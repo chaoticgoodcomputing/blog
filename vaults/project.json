@@ -1,5 +1,17 @@
 {
   "$schema": "../node_modules/nx/schemas/project-schema.json",
   "name": "vaults",
-  "targets": {}
+  "sourceRoot": "vaults",
+  "targets": {
+    "pull": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "cp -R /Users/spelkington/Library/Mobile Documents/iCloud~md~obsidian/Documents/content ."
+        ],
+        "cwd": ".",
+        "parallel": false
+      }
+    },
+  }
 }

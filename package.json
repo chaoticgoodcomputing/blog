@@ -4,7 +4,17 @@
   "repository": "https://github.com/chaoticgoodcomputing/blog",
   "author": "Spencer Elkington <me@chaoticgood.computer>",
   "license": "MIT",
+  "workspaces": {
+    "packages": [
+      "quartz"
+    ]
+  },
   "devDependencies": {
+    "@nx/js": "19.7.4",
+    "@swc-node/register": "~1.9.1",
+    "@swc/core": "~1.5.7",
+    "@swc/helpers": "~0.5.11",
     "nx": "19.7.4"
-  }
+  },
+  "packageManager": "yarn@4.9.1"
 }
