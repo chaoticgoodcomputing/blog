@@ -31,9 +31,7 @@
     "blog",
     "quartz"
   ],
-  "bin": {
-    "quartz": "./quartz/bootstrap-cli.mjs"
-  },
+  "bin": "./quartz/bootstrap-cli.mjs",
   "dependencies": {
     "@clack/prompts": "^0.10.1",
     "@floating-ui/dom": "^1.6.13",

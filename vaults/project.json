@@ -7,11 +7,21 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "cp -R /Users/spelkington/Library/Mobile Documents/iCloud~md~obsidian/Documents/content ."
+          "bash _utils/pull.sh"
         ],
-        "cwd": ".",
+        "cwd": "vaults",
         "parallel": false
       }
     },
+    "push": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "bash _utils/push.sh"
+        ],
+        "cwd": "vaults",
+        "parallel": false
+      }
+    }
   }
 }
