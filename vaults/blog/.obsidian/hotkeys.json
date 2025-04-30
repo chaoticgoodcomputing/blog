@@ -1,0 +1,190 @@
+{
+  "workspace:undo-close-pane": [],
+  "markdown:toggle-preview": [],
+  "editor:toggle-italics": [],
+  "editor:toggle-comments": [],
+  "editor:toggle-checklist-status": [],
+  "editor:toggle-bold": [],
+  "templater-obsidian:jump-to-next-cursor-location": [],
+  "global-search:open": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "F"
+    }
+  ],
+  "editor:open-search": [],
+  "editor:open-search-replace": [],
+  "editor:save-file": [],
+  "workspace:edit-file-title": [],
+  "switcher:open": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "P"
+    }
+  ],
+  "app:open-settings": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": ","
+    }
+  ],
+  "editor:open-link-in-new-split": [],
+  "editor:open-link-in-new-window": [],
+  "editor:open-link-in-new-leaf": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "Enter"
+    }
+  ],
+  "app:open-help": [],
+  "workspace:new-tab": [],
+  "app:go-forward": [
+    {
+      "modifiers": [
+        "Ctrl",
+        "Mod"
+      ],
+      "key": "["
+    }
+  ],
+  "app:go-back": [
+    {
+      "modifiers": [
+        "Ctrl",
+        "Mod"
+      ],
+      "key": "I"
+    }
+  ],
+  "editor:insert-link": [],
+  "graph:open": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "G"
+    }
+  ],
+  "workspace:goto-tab-8": [],
+  "workspace:goto-tab-7": [],
+  "workspace:goto-tab-6": [],
+  "workspace:goto-tab-5": [],
+  "workspace:goto-tab-4": [],
+  "workspace:goto-tab-3": [],
+  "workspace:goto-tab-2": [],
+  "workspace:goto-tab-1": [],
+  "workspace:previous-tab": [
+    {
+      "modifiers": [
+        "Ctrl",
+        "Mod"
+      ],
+      "key": "K"
+    }
+  ],
+  "workspace:next-tab": [
+    {
+      "modifiers": [
+        "Ctrl",
+        "Mod"
+      ],
+      "key": "J"
+    }
+  ],
+  "workspace:goto-last-tab": [],
+  "editor:follow-link": [],
+  "editor:delete-paragraph": [],
+  "file-explorer:new-file-in-new-pane": [],
+  "file-explorer:new-file": [],
+  "command-palette:open": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "P"
+    }
+  ],
+  "workspace:close-window": [],
+  "workspace:close": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "K"
+    }
+  ],
+  "markdown:add-metadata-property": [],
+  "app:toggle-left-sidebar": [
+    {
+      "modifiers": [
+        "Ctrl",
+        "Mod"
+      ],
+      "key": "N"
+    }
+  ],
+  "window:zoom-in": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "="
+    }
+  ],
+  "window:zoom-out": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "-"
+    }
+  ],
+  "app:show-debug-info": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "C"
+    }
+  ],
+  "app:reload": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "R"
+    }
+  ],
+  "app:toggle-right-sidebar": [
+    {
+      "modifiers": [
+        "Ctrl",
+        "Mod"
+      ],
+      "key": "."
+    }
+  ],
+  "file-explorer:open": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "E"
+    }
+  ]
+}

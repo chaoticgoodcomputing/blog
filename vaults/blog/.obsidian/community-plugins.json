@@ -1,0 +1,16 @@
+[
+  "templater-obsidian",
+  "obsidian-tasks-plugin",
+  "periodic-notes",
+  "mdx-as-md-obsidian",
+  "obsidian-linter",
+  "obsidian-languagetool-plugin",
+  "dataview",
+  "obsidian-dangling-links",
+  "calendar",
+  "obsidian-annotator",
+  "obsidian-advanced-uri",
+  "obsidian-style-settings",
+  "obsidian-shellcommands",
+  "find-unlinked-files"
+]

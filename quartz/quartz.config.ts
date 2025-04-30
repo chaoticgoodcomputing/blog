@@ -17,7 +17,7 @@ const config: QuartzConfig = {
     },
     locale: "en-US",
     baseUrl: "blog.chaoticgood.computer",
-    ignorePatterns: ["private", "templates", ".obsidian"],
+    ignorePatterns: ["**/!*/**/*", "**/!*", ".obsidian"],
     defaultDateType: "modified",
     theme: {
       fontOrigin: "googleFonts",

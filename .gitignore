@@ -1,3 +1,21 @@
+# ===========================
+# ===== VAULT GITIGNORE =====
+# ===========================
+
+# Avoid adding untitled notes
+Untitled*
+
+# Do not add private-marked files
+\!*
+
+# Manually permit certain obsidian config
+**/.obsidian/plugins
+**/.obsidian/app.json
+**/.obsidian/appearance.json
+**/.obsidian/graph.json
+**/.obsidian/types.json
+**/.obsidian/workspace.json
+
 # Logs
 logs
 *.log
