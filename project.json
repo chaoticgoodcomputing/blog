@@ -2,5 +2,17 @@
   "$schema": "node_modules/nx/schemas/project-schema.json",
   "name": "blog",
   "sourceRoot": ".",
-  "projectType": "application"
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx run site:serve"
+        ],
+        "cwd": ".",
+        "parallel": false
+      }
+    },
+  }
 }

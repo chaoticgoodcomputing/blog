@@ -1,4 +1,4 @@
-import { FileTrieNode } from "../../util/fileTrie"
+import { TrieNode, createTrie } from "../../util/itrie"
 import { FullSlug, resolveRelative, simplifySlug } from "../../util/path"
 import { ContentDetails } from "../../plugins/emitters/contentIndex"
 
@@ -8,9 +8,10 @@ interface ParsedOptions {
   folderClickBehavior: "collapse" | "link"
   folderDefaultState: "collapsed" | "open"
   useSavedState: boolean
-  sortFn: (a: FileTrieNode, b: FileTrieNode) => number
-  filterFn: (node: FileTrieNode) => boolean
-  mapFn: (node: FileTrieNode) => void
+  useTagsAsFolders: boolean
+  sortFn: (a: TrieNode, b: TrieNode) => number
+  filterFn: (node: TrieNode | TrieNode) => boolean
+  mapFn: (node: TrieNode | TrieNode) => void
   order: "sort" | "filter" | "map"[]
 }
 
@@ -79,25 +80,27 @@ function toggleFolder(evt: MouseEvent) {
   localStorage.setItem("fileTree", stringifiedFileTree)
 }
 
-function createFileNode(currentSlug: FullSlug, node: FileTrieNode): HTMLLIElement {
+// Unified function for creating content nodes
+function createContentNode(currentSlug: FullSlug, nodeInfo: { slug: FullSlug, displayName: string }): HTMLLIElement {
   const template = document.getElementById("template-file") as HTMLTemplateElement
   const clone = template.content.cloneNode(true) as DocumentFragment
   const li = clone.querySelector("li") as HTMLLIElement
   const a = li.querySelector("a") as HTMLAnchorElement
-  a.href = resolveRelative(currentSlug, node.slug)
-  a.dataset.for = node.slug
-  a.textContent = node.displayName
+  a.href = resolveRelative(currentSlug, nodeInfo.slug)
+  a.dataset.for = nodeInfo.slug
+  a.textContent = nodeInfo.displayName
 
-  if (currentSlug === node.slug) {
+  if (currentSlug === nodeInfo.slug) {
     a.classList.add("active")
   }
 
   return li
 }
 
+// Unified function for creating folder nodes
 function createFolderNode(
   currentSlug: FullSlug,
-  node: FileTrieNode,
+  node: TrieNode,
   opts: ParsedOptions,
 ): HTMLLIElement {
   const template = document.getElementById("template-folder") as HTMLTemplateElement
@@ -140,10 +143,16 @@ function createFolderNode(
     folderOuter.classList.add("open")
   }
 
+  // Add content items for this node
+  const contentNodes = node.getContentNodes()
+  for (const contentInfo of contentNodes) {
+    const contentNode = createContentNode(currentSlug, contentInfo)
+    ul.appendChild(contentNode)
+  }
+
+  // Add child folders
   for (const child of node.children) {
-    const childNode = child.isFolder
-      ? createFolderNode(currentSlug, child, opts)
-      : createFileNode(currentSlug, child)
+    const childNode = createFolderNode(currentSlug, child, opts)
     ul.appendChild(childNode)
   }
 
@@ -159,6 +168,7 @@ async function setupExplorer(currentSlug: FullSlug) {
       folderClickBehavior: (explorer.dataset.behavior || "collapse") as "collapse" | "link",
       folderDefaultState: (explorer.dataset.collapsed || "collapsed") as "collapsed" | "open",
       useSavedState: explorer.dataset.savestate === "true",
+      useTagsAsFolders: explorer.dataset.useTags === "true",
       order: dataFns.order || ["filter", "map", "sort"],
       sortFn: new Function("return " + (dataFns.sortFn || "undefined"))(),
       filterFn: new Function("return " + (dataFns.filterFn || "undefined"))(),
@@ -172,10 +182,13 @@ async function setupExplorer(currentSlug: FullSlug) {
       serializedExplorerState.map((entry: FolderState) => [entry.path, entry.collapsed]),
     )
 
+    // Fetch data
     const data = await fetchData
     const entries = [...Object.entries(data)] as [FullSlug, ContentDetails][]
-    const trie = FileTrieNode.fromEntries(entries)
-
+    
+    // Create appropriate trie type using the factory function
+    const trie = createTrie(opts.useTagsAsFolders, entries)
+    
     // Apply functions in order
     for (const fn of opts.order) {
       switch (fn) {
@@ -190,9 +203,11 @@ async function setupExplorer(currentSlug: FullSlug) {
           break
       }
     }
-
-    // Get folder paths for state management
+    
+    // Get folder paths
     const folderPaths = trie.getFolderPaths()
+
+    // Update explorer state
     currentExplorerState = folderPaths.map((path) => {
       const previousState = oldIndex.get(path)
       return {
@@ -207,13 +222,12 @@ async function setupExplorer(currentSlug: FullSlug) {
 
     // Create and insert new content
     const fragment = document.createDocumentFragment()
+    
     for (const child of trie.children) {
-      const node = child.isFolder
-        ? createFolderNode(currentSlug, child, opts)
-        : createFileNode(currentSlug, child)
-
+      const node = createFolderNode(currentSlug, child, opts)
       fragment.appendChild(node)
     }
+    
     explorerUl.insertBefore(fragment, explorerUl.firstChild)
 
     // restore explorer scrollTop position if it exists

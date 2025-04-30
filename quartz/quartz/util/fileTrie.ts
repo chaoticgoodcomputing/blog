@@ -1,5 +1,6 @@
 import { ContentDetails } from "../plugins/emitters/contentIndex"
 import { FullSlug, joinSegments } from "./path"
+import { TrieNode } from "./itrie"
 
 interface FileTrieData {
   slug: string
@@ -7,14 +8,11 @@ interface FileTrieData {
   filePath: string
 }
 
-export class FileTrieNode<T extends FileTrieData = ContentDetails> {
+export class FileTrieNode<T extends FileTrieData = ContentDetails> implements TrieNode<T> {
   isFolder: boolean
   children: Array<FileTrieNode<T>>
 
   private slugSegments: string[]
-  // prefer showing the file path segment over the slug segment
-  // so that folders that dont have index files can be shown as is
-  // without dashes in the slug
   private fileSegmentHint?: string
   private displayNameOverride?: string
   data: T | null
@@ -49,6 +47,18 @@ export class FileTrieNode<T extends FileTrieData = ContentDetails> {
 
   get slugSegment(): string {
     return this.slugSegments[this.slugSegments.length - 1]
+  }
+
+  // Implement the getContentNodes method from TrieNode interface
+  getContentNodes(): Array<{ slug: FullSlug; displayName: string }> {
+    if (this.isFolder) {
+      return []
+    }
+    
+    return [{
+      slug: this.slug,
+      displayName: this.displayName
+    }]
   }
 
   private makeChild(path: string[], file?: T) {
@@ -139,7 +149,7 @@ export class FileTrieNode<T extends FileTrieData = ContentDetails> {
     this.children.forEach((e) => e.sort(sortFn))
   }
 
-  static fromEntries<T extends FileTrieData>(entries: [FullSlug, T][]) {
+static fromEntries<T extends FileTrieData>(entries: [FullSlug, T][]) {
     const trie = new FileTrieNode<T>([])
     entries.forEach(([, entry]) => trie.add(entry))
     return trie

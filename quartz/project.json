@@ -7,7 +7,7 @@
       "options": {
         "commands": [
           "./quartz/bootstrap-cli.mjs build --serve -d ../vaults/blog",
-          "open 'http://localhost:8080'"
+          "wait-on http://localhost:8080 && open 'http://localhost:8080'"
         ],
         "cwd": "quartz",
         "parallel": true
@@ -16,13 +16,13 @@
         "docs": {
           "commands": [
             "./quartz/bootstrap-cli.mjs build --serve -d docs",
-            "open 'http://localhost:8080'"
+            "wait-on http://localhost:8080 && open 'http://localhost:8080'"
           ]
         },
         "detached": {
           "commands": [
             "./quartz/bootstrap-cli.mjs build --serve -d ../vaults/blog &",
-            "open 'http://localhost:8080'"
+            "wait-on http://localhost:8080 && open 'http://localhost:8080'"
           ]
         },
         "stop": {

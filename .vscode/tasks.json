@@ -1,0 +1,18 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "nx",
+			"project": "",
+			"command": "run",
+			"positional": "site:serve",
+			"flags": [],
+			"problemMatcher": [],
+			"label": "nx: nx run site:serve",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}
