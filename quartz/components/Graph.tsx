@@ -41,6 +41,10 @@ export interface D3Config {
     tags?: number    // Base size for tag nodes
     posts?: number   // Base size for post nodes
   }
+  sizeScaling?: number | {
+    tags?: number    // Scaling factor for tag nodes based on sqrt(connections) (default: 2)
+    posts?: number   // Scaling factor for post nodes based on sqrt(connections) (default: 1)
+  }
   labelAnchor?: {
     baseY?: number         // Base y-anchor position (default: 1.2)
     scaleFactor?: number   // How much node size affects label position (default: 0.05)
@@ -86,6 +90,10 @@ const defaultOptions: GraphOptions = {
       tags: 4,
       posts: 2,
     },
+    sizeScaling: {
+      tags: 2,
+      posts: 1,
+    },
     labelAnchor: {
       baseY: 1.2,
       scaleFactor: 0.05,
@@ -123,6 +131,10 @@ const defaultOptions: GraphOptions = {
     baseSize: {
       tags: 4,
       posts: 2,
+    },
+    sizeScaling: {
+      tags: 2,
+      posts: 1,
     },
     labelAnchor: {
       baseY: 1.2,

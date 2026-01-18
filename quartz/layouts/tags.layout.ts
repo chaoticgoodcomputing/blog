@@ -37,7 +37,7 @@ export const tagsLayout: PageLayout = {
       localGraph: defaultLocalGraphOptions,
       globalGraph: defaultGraphOptions,
     }),
-    Component.Backlinks(),
+    Component.Backlinks()
   ],
   afterBody: [
     Component.PostListing({

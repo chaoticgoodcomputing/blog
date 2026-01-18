@@ -26,6 +26,11 @@ export type BaseSizeConfig = {
   posts: number
 }
 
+export type SizeScalingConfig = {
+  tags: number
+  posts: number
+}
+
 export type LabelAnchorConfig = {
   baseY: number
   scaleFactor: number
@@ -107,6 +112,18 @@ export function normalizeBaseSize(
   return {
     tags: baseSize?.tags ?? 4,
     posts: baseSize?.posts ?? 2,
+  }
+}
+
+export function normalizeSizeScaling(
+  sizeScaling: number | { tags?: number; posts?: number } | undefined,
+): SizeScalingConfig {
+  if (typeof sizeScaling === "number") {
+    return { tags: sizeScaling, posts: sizeScaling }
+  }
+  return {
+    tags: sizeScaling?.tags ?? 2,
+    posts: sizeScaling?.posts ?? 1,
   }
 }
 

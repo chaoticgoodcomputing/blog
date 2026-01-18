@@ -105,4 +105,9 @@ export const BuildArgv = {
     number: true,
     describe: "how many threads to use to parse notes",
   },
+  watchDebounce: {
+    number: true,
+    default: 250,
+    describe: "debounce time in milliseconds for source code file watcher (prevents rapid rebuilds)",
+  },
 }

@@ -343,7 +343,7 @@ export async function handleBuild(argv) {
     clientRefresh()
   }
 
-  let clientRefresh = () => {}
+  let clientRefresh = () => { }
   if (argv.serve) {
     const connections = []
     clientRefresh = () => connections.forEach((conn) => conn.send("rebuild"))
@@ -406,7 +406,7 @@ export async function handleBuild(argv) {
         })
         console.log(
           styleText("yellow", "[302]") +
-            styleText("grey", ` ${argv.baseDir}${req.url} -> ${newFp}`),
+          styleText("grey", ` ${argv.baseDir}${req.url} -> ${newFp}`),
         )
         res.end()
       }
@@ -476,11 +476,23 @@ export async function handleBuild(argv) {
       "**/*.scss",
       "package.json",
     ])
+
+    let debounceTimer = null
+    const debouncedBuild = () => {
+      if (debounceTimer) {
+        clearTimeout(debounceTimer)
+      }
+      debounceTimer = setTimeout(() => {
+        build(clientRefresh)
+        debounceTimer = null
+      }, argv.watchDebounce)
+    }
+
     chokidar
       .watch(paths, { ignoreInitial: true })
-      .on("add", () => build(clientRefresh))
-      .on("change", () => build(clientRefresh))
-      .on("unlink", () => build(clientRefresh))
+      .on("add", debouncedBuild)
+      .on("change", debouncedBuild)
+      .on("unlink", debouncedBuild)
 
     console.log(styleText("grey", "hint: exit with ctrl+c"))
   }

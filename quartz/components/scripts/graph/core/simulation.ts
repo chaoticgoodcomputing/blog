@@ -13,19 +13,21 @@ import type { LinkData, NodeData } from "./types"
 export function createNodeRadiusFunction(
   graphData: { nodes: NodeData[]; links: LinkData[] },
   baseSize: { tags: number; posts: number },
+  sizeScaling: { tags: number; posts: number },
   tagFileCountMap: Map<SimpleSlug, number>,
 ) {
   return (d: NodeData): number => {
     const base = d.id.startsWith("tags/") ? baseSize.tags : baseSize.posts
+    const scaling = d.id.startsWith("tags/") ? sizeScaling.tags : sizeScaling.posts
 
     if (d.id.startsWith("tags/")) {
       const fileCount = tagFileCountMap.get(d.id) || 0
-      return base + 2 * Math.sqrt(fileCount)
+      return base + scaling * Math.sqrt(fileCount)
     }
 
     const numLinks = graphData.links.filter((l) => l.source.id === d.id || l.target.id === d.id)
       .length
-    return base + Math.sqrt(numLinks)
+    return base + scaling * Math.sqrt(numLinks)
   }
 }
 

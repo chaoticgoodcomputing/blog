@@ -29,6 +29,7 @@ import {
   normalizeLinkStrength,
   normalizeEdgeOpacity,
   normalizeBaseSize,
+  normalizeSizeScaling,
   normalizeLabelAnchor,
   normalizeTagColorGradient,
 } from "../adapters/configAdapter"
@@ -65,6 +66,7 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     tagColorGradient,
     edgeOpacity,
     baseSize,
+    sizeScaling,
     labelAnchor,
   } = parseGraphConfig(graph)
 
@@ -73,6 +75,7 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const linkStrengthConfig = normalizeLinkStrength(linkStrength)
   const edgeOpacityConfig = normalizeEdgeOpacity(edgeOpacity)
   const baseSizeConfig = normalizeBaseSize(baseSize)
+  const sizeScalingConfig = normalizeSizeScaling(sizeScaling)
   const labelAnchorConfig = normalizeLabelAnchor(labelAnchor)
 
   // Fetch and process data
@@ -89,7 +92,7 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   // Setup dimensions and simulation
   const width = graph.offsetWidth
   const height = Math.max(graph.offsetHeight, 250)
-  const nodeRadius = createNodeRadiusFunction(graphData, baseSizeConfig, tagFileCountMap)
+  const nodeRadius = createNodeRadiusFunction(graphData, baseSizeConfig, sizeScalingConfig, tagFileCountMap)
   const simulation = setupSimulation(
     graphData,
     nodeRadius,

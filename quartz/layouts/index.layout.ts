@@ -29,6 +29,10 @@ export const defaultGraphOptions: Partial<D3Config> = {
     tags: 14,
     posts: 10,
   },
+  sizeScaling: {
+    tags: 2,
+    posts: 1,
+  },
   tagColorGradient: [
     "#FF0000",
     "#FF7F00",
@@ -51,15 +55,19 @@ export const defaultGraphOptions: Partial<D3Config> = {
 export const defaultLocalGraphOptions: Partial<D3Config> = {
   ...defaultGraphOptions,
   depth: 1,
-  scale: 0.7,
+  scale: 1,
   baseSize: {
-    tags: 10,
-    posts: 10,
+    tags: 5,
+    posts: 5,
+  },
+  sizeScaling: {
+    tags: 1,
+    posts: 2,
   },
   linkDistance: {
-    tagTag: 50,
-    tagPost: 50,
-    postPost: 50,
+    tagTag: 25,
+    tagPost: 25,
+    postPost: 25,
   },
 }
 
@@ -101,10 +109,10 @@ export const indexLayout: PageLayout = {
   ],
   body: [
     Component.Content(),
-    Component.FullGraph({
-      globalGraph: defaultGraphOptions,
-      height: "500px", // Adjust this value to change graph height
-    }),
+    // Component.FullGraph({
+    //   globalGraph: defaultGraphOptions,
+    //   height: "500px", // Adjust this value to change graph height
+    // }),
     Component.PostListing({
       excludeTags: ["private"],
       collapsedItemCount: 5,
@@ -112,8 +120,11 @@ export const indexLayout: PageLayout = {
     }),
   ],
   right: [
+    Component.Graph({
+      localGraph: defaultLocalGraphOptions,
+      globalGraph: defaultGraphOptions,
+    }),
     Component.DesktopOnly(Component.TableOfContents()),
-    Component.Backlinks(),
   ],
   afterBody: [
   ],
