@@ -1,8 +1,8 @@
 ---
-title: "Systems: Day 29"
-date: "2026-01-17T00:00:00.000Z"
+title: "AH: Letter of Recommendation"
+date: "2026-01-05T00:00:00.000Z"
 tags:
-  - "horticulture/seasons/systems"
+  - "writing"
   - "private"
 ---
 
@@ -15,6 +15,8 @@ If you are interested in what this note contains, please [[contact|reach out to 
 
 This note originally contained the following links:
 
-- [2026-01-16](content/notes/periodic/daily/2026/01/2026-01-16)
-- [letter of rec](content/notes/scratch/ah-rec-letter)
-- [AI policy](ai-policy)
+- [National Write Your Congressman](https://www.nwyc.com/frontpage)
+- [Constituent Voice](https://constituentvoice.com/)
+- [PointyPal](https://github.com/UtahTriangle/pointypal)
+- [M Science](https://mscience.com/)
+- [Project Embrace](https://www.projectembrace.org/)
