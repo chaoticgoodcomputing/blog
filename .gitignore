@@ -7,8 +7,6 @@ tsconfig.tsbuildinfo
 .replit
 replit.nix
 .nx
-/public
-/public/assets/annotated-documents/
 
 dist
 

@@ -15,7 +15,7 @@ import { fileURLToPath } from "url"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const WORKSPACE_ROOT = path.resolve(__dirname, "../..")
-const PUBLIC_DIR = path.join(WORKSPACE_ROOT, "public")
+const PUBLIC_DIR = path.join(WORKSPACE_ROOT, "dist/public")
 const FONTS_DIR = path.join(WORKSPACE_ROOT, "quartz/static/fonts")
 
 // Check if glyphhanger is available
@@ -95,7 +95,7 @@ async function main() {
   }
 
   if (!(await checkPublicDir())) {
-    console.log("⚠️  public/ directory not found. Run build first.")
+    console.log("⚠️  dist/public/ directory not found. Run build first.")
     console.log("Skipping subsetting (full fonts will be used)\n")
     return
   }

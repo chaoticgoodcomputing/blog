@@ -7,7 +7,7 @@ import { promisify } from 'util';
 
 const parseXML = promisify(parseString);
 
-const sitemapPath = resolve(process.cwd(), 'public/sitemap.xml');
+const sitemapPath = resolve(process.cwd(), 'dist/public/sitemap.xml');
 const outputPath = resolve(process.cwd(), 'utils/lighthouse/lighthouserc.cjs');
 
 // Configuration
@@ -108,7 +108,7 @@ async function shouldIncludeUrl(url) {
 }
 
 async function generateConfig() {
-  console.log('📖 Reading sitemap from public/sitemap.xml...');
+  console.log('📖 Reading sitemap from dist/public/sitemap.xml...');
   const sitemapXML = await readFile(sitemapPath, 'utf-8');
 
   console.log('🔍 Parsing sitemap XML...');

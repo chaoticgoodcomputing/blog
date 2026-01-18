@@ -10,7 +10,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "rm -rf public",
+          "rm -rf dist/public",
           "rm -rf quartz/.quartz-cache"
         ],
         "cwd": "{workspaceRoot}",
@@ -63,15 +63,15 @@
         "cwd": "{workspaceRoot}",
         "parallel": false
       },
-      "outputs": [ "{workspaceRoot}/public" ]
+      "outputs": [ "{workspaceRoot}/dist/public" ]
     },
     "_postbuild": {
       "//": "Private target for post-build hooks. Uses dependsOn for extensibility.",
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "cp quartz/static/robots.txt public/robots.txt",
-          "cp CNAME public/CNAME"
+          "cp quartz/static/robots.txt dist/public/robots.txt",
+          "cp CNAME dist/public/CNAME"
         ],
         "cwd": "{workspaceRoot}",
         "parallel": false
@@ -99,7 +99,7 @@
         "parallel": false,
         "cwd": "{workspaceRoot}"
       },
-      "outputs": [ "{workspaceRoot}/public" ],
+      "outputs": [ "{workspaceRoot}/dist/public" ],
       "dependsOn": [ "site:_prebuild" ]
     },
     "check": {
@@ -144,11 +144,11 @@
       "dependsOn": [ "site:build", "_serve-static" ]
     },
     "_serve-static": {
-      "//": "Helper: Serve production build from public/ directory on port 8080 for Lighthouse evaluation",
+      "//": "Helper: Serve production build from dist/public directory on port 8080 for Lighthouse evaluation",
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "npx serve public -l 8080"
+          "npx serve dist/public -l 8080"
         ],
         "parallel": false,
         "cwd": "{workspaceRoot}"
