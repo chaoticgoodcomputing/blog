@@ -66,6 +66,7 @@ export const ContentPage: QuartzEmitterPlugin<Partial<FullPageLayout>> = (userOp
         ...(indexLayout.body || []),
         ...indexLayout.left,
         ...indexLayout.right,
+        ...(indexLayout.afterBody || []),
       ]
       const notesComponents = [
         ...(notesLayout.pageHeader || []),
@@ -73,6 +74,7 @@ export const ContentPage: QuartzEmitterPlugin<Partial<FullPageLayout>> = (userOp
         ...(notesLayout.body || []),
         ...notesLayout.left,
         ...notesLayout.right,
+        ...(notesLayout.afterBody || []),
       ]
       const annotationsComponents = [
         ...(annotationsLayout.pageHeader || []),
@@ -80,6 +82,7 @@ export const ContentPage: QuartzEmitterPlugin<Partial<FullPageLayout>> = (userOp
         ...(annotationsLayout.body || []),
         ...annotationsLayout.left,
         ...annotationsLayout.right,
+        ...(annotationsLayout.afterBody || []),
       ]
 
       return [

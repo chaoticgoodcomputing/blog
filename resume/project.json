@@ -49,6 +49,18 @@
       },
       "continuous": true
     },
+    "parse": {
+      "//": "Extracts text from compiled PDF for ATS compatibility validation",
+      "executor": "nx:run-commands",
+      "dependsOn": [ "build" ],
+      "options": {
+        "commands": [
+          "node resume/utils/parse-pdf.mjs"
+        ],
+        "parallel": false
+      },
+      "outputs": [ "{workspaceRoot}/dist/resume/parse.txt" ]
+    },
     "_lint-links": {
       "//": "Helper target: Checks for broken links in resume.typ using curl",
       "executor": "nx:run-commands",

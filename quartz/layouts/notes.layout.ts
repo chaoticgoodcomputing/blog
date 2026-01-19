@@ -11,12 +11,12 @@ export const notesLayout: PageLayout = {
     Component.ArticleTitle(),
     Component.ContentMeta(),
     Component.TagList(),
-    Component.ShowPageSource({
-      repoUrl: "https://github.com/chaoticgoodcomputing/chaoticgoodcomputing.github.io/blob/main",
-    }),
   ],
   body: [
     Component.Content(),
+  ],
+  afterBody: [
+    Component.ShowPageSource()
   ],
   left: [
     Component.PageTitle(),

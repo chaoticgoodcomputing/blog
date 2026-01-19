@@ -234,11 +234,12 @@ a {
         position: initial;
         height: unset;
         width: 100%;
-        flex-direction: row;
+        // Keep vertical stacking for cleaner mobile layout
+        flex-direction: column;
         padding: 0;
 
         &>* {
-          flex: 1;
+          flex: 0 1 auto;
           max-height: 24rem;
         }
 
@@ -248,9 +249,44 @@ a {
       }
     }
 
+    /**
+     * Section-Based Header Hierarchy
+     * 
+     * Components within the same grid section should have consistent header styling.
+     * This defines a standard hierarchy based on layout position rather than component type.
+     * 
+     * Hierarchy:
+     * - Sidebars (left/right): h3 at 1rem - compact, secondary navigation/metadata
+     * - Page footer (afterBody): h3 at 1rem - consistent with sidebar styling
+     * - Main content (.center): Uses natural h1-h6 hierarchy (defined globally below)
+     * 
+     * Components should use semantic HTML heading levels (h2, h3, etc.) without
+     * custom font-size declarations - the section will apply appropriate sizing.
+     */
+    & .sidebar.left,
+    & .sidebar.right {
+
+      // Sidebar component headers: compact, consistent sizing
+      h3 {
+        font-size: 1rem;
+        margin: 0.75rem 0 0.25rem 0;
+      }
+    }
+
     & .page-header,
     & .page-footer {
       margin-top: 1rem;
+
+      // Ensure components stack vertically, never side-by-side
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+
+      // Page-footer component headers: match sidebar styling for consistency
+      h3 {
+        font-size: 1rem;
+        margin: 0.75rem 0 0.25rem 0;
+      }
     }
 
     & .page-level-header {

@@ -1,10 +1,7 @@
 @use "../../styles/variables.scss" as *;
 
 .graph {
-  &>h3 {
-    font-size: 1rem;
-    margin: 0;
-  }
+  // Header styling inherited from section-based hierarchy (base.scss)
 
   &>.graph-outer {
     border-radius: 5px;

@@ -23,6 +23,7 @@ const config: QuartzConfig = {
     },
     locale: "en-US",
     baseUrl: "blog.chaoticgood.computer",
+    repoUrl: "https://github.com/chaoticgoodcomputing/chaoticgoodcomputing.github.io/blob/main",
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "modified",
     tags: {
@@ -75,11 +76,11 @@ const config: QuartzConfig = {
         { tag: "horticulture/seasons", icon: "mdi:weather-sunny" },
         
         // Top-level Categories
+        { tag: "writing", icon: "mdi:pencil" },
         { tag: "horticulture", icon: "mdi:flower" },
         { tag: "economics", icon: "mdi:chart-bell-curve" },
         { tag: "engineering", icon: "mdi:wrench" },
         { tag: "projects", icon: "mdi:source-branch" },
-        { tag: "writing", icon: "mdi:pencil" },
         
         // Seasonal Themes
         { tag: "horticulture/seasons/rhythm", icon: "mdi:music-note" },

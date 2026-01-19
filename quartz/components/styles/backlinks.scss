@@ -3,10 +3,7 @@
 .backlinks {
   flex-direction: column;
 
-  &>h3 {
-    font-size: 1.5rem;
-    margin: 0.75rem 0 0.25rem 0;
-  }
+  // Header styling inherited from section-based hierarchy (base.scss)
 
   &>ul.overflow {
     list-style: none;

@@ -1,30 +1,29 @@
 import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
 import { classNames } from "../util/lang"
 import { i18n } from "../i18n"
+import style from "./styles/showPageSource.scss"
 
 interface ShowPageSourceOptions {
   /**
    * Base GitHub repository URL (e.g., "https://github.com/user/repo/blob/main")
    * Trailing slashes will be automatically removed.
+   * If not provided, uses the repoUrl from the global configuration.
    */
-  repoUrl: string
+  repoUrl?: string
 }
 
-const defaultOptions: ShowPageSourceOptions = {
-  repoUrl: "",
-}
-
-export default ((opts?: Partial<ShowPageSourceOptions>) => {
-  const options: ShowPageSourceOptions = { ...defaultOptions, ...opts }
-
+export default ((opts?: ShowPageSourceOptions) => {
   const ShowPageSource: QuartzComponent = ({ fileData, displayClass, cfg }: QuartzComponentProps) => {
+    // Use provided repoUrl or fall back to config value
+    const repoUrl = opts?.repoUrl || cfg.repoUrl
+
     // Skip if no repo URL configured or if this is a special page (404, tag pages, etc.)
-    if (!options.repoUrl || !fileData.filePath) {
+    if (!repoUrl || !fileData.filePath) {
       return null
     }
 
     // Clean up the repo URL by removing trailing slashes
-    const cleanRepoUrl = options.repoUrl.replace(/\/+$/, "")
+    const cleanRepoUrl = repoUrl.replace(/\/+$/, "")
 
     // The filePath includes "content/" prefix (e.g., "content/public/index.md")
     // We need to keep this path structure for GitHub
@@ -52,32 +51,7 @@ export default ((opts?: Partial<ShowPageSourceOptions>) => {
     )
   }
 
-  ShowPageSource.css = `
-.page-source {
-  margin: 1rem 0;
-}
-
-.page-source a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--lightgray);
-  border-radius: 5px;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  font-size: 0.9rem;
-}
-
-.page-source a:hover {
-  background: var(--lightgray);
-  border-color: var(--secondary);
-}
-
-.page-source svg {
-  flex-shrink: 0;
-}
-`
+  ShowPageSource.css = style
 
   return ShowPageSource
 }) satisfies QuartzComponentConstructor

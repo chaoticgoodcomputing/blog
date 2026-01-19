@@ -166,6 +166,8 @@ export interface GlobalConfiguration {
   tags?: TagConfiguration
   /** Structured data (JSON-LD) configuration for SEO */
   structuredData?: StructuredDataConfiguration
+  /** Base GitHub repository URL for source links (e.g., "https://github.com/user/repo/blob/main") */
+  repoUrl?: string
 }
 
 export interface QuartzConfig {
