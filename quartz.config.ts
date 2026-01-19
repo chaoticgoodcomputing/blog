@@ -15,7 +15,7 @@ const BLUESTEEL = "#4682B4"
 const config: QuartzConfig = {
   configuration: {
     pageTitle: "Chaotic Good Computing",
-    pageTitleSuffix: " | CGC",
+    pageTitleSuffix: " | Spencer Elkington",
     enableSPA: true,
     enablePopovers: true,
     analytics: {

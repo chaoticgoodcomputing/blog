@@ -106,11 +106,37 @@ a.internal.tag-link {
   margin: 0;
   text-decoration: none;
   color: inherit;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, border-radius 0.2s ease, padding 0.2s ease;
 }
 
 a.internal.tag-link:hover {
   background-color: var(--gray);
+}
+
+/* Mobile only: icon-only mode */
+@media (max-width: 800px) {
+  a.internal.tag-link {
+    border-radius: 50%;
+    padding: 0.3rem;
+    gap: 0;
+  }
+
+  a.internal.tag-link:not(.expanded) .tag-name,
+  a.internal.tag-link:not(.expanded) .tag-count {
+    display: none;
+  }
+
+  /* Long-press: expand to show name and count */
+  a.internal.tag-link.expanded {
+    border-radius: 18px 8px 8px 18px;
+    padding: 0.3rem 0.6rem 0.3rem 0.3rem;
+    gap: 0.5rem;
+  }
+
+  a.internal.tag-link.expanded .tag-name,
+  a.internal.tag-link.expanded .tag-count {
+    display: flex;
+  }
 }
 
 .tag-icon-badge {

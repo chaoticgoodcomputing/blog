@@ -15,6 +15,103 @@ import { IconService } from "../../util/iconService"
 declare const fetchTagData: Promise<any>
 
 /**
+ * Setup long-press expansion for tag links on mobile/tablet
+ * On long-press/long-click, the tag expands to show name and count
+ * @param tagList - The tag list container element
+ */
+function setupLongPressExpansion(tagList: HTMLElement) {
+  const tagLinks = tagList.querySelectorAll("a.tag-link") as NodeListOf<HTMLAnchorElement>
+  let longPressTimer: number | undefined
+  let currentExpanded: HTMLAnchorElement | null = null
+  const LONG_PRESS_DURATION = 500 // milliseconds
+
+  // Check if we're on mobile/tablet (screen width < 1200px)
+  const isMobileTablet = () => window.matchMedia("(max-width: 1200px)").matches
+
+  const expand = (link: HTMLAnchorElement) => {
+    if (!isMobileTablet()) return
+    
+    // Collapse any previously expanded tag
+    if (currentExpanded && currentExpanded !== link) {
+      currentExpanded.classList.remove("expanded")
+    }
+    
+    link.classList.add("expanded")
+    currentExpanded = link
+  }
+
+  const collapse = (link: HTMLAnchorElement) => {
+    link.classList.remove("expanded")
+    if (currentExpanded === link) {
+      currentExpanded = null
+    }
+  }
+
+  const startLongPress = (e: TouchEvent | MouseEvent, link: HTMLAnchorElement) => {
+    if (!isMobileTablet()) return
+    
+    // Prevent default link behavior during long-press detection
+    e.preventDefault()
+    
+    longPressTimer = window.setTimeout(() => {
+      expand(link)
+    }, LONG_PRESS_DURATION)
+  }
+
+  const cancelLongPress = () => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer)
+      longPressTimer = undefined
+    }
+  }
+
+  const handleEnd = (e: TouchEvent | MouseEvent, link: HTMLAnchorElement) => {
+    cancelLongPress()
+    
+    // If tag is expanded, navigate on tap/click release
+    if (link.classList.contains("expanded")) {
+      // Allow the link to navigate naturally
+      return
+    }
+    
+    // If not expanded and was a quick tap/click, navigate immediately
+    if (isMobileTablet()) {
+      window.location.href = link.href
+    }
+  }
+
+  for (const link of tagLinks) {
+    // Touch events (mobile)
+    link.addEventListener("touchstart", (e) => startLongPress(e, link), { passive: false })
+    link.addEventListener("touchend", (e) => handleEnd(e, link))
+    link.addEventListener("touchcancel", cancelLongPress)
+    link.addEventListener("touchmove", cancelLongPress)
+
+    // Mouse events (tablet/desktop with mouse)
+    link.addEventListener("mousedown", (e) => {
+      if (e.button === 0) { // Left click only
+        startLongPress(e, link)
+      }
+    })
+    link.addEventListener("mouseup", (e) => handleEnd(e, link))
+    link.addEventListener("mouseleave", () => {
+      cancelLongPress()
+      // Collapse after a delay when mouse leaves
+      if (currentExpanded === link) {
+        setTimeout(() => collapse(link), 300)
+      }
+    })
+  }
+
+  // Click outside to collapse
+  document.addEventListener("click", (e) => {
+    if (currentExpanded && !currentExpanded.contains(e.target as Node)) {
+      collapse(currentExpanded)
+    }
+  })
+}
+
+/**
  * Initialize all tag lists in post listings
  */
 async function setupPostListingTags() {
@@ -100,6 +197,11 @@ async function setupPostListingTags() {
           countSpan?.remove()
         }
       }
+    }
+
+    // Add long-press/long-click support for mobile/tablet (screen width < 1200px)
+    for (const tagList of allTagLists) {
+      setupLongPressExpansion(tagList)
     }
   } catch (err) {
     console.error("Error initializing PostListing tags:", err)
