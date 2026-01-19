@@ -44,14 +44,14 @@ function getTypstLastModified() {
       `git log -1 --format=%cs -- "${SOURCE_TYP}"`,
       { cwd: workspaceRoot, encoding: 'utf8' }
     ).trim();
-    
+
     if (gitDate) {
       return gitDate;
     }
   } catch {
     // Git command failed, fall back to mtime
   }
-  
+
   // Fallback: use file modification time
   const stats = fs.statSync(SOURCE_TYP);
   return stats.mtime.toISOString().split('T')[0];
