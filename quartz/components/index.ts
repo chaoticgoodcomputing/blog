@@ -30,6 +30,7 @@ import Flex from "./Flex"
 import ConditionalRender from "./ConditionalRender"
 import PostListing from "./PostListing"
 import AnnotationViewer from "./AnnotationViewer"
+import ShowPageSource from "./ShowPageSource"
 
 export {
   ArticleTitle,
@@ -64,4 +65,5 @@ export {
   ConditionalRender,
   PostListing,
   AnnotationViewer,
+  ShowPageSource,
 }

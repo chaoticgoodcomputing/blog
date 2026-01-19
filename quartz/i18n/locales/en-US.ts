@@ -65,6 +65,9 @@ export default {
     contentMeta: {
       readingTime: ({ minutes }) => `${minutes} min read`,
     },
+    pageSource: {
+      linkText: "View source on GitHub",
+    },
   },
   pages: {
     rss: {
