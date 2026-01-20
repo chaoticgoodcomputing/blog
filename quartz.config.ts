@@ -44,13 +44,6 @@ const config: QuartzConfig = {
         { tag: "projects/flowthru", icon: "mdi:graph-outline" },
         { tag: "projects/homelab", icon: "mdi:home-sound-out" },
         
-        // Programming Languages
-        { tag: "engineering/languages/python", icon: "mdi:language-python" },
-        { tag: "engineering/languages/typescript", icon: "mdi:language-typescript" },
-        { tag: "engineering/languages/csharp", icon: "mdi:language-csharp" },
-        { tag: "engineering/languages/lua", icon: "mdi:language-lua" },
-        { tag: "engineering/languages/scratch", icon: "mdi:cat" },
-        
         // Engineering Subtopics
         { tag: "engineering/bio", icon: "mdi:molecule" },
         { tag: "engineering/languages", icon: "mdi:code-braces" },
@@ -66,9 +59,19 @@ const config: QuartzConfig = {
         
         // Project Types
         { tag: "projects/games", icon: "mdi:controller-classic" },
-        { tag: "projects/college", icon: "custom:uofu" },
         { tag: "projects/teaching", icon: "mdi:thought-bubble" },
+
+        // Programming Languages
+        { tag: "engineering/languages/python", icon: "mdi:language-python" },
+        { tag: "engineering/languages/typescript", icon: "mdi:language-typescript" },
+        { tag: "engineering/languages/csharp", icon: "mdi:language-csharp" },
+        { tag: "engineering/languages/lua", icon: "mdi:language-lua" },
+        { tag: "engineering/languages/scratch", icon: "mdi:cat" },
         
+        // Secondary project types
+        { tag: "projects/college", icon: "custom:uofu" },
+        
+        // Writing types
         { tag: "writing/annotations", icon: "mdi:chat-plus" },
         { tag: "writing/articles", icon: "mdi:file-edit" },
         { tag: "writing/tutorials", icon: "mdi:school" },
