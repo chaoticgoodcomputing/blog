@@ -25,10 +25,6 @@ export default {
       title: "反向連結",
       noBacklinksFound: "無法找到反向連結",
     },
-    themeToggle: {
-      lightMode: "亮色模式",
-      darkMode: "暗色模式",
-    },
     readerMode: {
       title: "閱讀模式",
     },

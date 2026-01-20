@@ -94,7 +94,6 @@ export const indexLayout: PageLayout = {
           Component: Component.Search(),
           grow: true,
         },
-        { Component: Component.Darkmode() },
         { Component: Component.DesktopOnly(Component.ReaderMode()) },
       ],
     }),

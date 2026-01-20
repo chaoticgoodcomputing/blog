@@ -25,10 +25,6 @@ export default {
       title: "Link entranti",
       noBacklinksFound: "Nessun link entrante",
     },
-    themeToggle: {
-      lightMode: "Tema chiaro",
-      darkMode: "Tema scuro",
-    },
     readerMode: {
       title: "Modalità lettura",
     },

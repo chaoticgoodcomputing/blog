@@ -25,10 +25,6 @@ export default {
       title: "Tautan Balik",
       noBacklinksFound: "Tidak ada tautan balik ditemukan",
     },
-    themeToggle: {
-      lightMode: "Mode Terang",
-      darkMode: "Mode Gelap",
-    },
     readerMode: {
       title: "Mode Pembaca",
     },

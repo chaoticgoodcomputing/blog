@@ -25,10 +25,6 @@ export default {
       title: "Backlinkler",
       noBacklinksFound: "Backlink bulunamadı",
     },
-    themeToggle: {
-      lightMode: "Açık mod",
-      darkMode: "Koyu mod",
-    },
     readerMode: {
       title: "Okuma modu",
     },

@@ -20,7 +20,6 @@ export const tagsLayout: PageLayout = {
           Component: Component.Search(),
           grow: true,
         },
-        { Component: Component.Darkmode() },
       ],
     }),
     Component.TagExplorer({

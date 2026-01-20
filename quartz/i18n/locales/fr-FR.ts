@@ -25,10 +25,6 @@ export default {
       title: "Liens retour",
       noBacklinksFound: "Aucun lien retour trouvé",
     },
-    themeToggle: {
-      lightMode: "Mode clair",
-      darkMode: "Mode sombre",
-    },
     readerMode: {
       title: "Mode lecture",
     },

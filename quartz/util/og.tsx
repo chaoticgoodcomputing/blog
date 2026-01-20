@@ -3,7 +3,7 @@ import { FontWeight, SatoriOptions } from "satori/wasm"
 import { GlobalConfiguration } from "../cfg"
 import { QuartzPluginData } from "../plugins/vfile"
 import { JSXInternal } from "preact/src/jsx"
-import { FontSpecification, getFontSpecificationName, ThemeKey } from "./theme"
+import { FontSpecification, getFontSpecificationName } from "./theme"
 import path from "path"
 import { QUARTZ } from "./path"
 import { formatDate, getDate } from "../components/Date"
@@ -119,10 +119,6 @@ export async function fetchTtf(
 
 export type SocialImageOptions = {
   /**
-   * What color scheme to use for image generation (uses colors from config theme)
-   */
-  colorScheme: ThemeKey
-  /**
    * Height to generate image with in pixels (should be around 630px)
    */
   height: number
@@ -185,7 +181,6 @@ export const defaultImage: SocialImageOptions["imageStructure"] = ({
   fileData,
   iconBase64,
 }) => {
-  const { colorScheme } = userOpts
   const fontBreakPoint = 32
   const useSmallerFont = title.length > fontBreakPoint
 
@@ -211,7 +206,7 @@ export const defaultImage: SocialImageOptions["imageStructure"] = ({
         flexDirection: "column",
         height: "100%",
         width: "100%",
-        backgroundColor: cfg.theme.colors[colorScheme].light,
+        backgroundColor: cfg.theme.colors.light,
         padding: "2.5rem",
         fontFamily: bodyFont,
       }}
@@ -239,7 +234,7 @@ export const defaultImage: SocialImageOptions["imageStructure"] = ({
           style={{
             display: "flex",
             fontSize: 32,
-            color: cfg.theme.colors[colorScheme].gray,
+            color: cfg.theme.colors.gray,
             fontFamily: bodyFont,
           }}
         >
@@ -261,7 +256,7 @@ export const defaultImage: SocialImageOptions["imageStructure"] = ({
             fontSize: useSmallerFont ? 64 : 72,
             fontFamily: headerFont,
             fontWeight: 700,
-            color: cfg.theme.colors[colorScheme].dark,
+            color: cfg.theme.colors.dark,
             lineHeight: 1.2,
             display: "-webkit-box",
             WebkitBoxOrient: "vertical",
@@ -280,7 +275,7 @@ export const defaultImage: SocialImageOptions["imageStructure"] = ({
           display: "flex",
           flex: 1,
           fontSize: 36,
-          color: cfg.theme.colors[colorScheme].darkgray,
+          color: cfg.theme.colors.darkgray,
           lineHeight: 1.4,
         }}
       >
@@ -306,7 +301,7 @@ export const defaultImage: SocialImageOptions["imageStructure"] = ({
           justifyContent: "space-between",
           marginTop: "2rem",
           paddingTop: "2rem",
-          borderTop: `1px solid ${cfg.theme.colors[colorScheme].lightgray}`,
+          borderTop: `1px solid ${cfg.theme.colors.lightgray}`,
         }}
       >
         {/* Left side - Date and Reading Time */}
@@ -315,7 +310,7 @@ export const defaultImage: SocialImageOptions["imageStructure"] = ({
             display: "flex",
             alignItems: "center",
             gap: "2rem",
-            color: cfg.theme.colors[colorScheme].gray,
+            color: cfg.theme.colors.gray,
             fontSize: 28,
           }}
         >
@@ -368,8 +363,8 @@ export const defaultImage: SocialImageOptions["imageStructure"] = ({
               style={{
                 display: "flex",
                 padding: "0.5rem 1rem",
-                backgroundColor: cfg.theme.colors[colorScheme].highlight,
-                color: cfg.theme.colors[colorScheme].secondary,
+                backgroundColor: cfg.theme.colors.highlight,
+                color: cfg.theme.colors.secondary,
                 borderRadius: "10px",
                 fontSize: 24,
               }}

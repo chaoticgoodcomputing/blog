@@ -25,10 +25,6 @@ export default {
       title: "Зворотні посилання",
       noBacklinksFound: "Зворотних посилань не знайдено",
     },
-    themeToggle: {
-      lightMode: "Світлий режим",
-      darkMode: "Темний режим",
-    },
     readerMode: {
       title: "Режим читання",
     },

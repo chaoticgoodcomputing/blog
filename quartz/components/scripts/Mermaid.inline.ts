@@ -305,12 +305,11 @@ async function setupMermaidDiagrams() {
     }
 
     const computedStyleMap = _getCSSVariables()
-    const darkMode = document.documentElement.getAttribute("saved-theme") === "dark"
 
     mermaid.initialize({
       startOnLoad: false,
       securityLevel: "loose",
-      theme: darkMode ? "dark" : "base",
+      theme: "dark",
       themeVariables: {
         fontFamily: computedStyleMap["--codeFont"],
         primaryColor: computedStyleMap["--light"],

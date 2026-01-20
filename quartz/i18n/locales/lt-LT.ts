@@ -25,10 +25,6 @@ export default {
       title: "Atgalinės Nuorodos",
       noBacklinksFound: "Atgalinių Nuorodų Nerasta",
     },
-    themeToggle: {
-      lightMode: "Šviesus Režimas",
-      darkMode: "Tamsus Režimas",
-    },
     readerMode: {
       title: "Modalità lettore",
     },

@@ -25,10 +25,6 @@ export default {
       title: "Liên kết ngược",
       noBacklinksFound: "Không có liên kết ngược nào",
     },
-    themeToggle: {
-      lightMode: "Chế độ sáng",
-      darkMode: "Chế độ tối",
-    },
     readerMode: {
       title: "Chế độ đọc",
     },

@@ -25,10 +25,6 @@ export default {
       title: "Tilbakekoblinger",
       noBacklinksFound: "Ingen tilbakekoblinger funnet",
     },
-    themeToggle: {
-      lightMode: "Lys modus",
-      darkMode: "Mørk modus",
-    },
     readerMode: {
       title: "Læsemodus",
     },

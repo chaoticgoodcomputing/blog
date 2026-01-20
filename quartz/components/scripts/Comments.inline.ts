@@ -44,32 +44,6 @@ function _getThemeUrl(theme: string): string {
 }
 
 /**
- * Handle theme change events and update Giscus iframe
- */
-function _changeTheme(e: CustomEventMap["themechange"]) {
-  const theme = e.detail.theme
-  const iframe = document.querySelector("iframe.giscus-frame") as HTMLIFrameElement
-  if (!iframe) {
-    return
-  }
-
-  if (!iframe.contentWindow) {
-    return
-  }
-
-  iframe.contentWindow.postMessage(
-    {
-      giscus: {
-        setConfig: {
-          theme: _getThemeUrl(_getThemeName(theme)),
-        },
-      },
-    },
-    "https://giscus.app",
-  )
-}
-
-/**
  * Create and configure the Giscus script element
  */
 function _createGiscusScript(giscusContainer: GiscusElement): HTMLScriptElement {
@@ -88,11 +62,7 @@ function _createGiscusScript(giscusContainer: GiscusElement): HTMLScriptElement 
   giscusScript.setAttribute("data-reactions-enabled", giscusContainer.dataset.reactionsEnabled)
   giscusScript.setAttribute("data-input-position", giscusContainer.dataset.inputPosition)
   giscusScript.setAttribute("data-lang", giscusContainer.dataset.lang)
-
-  const theme = document.documentElement.getAttribute("saved-theme")
-  if (theme) {
-    giscusScript.setAttribute("data-theme", _getThemeUrl(_getThemeName(theme)))
-  }
+  giscusScript.setAttribute("data-theme", _getThemeUrl(_getThemeName("dark")))
 
   return giscusScript
 }
@@ -110,9 +80,6 @@ function setupComments() {
 
   const giscusScript = _createGiscusScript(giscusContainer)
   giscusContainer.appendChild(giscusScript)
-
-  document.addEventListener("themechange", _changeTheme)
-  window.addCleanup(() => document.removeEventListener("themechange", _changeTheme))
 }
 
 document.addEventListener("nav", setupComments)

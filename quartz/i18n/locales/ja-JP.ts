@@ -25,10 +25,6 @@ export default {
       title: "バックリンク",
       noBacklinksFound: "バックリンクはありません",
     },
-    themeToggle: {
-      lightMode: "ライトモード",
-      darkMode: "ダークモード",
-    },
     readerMode: {
       title: "リーダーモード",
     },

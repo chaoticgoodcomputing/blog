@@ -25,10 +25,6 @@ export default {
       title: "백링크",
       noBacklinksFound: "백링크가 없습니다.",
     },
-    themeToggle: {
-      lightMode: "라이트 모드",
-      darkMode: "다크 모드",
-    },
     readerMode: {
       title: "리더 모드",
     },

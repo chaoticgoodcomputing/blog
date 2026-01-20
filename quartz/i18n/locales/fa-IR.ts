@@ -26,10 +26,6 @@ export default {
       title: "بک‌لینک‌ها",
       noBacklinksFound: "بدون بک‌لینک",
     },
-    themeToggle: {
-      lightMode: "حالت روشن",
-      darkMode: "حالت تاریک",
-    },
     readerMode: {
       title: "حالت خواندن",
     },

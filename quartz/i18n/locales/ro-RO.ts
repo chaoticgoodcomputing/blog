@@ -25,10 +25,6 @@ export default {
       title: "Legături înapoi",
       noBacklinksFound: "Nu s-au găsit legături înapoi",
     },
-    themeToggle: {
-      lightMode: "Modul luminos",
-      darkMode: "Modul întunecat",
-    },
     readerMode: {
       title: "Modul de citire",
     },

@@ -25,10 +25,6 @@ export default {
       title: "Retroenlaces",
       noBacklinksFound: "No se han encontrado retroenlaces",
     },
-    themeToggle: {
-      lightMode: "Modo claro",
-      darkMode: "Modo oscuro",
-    },
     readerMode: {
       title: "Modo lector",
     },

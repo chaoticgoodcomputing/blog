@@ -25,10 +25,6 @@ export default {
       title: "หน้าที่กล่าวถึง",
       noBacklinksFound: "ไม่มีหน้าที่โยงมาหน้านี้",
     },
-    themeToggle: {
-      lightMode: "โหมดสว่าง",
-      darkMode: "โหมดมืด",
-    },
     readerMode: {
       title: "โหมดอ่าน",
     },

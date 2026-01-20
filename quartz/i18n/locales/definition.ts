@@ -34,10 +34,6 @@ export interface Translation {
     tagExplorer: {
       title: string
     }
-    themeToggle: {
-      lightMode: string
-      darkMode: string
-    }
     readerMode: {
       title: string
     }

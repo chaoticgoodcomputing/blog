@@ -25,10 +25,6 @@ export default {
       title: "Příchozí odkazy",
       noBacklinksFound: "Nenalezeny žádné příchozí odkazy",
     },
-    themeToggle: {
-      lightMode: "Světlý režim",
-      darkMode: "Tmavý režim",
-    },
     readerMode: {
       title: "Režim čtečky",
     },

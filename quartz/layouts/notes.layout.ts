@@ -26,7 +26,6 @@ export const notesLayout: PageLayout = {
           Component: Component.Search(),
           grow: true,
         },
-        { Component: Component.Darkmode() },
         { Component: Component.DesktopOnly(Component.ReaderMode()) },
       ],
     }),

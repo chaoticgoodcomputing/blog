@@ -25,10 +25,6 @@ export default {
       title: "Артқа сілтемелер",
       noBacklinksFound: "Артқа сілтемелер табылмады",
     },
-    themeToggle: {
-      lightMode: "Жарық режимі",
-      darkMode: "Қараңғы режим",
-    },
     readerMode: {
       title: "Оқу режимі",
     },

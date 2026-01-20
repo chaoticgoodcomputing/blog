@@ -25,10 +25,6 @@ export default {
       title: "Retroenllaç",
       noBacklinksFound: "No s'han trobat retroenllaços",
     },
-    themeToggle: {
-      lightMode: "Mode clar",
-      darkMode: "Mode fosc",
-    },
     readerMode: {
       title: "Mode lector",
     },

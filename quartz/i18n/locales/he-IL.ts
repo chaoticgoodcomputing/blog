@@ -26,10 +26,6 @@ export default {
       title: "קישורים חוזרים",
       noBacklinksFound: "לא נמצאו קישורים חוזרים",
     },
-    themeToggle: {
-      lightMode: "מצב בהיר",
-      darkMode: "מצב כהה",
-    },
     readerMode: {
       title: "מצב קריאה",
     },

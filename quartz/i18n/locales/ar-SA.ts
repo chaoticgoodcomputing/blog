@@ -26,10 +26,6 @@ export default {
       title: "وصلات العودة",
       noBacklinksFound: "لا يوجد وصلات عودة",
     },
-    themeToggle: {
-      lightMode: "الوضع النهاري",
-      darkMode: "الوضع الليلي",
-    },
     explorer: {
       title: "المستعرض",
     },

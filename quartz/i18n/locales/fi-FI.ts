@@ -25,10 +25,6 @@ export default {
       title: "Takalinkit",
       noBacklinksFound: "Takalinkkejä ei löytynyt",
     },
-    themeToggle: {
-      lightMode: "Vaalea tila",
-      darkMode: "Tumma tila",
-    },
     readerMode: {
       title: "Lukijatila",
     },

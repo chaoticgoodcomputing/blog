@@ -25,10 +25,6 @@ export default {
       title: "Обратные ссылки",
       noBacklinksFound: "Обратные ссылки отсутствуют",
     },
-    themeToggle: {
-      lightMode: "Светлый режим",
-      darkMode: "Тёмный режим",
-    },
     readerMode: {
       title: "Режим чтения",
     },

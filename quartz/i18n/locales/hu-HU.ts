@@ -25,10 +25,6 @@ export default {
       title: "Visszautalások",
       noBacklinksFound: "Nincs visszautalás",
     },
-    themeToggle: {
-      lightMode: "Világos mód",
-      darkMode: "Sötét mód",
-    },
     readerMode: {
       title: "Olvasó mód",
     },

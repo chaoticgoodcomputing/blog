@@ -25,10 +25,6 @@ export default {
       title: "Odnośniki zwrotne",
       noBacklinksFound: "Brak połączeń zwrotnych",
     },
-    themeToggle: {
-      lightMode: "Trzyb jasny",
-      darkMode: "Tryb ciemny",
-    },
     readerMode: {
       title: "Tryb czytania",
     },

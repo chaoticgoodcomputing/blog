@@ -31,10 +31,6 @@ export default {
     tagExplorer: {
       title: "Tag Explorer",
     },
-    themeToggle: {
-      lightMode: "Light mode",
-      darkMode: "Dark mode",
-    },
     readerMode: {
       title: "Reader mode",
     },
