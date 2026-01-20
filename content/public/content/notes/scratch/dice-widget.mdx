@@ -1,0 +1,28 @@
+---
+title: "Dice Roll Distribution Widget"
+date: 2026-01-19
+tags:
+  - projects/games
+  - engineering/data
+description: Discover the probability distributions of different dice roll combinations
+---
+import { ProbabilityConvolutions } from '@content/widgets/probability-convolutions'
+
+<ProbabilityConvolutions expression="adv(d20) + 3d4" title="Roll Distribution" showThreshold={true} />
+
+## Available Operations
+
+- **Basic Dice**: `dX` or `NdX` - Roll a single die or multiple dice
+  - Examples: `d20`, `2d6`, `3d8`
+- **Advantage**: `adv(expr)` - Roll with advantage (take maximum of two rolls)
+  - Examples: `adv(d20)`, `adv(2d6)`
+- **Disadvantage**: `dis(expr)` - Roll with disadvantage (take minimum of two rolls)
+  - Examples: `dis(d20)`, `dis(2d6)`
+- **Maximum**: `max(expr1, expr2, ...)` - Take the maximum value across multiple expressions
+  - Examples: `max(d6, d8)`, `max(2d6, 1d12)`
+- **Minimum**: `min(expr1, expr2, ...)` - Take the minimum value across multiple expressions
+  - Examples: `min(d6, d8)`, `min(2d6, 1d12)`
+- **Arithmetic**: `+`, `-`, `*`, `/` - Combine expressions with arithmetic operations
+  - Examples: `2d6 + 3`, `d20 - 2`, `d6 * 2`
+- **Constants**: Use plain numbers in expressions
+  - Examples: `5`, `10 + d6`
