@@ -101,7 +101,7 @@ a.internal.tag-link {
   align-items: center;
   gap: 0.5rem;
   border-radius: 18px 8px 8px 18px;
-  background-color: var(--highlight);
+  background-color: var(--lightgray);
   padding: 0.3rem 0.6rem 0.3rem 0.3rem;
   margin: 0;
   text-decoration: none;
