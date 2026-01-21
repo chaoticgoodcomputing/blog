@@ -15,7 +15,6 @@ export const indexLayout: PageLayout = {
   pageHeader: [],
   beforeBody: [
     Component.ArticleTitle(),
-    Component.ContentMeta(),
     Component.TagList(),
   ],
   left: [
