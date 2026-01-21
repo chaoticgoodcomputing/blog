@@ -139,7 +139,7 @@ function _updateTitle(html: Document, url: URL): string {
   if (title) {
     document.title = title
   } else {
-    const h1 = document.querySelector("h1")
+    const h1 = html.querySelector("h1")
     title = h1?.innerText ?? h1?.textContent ?? url.pathname
   }
   return title
@@ -178,7 +178,7 @@ function _updateHead(html: Document): Promise<void> {
 
   const resourceLoadPromises: Promise<void>[] = []
   // Add ALL elements from new page (including persisted ones that might not be in current page)
-  const elementsToAdd = html.head.querySelectorAll("link, meta, script, style")
+  const elementsToAdd = html.head.querySelectorAll("title, link, meta, script, style")
   
   elementsToAdd.forEach((el) => {
     // For script elements, create a new script tag to ensure it executes
