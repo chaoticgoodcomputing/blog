@@ -88,6 +88,12 @@ export default ((userOpts?: Partial<TagListOptions>) => {
 .section-li > .section > .tags {
   justify-content: flex-end;
 }
+
+@media (max-width: 800px) {
+  .tags {
+    justify-content: center;
+  }
+}
   
 .tags > .tag-item {
   display: inline-block;

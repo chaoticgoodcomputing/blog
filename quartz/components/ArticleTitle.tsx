@@ -14,6 +14,12 @@ ArticleTitle.css = `
 .article-title {
   margin: 2rem 0 0 0;
 }
+
+@media (max-width: 800px) {
+  .article-title {
+    text-align: center;
+  }
+}
 `
 
 export default (() => ArticleTitle) satisfies QuartzComponentConstructor

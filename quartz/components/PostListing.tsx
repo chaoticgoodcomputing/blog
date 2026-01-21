@@ -200,14 +200,9 @@ export default ((userOpts?: Partial<PostListingOptions>) => {
         return (
           <li class="section-li">
             <div class="section">
-              {opts.showDates && page.dates && (
-                <p class="meta">
-                  <Date date={getDate(cfg, page)!} locale={cfg.locale} />
-                </p>
-              )}
               <div class="desc">
                 <h3>
-                  <a href={resolveAbsolute(page.slug!)} class="internal">
+                  <a href={resolveAbsolute(page.slug!)} class="post-link">
                     {title}
                   </a>
                 </h3>
@@ -230,6 +225,11 @@ export default ((userOpts?: Partial<PostListingOptions>) => {
                 )}
                 {opts.showDescriptions && description && (
                   <p class="post-description">
+                    {opts.showDates && page.dates && (
+                      <>
+                        <Date date={getDate(cfg, page)!} locale={cfg.locale} /> —{" "}
+                      </>
+                    )}
                     {description}
                     {readingTimeText && ` (${readingTimeText})`}
                   </p>

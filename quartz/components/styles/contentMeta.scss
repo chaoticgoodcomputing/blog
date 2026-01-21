@@ -1,14 +1,22 @@
+@use "../../styles/variables.scss" as *;
+
 .content-meta {
   margin-top: 0;
   color: var(--darkgray);
 
   &[show-comma="true"] {
-    > *:not(:last-child) {
+    >*:not(:last-child) {
       margin-right: 8px;
 
       &::after {
         content: ",";
       }
     }
+  }
+}
+
+@media all and ($mobile) {
+  .content-meta {
+    text-align: center;
   }
 }

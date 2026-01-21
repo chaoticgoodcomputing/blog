@@ -4,6 +4,10 @@ import { resolveAbsolute, simplifySlug } from "../util/path"
 import { i18n } from "../i18n"
 import { classNames } from "../util/lang"
 import OverflowListFactory from "./OverflowList"
+import { concatenateResources } from "../util/resources"
+
+// @ts-ignore
+import script from "./scripts/Backlinks.inline"
 
 interface BacklinksOptions {
   hideWhenEmpty: boolean
@@ -24,7 +28,24 @@ export default ((opts?: Partial<BacklinksOptions>) => {
     cfg,
   }: QuartzComponentProps) => {
     const slug = simplifySlug(fileData.slug!)
-    const backlinkFiles = allFiles.filter((file) => file.links?.includes(slug))
+    let backlinkFiles = allFiles.filter((file) => file.links?.includes(slug))
+
+    // Sort: public posts first, then by date descending
+    backlinkFiles = backlinkFiles.sort((a, b) => {
+      const aIsPrivate = a.frontmatter?.tags?.includes("private") ?? false
+      const bIsPrivate = b.frontmatter?.tags?.includes("private") ?? false
+
+      // Sort by public/private status first
+      if (aIsPrivate !== bIsPrivate) {
+        return aIsPrivate ? 1 : -1  // Public first
+      }
+
+      // Then sort by date descending
+      const aDate = a.dates?.modified ?? a.dates?.published ?? new Date(0)
+      const bDate = b.dates?.modified ?? b.dates?.published ?? new Date(0)
+      return bDate.getTime() - aDate.getTime()
+    })
+
     if (options.hideWhenEmpty && backlinkFiles.length == 0) {
       return null
     }
@@ -33,13 +54,20 @@ export default ((opts?: Partial<BacklinksOptions>) => {
         <h3>{i18n(cfg.locale).components.backlinks.title}</h3>
         <OverflowList>
           {backlinkFiles.length > 0 ? (
-            backlinkFiles.map((f) => (
-              <li>
-                <a href={resolveAbsolute(f.slug!)} class="internal">
-                  {f.frontmatter?.title}
-                </a>
-              </li>
-            ))
+            backlinkFiles.map((f) => {
+              const isPrivate = f.frontmatter?.tags?.includes("private") ?? false
+              return (
+                <li>
+                  <a
+                    href={resolveAbsolute(f.slug!)}
+                    class={classNames("file-link", isPrivate && "private")}
+                  >
+                    <span class="file-icon"></span>
+                    <span class="file-title">{f.frontmatter?.title}</span>
+                  </a>
+                </li>
+              )
+            })
           ) : (
             <li>{i18n(cfg.locale).components.backlinks.noBacklinksFound}</li>
           )}
@@ -49,7 +77,7 @@ export default ((opts?: Partial<BacklinksOptions>) => {
   }
 
   Backlinks.css = style
-  Backlinks.afterDOMLoaded = overflowListAfterDOMLoaded
+  Backlinks.afterDOMLoaded = concatenateResources(script, overflowListAfterDOMLoaded)
 
   return Backlinks
 }) satisfies QuartzComponentConstructor

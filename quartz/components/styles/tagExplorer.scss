@@ -178,3 +178,35 @@ li:has(> .tag-outer:not(.open))>.tag-container>.tag-fold-icon {
 .tag-fold-icon:hover {
   color: var(--tertiary);
 }
+
+.file-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 2px;
+  flex-shrink: 0;
+  min-width: 16px;
+  height: 1.5rem;
+
+  // Default bullet for public posts (when empty)
+  &:empty::before {
+    content: "•";
+    color: var(--gray);
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  // Override inline margin on SVG and ensure proper sizing
+  & svg {
+    margin-right: 0 !important;
+    width: 12px;
+    height: 12px;
+    display: block;
+  }
+}
+
+li>a.file-link {
+  display: flex;
+  align-items: flex-start;
+  text-indent: 0;
+}

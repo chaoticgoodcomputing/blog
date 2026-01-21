@@ -5,6 +5,15 @@
     font-size: 1.5rem;
     margin: 1.5rem 0 0.25rem 0;
   }
+
+  & .section-ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  & .section-li {
+    margin-bottom: 2rem;
+  }
 }
 
 .section {
@@ -14,7 +23,7 @@
   }
 
   & .post-description {
-    margin: 0.5rem 0 0 0;
+    margin: 0.75rem 0 0 0;
     color: var(--gray);
     font-size: 0.95em;
     line-height: 1.5;

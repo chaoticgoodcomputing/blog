@@ -89,6 +89,8 @@ const config: QuartzConfig = {
         { tag: "horticulture/seasons/rhythm", icon: "mdi:music-note" },
         { tag: "horticulture/seasons/systems", icon: "mdi:connection" },
 
+        { tag: "horticulture/health", icon: "mdi:heart" },
+
         // Dayjob
         { tag: "projects/dayjob", icon: "mdi:vote" },
 
