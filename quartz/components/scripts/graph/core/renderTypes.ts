@@ -8,6 +8,7 @@ export type GraphicsInfo = {
 
 export type LinkRenderData = GraphicsInfo & {
   simulationData: LinkData
+  lineStyle?: 'solid' | 'dotted'
 }
 
 export type LabelData = {

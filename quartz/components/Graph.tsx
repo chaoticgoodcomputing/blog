@@ -49,6 +49,16 @@ export interface D3Config {
     baseY?: number         // Base y-anchor position (default: 1.2)
     scaleFactor?: number   // How much node size affects label position (default: 0.05)
   }
+  nodeColors?: {
+    public?: string      // Color for public nodes (default: uses CSS --secondary)
+    private?: string     // Color for private nodes (nodes with #private tag)
+  }
+  linkStyle?: {
+    tagTag?: 'solid' | 'dotted'      // Line style for tag-tag connections (default: 'solid')
+    tagPost?: 'solid' | 'dotted'     // Line style for tag-post connections (default: 'solid')
+    postPost?: 'solid' | 'dotted'    // Line style for post-post connections (default: 'dotted')
+  }
+  privatePostSizeMultiplier?: number  // Size multiplier for private posts (default: 1, e.g., 0.5 for half size)
 }
 
 interface GraphOptions {
@@ -98,6 +108,16 @@ const defaultOptions: GraphOptions = {
       baseY: 1.2,
       scaleFactor: 0.05,
     },
+    nodeColors: {
+      public: undefined,   // Uses CSS --secondary by default
+      private: undefined,  // Will be computed if not specified
+    },
+    linkStyle: {
+      tagTag: 'solid',
+      tagPost: 'solid',
+      postPost: 'dotted',
+    },
+    privatePostSizeMultiplier: 1,
   },
   globalGraph: {
     drag: true,
@@ -140,6 +160,16 @@ const defaultOptions: GraphOptions = {
       baseY: 1.2,
       scaleFactor: 0.05,
     },
+    nodeColors: {
+      public: undefined,   // Uses CSS --secondary by default
+      private: undefined,  // Will be computed if not specified
+    },
+    linkStyle: {
+      tagTag: 'solid',
+      tagPost: 'solid',
+      postPost: 'dotted',
+    },
+    privatePostSizeMultiplier: 1,
   },
 }
 

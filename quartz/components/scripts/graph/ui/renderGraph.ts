@@ -68,6 +68,9 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     baseSize,
     sizeScaling,
     labelAnchor,
+    nodeColors,
+    linkStyle,
+    privatePostSizeMultiplier,
   } = parseGraphConfig(graph)
 
   // Normalize configuration
@@ -92,7 +95,13 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   // Setup dimensions and simulation
   const width = graph.offsetWidth
   const height = Math.max(graph.offsetHeight, 250)
-  const nodeRadius = createNodeRadiusFunction(graphData, baseSizeConfig, sizeScalingConfig, tagFileCountMap)
+  const nodeRadius = createNodeRadiusFunction(
+    graphData,
+    baseSizeConfig,
+    sizeScalingConfig,
+    tagFileCountMap,
+    privatePostSizeMultiplier ?? 1,
+  )
   const simulation = setupSimulation(
     graphData,
     nodeRadius,
@@ -153,8 +162,8 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
         slug,
         labelAnchorConfig,
         tagIndex,
+        nodeColorsConfig: nodeColors,
       },
-      hoverState,
       hoverState,
       linkRenderData,
       nodeRenderData,
@@ -165,7 +174,7 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
 
   // Create all links
   for (const l of graphData.links) {
-    const linkRenderDatum = createLink(l, computedStyleMap)
+    const linkRenderDatum = createLink(l, computedStyleMap, linkStyle)
     linkRenderData.push(linkRenderDatum)
   }
 

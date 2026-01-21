@@ -11,24 +11,15 @@ export function renderLinks(
   styleMap: Record<string, string>,
 ) {
   tweenManager.get("link")?.stop()
-  const tweenGroup = new TweenGroup()
 
   for (const l of linkRenderData) {
     let alpha = 1
     if (hoveredNodeId) {
-      alpha = l.active ? 1 : 0.2
+      alpha = l.active ? 1 : 0
     }
     l.color = l.active ? styleMap["--gray"] : styleMap["--lightgray"]
-    tweenGroup.add(new Tweened<LinkRenderData>(l).to({ alpha }, 200))
+    l.alpha = alpha  // Directly set alpha without tweening
   }
-
-  tweenGroup.getAll().forEach((tw) => tw.start())
-  tweenManager.set("link", {
-    update: tweenGroup.update.bind(tweenGroup),
-    stop() {
-      tweenGroup.getAll().forEach((tw) => tw.stop())
-    },
-  })
 }
 
 export function renderLabels(
@@ -44,8 +35,14 @@ export function renderLabels(
   const activeScale = defaultScale * 1.1
   for (const n of nodeRenderData) {
     const nodeId = n.simulationData.id
+    const isPrivate = n.simulationData.tags.includes("private")
+    
     if (hoveredNodeId === nodeId) {
       tweenGroup.add(new Tweened<LabelData>(n.label).to({ alpha: 1, scale: activeScale }, 100))
+    } else if (hoveredNodeId !== null) {
+      // When a node is hovered, only show labels for active public nodes
+      const targetAlpha = n.active && !isPrivate ? 1 : 0
+      tweenGroup.add(new Tweened<LabelData>(n.label).to({ alpha: targetAlpha, scale: defaultScale }, 100))
     } else {
       // Reset to initial alpha when not hovered
       tweenGroup.add(new Tweened<LabelData>(n.label).to({ alpha: n.label.initialAlpha, scale: defaultScale }, 100))
@@ -169,6 +166,14 @@ function drawLink(
   ctx.globalAlpha = finalAlpha
   ctx.strokeStyle = link.color
   ctx.lineWidth = 1
+  
+  // Apply line dash for dotted style
+  if (link.lineStyle === 'dotted') {
+    ctx.setLineDash([1, 2])  // 1px dot, 2px gap
+  } else {
+    ctx.setLineDash([])  // Solid line (clear any dash pattern)
+  }
+  
   ctx.beginPath()
   ctx.moveTo(sx, sy)
   ctx.lineTo(tx, ty)
@@ -232,13 +237,20 @@ export function startAnimationLoop(
             ? edgeOpacityConfig.tagPost
             : edgeOpacityConfig.postPost
 
-      const baseOpacity = calculateEdgeOpacity(
-        distance,
-        targetDistance,
-        opacityConfig.min,
-        opacityConfig.max,
-      )
-      const finalAlpha = baseOpacity * l.alpha
+      // For active links (connected to hovered node), use full opacity
+      // Otherwise, apply distance-based opacity calculation
+      let finalAlpha: number
+      if (l.active && l.alpha === 1) {
+        finalAlpha = 1
+      } else {
+        const baseOpacity = calculateEdgeOpacity(
+          distance,
+          targetDistance,
+          opacityConfig.min,
+          opacityConfig.max,
+        )
+        finalAlpha = baseOpacity * l.alpha
+      }
 
       drawLink(ctx, l, sx, sy, tx, ty, finalAlpha)
     }

@@ -5,8 +5,8 @@ const RED = "#FF0000"
 const ORANGE = "#de8200"
 const YELLOW = "#FFD637"
 const GREEN = "#00FF00"
-const BLUE = "#0055ffff"
-const BLUESTEEL = "#4682B4"
+const BLUE = "#008CFF"
+const PINK = "#FF69B4"
 
 /**
  * Quartz 4 Configuration
@@ -28,12 +28,12 @@ const config: QuartzConfig = {
     tags: {
       colors: [
         // Top-level categories
-        { tag: "horticulture", color: GREEN },
-        { tag: "engineering", color: RED },
+        { tag: "horticulture", color: PINK },
+        { tag: "engineering", color: GREEN },
         { tag: "economics", color: ORANGE },
         { tag: "projects", color: BLUE },
         { tag: "writing", color: YELLOW },
-        { tag: "private", color: BLUESTEEL },
+        { tag: "private", color: RED },
       ],
       icons: [
         

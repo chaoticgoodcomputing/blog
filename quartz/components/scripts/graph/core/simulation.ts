@@ -15,6 +15,7 @@ export function createNodeRadiusFunction(
   baseSize: { tags: number; posts: number },
   sizeScaling: { tags: number; posts: number },
   tagFileCountMap: Map<SimpleSlug, number>,
+  privatePostSizeMultiplier: number = 1,
 ) {
   return (d: NodeData): number => {
     const base = d.id.startsWith("tags/") ? baseSize.tags : baseSize.posts
@@ -27,7 +28,11 @@ export function createNodeRadiusFunction(
 
     const numLinks = graphData.links.filter((l) => l.source.id === d.id || l.target.id === d.id)
       .length
-    return base + scaling * Math.sqrt(numLinks)
+    const radius = base + scaling * Math.sqrt(numLinks)
+    
+    // Apply private post size multiplier if node has #private tag
+    const isPrivate = d.tags.includes("private")
+    return isPrivate ? radius * privatePostSizeMultiplier : radius
   }
 }
 

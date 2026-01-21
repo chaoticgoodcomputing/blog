@@ -105,17 +105,8 @@ export function setupZoomBehavior(
         transform.x = t.x
         transform.y = t.y
         transform.k = t.k
-
-        const scale = t.k * opacityScale
-        const scaleOpacity = Math.max((scale - 1) / 3.75, 0)
-
-        for (const node of nodeRenderData) {
-          if (!node.active) {
-            const isTagNode = node.simulationData.id.startsWith("tags/")
-            const isCurrentPage = node.simulationData.id === currentPageSlug
-            node.label.alpha = isTagNode || isCurrentPage ? 1 : scaleOpacity
-          }
-        }
+        
+        // Removed opacity scaling based on zoom level
       }),
   )
 }

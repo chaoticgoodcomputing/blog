@@ -18,6 +18,7 @@ export type NodeCreationParams = {
   slug: SimpleSlug
   labelAnchorConfig: { baseY: number; scaleFactor: number }
   tagIndex: TagIndex
+  nodeColorsConfig?: { public?: string; private?: string }
 }
 
 export type NodeCreationResult = {
@@ -42,11 +43,15 @@ export async function createNode(
     slug,
     labelAnchorConfig,
     tagIndex,
+    nodeColorsConfig,
   } = params
 
   const nodeId = n.id
   const isTagNode = nodeId.startsWith("tags/")
   const isCurrentPage = nodeId === slug
+
+  // Check if node has #private tag
+  const isPrivate = n.tags.includes("private")
 
   const initialOpacity =
     isTagNode || isCurrentPage ? 1 : Math.max((scale * opacityScale - 1) / 3.75, 0)
@@ -68,7 +73,17 @@ export async function createNode(
   }
 
   let oldLabelOpacity = initialOpacity
-  const nodeColor = color(n)
+  
+  // Determine node color based on privacy status
+  let nodeColor: string
+  if (isPrivate && nodeColorsConfig?.private) {
+    nodeColor = nodeColorsConfig.private
+  } else if (!isPrivate && nodeColorsConfig?.public) {
+    nodeColor = nodeColorsConfig.public
+  } else {
+    nodeColor = color(n)
+  }
+  
   const fillColor = isTagNode ? computedStyleMap["--gray"] : nodeColor
 
   const nodeRenderDatum: NodeRenderData = {
@@ -114,12 +129,31 @@ export async function createNode(
 export function createLink(
   linkData: any,
   computedStyleMap: Record<string, string>,
+  linkStyleConfig?: {
+    tagTag?: 'solid' | 'dotted'
+    tagPost?: 'solid' | 'dotted'
+    postPost?: 'solid' | 'dotted'
+  },
 ): LinkRenderData {
+  // Determine line style based on link type
+  let lineStyle: 'solid' | 'dotted' = 'solid'
+  if (linkStyleConfig) {
+    const linkType = linkData.type
+    if (linkType === 'tag-tag' && linkStyleConfig.tagTag) {
+      lineStyle = linkStyleConfig.tagTag
+    } else if (linkType === 'tag-post' && linkStyleConfig.tagPost) {
+      lineStyle = linkStyleConfig.tagPost
+    } else if (linkType === 'post-post' && linkStyleConfig.postPost) {
+      lineStyle = linkStyleConfig.postPost
+    }
+  }
+
   const linkRenderDatum: LinkRenderData = {
     simulationData: linkData,
     color: computedStyleMap["--lightgray"],
     alpha: 1,
     active: false,
+    lineStyle,
   }
 
   return linkRenderDatum
