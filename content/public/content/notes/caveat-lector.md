@@ -5,7 +5,7 @@ description: |
   A disclaimer on digital gardening, dead pixels, and the fear of terminal online-ness.
 date: 2024-02-27
 tags:
-  - horticulture
+  - horticulture/seasons/rhythm
 ---
 The past few days have been a weird experience as I actively try to lower the internal bar for what I feel comfortable putting out into the world. As a proud member of the most terminally online generation to ever live, **I have a deep and relentless fear of being wrong on the Internet.**
 

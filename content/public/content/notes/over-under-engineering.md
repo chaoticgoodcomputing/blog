@@ -5,8 +5,8 @@ description: |
   Over-engineering: it's easier to be bad at something on accident than on purpose.
 date: 2024-02-25
 tags:
-  - horticulture
   - engineering
+  - horticulture/seasons/rhythm
 ---
 
 I think that over-engineering is the single greatest contributor to starting projects and never finishing them.

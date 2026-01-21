@@ -5,7 +5,6 @@ description: |
   Automate SelfControl and self control: take your laptop back.
 date: 2024-02-28
 tags:
-  - horticulture
   - engineering/languages/typescript
   - horticulture/seasons/rhythm
 ---

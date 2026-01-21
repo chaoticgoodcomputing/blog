@@ -4,7 +4,7 @@ date: "2026-01-14T00:00:00.000Z"
 tags:
   - "horticulture/seasons/systems"
   - "engineering/languages/typescript"
-  - "horticulture"
+  - "engineering/frontend"
   - "private"
 ---
 

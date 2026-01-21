@@ -192,7 +192,17 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
 
   // Setup interactions
   if (enableDrag) {
-    setupDragBehavior(app.canvas, graphData, hoverState, simulation, transform, renderAll)
+    setupDragBehavior(
+      app.canvas,
+      graphData,
+      hoverState,
+      simulation,
+      transform,
+      renderAll,
+      width,
+      height,
+      nodeRenderData,
+    )
   } else {
     setupClickBehavior(app.canvas, nodeRenderData, width, height, transform)
   }

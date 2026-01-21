@@ -11,11 +11,48 @@ export function setupDragBehavior(
   simulation: Simulation<NodeData, LinkData>,
   transform: { x: number; y: number; k: number },
   renderAll: () => void,
+  width: number,
+  height: number,
+  nodeRenderData: NodeRenderData[],
 ) {
+  // Helper function to find node at coordinates
+  const findNodeAtPoint = (x: number, y: number): NodeData | undefined => {
+    // Transform coordinates to graph space
+    const graphX = (x - transform.x) / transform.k
+    const graphY = (y - transform.y) / transform.k
+    
+    for (const node of nodeRenderData) {
+      const nodeX = node.simulationData.x! + width / 2
+      const nodeY = node.simulationData.y! + height / 2
+      const dx = graphX - nodeX
+      const dy = graphY - nodeY
+      const distance = Math.sqrt(dx * dx + dy * dy)
+      
+      if (distance < node.radius) {
+        return node.simulationData
+      }
+    }
+    return undefined
+  }
+
   select<HTMLCanvasElement, NodeData | undefined>(canvas).call(
     drag<HTMLCanvasElement, NodeData | undefined>()
       .container(() => canvas)
-      .subject(() => graphData.nodes.find((n) => n.id === hoverState.hoveredNodeId))
+      .subject(function(event) {
+        // For touch events or when hoveredNodeId is not set, find node at event position
+        const rect = canvas.getBoundingClientRect()
+        const clientX = event.sourceEvent.clientX || event.sourceEvent.touches?.[0]?.clientX
+        const clientY = event.sourceEvent.clientY || event.sourceEvent.touches?.[0]?.clientY
+        
+        if (clientX !== undefined && clientY !== undefined) {
+          const x = clientX - rect.left
+          const y = clientY - rect.top
+          return findNodeAtPoint(x, y)
+        }
+        
+        // Fallback to hover state
+        return graphData.nodes.find((n) => n.id === hoverState.hoveredNodeId)
+      })
       .on("start", function dragstarted(event) {
         if (!event.active) simulation.alphaTarget(1).restart()
         event.subject.fx = event.subject.x

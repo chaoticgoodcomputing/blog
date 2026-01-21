@@ -5,7 +5,7 @@ import { D3Config } from "../../components/Graph"
  * These can be overridden in individual layouts as needed.
  */
 export const defaultGraphOptions: Partial<D3Config> = {
-  scale: 0.5,
+  scale: 0.6,
   linkStrength: {
     tagTag: 0.5,
     tagPost: 0.20,
@@ -13,22 +13,22 @@ export const defaultGraphOptions: Partial<D3Config> = {
   },
   edgeOpacity: {
     tagTag: { min: 0.9, max: 0.9 },
-    tagPost: { min: 0.0, max: 0.9 },
-    postPost: { min: 0.0, max: 0.9 },
+    tagPost: { min: 0.1, max: 0.9 },
+    postPost: { min: 0.1, max: 0.9 },
   },
   repelForce: 2.5,
   centerForce: 0.25,
   linkDistance: {
-    tagTag: 50,
-    tagPost: 75,
-    postPost: 100,
+    tagTag: 60,
+    tagPost: 80,
+    postPost: 110,
   },
   baseSize: {
-    tags: 10,
+    tags: 15,
     posts: 10,
   },
   sizeScaling: {
-    tags: 2,
+    tags: 1.5,
     posts: 1,
   },
   labelAnchor: {
@@ -53,14 +53,29 @@ export const defaultGraphOptions: Partial<D3Config> = {
  */
 export const defaultLocalGraphOptions: Partial<D3Config> = {
   ...defaultGraphOptions,
-  scale: 0.5,
+  scale: 0.8,
   linkDistance: {
-    tagTag: 25,
-    tagPost: 25,
-    postPost: 25,
+    tagTag: 40,
+    tagPost: 40,
+    postPost: 40,
   },
+  linkStrength: {
+    tagTag: 0.3,
+    tagPost: 0.3,
+    postPost: 0.3,
+  },
+  repelForce: 1,
   sizeScaling: {
     tags: 1,
     posts: 1,
+  },
+  baseSize: {
+    tags: 5,
+    posts: 5,
+  },
+  edgeOpacity: {
+    tagTag: { min: 1, max: 1 },
+    tagPost: { min: 1, max: 1 },
+    postPost: { min: 1, max: 1 },
   },
 }

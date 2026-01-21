@@ -7,6 +7,7 @@ const YELLOW = "#FFD637"
 const GREEN = "#00FF00"
 const BLUE = "#008CFF"
 const PINK = "#FF69B4"
+const VIOLET = "#8A2BE2"
 
 /**
  * Quartz 4 Configuration
@@ -32,7 +33,7 @@ const config: QuartzConfig = {
         { tag: "engineering", color: GREEN },
         { tag: "economics", color: ORANGE },
         { tag: "projects", color: BLUE },
-        { tag: "writing", color: YELLOW },
+        { tag: "writing", color: VIOLET },
         { tag: "private", color: RED },
       ],
       icons: [

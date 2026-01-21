@@ -6,7 +6,7 @@ description: |
 date: 2024-03-05
 tags:
   - engineering
-  - horticulture
+  - horticulture/seasons/rhythm
 ---
 
 ## Opinionated Software
