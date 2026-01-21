@@ -62,6 +62,24 @@ tags:
 
 Today:
 
+### Thoughts
+
+- 
+
+### Tasks
+
+Tasks for the day:
+
+#### Leftovers
+
+```dataview
+TASK
+WHERE !completed
+  AND file.day = date("<% previousBasename %>")
+```
+
+#### Fresh
+
 - 
 
 ## In Review
