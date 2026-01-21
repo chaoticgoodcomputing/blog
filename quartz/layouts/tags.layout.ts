@@ -32,14 +32,14 @@ export const tagsLayout: PageLayout = {
     }),
   ],
   right: [
-    Component.Graph({
-      localGraph: defaultLocalGraphOptions,
-      globalGraph: defaultGraphOptions,
-    }),
     Component.Backlinks()
   ],
   body: [
     Component.Content(),
+    Component.Graph({
+      localGraph: defaultLocalGraphOptions,
+      globalGraph: defaultGraphOptions,
+    }),
     Component.PostListing({
       excludeTags: ["private"],
       filterToCurrentTag: true,

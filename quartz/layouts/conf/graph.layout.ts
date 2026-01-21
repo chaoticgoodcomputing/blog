@@ -53,11 +53,11 @@ export const defaultGraphOptions: Partial<D3Config> = {
  */
 export const defaultLocalGraphOptions: Partial<D3Config> = {
   ...defaultGraphOptions,
-  scale: 0.8,
+  scale: 0.75,
   linkDistance: {
-    tagTag: 40,
-    tagPost: 40,
-    postPost: 40,
+    tagTag: 50,
+    tagPost: 50,
+    postPost: 50,
   },
   linkStrength: {
     tagTag: 0.3,
@@ -66,12 +66,12 @@ export const defaultLocalGraphOptions: Partial<D3Config> = {
   },
   repelForce: 1,
   sizeScaling: {
-    tags: 1,
+    tags: 0.5,
     posts: 1,
   },
   baseSize: {
-    tags: 5,
-    posts: 5,
+    tags: 10,
+    posts: 10,
   },
   edgeOpacity: {
     tagTag: { min: 1, max: 1 },
