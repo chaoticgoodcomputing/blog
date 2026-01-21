@@ -29,18 +29,15 @@ I don't think I'd recommend Terraform LocalStack at the moment:
 ### [Demo Section](https://youtu.be/DDa1PcHRQ4I?si=ZKzMLKGAfttcp94n&t=419)
 
 - SPIKE Reference: HashiCorp Deploy
-    - TODO
 - Demo for a lambda reading into an S3 bucket
 - Application for AFT would need to be in multiple steps — particularly, global customizations into account customizations
     - Environment would need to preemptively load an additional layer for the account request resources, but this should be trivial - would need to be starter account system variables in [TODO: SERVICE NAME]
 - Goes over the particulars of the infrastructure they're attempting to deploy - should be arbitrary, but we'd want to set up a specific test account for our purposes. `sandbox` is comin' back, baybeeeeee
 - SPIKE Reference: LocalStack Docs
-    - TODO
     - Localstack extensions (labelled alternatives in the docs)
         - This seems to reference a docker compose system, which makes sense, since AWS is made of a bajillion different services. This might be the approach, as we realistically only need the 6-7 services that we tend to use (+ dependencies for those services)
 - **DOCKER COMPOSE**
     - Debug level to see output - requires passthrough of docker socket and a localstack local volume
-    - TODO: Mermaid graph of interaction between local terraform instance, LocalStack docker stack, actual AWS account
     - NOTE: The concern I'd have is the frequency at which AWS updates and cadence at which LocalStack would update alongside it. I would have concerns about having tests passing here as a hard requirement for merging in a PR.
         - That said, this would still be invaluable as both a local development tool *and* a canary-in-the-coalmine with incoming deployments.
         - SPIKE: Broadcasting non-blocking warning outputs in GitHub Actions
