@@ -9,7 +9,7 @@ tags:
 ---
 ## GPTinglish
 
-> *GPTing·lish*, *noun* (derogatory)
+> *G·P·ting·lish*, *noun* (derogatory)
 >
 > - The default writing style of generative AI text models. (derogatory)
 > - Shorthand for a median style of writing, devoid of personality. (derogatory)

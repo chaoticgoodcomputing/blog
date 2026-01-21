@@ -38,7 +38,8 @@ export const tagsLayout: PageLayout = {
     }),
     Component.Backlinks()
   ],
-  afterBody: [
+  body: [
+    Component.Content(),
     Component.PostListing({
       excludeTags: ["private"],
       filterToCurrentTag: true,
@@ -46,5 +47,5 @@ export const tagsLayout: PageLayout = {
       collapsedItemCount: 5,
       showEmptyMessage: true,
     }),
-  ],
+  ]
 }

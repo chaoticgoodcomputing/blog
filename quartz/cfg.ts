@@ -179,16 +179,14 @@ export interface FullPageLayout {
   head: QuartzComponent
   header: QuartzComponent[]
   beforeBody: QuartzComponent[]
-  pageBody: QuartzComponent
-  afterBody: QuartzComponent[]
   left: QuartzComponent[]
   right: QuartzComponent[]
   footer: QuartzComponent
+  body?: QuartzComponent[]
 }
 
 export type PageLayout = Pick<FullPageLayout, "beforeBody" | "left" | "right"> & {
   body?: QuartzComponent[]
   pageHeader?: QuartzComponent[]
-  afterBody?: QuartzComponent[]
 }
-export type SharedLayout = Pick<FullPageLayout, "head" | "header" | "footer" | "afterBody">
+export type SharedLayout = Pick<FullPageLayout, "head" | "header" | "footer">

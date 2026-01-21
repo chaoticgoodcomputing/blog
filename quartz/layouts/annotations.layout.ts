@@ -20,13 +20,11 @@ export const annotationsLayout: PageLayout = {
   ],
   body: [
     Component.AnnotationViewer(),
-  ],
-  afterBody: [
     Component.Graph({
       localGraph: defaultLocalGraphOptions,
       globalGraph: defaultGraphOptions,
     }),
-    Component.Backlinks()
+    Component.Backlinks(),
   ],
   left: [],
   right: [],

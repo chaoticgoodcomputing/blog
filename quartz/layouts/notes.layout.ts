@@ -14,9 +14,7 @@ export const notesLayout: PageLayout = {
   ],
   body: [
     Component.Content(),
-  ],
-  afterBody: [
-    Component.ShowPageSource()
+    Component.ShowPageSource(),
   ],
   left: [
     Component.PageTitle(),

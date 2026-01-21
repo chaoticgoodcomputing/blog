@@ -1,6 +1,6 @@
 import { PageLayout } from "../cfg"
 import * as Component from "../components"
-import { defaultGraphOptions, defaultLocalGraphOptions } from "./conf/graph.layout"
+import { defaultGraphOptions } from "./conf/graph.layout"
 
 /**
  * Layout configuration for the 404 error page.
@@ -43,6 +43,4 @@ export const notFoundLayout: PageLayout = {
     }),
   ],
   right: [],
-  afterBody: [
-  ],
 }

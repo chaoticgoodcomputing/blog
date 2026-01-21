@@ -40,10 +40,10 @@ export const indexLayout: PageLayout = {
   ],
   body: [
     Component.Content(),
-    // Component.FullGraph({
-    //   globalGraph: defaultGraphOptions,
-    //   height: "500px", // Adjust this value to change graph height
-    // }),
+    Component.Graph({
+      localGraph: defaultLocalGraphOptions,
+      globalGraph: defaultGraphOptions,
+    }),
     Component.PostListing({
       excludeTags: ["private"],
       collapsedItemCount: 5,
@@ -51,12 +51,6 @@ export const indexLayout: PageLayout = {
     }),
   ],
   right: [
-    Component.Graph({
-      localGraph: defaultLocalGraphOptions,
-      globalGraph: defaultGraphOptions,
-    }),
     Component.DesktopOnly(Component.TableOfContents()),
-  ],
-  afterBody: [
   ],
 }

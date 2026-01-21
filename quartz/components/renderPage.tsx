@@ -17,11 +17,11 @@ interface RenderComponents {
   head: QuartzComponent
   header: QuartzComponent[]
   beforeBody: QuartzComponent[]
-  pageBody: QuartzComponent
-  afterBody: QuartzComponent[]
   left: QuartzComponent[]
   right: QuartzComponent[]
   footer: QuartzComponent
+  body?: QuartzComponent[]
+  pageHeader?: QuartzComponent[]
 }
 
 const headerRegex = new RegExp(/h[1-6]/)
@@ -261,8 +261,6 @@ export function renderPage(
     head: Head,
     header,
     beforeBody,
-    pageBody: Content,
-    afterBody,
     left,
     right,
     footer: Footer,
@@ -335,16 +333,10 @@ export function renderPage(
                   ))}
                 </div>
               </div>
-              {Content && <Content {...componentData} />}
               {bodyComponents.map((BodyComponent) => (
                 <BodyComponent {...componentData} />
               ))}
-              {(Content || bodyComponents.length > 0) && <hr />}
-              <div class="page-footer">
-                {afterBody.map((BodyComponent) => (
-                  <BodyComponent {...componentData} />
-                ))}
-              </div>
+              {bodyComponents.length > 0 && <hr />}
             </div>
             {RightComponent}
             <Footer {...componentData} />

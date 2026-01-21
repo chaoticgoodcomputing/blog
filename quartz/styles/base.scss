@@ -257,7 +257,7 @@ a {
      * 
      * Hierarchy:
      * - Sidebars (left/right): h3 at 1rem - compact, secondary navigation/metadata
-     * - Page footer (afterBody): h3 at 1rem - consistent with sidebar styling
+     * - Page header (beforeBody): h3 at 1rem - consistent with sidebar styling
      * - Main content (.center): Uses natural h1-h6 hierarchy (defined globally below)
      * 
      * Components should use semantic HTML heading levels (h2, h3, etc.) without
@@ -273,8 +273,7 @@ a {
       }
     }
 
-    & .page-header,
-    & .page-footer {
+    & .page-header {
       margin-top: 1rem;
 
       // Ensure components stack vertically, never side-by-side
@@ -282,7 +281,7 @@ a {
       flex-direction: column;
       gap: 1.2rem;
 
-      // Page-footer component headers: match sidebar styling for consistency
+      // Page-header component headers: match sidebar styling for consistency
       h3 {
         font-size: 1rem;
         margin: 0.75rem 0 0.25rem 0;
@@ -382,9 +381,8 @@ body.full-width .page {
     & .center {
       max-width: none;
 
-      // Keep beforeBody and afterBody sections at normal width, centered
-      & .page-header,
-      & .page-footer {
+      // Keep beforeBody section at normal width, centered
+      & .page-header {
         max-width: 850px;
         margin-left: auto;
         margin-right: auto;
