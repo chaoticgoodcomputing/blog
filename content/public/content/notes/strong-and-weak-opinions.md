@@ -58,7 +58,7 @@ That said, having a strong opinion *also* doesn't necessarily mean it's somethin
 
 Even if my case for one of my strong opinions fails to reach a consensus — or even convince *anybody*, which does happen (sometimes a lot) (most of the time) — that isn't failure. Ultimately, as I've gotten further into my career and seen a broader range of opinions reach a broader range of success or shortcoming, my approach has ultimately fallen back to:
 
-**[[content/notes/scratch/the-best-side-of-the-road|The best side of the road to drive on is the side everybody else has agreed to drive on.]]**
+**The best side of the road to drive on is the side everybody else has agreed to drive on.**
 
 No matter how strongly you might feel one way or another, never underestimate the power of consensus. Either way, the outcome of accepting consensus is positive:
 

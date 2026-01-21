@@ -72,12 +72,21 @@ Tasks for the day:
 
 #### Leftovers
 
+---
 ```dataview
 TASK
-WHERE !completed
-  AND file.day = date("<% previousBasename %>")
+WHERE contains(path, "private/")
+  AND (
+    (!completed AND file.day < date("<% tp.date.now("YYYY-MM-DD") %>"))
+    OR (completed 
+        AND typeof(created) = "date" 
+        AND created < date("<% tp.date.now("YYYY-MM-DD") %>") 
+        AND typeof(completion) = "date" 
+        AND completion = date("<% tp.date.now("YYYY-MM-DD") %>"))
+  )
+SORT created DESC
 ```
-
+---
 #### Fresh
 
 - 

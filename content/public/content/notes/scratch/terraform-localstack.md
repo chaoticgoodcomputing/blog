@@ -58,7 +58,7 @@ I don't think I'd recommend Terraform LocalStack at the moment:
     1. **BRONZE:** In the Customizations repository, we add the infrastructure to locally test a given account customization directory, adding a Compose file to each to declare which services the account actively requires.
     2. **SILVER:** We pull in the `requests` and `global-customizations` repositories, emulating the general "pipeline" that AFT provides us by applying the layers in the same order AFT would when we deploy a new account
     3. **GOLD:** We emulate (or more likely, see if somebody else has already tried to emulate) the Account Factory Terraform setup process, likely running two stacks: one for the AFT account + pipeline, and the other for the "new" account.
-        - [I] Hold your *horses:* What if we created a "pure" LocalStack docker stack, applied the original Account Factory Terraform `.tf` file to *that*, and then just... built *that* into an image?
+        - [x] Hold your *horses:* What if we created a "pure" LocalStack docker stack, applied the original Account Factory Terraform `.tf` file to *that*, and then just... built *that* into an image?
 3. The ability to emulate the target test account as-is may not be feasible - in essence, setting up the LocalStack would only emulate a from-scratch deployment. Not necessarily a good or bad thing — just a consideration.
 
 ## [LocalStack Docs](https://docs.localstack.cloud/overview/)
