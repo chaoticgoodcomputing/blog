@@ -13,8 +13,8 @@ export const defaultGraphOptions: Partial<D3Config> = {
   },
   edgeOpacity: {
     tagTag: { min: 0.9, max: 0.9 },
-    tagPost: { min: 0.1, max: 0.9 },
-    postPost: { min: 0.1, max: 0.9 },
+    tagPost: { min: 0.0, max: 0.9 },
+    postPost: { min: 0.0, max: 0.9 },
   },
   repelForce: 2.5,
   centerForce: 0.25,
@@ -37,7 +37,7 @@ export const defaultGraphOptions: Partial<D3Config> = {
   },
   nodeColors: {
     public: undefined,   // Uses CSS --secondary by default
-    private: "#ca7878",  // Pink color for private notes
+    private: "#c54040",  // Pink color for private notes
   },
   linkStyle: {
     tagTag: "solid",

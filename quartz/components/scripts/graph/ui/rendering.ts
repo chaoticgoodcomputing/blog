@@ -165,11 +165,11 @@ function drawLink(
   ctx.save()
   ctx.globalAlpha = finalAlpha
   ctx.strokeStyle = link.color
-  ctx.lineWidth = 1
+  ctx.lineWidth = 2
   
   // Apply line dash for dotted style
   if (link.lineStyle === 'dotted') {
-    ctx.setLineDash([1, 2])  // 1px dot, 2px gap
+    ctx.setLineDash([2, 2])  // 1px dot, 2px gap
   } else {
     ctx.setLineDash([])  // Solid line (clear any dash pattern)
   }
