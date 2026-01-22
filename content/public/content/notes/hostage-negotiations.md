@@ -54,6 +54,8 @@ In working with agents, then, what systems can actually help? That's been the co
 > Jan 22nd, 2026 — Anthropic has updated their guidance to state [exactly this](https://code.claude.com/docs/en/best-practices):
 > 
 > *"Include tests, screenshots, or expected outputs so Claude can check itself. This is the single highest-leverage thing you can do."*
+> 
+> I am still an advocate of taking it one step further, that these types of tests should be *deterministic*, not something where the agent is evaluating its own work. That's why I describe these as *adversarial* — they're systems that should not be lenient to the agent if it has done poor work.
    
 3. **Atomic Tasks:** The thing that really seemed to catch the industry off guard is how, almost overnight, we became pseudo-managers of a fleet of agents writing code. Very little of a computer science education focuses on what many engineers find themselves doing far enough into their careers — managing other engineers. The skillset for engineering management is certainly a superset of the skillset of simply engineering. I've seen — and experienced, myself — a massive struggle around how to take a piece of software and delegate it out to dozens of smaller, discrete tasks. Many of the project management and delegation skills that an engineer may build up over a decade in the industry has quickly become a prerequisite to juggling multiple code generation sessions. It's a rapid adjustment to folks in my position who, despite not being "junior" engineers, are still more junior than, say, a seasoned principal engineer.
    

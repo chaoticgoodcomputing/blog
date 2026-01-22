@@ -86,6 +86,31 @@ export default ((userOpts: Options) => {
               const createdAt = new Date(record.createdAt);
               const relativeTime = getRelativeTime(createdAt);
 
+              // Format text with proper newlines
+              const formattedText = escapeHtml(text).replace(/\\n/g, '<br>');
+
+              // Build embed display (images, external links, etc.)
+              let embedHtml = '';
+              if (post.embed) {
+                if (post.embed.$type === 'app.bsky.embed.images#view') {
+                  const imagesHtml = post.embed.images.map(img => \`
+                    <img src="\${img.thumb}" alt="\${escapeHtml(img.alt || '')}" class="post-image" loading="lazy" />
+                  \`).join('');
+                  embedHtml = \`<div class="post-images">\${imagesHtml}</div>\`;
+                } else if (post.embed.$type === 'app.bsky.embed.external#view') {
+                  const ext = post.embed.external;
+                  embedHtml = \`
+                    <a href="\${escapeHtml(ext.uri)}" target="_blank" rel="noopener noreferrer" class="post-external-link">
+                      \${ext.thumb ? \`<img src="\${ext.thumb}" alt="" class="link-thumb" loading="lazy" />\` : ''}
+                      <div class="link-details">
+                        <div class="link-title">\${escapeHtml(ext.title || '')}</div>
+                        \${ext.description ? \`<div class="link-description">\${escapeHtml(ext.description)}</div>\` : ''}
+                      </div>
+                    </a>
+                  \`;
+                }
+              }
+
               // Build metrics display
               let metricsHtml = '';
               if (showMetrics) {
@@ -105,7 +130,8 @@ export default ((userOpts: Options) => {
               return \`
                 <div class="bluesky-post">
                   <div class="post-content">
-                    <p>\${escapeHtml(text)}</p>
+                    <p>\${formattedText}</p>
+                    \${embedHtml}
                   </div>
                   <div class="post-footer">
                     <time datetime="\${createdAt.toISOString()}">\${relativeTime}</time>
