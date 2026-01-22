@@ -30,6 +30,8 @@ import ConditionalRender from "./ConditionalRender"
 import PostListing from "./PostListing"
 import AnnotationViewer from "./AnnotationViewer"
 import ShowPageSource from "./ShowPageSource"
+import SocialMediaGitHub from "./SocialMediaGitHub"
+import SocialMediaBlueSky from "./SocialMediaBlueSky"
 
 export {
   ArticleTitle,
@@ -64,4 +66,6 @@ export {
   PostListing,
   AnnotationViewer,
   ShowPageSource,
+  SocialMediaGitHub,
+  SocialMediaBlueSky,
 }

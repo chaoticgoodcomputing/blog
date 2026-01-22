@@ -51,5 +51,19 @@ export const indexLayout: PageLayout = {
   ],
   right: [
     Component.DesktopOnly(Component.TableOfContents()),
+    Component.SocialMediaGitHub({
+      username: "spelkington",
+      theme: "default",
+      showHeader: true,
+      showFooter: true,
+      showThumbnail: false,
+      title: "GitHub Activity",
+    }),
+    Component.SocialMediaBlueSky({
+      handle: "speen.us",
+      postLimit: 5,
+      showMetrics: false,
+      title: "ATProto Feed",
+    }),
   ],
 }
