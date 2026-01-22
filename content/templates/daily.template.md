@@ -60,11 +60,7 @@ tags:
 
 ## Up Front
 
-Today:
-
-### Thoughts
-
-- 
+What is my day going to look like?
 
 ### Tasks
 
@@ -88,6 +84,10 @@ SORT created DESC
 ```
 ---
 #### Fresh
+
+- [ ] #task TODO [created:: <% tp.date.now("YYYY-MM-DD") %>]
+
+### Thoughts
 
 - 
 
