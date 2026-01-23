@@ -3,3 +3,8 @@
 # Include Markdown in language statistics
 *.md linguist-detectable=true
 *.md linguist-documentation=false
+
+# Exclude build artifacts from language statistics
+*.html linguist-generated=true
+*.css linguist-generated=true
+*.js linguist-generated=true
