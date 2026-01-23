@@ -1,7 +1,15 @@
 ---
-title: LLMs Starter
-date: 2026-01-23
+title: "LLMs: A Primer Presentation for Newest, Scariest Tool"
+description: |
+  An engineer-focused primer on the mechanisms that drive Large Language Models. Basics on how we got here,
+  how they work, and how to use them without feeling an apocalyptic dread.
+date: 2025-07-15
 tags:
+  - engineering/ai
+  - writing/evergreen
+  - engineering/data
+  - engineering/languages/csharp
+  - engineering/languages/typescript
   - writing/annotations
 annotation-target: https://raw.githubusercontent.com/chaoticgoodcomputing/chaoticgoodcomputing.github.io/refs/heads/main/content/public/assets/llms.pdf
 ---
