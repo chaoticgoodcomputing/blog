@@ -82,3 +82,180 @@
     }
   }
 }
+
+/**
+ * Global graph filter controls
+ * - Overlaid on graph (no box)
+ * - Desktop/tablet: top-left
+ * - Mobile: top-center
+ */
+.graph-filters {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: 1000001;
+  font-family: var(--codeFont);
+  font-size: 0.7rem;
+  color: var(--darkgray);
+  pointer-events: none;
+
+  // Allow interaction with controls
+  * {
+    pointer-events: auto;
+  }
+
+  // Time period slider with inline labels
+  .time-slider-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: flex-start;
+
+    .time-labels {
+      display: flex;
+      justify-content: space-between;
+      width: 150px;
+      font-size: 0.65rem;
+      margin-bottom: 0.125rem;
+
+      span {
+        flex: 1;
+        text-align: center;
+
+        &:first-child {
+          text-align: left;
+        }
+
+        &:last-child {
+          text-align: right;
+        }
+      }
+    }
+
+    input[type="range"] {
+      width: 150px;
+      height: 12px;
+      border-radius: 2px;
+      background: transparent;
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+
+      // Snap points
+      &::-webkit-slider-runnable-track {
+        background: repeating-linear-gradient(to right,
+            var(--gray) 0px, var(--gray) 2px,
+            transparent 2px, transparent calc(50% - 1px),
+            var(--gray) calc(50% - 1px), var(--gray) calc(50% + 1px),
+            transparent calc(50% + 1px), transparent calc(100% - 2px),
+            var(--gray) calc(100% - 2px), var(--gray) 100%);
+        height: 4px;
+        border-radius: 2px;
+        background-color: var(--lightgray);
+        background-image: repeating-linear-gradient(to right,
+            var(--gray) 0px, var(--gray) 2px,
+            transparent 2px, transparent calc(50% - 1px),
+            var(--gray) calc(50% - 1px), var(--gray) calc(50% + 1px),
+            transparent calc(50% + 1px), transparent calc(100% - 2px),
+            var(--gray) calc(100% - 2px), var(--gray) 100%);
+      }
+
+      &::-moz-range-track {
+        background: var(--lightgray);
+        height: 4px;
+        border-radius: 2px;
+        background-image: repeating-linear-gradient(to right,
+            var(--gray) 0px, var(--gray) 2px,
+            transparent 2px, transparent calc(50% - 1px),
+            var(--gray) calc(50% - 1px), var(--gray) calc(50% + 1px),
+            transparent calc(50% + 1px), transparent calc(100% - 2px),
+            var(--gray) calc(100% - 2px), var(--gray) 100%);
+      }
+
+      &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--secondary);
+        cursor: pointer;
+        margin-top: -4px;
+
+        &:hover {
+          background: var(--tertiary);
+        }
+      }
+
+      &::-moz-range-thumb {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--secondary);
+        cursor: pointer;
+        border: none;
+
+        &:hover {
+          background: var(--tertiary);
+        }
+      }
+    }
+  }
+
+  // Private/public toggle
+  .visibility-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    justify-content: flex-start;
+
+    input[type="checkbox"] {
+      cursor: pointer;
+      width: 14px;
+      height: 14px;
+      margin: 0;
+      vertical-align: middle;
+      transform: translateY(2px);
+
+      &:checked {
+        border-color: #c54040;
+        background-color: #c54040;
+      }
+
+      &:checked::after {
+        left: 3px;
+        top: 0px;
+        width: 4px;
+        height: 7px;
+      }
+    }
+
+    label {
+      font-size: 0.7rem;
+      font-weight: normal;
+      cursor: pointer;
+      margin: 0;
+      line-height: 1;
+    }
+  }
+
+  @media all and not ($desktop) {
+    // Mobile: center at top
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    top: 0.5rem;
+    align-items: center;
+
+    .time-slider-group {
+      align-items: center;
+    }
+
+    .visibility-toggle {
+      justify-content: center;
+    }
+  }
+}

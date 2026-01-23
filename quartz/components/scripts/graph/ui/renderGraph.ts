@@ -1,6 +1,7 @@
 import { removeAllChildren } from "../../util"
 import { FullSlug, SimpleSlug, simplifySlug } from "../../../../util/path"
 import { IconService } from "../../../../util/iconService"
+import type { Simulation } from "d3"
 import {
   buildLinksAndTags,
   fetchTagIndex,
@@ -16,6 +17,7 @@ import {
   setupSimulation,
   HoverState,
   TweenManager,
+  NodeData,
 } from "../core"
 import { getVisited } from "../adapters/visited"
 import { LinkRenderData, NodeRenderData } from "../core/renderTypes"
@@ -33,6 +35,8 @@ import {
   normalizeLabelAnchor,
   normalizeTagColorGradient,
 } from "../adapters/configAdapter"
+import { createFilterControls, FilterState } from "./filters"
+import { filterGraphData } from "./filterLogic"
 
 export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   let slug = simplifySlug(fullSlug)
@@ -43,6 +47,9 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
 
   const visited = getVisited()
   removeAllChildren(graph)
+
+  // Detect if this is a global graph (inside .global-graph-container)
+  const isGlobalGraph = graph.classList.contains("global-graph-container")
 
   // Load TagIndex and preload icons
   const tagIndex = await fetchTagIndex()
@@ -87,7 +94,10 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const validLinks = new Set(data.keys())
   const neighbourhood = calculateNeighborhood(slug, links, validLinks, tags, depth, showTags)
   const nodes = constructGraphNodes(neighbourhood, data)
-  const graphData = constructGraphData(nodes, links, neighbourhood)
+  let graphData = constructGraphData(nodes, links, neighbourhood)
+
+  // Store original graph data for filtering (only for global graphs)
+  const originalGraphData = isGlobalGraph ? { nodes: [...graphData.nodes], links: [...graphData.links] } : null
 
   const tagFileCountMap = buildGraphCountMap(tags, tagIndex)
   const tagColorMap = buildGraphColorMap(tags, tagIndex)
@@ -95,23 +105,6 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   // Setup dimensions and simulation
   const width = graph.offsetWidth
   const height = Math.max(graph.offsetHeight, 250)
-  const nodeRadius = createNodeRadiusFunction(
-    graphData,
-    baseSizeConfig,
-    sizeScalingConfig,
-    tagFileCountMap,
-    privatePostSizeMultiplier ?? 1,
-  )
-  const simulation = setupSimulation(
-    graphData,
-    nodeRadius,
-    { repelForce, centerForce },
-    linkDistanceConfig,
-    linkStrengthConfig,
-    enableRadial ?? false,
-    width,
-    height,
-  )
 
   // Setup rendering infrastructure
   const computedStyleMap = getComputedStyleMap()
@@ -124,111 +117,212 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     dragStartTime: 0,
     dragging: false,
   }
-  const linkRenderData: LinkRenderData[] = []
-  const nodeRenderData: NodeRenderData[] = []
-  
+
   // Shared transform state for zoom/pan
   const transform = { x: 0, y: 0, k: 1 }
 
-  const renderAll = () => {
-    updateRenderData(
-      tweenManager,
-      linkRenderData,
-      nodeRenderData,
-      hoverState.hoveredNodeId,
-      computedStyleMap,
-      scale,
-      focusOnHover ?? false,
+  let linkRenderData: LinkRenderData[] = []
+  let nodeRenderData: NodeRenderData[] = []
+  let simulation: Simulation<NodeData, undefined> | null = null
+  let currentAnimationCleanup: (() => void) | null = null
+  let currentCanvas: HTMLCanvasElement | null = null
+
+  // Function to completely tear down and rebuild the graph
+  const rebuildGraph = async (currentGraphData: typeof graphData) => {
+    console.log("[Graph Rebuild] Starting full rebuild with", currentGraphData.nodes.length, "nodes")
+    
+    // Stop and cleanup previous animation loop
+    if (currentAnimationCleanup) {
+      currentAnimationCleanup()
+      currentAnimationCleanup = null
+    }
+
+    // Stop and clear previous simulation
+    if (simulation) {
+      simulation.stop()
+      simulation = null
+    }
+
+    // Remove old canvas
+    if (currentCanvas) {
+      currentCanvas.remove()
+      currentCanvas = null
+    }
+
+    // Clear render data
+    tweenManager.clear()
+    linkRenderData = []
+    nodeRenderData = []
+
+    // Create new Canvas2D app
+    const app = createCanvasApp(width, height)
+    graph.appendChild(app.canvas)
+    currentCanvas = app.canvas
+    
+    console.log("[Graph Rebuild] New canvas created")
+
+    const nodeRadius = createNodeRadiusFunction(
+      currentGraphData,
+      baseSizeConfig,
+      sizeScalingConfig,
+      tagFileCountMap,
+      privatePostSizeMultiplier ?? 1,
     )
-  }
 
-  tweenManager.clear()
+    simulation = setupSimulation(
+      currentGraphData,
+      nodeRadius,
+      { repelForce, centerForce },
+      linkDistanceConfig,
+      linkStrengthConfig,
+      enableRadial ?? false,
+      width,
+      height,
+    )
 
-  // Create Canvas2D app
-  const app = createCanvasApp(width, height)
-  graph.appendChild(app.canvas)
-
-  // Create all nodes
-  for (const n of graphData.nodes) {
-    const result = await createNode(
-      {
-        node: n,
-        nodeRadius,
-        color,
+    const renderAll = () => {
+      updateRenderData(
+        tweenManager,
+        linkRenderData,
+        nodeRenderData,
+        hoverState.hoveredNodeId,
         computedStyleMap,
         scale,
-        opacityScale,
-        fontSize,
-        slug,
-        labelAnchorConfig,
-        tagIndex,
-        nodeColorsConfig: nodeColors,
-      },
-      hoverState,
+        focusOnHover ?? false,
+      )
+    }
+
+    // Create all nodes
+    for (const n of currentGraphData.nodes) {
+      const result = await createNode(
+        {
+          node: n,
+          nodeRadius,
+          color,
+          computedStyleMap,
+          scale,
+          opacityScale,
+          fontSize,
+          slug,
+          labelAnchorConfig,
+          tagIndex,
+          nodeColorsConfig: nodeColors,
+        },
+        hoverState,
+        linkRenderData,
+        nodeRenderData,
+        renderAll,
+      )
+      nodeRenderData.push(result.nodeRenderData)
+    }
+    
+    console.log("[Graph Render] Created", nodeRenderData.length, "node render objects")
+
+    // Create all links
+    for (const l of currentGraphData.links) {
+      const linkRenderDatum = createLink(l, computedStyleMap, linkStyle)
+      linkRenderData.push(linkRenderDatum)
+    }
+    
+    console.log("[Graph Render] Created", linkRenderData.length, "link render objects")
+
+    // Setup hover behavior (always active for hover effects)
+    setupHoverBehavior(
+      app.canvas,
+      nodeRenderData,
       linkRenderData,
-      nodeRenderData,
-      renderAll,
-    )
-    nodeRenderData.push(result.nodeRenderData)
-  }
-
-  // Create all links
-  for (const l of graphData.links) {
-    const linkRenderDatum = createLink(l, computedStyleMap, linkStyle)
-    linkRenderData.push(linkRenderDatum)
-  }
-
-  // Setup hover behavior (always active for hover effects)
-  setupHoverBehavior(
-    app.canvas,
-    nodeRenderData,
-    linkRenderData,
-    hoverState,
-    width,
-    height,
-    transform,
-    renderAll,
-  )
-
-  // Setup interactions
-  if (enableDrag) {
-    setupDragBehavior(
-      app.canvas,
-      graphData,
       hoverState,
-      simulation,
+      width,
+      height,
       transform,
       renderAll,
-      width,
-      height,
-      nodeRenderData,
     )
-  } else {
-    setupClickBehavior(app.canvas, nodeRenderData, width, height, transform)
-  }
 
-  if (enableZoom) {
-    setupZoomBehavior(
-      app.canvas,
+    // Setup interactions
+    if (enableDrag) {
+      setupDragBehavior(
+        app.canvas,
+        currentGraphData,
+        hoverState,
+        simulation,
+        transform,
+        renderAll,
+        width,
+        height,
+        nodeRenderData,
+      )
+    } else {
+      setupClickBehavior(app.canvas, nodeRenderData, width, height, transform)
+    }
+
+    if (enableZoom) {
+      setupZoomBehavior(
+        app.canvas,
+        width,
+        height,
+        opacityScale,
+        nodeRenderData,
+        slug,
+        transform,
+      )
+    }
+
+    // Start animation loop with the current render data
+    currentAnimationCleanup = startAnimationLoop(
+      nodeRenderData,
+      linkRenderData,
+      tweenManager,
+      app,
       width,
       height,
-      opacityScale,
-      nodeRenderData,
-      slug,
+      linkDistanceConfig,
+      edgeOpacityConfig,
       transform,
     )
+    
+    // Force an initial render
+    renderAll()
+    
+    console.log("[Graph Rebuild] Animation loop started, graph rebuilt successfully")
   }
 
-  // Start animation loop
-  return startAnimationLoop(
-    nodeRenderData,
-    linkRenderData,
-    tweenManager,
-    app,
-    width,
-    height,
-    linkDistanceConfig,
-    edgeOpacityConfig,
-    transform,
-  )
+  // Initial render
+  await rebuildGraph(graphData)
+
+  // Setup filter controls for global graphs
+  let filterCleanup: (() => void) | null = null
+  if (isGlobalGraph && originalGraphData) {
+    const handleFilterChange = async (filterState: FilterState) => {
+      console.log("[Graph Filter] Applying filter:", filterState)
+      console.log("[Graph Filter] Original data:", originalGraphData.nodes.length, "nodes,", originalGraphData.links.length, "links")
+      
+      // Apply filtering to the original graph data
+      const filtered = filterGraphData(
+        originalGraphData.nodes,
+        originalGraphData.links,
+        data,
+        filterState,
+      )
+      
+      console.log("[Graph Filter] Filtered data:", filtered.nodes.length, "nodes,", filtered.links.length, "links")
+      graphData = filtered
+      await rebuildGraph(graphData)
+    }
+
+    const filterControls = createFilterControls(graph, handleFilterChange)
+    filterCleanup = filterControls.cleanup
+  }
+
+  // Return combined cleanup function
+  return () => {
+    if (currentAnimationCleanup) {
+      currentAnimationCleanup()
+    }
+    if (filterCleanup) {
+      filterCleanup()
+    }
+    if (simulation) {
+      simulation.stop()
+    }
+  }
 }
