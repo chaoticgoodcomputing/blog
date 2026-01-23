@@ -206,6 +206,17 @@ export default ((userOpts?: Partial<PostListingOptions>) => {
                     {title}
                   </a>
                 </h3>
+                {opts.showDescriptions && description && (
+                  <p class="post-description">
+                    {opts.showDates && page.dates && (
+                      <>
+                        <Date date={getDate(cfg, page)!} locale={cfg.locale} /> —{" "}
+                      </>
+                    )}
+                    {description}
+                    {readingTimeText && ` (${readingTimeText})`}
+                  </p>
+                )}
                 {opts.showTags && tags.length > 0 && (
                   <ul
                     class="tags"
@@ -222,17 +233,6 @@ export default ((userOpts?: Partial<PostListingOptions>) => {
                       </li>
                     ))}
                   </ul>
-                )}
-                {opts.showDescriptions && description && (
-                  <p class="post-description">
-                    {opts.showDates && page.dates && (
-                      <>
-                        <Date date={getDate(cfg, page)!} locale={cfg.locale} /> —{" "}
-                      </>
-                    )}
-                    {description}
-                    {readingTimeText && ` (${readingTimeText})`}
-                  </p>
                 )}
               </div>
             </div>

@@ -144,9 +144,21 @@
     transition: transform 0.3s ease;
     overflow-y: auto;
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+    
+    // Allow fixed children (like search) to escape containment
+    // when search is active, remove transform/overflow that create containing blocks
+    &:has(.search-container.active) {
+      overflow: visible;
+      transform: none; // Remove transform to allow position:fixed children to escape
+    }
 
     &.open {
       transform: translateX(0);
+      
+      // When sidebar is open AND search is active, keep sidebar visible
+      &:has(.search-container.active) {
+        transform: translateX(0);
+      }
     }
 
     /**

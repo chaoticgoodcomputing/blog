@@ -414,6 +414,16 @@ function _createShowSearchHandler(
   return function showSearch(searchTypeNew: SearchType) {
     searchType = searchTypeNew
     if (sidebar) sidebar.style.zIndex = "1"
+    
+    // Close mobile sidebar when search opens (if it's open)
+    const mobileSidebarContainer = document.getElementById("mobile-sidebar-container")
+    const mobileSidebarBackdrop = document.getElementById("mobile-sidebar-backdrop")
+    if (mobileSidebarContainer?.classList.contains("open")) {
+      mobileSidebarContainer.classList.remove("open")
+      mobileSidebarBackdrop?.classList.remove("visible")
+      document.body.style.overflow = ""
+    }
+    
     container.classList.add("active")
     searchBar.focus()
   }

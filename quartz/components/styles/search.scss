@@ -3,8 +3,17 @@
 .search {
   min-width: fit-content;
   max-width: 14rem;
+  // Ensure search component stacks above siblings when active
+  position: relative;
+  z-index: 1;
+  
   @media all and ($mobile) {
     flex-grow: 0.3;
+  }
+  
+  // When search is active, elevate above all sidebar siblings
+  &:has(.search-container.active) {
+    z-index: 10001;
   }
 
   & > .search-button {
@@ -44,10 +53,9 @@
 
   & > .search-container {
     position: fixed;
-    contain: layout;
-    z-index: 999;
-    left: 0;
-    top: 0;
+    // Use inset to force positioning relative to viewport, not parent
+    inset: 0;
+    z-index: 10000;
     width: 100vw;
     height: 100vh;
     overflow-y: auto;

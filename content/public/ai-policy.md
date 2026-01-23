@@ -6,7 +6,7 @@ date: 2026-01-04
 tags:
   - engineering/ai
   - horticulture/seasons/systems
-  - writing
+  - writing/evergreen
 ---
 
 Since we're now in the era of [[content/notes/hostage-negotiations|AI slop]], it feels necessary to have a general AI policy available for this site.
