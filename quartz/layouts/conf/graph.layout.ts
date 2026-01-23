@@ -7,20 +7,20 @@ import { D3Config } from "../../components/Graph"
 export const defaultGraphOptions: Partial<D3Config> = {
   scale: 0.6,
   linkStrength: {
-    tagTag: 0.5,
-    tagPost: 0.20,
-    postPost: 0.03,
+    tagTag: 1,
+    tagPost: 0.2,
+    postPost: 0.01,
   },
   edgeOpacity: {
-    tagTag: { min: 0.9, max: 0.9 },
-    tagPost: { min: 0.0, max: 0.9 },
-    postPost: { min: 0.0, max: 0.9 },
+    tagTag: { min: 1, max: 1 },
+    tagPost: { min: 0.05, max: 0.8 },
+    postPost: { min: 0.01, max: 0.8 },
   },
-  repelForce: 2.5,
+  repelForce: 3,
   centerForce: 0.25,
   linkDistance: {
-    tagTag: 60,
-    tagPost: 80,
+    tagTag: 50,
+    tagPost: 60,
     postPost: 110,
   },
   baseSize: {
@@ -56,16 +56,16 @@ export const defaultLocalGraphOptions: Partial<D3Config> = {
   ...defaultGraphOptions,
   scale: 0.75,
   linkDistance: {
-    tagTag: 50,
-    tagPost: 50,
-    postPost: 50,
+    tagTag: 70,
+    tagPost: 70,
+    postPost: 70,
   },
   linkStrength: {
     tagTag: 0.3,
     tagPost: 0.3,
     postPost: 0.3,
   },
-  repelForce: 1,
+  repelForce: 3,
   sizeScaling: {
     tags: 0.5,
     posts: 1,
@@ -76,7 +76,7 @@ export const defaultLocalGraphOptions: Partial<D3Config> = {
   },
   edgeOpacity: {
     tagTag: { min: 1, max: 1 },
-    tagPost: { min: 1, max: 1 },
-    postPost: { min: 1, max: 1 },
+    tagPost: { min: 0.3, max: 0.7 },
+    postPost: { min: 0.3, max: 0.7 },
   },
 }
