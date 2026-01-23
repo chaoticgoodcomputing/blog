@@ -1,5 +1,5 @@
 ---
-title: "LLMs: A Primer Presentation for Newest, Scariest Tool"
+title: "LLMs: A Primer Presentation for Our Newest, Scariest Tool"
 description: |
   An engineer-focused primer on the mechanisms that drive Large Language Models. Basics on how we got here,
   how they work, and how to use them without feeling an apocalyptic dread.
