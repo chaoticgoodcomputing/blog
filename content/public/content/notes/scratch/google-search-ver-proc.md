@@ -2,6 +2,8 @@
 title: "Google Search Verification Process"
 date: "2026-01-16T00:00:00.000Z"
 tags:
+  - "engineering/frontend"
+  - "engineering/devops"
   - "private"
 ---
 

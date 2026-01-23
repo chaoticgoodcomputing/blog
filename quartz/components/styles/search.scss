@@ -6,17 +6,17 @@
   // Ensure search component stacks above siblings when active
   position: relative;
   z-index: 1;
-  
+
   @media all and ($mobile) {
     flex-grow: 0.3;
   }
-  
+
   // When search is active, elevate above all sidebar siblings
   &:has(.search-container.active) {
     z-index: 10001;
   }
 
-  & > .search-button {
+  &>.search-button {
     background-color: transparent;
     border: 1px var(--lightgray) solid;
     border-radius: 4px;
@@ -31,7 +31,7 @@
     white-space: nowrap;
     width: 100%;
 
-    & > p {
+    &>p {
       display: inline;
       color: var(--gray);
       text-wrap: unset;
@@ -51,7 +51,7 @@
     }
   }
 
-  & > .search-container {
+  &>.search-container {
     position: fixed;
     // Use inset to force positioning relative to viewport, not parent
     inset: 0;
@@ -66,7 +66,7 @@
       display: inline-block;
     }
 
-    & > .search-space {
+    &>.search-space {
       width: 65%;
       margin-top: 12vh;
       margin-left: auto;
@@ -76,7 +76,7 @@
         width: 90%;
       }
 
-      & > * {
+      &>* {
         width: 100%;
         border-radius: 7px;
         background: var(--light);
@@ -86,7 +86,7 @@
         margin-bottom: 2em;
       }
 
-      & > input {
+      &>input {
         box-sizing: border-box;
         padding: 0.5em 1em;
         font-family: var(--bodyFont);
@@ -99,7 +99,7 @@
         }
       }
 
-      & > .search-layout {
+      &>.search-layout {
         display: none;
         flex-direction: row;
         border: 1px solid var(--lightgray);
@@ -110,17 +110,17 @@
           display: flex;
         }
 
-        &[data-preview] > .results-container {
+        &[data-preview]>.results-container {
           flex: 0 0 min(30%, 450px);
         }
 
         @media all and not ($mobile) {
           &[data-preview] {
-            & .result-card > p.preview {
+            & .result-card>p.preview {
               display: none;
             }
 
-            & > div {
+            &>div {
               &:first-child {
                 border-right: 1px solid var(--lightgray);
                 border-top-right-radius: unset;
@@ -135,7 +135,7 @@
           }
         }
 
-        & > div {
+        &>div {
           height: calc(75vh - 12vh);
           border-radius: 5px;
         }
@@ -143,11 +143,11 @@
         @media all and ($mobile) {
           flex-direction: column;
 
-          & > .preview-container {
+          &>.preview-container {
             display: none !important;
           }
 
-          &[data-preview] > .results-container {
+          &[data-preview]>.results-container {
             width: 100%;
             height: auto;
             flex: 0 0 100%;
@@ -160,7 +160,7 @@
           scroll-margin-top: 2rem;
         }
 
-        & > .preview-container {
+        &>.preview-container {
           flex-grow: 1;
           display: block;
           overflow: hidden;
@@ -181,7 +181,7 @@
           }
         }
 
-        & > .results-container {
+        &>.results-container {
           overflow-y: auto;
 
           & .result-card {
@@ -210,22 +210,22 @@
               background: var(--lightgray);
             }
 
-            & > h3 {
+            &>h3 {
               margin: 0;
             }
 
             @media all and not ($mobile) {
-              & > p.card-description {
+              &>p.card-description {
                 display: none;
               }
             }
 
-            & > ul.tags {
+            &>ul.tags {
               margin-top: 0.45rem;
               margin-bottom: 0;
             }
 
-            & > ul > li > p {
+            &>ul>li>p {
               border-radius: 8px;
               background-color: var(--highlight);
               padding: 0.2rem 0.4rem;
@@ -239,7 +239,7 @@
               }
             }
 
-            & > p {
+            &>p {
               margin-bottom: 0;
             }
           }

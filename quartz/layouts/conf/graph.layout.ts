@@ -45,6 +45,7 @@ export const defaultGraphOptions: Partial<D3Config> = {
     postPost: "dotted",
   },
   privatePostSizeMultiplier: 0.8,  // Private posts are half the size
+  removeTags: ["private"]
 }
 
 /**

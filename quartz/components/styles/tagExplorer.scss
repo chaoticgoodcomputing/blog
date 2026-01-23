@@ -7,11 +7,11 @@
 
   min-height: 1.2rem;
   flex: 0 1 auto;
-  
+
   // Ensure tag explorer respects search modal z-index
   position: relative;
   z-index: 1;
-  
+
   // Hide TagExplorer on mobile when search is active
   @media all and ($mobile) {
     .left.sidebar:has(.search-container.active) & {
