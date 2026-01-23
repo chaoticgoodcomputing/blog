@@ -8,6 +8,7 @@ const GREEN = "#00FF00"
 const BLUE = "#008CFF"
 const PINK = "#FF69B4"
 const VIOLET = "#8A2BE2"
+const DARK_GREEN = "#006400"
 
 /**
  * Quartz 4 Configuration
@@ -34,9 +35,12 @@ const config: QuartzConfig = {
         { tag: "economics", color: ORANGE },
         { tag: "projects", color: BLUE },
         { tag: "writing", color: VIOLET },
+        { tag: "writing/evergreen", color: DARK_GREEN },
         { tag: "private", color: RED },
       ],
       icons: [
+
+        { tag: "writing/evergreen", icon: "mdi:star" },
         
         // Specific Projects
         { tag: "projects/games/roblox", icon: "custom:roblox" },
