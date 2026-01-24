@@ -114,7 +114,7 @@
   // location: "Remote",
   details: [
     - Lead implementation of *Spark/AWS* optimizations, resulting in \$1M+ annual compute cost reductions
-    - Constructed optimized and durable ETL processes for #link("https://mscience.com/blog/?topics=223%2C223")[cornerstone TMT/games reporting]
+    - Constructed optimized and durable ETL processes for #link("https://mscience.com/blogs")[cornerstone TMT/games reporting and analytics]
     - Planned & constructed unified DataOps & statistics libraries to streamline financial research operations
     // - Construct DataOps CI/CD pipelines for end-to-end *Python/SQL* ETL dev lifecycles
     // - Build & present *Tableau* dashboards for pipeline performance analytics & business cost insights
