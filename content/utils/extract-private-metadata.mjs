@@ -105,6 +105,26 @@ function extractLinks(content) {
 async function extractPrivateMetadata() {
   console.log("🔍 Scanning for private markdown files...")
 
+  // Check if private directory exists and has content
+  if (!existsSync(PRIVATE_DIR)) {
+    console.log("⚠️  Private directory not found. Skipping sync to avoid deleting existing files.")
+    console.log("ℹ️  This is expected in CI environments without access to the private submodule.")
+    return
+  }
+
+  // Check if there are any markdown files in private directory
+  const privateFiles = await globby([`${PRIVATE_DIR}/**/*.md`], {
+    ignore: ["**/node_modules/**", "**/.git/**"],
+  })
+
+  if (privateFiles.length === 0) {
+    console.log("⚠️  No private markdown files found. Skipping sync to avoid deleting existing files.")
+    console.log("ℹ️  This is expected in CI environments without access to the private submodule.")
+    return
+  }
+
+  console.log(`📄 Found ${privateFiles.length} private file(s)`)
+
   // Clean up existing private-tagged files first
   await cleanupPrivateTaggedFiles()
 
@@ -115,18 +135,6 @@ async function extractPrivateMetadata() {
   } catch (error) {
     console.log("⚠️  Could not read PRIVATE_FILE_BODY.txt, using default message")
   }
-
-  // Find all markdown files in the private directory
-  const privateFiles = await globby([`${PRIVATE_DIR}/**/*.md`], {
-    ignore: ["**/node_modules/**", "**/.git/**"],
-  })
-
-  if (privateFiles.length === 0) {
-    console.log("ℹ️  No private markdown files found.")
-    return
-  }
-
-  console.log(`📄 Found ${privateFiles.length} private file(s)`)
 
   let extracted = 0
   let skipped = 0
