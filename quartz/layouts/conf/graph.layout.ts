@@ -20,8 +20,8 @@ export const defaultGraphOptions: Partial<D3Config> = {
   centerForce: 0.25,
   linkDistance: {
     tagTag: 50,
-    tagPost: 60,
-    postPost: 110,
+    tagPost: 1,
+    postPost: 1,
   },
   baseSize: {
     tags: 15,
@@ -60,9 +60,9 @@ export const defaultLocalGraphOptions: Partial<D3Config> = {
   ...defaultGraphOptions,
   scale: 0.75,
   linkDistance: {
-    tagTag: 70,
-    tagPost: 70,
-    postPost: 70,
+    tagTag: 10,
+    tagPost: 1,
+    postPost: 1,
   },
   linkStrength: {
     tagTag: 0.3,
@@ -90,11 +90,11 @@ export const defaultLocalGraphOptions: Partial<D3Config> = {
  * These can be overridden in individual layouts as needed.
  */
 export const shellGraphOptions: Partial<D3Config> = {
-  scale: 0.6,
+  ...defaultGraphOptions,
   linkStrength: {
     tagTag: 0.95,
     tagPost: 0.2,
-    postPost: 0.1,
+    postPost: 0.2,
   },
   edgeOpacity: {
     tagTag: { min: 1, max: 1 },
@@ -105,35 +105,8 @@ export const shellGraphOptions: Partial<D3Config> = {
   centerForce: 1.5,
   linkDistance: {
     tagTag: 50,
-    tagPost: 10,
-    postPost: 10,
-  },
-  baseSize: {
-    tags: 15,
-    posts: 10,
-  },
-  sizeScaling: {
-    tags: 1.5,
-    posts: 1,
-  },
-  labelAnchor: {
-    baseY: 1.2,
-    scaleFactor: 0.05,
-  },
-  nodeColors: {
-    public: undefined,   // Uses CSS --secondary by default
-    private: "#c54040",  // Pink color for private notes
-  },
-  linkStyle: {
-    tagTag: "solid",
-    tagPost: "solid",
-    postPost: "dotted",
-  },
-  privatePostSizeMultiplier: 0.8,  // Private posts are 80% the size
-  removeTags: ["private"],
-  defaultFilterState: {
-    timePeriod: "year",        // Default to showing posts from the last year
-    includePrivate: false,     // Exclude private posts by default
+    tagPost: 1,
+    postPost: 1,
   },
   // Pseudo-shell style configuration
   graphStyle: "pseudo-shell",
@@ -151,7 +124,7 @@ export const shellGraphOptions: Partial<D3Config> = {
     showShell: true,           // Render the shell circle
     shellStyle: {
       color: undefined,        // Uses CSS --lightgray by default
-      opacity: 0.3,
+      opacity: 0.5,
       lineStyle: "dotted",
       lineWidth: 2,
     },

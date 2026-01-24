@@ -83,7 +83,7 @@ const config: QuartzConfig = {
         // Top-level Categories
         { tag: "writing", icon: "mdi:pencil" },
         { tag: "horticulture", icon: "mdi:flower" },
-        { tag: "economics", icon: "mdi:chart-bell-curve" },
+        { tag: "economics", icon: "mdi:earth" },
         { tag: "engineering", icon: "mdi:wrench" },
         { tag: "projects", icon: "mdi:source-branch" },
         
