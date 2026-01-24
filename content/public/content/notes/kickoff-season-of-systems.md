@@ -7,6 +7,7 @@ date: 2026-01-04
 tags:
   - horticulture/seasons/systems
   - engineering/ai
+  - projects/homelab
 ---
 Letting the vault go stale for a year and a half feels less like falling off the wagon, and more like completely losing the wagon altogether.
 
