@@ -3,6 +3,8 @@
  * Handles backward compatibility and provides defaults for all config values.
  */
 
+import type { PseudoShellConfig } from "../../../Graph"
+
 export type LinkDistanceConfig = {
   tagTag: number
   tagPost: number
@@ -35,6 +37,21 @@ export type LabelAnchorConfig = {
   baseY: number
   scaleFactor: number
 }
+
+export type NormalizedPseudoShellConfig = {
+  radiusBase: number
+  radiusScale: number
+  pinnedTags: string[]
+  showShell: boolean
+  circumferentialRepulsion: number
+  shellStyle: {
+    color: string
+    opacity: number
+    lineStyle: "solid" | "dotted"
+    lineWidth: number
+  }
+}
+
 
 export function normalizeLinkDistance(
   linkDistance: number | { tagTag?: number; tagPost?: number; postPost?: number } | undefined,
@@ -140,4 +157,25 @@ export function normalizeTagColorGradient(
   tagColorGradient: string[] | undefined,
 ): string[] {
   return tagColorGradient ?? ["#4CAF50", "#2196F3", "#9C27B0", "#FF9800"]
+}
+
+export function normalizePseudoShellConfig(
+  pseudoShellConfig: PseudoShellConfig | undefined,
+  computedStyleMap: Record<string, string>,
+): NormalizedPseudoShellConfig {
+  const defaultColor = computedStyleMap["--lightgray"] ?? "#e0e0e0"
+  
+  return {
+    radiusBase: pseudoShellConfig?.radiusBase ?? 200,
+    radiusScale: pseudoShellConfig?.radiusScale ?? 1.5,
+    pinnedTags: pseudoShellConfig?.pinnedTags ?? [],
+    showShell: pseudoShellConfig?.showShell ?? true,
+    circumferentialRepulsion: pseudoShellConfig?.circumferentialRepulsion ?? 0.5,
+    shellStyle: {
+      color: pseudoShellConfig?.shellStyle?.color ?? defaultColor,
+      opacity: pseudoShellConfig?.shellStyle?.opacity ?? 0.3,
+      lineStyle: pseudoShellConfig?.shellStyle?.lineStyle ?? "dotted",
+      lineWidth: pseudoShellConfig?.shellStyle?.lineWidth ?? 2,
+    },
+  }
 }

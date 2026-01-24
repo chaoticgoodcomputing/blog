@@ -5,6 +5,22 @@ import style from "./styles/graph.scss"
 import { i18n } from "../i18n"
 import { classNames } from "../util/lang"
 
+export type GraphStyle = "freeform" | "pseudo-shell"
+
+export interface PseudoShellConfig {
+  radiusBase: number              // Base radius of the circle
+  radiusScale: number             // Scaling factor for radius based on node count
+  pinnedTags: string[]            // Tags that should be pinned to the shell (e.g., ["engineering", "writing"])
+  showShell: boolean              // Whether to render the shell circle
+  circumferentialRepulsion?: number  // Strength of angular repulsion between pinned nodes (default: 0.5)
+  shellStyle?: {
+    color?: string                // Color of the shell (default: CSS --lightgray)
+    opacity?: number              // Opacity of the shell line (default: 0.3)
+    lineStyle?: "solid" | "dotted"  // Line style (default: "dotted")
+    lineWidth?: number            // Width of the shell line (default: 2)
+  }
+}
+
 export interface D3Config {
   drag: boolean
   zoom: boolean
@@ -23,6 +39,8 @@ export interface D3Config {
   showTags: boolean
   focusOnHover?: boolean
   enableRadial?: boolean
+  graphStyle?: GraphStyle         // Graph layout style (default: "freeform")
+  pseudoShellConfig?: PseudoShellConfig  // Configuration for pseudo-shell style
   linkStrength?: {
     tagTag?: number      // Parent-child tag connections
     tagPost?: number     // Tag-to-post connections
@@ -59,6 +77,10 @@ export interface D3Config {
     postPost?: 'solid' | 'dotted'    // Line style for post-post connections (default: 'dotted')
   }
   privatePostSizeMultiplier?: number  // Size multiplier for private posts (default: 1, e.g., 0.5 for half size)
+  defaultFilterState?: {
+    timePeriod?: 'all' | 'year' | 'month'  // Default time period filter (default: 'all')
+    includePrivate?: boolean               // Default private post visibility (default: true)
+  }
 }
 
 interface GraphOptions {
@@ -170,6 +192,10 @@ const defaultOptions: GraphOptions = {
       postPost: 'dotted',
     },
     privatePostSizeMultiplier: 1,
+    defaultFilterState: {
+      timePeriod: 'all',
+      includePrivate: true,
+    },
   },
 }
 

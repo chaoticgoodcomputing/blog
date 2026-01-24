@@ -1,6 +1,9 @@
 import { PageLayout } from "../cfg"
 import * as Component from "../components"
-import { defaultGraphOptions, defaultLocalGraphOptions } from "./conf/graph.layout"
+import { 
+  shellGraphOptions as defaultGraphOptions,
+  defaultLocalGraphOptions
+} from "./conf/graph.layout"
 
 /**
  * Layout configuration for tag and folder list pages.

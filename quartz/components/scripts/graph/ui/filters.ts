@@ -15,6 +15,7 @@ export interface FilterState {
 export function createFilterControls(
   container: HTMLElement,
   onFilterChange: (state: FilterState) => void,
+  initialState?: Partial<FilterState>,
 ): { cleanup: () => void } {
   const filterContainer = document.createElement("div")
   filterContainer.className = "graph-filters"
@@ -64,11 +65,16 @@ export function createFilterControls(
   // Insert at the beginning of the container
   container.insertBefore(filterContainer, container.firstChild)
 
-  // Current filter state
+  // Current filter state (use initial state if provided)
   let currentState: FilterState = {
-    timePeriod: "all",
-    includePrivate: true,
+    timePeriod: initialState?.timePeriod ?? "all",
+    includePrivate: initialState?.includePrivate ?? true,
   }
+
+  // Set UI controls to match initial state
+  const timePeriods: TimePeriod[] = ["all", "year", "month"]
+  slider.value = timePeriods.indexOf(currentState.timePeriod).toString()
+  privateCheckbox.checked = currentState.includePrivate
 
   // Event handlers
   const handleSliderChange = () => {

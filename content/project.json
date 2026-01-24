@@ -62,7 +62,8 @@
         ],
         "parallel": false,
         "cwd": "content"
-      }
+      },
+      "dependsOn": [ "vault:sync" ]
     },
     "list-non-private": {
       "//": "List all markdown files in content/public without 'private' tag or description field.",

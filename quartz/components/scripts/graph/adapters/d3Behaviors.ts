@@ -131,21 +131,27 @@ export function setupZoomBehavior(
   currentPageSlug: SimpleSlug,
   transform: { x: number; y: number; k: number },
 ) {
-  select<HTMLCanvasElement, NodeData>(canvas).call(
-    zoom<HTMLCanvasElement, NodeData>()
-      .extent([
-        [0, 0],
-        [width, height],
-      ])
-      .scaleExtent([0.25, 4])
-      .on("zoom", ({ transform: t }) => {
-        transform.x = t.x
-        transform.y = t.y
-        transform.k = t.k
-        
-        // Removed opacity scaling based on zoom level
-      }),
-  )
+  const canvasSelection = select<HTMLCanvasElement, NodeData>(canvas)
+  const zoomBehavior = zoom<HTMLCanvasElement, NodeData>()
+    .extent([
+      [0, 0],
+      [width, height],
+    ])
+    .scaleExtent([0.25, 4])
+    .on("zoom", ({ transform: t }) => {
+      transform.x = t.x
+      transform.y = t.y
+      transform.k = t.k
+      
+      // Removed opacity scaling based on zoom level
+    })
+  
+  // Apply the zoom behavior to the canvas
+  canvasSelection.call(zoomBehavior)
+  
+  // Initialize the zoom behavior with the current transform state
+  // This ensures that when rebuilding the graph, the zoom/pan position is preserved
+  canvasSelection.call(zoomBehavior.transform, zoomIdentity.translate(transform.x, transform.y).scale(transform.k))
 }
 
 export function setupHoverBehavior(

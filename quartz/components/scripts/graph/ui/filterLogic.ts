@@ -49,7 +49,13 @@ function shouldIncludeNode(
  * This removes:
  * 1. Post nodes that don't match the filter criteria
  * 2. Links involving filtered nodes
- * 3. Tag nodes that no longer have any tag-post connections
+ * 3. Tag nodes that have neither:
+ *    a. Direct tag-post connections, nor
+ *    b. Children (via tag-tag links) with tag-post connections
+ * 
+ * Tags are kept alive if they have post connections OR if any of their
+ * descendant tags have post connections. Parent tags are recursively
+ * marked as alive when their children are alive, preserving the hierarchy.
  */
 export function filterGraphData(
   originalNodes: NodeData[],
@@ -73,10 +79,20 @@ export function filterGraphData(
   )
 
   // Step 3: Remove tag nodes that no longer have any tag-post connections
+  // or connections to children that have tag-post connections
   const tagNodeIds = new Set<SimpleSlug>()
   const tagPostConnections = new Set<SimpleSlug>()
+  const tagParentMap = new Map<SimpleSlug, SimpleSlug[]>() // tag -> parent tags
+  const tagChildMap = new Map<SimpleSlug, SimpleSlug[]>() // tag -> child tags
 
-  // Find all tag nodes and identify which ones have tag-post connections
+  // Identify all tag nodes and build parent-child relationships
+  for (const nodeId of includedNodeIds) {
+    if (nodeId.startsWith("tags/")) {
+      tagNodeIds.add(nodeId)
+    }
+  }
+
+  // Build tag hierarchy maps and identify tag-post connections
   for (const link of filteredLinks) {
     if (link.type === "tag-post") {
       // Tag-post connections: either source or target is a tag
@@ -86,19 +102,48 @@ export function filterGraphData(
       if (link.target.id.startsWith("tags/")) {
         tagPostConnections.add(link.target.id)
       }
+    } else if (link.type === "tag-tag") {
+      // Tag-tag connections represent parent-child relationships
+      const parentId = link.source.id
+      const childId = link.target.id
+
+      if (!tagChildMap.has(parentId)) {
+        tagChildMap.set(parentId, [])
+      }
+      tagChildMap.get(parentId)!.push(childId)
+
+      if (!tagParentMap.has(childId)) {
+        tagParentMap.set(childId, [])
+      }
+      tagParentMap.get(childId)!.push(parentId)
     }
   }
 
-  // Identify all tag nodes
-  for (const nodeId of includedNodeIds) {
-    if (nodeId.startsWith("tags/")) {
-      tagNodeIds.add(nodeId)
+  // Recursively determine which tags are "alive" (have connections or alive children)
+  const aliveTagIds = new Set<SimpleSlug>()
+  
+  function markTagAsAlive(tagId: SimpleSlug): void {
+    if (aliveTagIds.has(tagId)) {
+      return // Already processed
+    }
+    
+    aliveTagIds.add(tagId)
+    
+    // Mark all parent tags as alive too
+    const parents = tagParentMap.get(tagId) || []
+    for (const parentId of parents) {
+      markTagAsAlive(parentId)
     }
   }
 
-  // Remove tag nodes that don't have any tag-post connections
+  // First pass: Mark tags with direct post connections as alive
+  for (const tagId of tagPostConnections) {
+    markTagAsAlive(tagId)
+  }
+
+  // Remove tag nodes that are not alive (no post connections and no alive children)
   for (const tagId of tagNodeIds) {
-    if (!tagPostConnections.has(tagId)) {
+    if (!aliveTagIds.has(tagId)) {
       includedNodeIds.delete(tagId)
     }
   }

@@ -1,6 +1,9 @@
 import { PageLayout } from "../cfg"
 import * as Component from "../components"
-import { defaultGraphOptions } from "./conf/graph.layout"
+import { 
+  shellGraphOptions as defaultGraphOptions,
+  defaultLocalGraphOptions
+} from "./conf/graph.layout"
 
 /**
  * Layout configuration for the 404 error page.

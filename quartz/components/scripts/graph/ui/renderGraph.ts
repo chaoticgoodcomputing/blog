@@ -34,6 +34,7 @@ import {
   normalizeSizeScaling,
   normalizeLabelAnchor,
   normalizeTagColorGradient,
+  normalizePseudoShellConfig,
 } from "../adapters/configAdapter"
 import { createFilterControls, FilterState } from "./filters"
 import { filterGraphData } from "./filterLogic"
@@ -55,6 +56,7 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const tagIndex = await fetchTagIndex()
   await IconService.preloadIcons(getAllIconsFromTagIndex(tagIndex))
 
+  const graphConfig = parseGraphConfig(graph)
   const {
     drag: enableDrag,
     zoom: enableZoom,
@@ -78,7 +80,9 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     nodeColors,
     linkStyle,
     privatePostSizeMultiplier,
-  } = parseGraphConfig(graph)
+    graphStyle,
+    pseudoShellConfig,
+  } = graphConfig
 
   // Normalize configuration
   const linkDistanceConfig = normalizeLinkDistance(linkDistance)
@@ -87,6 +91,12 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const baseSizeConfig = normalizeBaseSize(baseSize)
   const sizeScalingConfig = normalizeSizeScaling(sizeScaling)
   const labelAnchorConfig = normalizeLabelAnchor(labelAnchor)
+  
+  // Setup dimensions and rendering infrastructure first (needed for shell config)
+  const width = graph.offsetWidth
+  const height = Math.max(graph.offsetHeight, 250)
+  const computedStyleMap = getComputedStyleMap()
+  const normalizedPseudoShellConfig = normalizePseudoShellConfig(pseudoShellConfig, computedStyleMap)
 
   // Fetch and process data
   const data = await fetchAndTransformData()
@@ -102,12 +112,19 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const tagFileCountMap = buildGraphCountMap(tags, tagIndex)
   const tagColorMap = buildGraphColorMap(tags, tagIndex)
 
-  // Setup dimensions and simulation
-  const width = graph.offsetWidth
-  const height = Math.max(graph.offsetHeight, 250)
+  // Apply initial filter state for global graphs before first render
+  // Note: For global graph, graphConfig IS the globalGraph config (parsed from data-cfg)
+  const globalGraphConfig = isGlobalGraph ? graphConfig : null
+  if (globalGraphConfig?.defaultFilterState) {
+    const defaultState = globalGraphConfig.defaultFilterState
+    const initialFilterState: FilterState = {
+      timePeriod: defaultState.timePeriod ?? "all",
+      includePrivate: defaultState.includePrivate ?? true,
+    }
+    graphData = filterGraphData(graphData.nodes, graphData.links, data, initialFilterState)
+  }
 
   // Setup rendering infrastructure
-  const computedStyleMap = getComputedStyleMap()
   const color = createColorFunction(slug, visited, computedStyleMap, tagColorMap)
   const tweenManager = new TweenManager()
 
@@ -126,10 +143,16 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   let simulation: Simulation<NodeData, undefined> | null = null
   let currentAnimationCleanup: (() => void) | null = null
   let currentCanvas: HTMLCanvasElement | null = null
+  let shellRadius: number | undefined = undefined
 
   // Function to completely tear down and rebuild the graph
-  const rebuildGraph = async (currentGraphData: typeof graphData) => {
-    console.log("[Graph Rebuild] Starting full rebuild with", currentGraphData.nodes.length, "nodes")
+  const rebuildGraph = async (currentGraphData: typeof graphData, resetTransform: boolean = false) => {
+    // Reset transform if requested (e.g., when filters change)
+    if (resetTransform) {
+      transform.x = 0
+      transform.y = 0
+      transform.k = 1
+    }
     
     // Stop and cleanup previous animation loop
     if (currentAnimationCleanup) {
@@ -158,8 +181,6 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     const app = createCanvasApp(width, height)
     graph.appendChild(app.canvas)
     currentCanvas = app.canvas
-    
-    console.log("[Graph Rebuild] New canvas created")
 
     const nodeRadius = createNodeRadiusFunction(
       currentGraphData,
@@ -169,7 +190,7 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       privatePostSizeMultiplier ?? 1,
     )
 
-    simulation = setupSimulation(
+    const setupResult = setupSimulation(
       currentGraphData,
       nodeRadius,
       { repelForce, centerForce },
@@ -178,7 +199,12 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       enableRadial ?? false,
       width,
       height,
+      graphStyle,
+      normalizedPseudoShellConfig,
     )
+    
+    simulation = setupResult.simulation
+    shellRadius = setupResult.shellRadius
 
     const renderAll = () => {
       updateRenderData(
@@ -215,16 +241,12 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       )
       nodeRenderData.push(result.nodeRenderData)
     }
-    
-    console.log("[Graph Render] Created", nodeRenderData.length, "node render objects")
 
     // Create all links
     for (const l of currentGraphData.links) {
       const linkRenderDatum = createLink(l, computedStyleMap, linkStyle)
       linkRenderData.push(linkRenderDatum)
     }
-    
-    console.log("[Graph Render] Created", linkRenderData.length, "link render objects")
 
     // Setup hover behavior (always active for hover effects)
     setupHoverBehavior(
@@ -278,12 +300,13 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       linkDistanceConfig,
       edgeOpacityConfig,
       transform,
+      graphStyle,
+      shellRadius,
+      normalizedPseudoShellConfig,
     )
     
     // Force an initial render
     renderAll()
-    
-    console.log("[Graph Rebuild] Animation loop started, graph rebuilt successfully")
   }
 
   // Initial render
@@ -293,9 +316,6 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   let filterCleanup: (() => void) | null = null
   if (isGlobalGraph && originalGraphData) {
     const handleFilterChange = async (filterState: FilterState) => {
-      console.log("[Graph Filter] Applying filter:", filterState)
-      console.log("[Graph Filter] Original data:", originalGraphData.nodes.length, "nodes,", originalGraphData.links.length, "links")
-      
       // Apply filtering to the original graph data
       const filtered = filterGraphData(
         originalGraphData.nodes,
@@ -303,13 +323,12 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
         data,
         filterState,
       )
-      
-      console.log("[Graph Filter] Filtered data:", filtered.nodes.length, "nodes,", filtered.links.length, "links")
       graphData = filtered
-      await rebuildGraph(graphData)
+      // Reset transform when filter changes to recenter the graph
+      await rebuildGraph(graphData, true)
     }
 
-    const filterControls = createFilterControls(graph, handleFilterChange)
+    const filterControls = createFilterControls(graph, handleFilterChange, globalGraphConfig?.defaultFilterState)
     filterCleanup = filterControls.cleanup
   }
 

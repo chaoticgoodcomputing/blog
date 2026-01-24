@@ -45,7 +45,11 @@ export const defaultGraphOptions: Partial<D3Config> = {
     postPost: "dotted",
   },
   privatePostSizeMultiplier: 0.8,  // Private posts are half the size
-  removeTags: ["private"]
+  removeTags: ["private"],
+  defaultFilterState: {
+    timePeriod: "year",        // Default to showing posts from the last year
+    includePrivate: false,     // Exclude private posts by default
+  },
 }
 
 /**
@@ -78,5 +82,78 @@ export const defaultLocalGraphOptions: Partial<D3Config> = {
     tagTag: { min: 1, max: 1 },
     tagPost: { min: 0.3, max: 0.7 },
     postPost: { min: 0.3, max: 0.7 },
+  },
+}
+
+/**
+ * Common graph configuration options shared across multiple page types.
+ * These can be overridden in individual layouts as needed.
+ */
+export const shellGraphOptions: Partial<D3Config> = {
+  scale: 0.6,
+  linkStrength: {
+    tagTag: 0.95,
+    tagPost: 0.2,
+    postPost: 0.1,
+  },
+  edgeOpacity: {
+    tagTag: { min: 1, max: 1 },
+    tagPost: { min: 0.1, max: 0.8 },
+    postPost: { min: 0.1, max: 0.8 },
+  },
+  repelForce: 3,
+  centerForce: 1.5,
+  linkDistance: {
+    tagTag: 50,
+    tagPost: 10,
+    postPost: 10,
+  },
+  baseSize: {
+    tags: 15,
+    posts: 10,
+  },
+  sizeScaling: {
+    tags: 1.5,
+    posts: 1,
+  },
+  labelAnchor: {
+    baseY: 1.2,
+    scaleFactor: 0.05,
+  },
+  nodeColors: {
+    public: undefined,   // Uses CSS --secondary by default
+    private: "#c54040",  // Pink color for private notes
+  },
+  linkStyle: {
+    tagTag: "solid",
+    tagPost: "solid",
+    postPost: "dotted",
+  },
+  privatePostSizeMultiplier: 0.8,  // Private posts are 80% the size
+  removeTags: ["private"],
+  defaultFilterState: {
+    timePeriod: "year",        // Default to showing posts from the last year
+    includePrivate: false,     // Exclude private posts by default
+  },
+  // Pseudo-shell style configuration
+  graphStyle: "pseudo-shell",
+  pseudoShellConfig: {
+    radiusBase: 90,           // Base radius of the shell circle
+    radiusScale: 45,            // Multiplier for sqrt(nodeCount) - maintains constant node density
+    circumferentialRepulsion: 3,
+    pinnedTags: [              // Top-level tags pinned to the shell
+      "engineering",
+      "writing",
+      "horticulture",
+      "projects",
+      "economics"
+    ],
+    showShell: true,           // Render the shell circle
+    shellStyle: {
+      color: undefined,        // Uses CSS --lightgray by default
+      opacity: 0.3,
+      lineStyle: "dotted",
+      lineWidth: 2,
+    },
   },
 }

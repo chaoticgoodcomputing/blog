@@ -3,6 +3,8 @@ import { LinkRenderData, NodeRenderData, LabelData } from "../core/renderTypes"
 import { calculateEdgeOpacity } from "../core/graphData"
 import { TweenManager } from "../core/tweenManager"
 import { CanvasApp } from "./canvasSetup"
+import type { NormalizedPseudoShellConfig } from "../adapters/configAdapter"
+import type { GraphStyle } from "../../../Graph"
 
 export function renderLinks(
   tweenManager: TweenManager,
@@ -181,6 +183,31 @@ function drawLink(
   ctx.restore()
 }
 
+function drawShell(
+  ctx: CanvasRenderingContext2D,
+  shellRadius: number,
+  shellConfig: NormalizedPseudoShellConfig,
+  centerX: number,
+  centerY: number,
+) {
+  ctx.save()
+  ctx.globalAlpha = shellConfig.shellStyle.opacity
+  ctx.strokeStyle = shellConfig.shellStyle.color
+  ctx.lineWidth = shellConfig.shellStyle.lineWidth
+  
+  // Apply line dash for dotted style
+  if (shellConfig.shellStyle.lineStyle === 'dotted') {
+    ctx.setLineDash([5, 5])  // 5px dash, 5px gap
+  } else {
+    ctx.setLineDash([])  // Solid line
+  }
+  
+  ctx.beginPath()
+  ctx.arc(centerX, centerY, shellRadius, 0, 2 * Math.PI)
+  ctx.stroke()
+  ctx.restore()
+}
+
 export function startAnimationLoop(
   nodeRenderData: NodeRenderData[],
   linkRenderData: LinkRenderData[],
@@ -195,6 +222,9 @@ export function startAnimationLoop(
     postPost: { min: number; max: number }
   },
   transform: { x: number; y: number; k: number },
+  graphStyle?: GraphStyle,
+  shellRadius?: number,
+  pseudoShellConfig?: NormalizedPseudoShellConfig,
 ): () => void {
   const { ctx } = app
   let stopAnimation = false
@@ -211,7 +241,14 @@ export function startAnimationLoop(
     ctx.translate(transform.x, transform.y)
     ctx.scale(transform.k, transform.k)
 
-    // Draw links first (background layer)
+    // Draw shell circle if pseudo-shell style is enabled
+    if (graphStyle === "pseudo-shell" && shellRadius && pseudoShellConfig?.showShell) {
+      const centerX = width / 2
+      const centerY = height / 2
+      drawShell(ctx, shellRadius, pseudoShellConfig, centerX, centerY)
+    }
+
+    // Draw links (background layer)
     for (const l of linkRenderData) {
       const linkData = l.simulationData
       const sx = linkData.source.x! + width / 2
