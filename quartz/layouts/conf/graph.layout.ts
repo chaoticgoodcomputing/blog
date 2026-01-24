@@ -20,15 +20,15 @@ export const defaultGraphOptions: Partial<D3Config> = {
   centerForce: 0.25,
   linkDistance: {
     tagTag: 50,
-    tagPost: 1,
-    postPost: 1,
+    tagPost: 10,
+    postPost: 10,
   },
   baseSize: {
-    tags: 15,
+    tags: 14,
     posts: 10,
   },
   sizeScaling: {
-    tags: 1.5,
+    tags: 1.25,
     posts: 1,
   },
   labelAnchor: {
@@ -60,9 +60,9 @@ export const defaultLocalGraphOptions: Partial<D3Config> = {
   ...defaultGraphOptions,
   scale: 0.75,
   linkDistance: {
-    tagTag: 10,
-    tagPost: 1,
-    postPost: 1,
+    tagTag: 15,
+    tagPost: 15,
+    postPost: 15,
   },
   linkStrength: {
     tagTag: 0.3,
@@ -80,8 +80,8 @@ export const defaultLocalGraphOptions: Partial<D3Config> = {
   },
   edgeOpacity: {
     tagTag: { min: 1, max: 1 },
-    tagPost: { min: 0.3, max: 0.7 },
-    postPost: { min: 0.3, max: 0.7 },
+    tagPost: { min: 0.6, max: 0.8 },
+    postPost: { min: 0.6, max: 0.8 },
   },
 }
 
