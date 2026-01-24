@@ -47,7 +47,7 @@ const config: QuartzConfig = {
         { tag: "projects/homelab", icon: "mdi:home-sound-out" },
         
         // Engineering Subtopics
-        { tag: "engineering/bio", icon: "mdi:molecule" },
+        { tag: "engineering/bio", icon: "mdi:dna" },
         { tag: "engineering/languages", icon: "mdi:code-braces" },
         { tag: "engineering/data", icon: "mdi:pulse" },
         { tag: "engineering/devops", icon: "mdi:cloud" },

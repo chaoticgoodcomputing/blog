@@ -86,33 +86,32 @@ export const defaultLocalGraphOptions: Partial<D3Config> = {
 }
 
 /**
- * Common graph configuration options shared across multiple page types.
- * These can be overridden in individual layouts as needed.
+ * Shell-based global graph config
  */
 export const shellGraphOptions: Partial<D3Config> = {
   ...defaultGraphOptions,
   linkStrength: {
-    tagTag: 0.95,
+    tagTag: 1,
     tagPost: 0.2,
-    postPost: 0.2,
+    postPost: 0.1,
   },
   edgeOpacity: {
-    tagTag: { min: 1, max: 1 },
-    tagPost: { min: 0.1, max: 0.8 },
-    postPost: { min: 0.1, max: 0.8 },
+    tagTag: { min: 0.5, max: 1 },
+    tagPost: { min: 0.1, max: 0.9 },
+    postPost: { min: 0.1, max: 0.9 },
   },
   repelForce: 3,
-  centerForce: 1.5,
+  centerForce: 1.75,
   linkDistance: {
-    tagTag: 50,
-    tagPost: 1,
-    postPost: 1,
+    tagTag: 25,
+    tagPost: 5,
+    postPost: 2,
   },
   // Pseudo-shell style configuration
   graphStyle: "pseudo-shell",
   pseudoShellConfig: {
     radiusBase: 90,           // Base radius of the shell circle
-    radiusScale: 45,            // Multiplier for sqrt(nodeCount) - maintains constant node density
+    radiusScale: 41,            // Multiplier for sqrt(nodeCount) - maintains constant node density
     circumferentialRepulsion: 3,
     pinnedTags: [              // Top-level tags pinned to the shell
       "engineering",
