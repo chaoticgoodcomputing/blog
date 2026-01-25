@@ -53,7 +53,7 @@ export function createFilterControls(
 
   const privateLabel = document.createElement("label")
   privateLabel.htmlFor = "graph-private-toggle"
-  privateLabel.textContent = "Include private posts"
+  privateLabel.textContent = "Include private notes"
 
   visibilityToggle.appendChild(privateCheckbox)
   visibilityToggle.appendChild(privateLabel)
