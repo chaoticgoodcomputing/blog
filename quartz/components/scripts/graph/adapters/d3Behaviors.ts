@@ -1,8 +1,8 @@
 import { Simulation, drag, select, zoom, zoomIdentity } from "d3"
 import { SimpleSlug } from "../../../../util/path"
 import { LinkData, NodeData } from "../core/types"
-import { NodeRenderData } from "../core/renderTypes"
-import { HoverState } from "../core/hoverState"
+import { LinkRenderData, NodeRenderData } from "../core/renderTypes"
+import { HoverState, updateHoverInfo } from "../core/hoverState"
 
 export function setupDragBehavior(
   canvas: HTMLCanvasElement,
@@ -14,6 +14,7 @@ export function setupDragBehavior(
   width: number,
   height: number,
   nodeRenderData: NodeRenderData[],
+  linkRenderData: LinkRenderData[],
 ) {
   // Helper function to find node at coordinates
   const findNodeAtPoint = (x: number, y: number): NodeData | undefined => {
@@ -65,6 +66,11 @@ export function setupDragBehavior(
         }
         hoverState.dragStartTime = Date.now()
         hoverState.dragging = true
+        
+        // Highlight the dragged node and its neighbors (mobile-friendly)
+        updateHoverInfo(hoverState, linkRenderData, nodeRenderData, event.subject.id)
+        canvas.style.cursor = "grabbing"
+        renderAll()
       })
       .on("drag", function dragged(event) {
         const initPos = event.subject.__initialDragPos
@@ -76,6 +82,11 @@ export function setupDragBehavior(
         event.subject.fx = null
         event.subject.fy = null
         hoverState.dragging = false
+        
+        // Clear highlighting when drag ends
+        updateHoverInfo(hoverState, linkRenderData, nodeRenderData, null)
+        canvas.style.cursor = "default"
+        renderAll()
 
         if (Date.now() - hoverState.dragStartTime < 500) {
           const node = graphData.nodes.find((n) => n.id === event.subject.id) as NodeData

@@ -272,6 +272,7 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
         width,
         height,
         nodeRenderData,
+        linkRenderData,
       )
     } else {
       setupClickBehavior(app.canvas, nodeRenderData, width, height, transform)
