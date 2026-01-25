@@ -2,7 +2,6 @@
 node_modules
 prof
 tsconfig.tsbuildinfo
-.obsidian
 .quartz-cache
 .replit
 replit.nix

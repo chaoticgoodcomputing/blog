@@ -1,0 +1,71 @@
+/* Remove awkward list indentation in live preview mode */
+
+/* ========================================
+   REMOVE LIST INDENTATION
+   ========================================
+   
+   Removes the text-indent and padding-inline-start that causes
+   awkward indentation when typing markdown lists.
+   
+   Uses !important to override inline styles and CSS variables.
+*/
+
+/* Override inline styles on list lines (numbered and unnumbered lists) */
+.cm-line.HyperMD-list-line {
+  text-indent: 0 !important;
+  padding-inline-start: 0 !important;
+}
+
+/* Also target task lines */
+.cm-line.HyperMD-task-line {
+  text-indent: 0 !important;
+  padding-inline-start: 0 !important;
+}
+
+/* Remove padding from the formatting wrapper spans */
+.cm-formatting.cm-formatting-list {
+  padding-inline-start: 0 !important;
+  text-indent: 0 !important;
+}
+
+/* Reset list number and bullet element spacing */
+.list-number,
+.list-bullet {
+  padding-inline-start: 0 !important;
+  text-indent: 0 !important;
+  margin-right: 0.5em;
+  vertical-align: baseline;
+  white-space: normal;
+}
+
+/* Align task checkboxes with text baseline */
+.task-list-label {
+  vertical-align: baseline;
+  margin-right: 0.25em;
+}
+
+.task-list-item-checkbox {
+  vertical-align: baseline;
+  margin: 0;
+}
+
+/* Ensure tags display inline properly within lists */
+.cm-hashtag,
+.cm-formatting-hashtag {
+  vertical-align: baseline;
+}
+
+/* ========================================
+   REDUCE NESTED LIST INDENTATION
+   ========================================
+   
+   Makes nested list indentation roughly equal to two spaces
+   instead of the default tab width.
+*/
+
+.cm-indent,
+.cm-indent-spacing {
+  min-width: 2ch !important;
+  width: 2ch !important;
+  display: inline-block;
+}

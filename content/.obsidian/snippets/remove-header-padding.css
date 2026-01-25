@@ -1,0 +1,49 @@
+/* Remove awkward header padding in live preview mode */
+
+/* ========================================
+   REMOVE HEADER PADDING/MARGIN
+   ========================================
+   
+   Removes extra padding above headers to make it easier to judge
+   line spacing in plaintext view.
+*/
+
+/* Remove block-start margin from all header levels in live preview */
+.HyperMD-header,
+.HyperMD-header-1,
+.HyperMD-header-2,
+.HyperMD-header-3,
+.HyperMD-header-4,
+.HyperMD-header-5,
+.HyperMD-header-6 {
+  margin-block-start: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Also target the cm-header spans */
+.cm-header,
+.cm-header-1,
+.cm-header-2,
+.cm-header-3,
+.cm-header-4,
+.cm-header-5,
+.cm-header-6 {
+  margin-block-start: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Override header margin toggle if it's enabled */
+.cm-header-1,
+.cm-header-2,
+.cm-header-3,
+.cm-header-4,
+.cm-header-5,
+.cm-header-6 {
+  margin-block-start: 0 !important;
+  margin-block-end: 0 !important;
+}
+
+/* Keep minimal bottom margin for visual separation */
+.HyperMD-header {
+  margin-block-end: 0.5em;
+}

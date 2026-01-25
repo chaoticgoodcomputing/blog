@@ -1,0 +1,9 @@
+{
+  "vimMode": true,
+  "alwaysUpdateLinks": true,
+  "newLinkFormat": "absolute",
+  "attachmentFolderPath": "public/assets",
+  "useTab": false,
+  "newFileLocation": "folder",
+  "newFileFolderPath": "private/content/notes/scratch"
+}
