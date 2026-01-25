@@ -27,7 +27,6 @@ export const notesLayout: PageLayout = {
           Component: Component.Search(),
           grow: true,
         },
-        { Component: Component.DesktopOnly(Component.ReaderMode()) },
       ],
     }),
     Component.TagExplorer({

@@ -33,7 +33,6 @@ export const notFoundLayout: PageLayout = {
           Component: Component.Search(),
           grow: true,
         },
-        { Component: Component.ReaderMode() },
       ],
     }),
     Component.TagExplorer({
