@@ -3,6 +3,8 @@ title: "AH: Letter of Recommendation"
 date: "2026-01-05T00:00:00.000Z"
 tags:
   - "writing"
+  - "projects/dayjob"
+  - "projects/college"
   - "private"
 ---
 

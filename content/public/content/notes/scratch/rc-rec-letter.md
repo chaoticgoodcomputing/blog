@@ -3,6 +3,8 @@ title: "RC: Letter of Recommendation"
 date: "2024-02-05T00:00:00.000Z"
 tags:
   - "writing"
+  - "projects/games"
+  - "engineering/languages/csharp"
   - "private"
 ---
 
