@@ -11,6 +11,7 @@ tags:
   - engineering/languages/csharp
   - engineering/languages/typescript
   - writing/annotations
+  - projects/teaching
 annotation-target: https://raw.githubusercontent.com/chaoticgoodcomputing/chaoticgoodcomputing.github.io/refs/heads/main/content/public/assets/llms.pdf
 ---
 

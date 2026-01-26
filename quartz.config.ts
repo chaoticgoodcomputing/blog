@@ -62,7 +62,7 @@ const config: QuartzConfig = {
         
         // Project Types
         { tag: "projects/games", icon: "mdi:controller-classic" },
-        { tag: "projects/teaching", icon: "mdi:thought-bubble" },
+        { tag: "projects/teaching", icon: "mdi:school" },
 
         // Programming Languages
         { tag: "engineering/languages/python", icon: "mdi:language-python" },

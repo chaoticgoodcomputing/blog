@@ -1,13 +1,24 @@
 ---
-title: Unstable Marriage
+title: "Unstable Marriage"
 description: |
   After researching matchmaking algorithms forever, I never considered odd-numbered sets.
   The implications are funnier than expected — addendum on Gale-Shapley matchmaking.
-date: 2024-02-27
+  
+date: "2024-02-27T00:00:00.000Z"
 tags:
-  - engineering/data
-  - economics/markets
+  - "engineering/data"
+  - "economics/markets"
+  - "private"
 ---
-I've spent a whole lot of time researching [[content/notes/stability-of-marriage|matchmaking algorithms]], and yet I'd never considered - didn't even *mention* in the presentation - what would happen in odd-numbered sets.
 
-[the implications are frankly funnier than I would have imagined](https://x.com/jennsun/status/1758212380784300292?s=20)
+This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
+
+If you are interested in what this note contains, please [[contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
+
+
+## Links
+
+This note originally contained the following links:
+
+- [matchmaking algorithms](content/notes/stability-of-marriage)
+- [the implications are frankly funnier than I would have imagined](https://x.com/jennsun/status/1758212380784300292?s=20)

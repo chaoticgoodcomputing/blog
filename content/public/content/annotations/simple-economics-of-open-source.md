@@ -7,6 +7,7 @@ date: 2024-03-17
 tags:
   - economics/markets
   - writing/annotations
+  - engineering
 annotation-target: "https://www.nber.org/system/files/working_papers/w7600/w7600.pdf"
 ---
 
