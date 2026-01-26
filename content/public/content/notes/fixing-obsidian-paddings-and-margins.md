@@ -5,6 +5,7 @@ description: |
 date: 2026-01-24
 tags:
   - engineering/frontend
+  - projects/site
 ---
 This'll be a quicker note, and likely kicked to a Gist.
 

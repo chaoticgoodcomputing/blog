@@ -45,6 +45,7 @@ const config: QuartzConfig = {
         { tag: "projects/games/magic-atlas", icon: "mdi:cards-outline" },
         { tag: "projects/flowthru", icon: "mdi:graph-outline" },
         { tag: "projects/homelab", icon: "mdi:home-sound-out" },
+        { tag: "projects/site", icon: "mdi:web" },
         
         // Engineering Subtopics
         { tag: "engineering/bio", icon: "mdi:dna" },

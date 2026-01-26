@@ -206,6 +206,39 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     simulation = setupResult.simulation
     shellRadius = setupResult.shellRadius
 
+    // Apply auto-zoom for pseudo-shell style to fit the shell in the viewport
+    if (graphStyle === "pseudo-shell" && shellRadius !== undefined && normalizedPseudoShellConfig) {
+      // Calculate the zoom level needed to fit the shell + margin
+      // The shell extends shellRadius in all directions from center
+      // We need to fit 2 * (shellRadius + margin) in the smallest dimension
+      const totalDiameter = 2 * (shellRadius + normalizedPseudoShellConfig.zoomMargin)
+      
+      // Use the minimum dimension to ensure the shell fits in the constrained axis
+      // For example, in a vertical aspect ratio (narrow width), we fit to width
+      const minDimension = Math.min(width, height)
+      
+      // Calculate zoom scale: how much we need to scale down to fit
+      const autoZoomScale = minDimension / totalDiameter
+      
+      // Apply the calculated zoom scale and center the view
+      // When zooming, we need to translate to keep the shell centered in the viewport
+      // The center point should remain at (width/2, height/2) in screen coordinates
+      transform.k = autoZoomScale
+      transform.x = (width / 2) * (1 - autoZoomScale)
+      transform.y = (height / 2) * (1 - autoZoomScale)
+      
+      console.log('[PseudoShell] Auto-zoom applied:', {
+        shellRadius,
+        zoomMargin: normalizedPseudoShellConfig.zoomMargin,
+        totalDiameter,
+        width,
+        height,
+        minDimension,
+        autoZoomScale,
+        transform: { ...transform },
+      })
+    }
+
     const renderAll = () => {
       updateRenderData(
         tweenManager,

@@ -5,6 +5,7 @@ description: |
 tags:
   - engineering/languages/typescript
   - engineering/frontend
+  - projects/site
 ---
 > [!NOTE]
 > Reference of additions from [[content/notes/mdx-widgets-test.mdx|widget intro note]], summary of [[content/notes/scratch/quartz-mdx-notes|private feature integration doc]]

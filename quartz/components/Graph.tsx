@@ -12,6 +12,7 @@ export interface PseudoShellConfig {
   radiusScale: number             // Scaling factor for radius based on node count
   pinnedTags: string[]            // Tags that should be pinned to the shell (e.g., ["engineering", "writing"])
   showShell: boolean              // Whether to render the shell circle
+  zoomMargin?: number             // Additional margin (in pixels) to add when auto-zooming to fit shell (default: 50)
   circumferentialRepulsion?: number  // Strength of angular repulsion between pinned nodes (default: 0.5)
   shellStyle?: {
     color?: string                // Color of the shell (default: CSS --lightgray)

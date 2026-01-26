@@ -6,6 +6,7 @@ description: |
 date: 2024-02-25
 tags:
   - horticulture/seasons/rhythm
+  - projects/site
 ---
 In the spirit of [setting themes instead of resolutions](https://youtu.be/NVGuFdX5guE?si=TLk72LPnvoUjS1l2), I've adopted a seasonal (or perhaps year-long - who knows?) theme for my own life:
 

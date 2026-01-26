@@ -6,6 +6,7 @@ description: |-
 date: 2025-12-26
 tags:
   - horticulture/seasons/rhythm
+  - projects/site
 ---
 ## Rationale
 

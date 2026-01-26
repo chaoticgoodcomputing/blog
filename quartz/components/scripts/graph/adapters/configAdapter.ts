@@ -43,6 +43,7 @@ export type NormalizedPseudoShellConfig = {
   radiusScale: number
   pinnedTags: string[]
   showShell: boolean
+  zoomMargin: number
   circumferentialRepulsion: number
   shellStyle: {
     color: string
@@ -170,6 +171,7 @@ export function normalizePseudoShellConfig(
     radiusScale: pseudoShellConfig?.radiusScale ?? 1.5,
     pinnedTags: pseudoShellConfig?.pinnedTags ?? [],
     showShell: pseudoShellConfig?.showShell ?? true,
+    zoomMargin: pseudoShellConfig?.zoomMargin ?? 50,
     circumferentialRepulsion: pseudoShellConfig?.circumferentialRepulsion ?? 0.5,
     shellStyle: {
       color: pseudoShellConfig?.shellStyle?.color ?? defaultColor,
