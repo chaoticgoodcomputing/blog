@@ -112,7 +112,7 @@ tags:
 
 ## Past Week
 
-### Writing
+### Vault Progress
 
 #### Private Notes
 
@@ -134,7 +134,7 @@ tags:
 *No public notes from the past week.*
 <%* } -%>
 
-### Tasks
+#### Tasks
 
 ---
 ```dataview
