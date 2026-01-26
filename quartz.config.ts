@@ -45,7 +45,6 @@ const config: QuartzConfig = {
         { tag: "projects/games/magic-atlas", icon: "mdi:cards-outline" },
         { tag: "projects/flowthru", icon: "mdi:graph-outline" },
         { tag: "projects/homelab", icon: "mdi:home-sound-out" },
-        { tag: "projects/site", icon: "mdi:web" },
         
         // Engineering Subtopics
         { tag: "engineering/bio", icon: "mdi:dna" },
@@ -92,7 +91,8 @@ const config: QuartzConfig = {
         { tag: "horticulture/seasons/rhythm", icon: "mdi:music-note" },
         { tag: "horticulture/seasons/systems", icon: "mdi:connection" },
 
-        { tag: "horticulture/health", icon: "mdi:heart" },
+        // Website
+        { tag: "projects/site", icon: "mdi:web" },
 
         // Dayjob
         { tag: "projects/dayjob", icon: "mdi:vote" },
