@@ -112,7 +112,9 @@ tags:
 
 ## Past Week
 
-### Private Notes
+### Writing
+
+#### Private Notes
 
 <%* if (privateNotes.length > 0) { -%>
 <%* for (const note of privateNotes) { -%>
@@ -122,7 +124,7 @@ tags:
 *No private notes from the past week.*
 <%* } -%>
 
-### Public Notes
+#### Public Notes
 
 <%* if (publicNotes.length > 0) { -%>
 <%* for (const note of publicNotes) { -%>
@@ -146,10 +148,20 @@ SORT completion DESC
 ```
 ---
 
-### In Review
+### Retrospective
 
-TODO
+#### Personal
+
+⋯
+
+#### Work
+
+⋯
+
+#### Projects
+
+⋯
 
 ## This Week
 
-- TODO
+⋯
