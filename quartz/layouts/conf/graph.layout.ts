@@ -50,6 +50,8 @@ export const defaultGraphOptions: Partial<D3Config> = {
     timePeriod: "year",        // Default to showing posts from the last year
     includePrivate: false,     // Exclude private posts by default
   },
+  expandSelectedSize: 1.4,
+  expandSelectedOscillationTime: 3.0,
 }
 
 /**
@@ -83,6 +85,8 @@ export const defaultLocalGraphOptions: Partial<D3Config> = {
     tagPost: { min: 0.6, max: 0.8 },
     postPost: { min: 0.6, max: 0.8 },
   },
+  expandSelectedSize: 1.2,
+  expandSelectedOscillationTime: 3.0,
 }
 
 /**

@@ -82,6 +82,8 @@ export interface D3Config {
     timePeriod?: 'all' | 'year' | 'month'  // Default time period filter (default: 'all')
     includePrivate?: boolean               // Default private post visibility (default: true)
   }
+  expandSelectedSize?: number             // Percentage multiplier for expanded size (e.g., 1.5 = 150% of base size)
+  expandSelectedOscillationTime?: number  // Time in seconds for full expand-contract cycle
 }
 
 interface GraphOptions {
@@ -141,6 +143,8 @@ const defaultOptions: GraphOptions = {
       postPost: 'dotted',
     },
     privatePostSizeMultiplier: 1,
+    expandSelectedSize: 1.3,
+    expandSelectedOscillationTime: 2.0,
   },
   globalGraph: {
     drag: true,
@@ -197,6 +201,8 @@ const defaultOptions: GraphOptions = {
       timePeriod: 'all',
       includePrivate: true,
     },
+    expandSelectedSize: 1.3,
+    expandSelectedOscillationTime: 2.0,
   },
 }
 

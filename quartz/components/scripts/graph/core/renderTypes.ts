@@ -33,6 +33,7 @@ export type NodeRenderData = GraphicsInfo & {
   strokeWidth?: number
   iconImage?: HTMLImageElement | null
   iconSize?: number
+  baseIconSize?: number
 }
 
 export type TweenNode = {

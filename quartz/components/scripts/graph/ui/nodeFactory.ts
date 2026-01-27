@@ -120,6 +120,7 @@ export async function createNode(
         const iconSize = radius * 1.4
         nodeRenderDatum.iconImage = img
         nodeRenderDatum.iconSize = iconSize
+        nodeRenderDatum.baseIconSize = iconSize
       })
     })
   }

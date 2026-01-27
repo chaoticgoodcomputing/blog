@@ -5,6 +5,7 @@ import { TweenManager } from "../core/tweenManager"
 import { CanvasApp } from "./canvasSetup"
 import type { NormalizedPseudoShellConfig } from "../adapters/configAdapter"
 import type { GraphStyle } from "../../../Graph"
+import type { SimpleSlug } from "../../../../util/path"
 
 export function renderLinks(
   tweenManager: TweenManager,
@@ -225,9 +226,21 @@ export function startAnimationLoop(
   graphStyle?: GraphStyle,
   shellRadius?: number,
   pseudoShellConfig?: NormalizedPseudoShellConfig,
+  currentPageSlug?: SimpleSlug,
+  expandSelectedSize: number = 1.3,
+  expandSelectedOscillationTime: number = 2.0,
 ): () => void {
   const { ctx } = app
   let stopAnimation = false
+  
+  // Find the current page node if it exists
+  const currentPageNode = currentPageSlug 
+    ? nodeRenderData.find(n => n.simulationData.id === currentPageSlug)
+    : undefined
+  const baseRadius = currentPageNode?.radius ?? 0
+  
+  // Convert oscillation time from seconds to milliseconds
+  const oscillationPeriod = expandSelectedOscillationTime * 1000
 
   function animate(time: number) {
     if (stopAnimation) return
@@ -298,7 +311,31 @@ export function startAnimationLoop(
       if (!x || !y) continue
       const nodeX = x + width / 2
       const nodeY = y + height / 2
-      drawNode(ctx, n, nodeX, nodeY)
+      
+      // Apply breathing animation to current page node
+      if (currentPageNode && n === currentPageNode && baseRadius > 0) {
+        // Calculate oscillation: sine wave that goes from 1.0 to expandSelectedSize and back
+        // time is in milliseconds, oscillationPeriod is the full cycle time
+        const phase = (time % oscillationPeriod) / oscillationPeriod  // 0 to 1
+        const sineWave = Math.sin(phase * 2 * Math.PI)  // -1 to 1
+        // Map sine wave from [-1, 1] to [1.0, expandSelectedSize]
+        const minScale = 1.0
+        const maxScale = expandSelectedSize
+        const scale = minScale + ((sineWave + 1) / 2) * (maxScale - minScale)
+        
+        // Temporarily modify radius and icon size for drawing
+        const originalRadius = n.radius
+        const originalIconSize = n.iconSize
+        n.radius = baseRadius * scale
+        if (n.baseIconSize) {
+          n.iconSize = n.baseIconSize * scale
+        }
+        drawNode(ctx, n, nodeX, nodeY)
+        n.radius = originalRadius  // Restore original values
+        n.iconSize = originalIconSize
+      } else {
+        drawNode(ctx, n, nodeX, nodeY)
+      }
     }
 
     // Draw labels (top layer)

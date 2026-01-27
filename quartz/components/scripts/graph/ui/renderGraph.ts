@@ -82,6 +82,8 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     privatePostSizeMultiplier,
     graphStyle,
     pseudoShellConfig,
+    expandSelectedSize,
+    expandSelectedOscillationTime,
   } = graphConfig
 
   // Normalize configuration
@@ -337,6 +339,9 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       graphStyle,
       shellRadius,
       normalizedPseudoShellConfig,
+      slug,
+      expandSelectedSize,
+      expandSelectedOscillationTime,
     )
     
     // Force an initial render
