@@ -229,27 +229,27 @@ export function applyPseudoShellForces(
           if (angularDist < -Math.PI) angularDist += 2 * Math.PI
           
           // Repulsion strength decreases with angular distance
-          // Use inverse square for natural repulsion falloff
+          // Use smooth inverse square falloff for natural, organic behavior
           const idealAngularDist = (2 * Math.PI) / pinnedNodes.length
           const distRatio = Math.abs(angularDist) / idealAngularDist
           
-          // Only apply force if nodes are closer than ideal spacing
-          if (distRatio < 1.5) {
-            const repulsionStrength = config.circumferentialRepulsion * (1 - distRatio / 1.5)
-            
-            // Calculate tangent vectors (perpendicular to radial direction)
-            const tangentXA = -(nodeA.y ?? 0) / shellRadius
-            const tangentYA = (nodeA.x ?? 0) / shellRadius
-            const tangentXB = -(nodeB.y ?? 0) / shellRadius
-            const tangentYB = (nodeB.x ?? 0) / shellRadius
-            
-            // Apply forces in opposite tangential directions
-            const forceDirection = angularDist > 0 ? -1 : 1
-            nodeA.vx = (nodeA.vx ?? 0) + tangentXA * repulsionStrength * forceDirection
-            nodeA.vy = (nodeA.vy ?? 0) + tangentYA * repulsionStrength * forceDirection
-            nodeB.vx = (nodeB.vx ?? 0) - tangentXB * repulsionStrength * forceDirection
-            nodeB.vy = (nodeB.vy ?? 0) - tangentYB * repulsionStrength * forceDirection
-          }
+          // Smooth falloff: inverse square law with no hard cutoff
+          // This creates organic settling as nodes gradually slow down
+          // Force approaches 0 asymptotically but never hits a discontinuity
+          const repulsionStrength = config.circumferentialRepulsion / (distRatio * distRatio)
+          
+          // Calculate tangent vectors (perpendicular to radial direction)
+          const tangentXA = -(nodeA.y ?? 0) / shellRadius
+          const tangentYA = (nodeA.x ?? 0) / shellRadius
+          const tangentXB = -(nodeB.y ?? 0) / shellRadius
+          const tangentYB = (nodeB.x ?? 0) / shellRadius
+          
+          // Apply forces in opposite tangential directions
+          const forceDirection = angularDist > 0 ? -1 : 1
+          nodeA.vx = (nodeA.vx ?? 0) + tangentXA * repulsionStrength * forceDirection
+          nodeA.vy = (nodeA.vy ?? 0) + tangentYA * repulsionStrength * forceDirection
+          nodeB.vx = (nodeB.vx ?? 0) - tangentXB * repulsionStrength * forceDirection
+          nodeB.vy = (nodeB.vy ?? 0) - tangentYB * repulsionStrength * forceDirection
         }
       }
     }

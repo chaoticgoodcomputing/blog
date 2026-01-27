@@ -90,7 +90,8 @@ export function setupDragBehavior(
 
         if (Date.now() - hoverState.dragStartTime < 500) {
           const node = graphData.nodes.find((n) => n.id === event.subject.id) as NodeData
-          const targ = "/" + node.id
+          // node.id already has leading slash for index page ("/"), so don't double up
+          const targ = node.id.startsWith("/") ? node.id : "/" + node.id
           window.spaNavigate(new URL(targ, window.location.toString()))
         }
       }),
@@ -125,7 +126,8 @@ export function setupClickBehavior(
       const distance = Math.sqrt(dx * dx + dy * dy)
       
       if (distance < node.radius) {
-        const targ = "/" + node.simulationData.id
+        // node.id already has leading slash for index page ("/"), so don't double up
+        const targ = node.simulationData.id.startsWith("/") ? node.simulationData.id : "/" + node.simulationData.id
         window.spaNavigate(new URL(targ, window.location.toString()))
         break
       }

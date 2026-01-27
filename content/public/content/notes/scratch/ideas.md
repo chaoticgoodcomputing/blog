@@ -2,8 +2,8 @@
 title: "Scratch: Note Ideas"
 date: "2026-01-26T00:00:00.000Z"
 tags:
-  - "horticulture"
   - "projects/site"
+  - "writing"
   - "private"
 ---
 

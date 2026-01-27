@@ -60,7 +60,7 @@ const config: QuartzConfig = {
         { tag: "economics/markets", icon: "mdi:handshake" },
         
         // Project Types
-        { tag: "projects/games", icon: "mdi:controller-classic" },
+        { tag: "projects/games", icon: "custom:d20" },
         { tag: "projects/teaching", icon: "mdi:school" },
 
         // Programming Languages
