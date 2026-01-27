@@ -92,7 +92,7 @@ const config: QuartzConfig = {
         { tag: "horticulture/seasons/systems", icon: "mdi:connection" },
 
         // Website
-        { tag: "projects/site", icon: "mdi:web" },
+        { tag: "projects/site", icon: "custom:quartz-filled" },
 
         // Dayjob
         { tag: "projects/dayjob", icon: "mdi:vote" },

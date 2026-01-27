@@ -13,8 +13,8 @@ export const defaultGraphOptions: Partial<D3Config> = {
   },
   edgeOpacity: {
     tagTag: { min: 0.8, max: 1 },
-    tagPost: { min: 0.3, max: 0.9 },
-    postPost: { min: 0.3, max: 0.9 },
+    tagPost: { min: 0.2, max: 1 },
+    postPost: { min: 0.2, max: 1 },
   },
   repelForce: 3,
   centerForce: 0.25,

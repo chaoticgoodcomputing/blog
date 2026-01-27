@@ -1,14 +1,14 @@
 ---
-title: "Widget System Reference"
+title: Widget System Reference
 description: |
   Lite reference documentation of the Quartz MDX widget system
 tags:
   - engineering/languages/typescript
   - engineering/frontend
-  - projects/site
 ---
 > [!NOTE]
 > Reference of additions from [[content/notes/mdx-widgets-test.mdx|widget intro note]], summary of [[content/notes/scratch/quartz-mdx-notes|private feature integration doc]]
+
 ## Creating a New Widget
 
 1. Create directory: `{dir}/widgets/{widget-name}/`

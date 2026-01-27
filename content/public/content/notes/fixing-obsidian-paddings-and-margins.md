@@ -3,8 +3,8 @@ title: "Quick Fix: Tone Down Obsidian List/Header Padding"
 description: Annoyed by Obsidian Live Preview over-padding headers and aggressively indenting? Some snippets to help keep your notes from jumping around, so you can focus on actually writing them.
 date: 2026-01-24
 tags:
-  - engineering/frontend
   - projects/site
+  - engineering/frontend
 ---
 This'll be a quicker note, and likely kicked to a Gist.
 
