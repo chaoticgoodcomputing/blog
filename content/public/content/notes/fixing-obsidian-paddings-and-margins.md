@@ -1,7 +1,6 @@
 ---
 title: "Quick Fix: Tone Down Obsidian List/Header Padding"
-description: |
-  Annoyed by Obsidian Live Preview adding over-padding and aggressively indenting? Snippets can help keep your notes from jumping around, so you can focus on actually writing them.
+description: Annoyed by Obsidian Live Preview over-padding headers and aggressively indenting? Some snippets to help keep your notes from jumping around, so you can focus on actually writing them.
 date: 2026-01-24
 tags:
   - engineering/frontend

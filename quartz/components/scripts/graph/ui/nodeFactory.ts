@@ -1,7 +1,7 @@
 import { SimpleSlug } from "../../../../util/path"
 import { IconService } from "../../../../util/iconService"
 import type { TagIndex } from "../../../../util/tags"
-import { getTagIcon, getIconForTagsFromIndex } from "../core/tagIndex"
+import { getTagIcon } from "../core/tagIndex"
 import { NodeData } from "../core/types"
 import { LinkRenderData, NodeRenderData, LabelData } from "../core/renderTypes"
 import { HoverState, updateHoverInfo } from "../core/hoverState"
@@ -106,8 +106,9 @@ export async function createNode(
       tag = tag.substring(0, tag.length - 1)
     }
     iconId = getTagIcon(tag, tagIndex)
-  } else {
-    iconId = getIconForTagsFromIndex(n.tags, tagIndex)
+  } else if (n.tags && n.tags.length > 0) {
+    // Use icon from first tag in frontmatter
+    iconId = getTagIcon(n.tags[0], tagIndex)
   }
 
   if (iconId) {

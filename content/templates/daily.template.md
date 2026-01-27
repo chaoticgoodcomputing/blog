@@ -85,7 +85,7 @@ SORT created DESC
 ---
 #### Fresh
 
-- [ ] #task TODO [created:: <% tp.date.now("YYYY-MM-DD") %>]
+- [ ] #task Start <% tp.date.now("YYYY-MM-DD") %> daily note [created:: <% tp.date.now("YYYY-MM-DD") %>]
 
 ### Thoughts
 

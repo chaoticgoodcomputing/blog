@@ -37,7 +37,7 @@ const config: QuartzConfig = {
         { tag: "private", color: RED },
       ],
       icons: [
-
+        // Featured/Evergreen override
         { tag: "writing/evergreen", icon: "mdi:star" },
         
         // Specific Projects

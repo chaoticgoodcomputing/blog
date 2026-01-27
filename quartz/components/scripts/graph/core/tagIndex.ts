@@ -122,29 +122,4 @@ export function getAllIconsFromTagIndex(tagIndex: TagIndex): string[] {
   return Array.from(icons)
 }
 
-/**
- * Get icon for a set of tags using TagIndex (priority-based).
- * Returns the icon of the first tag in iconConfigOrder that appears in the tags array.
- * This ensures that tags listed first in the config take priority.
- * 
- * @example
- * // Config order: ["private", "engineering"]
- * // Post tags: ["engineering/python", "private"]
- * // Returns: "mdi:lock" (private icon, because it's first in config)
- */
-export function getIconForTagsFromIndex(tags: string[], tagIndex: TagIndex): string | null {
-  if (!tags || tags.length === 0) return null
-  
-  const normalizedTags = tags.map(normalizeTag)
-  
-  // Iterate through icon config in priority order (first match wins)
-  for (const configTag of tagIndex.iconConfigOrder) {
-    const normalizedConfigTag = normalizeTag(configTag)
-    if (normalizedTags.includes(normalizedConfigTag)) {
-      const icon = getTagIcon(configTag, tagIndex)
-      if (icon) return icon
-    }
-  }
-  
-  return null
-}
+
