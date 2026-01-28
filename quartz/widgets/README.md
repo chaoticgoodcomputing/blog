@@ -3,6 +3,7 @@ title: Widget System Reference
 description: |
   Lite reference documentation of the Quartz MDX widget system
 tags:
+  - projects/site
   - engineering/languages/typescript
   - engineering/frontend
 ---
