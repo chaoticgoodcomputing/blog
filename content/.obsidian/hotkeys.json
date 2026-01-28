@@ -148,15 +148,6 @@
     }
   ],
   "markdown:add-metadata-property": [],
-  "app:toggle-left-sidebar": [
-    {
-      "modifiers": [
-        "Ctrl",
-        "Mod"
-      ],
-      "key": "N"
-    }
-  ],
   "window:zoom-in": [
     {
       "modifiers": [
@@ -200,15 +191,6 @@
       "key": "."
     }
   ],
-  "file-explorer:open": [
-    {
-      "modifiers": [
-        "Mod",
-        "Shift"
-      ],
-      "key": "E"
-    }
-  ],
   "templater-obsidian:create-new-note-from-template": [
     {
       "modifiers": [
@@ -250,6 +232,15 @@
         "Mod"
       ],
       "key": "Y"
+    }
+  ],
+  "app:toggle-left-sidebar": [
+    {
+      "modifiers": [
+        "Ctrl",
+        "Mod"
+      ],
+      "key": ","
     }
   ]
 }

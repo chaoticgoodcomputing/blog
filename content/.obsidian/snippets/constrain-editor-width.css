@@ -1,0 +1,34 @@
+/* Constrain editor width to match site's 70-character content width */
+
+/* ========================================
+   CONSTRAIN EDITOR WIDTH
+   ========================================
+   
+   Constrains the editor content area to ~40em (~70 characters) to match
+   the site's rendered output width. This helps maintain visual consistency
+   between editing and published content.
+   
+   Target: .cm-sizer (the actual content container in CodeMirror 6)
+   Width: 40em matches the site's .center > * max-width
+   Centering: Uses auto margins for horizontal centering
+*/
+
+/* Constrain and center the editor content area */
+.markdown-source-view.mod-cm6 .cm-sizer {
+  max-width: 40em !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Ensure the scroller allows centering */
+.markdown-source-view.mod-cm6 .cm-scroller {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+/* Also apply to reading view for consistency */
+.markdown-reading-view {
+  max-width: 40em !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
