@@ -68,17 +68,20 @@ export function renderHighlights(annotation: Annotation): void {
 
   // Create highlights from the bounding boxes of overlapping spans
   for (const span of overlappingSpans) {
-    const rect = span.getBoundingClientRect()
-    const layerRect = highlightLayer.getBoundingClientRect()
-
-    // Position highlight relative to the highlight layer
+    // Use offsetLeft/Top for position within the parent (textLayer)
+    // PDF.js applies transforms to text spans, so we use offset properties instead of getBoundingClientRect
+    const textLayerRect = textLayerDiv.getBoundingClientRect()
+    
+    // Position highlight relative to the text layer (which shares parent with highlight layer)
     const highlight = document.createElement("div")
     highlight.className = "pdf-text-highlight"
     highlight.style.position = "absolute"
-    highlight.style.left = `${rect.left - layerRect.left}px`
-    highlight.style.top = `${rect.top - layerRect.top}px`
-    highlight.style.width = `${rect.width}px`
-    highlight.style.height = `${rect.height}px`
+    // Use offsetLeft/offsetTop for position (relative to offsetParent)
+    highlight.style.left = `${span.offsetLeft}px`
+    highlight.style.top = `${span.offsetTop}px`
+    // Use offsetWidth/offsetHeight to get dimensions without transform scaling
+    highlight.style.width = `${span.offsetWidth}px`
+    highlight.style.height = `${span.offsetHeight}px`
     highlightLayer.appendChild(highlight)
   }
 }

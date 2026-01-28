@@ -1,7 +1,21 @@
 .annotation-viewer {
+  // Use full width to let flex children determine size naturally
   width: 100%;
+  max-width: none;
+  padding-left: 2rem;
+  padding-right: 2rem;
   height: 100vh;
   overflow: hidden;
+
+  @media all and (max-width: 1250px) {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  @media all and (max-width: 600px) {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }
 
 .annotation-source-citation {
@@ -29,8 +43,8 @@
 }
 
 .annotation-pdf-container {
-  flex: 1;
-  min-width: 0;
+  flex: 1 1 auto; // Allow growth and shrinkage
+  min-width: 600px; // Minimum reasonable PDF viewing width
   overflow-y: auto;
   overflow-x: hidden;
   background: var(--light);

@@ -330,8 +330,9 @@ a {
        * - Includes page-header (title, meta, tags), article, graphs, post listings
        * - 40em ≈ 70 characters in proportional fonts
        * - Centered for visual balance
+       * - Exception: annotation-viewer needs full width for PDF + sidebar layout
        */
-      &>* {
+      &>*:not(.annotation-viewer) {
         max-width: 40em;
         margin-left: auto;
         margin-right: auto;
@@ -418,7 +419,8 @@ body.full-width .page {
       }
 
       // Constrain body content for readability even in full-width layout
-      &>*:not(.page-header) {
+      // Exception: annotation-viewer needs full width for PDF + sidebar layout
+      &>*:not(.page-header):not(.annotation-viewer) {
         max-width: 40em;
         margin-left: auto;
         margin-right: auto;
