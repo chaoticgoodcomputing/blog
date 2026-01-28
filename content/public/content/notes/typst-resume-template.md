@@ -13,7 +13,7 @@ aliases:
 
 ![[Sample Resume Template.png]]
 
-> This guide is a direct copy of the Resume Template on the [Typst Universe](https://typst.app/universe/package/resume-starter-cgc) portal.
+> This guide is a direct copy of the Resume Template on the [Typst Universe](https://typst.app/universe/package/guided-resume-starter-cgc) portal.
 
 Welcome to the 2.0 version of the Super Cool Resume Template: now with 100% less LaTeX!
 
