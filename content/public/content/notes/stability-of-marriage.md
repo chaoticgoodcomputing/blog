@@ -16,7 +16,7 @@ A presentation I'm particularly proud of is a presentation on David Gale and Llo
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/lMFQp3wN-cg?si=WyU4VG0KnmL9BqIc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
-This presentation happened at a personally odd time during a globally odd year, and - due to the practical limitation of only having my iPad available while I was in-patient at the University of Utah - was the first time I started using [[tags/engineering/data/index]] in the vast majority of my presentations.
+This presentation happened at a personally odd time during a globally odd year, and - due to the practical limitation of only having my iPad available while I was in-patient at the University of Utah - was the first time I started using hand-written stylized diagrams in the vast majority of my presentations.
 
 There are a few things that were cut for the presentation for time - in particular, the incredibly interesting concept of **matchmaking lattices**. Eventually, I'd like to include some additional written resources here on the topic, because it's pretty cool. One of the cut slides is available [[content/notes/scratch/some1-entry|here.]]
 

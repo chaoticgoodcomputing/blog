@@ -26,7 +26,7 @@ I can name 4 periods of my life where the amount I learned about engineering gre
 1. **2016**: I began studying computer science in my undergraduate
 2. **2018**: In trying to build up my resume, I started taking writing open-source and release-able projects more seriously
 3. **2020**: I got my first full-time job as a data analyst/software engineer writing data pipelines in [[tags/engineering/languages/python/index|Python]] and [[content/articles/structured-streaming|Spark]]
-4. **2023**: I got my second full-time job writing general software in [[tags/engineering/languages/csharp/index]], with incredibly smart capital-E Engineers™ that were also incredibly good mentors
+4. **2023**: I got my second full-time job writing general software in [[tags/engineering/languages/csharp/index|.NET]], with incredibly smart capital-E Engineers™ that were also incredibly good mentors
 
 While it feels great to know more, learning has caused me a fundamental issue: **it's easier to be bad at something on accident than on purpose.**
 
