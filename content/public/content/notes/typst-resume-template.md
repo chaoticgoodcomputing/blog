@@ -13,7 +13,7 @@ aliases:
 
 ![[Sample Resume Template.png]]
 
-> This guide is a direct copy of the Resume Template on the [Typst Universe](https://typst.app/universe/package/guided-resume-starter-cgc) portal.
+> This guide is a direct copy of the Resume Template on the [Typst Universe](https://typst.app/universe/package/guided-resume-starter-cgc) portal. This is the exact system I use for [[resume.mdx|my own resume]], so this system may be updated over time.
 
 Welcome to the 2.0 version of the Super Cool Resume Template: now with 100% less LaTeX!
 
@@ -224,8 +224,6 @@ In general, the workflow I advise for creating this section is an "everything in
 6. (Optional) If you noticed keywords in the job description that you would be comfortable adding, add them to the list.
 
 ### Opinion: Including Programming Languages
-
-Engineers get real weird about which programming languages you include on your resume. In general, here is the unspoken, unwritten policy around programming languages on your resume:
 
 > If a technical interviewer sees a programming language on your resume, they will assume it's fair game for a technical interview.
 
