@@ -5,8 +5,8 @@ description: |
   color-coded chaos, and how to transition from fast pitches to full products.
 date: 2026-01-06
 tags:
-  - writing/annotations
   - engineering
+  - writing/annotations
   - projects/dayjob
   - horticulture/seasons/systems
 ---
