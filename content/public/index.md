@@ -7,4 +7,4 @@ description: |
 tags:
   - writing/evergreen
 ---
-This site is a dedicated [[tags/horticulture/index|digital garden]] of [[tags/writing]] related to my personal life and work, as well as work I do through Chaotic Good Computing, a separate business I run for consulting and [[tags/projects/index|OSS projects]] around [[tags/economics/index|economics]] and [[tags/engineering/index|engineering]].
+This site is a dedicated [[tags/horticulture/index|digital garden]] of [[tags/writing]] related to my personal life and work, as well as work I do through Chaotic Good Computing, a separate practice I operate for consulting and [[tags/projects/index|projects]] related to [[tags/economics/index|economics]] and [[tags/engineering/index|software engineering]].

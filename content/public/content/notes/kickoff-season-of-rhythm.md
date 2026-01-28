@@ -10,6 +10,9 @@ tags:
 ---
 In the spirit of [setting themes instead of resolutions](https://youtu.be/NVGuFdX5guE?si=TLk72LPnvoUjS1l2), I've adopted a seasonal (or perhaps year-long - who knows?) theme for my own life:
 
+> [!UPDATE]
+> Dec 26th, 2025 — The review for the Season of Rhythm can be found [[content/notes/season-of-rhythm-in-review|here]].
+
 ## The Season of 🎵 Rhythm! ✨
 
 During my Season of 🎵 Rhythm! ✨, I want to establish healthier cadences to how I spend my time day-to-day, and to be far more intentional with how I spend my time. This is largely a response to a broad problem in my life that I've felt for some time now.

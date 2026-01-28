@@ -378,7 +378,7 @@ function _restoreScrollPosition(ul: Element) {
     ul.scrollTop = scrollTop
   } else {
     const activeElement = ul.querySelector(".active")
-    activeElement?.scrollIntoView({ behavior: "smooth" })
+    activeElement?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" })
   }
 }
 

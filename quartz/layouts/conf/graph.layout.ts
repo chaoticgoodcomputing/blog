@@ -112,7 +112,7 @@ export const shellGraphOptions: Partial<D3Config> = {
     radiusBase: 90,           // Base radius of the shell circle
     radiusScale: 41,            // Multiplier for sqrt(nodeCount) - maintains constant node density
     circumferentialRepulsion: 3,
-    zoomMargin: 30,
+    zoomMargin: 80,
     pinnedTags: [              // Top-level tags pinned to the shell
       "engineering",
       "writing",

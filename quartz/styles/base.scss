@@ -162,6 +162,7 @@ a {
 
   &>#quartz-body {
     display: grid;
+    justify-content: center;
     grid-template-columns: #{map.get($desktopGrid, templateColumns)};
     grid-template-rows: #{map.get($desktopGrid, templateRows)};
     column-gap: #{map.get($desktopGrid, columnGap)};
@@ -237,6 +238,11 @@ a {
         // Keep vertical stacking for cleaner mobile layout
         flex-direction: column;
         padding: 0;
+
+        // Constrain right sidebar content to match body width in tablet/mobile
+        max-width: 40em;
+        margin-left: auto;
+        margin-right: auto;
 
         &>* {
           flex: 0 1 auto;
@@ -318,14 +324,25 @@ a {
 
     & .center {
       grid-area: grid-center;
+
+      /**
+       * Constrain all content to ~70 characters per line for readability.
+       * - Includes page-header (title, meta, tags), article, graphs, post listings
+       * - 40em ≈ 70 characters in proportional fonts
+       * - Centered for visual balance
+       */
+      &>* {
+        max-width: 40em;
+        margin-left: auto;
+        margin-right: auto;
+      }
     }
 
     & footer {
       grid-area: grid-footer;
     }
 
-    & .center,
-    & footer {
+    & .center {
       max-width: 100%;
       min-width: 100%;
       margin-left: auto;
@@ -342,7 +359,19 @@ a {
     }
 
     & footer {
-      margin-left: 0;
+      margin-left: auto;
+      max-width: 40em;
+      margin-right: auto;
+
+      @media all and ($tablet) {
+        margin-right: 0;
+        margin-left: 0;
+      }
+
+      @media all and ($mobile) {
+        margin-right: 0;
+        margin-left: 0;
+      }
     }
   }
 }
@@ -387,6 +416,19 @@ body.full-width .page {
         margin-left: auto;
         margin-right: auto;
       }
+
+      // Constrain body content for readability even in full-width layout
+      &>*:not(.page-header) {
+        max-width: 40em;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    & footer {
+      max-width: 40em;
+      margin-left: auto;
+      margin-right: auto;
     }
   }
 }
