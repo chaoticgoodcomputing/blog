@@ -38,7 +38,18 @@ export function createHtmlProcessor(ctx: BuildCtx): QuartzHtmlProcessor {
   return (
     unified()
       // MD AST -> HTML AST
-      .use(remarkRehype, { allowDangerousHtml: true })
+      .use(remarkRehype, {
+        allowDangerousHtml: true,
+        // Pass MDX JSX nodes through to hast for proper rendering
+        // This is required when using remarkMdx parser
+        passThrough: [
+          'mdxjsEsm',
+          'mdxFlowExpression',
+          'mdxJsxFlowElement',
+          'mdxJsxTextElement',
+          'mdxTextExpression',
+        ],
+      })
       // HTML AST -> HTML AST transforms
       .use(transformers.flatMap((plugin) => plugin.htmlPlugins?.(ctx) ?? []))
   )

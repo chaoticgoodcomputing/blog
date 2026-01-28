@@ -80,7 +80,7 @@ WHERE contains(path, "private/")
         AND typeof(completion) = "date" 
         AND completion = date("<% tp.date.now("YYYY-MM-DD") %>"))
   )
-SORT created DESC
+SORT created ASC
 ```
 ---
 #### Fresh

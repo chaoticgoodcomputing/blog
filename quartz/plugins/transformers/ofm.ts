@@ -541,7 +541,22 @@ export const ObsidianFlavoredMarkdown: QuartzTransformerPlugin<Partial<Options>>
       return plugins
     },
     htmlPlugins() {
-      const plugins: PluggableList = [rehypeRaw]
+      // Configure rehype-raw to pass through MDX nodes
+      // This is required when using remarkMdx parser
+      const plugins: PluggableList = [
+        [
+          rehypeRaw,
+          {
+            passThrough: [
+              "mdxjsEsm",
+              "mdxFlowExpression",
+              "mdxJsxFlowElement",
+              "mdxJsxTextElement",
+              "mdxTextExpression",
+            ],
+          },
+        ],
+      ]
 
       if (opts.parseBlockReferences) {
         plugins.push(() => {

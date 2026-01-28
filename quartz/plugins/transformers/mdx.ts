@@ -43,9 +43,11 @@ function getWidgetFromAnyRegistry(importPath: string): WidgetDefinition | undefi
 export const MDX: QuartzTransformerPlugin = () => {
   return {
     name: "MDX",
-    markdownPlugins() {
+    markdownPlugins(ctx) {
+      // Use remarkMdx for ALL files (.md and .mdx)
+      // MDX properly handles standard HTML elements like <iframe> when
+      // remark-rehype is configured with passThrough option
       return [
-        // Apply remarkMdx to all files - MDX is a superset of Markdown
         remarkMdx,
         () => {
           return (tree, file) => {

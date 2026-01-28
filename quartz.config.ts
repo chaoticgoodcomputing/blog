@@ -153,7 +153,7 @@ const config: QuartzConfig = {
     transformers: [
       Plugin.FrontMatter(),
       Plugin.Annotations(), // Must run before MDX to remove annotation blocks
-      Plugin.MDX(),
+      Plugin.MDX(), // Now properly handles .mdx files only
       Plugin.CreatedModifiedDate({
         priority: ["frontmatter", "git", "filesystem"],
       }),

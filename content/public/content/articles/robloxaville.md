@@ -10,6 +10,7 @@ tags:
   - writing/evergreen
 ---
 Guilty confession: I've had a ROBLOX account for 14 years. At 23 years old, that's *more than half my life.* After picking up development again in 2021, I've had quite the walk through memory lane.
+
 ## Being a dork is a lifetime commitment
 
 Flash back to 2007: Spencer Elkington, 4th grade extraordinaire. Oh, to be at my *peak* again. While I appreciate that secondary schools mandate that all kids have a well-rounded curriculum to introduce them to a wide span of different fields of study, I can safely say that one of my *least* favorite classes was art. While I didn't *not* enjoy spending an hour cutting, painting, gluing, and molding, there are only so many burnt ceramics and skewed portraits I could churn out before they - and my parents to whom that "art" was gifted - realized that *perhaps* a budding patronage in the fine arts wasn't going to be in the cards for me.
