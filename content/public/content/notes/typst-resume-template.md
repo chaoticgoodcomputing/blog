@@ -7,6 +7,8 @@ tags:
   - writing/tutorials
   - projects/college
   - projects/teaching
+aliases:
+  - writing/notes/typst-resume-template
 ---
 
 ![[Sample Resume Template.png]]
