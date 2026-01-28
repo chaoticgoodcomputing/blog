@@ -76,7 +76,7 @@ const config: QuartzConfig = {
         // Writing types
         { tag: "writing/annotations", icon: "mdi:chat-plus" },
         { tag: "writing/articles", icon: "mdi:file-edit" },
-        { tag: "writing/tutorials", icon: "mdi:school" },
+        { tag: "writing/tutorials", icon: "mdi:map" },
 
         { tag: "horticulture/seasons", icon: "mdi:weather-sunny" },
         
