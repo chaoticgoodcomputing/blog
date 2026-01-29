@@ -1,9 +1,11 @@
 ---
-title: Evolution and Revolutions as Organizations Grow
+title: Evolution and Revolution as Organizations Grow
 date: 2026-01-28
 tags:
-  - writing/annotations
   - economics/strategy
+  - writing/annotations
+  - engineering/ai
+  - projects/dayjob
 annotation-target: https://ils.unc.edu/daniel/131/cco4/Greiner.pdf
 ---
 

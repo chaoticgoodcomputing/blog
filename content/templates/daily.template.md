@@ -2,6 +2,15 @@
 // Configuration
 const SEASONS_FOLDER = "public/tags/horticulture/seasons";
 const DAILY_NOTES_FOLDER = "private/content/notes/periodic/daily";
+const WEEKDAYS = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday"
+];
 
 // Find the most recent season by date
 const latestSeason = app.vault.getMarkdownFiles()
@@ -50,6 +59,28 @@ const previousPath = previousNote
     })();
 const previousBasename = previousNote ? previousNote.basename : tp.date.now("YYYY-MM-DD", -1);
 
+// Execute Dataview query to get leftover tasks from previous note only
+const DataviewAPI = app.plugins.plugins.dataview?.api;
+let leftoverTasks = "No tasks found.";
+
+if (DataviewAPI && previousNote) {
+  const query = `
+TASK
+WHERE file.path = "${previousNote.path}"
+  AND !completed
+SORT created ASC
+  `.trim();
+  
+  const result = await DataviewAPI.queryMarkdown(query);
+  if (result.successful && result.value) {
+    leftoverTasks = result.value;
+  } else if (!result.successful) {
+    leftoverTasks = `Error executing query: ${result.error}`;
+  }
+} else if (!previousNote) {
+  leftoverTasks = "No previous daily note found.";
+}
+
 -%>---
 title: "<% title %>"
 date: <% tp.date.now() %>
@@ -58,7 +89,7 @@ tags:
 ---
 ⇐ [[<% previousPath %>|<% previousBasename %>]]
 
-## Up Front
+## <% WEEKDAYS[moment().day()] %>: Up Front
 
 What is my day going to look like?
 
@@ -68,28 +99,31 @@ Tasks for the day:
 
 #### Leftovers
 
----
-```dataview
-TASK
-WHERE contains(path, "private/")
-  AND (
-    (!completed AND file.day < date("<% tp.date.now("YYYY-MM-DD") %>"))
-    OR (completed 
-        AND typeof(created) = "date" 
-        AND created < date("<% tp.date.now("YYYY-MM-DD") %>") 
-        AND typeof(completion) = "date" 
-        AND completion = date("<% tp.date.now("YYYY-MM-DD") %>"))
-  )
-SORT created ASC
-```
----
+<% leftoverTasks %>
 #### Fresh
 
-- [ ] #task Start <% tp.date.now("YYYY-MM-DD") %> daily note [created:: <% tp.date.now("YYYY-MM-DD") %>]
+- [x] #tasks/site Start <% tp.date.now("YYYY-MM-DD") %> daily note [created:: <% tp.date.now("YYYY-MM-DD") %>] [completion:: <% tp.date.now("YYYY-MM-DD") %>]
+- 
 
 ### Thoughts
 
 - 
+
+### Plans
+
+> [!ASSISTANT]
+> 
+> #### Morning Block
+> 
+> - 
+> 
+> #### Afternoon Block
+> 
+> - 
+> 
+> #### Evening Block
+> 
+> - 
 
 ## In Review
 

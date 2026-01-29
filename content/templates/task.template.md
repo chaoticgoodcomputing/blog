@@ -1,1 +1,1 @@
-- [ ] #task TODO [created:: <% tp.date.now() %>]
+[ ] #tasks/fruit TODO [created:: <% tp.date.now() %>]

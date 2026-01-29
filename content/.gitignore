@@ -1,0 +1,9 @@
+# Obsidian configuration/styling
+.obsidian/plugins
+.obsidian/themes
+.obsidian/workspace.json
+.obsidian/graph.json
+.obsidian/appearance.json
+
+# Copilot files
+.copilot

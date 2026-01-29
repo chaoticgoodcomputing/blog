@@ -17,7 +17,8 @@
         "parallel": false
       },
       "dependsOn": [
-        "resume:publish"
+        "resume:publish",
+        "vault:_clear-copilot"
       ]
     },
     "sync": {
@@ -81,6 +82,17 @@
             "node utils/list-non-private-files.mjs -n 3"
           ]
         }
+      }
+    },
+    "_clear-copilot": {
+      "//": "Clean Obsidian Copilot conversations",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "rm -rf .copilot/conversations/*"
+        ],
+        "parallel": false,
+        "cwd": "content"
       }
     }
   }
