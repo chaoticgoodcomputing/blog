@@ -20,15 +20,7 @@
     }
   ],
   "templater-obsidian:jump-to-next-cursor-location": [],
-  "global-search:open": [
-    {
-      "modifiers": [
-        "Mod",
-        "Shift"
-      ],
-      "key": "F"
-    }
-  ],
+  "global-search:open": [],
   "editor:open-search": [],
   "editor:open-search-replace": [],
   "editor:save-file": [],
@@ -241,6 +233,15 @@
         "Mod"
       ],
       "key": ","
+    }
+  ],
+  "file-explorer:reveal-active-file": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "F"
     }
   ]
 }
