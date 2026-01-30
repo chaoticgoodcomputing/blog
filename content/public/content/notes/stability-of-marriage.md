@@ -5,8 +5,8 @@ description: |
   Non-market environments, matchmaking lattices, and gratitude for good professors.
 date: 2020-11-01
 tags:
-  - engineering/languages/python
   - economics/markets
+  - engineering/languages/python
   - engineering/data
   - projects/college
 ---

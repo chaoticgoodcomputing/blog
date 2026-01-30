@@ -5,9 +5,9 @@ description: |
   A consult on thinking out-of-the-box to explain morale problems in small companies.
 date: 2021-03-01
 tags:
+  - economics/strategy
   - writing/annotations
   - engineering/languages/python
-  - economics/strategy
   - engineering/data
   - projects/college
 annotation-target: https://raw.githubusercontent.com/chaoticgoodcomputing/chaoticgoodcomputing.github.io/refs/heads/main/content/public/assets/utah_office_update.pdf

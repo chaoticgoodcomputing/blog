@@ -4,8 +4,8 @@ description: |
   Stable matching, optimal stopping, and Bachelor analysis - visualized with some care.
 date: 2021-05-25
 tags:
-  - engineering/languages/python
   - engineering/data
+  - engineering/languages/python
   - economics/markets
   - projects/college
 ---

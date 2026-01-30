@@ -102,7 +102,7 @@ Tasks for the day:
 <% leftoverTasks %>
 #### Fresh
 
-- [x] #tasks/site Start <% tp.date.now("YYYY-MM-DD") %> daily note [created:: <% tp.date.now("YYYY-MM-DD") %>] [completion:: <% tp.date.now("YYYY-MM-DD") %>]
+- [x] #tasks/fruit Start <% tp.date.now("YYYY-MM-DD") %> daily note [created:: <% tp.date.now("YYYY-MM-DD") %>] [completion:: <% tp.date.now("YYYY-MM-DD") %>]
 - 
 
 ### Thoughts
