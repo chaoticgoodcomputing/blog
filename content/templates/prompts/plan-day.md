@@ -3,7 +3,7 @@ copilot-command-context-menu-enabled: true
 copilot-command-slash-enabled: true
 copilot-command-context-menu-order: 1020
 copilot-command-model-key: ""
-copilot-command-last-used: 1769731649296
+copilot-command-last-used: 1769789480312
 ---
 ## Task
 
@@ -21,10 +21,12 @@ The task is to plan my day by filling in the Markdown quote block labelled `> [!
 
 - Each subheader should be filled with two tasks.
 - If it is a weekday (Mon-Fri), the morning and afternoon block should be day job tasks.
-- If it is a weekend (Sat, Sun), the morning and afternoon block can be any tasks.
+- If it is a weekend (Sat, Sun), the morning and afternoon block should NOT be day job tasks.
 - The evening block should never be dayjob tasks.
 - High priority tasks should always be preferred over low-priority tasks
 - The creation date of the task should be used to break ties between tasks of the same priority.
+- The mornings should lean towards tasks that seem easier.
+- On Fridays, break priority slightly by always using a fruit for the second Afternoon block task, regardless of project.
 
 ### Example
 
@@ -64,4 +66,4 @@ A valid assistant block may look like:
 ```
 
 - Respond ONLY with the assistant block. Do NOT include any additional rationale for the decisions.
-- When responding, place the block into a markdown codeblock for easier copy-pasting.
+- Sometimes, the "Thoughts" subheader will be filled in. If that is the case, take those insights into account when weighing tasks

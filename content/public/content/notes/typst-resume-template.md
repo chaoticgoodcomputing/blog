@@ -7,6 +7,7 @@ tags:
   - writing/tutorials
   - projects/college
   - projects/teaching
+  - writing/evergreen
 aliases:
   - writing/notes/typst-resume-template
 ---
