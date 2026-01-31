@@ -28,7 +28,7 @@ export const defaultGraphOptions: Partial<D3Config> = {
     posts: 10,
   },
   sizeScaling: {
-    tags: 1.25,
+    tags: 1.1,
     posts: 1,
   },
   labelAnchor: {

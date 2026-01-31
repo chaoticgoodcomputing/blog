@@ -1,5 +1,5 @@
 ---
-title: "APL: Pattern 1; Independent Regions"
+title: "APL: Pattern 91; Traveler’s Inn"
 date: "1970-01-02T00:00:00.000Z"
 tags:
   - "writing/annotations/pattern-language"
@@ -16,5 +16,5 @@ If you are interested in what this note contains, please [[contact|reach out to 
 
 This note originally contained the following links:
 
-- [Introduction](00-introduction)
-- [The Distribution of Towns](02-the-distribution-of-towns)
+- [Beer Hall](90-beer-hall)
+- [Bus Stop](92-bus-stop)

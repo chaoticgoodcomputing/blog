@@ -1,5 +1,5 @@
 ---
-title: "APL: Pattern 1; Independent Regions"
+title: "APL: Pattern 108; Connected Buildings"
 date: "1970-01-02T00:00:00.000Z"
 tags:
   - "writing/annotations/pattern-language"
@@ -16,5 +16,5 @@ If you are interested in what this note contains, please [[contact|reach out to 
 
 This note originally contained the following links:
 
-- [Introduction](00-introduction)
-- [The Distribution of Towns](02-the-distribution-of-towns)
+- [Wings of Light](107-wings-of-light)
+- [Long Thin House](109-long-thin-house)

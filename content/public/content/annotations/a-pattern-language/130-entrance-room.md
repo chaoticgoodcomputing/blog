@@ -1,5 +1,5 @@
 ---
-title: "APL: Pattern 1; Independent Regions"
+title: "APL: Pattern 130; Entrance Room"
 date: "1970-01-02T00:00:00.000Z"
 tags:
   - "writing/annotations/pattern-language"
@@ -16,5 +16,5 @@ If you are interested in what this note contains, please [[contact|reach out to 
 
 This note originally contained the following links:
 
-- [Introduction](00-introduction)
-- [The Distribution of Towns](02-the-distribution-of-towns)
+- [Common Areas at the Heart](129-common-areas-at-the-heart)
+- [The Flow Through Rooms](131-the-flow-through-rooms)
