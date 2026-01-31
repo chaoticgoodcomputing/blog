@@ -63,6 +63,13 @@ const config: QuartzConfig = {
         { tag: "projects/games", icon: "custom:d20" },
         { tag: "projects/teaching", icon: "mdi:school" },
 
+        // The Neighborhood/A Pattern Language
+        { tag: "projects/games/neighborhood", icon: "mdi:home-group" },
+        { tag: "writing/annotations/pattern-language", icon: "mdi:home-city" },
+        { tag: "writing/annotations/pattern-language/sub", icon: "mdi:home" },
+        { tag: "writing/annotations/pattern-language/super", icon: "mdi:city" },
+        { tag: "economics/policy", icon: "mdi:script" },
+
         // Programming Languages
         { tag: "engineering/languages/python", icon: "mdi:language-python" },
         { tag: "engineering/languages/typescript", icon: "mdi:language-typescript" },
