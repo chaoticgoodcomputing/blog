@@ -3,11 +3,14 @@ copilot-command-context-menu-enabled: true
 copilot-command-slash-enabled: true
 copilot-command-context-menu-order: 1020
 copilot-command-model-key: ""
-copilot-command-last-used: 1769789480312
+copilot-command-last-used: 1769883675379
 ---
 ## Task
 
-Read the contents of {activeNote}. Under the "#### Leftovers" subheader in the "### Tasks" section, there is a markdown task list.
+Read the contents of {activeNote}. Under the "### Tasks" section, there are markdown task lists:
+
+- "Leftovers" are tasks remaining from previous days
+- "Fresh" are tasks created today
 
 This is the data for necessary tasks. Each will have two tags, denoted by `#`.
 
@@ -51,18 +54,18 @@ A valid assistant block may look like:
 > 
 > #### Morning Block
 > 
-> - [ ] Fix ACME product render bug
-> - [ ] Prepare ACME product render bug
+> - Fix ACME product render bug
+> - Prepare ACME product render bug
 > 
 > #### Afternoon Block
 > 
-> - [ ] Create new internal tool presentation
-> - [ ] Schedule DMV appointment
+> - Create new internal tool presentation
+> - Schedule DMV appointment
 > 
 > #### Evening Block
 > 
-> - [ ] Clean the house
-> - [ ] Write new blog post about cats
+> - Clean the house
+> - Write new blog post about cats
 ```
 
 - Respond ONLY with the assistant block. Do NOT include any additional rationale for the decisions.
