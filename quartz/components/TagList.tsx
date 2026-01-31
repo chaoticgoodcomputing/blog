@@ -13,6 +13,14 @@ export interface TagListOptions {
   showSubtags?: boolean
 
   /**
+   * Show the immediate parent tag in the hierarchy.
+   * For example, #writing/annotations will show #writing.
+   * Only shows one level up (not all ancestors).
+   * Default: false
+   */
+  showParentTag?: boolean
+
+  /**
    * Show count of posts for each tag (only applies when showSubtags is true).
    * Counts are cumulative - parent tags include all descendant posts.
    * Default: true
@@ -22,6 +30,7 @@ export interface TagListOptions {
 
 const defaultOptions: TagListOptions = {
   showSubtags: false,
+  showParentTag: false,
   showCount: true,
 }
 
@@ -41,6 +50,7 @@ export default ((userOpts?: Partial<TagListOptions>) => {
           class={classNames(displayClass, "tags")}
           data-showtags="true"
           data-showsubtags={opts.showSubtags}
+          data-showparenttag={opts.showParentTag}
           data-showcount={opts.showCount}
           data-currentslug={slug}
         >
@@ -66,6 +76,7 @@ export default ((userOpts?: Partial<TagListOptions>) => {
           class={classNames(displayClass, "tags")}
           data-showtags="true"
           data-showsubtags={opts.showSubtags}
+          data-showparenttag={opts.showParentTag}
           data-showcount={opts.showCount}
           data-currentslug={slug}
         ></ul>

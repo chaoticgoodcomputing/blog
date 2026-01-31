@@ -131,6 +131,7 @@ async function setupTagList(container?: HTMLElement | Document) {
     for (const tagList of allTagLists) {
       const showCount = tagList.dataset.showcount === "true"
       const showSubtags = tagList.dataset.showsubtags === "true"
+      const showParentTag = tagList.dataset.showparenttag === "true"
       const currentSlug = tagList.dataset.currentslug || ""
 
       // Determine which tags to render for this list
@@ -141,12 +142,32 @@ async function setupTagList(container?: HTMLElement | Document) {
         const meta = tagIndex.tags[tagName]
         if (meta) {
           tagsForList = meta.children
+          
+          // If showing parent tag on a tag page, prepend the immediate parent
+          if (showParentTag && meta.parent) {
+            tagsForList = [meta.parent, ...tagsForList]
+          }
         }
       } else {
         const existingItems = tagList.querySelectorAll("li.tag-item") as NodeListOf<HTMLLIElement>
         tagsForList = Array.from(existingItems)
           .map((el) => el.dataset.tag)
           .filter((t): t is string => !!t)
+        
+        // If showing parent tag for regular tag lists, prepend parent of each tag
+        if (showParentTag) {
+          const parentTags = new Set<string>()
+          for (const tag of tagsForList) {
+            const meta = tagIndex.tags[tag]
+            if (meta?.parent) {
+              parentTags.add(meta.parent)
+            }
+          }
+          // Prepend parent tags to the list
+          if (parentTags.size > 0) {
+            tagsForList = [...Array.from(parentTags), ...tagsForList]
+          }
+        }
       }
 
       // If showing subtags, rebuild the list with child tags

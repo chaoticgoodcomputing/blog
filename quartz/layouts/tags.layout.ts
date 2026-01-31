@@ -13,7 +13,7 @@ export const tagsLayout: PageLayout = {
   beforeBody: [
     Component.ArticleTitle(),
     Component.ContentMeta(),
-    Component.TagList({ showSubtags: true, showCount: true }),
+    Component.TagList({ showSubtags: true, showParentTag: true, showCount: true }),
   ],
   left: [
     Component.PageTitle(),
