@@ -2,7 +2,7 @@
 title: "APL: Pattern 85; Shopfront Schools"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -17,4 +17,6 @@ If you are interested in what this note contains, please [[contact|reach out to 
 This note originally contained the following links:
 
 - [Teenage Society](84-teenage-society)
-- [Childrens’ Home](86-childrens-home)
+- [Children's Home](86-childrens-home)
+- [86-childrens-home](content/annotations/a-pattern-language/86-childrens-home)
+- [18-network-of-learning](content/annotations/a-pattern-language/18-network-of-learning)

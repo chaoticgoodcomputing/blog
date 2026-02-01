@@ -2,7 +2,7 @@
 title: "APL: Pattern 33; Night Life"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Shopping Street](32-shopping-street)
 - [Interchange](34-interchange)
+- [10-magic-of-the-city](content/annotations/a-pattern-language/10-magic-of-the-city)
+- [12-community-of-7000](content/annotations/a-pattern-language/12-community-of-7000)
+- [31-promenade](content/annotations/a-pattern-language/31-promenade)

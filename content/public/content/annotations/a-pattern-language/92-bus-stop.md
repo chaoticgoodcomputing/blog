@@ -2,7 +2,7 @@
 title: "APL: Pattern 92; Bus Stop"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,4 @@ This note originally contained the following links:
 
 - [Traveler’s Inn](91-traveler-s-inn)
 - [Food Stands](93-food-stands)
+- [20-mini-buses](content/annotations/a-pattern-language/20-mini-buses)

@@ -2,7 +2,7 @@
 title: "APL: Pattern 12; Community of 7000"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,4 @@ This note originally contained the following links:
 
 - [Local Transport Areas](11-local-transport-areas)
 - [Subculture Boundary](13-subculture-boundary)
+- [08-mosaic-of-subcultures](content/annotations/a-pattern-language/08-mosaic-of-subcultures)

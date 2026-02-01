@@ -2,7 +2,7 @@
 title: "APL: Pattern 24; Sacred Sites"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---

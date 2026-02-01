@@ -2,7 +2,7 @@
 title: "APL: Pattern 60; Accessible Green"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,8 @@ This note originally contained the following links:
 
 - [Quiet Backs](59-quiet-backs)
 - [Small Public Squares](61-small-public-squares)
+- [14-identifiable-neighborhood](content/annotations/a-pattern-language/14-identifiable-neighborhood)
+- [41-work-community](content/annotations/a-pattern-language/41-work-community)
+- [13-subculture-boundary](content/annotations/a-pattern-language/13-subculture-boundary)
+- [15-neighborhood-boundary](content/annotations/a-pattern-language/15-neighborhood-boundary)
+- [59-quiet-backs](content/annotations/a-pattern-language/59-quiet-backs)

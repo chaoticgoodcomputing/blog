@@ -2,7 +2,7 @@
 title: "APL: Pattern 88; Street Cafe"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Individually Owned Shops](87-individually-owned-shops)
 - [Corner Grocery](89-corner-grocery)
+- [14-identifiable-neighborhood](content/annotations/a-pattern-language/14-identifiable-neighborhood)
+- [30-activity-nodes](content/annotations/a-pattern-language/30-activity-nodes)
+- [61-small-public-squares](content/annotations/a-pattern-language/61-small-public-squares)

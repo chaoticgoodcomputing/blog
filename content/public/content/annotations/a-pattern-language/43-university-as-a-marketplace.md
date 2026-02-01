@@ -2,7 +2,7 @@
 title: "APL: Pattern 43; University as a Marketplace"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,4 @@ This note originally contained the following links:
 
 - [Industrial Ribbon](42-industrial-ribbon)
 - [Local Town Hall](44-local-town-hall)
+- [18-network-of-learning](content/annotations/a-pattern-language/18-network-of-learning)

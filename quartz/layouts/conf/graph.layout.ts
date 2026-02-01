@@ -28,8 +28,8 @@ export const defaultGraphOptions: Partial<D3Config> = {
     posts: 10,
   },
   sizeScaling: {
-    tags: 1.1,
-    posts: 1,
+    tags: 1,
+    posts: 1.05,
   },
   labelAnchor: {
     baseY: 1.2,
@@ -110,8 +110,8 @@ export const shellGraphOptions: Partial<D3Config> = {
   graphStyle: "pseudo-shell",
   pseudoShellConfig: {
     radiusBase: 90,           // Base radius of the shell circle
-    radiusScale: 41,            // Multiplier for sqrt(nodeCount) - maintains constant node density
-    circumferentialRepulsion: 3,
+    radiusScale: 40,            // Multiplier for sqrt(nodeCount) - maintains constant node density
+    circumferentialRepulsion: 4,
     zoomMargin: 80,
     pinnedTags: [              // Top-level tags pinned to the shell
       "engineering",

@@ -2,7 +2,7 @@
 title: "APL: Pattern 47; Health Center"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,4 @@ This note originally contained the following links:
 
 - [Market of Many Shops](46-market-of-many-shops)
 - [Housing In Between](48-housing-in-between)
+- [26-life-cycle](content/annotations/a-pattern-language/26-life-cycle)

@@ -2,7 +2,7 @@
 title: "APL: Pattern 51; Green Streets"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [T Junctions](50-t-junctions)
 - [Network of Paths and Cars](52-network-of-paths-and-cars)
+- [49-looped-local-roads](content/annotations/a-pattern-language/49-looped-local-roads)
+- [50-t-junctions](content/annotations/a-pattern-language/50-t-junctions)
+- [67-common-land](content/annotations/a-pattern-language/67-common-land)

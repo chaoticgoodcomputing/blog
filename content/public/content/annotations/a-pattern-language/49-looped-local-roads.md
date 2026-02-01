@@ -2,7 +2,7 @@
 title: "APL: Pattern 49; Looped Local Roads"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,8 @@ This note originally contained the following links:
 
 - [Housing In Between](48-housing-in-between)
 - [T Junctions](50-t-junctions)
+- [11-local-transport-areas](content/annotations/a-pattern-language/11-local-transport-areas)
+- [14-identifiable-neighborhood](content/annotations/a-pattern-language/14-identifiable-neighborhood)
+- [23-parallel-roads](content/annotations/a-pattern-language/23-parallel-roads)
+- [37-house-cluster](content/annotations/a-pattern-language/37-house-cluster)
+- [41-work-community](content/annotations/a-pattern-language/41-work-community)

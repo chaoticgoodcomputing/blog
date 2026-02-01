@@ -2,7 +2,7 @@
 title: "APL: Pattern 50; T Junctions"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Looped Local Roads](49-looped-local-roads)
 - [Green Streets](51-green-streets)
+- [23-parallel-roads](content/annotations/a-pattern-language/23-parallel-roads)
+- [49-looped-local-roads](content/annotations/a-pattern-language/49-looped-local-roads)

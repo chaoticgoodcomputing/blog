@@ -2,7 +2,7 @@
 title: "APL: Pattern 6; Country Towns"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,4 @@ This note originally contained the following links:
 
 - [Lace of Country Streets](05-lace-of-country-streets)
 - [The Countryside](07-the-countryside)
+- [02-the-distribution-of-towns](content/annotations/a-pattern-language/02-the-distribution-of-towns)

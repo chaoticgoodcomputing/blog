@@ -2,7 +2,7 @@
 title: "APL: Pattern 2; The Distribution of Towns"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,4 @@ This note originally contained the following links:
 
 - [Independent Regions](01-independent-regions)
 - [City Country Fingers](03-city-country-fingers)
+- [01-independent-regions](content/annotations/a-pattern-language/01-independent-regions)

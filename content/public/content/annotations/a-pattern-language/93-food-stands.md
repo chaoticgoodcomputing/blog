@@ -2,7 +2,7 @@
 title: "APL: Pattern 93; Food Stands"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,8 @@ This note originally contained the following links:
 
 - [Bus Stop](92-bus-stop)
 - [Sleeping in Public](94-sleeping-in-public)
+- [30-activity-nodes](content/annotations/a-pattern-language/30-activity-nodes)
+- [54-road-crossing](content/annotations/a-pattern-language/54-road-crossing)
+- [55-raised-walk](content/annotations/a-pattern-language/55-raised-walk)
+- [61-small-public-squares](content/annotations/a-pattern-language/61-small-public-squares)
+- [92-bus-stop](content/annotations/a-pattern-language/92-bus-stop)

@@ -2,7 +2,7 @@
 title: "APL: Pattern 26; Life Cycle"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Access to Water](25-access-to-water)
 - [Men and Women](27-men-and-women)
+- [12-community-of-7000](content/annotations/a-pattern-language/12-community-of-7000)
+- [14-identifiable-neighborhood](content/annotations/a-pattern-language/14-identifiable-neighborhood)

@@ -2,7 +2,7 @@
 title: "APL: Pattern 89; Corner Grocery"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Street Cafe](88-street-cafe)
 - [Beer Hall](90-beer-hall)
+- [46-market-of-many-shops](content/annotations/a-pattern-language/46-market-of-many-shops)
+- [19-web-of-shopping](content/annotations/a-pattern-language/19-web-of-shopping)
+- [14-identifiable-neighborhood](content/annotations/a-pattern-language/14-identifiable-neighborhood)

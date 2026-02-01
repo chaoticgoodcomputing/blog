@@ -2,7 +2,7 @@
 title: "APL: Pattern 91; Traveler’s Inn"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,8 @@ This note originally contained the following links:
 
 - [Beer Hall](90-beer-hall)
 - [Bus Stop](92-bus-stop)
+- [10-magic-of-the-city](content/annotations/a-pattern-language/10-magic-of-the-city)
+- [30-activity-nodes](content/annotations/a-pattern-language/30-activity-nodes)
+- [31-promenade](content/annotations/a-pattern-language/31-promenade)
+- [33-night-life](content/annotations/a-pattern-language/33-night-life)
+- [41-work-community](content/annotations/a-pattern-language/41-work-community)

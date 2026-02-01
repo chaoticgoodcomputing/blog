@@ -2,7 +2,7 @@
 title: "APL: Pattern 4; Agricultural Valleys"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [City Country Fingers](03-city-country-fingers)
 - [Lace of Country Streets](05-lace-of-country-streets)
+- [01-independent-regions](content/annotations/a-pattern-language/01-independent-regions)
+- [03-city-country-fingers](content/annotations/a-pattern-language/03-city-country-fingers)

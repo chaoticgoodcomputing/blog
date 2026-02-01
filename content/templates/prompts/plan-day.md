@@ -3,7 +3,7 @@ copilot-command-context-menu-enabled: true
 copilot-command-slash-enabled: true
 copilot-command-context-menu-order: 1020
 copilot-command-model-key: ""
-copilot-command-last-used: 1769883675379
+copilot-command-last-used: 1769958748592
 ---
 ## Task
 
@@ -27,7 +27,9 @@ The task is to plan my day by filling in the Markdown quote block labelled `> [!
 - If it is a weekend (Sat, Sun), the morning and afternoon block should NOT be day job tasks.
 - The evening block should never be dayjob tasks.
 - High priority tasks should always be preferred over low-priority tasks
-- The creation date of the task should be used to break ties between tasks of the same priority.
+- The creation date of the task should be used to break ties between tasks of the same priority. Date should be used to tiebreak in the following order:
+    - "Fresh" tasks — tasks created that day — should be prioritized first.
+    - "Leftover" tasks should be prioritized in ascending date, with later tasks being prioritized first.
 - The mornings should lean towards tasks that seem easier.
 - On Fridays, break priority slightly by always using a fruit for the second Afternoon block task, regardless of project.
 

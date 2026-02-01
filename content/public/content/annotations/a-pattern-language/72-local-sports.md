@@ -2,7 +2,7 @@
 title: "APL: Pattern 72; Local Sports"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Still Water](71-still-water)
 - [Adventure Playground](73-adventure-playground)
+- [41-work-community](content/annotations/a-pattern-language/41-work-community)
+- [47-health-center](content/annotations/a-pattern-language/47-health-center)

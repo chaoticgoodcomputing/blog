@@ -2,7 +2,7 @@
 title: "APL: Pattern 37; House Cluster"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Degrees of Publicness](36-degrees-of-publicness)
 - [Row Houses](38-row-houses)
+- [14-identifiable-neighborhood](content/annotations/a-pattern-language/14-identifiable-neighborhood)
+- [29-density-rings](content/annotations/a-pattern-language/29-density-rings)
+- [35-household-mix](content/annotations/a-pattern-language/35-household-mix)
+- [36-degrees-of-publicness](content/annotations/a-pattern-language/36-degrees-of-publicness)

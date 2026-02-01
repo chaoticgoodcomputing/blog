@@ -1,8 +1,8 @@
 ---
-title: "APL: Pattern 86; Childrens’ Home"
+title: "APL: Pattern 86; Children's Home"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Shopfront Schools](85-shopfront-schools)
 - [Individually Owned Shops](87-individually-owned-shops)
+- [57-children-in-the-city](content/annotations/a-pattern-language/57-children-in-the-city)
+- [68-connected-play](content/annotations/a-pattern-language/68-connected-play)
+- [18-network-of-learning](content/annotations/a-pattern-language/18-network-of-learning)

@@ -2,7 +2,7 @@
 title: "APL: Pattern 52; Network of Paths and Cars"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,9 @@ This note originally contained the following links:
 
 - [Green Streets](51-green-streets)
 - [Main Gateways](53-main-gateways)
+- [23-parallel-roads](content/annotations/a-pattern-language/23-parallel-roads)
+- [49-looped-local-roads](content/annotations/a-pattern-language/49-looped-local-roads)
+- [51-green-streets](content/annotations/a-pattern-language/51-green-streets)
+- [30-activity-nodes](content/annotations/a-pattern-language/30-activity-nodes)
+- [31-promenade](content/annotations/a-pattern-language/31-promenade)
+- [120-paths-and-goals](content/annotations/a-pattern-language/120-paths-and-goals)

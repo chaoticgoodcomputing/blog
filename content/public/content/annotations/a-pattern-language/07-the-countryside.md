@@ -2,7 +2,7 @@
 title: "APL: Pattern 7; The Countryside"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,8 @@ This note originally contained the following links:
 
 - [Country Towns](06-country-towns)
 - [Mosaic of Subcultures](08-mosaic-of-subcultures)
+- [02-the-distribution-of-towns](content/annotations/a-pattern-language/02-the-distribution-of-towns)
+- [03-city-country-fingers](content/annotations/a-pattern-language/03-city-country-fingers)
+- [04-agricultural-valleys](content/annotations/a-pattern-language/04-agricultural-valleys)
+- [05-lace-of-country-streets](content/annotations/a-pattern-language/05-lace-of-country-streets)
+- [06-country-towns](content/annotations/a-pattern-language/06-country-towns)

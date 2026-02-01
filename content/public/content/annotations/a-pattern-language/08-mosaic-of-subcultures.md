@@ -2,7 +2,7 @@
 title: "APL: Pattern 8; Mosaic of Subcultures"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,4 @@ This note originally contained the following links:
 
 - [The Countryside](07-the-countryside)
 - [Scattered Work](09-scattered-work)
+- [03-city-country-fingers](content/annotations/a-pattern-language/03-city-country-fingers)

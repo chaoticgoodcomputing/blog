@@ -2,7 +2,7 @@
 title: "APL: Pattern 39; Housing Hill"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Row Houses](38-row-houses)
 - [Old People Everywhere](40-old-people-everywhere)
+- [29-density-rings](content/annotations/a-pattern-language/29-density-rings)
+- [21-four-story-limit](content/annotations/a-pattern-language/21-four-story-limit)

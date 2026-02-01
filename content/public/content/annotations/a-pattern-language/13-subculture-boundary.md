@@ -2,7 +2,7 @@
 title: "APL: Pattern 13; Subculture Boundary"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Community of 7000](12-community-of-7000)
 - [Identifiable Neighborhood](14-identifiable-neighborhood)
+- [08-mosaic-of-subcultures](content/annotations/a-pattern-language/08-mosaic-of-subcultures)
+- [12-community-of-7000](content/annotations/a-pattern-language/12-community-of-7000)
+- [14-identifiable-neighborhood](content/annotations/a-pattern-language/14-identifiable-neighborhood)

@@ -2,7 +2,7 @@
 title: "APL: Pattern 90; Beer Hall"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Corner Grocery](89-corner-grocery)
 - [Traveler’s Inn](91-traveler-s-inn)
+- [15-neighborhood-boundary](content/annotations/a-pattern-language/15-neighborhood-boundary)
+- [31-promenade](content/annotations/a-pattern-language/31-promenade)
+- [33-night-life](content/annotations/a-pattern-language/33-night-life)

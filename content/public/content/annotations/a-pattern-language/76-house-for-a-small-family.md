@@ -2,7 +2,7 @@
 title: "APL: Pattern 76; House for a Small Family"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [The Family](75-the-family)
 - [House for a Couple](77-house-for-a-couple)
+- [75-the-family](content/annotations/a-pattern-language/75-the-family)
+- [37-house-cluster](content/annotations/a-pattern-language/37-house-cluster)

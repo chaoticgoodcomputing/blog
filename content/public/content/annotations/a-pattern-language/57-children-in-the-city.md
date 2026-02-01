@@ -2,7 +2,7 @@
 title: "APL: Pattern 57; Children in the City"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,10 @@ This note originally contained the following links:
 
 - [Bike Paths and Racks](56-bike-paths-and-racks)
 - [Carnival](58-carnival)
+- [23-parallel-roads](content/annotations/a-pattern-language/23-parallel-roads)
+- [31-promenade](content/annotations/a-pattern-language/31-promenade)
+- [49-looped-local-roads](content/annotations/a-pattern-language/49-looped-local-roads)
+- [51-green-streets](content/annotations/a-pattern-language/51-green-streets)
+- [52-network-of-paths-and-cars](content/annotations/a-pattern-language/52-network-of-paths-and-cars)
+- [56-bike-paths-and-racks](content/annotations/a-pattern-language/56-bike-paths-and-racks)
+- [18-network-of-learning](content/annotations/a-pattern-language/18-network-of-learning)

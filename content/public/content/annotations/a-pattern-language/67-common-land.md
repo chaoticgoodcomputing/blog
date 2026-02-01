@@ -2,7 +2,7 @@
 title: "APL: Pattern 67; Common Land"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,8 @@ This note originally contained the following links:
 
 - [Holy Ground](66-holy-ground)
 - [Connected Play](68-connected-play)
+- [60-accessible-green](content/annotations/a-pattern-language/60-accessible-green)
+- [37-house-cluster](content/annotations/a-pattern-language/37-house-cluster)
+- [38-row-houses](content/annotations/a-pattern-language/38-row-houses)
+- [39-housing-hill](content/annotations/a-pattern-language/39-housing-hill)
+- [41-work-community](content/annotations/a-pattern-language/41-work-community)

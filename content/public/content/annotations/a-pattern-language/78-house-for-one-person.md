@@ -2,7 +2,7 @@
 title: "APL: Pattern 78; House for One Person"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [House for a Couple](77-house-for-a-couple)
 - [Your Own Home](79-your-own-home)
+- [75-the-family](content/annotations/a-pattern-language/75-the-family)
+- [76-house-for-a-small-family](content/annotations/a-pattern-language/76-house-for-a-small-family)
+- [77-house-for-a-couple](content/annotations/a-pattern-language/77-house-for-a-couple)

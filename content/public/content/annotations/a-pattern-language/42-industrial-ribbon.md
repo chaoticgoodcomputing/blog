@@ -2,7 +2,7 @@
 title: "APL: Pattern 42; Industrial Ribbon"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Work Community](41-work-community)
 - [University as a Marketplace](43-university-as-a-marketplace)
+- [09-scattered-work](content/annotations/a-pattern-language/09-scattered-work)
+- [41-work-community](content/annotations/a-pattern-language/41-work-community)
+- [13-subculture-boundary](content/annotations/a-pattern-language/13-subculture-boundary)

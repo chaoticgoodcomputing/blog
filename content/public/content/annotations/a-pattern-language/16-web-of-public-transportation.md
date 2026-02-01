@@ -2,7 +2,7 @@
 title: "APL: Pattern 16; Web of Public Transportation"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Neighborhood Boundary](15-neighborhood-boundary)
 - [Ring Roads](17-ring-roads)
+- [03-city-country-fingers](content/annotations/a-pattern-language/03-city-country-fingers)
+- [11-local-transport-areas](content/annotations/a-pattern-language/11-local-transport-areas)

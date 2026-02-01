@@ -2,7 +2,7 @@
 title: "APL: Pattern 68; Connected Play"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,4 @@ This note originally contained the following links:
 
 - [Common Land](67-common-land)
 - [Public Outdoor Room](69-public-outdoor-room)
+- [67-common-land](content/annotations/a-pattern-language/67-common-land)

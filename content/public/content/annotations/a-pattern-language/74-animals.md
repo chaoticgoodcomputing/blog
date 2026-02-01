@@ -2,7 +2,7 @@
 title: "APL: Pattern 74; Animals"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Adventure Playground](73-adventure-playground)
 - [The Family](75-the-family)
+- [67-common-land](content/annotations/a-pattern-language/67-common-land)
+- [79-your-own-home](content/annotations/a-pattern-language/79-your-own-home)
+- [51-green-streets](content/annotations/a-pattern-language/51-green-streets)

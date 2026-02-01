@@ -2,7 +2,7 @@
 title: "APL: Pattern 203; Child Caves"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/sub"
   - "projects/games/neighborhood"
   - "private"
 ---

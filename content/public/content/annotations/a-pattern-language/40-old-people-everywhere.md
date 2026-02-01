@@ -2,7 +2,7 @@
 title: "APL: Pattern 40; Old People Everywhere"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Housing Hill](39-housing-hill)
 - [Work Community](41-work-community)
+- [14-identifiable-neighborhood](content/annotations/a-pattern-language/14-identifiable-neighborhood)
+- [26-life-cycle](content/annotations/a-pattern-language/26-life-cycle)
+- [35-household-mix](content/annotations/a-pattern-language/35-household-mix)

@@ -2,7 +2,7 @@
 title: "APL: Pattern 109; Long Thin House"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/sub"
   - "projects/games/neighborhood"
   - "private"
 ---

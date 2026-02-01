@@ -2,7 +2,7 @@
 title: "APL: Pattern 87; Individually Owned Shops"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -16,5 +16,9 @@ If you are interested in what this note contains, please [[contact|reach out to 
 
 This note originally contained the following links:
 
-- [Childrens’ Home](86-childrens-home)
+- [Children's Home](86-childrens-home)
 - [Street Cafe](88-street-cafe)
+- [88-street-cafe](content/annotations/a-pattern-language/88-street-cafe)
+- [89-corner-grocery](content/annotations/a-pattern-language/89-corner-grocery)
+- [32-shopping-street](content/annotations/a-pattern-language/32-shopping-street)
+- [46-market-of-many-shops](content/annotations/a-pattern-language/46-market-of-many-shops)

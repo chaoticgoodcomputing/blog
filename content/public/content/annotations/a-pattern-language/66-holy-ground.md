@@ -2,7 +2,7 @@
 title: "APL: Pattern 66; Holy Ground"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Birth Places](65-birth-places)
 - [Common Land](67-common-land)
+- [26-life-cycle](content/annotations/a-pattern-language/26-life-cycle)
+- [24-sacred-sites](content/annotations/a-pattern-language/24-sacred-sites)

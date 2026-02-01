@@ -2,7 +2,7 @@
 title: "APL: Pattern 46; Market of Many Shops"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Necklace of Community Projects](45-necklace-of-community-projects)
 - [Health Center](47-health-center)
+- [19-web-of-shopping](content/annotations/a-pattern-language/19-web-of-shopping)
+- [32-shopping-streets](content/annotations/a-pattern-language/32-shopping-street)

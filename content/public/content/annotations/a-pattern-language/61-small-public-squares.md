@@ -2,7 +2,7 @@
 title: "APL: Pattern 61; Small Public Squares"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Accessible Green](60-accessible-green)
 - [High Places](62-high-places)
+- [30-activity-nodes](content/annotations/a-pattern-language/30-activity-nodes)
+- [31-promenade](content/annotations/a-pattern-language/31-promenade)
+- [41-work-community](content/annotations/a-pattern-language/41-work-community)
+- [14-identifiable-neighborhood](content/annotations/a-pattern-language/14-identifiable-neighborhood)

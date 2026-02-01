@@ -2,7 +2,7 @@
 title: "APL: Pattern 17; Ring Roads"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Web of Public Transportation](16-web-of-public-transportation)
 - [Network of Learning](18-network-of-learning)
+- [11-local-transport-areas](content/annotations/a-pattern-language/11-local-transport-areas)
+- [34-interchange](content/annotations/a-pattern-language/34-interchange)
+- [16-web-of-public-transportation](content/annotations/a-pattern-language/16-web-of-public-transportation)

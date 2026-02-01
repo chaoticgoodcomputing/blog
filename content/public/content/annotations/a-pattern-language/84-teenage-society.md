@@ -2,7 +2,7 @@
 title: "APL: Pattern 84; Teenage Society"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
+  - "writing/annotations/pattern-language/super"
   - "projects/games/neighborhood"
   - "private"
 ---
@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Master and Apprentices](83-master-and-apprentices)
 - [Shopfront Schools](85-shopfront-schools)
+- [26-life-cycle](content/annotations/a-pattern-language/26-life-cycle)
+- [18-network-of-learning](content/annotations/a-pattern-language/18-network-of-learning)
+- [83-master-and-apprentices](content/annotations/a-pattern-language/83-master-and-apprentices)
