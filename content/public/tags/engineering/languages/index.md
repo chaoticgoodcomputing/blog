@@ -1,5 +1,5 @@
 ---
-title: "#engineering/languages"
+title: "#languages"
 ---
 I'm certainly not a person who has [[content/notes/strong-and-weak-opinions|strong opinions]] about programming languages. My personal and professional decision graph around language choice is:
 

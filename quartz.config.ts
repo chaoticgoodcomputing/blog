@@ -29,16 +29,16 @@ const config: QuartzConfig = {
     tags: {
       colors: [
         // Top-level categories
-        { tag: "horticulture", color: PINK },
-        { tag: "engineering", color: YELLOW },
+        { tag: "horticulture", color: GREEN },
+        { tag: "engineering", color: BLUE },
         { tag: "economics", color: ORANGE },
-        { tag: "projects", color: BLUE },
-        { tag: "writing", color: GREEN },
+        { tag: "projects", color: RED },
+        { tag: "writing", color: YELLOW },
         { tag: "private", color: RED },
       ],
       icons: [
         // Featured/Evergreen override
-        { tag: "writing/evergreen", icon: "mdi:star" },
+        { tag: "writing/highlights", icon: "mdi:star" },
         
         // Specific Projects
         { tag: "projects/games/roblox", icon: "custom:roblox" },

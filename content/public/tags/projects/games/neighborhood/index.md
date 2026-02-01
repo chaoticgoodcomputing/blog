@@ -1,4 +1,4 @@
 ---
-title: "#projects/games/neighborhood"
+title: "#neighborhood"
 ---
 

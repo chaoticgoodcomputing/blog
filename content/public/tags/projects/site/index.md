@@ -1,5 +1,5 @@
 ---
-title: "#projects/site"
+title: "#site"
 ---
 `#projects/site` is a tag dedicated to the mechanical work done on this website. In general, this site is grown up in two places:
 

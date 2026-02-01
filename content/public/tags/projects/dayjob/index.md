@@ -1,5 +1,5 @@
 ---
-title: "#projects/dayjob"
+title: "#dayjob"
 ---
 
 As part of my [[tags/horticulture/index|daily gardening]], I write brief notes about tasks to get done at my day job. The vast majority of these notes will be private, except when taking notes on other publicly-available materials that I am recommended, or assigned to annotate, at work.

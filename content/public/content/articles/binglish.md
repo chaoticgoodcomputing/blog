@@ -4,7 +4,7 @@ description: |
   The only market crashing is the market for sanitized language. Stay human. Embrace typos.
 date: 2024-03-01
 tags:
-  - writing/evergreen
+  - writing/highlights
   - engineering/ai
   - projects/site
 ---

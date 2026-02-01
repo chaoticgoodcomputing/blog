@@ -1,5 +1,5 @@
 ---
-title: "#annotations/pattern-language"
+title: "#pattern-language"
 ---
 
 These notes are a collection of notes and annotations directly from [A Pattern Language](https://arl.human.cornell.edu/linked%20docs/Alexander_A_Pattern_Language.pdf) (by C. Alexander, S. Ishikawa, M. Silverstein et al.), a book setting up a design pattern and language for urban design and development.

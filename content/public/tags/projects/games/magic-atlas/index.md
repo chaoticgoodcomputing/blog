@@ -1,5 +1,5 @@
 ---
-title: "#projects/games/magic-atlas"
+title: "#magic-atlas"
 repo: https://github.com/chaoticgoodcomputing/MagicAtlas
 ---
 
