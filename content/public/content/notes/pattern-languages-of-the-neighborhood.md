@@ -6,7 +6,7 @@ tags:
   - writing/annotations/pattern-language
   - engineering/data
   - economics/policy
-description: "The beginning of a topological review of the 1977 reference book A Pattern Language, and a journey to understand Earth's greatest graph: the Earth, itself."
+description: "The beginning of a topological review of the 1977 urban design and architecture reference book A Pattern Language, and a journey to understand Earth's greatest graph: the Earth, itself."
 ---
 The world is too complicated a place to be understood, wholly, exactly how it is. With each passing day, it becomes *more* complicated. Not even a century ago, the general term "scientist" could be somebody's wholesale job title; a person who *in general, does science.* Now, we know enough about any given field that even among broad categories of science — biology, computing, chemistry, economics — nobody could ever hope to fully understand even a *subsection* of the world. Broad strokes, rules-of-thumb, and statements with many, *many* asterisks are required to even *begin* to understand the many forces that govern our lives.
 
