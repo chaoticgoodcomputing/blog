@@ -18,9 +18,9 @@ For a long time, I had assumed that design patterns were a term *coined* by soft
 
 ## *A Pattern Language* — of another field
 
-A few years ago, I stumbled on *A Pattern Language* while researching more about design patterns for software. What I stumbled into, though, was a bit of hubris: engineers didn't invent design patterns. Other fields have been using them for years.
+A few years ago, I stumbled on *[A Pattern Language](https://arl.human.cornell.edu/linked%20docs/Alexander_A_Pattern_Language.pdf)* while researching more about design patterns for software. What I stumbled into, though, was a bit of hubris: engineers didn't invent design patterns. Other fields have been using them for years.
 
-A Pattern Language is, specifically, a series of patterns related to the physical development of structures and communities — homes, neighborhoods, towns, cities — using design patterns that can begin to describe the organic way we, human beings, have decided to organize ourselves over the course of the last few thousand years.
+*A Pattern Language* is, specifically, a series of patterns related to the physical development of structures and communities — homes, neighborhoods, towns, cities — using design patterns that can begin to describe the organic way we, human beings, have decided to organize ourselves over the course of the last few thousand years.
 
 The text is broken into a few volumes:
 
@@ -28,7 +28,7 @@ The text is broken into a few volumes:
 - **Volume 2:** *A Pattern Language*
 - **Volume 3:** *The Oregon Experiment*
 
-Volumes 1 and 2 are *very* closely related. *A Pattern Language* even states — in the first sentence, of the first paragraph, of the first *page* — that *A Pattern Language* and *The Timeless Way of Building* "... are two halves of a single work." I would describe the system as:
+Volumes 1 and 2 are *very* closely related. *A Pattern Language* even states — in the first sentence, of the first paragraph, of the first *page* — that itself and *The Timeless Way of Building* "... are two halves of a single work." I would describe the system as:
 
 ```mermaid
 graph LR
@@ -74,7 +74,7 @@ Further ahead, the concepts begin to abstract away into patterns for **super**st
 2. **Pattern 10:** Magic of the City; and
 3. **Pattern 8:** Mosaic of Subcultures
 
-The most abstract — **Pattern 1**, fittingly, is Independent Regions; a case that independent regions should be... well, independent.
+The most abstract — **Pattern 1**, fittingly — is Independent Regions; a case that independent regions should be... well, independent.
 
 ![[assets/Pasted image 20260201161641.png]]
 
@@ -84,7 +84,7 @@ That is all to say: *A Pattern Language* seeks to cover a wide-ranging set of pa
 
 Although my initial interest in *A Pattern Language* started with software design pattern research, reading the patterns has bubbled up a different interest: the representation of our world, and the many communities that make it up, as graphs.
 
-When I say graphs, I don't mean a line graph on an X-Y plot — I mean it the most abstract sense of nodes as dots, and edges that connect them: the study of [graph theory](https://en.wikipedia.org/wiki/Graph_theory). This feels like an apt return to form, as the study of graph theory itself formed when Leonhard Euler (of the number *e*), in 1736, solved a puzzle about [seven bridges in the city of Königsberg](https://en.wikipedia.org/wiki/Seven_Bridges_of_K%C3%B6nigsberg):
+When I say graphs, I don't mean a line graph on an X-Y plot — I mean it in the most abstract sense — dots that represent *things*, and lines that *connect* those things: the study of [graph theory](https://en.wikipedia.org/wiki/Graph_theory). This feels like an apt return to form, as the study of graph theory itself formed in 1736 when Leonhard Euler (of the number ***e***), solved a puzzle about [seven bridges in the city of Königsberg](https://en.wikipedia.org/wiki/Seven_Bridges_of_K%C3%B6nigsberg):
 
 ![[assets/Pasted image 20260201163320.png]]
 
@@ -96,13 +96,13 @@ My hope with *A Pattern Language* is to learn more about the relationship *betwe
 
 ### Understanding The Neighborhood
 
-This ultimately lends itself to another project that I've been hoping to work on for a very long time — [[tags/projects/games/neighborhood/index|The Neighborhood]]. What form this project will take is a bit up-in-the-air, as it really depends on how well I can analyze graphs. The goal, though, is simple:
+This ultimately lends itself to another project that I've been hoping to work on for a very long time — [[tags/projects/games/neighborhood/index|The Neighborhood]]. What form this project will take is, to put it mildly, a bit up-in-the-air; it will really depend on how well I can analyze maps as graphs. The goal, though, is simple:
 
 We have so much data about the world around us. We've learned that it's, all things considered, fairly straightforward to simply collect everything, always, all the time:
 
 ![[assets/Pasted image 20260201164026.png]]
 
-However, you and I don't see our communities as nodes and edges. We see them as alive — they're the places we rest, where we work, the friends in our lives, our connection to others. These are all in the raw data, but their *meaning* is a superstructure. It's not the lines on the graph — it's somewhere hidden between them.
+However, you and I don't see our communities as nodes and edges. We see them as alive — they're the places we rest, where we work, the friends in our lives, our connection to others. The literal places and the ways they're connected are all in the raw data, but their *meaning* — the *semantics* of data, to each of us — is a superstructure. The deeper connections are not the lines on the graph — they're somewhere hidden between them.
 
 My hope is to understand and apply the language to create a system that can process the raw data and boil it down to something smaller, but representative. Given an area of data, The Neighborhood's first goal is to understand the abstract, conceptual relationships and generate something akin to the style of the old city-style playmats for kids, boiling down civic structure into an understandable toy.
 
