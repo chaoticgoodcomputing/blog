@@ -73,7 +73,7 @@ export const defaultLocalGraphOptions: Partial<D3Config> = {
   },
   repelForce: 3,
   sizeScaling: {
-    tags: 0.5,
+    tags: 1,
     posts: 1,
   },
   baseSize: {

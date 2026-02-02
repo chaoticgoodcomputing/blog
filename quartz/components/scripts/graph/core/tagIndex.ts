@@ -106,6 +106,38 @@ export function buildGraphCountMap(
 }
 
 /**
+ * Build a count map for tag nodes based on actual connections in the filtered graph.
+ * This counts tag-post connections to determine tag sizes based on visible posts.
+ * 
+ * @param graphData - The filtered graph data containing nodes and links
+ * @returns Map from tag slug to number of post connections
+ */
+export function buildFilteredTagCountMap(
+  graphData: { nodes: any[]; links: any[] },
+): Map<SimpleSlug, number> {
+  const countMap = new Map<SimpleSlug, number>()
+  
+  // Initialize all tag nodes with count of 0
+  for (const node of graphData.nodes) {
+    if (node.id.startsWith("tags/")) {
+      countMap.set(node.id, 0)
+    }
+  }
+  
+  // Count tag-post connections
+  for (const link of graphData.links) {
+    if (link.type === "tag-post") {
+      // Tag-post links: one end is a tag, the other is a post
+      const tagId = link.source.id.startsWith("tags/") ? link.source.id : link.target.id
+      const currentCount = countMap.get(tagId) ?? 0
+      countMap.set(tagId, currentCount + 1)
+    }
+  }
+  
+  return countMap
+}
+
+/**
  * Extract all unique icon identifiers from TagIndex.
  * Used for preloading icons.
  */

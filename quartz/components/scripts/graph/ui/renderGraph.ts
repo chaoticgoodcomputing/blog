@@ -6,7 +6,7 @@ import {
   buildLinksAndTags,
   fetchTagIndex,
   buildGraphColorMap,
-  buildGraphCountMap,
+  buildFilteredTagCountMap,
   getAllIconsFromTagIndex,
   calculateNeighborhood,
   constructGraphData,
@@ -111,7 +111,6 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   // Store original graph data for filtering (only for global graphs)
   const originalGraphData = isGlobalGraph ? { nodes: [...graphData.nodes], links: [...graphData.links] } : null
 
-  const tagFileCountMap = buildGraphCountMap(tags, tagIndex)
   const tagColorMap = buildGraphColorMap(tags, tagIndex)
 
   // Apply initial filter state for global graphs before first render
@@ -184,11 +183,14 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     graph.appendChild(app.canvas)
     currentCanvas = app.canvas
 
+    // Calculate tag sizes based on the filtered graph data
+    const filteredTagCountMap = buildFilteredTagCountMap(currentGraphData)
+
     const nodeRadius = createNodeRadiusFunction(
       currentGraphData,
       baseSizeConfig,
       sizeScalingConfig,
-      tagFileCountMap,
+      filteredTagCountMap,
       privatePostSizeMultiplier ?? 1,
     )
 
