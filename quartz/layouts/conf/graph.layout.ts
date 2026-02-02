@@ -24,12 +24,12 @@ export const defaultGraphOptions: Partial<D3Config> = {
     postPost: 10,
   },
   baseSize: {
-    tags: 14,
+    tags: 15,
     posts: 10,
   },
   sizeScaling: {
-    tags: 1,
-    posts: 1.05,
+    tags: 1.2,
+    posts: 1,
   },
   labelAnchor: {
     baseY: 1.2,
@@ -51,7 +51,7 @@ export const defaultGraphOptions: Partial<D3Config> = {
     includePrivate: false,     // Exclude private posts by default
   },
   expandSelectedSize: 1.4,
-  expandSelectedOscillationTime: 3.0,
+  expandSelectedOscillationTime: 2,
 }
 
 /**
@@ -60,7 +60,7 @@ export const defaultGraphOptions: Partial<D3Config> = {
  */
 export const defaultLocalGraphOptions: Partial<D3Config> = {
   ...defaultGraphOptions,
-  scale: 0.75,
+  scale: 0.6,
   linkDistance: {
     tagTag: 15,
     tagPost: 15,
@@ -71,22 +71,11 @@ export const defaultLocalGraphOptions: Partial<D3Config> = {
     tagPost: 0.3,
     postPost: 0.3,
   },
-  repelForce: 3,
-  sizeScaling: {
-    tags: 1,
-    posts: 1,
-  },
-  baseSize: {
-    tags: 10,
-    posts: 10,
-  },
   edgeOpacity: {
     tagTag: { min: 1, max: 1 },
     tagPost: { min: 0.6, max: 0.8 },
     postPost: { min: 0.6, max: 0.8 },
   },
-  expandSelectedSize: 1.2,
-  expandSelectedOscillationTime: 3.0,
 }
 
 /**

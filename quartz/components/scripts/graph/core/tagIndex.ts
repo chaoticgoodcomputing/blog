@@ -107,34 +107,76 @@ export function buildGraphCountMap(
 
 /**
  * Build a count map for tag nodes based on actual connections in the filtered graph.
- * This counts tag-post connections to determine tag sizes based on visible posts.
+ * This counts tag-post connections and propagates counts upward through the hierarchy,
+ * so parent tags include the count of all their descendants' posts.
  * 
  * @param graphData - The filtered graph data containing nodes and links
- * @returns Map from tag slug to number of post connections
+ * @returns Map from tag slug to cumulative post count (including descendants)
  */
 export function buildFilteredTagCountMap(
   graphData: { nodes: any[]; links: any[] },
 ): Map<SimpleSlug, number> {
-  const countMap = new Map<SimpleSlug, number>()
+  const directCountMap = new Map<SimpleSlug, number>()
+  const parentMap = new Map<SimpleSlug, SimpleSlug>()  // child -> parent
   
   // Initialize all tag nodes with count of 0
   for (const node of graphData.nodes) {
     if (node.id.startsWith("tags/")) {
-      countMap.set(node.id, 0)
+      directCountMap.set(node.id, 0)
     }
   }
   
-  // Count tag-post connections
+  // Build parent-child relationships from tag-tag links
+  for (const link of graphData.links) {
+    if (link.type === "tag-tag") {
+      // tag-tag links: source is parent, target is child
+      const parentId = link.source.id
+      const childId = link.target.id
+      parentMap.set(childId, parentId)
+    }
+  }
+  
+  // Count direct tag-post connections
   for (const link of graphData.links) {
     if (link.type === "tag-post") {
       // Tag-post links: one end is a tag, the other is a post
       const tagId = link.source.id.startsWith("tags/") ? link.source.id : link.target.id
-      const currentCount = countMap.get(tagId) ?? 0
-      countMap.set(tagId, currentCount + 1)
+      const currentCount = directCountMap.get(tagId) ?? 0
+      directCountMap.set(tagId, currentCount + 1)
     }
   }
   
-  return countMap
+  // Propagate counts upward through the hierarchy
+  const totalCountMap = new Map<SimpleSlug, number>()
+  
+  // Helper function to recursively calculate total count (direct + descendants)
+  function getTotalCount(tagId: SimpleSlug): number {
+    // If already calculated, return cached value
+    if (totalCountMap.has(tagId)) {
+      return totalCountMap.get(tagId)!
+    }
+    
+    // Start with direct count
+    let total = directCountMap.get(tagId) ?? 0
+    
+    // Add counts from all children
+    for (const [childId, parentId] of parentMap.entries()) {
+      if (parentId === tagId) {
+        total += getTotalCount(childId)
+      }
+    }
+    
+    // Cache and return
+    totalCountMap.set(tagId, total)
+    return total
+  }
+  
+  // Calculate total counts for all tags
+  for (const tagId of directCountMap.keys()) {
+    getTotalCount(tagId)
+  }
+  
+  return totalCountMap
 }
 
 /**
