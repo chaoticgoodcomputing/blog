@@ -76,7 +76,7 @@ Further ahead, the concepts begin to abstract away into patterns for **super**st
 
 The most abstract — **Pattern 1**, fittingly, is Independent Regions; a case that independent regions should be... well, independent.
 
-![[public/assets/Pasted image 20260201161641.png]]
+![[assets/Pasted image 20260201161641.png]]
 
 That is all to say: *A Pattern Language* seeks to cover a wide-ranging set of patterns to encapsulate all levels of structure that human beings could possibly dwell in. There are some patterns I agree with more than others. The amount of effort, however, that the authors have put into 253 separate rules seeking to cover the entirety of human habitat while being generalizable enough to cover many cultures? It's herculean.
 
@@ -86,8 +86,9 @@ Although my initial interest in *A Pattern Language* started with software desig
 
 When I say graphs, I don't mean a line graph on an X-Y plot — I mean it the most abstract sense of nodes as dots, and edges that connect them: the study of [graph theory](https://en.wikipedia.org/wiki/Graph_theory). This feels like an apt return to form, as the study of graph theory itself formed when Leonhard Euler (of the number *e*), in 1736, solved a puzzle about [seven bridges in the city of Königsberg](https://en.wikipedia.org/wiki/Seven_Bridges_of_K%C3%B6nigsberg):
 
-![[public/assets/Pasted image 20260201163320.png]]
-![[public/assets/Pasted image 20260201163331.png]]
+![[assets/Pasted image 20260201163320.png]]
+
+![[assets/Pasted image 20260201163331.png]]
 
 Maps are simply graphs of the real world. In fact, whenever a device shows you a map, gives you directions, it's not *seeing* left turns and right turns, streets and buildings — it's seeing nodes on a graph, and the edges that connect them.
 
@@ -99,13 +100,13 @@ This ultimately lends itself to another project that I've been hoping to work on
 
 We have so much data about the world around us. We've learned that it's, all things considered, fairly straightforward to simply collect everything, always, all the time:
 
-![[public/assets/Pasted image 20260201164026.png]]
+![[assets/Pasted image 20260201164026.png]]
 
 However, you and I don't see our communities as nodes and edges. We see them as alive — they're the places we rest, where we work, the friends in our lives, our connection to others. These are all in the raw data, but their *meaning* is a superstructure. It's not the lines on the graph — it's somewhere hidden between them.
 
 My hope is to understand and apply the language to create a system that can process the raw data and boil it down to something smaller, but representative. Given an area of data, The Neighborhood's first goal is to understand the abstract, conceptual relationships and generate something akin to the style of the old city-style playmats for kids, boiling down civic structure into an understandable toy.
 
-![[public/assets/Pasted image 20260201164502.png]]
+![[assets/Pasted image 20260201164502.png]]
 
 I have many amorphous thoughts on what form of a game The Neighborhood will take — thoughts that I'll spare you from, until they take some more concrete, actionable and *playable* form — but I consider the graphical analysis of real map data to be at the core of the concept.
 
@@ -131,7 +132,7 @@ This is a very solid piece of work, and I don't anticipate that anything from th
 
 ### Pacing
 
-Obviously, with 253 patterns, this will be a long-running project — the scope has already decimated the organization of my site graph. Even at a pace averaging one pattern a day, that'd make for an estimated completion date of October of this year. While I have every intention, as of writing this, to read back through the text and have at least *some* annotation for each section (if only just to complete the link connections between a pattern and its neighbors), I will need to triage the pacing a bit.
+With 253 patterns to annotate, this will doubtless be a long-running project (the scope has already decimated the organization of my site graph). Even at a *very generous* estimated pace pace averaging one pattern a day, that'd make for an completion date eight months in the future — October of this year. While I have every intention, as of writing this, to read back through the text and have at least *some* annotation for each section (if only just to complete the link connections between a pattern and its neighbors), I will need to triage the pacing a bit.
 
 Above, I define the terms *substructure* to mean "structures smaller than a whole building" and *superstructure* to mean "structures larger than a whole building". I've created two subtags — [[tags/writing/annotations/pattern-language/sub/index|pattern-language/sub]] and [[tags/writing/annotations/pattern-language/super/index|pattern-language/super]] — to sort patterns into these two categories. I'll be prioritizing the `#super` patterns first, as they relate more to what I'd like to get out of this reading. The book does a preliminary grouping into Towns and Buildings, that I've temporarily co-opted as the current super- and sub-boundaries:
 
