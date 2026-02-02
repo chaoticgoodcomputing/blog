@@ -18,3 +18,9 @@ This note originally contained the following links:
 
 - [Activity Pockets](124-activity-pockets)
 - [Something Roughly in the Middle](126-something-roughly-in-the-middle)
+- [61-small-public-squares](content/annotations/a-pattern-language/61-small-public-squares)
+- [106-positive-outdoor-space](content/annotations/a-pattern-language/106-positive-outdoor-space)
+- [121-path-shape](content/annotations/a-pattern-language/121-path-shape)
+- [102-family-of-entrances](content/annotations/a-pattern-language/102-family-of-entrances)
+- [110-main-entrance](content/annotations/a-pattern-language/110-main-entrance)
+- [158-open-stairs](content/annotations/a-pattern-language/158-open-stairs)

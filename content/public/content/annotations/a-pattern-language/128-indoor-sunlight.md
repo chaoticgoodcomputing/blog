@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Intimacy Gradient](127-intimacy-gradient)
 - [Common Areas at the Heart](129-common-areas-at-the-heart)
+- [105-south-facing-outdoors](content/annotations/a-pattern-language/105-south-facing-outdoors)
+- [127-intimacy-gradient](content/annotations/a-pattern-language/127-intimacy-gradient)

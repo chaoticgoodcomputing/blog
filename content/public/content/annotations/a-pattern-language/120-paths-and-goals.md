@@ -18,3 +18,10 @@ This note originally contained the following links:
 
 - [Arcades](119-arcades)
 - [Path Shape](121-path-shape)
+- [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
+- [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)
+- [106-positive-outdoor-space](content/annotations/a-pattern-language/106-positive-outdoor-space)
+- [119-arcades](content/annotations/a-pattern-language/119-arcades)
+- [36-degrees-of-publicness](content/annotations/a-pattern-language/36-degrees-of-publicness)
+- [52-network-of-paths-and-cars](content/annotations/a-pattern-language/52-network-of-paths-and-cars)
+- [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)

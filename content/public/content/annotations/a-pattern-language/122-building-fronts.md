@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Path Shape](121-path-shape)
 - [Pedestrian Density](123-pedestrian-density)
+- [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
+- [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)
+- [121-path-shape](content/annotations/a-pattern-language/121-path-shape)
+- [124-activity-pockets](content/annotations/a-pattern-language/124-activity-pockets)

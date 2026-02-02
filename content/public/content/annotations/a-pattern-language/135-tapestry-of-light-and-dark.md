@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Zen View](134-zen-view)
 - [Couple’s Realm](136-couple-s-realm)
+- [131-the-flow-through-rooms](content/annotations/a-pattern-language/131-the-flow-through-rooms)
+- [132-short-passages](content/annotations/a-pattern-language/132-short-passages)
+- [133-staircase-as-a-stage](content/annotations/a-pattern-language/133-staircase-as-a-stage)
+- [134-zen-view](content/annotations/a-pattern-language/134-zen-view)

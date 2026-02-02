@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Courtyards Which Live](115-courtyards-which-live)
 - [Sheltering Roof](117-sheltering-roof)
+- [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
+- [96-number-of-stories](content/annotations/a-pattern-language/96-number-of-stories)
+- [99-main-building](content/annotations/a-pattern-language/99-main-building)
+- [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)

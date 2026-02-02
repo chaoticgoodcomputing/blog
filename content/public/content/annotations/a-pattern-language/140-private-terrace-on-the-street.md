@@ -18,3 +18,8 @@ This note originally contained the following links:
 
 - [Farmhouse Kitchen](139-farmhouse-kitchen)
 - [A Room of One’s Own](141-a-room-of-one-s-own)
+- [129-common-areas-at-the-heart](content/annotations/a-pattern-language/129-common-areas-at-the-heart)
+- [142-sequence-of-sitting-spaces](content/annotations/a-pattern-language/142-sequence-of-sitting-spaces)
+- [111-half-hidden-garden](content/annotations/a-pattern-language/111-half-hidden-garden)
+- [51-green-streets](content/annotations/a-pattern-language/51-green-streets)
+- [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)

@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [The Flow Through Rooms](131-the-flow-through-rooms)
 - [Staircase as a Stage](133-staircase-as-a-stage)
+- [131-the-flow-through-rooms](content/annotations/a-pattern-language/131-the-flow-through-rooms)
+- [101-building-thoroughfare](content/annotations/a-pattern-language/101-building-thoroughfare)
+- [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)

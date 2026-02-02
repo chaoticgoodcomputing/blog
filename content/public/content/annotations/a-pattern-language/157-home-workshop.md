@@ -18,3 +18,8 @@ This note originally contained the following links:
 
 - [Settled Work](156-settled-work)
 - [Open Stairs](158-open-stairs)
+- [37-house-cluster](content/annotations/a-pattern-language/37-house-cluster)
+- [79-your-own-home](content/annotations/a-pattern-language/79-your-own-home)
+- [09-scattered-work](content/annotations/a-pattern-language/09-scattered-work)
+- [18-network-of-learning](content/annotations/a-pattern-language/18-network-of-learning)
+- [27-men-and-women](content/annotations/a-pattern-language/27-men-and-women)

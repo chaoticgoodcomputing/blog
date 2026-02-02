@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Childrens’ Realm](137-childrens-realm)
 - [Farmhouse Kitchen](139-farmhouse-kitchen)
+- [127-intimacy-gradient](content/annotations/a-pattern-language/127-intimacy-gradient)
+- [136-couple-s-realm](content/annotations/a-pattern-language/136-couple-s-realm)
+- [137-childrens-realm](content/annotations/a-pattern-language/137-childrens-realm)
+- [128-indoor-sunlight](content/annotations/a-pattern-language/128-indoor-sunlight)

@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Cascade of Roofs](116-cascade-of-roofs)
 - [Roof Garden](118-roof-garden)
+- [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)
+- [116-cascade-of-roofs](content/annotations/a-pattern-language/116-cascade-of-roofs)

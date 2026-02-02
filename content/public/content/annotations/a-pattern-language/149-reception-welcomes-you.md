@@ -18,3 +18,8 @@ This note originally contained the following links:
 
 - [Small Work Groups](148-small-work-groups)
 - [A Place to Wait](150-a-place-to-wait)
+- [80-self-governing-workshops-and-offices](content/annotations/a-pattern-language/80-self-governing-workshops-and-offices)
+- [81-small-services-without-red-tape](content/annotations/a-pattern-language/81-small-services-without-red-tape)
+- [91-traveler-s-inn](content/annotations/a-pattern-language/91-traveler-s-inn)
+- [146-flexible-office-space](content/annotations/a-pattern-language/146-flexible-office-space)
+- [130-entrance-room](content/annotations/a-pattern-language/130-entrance-room)

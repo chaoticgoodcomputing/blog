@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Half-Hidden Garden](111-half-hidden-garden)
 - [Car Connection](113-car-connection)
+- [53-main-gateways](content/annotations/a-pattern-language/53-main-gateways)
+- [102-family-of-entrances](content/annotations/a-pattern-language/102-family-of-entrances)
+- [110-main-entrance](content/annotations/a-pattern-language/110-main-entrance)
+- [111-half-hidden-garden](content/annotations/a-pattern-language/111-half-hidden-garden)

@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Bathing Room](144-bathing-room)
 - [Flexible Office Space](146-flexible-office-space)
+- [76-house-for-a-small-family](content/annotations/a-pattern-language/76-house-for-a-small-family)
+- [80-self-governing-workshops-and-offices](content/annotations/a-pattern-language/80-self-governing-workshops-and-offices)
+- [87-individually-owned-shops](content/annotations/a-pattern-language/87-individually-owned-shops)
+- [95-building-complex](content/annotations/a-pattern-language/95-building-complex)

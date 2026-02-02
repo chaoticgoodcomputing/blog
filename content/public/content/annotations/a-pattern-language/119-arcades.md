@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Roof Garden](118-roof-garden)
 - [Paths and Goals](120-paths-and-goals)
+- [116-cascade-of-roofs](content/annotations/a-pattern-language/116-cascade-of-roofs)
+- [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)
+- [108-connected-buildings](content/annotations/a-pattern-language/108-connected-buildings)
+- [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)

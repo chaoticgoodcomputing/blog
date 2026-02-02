@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Something Roughly in the Middle](126-something-roughly-in-the-middle)
 - [Indoor Sunlight](128-indoor-sunlight)
+- [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)
+- [96-number-of-stories](content/annotations/a-pattern-language/96-number-of-stories)
+- [110-main-entrance](content/annotations/a-pattern-language/110-main-entrance)

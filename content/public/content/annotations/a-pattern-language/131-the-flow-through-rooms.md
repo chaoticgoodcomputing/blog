@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Entrance Room](130-entrance-room)
 - [Short Passages](132-short-passages)
+- [127-intimacy-gradient](content/annotations/a-pattern-language/127-intimacy-gradient)
+- [129-common-areas-at-the-heart](content/annotations/a-pattern-language/129-common-areas-at-the-heart)

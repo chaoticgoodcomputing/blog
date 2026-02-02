@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Sequence of Sitting Spaces](142-sequence-of-sitting-spaces)
 - [Bathing Room](144-bathing-room)
+- [136-couple-s-realm](content/annotations/a-pattern-language/136-couple-s-realm)
+- [137-childrens-realm](content/annotations/a-pattern-language/137-childrens-realm)
+- [138-sleeping-to-the-east](content/annotations/a-pattern-language/138-sleeping-to-the-east)

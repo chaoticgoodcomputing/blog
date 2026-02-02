@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Old Age Cottage](155-old-age-cottage)
 - [Home Workshop](157-home-workshop)
+- [75-the-family](content/annotations/a-pattern-language/75-the-family)
+- [155-old-age-cottage](content/annotations/a-pattern-language/155-old-age-cottage)
+- [141-a-room-of-one-s-own](content/annotations/a-pattern-language/141-a-room-of-one-s-own)

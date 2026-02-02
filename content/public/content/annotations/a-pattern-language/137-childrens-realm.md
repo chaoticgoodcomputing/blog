@@ -18,3 +18,8 @@ This note originally contained the following links:
 
 - [Couple’s Realm](136-couple-s-realm)
 - [Sleeping to the East](138-sleeping-to-the-east)
+- [76-house-for-a-small-family](content/annotations/a-pattern-language/76-house-for-a-small-family)
+- [129-common-areas-at-the-heart](content/annotations/a-pattern-language/129-common-areas-at-the-heart)
+- [136-couple-s-realm](content/annotations/a-pattern-language/136-couple-s-realm)
+- [137-childrens-realm](content/annotations/a-pattern-language/137-childrens-realm)
+- [68-connected-play](content/annotations/a-pattern-language/68-connected-play)

@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Flexible Office Space](146-flexible-office-space)
 - [Small Work Groups](148-small-work-groups)
+- [129-common-areas-at-the-heart](content/annotations/a-pattern-language/129-common-areas-at-the-heart)
+- [75-the-family](content/annotations/a-pattern-language/75-the-family)
+- [80-self-governing-workshops-and-offices](content/annotations/a-pattern-language/80-self-governing-workshops-and-offices)

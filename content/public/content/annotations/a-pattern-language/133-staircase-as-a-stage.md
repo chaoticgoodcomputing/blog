@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Short Passages](132-short-passages)
 - [Zen View](134-zen-view)
+- [110-main-entrance](content/annotations/a-pattern-language/110-main-entrance)
+- [131-the-flow-through-rooms](content/annotations/a-pattern-language/131-the-flow-through-rooms)
+- [132-short-passages](content/annotations/a-pattern-language/132-short-passages)

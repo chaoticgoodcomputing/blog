@@ -18,3 +18,8 @@ This note originally contained the following links:
 
 - [Building Fronts](122-building-fronts)
 - [Activity Pockets](124-activity-pockets)
+- [31-promenade](content/annotations/a-pattern-language/31-promenade)
+- [61-small-public-squares](content/annotations/a-pattern-language/61-small-public-squares)
+- [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)
+- [101-building-thoroughfare](content/annotations/a-pattern-language/101-building-thoroughfare)
+- [121-path-shape](content/annotations/a-pattern-language/121-path-shape)

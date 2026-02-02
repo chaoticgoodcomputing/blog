@@ -18,3 +18,9 @@ This note originally contained the following links:
 
 - [Pedestrian Density](123-pedestrian-density)
 - [Stair Seats](125-stair-seats)
+- [31-promenade](content/annotations/a-pattern-language/31-promenade)
+- [61-small-public-squares](content/annotations/a-pattern-language/61-small-public-squares)
+- [69-public-outdoor-room](content/annotations/a-pattern-language/69-public-outdoor-room)
+- [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)
+- [101-building-thoroughfare](content/annotations/a-pattern-language/101-building-thoroughfare)
+- [121-path-shape](content/annotations/a-pattern-language/121-path-shape)

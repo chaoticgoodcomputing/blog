@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Sheltering Roof](117-sheltering-roof)
 - [Arcades](119-arcades)
+- [117-sheltering-roof](content/annotations/a-pattern-language/117-sheltering-roof)
+- [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)
+- [116-cascade-of-roofs](content/annotations/a-pattern-language/116-cascade-of-roofs)

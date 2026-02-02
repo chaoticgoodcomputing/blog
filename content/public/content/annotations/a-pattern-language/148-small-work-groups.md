@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Communal Eating](147-communal-eating)
 - [Reception Welcomes You](149-reception-welcomes-you)
+- [80-self-governing-workshops-and-offices](content/annotations/a-pattern-language/80-self-governing-workshops-and-offices)
+- [146-flexible-office-space](content/annotations/a-pattern-language/146-flexible-office-space)

@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Reception Welcomes You](149-reception-welcomes-you)
 - [Small Meeting Rooms](151-small-meeting-rooms)
+- [34-interchange](content/annotations/a-pattern-language/34-interchange)
+- [47-health-center](content/annotations/a-pattern-language/47-health-center)
+- [81-small-services-without-red-tape](content/annotations/a-pattern-language/81-small-services-without-red-tape)
+- [82-office-connections](content/annotations/a-pattern-language/82-office-connections)
