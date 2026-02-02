@@ -1,5 +1,5 @@
 ---
-title: "*A Pattern Language*, and a Beautiful Day in the Neighborhood"
+title: A Pattern Language, and a Beautiful Day in the Neighborhood
 date: 2026-02-01
 tags:
   - projects/games/neighborhood
