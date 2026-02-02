@@ -111,7 +111,7 @@ This snippet will scale back the aggressive indentation during list editing, and
 .list-bullet {
   padding-inline-start: 0 !important;
   text-indent: 0 !important;
-  margin-right: 0.5em;
+  margin-right: 0em;
   vertical-align: baseline;
   white-space: normal;
 }
