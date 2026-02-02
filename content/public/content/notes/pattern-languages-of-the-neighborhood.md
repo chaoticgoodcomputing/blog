@@ -8,17 +8,22 @@ tags:
   - economics/policy
 description: "The beginning of a topological review of the 1977 urban design and architecture reference book A Pattern Language, and a journey to understand Earth's greatest graph: the Earth, itself."
 ---
-The world is too complicated a place to be understood, wholly, exactly how it is. With each passing day, it becomes *more* complicated. Not even a century ago, the general term "scientist" could be somebody's wholesale job title; a person who *in general, does science.* Now, we know enough about any given field that even among broad categories of science — biology, computing, chemistry, economics — nobody could ever hope to fully understand even a *subsection* of the world. Broad strokes, rules-of-thumb, and statements with many, *many* asterisks are required to even *begin* to understand the many forces that govern our lives.
+The world is too complicated a place to be understood, wholly, exactly how it is. With each passing day, it becomes *more* complicated. Not even a century ago, the general term "scientist" could be somebody's wholesale job title; a person who *in general, does science.* The amount that we know has grown exponentially since then. In any given field, even among broad categories of science — biology, computing, chemistry, economics — nobody could ever hope to fully understand even a *subsection* of how the world works. Broad strokes, rules-of-thumb, and statements with many, *many* asterisks are required to even *begin* to understand the many forces that govern our lives.
 
 These are *patterns*, and they're our greatest tool in comprehending the basics of the incomprehensible.
 
 Patterns are prevalent in my main interest and occupation of [[tags/engineering/index|software engineering]]. Software is made up of lines of code in the same way that a building is made up of bricks and beams. They are the basic building materials, but random scatterings of code make as successful a piece of software as a random scattering of bricks would make a home. To make anything of use, you need to step back and see the bricks for what they build, or code for what process it defines; we use the phrase [design patterns](https://refactoring.guru/design-patterns) to describe the larger structures we build.
 
-For a long time, I had assumed that design patterns were a term *coined* by software engineers, even if many patterns do borrow terminology from other fields. Especially in object-oriented programming, many [creational](https://refactoring.guru/design-patterns/creational-patterns) and [structural](https://refactoring.guru/design-patterns/structural-patterns) patterns actually *do* borrow, directly from physical spaces[^1]. Factories, builders, bridges, facades — while they deal with data and information instead of physical structures, the abstract purposes match fairly well to their real-world analogs. Thinking in design patterns is, I think, what differentiates the role of software *development* — laying down the bricks of code — from software *architecture* — using patterns and theory to lay out the superstructures of the software.
+For a long time, I had assumed that "design patterns" was a term *coined* by software engineers — even if they did leverage terms from other fields. Especially in object-oriented programming, many [creational](https://refactoring.guru/design-patterns/creational-patterns) and [structural](https://refactoring.guru/design-patterns/structural-patterns) patterns actually *do* borrow, directly from physical spaces[^1]. Factories, builders, bridges, facades — while they deal with data and information instead of physical structures, the abstract purposes match fairly well to their real-world analogs. Thinking in design patterns is, I think, what differentiates the role of software *development* — laying down the bricks of code — from software *architecture* — using patterns and theory to lay out the superstructures of the software.
 
 ## *A Pattern Language* — of another field
 
-A few years ago, I stumbled on *[A Pattern Language](https://arl.human.cornell.edu/linked%20docs/Alexander_A_Pattern_Language.pdf)* while researching more about design patterns for software. What I stumbled into, though, was a bit of hubris: engineers didn't invent design patterns. Other fields have been using them for years.
+A few years ago, I stumbled on the 1977 urban planning and architecture reference manual *[A Pattern Language](https://arl.human.cornell.edu/linked%20docs/Alexander_A_Pattern_Language.pdf)* while researching more about design patterns for software. What I stumbled into, though, was a bit of hubris: engineers didn't invent design patterns. We could hardly be credited for coming up with the *term*, never mind the *concept*. Other fields had been using design patterns decades before *Design Patterns: Elements of Reusable Object-Oriented Software* applied the phrase to software development.
+
+> [!UPDATE]
+> February 2nd, 2026 — while editing this piece, I (re?)discovered that *A Pattern Language* isn't just *an earlier* use of the term "design patterns" — it's apparently the [original source](https://en.wikipedia.org/wiki/Design_pattern). I've had the book floating around my life for three years now, so I can't recall if going back to the root was an intentional investigation or just dumb luck.
+> 
+> (It was probably dumb luck.)
 
 *A Pattern Language* is, specifically, a series of patterns related to the physical development of structures and communities — homes, neighborhoods, towns, cities — using design patterns that can begin to describe the organic way we, human beings, have decided to organize ourselves over the course of the last few thousand years.
 
@@ -68,13 +73,13 @@ Obviously, where *A Pattern Language* differs is that the patterns here, while v
 
 I will call these **sub**structure patterns — patterns dealing with details *smaller than* a single home, shop, or other structure.
 
-Further ahead, the concepts begin to abstract away into patterns for **super**structures — full streets, towns, neighborhoods, or cities. They rise above the purely physical and describe less tactile details, such as:
+As we move forward in the pattern listing, concepts begin to abstract away and describe **super**structures — full streets, towns, neighborhoods, or cities. They rise above the purely physical and describe less tactile details, such as:
 
 1. **Pattern 12:** Communities of 7,000;
 2. **Pattern 10:** Magic of the City; and
 3. **Pattern 8:** Mosaic of Subcultures
 
-The most abstract — **Pattern 1**, fittingly — is Independent Regions; a case that independent regions should be... well, independent.
+The most abstract — **Pattern 1**, fittingly — is Independent Regions: a case that independent regions should be... well, independent.
 
 ![[assets/Pasted image 20260201161641.png]]
 
@@ -84,7 +89,7 @@ That is all to say: *A Pattern Language* seeks to cover a wide-ranging set of pa
 
 Although my initial interest in *A Pattern Language* started with software design pattern research, reading the patterns has bubbled up a different interest: the representation of our world, and the many communities that make it up, as graphs.
 
-When I say graphs, I don't mean a line graph on an X-Y plot — I mean it in the most abstract sense — dots that represent *things*, and lines that *connect* those things: the study of [graph theory](https://en.wikipedia.org/wiki/Graph_theory). This feels like an apt return to form, as the study of graph theory itself formed in 1736 when Leonhard Euler (of the number ***e***), solved a puzzle about [seven bridges in the city of Königsberg](https://en.wikipedia.org/wiki/Seven_Bridges_of_K%C3%B6nigsberg):
+When I say graphs, I don't mean a line graph on an X-Y plot — I mean it in the most abstract sense — dots that represent *things*, and lines that *connect* those things. This is the foundation of [graph theory](https://en.wikipedia.org/wiki/Graph_theory). Maps as graphs feels like an apt return to form — the study of graph theory itself formed in 1736 when Leonhard Euler (of the number ***e***), solved a puzzle about [seven bridges in the city of Königsberg](https://en.wikipedia.org/wiki/Seven_Bridges_of_K%C3%B6nigsberg):
 
 ![[assets/Pasted image 20260201163320.png]]
 
@@ -104,7 +109,7 @@ We have so much data about the world around us. We've learned that it's, all thi
 
 However, you and I don't see our communities as nodes and edges. We see them as alive — they're the places we rest, where we work, the friends in our lives, our connection to others. The literal places and the ways they're connected are all in the raw data, but their *meaning* — the *semantics* of data, to each of us — is a superstructure. The deeper connections are not the lines on the graph — they're somewhere hidden between them.
 
-My hope is to understand and apply the language to create a system that can process the raw data and boil it down to something smaller, but representative. Given an area of data, The Neighborhood's first goal is to understand the abstract, conceptual relationships and generate something akin to the style of the old city-style playmats for kids, boiling down civic structure into an understandable toy.
+My hope is to understand and apply the language to create a system that can process the raw data and boil it down to something smaller, but representative. Given an area of data, The Neighborhood's first goal is to understand the abstract, conceptual relationships and generate a toy model of the area — a simpler graph that maintains complex structures and relationships, but is simple enough that it could be printed on one of those old-school Playskool Village rugs for kids.
 
 ![[assets/Pasted image 20260201164502.png]]
 
@@ -117,7 +122,7 @@ Unfortunately, I won't be able to truly annotate the work in the same way I made
 Nonetheless, I'll be annotating my physical copy of the book and moving those annotations, piecemeal, into this blog under the [[tags/writing/annotations/pattern-language/index|pattern-language]] tag. I've already pre-generated 255 notes, one for each pattern (as well as an intro and conclusion note). The reason for pre-generating them is simple: the patterns form a graph, themselves. Each pattern references other patterns. This is most clear in the first portions of each pattern entry. For example, the introduction to [[content/annotations/a-pattern-language/62-high-places|Pattern 62: High Places]]:
 
 > [!QUOTE]
-> ... according to [[content/annotations/a-pattern-language/21-four-story-limit|Four Story Limit (21)]], most roofs in the community are no higher than four stories, about 40 or 50 feet. However, it is very important that this height limit be punctuated, just occasionally, by higher building which have special functions. They can help the character of the [[content/annotations/a-pattern-language/61-small-public-squares|Small Public Squares (61)]] and [[content/annotations/a-pattern-language/66-holy-ground|Holy Ground (66)]]; they can give particular identity to their communities, provided that they do not occur more frequently than one in each [[content/annotations/a-pattern-language/12-community-of-7000|Community of 7,000 (12)]].
+> ... according to [[content/annotations/a-pattern-language/21-four-story-limit|Four Story Limit (21)]], most roofs in the community are no higher than four stories, about 40 or 50 feet. However, it is very important that this height limit be punctuated, just occasionally, by higher buildings which have special functions. They can help the character of the [[content/annotations/a-pattern-language/61-small-public-squares|Small Public Squares (61)]] and [[content/annotations/a-pattern-language/66-holy-ground|Holy Ground (66)]]; they can give particular identity to their communities, provided that they do not occur more frequently than one in each [[content/annotations/a-pattern-language/12-community-of-7000|Community of 7,000 (12)]].
 
 The amount of explicit links between patterns is practically *begging* to be graphed out like the other pages on this site. To better learn this information for understanding the graphs formed by maps of the world, I also want to understand the graph of these patterns' connections to one another.
 
@@ -132,7 +137,7 @@ This is a very solid piece of work, and I don't anticipate that anything from th
 
 ### Pacing
 
-With 253 patterns to annotate, this will doubtless be a long-running project (the scope has already decimated the organization of my site graph). Even at a *very generous* estimated pace pace averaging one pattern a day, that'd make for an completion date eight months in the future — October of this year. While I have every intention, as of writing this, to read back through the text and have at least *some* annotation for each section (if only just to complete the link connections between a pattern and its neighbors), I will need to triage the pacing a bit.
+With 253 patterns to annotate, this will doubtless be a long-running project (the scope has already annihilated the organization of my site graph). Even at a *very generous* estimated pace averaging one pattern a day, that'd make for an completion date eight months in the future — October of this year. While I have every intention, as of writing this, to read back through the text and have at least *some* annotation for each section (if only just to complete the link connections between a pattern and its neighbors), I will need to triage the pacing a bit.
 
 Above, I define the terms *substructure* to mean "structures smaller than a whole building" and *superstructure* to mean "structures larger than a whole building". I've created two subtags — [[tags/writing/annotations/pattern-language/sub/index|pattern-language/sub]] and [[tags/writing/annotations/pattern-language/super/index|pattern-language/super]] — to sort patterns into these two categories. I'll be prioritizing the `#super` patterns first, as they relate more to what I'd like to get out of this reading. The book does a preliminary grouping into Towns and Buildings, that I've temporarily co-opted as the current super- and sub-boundaries:
 
@@ -148,4 +153,4 @@ Finally: the text itself groups patterns into broader categories — for example
 This will certainly be the largest notes collection on this site thus far. *A Pattern Language* is certainly a worthy candidate of it. If you are interested in urban design, civil engineering, or public policy, I would highly recommend purchasing a copy of the text yourself and giving it a read. Its authors — Christopher Alexander, Sara Ishikawa, Murray Silverstein, with Max Jacobson, Ingrid Fiksdahl-King, and Shlomo Angel — deserve credit for the work they put into researching, organizing, and publishing these thoughts.
 
 
-[^1]: This melts down a bit more when you get into [functional programming](https://en.wikipedia.org/wiki/Functional_programming). If I had to give a TL;DR: software exists in a space between pure information and the real world. Object-oriented programming takes the angle of going from physical concepts into information space, and functional programming takes the angle of going from pure path into the information space. Functional programming does *also* have design patterns, but they are far more derived from mathematical concepts than object-oriented programming's physical analogs.
+[^1]: This melts down a bit more when you get into [functional programming](https://en.wikipedia.org/wiki/Functional_programming). If I had to give a TL;DR: software exists in a space between pure information and the real world. Object-oriented programming takes the angle of going from *physical concepts* into information space, and functional programming takes the angle of going from *pure math* into the information space. Functional programming does *also* have design patterns, but they are far more derived from mathematical concepts than object-oriented programming's physical analogs.
