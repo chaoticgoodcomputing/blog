@@ -18,3 +18,4 @@ This note originally contained the following links:
 
 - [Building Thoroughfare](101-building-thoroughfare)
 - [Small Parking Lots](103-small-parking-lots)
+- [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)

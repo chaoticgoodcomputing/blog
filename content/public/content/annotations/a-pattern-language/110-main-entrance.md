@@ -18,3 +18,8 @@ This note originally contained the following links:
 
 - [Long Thin House](109-long-thin-house)
 - [Half-Hidden Garden](111-half-hidden-garden)
+- [104-site-repair](content/annotations/a-pattern-language/104-site-repair)
+- [105-south-facing-outdoors](content/annotations/a-pattern-language/105-south-facing-outdoors)
+- [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)
+- [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)
+- [102-family-of-entrances](content/annotations/a-pattern-language/102-family-of-entrances)

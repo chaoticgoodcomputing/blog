@@ -18,3 +18,10 @@ This note originally contained the following links:
 
 - [Main Entrance](110-main-entrance)
 - [Entrance Transition](112-entrance-transition)
+- [37-house-cluster](content/annotations/a-pattern-language/37-house-cluster)
+- [38-row-houses](content/annotations/a-pattern-language/38-row-houses)
+- [41-work-community](content/annotations/a-pattern-language/41-work-community)
+- [79-your-own-home](content/annotations/a-pattern-language/79-your-own-home)
+- [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
+- [105-south-facing-outdoors](content/annotations/a-pattern-language/105-south-facing-outdoors)
+- [104-site-repair](content/annotations/a-pattern-language/104-site-repair)

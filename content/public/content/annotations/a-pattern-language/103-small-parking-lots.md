@@ -18,3 +18,11 @@ This note originally contained the following links:
 
 - [Family of Entrances](102-family-of-entrances)
 - [Site Repair](104-site-repair)
+- [32-shopping-street](content/annotations/a-pattern-language/32-shopping-street)
+- [37-house-cluster](content/annotations/a-pattern-language/37-house-cluster)
+- [41-work-community](content/annotations/a-pattern-language/41-work-community)
+- [51-green-streets](content/annotations/a-pattern-language/51-green-streets)
+- [53-main-gateways](content/annotations/a-pattern-language/53-main-gateways)
+- [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)
+- [97-shielded-parking](content/annotations/a-pattern-language/97-shielded-parking)
+- [22-nine-per-cent-parking](content/annotations/a-pattern-language/22-nine-per-cent-parking)

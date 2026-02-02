@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Pedestrian Street](100-pedestrian-street)
 - [Family of Entrances](102-family-of-entrances)
+- [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)
+- [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)
+- [95-building-complex](content/annotations/a-pattern-language/95-building-complex)

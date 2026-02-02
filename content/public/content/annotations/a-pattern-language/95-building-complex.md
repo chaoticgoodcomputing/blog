@@ -18,3 +18,4 @@ This note originally contained the following links:
 
 - [Sleeping in Public](94-sleeping-in-public)
 - [Number of Stories](96-number-of-stories)
+- [96-number-of-stories](content/annotations/a-pattern-language/96-number-of-stories)

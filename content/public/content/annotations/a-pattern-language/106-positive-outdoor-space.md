@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [South Facing Outdoors](105-south-facing-outdoors)
 - [Wings of Light](107-wings-of-light)
+- [105-south-facing-outdoors](content/annotations/a-pattern-language/105-south-facing-outdoors)
+- [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)

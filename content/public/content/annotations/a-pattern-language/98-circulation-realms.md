@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Shielded Parking](97-shielded-parking)
 - [Main Building](99-main-building)
+- [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
+- [96-number-of-stories](content/annotations/a-pattern-language/96-number-of-stories)

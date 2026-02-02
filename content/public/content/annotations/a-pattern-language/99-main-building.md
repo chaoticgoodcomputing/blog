@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Circulation Realms](98-circulation-realms)
 - [Pedestrian Street](100-pedestrian-street)
+- [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
+- [96-number-of-stories](content/annotations/a-pattern-language/96-number-of-stories)
+- [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)

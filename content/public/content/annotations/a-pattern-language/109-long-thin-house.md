@@ -18,3 +18,4 @@ This note originally contained the following links:
 
 - [Connected Buildings](108-connected-buildings)
 - [Main Entrance](110-main-entrance)
+- [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)

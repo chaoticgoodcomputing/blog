@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Number of Stories](96-number-of-stories)
 - [Circulation Realms](98-circulation-realms)
+- [11-local-transport-areas](content/annotations/a-pattern-language/11-local-transport-areas)
+- [22-nine-per-cent-parking](content/annotations/a-pattern-language/22-nine-per-cent-parking)
+- [95-building-complex](content/annotations/a-pattern-language/95-building-complex)

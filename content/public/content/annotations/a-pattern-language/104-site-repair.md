@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Small Parking Lots](103-small-parking-lots)
 - [South Facing Outdoors](105-south-facing-outdoors)
+- [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
+- [96-number-of-stories](content/annotations/a-pattern-language/96-number-of-stories)
+- [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)
