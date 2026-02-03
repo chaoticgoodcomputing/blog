@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Windows (Which Open Wide)](236-windows-which-open-wide)
 - [Filtered Light](238-filtered-light)
+- [196-corner-doors](content/annotations/a-pattern-language/196-corner-doors)
+- [224-low-doorway](content/annotations/a-pattern-language/224-low-doorway)
+- [135-tapestry-of-light-and-dark](content/annotations/a-pattern-language/135-tapestry-of-light-and-dark)
+- [194-interior-windows](content/annotations/a-pattern-language/194-interior-windows)

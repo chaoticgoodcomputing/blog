@@ -18,3 +18,10 @@ This note originally contained the following links:
 
 - [Small Panes](239-small-panes)
 - [Seat Spots](241-seat-spots)
+- [235-soft-inside-walls](content/annotations/a-pattern-language/235-soft-inside-walls)
+- [234-lapped-outside-walls](content/annotations/a-pattern-language/234-lapped-outside-walls)
+- [216-box-columns](content/annotations/a-pattern-language/216-box-columns)
+- [217-perimeter-beams](content/annotations/a-pattern-language/217-perimeter-beams)
+- [219-floor-ceiling-vaults](content/annotations/a-pattern-language/219-floor-ceiling-vaults)
+- [225-frames-as-thickened-edges](content/annotations/a-pattern-language/225-frames-as-thickened-edges)
+- [249-ornament](content/annotations/a-pattern-language/249-ornament)

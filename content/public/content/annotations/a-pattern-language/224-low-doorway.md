@@ -17,4 +17,9 @@ If you are interested in what this note contains, please [[contact|reach out to 
 This note originally contained the following links:
 
 - [Deep Reveals](223-deep-reveals)
-- [Frames as Thickened Doors](225-frames-as-thickened-doors)
+- [Frames as Thickened Doors](content/annotations/a-pattern-language/225-frames-as-thickened-edges)
+- [102-family-of-entrances](content/annotations/a-pattern-language/102-family-of-entrances)
+- [110-main-entrance](content/annotations/a-pattern-language/110-main-entrance)
+- [131-the-flow-through-rooms](content/annotations/a-pattern-language/131-the-flow-through-rooms)
+- [196-corner-doors](content/annotations/a-pattern-language/196-corner-doors)
+- [221-natural-doors-and-windows](content/annotations/a-pattern-language/221-natural-doors-and-windows)

@@ -18,3 +18,12 @@ This note originally contained the following links:
 
 - [Different Chairs](251-different-chairs)
 - [Things from your Life](253-things-from-your-life)
+- [179-alcoves](content/annotations/a-pattern-language/179-alcoves)
+- [183-workspace-enclosure](content/annotations/a-pattern-language/183-workspace-enclosure)
+- [129-common-areas-at-the-heart](content/annotations/a-pattern-language/129-common-areas-at-the-heart)
+- [130-entrance-room](content/annotations/a-pattern-language/130-entrance-room)
+- [146-flexible-office-space](content/annotations/a-pattern-language/146-flexible-office-space)
+- [182-eating-atmosphere](content/annotations/a-pattern-language/182-eating-atmosphere)
+- [185-sitting-circle](content/annotations/a-pattern-language/185-sitting-circle)
+- [251-different-chairs](content/annotations/a-pattern-language/251-different-chairs)
+- [250-warm-colors](content/annotations/a-pattern-language/250-warm-colors)

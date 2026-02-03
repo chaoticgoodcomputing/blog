@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Stair Vault](228-stair-vault)
 - [Radiant Heat](230-radiant-heat)
+- [206-efficient-structure](content/annotations/a-pattern-language/206-efficient-structure)
+- [219-floor-ceiling-vaults](content/annotations/a-pattern-language/219-floor-ceiling-vaults)

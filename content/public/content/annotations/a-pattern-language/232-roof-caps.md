@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Dormer Windows](231-dormer-windows)
 - [Floor Surface](233-floor-surface)
+- [118-roof-garden](content/annotations/a-pattern-language/118-roof-garden)
+- [220-roof-vaults](content/annotations/a-pattern-language/220-roof-vaults)

@@ -1,5 +1,5 @@
 ---
-title: "APL: Pattern 238; Filtered Light"
+title: "APL: Pattern 225; Frames as Thickened Doors"
 date: "1970-01-02T00:00:00.000Z"
 tags:
   - "writing/annotations/pattern-language/sub"
@@ -16,7 +16,8 @@ If you are interested in what this note contains, please [[contact|reach out to 
 
 This note originally contained the following links:
 
-- [Solid Doors with Glass](237-solid-doors-with-glass)
-- [Small Panes](239-small-panes)
+- [Low Doorway](224-low-doorway)
+- [Column Place](226-column-place)
 - [221-natural-doors-and-windows](content/annotations/a-pattern-language/221-natural-doors-and-windows)
-- [223-deep-reveals](content/annotations/a-pattern-language/223-deep-reveals)
+- [206-efficient-structure](content/annotations/a-pattern-language/206-efficient-structure)
+- [208-gradual-stiffening](content/annotations/a-pattern-language/208-gradual-stiffening)

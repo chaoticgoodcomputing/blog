@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Soft Inside Walls](235-soft-inside-walls)
 - [Solid Doors with Glass](237-solid-doors-with-glass)
+- [180-window-place](content/annotations/a-pattern-language/180-window-place)
+- [192-windows-overlooking-life](content/annotations/a-pattern-language/192-windows-overlooking-life)
+- [221-natural-doors-and-windows](content/annotations/a-pattern-language/221-natural-doors-and-windows)

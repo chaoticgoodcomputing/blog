@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Floor Surface](233-floor-surface)
 - [Soft Inside Walls](235-soft-inside-walls)
+- [218-wall-membranes](content/annotations/a-pattern-language/218-wall-membranes)
+- [220-roof-vaults](content/annotations/a-pattern-language/220-roof-vaults)

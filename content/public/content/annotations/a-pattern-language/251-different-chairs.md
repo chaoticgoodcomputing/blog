@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Warm Colors](250-warm-colors)
 - [Pools of Light](252-pools-of-light)
+- [142-sequence-of-sitting-spaces](content/annotations/a-pattern-language/142-sequence-of-sitting-spaces)
+- [185-sitting-circle](content/annotations/a-pattern-language/185-sitting-circle)
+- [202-built-in-seats](content/annotations/a-pattern-language/202-built-in-seats)

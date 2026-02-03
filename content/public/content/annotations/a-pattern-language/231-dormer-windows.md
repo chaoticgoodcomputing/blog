@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Radiant Heat](230-radiant-heat)
 - [Roof Caps](232-roof-caps)
+- [117-sheltering-roof](content/annotations/a-pattern-language/117-sheltering-roof)
+- [180-window-place](content/annotations/a-pattern-language/180-window-place)
+- [220-roof-vaults](content/annotations/a-pattern-language/220-roof-vaults)

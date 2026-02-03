@@ -18,3 +18,8 @@ This note originally contained the following links:
 
 - [Filtered Light](238-filtered-light)
 - [Half-Inch Trim](240-half-inch-trim)
+- [194-interior-windows](content/annotations/a-pattern-language/194-interior-windows)
+- [221-natural-doors-and-windows](content/annotations/a-pattern-language/221-natural-doors-and-windows)
+- [236-windows-which-open-wide](content/annotations/a-pattern-language/236-windows-which-open-wide)
+- [237-solid-doors-with-glass](content/annotations/a-pattern-language/237-solid-doors-with-glass)
+- [225-frames-as-thickened-edges](content/annotations/a-pattern-language/225-frames-as-thickened-edges)

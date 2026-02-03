@@ -18,3 +18,10 @@ This note originally contained the following links:
 
 - [Seat Spots](241-seat-spots)
 - [Sitting Wall](243-sitting-wall)
+- [241-seat-spots](content/annotations/a-pattern-language/241-seat-spots)
+- [119-arcades](content/annotations/a-pattern-language/119-arcades)
+- [160-building-edge](content/annotations/a-pattern-language/160-building-edge)
+- [161-sunny-place](content/annotations/a-pattern-language/161-sunny-place)
+- [168-connection-to-the-earth](content/annotations/a-pattern-language/168-connection-to-the-earth)
+- [130-entrance-room](content/annotations/a-pattern-language/130-entrance-room)
+- [155-old-age-cottage](content/annotations/a-pattern-language/155-old-age-cottage)

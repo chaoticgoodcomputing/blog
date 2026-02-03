@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Roof Caps](232-roof-caps)
 - [Lapped Outside Walls](234-lapped-outside-walls)
+- [215-ground-floor-slab](content/annotations/a-pattern-language/215-ground-floor-slab)
+- [219-floor-ceiling-vaults](content/annotations/a-pattern-language/219-floor-ceiling-vaults)
+- [127-intimacy-gradient](content/annotations/a-pattern-language/127-intimacy-gradient)

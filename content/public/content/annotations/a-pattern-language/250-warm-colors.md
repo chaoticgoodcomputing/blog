@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Ornament](249-ornament)
 - [Different Chairs](251-different-chairs)
+- [207-good-materials](content/annotations/a-pattern-language/207-good-materials)
+- [233-floor-surface](content/annotations/a-pattern-language/233-floor-surface)
+- [235-soft-inside-walls](content/annotations/a-pattern-language/235-soft-inside-walls)
