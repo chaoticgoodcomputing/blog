@@ -25,3 +25,4 @@ This note originally contained the following links:
 - [36-degrees-of-publicness](content/annotations/a-pattern-language/36-degrees-of-publicness)
 - [52-network-of-paths-and-cars](content/annotations/a-pattern-language/52-network-of-paths-and-cars)
 - [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)
+- [A Pattern Language](https://www.patternlanguage.com/)

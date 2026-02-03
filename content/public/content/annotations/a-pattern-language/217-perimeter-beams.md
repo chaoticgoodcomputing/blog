@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [216-box-columns](content/annotations/a-pattern-language/216-box-columns)
 - [219-floor-ceiling-vaults](content/annotations/a-pattern-language/219-floor-ceiling-vaults)
 - [210-floor-and-ceiling-layout](content/annotations/a-pattern-language/210-floor-and-ceiling-layout)
+- [A Pattern Language](https://www.patternlanguage.com/)

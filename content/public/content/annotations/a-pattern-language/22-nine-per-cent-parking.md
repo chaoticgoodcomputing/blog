@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [11-local-transport-areas](content/annotations/a-pattern-language/11-local-transport-areas)
 - [12-community-of-7000](content/annotations/a-pattern-language/12-community-of-7000)
 - [14-identifiable-neighborhood](content/annotations/a-pattern-language/14-identifiable-neighborhood)
+- [A Pattern Language](https://www.patternlanguage.com/)

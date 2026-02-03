@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [03-city-country-fingers](content/annotations/a-pattern-language/03-city-country-fingers)
 - [05-lace-of-country-streets](content/annotations/a-pattern-language/05-lace-of-country-streets)
 - [10-magic-of-the-city](content/annotations/a-pattern-language/10-magic-of-the-city)
+- [A Pattern Language](https://www.patternlanguage.com/)

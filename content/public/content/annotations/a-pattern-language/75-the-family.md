@@ -24,3 +24,4 @@ This note originally contained the following links:
 - [48-housing-in-between](content/annotations/a-pattern-language/48-housing-in-between)
 - [26-life-cycle](content/annotations/a-pattern-language/26-life-cycle)
 - [35-household-mix](content/annotations/a-pattern-language/35-household-mix)
+- [A Pattern Language](https://www.patternlanguage.com/)

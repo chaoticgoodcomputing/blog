@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [129-common-areas-at-the-heart](content/annotations/a-pattern-language/129-common-areas-at-the-heart)
 - [75-the-family](content/annotations/a-pattern-language/75-the-family)
 - [80-self-governing-workshops-and-offices](content/annotations/a-pattern-language/80-self-governing-workshops-and-offices)
+- [A Pattern Language](https://www.patternlanguage.com/)

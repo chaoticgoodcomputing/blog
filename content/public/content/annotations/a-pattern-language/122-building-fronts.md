@@ -22,3 +22,4 @@ This note originally contained the following links:
 - [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)
 - [121-path-shape](content/annotations/a-pattern-language/121-path-shape)
 - [124-activity-pockets](content/annotations/a-pattern-language/124-activity-pockets)
+- [A Pattern Language](https://www.patternlanguage.com/)

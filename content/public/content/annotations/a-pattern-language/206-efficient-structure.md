@@ -19,3 +19,4 @@ This note originally contained the following links:
 - [Structure Follows Social Spaces](205-structure-follows-social-spaces)
 - [Good Materials](207-good-materials)
 - [205-structure-follows-social-spaces](content/annotations/a-pattern-language/205-structure-follows-social-spaces)
+- [A Pattern Language](https://www.patternlanguage.com/)

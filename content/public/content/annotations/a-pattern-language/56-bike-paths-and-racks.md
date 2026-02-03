@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [11-local-transport-areas](content/annotations/a-pattern-language/11-local-transport-areas)
 - [49-looped-local-roads](content/annotations/a-pattern-language/49-looped-local-roads)
 - [52-network-of-paths-and-cars](content/annotations/a-pattern-language/52-network-of-paths-and-cars)
+- [A Pattern Language](https://www.patternlanguage.com/)

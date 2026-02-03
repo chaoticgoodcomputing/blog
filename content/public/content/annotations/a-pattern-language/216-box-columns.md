@@ -20,3 +20,4 @@ This note originally contained the following links:
 - [Perimeter Beams](217-perimeter-beams)
 - [214-root-foundations](content/annotations/a-pattern-language/214-root-foundations)
 - [213-final-column-distribution](content/annotations/a-pattern-language/213-final-column-distribution)
+- [A Pattern Language](https://www.patternlanguage.com/)

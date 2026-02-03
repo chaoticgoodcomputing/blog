@@ -24,3 +24,4 @@ This note originally contained the following links:
 - [67-common-land](content/annotations/a-pattern-language/67-common-land)
 - [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)
 - [120-paths-and-goals](content/annotations/a-pattern-language/120-paths-and-goals)
+- [A Pattern Language](https://www.patternlanguage.com/)

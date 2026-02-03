@@ -23,3 +23,4 @@ This note originally contained the following links:
 - [140-private-terrace-on-the-street](content/annotations/a-pattern-language/140-private-terrace-on-the-street)
 - [166-gallery-surround](content/annotations/a-pattern-language/166-gallery-surround)
 - [167-six-foot-balcony](content/annotations/a-pattern-language/167-six-foot-balcony)
+- [A Pattern Language](https://www.patternlanguage.com/)

@@ -20,3 +20,4 @@ This note originally contained the following links:
 - [Main Building](99-main-building)
 - [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
 - [96-number-of-stories](content/annotations/a-pattern-language/96-number-of-stories)
+- [A Pattern Language](https://www.patternlanguage.com/)

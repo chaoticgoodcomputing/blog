@@ -22,3 +22,4 @@ This note originally contained the following links:
 - [29-density-rings](content/annotations/a-pattern-language/29-density-rings)
 - [35-household-mix](content/annotations/a-pattern-language/35-household-mix)
 - [36-degrees-of-publicness](content/annotations/a-pattern-language/36-degrees-of-publicness)
+- [A Pattern Language](https://www.patternlanguage.com/)

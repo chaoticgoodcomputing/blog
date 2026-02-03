@@ -20,3 +20,4 @@ This note originally contained the following links:
 - [Gradual Stiffening](208-gradual-stiffening)
 - [205-structure-follows-social-spaces](content/annotations/a-pattern-language/205-structure-follows-social-spaces)
 - [206-efficient-structure](content/annotations/a-pattern-language/206-efficient-structure)
+- [A Pattern Language](https://www.patternlanguage.com/)

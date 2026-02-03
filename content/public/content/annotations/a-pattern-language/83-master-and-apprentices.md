@@ -20,3 +20,4 @@ This note originally contained the following links:
 - [Teenage Society](84-teenage-society)
 - [18-network-of-learning](content/annotations/a-pattern-language/18-network-of-learning)
 - [80-self-governing-workshops-and-offices](content/annotations/a-pattern-language/80-self-governing-workshops-and-offices)
+- [A Pattern Language](https://www.patternlanguage.com/)

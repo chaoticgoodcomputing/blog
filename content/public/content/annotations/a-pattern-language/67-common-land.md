@@ -23,3 +23,4 @@ This note originally contained the following links:
 - [38-row-houses](content/annotations/a-pattern-language/38-row-houses)
 - [39-housing-hill](content/annotations/a-pattern-language/39-housing-hill)
 - [41-work-community](content/annotations/a-pattern-language/41-work-community)
+- [A Pattern Language](https://www.patternlanguage.com/)

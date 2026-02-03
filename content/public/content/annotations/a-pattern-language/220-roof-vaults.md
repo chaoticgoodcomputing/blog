@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [118-roof-garden](content/annotations/a-pattern-language/118-roof-garden)
 - [219-floor-ceiling-vaults](content/annotations/a-pattern-language/219-floor-ceiling-vaults)
 - [117-sheltering-roof](content/annotations/a-pattern-language/117-sheltering-roof)
+- [A Pattern Language](https://www.patternlanguage.com/)

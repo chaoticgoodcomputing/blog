@@ -22,3 +22,4 @@ This note originally contained the following links:
 - [89-corner-grocery](content/annotations/a-pattern-language/89-corner-grocery)
 - [32-shopping-street](content/annotations/a-pattern-language/32-shopping-street)
 - [46-market-of-many-shops](content/annotations/a-pattern-language/46-market-of-many-shops)
+- [A Pattern Language](https://www.patternlanguage.com/)

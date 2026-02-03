@@ -19,3 +19,4 @@ This note originally contained the following links:
 - [Local Transport Areas](11-local-transport-areas)
 - [Subculture Boundary](13-subculture-boundary)
 - [08-mosaic-of-subcultures](content/annotations/a-pattern-language/08-mosaic-of-subcultures)
+- [A Pattern Language](https://www.patternlanguage.com/)

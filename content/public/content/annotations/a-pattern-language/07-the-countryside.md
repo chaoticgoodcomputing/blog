@@ -23,3 +23,4 @@ This note originally contained the following links:
 - [04-agricultural-valleys](content/annotations/a-pattern-language/04-agricultural-valleys)
 - [05-lace-of-country-streets](content/annotations/a-pattern-language/05-lace-of-country-streets)
 - [06-country-towns](content/annotations/a-pattern-language/06-country-towns)
+- [A Pattern Language](https://www.patternlanguage.com/)

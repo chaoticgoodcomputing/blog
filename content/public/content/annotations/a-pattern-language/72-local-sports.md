@@ -20,3 +20,4 @@ This note originally contained the following links:
 - [Adventure Playground](73-adventure-playground)
 - [41-work-community](content/annotations/a-pattern-language/41-work-community)
 - [47-health-center](content/annotations/a-pattern-language/47-health-center)
+- [A Pattern Language](https://www.patternlanguage.com/)

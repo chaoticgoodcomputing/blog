@@ -23,3 +23,4 @@ This note originally contained the following links:
 - [09-scattered-work](content/annotations/a-pattern-language/09-scattered-work)
 - [18-network-of-learning](content/annotations/a-pattern-language/18-network-of-learning)
 - [27-men-and-women](content/annotations/a-pattern-language/27-men-and-women)
+- [A Pattern Language](https://www.patternlanguage.com/)

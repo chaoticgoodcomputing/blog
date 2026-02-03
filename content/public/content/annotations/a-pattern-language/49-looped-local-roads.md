@@ -23,3 +23,4 @@ This note originally contained the following links:
 - [23-parallel-roads](content/annotations/a-pattern-language/23-parallel-roads)
 - [37-house-cluster](content/annotations/a-pattern-language/37-house-cluster)
 - [41-work-community](content/annotations/a-pattern-language/41-work-community)
+- [A Pattern Language](https://www.patternlanguage.com/)

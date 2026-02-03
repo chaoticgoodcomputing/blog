@@ -27,3 +27,4 @@ This note originally contained the following links:
 - [15-neighborhood-boundary](content/annotations/a-pattern-language/15-neighborhood-boundary)
 - [28-eccentric-nucleus](content/annotations/a-pattern-language/28-eccentric-nucleus)
 - [29-density-rings](content/annotations/a-pattern-language/29-density-rings)
+- [A Pattern Language](https://www.patternlanguage.com/)

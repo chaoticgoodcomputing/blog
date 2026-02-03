@@ -22,3 +22,4 @@ This note originally contained the following links:
 - [177-vegetable-garden](content/annotations/a-pattern-language/177-vegetable-garden)
 - [37-house-cluster](content/annotations/a-pattern-language/37-house-cluster)
 - [74-animals](content/annotations/a-pattern-language/74-animals)
+- [A Pattern Language](https://www.patternlanguage.com/)

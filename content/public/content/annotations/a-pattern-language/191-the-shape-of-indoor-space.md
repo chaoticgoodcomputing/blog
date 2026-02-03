@@ -19,3 +19,4 @@ This note originally contained the following links:
 - [Ceiling Height Variety](190-ceiling-height-variety)
 - [Windows Overlooking Life](192-windows-overlooking-life)
 - [190-ceiling-height-variety](content/annotations/a-pattern-language/190-ceiling-height-variety)
+- [A Pattern Language](https://www.patternlanguage.com/)

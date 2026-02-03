@@ -23,3 +23,4 @@ This note originally contained the following links:
 - [33-night-life](content/annotations/a-pattern-language/33-night-life)
 - [58-carnival](content/annotations/a-pattern-language/58-carnival)
 - [61-small-public-squares](content/annotations/a-pattern-language/61-small-public-squares)
+- [A Pattern Language](https://www.patternlanguage.com/)

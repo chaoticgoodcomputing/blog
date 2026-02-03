@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [206-efficient-structure](content/annotations/a-pattern-language/206-efficient-structure)
 - [190-ceiling-height-variety](content/annotations/a-pattern-language/190-ceiling-height-variety)
 - [209-roof-layout](content/annotations/a-pattern-language/209-roof-layout)
+- [A Pattern Language](https://www.patternlanguage.com/)

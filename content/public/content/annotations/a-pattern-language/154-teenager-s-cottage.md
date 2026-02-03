@@ -22,3 +22,4 @@ This note originally contained the following links:
 - [76-house-for-a-small-family](content/annotations/a-pattern-language/76-house-for-a-small-family)
 - [141-a-room-of-one-s-own](content/annotations/a-pattern-language/141-a-room-of-one-s-own)
 - [153-rooms-to-rent](content/annotations/a-pattern-language/153-rooms-to-rent)
+- [A Pattern Language](https://www.patternlanguage.com/)

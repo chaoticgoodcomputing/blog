@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [136-couple-s-realm](content/annotations/a-pattern-language/136-couple-s-realm)
 - [137-childrens-realm](content/annotations/a-pattern-language/137-childrens-realm)
 - [138-sleeping-to-the-east](content/annotations/a-pattern-language/138-sleeping-to-the-east)
+- [A Pattern Language](https://www.patternlanguage.com/)

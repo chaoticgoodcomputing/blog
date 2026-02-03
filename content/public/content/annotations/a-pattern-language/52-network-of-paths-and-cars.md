@@ -24,3 +24,4 @@ This note originally contained the following links:
 - [30-activity-nodes](content/annotations/a-pattern-language/30-activity-nodes)
 - [31-promenade](content/annotations/a-pattern-language/31-promenade)
 - [120-paths-and-goals](content/annotations/a-pattern-language/120-paths-and-goals)
+- [A Pattern Language](https://www.patternlanguage.com/)

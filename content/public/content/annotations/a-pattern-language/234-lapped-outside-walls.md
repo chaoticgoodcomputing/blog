@@ -20,3 +20,4 @@ This note originally contained the following links:
 - [Soft Inside Walls](235-soft-inside-walls)
 - [218-wall-membranes](content/annotations/a-pattern-language/218-wall-membranes)
 - [220-roof-vaults](content/annotations/a-pattern-language/220-roof-vaults)
+- [A Pattern Language](https://www.patternlanguage.com/)

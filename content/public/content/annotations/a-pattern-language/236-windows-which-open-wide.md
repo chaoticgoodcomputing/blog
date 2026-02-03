@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [180-window-place](content/annotations/a-pattern-language/180-window-place)
 - [192-windows-overlooking-life](content/annotations/a-pattern-language/192-windows-overlooking-life)
 - [221-natural-doors-and-windows](content/annotations/a-pattern-language/221-natural-doors-and-windows)
+- [A Pattern Language](https://www.patternlanguage.com/)

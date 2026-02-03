@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [131-the-flow-through-rooms](content/annotations/a-pattern-language/131-the-flow-through-rooms)
 - [142-sequence-of-sitting-spaces](content/annotations/a-pattern-language/142-sequence-of-sitting-spaces)
 - [135-tapestry-of-light-and-dark](content/annotations/a-pattern-language/135-tapestry-of-light-and-dark)
+- [A Pattern Language](https://www.patternlanguage.com/)

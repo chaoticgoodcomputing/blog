@@ -22,3 +22,4 @@ This note originally contained the following links:
 - [96-number-of-stories](content/annotations/a-pattern-language/96-number-of-stories)
 - [99-main-building](content/annotations/a-pattern-language/99-main-building)
 - [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)
+- [A Pattern Language](https://www.patternlanguage.com/)

@@ -19,3 +19,4 @@ This note originally contained the following links:
 - [Common Land](67-common-land)
 - [Public Outdoor Room](69-public-outdoor-room)
 - [67-common-land](content/annotations/a-pattern-language/67-common-land)
+- [A Pattern Language](https://www.patternlanguage.com/)

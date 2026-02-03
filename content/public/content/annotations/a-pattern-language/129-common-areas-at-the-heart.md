@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [127-intimacy-gradient](content/annotations/a-pattern-language/127-intimacy-gradient)
 - [128-indoor-sunlight](content/annotations/a-pattern-language/128-indoor-sunlight)
 - [116-cascade-of-roofs](content/annotations/a-pattern-language/116-cascade-of-roofs)
+- [A Pattern Language](https://www.patternlanguage.com/)

@@ -20,3 +20,4 @@ This note originally contained the following links:
 - [Paving with Cracks Between the Stones](247-paving-with-cracks-between-the-stones)
 - [174-trellised-walk](content/annotations/a-pattern-language/174-trellised-walk)
 - [238-filtered-light](content/annotations/a-pattern-language/238-filtered-light)
+- [A Pattern Language](https://www.patternlanguage.com/)

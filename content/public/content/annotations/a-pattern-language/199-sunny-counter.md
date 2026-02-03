@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [139-farmhouse-kitchen](content/annotations/a-pattern-language/139-farmhouse-kitchen)
 - [184-cooking-layout](content/annotations/a-pattern-language/184-cooking-layout)
 - [128-indoor-sunlight](content/annotations/a-pattern-language/128-indoor-sunlight)
+- [A Pattern Language](https://www.patternlanguage.com/)

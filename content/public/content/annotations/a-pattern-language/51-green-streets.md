@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [49-looped-local-roads](content/annotations/a-pattern-language/49-looped-local-roads)
 - [50-t-junctions](content/annotations/a-pattern-language/50-t-junctions)
 - [67-common-land](content/annotations/a-pattern-language/67-common-land)
+- [A Pattern Language](https://www.patternlanguage.com/)

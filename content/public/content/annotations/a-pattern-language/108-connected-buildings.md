@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
 - [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)
 - [106-positive-outdoor-space](content/annotations/a-pattern-language/106-positive-outdoor-space)
+- [A Pattern Language](https://www.patternlanguage.com/)

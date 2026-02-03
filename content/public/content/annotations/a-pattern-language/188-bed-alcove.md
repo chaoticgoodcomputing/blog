@@ -22,3 +22,4 @@ This note originally contained the following links:
 - [186-communal-sleeping](content/annotations/a-pattern-language/186-communal-sleeping)
 - [187-marriage-bed](content/annotations/a-pattern-language/187-marriage-bed)
 - [141-a-room-of-one-s-own](content/annotations/a-pattern-language/141-a-room-of-one-s-own)
+- [A Pattern Language](https://www.patternlanguage.com/)

@@ -20,3 +20,4 @@ This note originally contained the following links:
 - [House for a Couple](77-house-for-a-couple)
 - [75-the-family](content/annotations/a-pattern-language/75-the-family)
 - [37-house-cluster](content/annotations/a-pattern-language/37-house-cluster)
+- [A Pattern Language](https://www.patternlanguage.com/)

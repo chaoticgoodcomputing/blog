@@ -24,3 +24,4 @@ This note originally contained the following links:
 - [146-flexible-office-space](content/annotations/a-pattern-language/146-flexible-office-space)
 - [150-a-place-to-wait](content/annotations/a-pattern-language/150-a-place-to-wait)
 - [151-small-meeting-rooms](content/annotations/a-pattern-language/151-small-meeting-rooms)
+- [A Pattern Language](https://www.patternlanguage.com/)

@@ -23,3 +23,4 @@ This note originally contained the following links:
 - [180-window-place](content/annotations/a-pattern-language/180-window-place)
 - [190-ceiling-height-variety](content/annotations/a-pattern-language/190-ceiling-height-variety)
 - [160-building-edge](content/annotations/a-pattern-language/160-building-edge)
+- [A Pattern Language](https://www.patternlanguage.com/)

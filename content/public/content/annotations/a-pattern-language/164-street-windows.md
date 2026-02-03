@@ -22,3 +22,4 @@ This note originally contained the following links:
 - [61-small-public-squares](content/annotations/a-pattern-language/61-small-public-squares)
 - [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)
 - [101-building-thoroughfare](content/annotations/a-pattern-language/101-building-thoroughfare)
+- [A Pattern Language](https://www.patternlanguage.com/)

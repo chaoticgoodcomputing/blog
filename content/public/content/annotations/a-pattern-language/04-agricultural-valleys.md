@@ -20,3 +20,4 @@ This note originally contained the following links:
 - [Lace of Country Streets](05-lace-of-country-streets)
 - [01-independent-regions](content/annotations/a-pattern-language/01-independent-regions)
 - [03-city-country-fingers](content/annotations/a-pattern-language/03-city-country-fingers)
+- [A Pattern Language](https://www.patternlanguage.com/)

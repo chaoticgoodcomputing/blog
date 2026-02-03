@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [159-light-on-two-sides-of-every-room](content/annotations/a-pattern-language/159-light-on-two-sides-of-every-room)
 - [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)
 - [106-positive-outdoor-space](content/annotations/a-pattern-language/106-positive-outdoor-space)
+- [A Pattern Language](https://www.patternlanguage.com/)

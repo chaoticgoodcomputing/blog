@@ -25,3 +25,4 @@ This note originally contained the following links:
 - [120-paths-and-goals](content/annotations/a-pattern-language/120-paths-and-goals)
 - [106-positive-outdoor-space](content/annotations/a-pattern-language/106-positive-outdoor-space)
 - [112-entrance-transition](content/annotations/a-pattern-language/112-entrance-transition)
+- [A Pattern Language](https://www.patternlanguage.com/)

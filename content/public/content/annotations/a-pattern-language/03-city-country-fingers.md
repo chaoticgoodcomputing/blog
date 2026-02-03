@@ -19,3 +19,4 @@ This note originally contained the following links:
 - [The Distribution of Towns](02-the-distribution-of-towns)
 - [Agricultural Valleys](04-agricultural-valleys)
 - [02-the-distribution-of-towns](content/annotations/a-pattern-language/02-the-distribution-of-towns)
+- [A Pattern Language](https://www.patternlanguage.com/)

@@ -26,3 +26,4 @@ This note originally contained the following links:
 - [47-health-center](content/annotations/a-pattern-language/47-health-center)
 - [88-street-cafe](content/annotations/a-pattern-language/88-street-cafe)
 - [101-building-thoroughfare](content/annotations/a-pattern-language/101-building-thoroughfare)
+- [A Pattern Language](https://www.patternlanguage.com/)

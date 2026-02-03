@@ -20,3 +20,4 @@ This note originally contained the following links:
 - [Quiet Backs](59-quiet-backs)
 - [31-promenade](content/annotations/a-pattern-language/31-promenade)
 - [33-night-life](content/annotations/a-pattern-language/33-night-life)
+- [A Pattern Language](https://www.patternlanguage.com/)

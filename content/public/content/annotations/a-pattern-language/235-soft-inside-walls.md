@@ -20,3 +20,4 @@ This note originally contained the following links:
 - [Windows (Which Open Wide)](236-windows-which-open-wide)
 - [218-wall-membranes](content/annotations/a-pattern-language/218-wall-membranes)
 - [219-floor-ceiling-vaults](content/annotations/a-pattern-language/219-floor-ceiling-vaults)
+- [A Pattern Language](https://www.patternlanguage.com/)

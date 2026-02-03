@@ -20,3 +20,4 @@ This note originally contained the following links:
 - [Animals](74-animals)
 - [67-common-land](content/annotations/a-pattern-language/67-common-land)
 - [68-connected-play](content/annotations/a-pattern-language/68-connected-play)
+- [A Pattern Language](https://www.patternlanguage.com/)

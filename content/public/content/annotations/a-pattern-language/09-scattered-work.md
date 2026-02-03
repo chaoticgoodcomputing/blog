@@ -19,3 +19,4 @@ This note originally contained the following links:
 - [Mosaic of Subcultures](08-mosaic-of-subcultures)
 - [Magic of the City](10-magic-of-the-city)
 - [08-mosaic-of-subcultures](content/annotations/a-pattern-language/08-mosaic-of-subcultures)
+- [A Pattern Language](https://www.patternlanguage.com/)

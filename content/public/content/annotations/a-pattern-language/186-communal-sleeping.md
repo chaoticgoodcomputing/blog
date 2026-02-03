@@ -24,3 +24,4 @@ This note originally contained the following links:
 - [143-bed-cluster](content/annotations/a-pattern-language/143-bed-cluster)
 - [187-marriage-bed](content/annotations/a-pattern-language/187-marriage-bed)
 - [188-bed-alcove](content/annotations/a-pattern-language/188-bed-alcove)
+- [A Pattern Language](https://www.patternlanguage.com/)

@@ -18,3 +18,4 @@ This note originally contained the following links:
 
 - [Parallel Roads](23-parallel-roads)
 - [Access to Water](25-access-to-water)
+- [A Pattern Language](https://www.patternlanguage.com/)

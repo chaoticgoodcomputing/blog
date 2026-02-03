@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [117-sheltering-roof](content/annotations/a-pattern-language/117-sheltering-roof)
 - [180-window-place](content/annotations/a-pattern-language/180-window-place)
 - [220-roof-vaults](content/annotations/a-pattern-language/220-roof-vaults)
+- [A Pattern Language](https://www.patternlanguage.com/)

@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [57-children-in-the-city](content/annotations/a-pattern-language/57-children-in-the-city)
 - [68-connected-play](content/annotations/a-pattern-language/68-connected-play)
 - [18-network-of-learning](content/annotations/a-pattern-language/18-network-of-learning)
+- [A Pattern Language](https://www.patternlanguage.com/)

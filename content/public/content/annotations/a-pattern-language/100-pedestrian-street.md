@@ -28,3 +28,4 @@ This note originally contained the following links:
 - [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
 - [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)
 - [55-raised-walk](content/annotations/a-pattern-language/55-raised-walk)
+- [A Pattern Language](https://www.patternlanguage.com/)

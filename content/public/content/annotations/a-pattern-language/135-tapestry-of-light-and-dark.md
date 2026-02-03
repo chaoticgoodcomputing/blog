@@ -22,3 +22,4 @@ This note originally contained the following links:
 - [132-short-passages](content/annotations/a-pattern-language/132-short-passages)
 - [133-staircase-as-a-stage](content/annotations/a-pattern-language/133-staircase-as-a-stage)
 - [134-zen-view](content/annotations/a-pattern-language/134-zen-view)
+- [A Pattern Language](https://www.patternlanguage.com/)

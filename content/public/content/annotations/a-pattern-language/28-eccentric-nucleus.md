@@ -22,3 +22,4 @@ This note originally contained the following links:
 - [10-magic-of-the-city](content/annotations/a-pattern-language/10-magic-of-the-city)
 - [12-community-of-7000](content/annotations/a-pattern-language/12-community-of-7000)
 - [13-subculture-boundary](content/annotations/a-pattern-language/13-subculture-boundary)
+- [A Pattern Language](https://www.patternlanguage.com/)

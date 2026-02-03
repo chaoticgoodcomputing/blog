@@ -27,3 +27,4 @@ This note originally contained the following links:
 - [101-building-thoroughfare](content/annotations/a-pattern-language/101-building-thoroughfare)
 - [119-arcades](content/annotations/a-pattern-language/119-arcades)
 - [131-the-flow-through-rooms](content/annotations/a-pattern-language/131-the-flow-through-rooms)
+- [A Pattern Language](https://www.patternlanguage.com/)

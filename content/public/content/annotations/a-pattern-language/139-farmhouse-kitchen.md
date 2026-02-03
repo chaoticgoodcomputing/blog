@@ -20,3 +20,4 @@ This note originally contained the following links:
 - [Private Terrace on the Street](140-private-terrace-on-the-street)
 - [129-common-areas-at-the-heart](content/annotations/a-pattern-language/129-common-areas-at-the-heart)
 - [147-communal-eating](content/annotations/a-pattern-language/147-communal-eating)
+- [A Pattern Language](https://www.patternlanguage.com/)

@@ -22,3 +22,4 @@ This note originally contained the following links:
 - [14-identifiable-neighborhood](content/annotations/a-pattern-language/14-identifiable-neighborhood)
 - [66-holy-ground](content/annotations/a-pattern-language/66-holy-ground)
 - [67-common-land](content/annotations/a-pattern-language/67-common-land)
+- [A Pattern Language](https://www.patternlanguage.com/)

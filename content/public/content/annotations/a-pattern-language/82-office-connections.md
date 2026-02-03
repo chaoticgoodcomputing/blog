@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [41-work-community](content/annotations/a-pattern-language/41-work-community)
 - [80-self-governing-workshops-and-offices](content/annotations/a-pattern-language/80-self-governing-workshops-and-offices)
 - [81-small-services-without-red-tape](content/annotations/a-pattern-language/81-small-services-without-red-tape)
+- [A Pattern Language](https://www.patternlanguage.com/)

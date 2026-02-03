@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [197-thick-walls](content/annotations/a-pattern-language/197-thick-walls)
 - [139-farmhouse-kitchen](content/annotations/a-pattern-language/139-farmhouse-kitchen)
 - [183-workspace-enclosure](content/annotations/a-pattern-language/183-workspace-enclosure)
+- [A Pattern Language](https://www.patternlanguage.com/)

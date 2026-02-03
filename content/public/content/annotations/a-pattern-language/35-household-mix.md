@@ -22,3 +22,4 @@ This note originally contained the following links:
 - [37-house-cluster](content/annotations/a-pattern-language/37-house-cluster)
 - [41-work-community](content/annotations/a-pattern-language/41-work-community)
 - [26-life-cycle](content/annotations/a-pattern-language/26-life-cycle)
+- [A Pattern Language](https://www.patternlanguage.com/)

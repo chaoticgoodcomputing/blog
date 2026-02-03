@@ -22,3 +22,4 @@ This note originally contained the following links:
 - [76-house-for-a-small-family](content/annotations/a-pattern-language/76-house-for-a-small-family)
 - [77-house-for-a-couple](content/annotations/a-pattern-language/77-house-for-a-couple)
 - [127-intimacy-gradient](content/annotations/a-pattern-language/127-intimacy-gradient)
+- [A Pattern Language](https://www.patternlanguage.com/)

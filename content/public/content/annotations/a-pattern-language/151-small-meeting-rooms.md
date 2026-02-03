@@ -23,3 +23,4 @@ This note originally contained the following links:
 - [83-master-and-apprentices](content/annotations/a-pattern-language/83-master-and-apprentices)
 - [146-flexible-office-space](content/annotations/a-pattern-language/146-flexible-office-space)
 - [148-small-work-groups](content/annotations/a-pattern-language/148-small-work-groups)
+- [A Pattern Language](https://www.patternlanguage.com/)

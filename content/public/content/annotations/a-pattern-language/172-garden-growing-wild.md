@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [169-terraced-slope](content/annotations/a-pattern-language/169-terraced-slope)
 - [170-fruit-trees](content/annotations/a-pattern-language/170-fruit-trees)
 - [171-tree-places](content/annotations/a-pattern-language/171-tree-places)
+- [A Pattern Language](https://www.patternlanguage.com/)

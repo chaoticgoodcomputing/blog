@@ -22,3 +22,4 @@ This note originally contained the following links:
 - [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)
 - [108-connected-buildings](content/annotations/a-pattern-language/108-connected-buildings)
 - [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)
+- [A Pattern Language](https://www.patternlanguage.com/)

@@ -20,3 +20,4 @@ This note originally contained the following links:
 - [Cascade of Roofs](116-cascade-of-roofs)
 - [106-positive-outdoor-space](content/annotations/a-pattern-language/106-positive-outdoor-space)
 - [114-hierarchy-of-open-space](content/annotations/a-pattern-language/114-hierarchy-of-open-space)
+- [A Pattern Language](https://www.patternlanguage.com/)

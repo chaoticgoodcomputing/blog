@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [215-ground-floor-slab](content/annotations/a-pattern-language/215-ground-floor-slab)
 - [219-floor-ceiling-vaults](content/annotations/a-pattern-language/219-floor-ceiling-vaults)
 - [127-intimacy-gradient](content/annotations/a-pattern-language/127-intimacy-gradient)
+- [A Pattern Language](https://www.patternlanguage.com/)

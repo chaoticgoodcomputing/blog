@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [105-south-facing-outdoors](content/annotations/a-pattern-language/105-south-facing-outdoors)
 - [128-indoor-sunlight](content/annotations/a-pattern-language/128-indoor-sunlight)
 - [161-sunny-place](content/annotations/a-pattern-language/161-sunny-place)
+- [A Pattern Language](https://www.patternlanguage.com/)

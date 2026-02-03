@@ -27,3 +27,4 @@ This note originally contained the following links:
 - [180-window-place](content/annotations/a-pattern-language/180-window-place)
 - [103-small-parking-lots](content/annotations/a-pattern-language/103-small-parking-lots)
 - [238-filtered-light](content/annotations/a-pattern-language/238-filtered-light)
+- [A Pattern Language](https://www.patternlanguage.com/)

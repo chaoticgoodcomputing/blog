@@ -23,3 +23,4 @@ This note originally contained the following links:
 - [44-local-town-hall](content/annotations/a-pattern-language/44-local-town-hall)
 - [47-health-center](content/annotations/a-pattern-language/47-health-center)
 - [84-teenage-society](content/annotations/a-pattern-language/84-teenage-society)
+- [A Pattern Language](https://www.patternlanguage.com/)

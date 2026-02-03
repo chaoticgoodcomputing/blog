@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [75-the-family](content/annotations/a-pattern-language/75-the-family)
 - [155-old-age-cottage](content/annotations/a-pattern-language/155-old-age-cottage)
 - [141-a-room-of-one-s-own](content/annotations/a-pattern-language/141-a-room-of-one-s-own)
+- [A Pattern Language](https://www.patternlanguage.com/)

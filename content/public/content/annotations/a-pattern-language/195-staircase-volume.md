@@ -20,3 +20,4 @@ This note originally contained the following links:
 - [Corner Doors](196-corner-doors)
 - [133-staircase-as-a-stage](content/annotations/a-pattern-language/133-staircase-as-a-stage)
 - [158-open-stairs](content/annotations/a-pattern-language/158-open-stairs)
+- [A Pattern Language](https://www.patternlanguage.com/)

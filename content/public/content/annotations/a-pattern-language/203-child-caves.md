@@ -22,3 +22,4 @@ This note originally contained the following links:
 - [86-childrens-home](content/annotations/a-pattern-language/86-childrens-home)
 - [137-childrens-realm](content/annotations/a-pattern-language/137-childrens-realm)
 - [197-thick-walls](content/annotations/a-pattern-language/197-thick-walls)
+- [A Pattern Language](https://www.patternlanguage.com/)

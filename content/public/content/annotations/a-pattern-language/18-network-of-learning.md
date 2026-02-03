@@ -18,3 +18,4 @@ This note originally contained the following links:
 
 - [Ring Roads](17-ring-roads)
 - [Web of Shopping](19-web-of-shopping)
+- [A Pattern Language](https://www.patternlanguage.com/)

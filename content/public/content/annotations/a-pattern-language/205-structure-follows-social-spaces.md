@@ -18,3 +18,4 @@ This note originally contained the following links:
 
 - [Secret Place](204-secret-place)
 - [Efficient Structure](206-efficient-structure)
+- [A Pattern Language](https://www.patternlanguage.com/)

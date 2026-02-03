@@ -22,3 +22,4 @@ This note originally contained the following links:
 - [17-ring-roads](content/annotations/a-pattern-language/17-ring-roads)
 - [13-subculture-boundary](content/annotations/a-pattern-language/13-subculture-boundary)
 - [15-neighborhood-boundary](content/annotations/a-pattern-language/15-neighborhood-boundary)
+- [A Pattern Language](https://www.patternlanguage.com/)

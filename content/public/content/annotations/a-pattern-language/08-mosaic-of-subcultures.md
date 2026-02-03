@@ -19,3 +19,4 @@ This note originally contained the following links:
 - [The Countryside](07-the-countryside)
 - [Scattered Work](09-scattered-work)
 - [03-city-country-fingers](content/annotations/a-pattern-language/03-city-country-fingers)
+- [A Pattern Language](https://www.patternlanguage.com/)

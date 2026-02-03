@@ -20,3 +20,4 @@ This note originally contained the following links:
 - [Local Transport Areas](11-local-transport-areas)
 - [08-mosaic-of-subcultures](content/annotations/a-pattern-language/08-mosaic-of-subcultures)
 - [03-city-country-fingers](content/annotations/a-pattern-language/03-city-country-fingers)
+- [A Pattern Language](https://www.patternlanguage.com/)

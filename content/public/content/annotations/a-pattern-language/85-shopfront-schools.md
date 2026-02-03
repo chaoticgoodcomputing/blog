@@ -20,3 +20,4 @@ This note originally contained the following links:
 - [Children's Home](86-childrens-home)
 - [86-childrens-home](content/annotations/a-pattern-language/86-childrens-home)
 - [18-network-of-learning](content/annotations/a-pattern-language/18-network-of-learning)
+- [A Pattern Language](https://www.patternlanguage.com/)

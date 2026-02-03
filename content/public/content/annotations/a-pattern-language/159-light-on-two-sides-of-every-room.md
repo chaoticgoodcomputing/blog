@@ -22,3 +22,4 @@ This note originally contained the following links:
 - [106-positive-outdoor-space](content/annotations/a-pattern-language/106-positive-outdoor-space)
 - [109-long-thin-house](content/annotations/a-pattern-language/109-long-thin-house)
 - [116-cascade-of-roofs](content/annotations/a-pattern-language/116-cascade-of-roofs)
+- [A Pattern Language](https://www.patternlanguage.com/)

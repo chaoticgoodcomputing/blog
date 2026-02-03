@@ -20,3 +20,4 @@ This note originally contained the following links:
 - [Workspace Enclosure](183-workspace-enclosure)
 - [147-communal-eating](content/annotations/a-pattern-language/147-communal-eating)
 - [139-farmhouse-kitchen](content/annotations/a-pattern-language/139-farmhouse-kitchen)
+- [A Pattern Language](https://www.patternlanguage.com/)

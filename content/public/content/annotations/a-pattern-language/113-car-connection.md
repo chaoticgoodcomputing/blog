@@ -20,3 +20,4 @@ This note originally contained the following links:
 - [Hierarchy of Open Space](114-hierarchy-of-open-space)
 - [110-main-entrance](content/annotations/a-pattern-language/110-main-entrance)
 - [112-entrance-transition](content/annotations/a-pattern-language/112-entrance-transition)
+- [A Pattern Language](https://www.patternlanguage.com/)

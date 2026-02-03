@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [131-the-flow-through-rooms](content/annotations/a-pattern-language/131-the-flow-through-rooms)
 - [101-building-thoroughfare](content/annotations/a-pattern-language/101-building-thoroughfare)
 - [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)
+- [A Pattern Language](https://www.patternlanguage.com/)

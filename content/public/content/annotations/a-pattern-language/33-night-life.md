@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [10-magic-of-the-city](content/annotations/a-pattern-language/10-magic-of-the-city)
 - [12-community-of-7000](content/annotations/a-pattern-language/12-community-of-7000)
 - [31-promenade](content/annotations/a-pattern-language/31-promenade)
+- [A Pattern Language](https://www.patternlanguage.com/)

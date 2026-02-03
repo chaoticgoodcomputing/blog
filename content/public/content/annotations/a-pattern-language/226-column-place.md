@@ -25,3 +25,4 @@ This note originally contained the following links:
 - [166-gallery-surround](content/annotations/a-pattern-language/166-gallery-surround)
 - [167-six-foot-balcony](content/annotations/a-pattern-language/167-six-foot-balcony)
 - [174-trellised-walk](content/annotations/a-pattern-language/174-trellised-walk)
+- [A Pattern Language](https://www.patternlanguage.com/)

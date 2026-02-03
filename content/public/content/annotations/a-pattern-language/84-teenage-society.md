@@ -21,3 +21,4 @@ This note originally contained the following links:
 - [26-life-cycle](content/annotations/a-pattern-language/26-life-cycle)
 - [18-network-of-learning](content/annotations/a-pattern-language/18-network-of-learning)
 - [83-master-and-apprentices](content/annotations/a-pattern-language/83-master-and-apprentices)
+- [A Pattern Language](https://www.patternlanguage.com/)
