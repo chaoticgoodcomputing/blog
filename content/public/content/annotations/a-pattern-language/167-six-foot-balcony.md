@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Gallery Surround](166-gallery-surround)
 - [Connection to the Earth](168-connection-to-the-earth)
+- [119-arcades](content/annotations/a-pattern-language/119-arcades)
+- [166-gallery-surround](content/annotations/a-pattern-language/166-gallery-surround)

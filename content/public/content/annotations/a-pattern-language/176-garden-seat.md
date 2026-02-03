@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Greenhouse](175-greenhouse)
 - [Vegetable Garden](177-vegetable-garden)
+- [172-garden-growing-wild](content/annotations/a-pattern-language/172-garden-growing-wild)
+- [161-sunny-place](content/annotations/a-pattern-language/161-sunny-place)

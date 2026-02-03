@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Opening to the Street](165-opening-to-the-street)
 - [Six-Foot Balcony](167-six-foot-balcony)
+- [160-building-edge](content/annotations/a-pattern-language/160-building-edge)
+- [119-arcades](content/annotations/a-pattern-language/119-arcades)
+- [118-roof-garden](content/annotations/a-pattern-language/118-roof-garden)
+- [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)

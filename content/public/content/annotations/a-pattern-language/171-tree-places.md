@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Fruit Trees](170-fruit-trees)
 - [Garden Growing Wild](172-garden-growing-wild)
+- [104-site-repair](content/annotations/a-pattern-language/104-site-repair)
+- [170-fruit-trees](content/annotations/a-pattern-language/170-fruit-trees)

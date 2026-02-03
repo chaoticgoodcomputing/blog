@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Child Caves](203-child-caves)
 - [Structure Follows Social Spaces](205-structure-follows-social-spaces)
+- [197-thick-walls](content/annotations/a-pattern-language/197-thick-walls)
+- [190-ceiling-height-variety](content/annotations/a-pattern-language/190-ceiling-height-variety)

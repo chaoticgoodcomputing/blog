@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Ground Floor Slab](215-ground-floor-slab)
 - [Perimeter Beams](217-perimeter-beams)
+- [214-root-foundations](content/annotations/a-pattern-language/214-root-foundations)
+- [213-final-column-distribution](content/annotations/a-pattern-language/213-final-column-distribution)

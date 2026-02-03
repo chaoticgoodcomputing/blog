@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Marriage Bed](187-marriage-bed)
 - [Dressing Room](189-dressing-room)
+- [143-bed-cluster](content/annotations/a-pattern-language/143-bed-cluster)
+- [186-communal-sleeping](content/annotations/a-pattern-language/186-communal-sleeping)
+- [187-marriage-bed](content/annotations/a-pattern-language/187-marriage-bed)
+- [141-a-room-of-one-s-own](content/annotations/a-pattern-language/141-a-room-of-one-s-own)

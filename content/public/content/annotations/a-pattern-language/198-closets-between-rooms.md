@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Thick Walls](197-thick-walls)
 - [Sunny Counter](199-sunny-counter)
+- [183-workspace-enclosure](content/annotations/a-pattern-language/183-workspace-enclosure)
+- [189-dressing-room](content/annotations/a-pattern-language/189-dressing-room)
+- [196-corner-doors](content/annotations/a-pattern-language/196-corner-doors)

@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Good Materials](207-good-materials)
 - [Roof Layout](209-roof-layout)
+- [205-structure-follows-social-spaces](content/annotations/a-pattern-language/205-structure-follows-social-spaces)
+- [206-efficient-structure](content/annotations/a-pattern-language/206-efficient-structure)
+- [207-good-materials](content/annotations/a-pattern-language/207-good-materials)

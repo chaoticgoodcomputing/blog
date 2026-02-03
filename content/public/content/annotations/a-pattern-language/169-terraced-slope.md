@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Connection to the Earth](168-connection-to-the-earth)
 - [Fruit Trees](170-fruit-trees)
+- [104-site-repair](content/annotations/a-pattern-language/104-site-repair)
+- [160-building-edge](content/annotations/a-pattern-language/160-building-edge)
+- [168-connection-to-the-earth](content/annotations/a-pattern-language/168-connection-to-the-earth)

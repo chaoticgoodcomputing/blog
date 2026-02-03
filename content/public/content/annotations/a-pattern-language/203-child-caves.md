@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Built-in Seats](202-built-in-seats)
 - [Secret Place](204-secret-place)
+- [73-adventure-playground](content/annotations/a-pattern-language/73-adventure-playground)
+- [86-childrens-home](content/annotations/a-pattern-language/86-childrens-home)
+- [137-childrens-realm](content/annotations/a-pattern-language/137-childrens-realm)
+- [197-thick-walls](content/annotations/a-pattern-language/197-thick-walls)

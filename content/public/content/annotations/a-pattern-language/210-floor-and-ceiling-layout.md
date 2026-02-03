@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Roof Layout](209-roof-layout)
 - [Thickening the Outer Walls](211-thickening-the-outer-walls)
+- [206-efficient-structure](content/annotations/a-pattern-language/206-efficient-structure)
+- [190-ceiling-height-variety](content/annotations/a-pattern-language/190-ceiling-height-variety)
+- [209-roof-layout](content/annotations/a-pattern-language/209-roof-layout)

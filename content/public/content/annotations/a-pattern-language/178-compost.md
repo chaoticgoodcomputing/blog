@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Vegetable Garden](177-vegetable-garden)
 - [Alcoves](179-alcoves)
+- [170-fruit-trees](content/annotations/a-pattern-language/170-fruit-trees)
+- [177-vegetable-garden](content/annotations/a-pattern-language/177-vegetable-garden)
+- [37-house-cluster](content/annotations/a-pattern-language/37-house-cluster)
+- [74-animals](content/annotations/a-pattern-language/74-animals)

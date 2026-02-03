@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Thickening the Outer Walls](211-thickening-the-outer-walls)
 - [Final Column Distribution](213-final-column-distribution)
+- [209-roof-layout](content/annotations/a-pattern-language/209-roof-layout)
+- [210-floor-and-ceiling-layout](content/annotations/a-pattern-language/210-floor-and-ceiling-layout)
+- [205-structure-follows-social-spaces](content/annotations/a-pattern-language/205-structure-follows-social-spaces)
+- [208-gradual-stiffening](content/annotations/a-pattern-language/208-gradual-stiffening)

@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Final Column Distribution](213-final-column-distribution)
 - [Ground Floor Slab](215-ground-floor-slab)
+- [212-columns-at-the-corners](content/annotations/a-pattern-language/212-columns-at-the-corners)
+- [213-final-column-distribution](content/annotations/a-pattern-language/213-final-column-distribution)
+- [104-site-repair](content/annotations/a-pattern-language/104-site-repair)
+- [168-connection-to-the-earth](content/annotations/a-pattern-language/168-connection-to-the-earth)

@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Root Foundations](214-root-foundations)
 - [Box Columns](216-box-columns)
+- [168-connection-to-the-earth](content/annotations/a-pattern-language/168-connection-to-the-earth)
+- [206-efficient-structure](content/annotations/a-pattern-language/206-efficient-structure)
+- [212-columns-at-the-corners](content/annotations/a-pattern-language/212-columns-at-the-corners)
+- [214-root-foundations](content/annotations/a-pattern-language/214-root-foundations)

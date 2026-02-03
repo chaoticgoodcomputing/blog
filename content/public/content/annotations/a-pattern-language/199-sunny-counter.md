@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Closets Between Rooms](198-closets-between-rooms)
 - [Open Shelves](200-open-shelves)
+- [139-farmhouse-kitchen](content/annotations/a-pattern-language/139-farmhouse-kitchen)
+- [184-cooking-layout](content/annotations/a-pattern-language/184-cooking-layout)
+- [128-indoor-sunlight](content/annotations/a-pattern-language/128-indoor-sunlight)

@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Sunny Place](161-sunny-place)
 - [Outdoor Room](163-outdoor-room)
+- [105-south-facing-outdoors](content/annotations/a-pattern-language/105-south-facing-outdoors)
+- [128-indoor-sunlight](content/annotations/a-pattern-language/128-indoor-sunlight)
+- [161-sunny-place](content/annotations/a-pattern-language/161-sunny-place)

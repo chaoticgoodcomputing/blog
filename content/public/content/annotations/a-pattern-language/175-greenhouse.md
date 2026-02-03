@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Trellised Walk](174-trellised-walk)
 - [Garden Seat](176-garden-seat)
+- [37-house-cluster](content/annotations/a-pattern-language/37-house-cluster)
+- [41-work-community](content/annotations/a-pattern-language/41-work-community)
+- [67-common-land](content/annotations/a-pattern-language/67-common-land)

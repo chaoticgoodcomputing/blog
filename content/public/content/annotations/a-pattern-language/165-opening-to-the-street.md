@@ -18,3 +18,11 @@ This note originally contained the following links:
 
 - [Street Windows](164-street-windows)
 - [Gallery Surround](166-gallery-surround)
+- [164-street-windows](content/annotations/a-pattern-language/164-street-windows)
+- [43-university-as-a-marketplace](content/annotations/a-pattern-language/43-university-as-a-marketplace)
+- [44-local-town-hall](content/annotations/a-pattern-language/44-local-town-hall)
+- [45-necklace-of-community-projects](content/annotations/a-pattern-language/45-necklace-of-community-projects)
+- [46-market-of-many-shops](content/annotations/a-pattern-language/46-market-of-many-shops)
+- [47-health-center](content/annotations/a-pattern-language/47-health-center)
+- [88-street-cafe](content/annotations/a-pattern-language/88-street-cafe)
+- [101-building-thoroughfare](content/annotations/a-pattern-language/101-building-thoroughfare)

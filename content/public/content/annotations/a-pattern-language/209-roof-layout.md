@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Gradual Stiffening](208-gradual-stiffening)
 - [Floor and Ceiling Layout](210-floor-and-ceiling-layout)
+- [116-cascade-of-roofs](content/annotations/a-pattern-language/116-cascade-of-roofs)
+- [117-sheltering-roof](content/annotations/a-pattern-language/117-sheltering-roof)
+- [118-roof-garden](content/annotations/a-pattern-language/118-roof-garden)

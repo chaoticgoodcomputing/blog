@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Sunny Counter](199-sunny-counter)
 - [Waist-High Shelf](201-waist-high-shelf)
+- [197-thick-walls](content/annotations/a-pattern-language/197-thick-walls)
+- [139-farmhouse-kitchen](content/annotations/a-pattern-language/139-farmhouse-kitchen)
+- [183-workspace-enclosure](content/annotations/a-pattern-language/183-workspace-enclosure)

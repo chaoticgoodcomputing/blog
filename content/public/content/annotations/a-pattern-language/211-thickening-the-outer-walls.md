@@ -18,3 +18,12 @@ This note originally contained the following links:
 
 - [Floor and Ceiling Layout](210-floor-and-ceiling-layout)
 - [Columns at the Corners](212-columns-at-the-corners)
+- [116-cascade-of-roofs](content/annotations/a-pattern-language/116-cascade-of-roofs)
+- [180-window-place](content/annotations/a-pattern-language/180-window-place)
+- [197-thick-walls](content/annotations/a-pattern-language/197-thick-walls)
+- [199-sunny-counter](content/annotations/a-pattern-language/199-sunny-counter)
+- [202-built-in-seats](content/annotations/a-pattern-language/202-built-in-seats)
+- [203-child-caves](content/annotations/a-pattern-language/203-child-caves)
+- [204-secret-place](content/annotations/a-pattern-language/204-secret-place)
+- [209-roof-layout](content/annotations/a-pattern-language/209-roof-layout)
+- [210-floor-and-ceiling-layout](content/annotations/a-pattern-language/210-floor-and-ceiling-layout)

@@ -18,3 +18,8 @@ This note originally contained the following links:
 
 - [Six-Foot Balcony](167-six-foot-balcony)
 - [Terraced Slope](169-terraced-slope)
+- [160-building-edge](content/annotations/a-pattern-language/160-building-edge)
+- [119-arcades](content/annotations/a-pattern-language/119-arcades)
+- [140-private-terrace-on-the-street](content/annotations/a-pattern-language/140-private-terrace-on-the-street)
+- [166-gallery-surround](content/annotations/a-pattern-language/166-gallery-surround)
+- [167-six-foot-balcony](content/annotations/a-pattern-language/167-six-foot-balcony)

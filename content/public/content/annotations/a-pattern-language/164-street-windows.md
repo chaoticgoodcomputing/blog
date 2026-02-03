@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Outdoor Room](163-outdoor-room)
 - [Opening to the Street](165-opening-to-the-street)
+- [51-green-streets](content/annotations/a-pattern-language/51-green-streets)
+- [61-small-public-squares](content/annotations/a-pattern-language/61-small-public-squares)
+- [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)
+- [101-building-thoroughfare](content/annotations/a-pattern-language/101-building-thoroughfare)

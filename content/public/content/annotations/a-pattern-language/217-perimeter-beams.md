@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Box Columns](216-box-columns)
 - [Wall Membranes](218-wall-membranes)
+- [216-box-columns](content/annotations/a-pattern-language/216-box-columns)
+- [219-floor-ceiling-vaults](content/annotations/a-pattern-language/219-floor-ceiling-vaults)
+- [210-floor-and-ceiling-layout](content/annotations/a-pattern-language/210-floor-and-ceiling-layout)

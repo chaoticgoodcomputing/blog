@@ -18,3 +18,12 @@ This note originally contained the following links:
 
 - [Windows Overlooking Life](192-windows-overlooking-life)
 - [Interior Windows](194-interior-windows)
+- [191-the-shape-of-indoor-space](content/annotations/a-pattern-language/191-the-shape-of-indoor-space)
+- [152-half-private-office](content/annotations/a-pattern-language/152-half-private-office)
+- [167-six-foot-balcony](content/annotations/a-pattern-language/167-six-foot-balcony)
+- [Please_perform_a_grammatical_evaluation_of_the_current_note._Avoid@20260202_091332](copilot/copilot-conversations/Please_perform_a_grammatical_evaluation_of_the_current_note._Avoid@20260202_091332)
+- [185-sitting-circle](content/annotations/a-pattern-language/185-sitting-circle)
+- [188-bed-alcove](content/annotations/a-pattern-language/188-bed-alcove)
+- [101-building-thoroughfare](content/annotations/a-pattern-language/101-building-thoroughfare)
+- [119-arcades](content/annotations/a-pattern-language/119-arcades)
+- [131-the-flow-through-rooms](content/annotations/a-pattern-language/131-the-flow-through-rooms)

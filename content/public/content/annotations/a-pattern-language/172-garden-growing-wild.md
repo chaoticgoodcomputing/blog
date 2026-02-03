@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Tree Places](171-tree-places)
 - [Garden Wall](173-garden-wall)
+- [169-terraced-slope](content/annotations/a-pattern-language/169-terraced-slope)
+- [170-fruit-trees](content/annotations/a-pattern-language/170-fruit-trees)
+- [171-tree-places](content/annotations/a-pattern-language/171-tree-places)

@@ -18,3 +18,5 @@ This note originally contained the following links:
 
 - [Terraced Slope](169-terraced-slope)
 - [Tree Places](171-tree-places)
+- [67-common-land](content/annotations/a-pattern-language/67-common-land)
+- [111-half-hidden-garden](content/annotations/a-pattern-language/111-half-hidden-garden)

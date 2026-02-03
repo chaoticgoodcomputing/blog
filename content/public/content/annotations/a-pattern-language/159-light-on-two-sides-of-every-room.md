@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Open Stairs](158-open-stairs)
 - [Building Edge](160-building-edge)
+- [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)
+- [106-positive-outdoor-space](content/annotations/a-pattern-language/106-positive-outdoor-space)
+- [109-long-thin-house](content/annotations/a-pattern-language/109-long-thin-house)
+- [116-cascade-of-roofs](content/annotations/a-pattern-language/116-cascade-of-roofs)

@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Floor-Ceiling Vaults](219-floor-ceiling-vaults)
 - [Natural Doors and Windows](221-natural-doors-and-windows)
+- [118-roof-garden](content/annotations/a-pattern-language/118-roof-garden)
+- [219-floor-ceiling-vaults](content/annotations/a-pattern-language/219-floor-ceiling-vaults)
+- [117-sheltering-roof](content/annotations/a-pattern-language/117-sheltering-roof)

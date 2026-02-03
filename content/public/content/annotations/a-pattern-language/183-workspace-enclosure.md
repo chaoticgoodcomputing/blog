@@ -18,3 +18,7 @@ This note originally contained the following links:
 
 - [Eating Atmosphere](182-eating-atmosphere)
 - [Cooking Layout](184-cooking-layout)
+- [146-flexible-office-space](content/annotations/a-pattern-language/146-flexible-office-space)
+- [152-half-private-office](content/annotations/a-pattern-language/152-half-private-office)
+- [157-home-workshop](content/annotations/a-pattern-language/157-home-workshop)
+- [179-alcoves](content/annotations/a-pattern-language/179-alcoves)

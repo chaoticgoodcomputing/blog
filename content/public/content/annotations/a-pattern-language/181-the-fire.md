@@ -18,3 +18,4 @@ This note originally contained the following links:
 
 - [Window Place](180-window-place)
 - [Eating Atmosphere](182-eating-atmosphere)
+- [129-common-areas-at-the-heart](content/annotations/a-pattern-language/129-common-areas-at-the-heart)

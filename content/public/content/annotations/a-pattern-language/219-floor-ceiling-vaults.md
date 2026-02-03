@@ -18,3 +18,8 @@ This note originally contained the following links:
 
 - [Wall Membranes](218-wall-membranes)
 - [Roof Vaults](220-roof-vaults)
+- [206-efficient-structure](content/annotations/a-pattern-language/206-efficient-structure)
+- [207-good-materials](content/annotations/a-pattern-language/207-good-materials)
+- [210-floor-and-ceiling-layout](content/annotations/a-pattern-language/210-floor-and-ceiling-layout)
+- [217-perimeter-beams](content/annotations/a-pattern-language/217-perimeter-beams)
+- [190-ceiling-height-variety](content/annotations/a-pattern-language/190-ceiling-height-variety)

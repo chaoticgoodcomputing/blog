@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Light on Two Sides of Every Room](159-light-on-two-sides-of-every-room)
 - [Sunny Place](161-sunny-place)
+- [159-light-on-two-sides-of-every-room](content/annotations/a-pattern-language/159-light-on-two-sides-of-every-room)
+- [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)
+- [106-positive-outdoor-space](content/annotations/a-pattern-language/106-positive-outdoor-space)

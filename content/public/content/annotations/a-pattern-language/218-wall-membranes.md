@@ -18,3 +18,6 @@ This note originally contained the following links:
 
 - [Perimeter Beams](217-perimeter-beams)
 - [Floor-Ceiling Vaults](219-floor-ceiling-vaults)
+- [206-efficient-structure](content/annotations/a-pattern-language/206-efficient-structure)
+- [213-final-column-distribution](content/annotations/a-pattern-language/213-final-column-distribution)
+- [216-box-columns](content/annotations/a-pattern-language/216-box-columns)
