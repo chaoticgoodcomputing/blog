@@ -14,6 +14,8 @@ import { QuartzLogger } from "../util/log"
 import { trace } from "../util/trace"
 import { BuildCtx, WorkerSerializableBuildCtx } from "../util/ctx"
 import { styleText } from "util"
+import { sassPlugin } from "esbuild-sass-plugin"
+import { promises as fs } from "fs"
 
 export type QuartzMdProcessor = Processor<MDRoot, MDRoot, MDRoot>
 export type QuartzHtmlProcessor = Processor<undefined, MDRoot, HTMLRoot>
@@ -76,17 +78,51 @@ async function transpileWorkerScript() {
     sourcemap: true,
     sourcesContent: false,
     plugins: [
+      // Compile .scss files as CSS text strings for widget styling
+      sassPlugin({
+        filter: /\.inline\.scss$/,
+        type: "css-text",
+        cssImports: true,
+      }),
+      // Other scss files (non-widget) are not needed in worker, return empty
+      sassPlugin({
+        filter: /\.scss$/,
+        type: "css-text",
+        cssImports: true,
+      }),
+      // Inline scripts loader - reads file content and bundles for browser
       {
-        name: "css-and-scripts-as-text",
+        name: "inline-script-loader",
         setup(build) {
-          build.onLoad({ filter: /\.scss$/ }, (_) => ({
-            contents: "",
-            loader: "text",
-          }))
-          build.onLoad({ filter: /\.inline\.(ts|js)$/ }, (_) => ({
-            contents: "",
-            loader: "text",
-          }))
+          build.onLoad({ filter: /\.inline\.(ts|js)$/ }, async (args) => {
+            let text = await fs.readFile(args.path, "utf8")
+
+            // remove default exports that we manually inserted
+            text = text.replace("export default", "")
+            text = text.replace("export", "")
+
+            const sourcefile = path.relative(path.resolve("."), args.path)
+            const resolveDir = path.dirname(args.path)
+            const transpiled = await esbuild.build({
+              stdin: {
+                contents: text,
+                loader: "ts",
+                resolveDir,
+                sourcefile,
+              },
+              write: false,
+              bundle: true,
+              minify: true,
+              platform: "browser",
+              format: "esm",
+            })
+
+            const code = transpiled.outputFiles![0].text
+            return {
+              contents: code,
+              loader: "text",
+            }
+          })
         },
       },
     ],

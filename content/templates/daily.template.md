@@ -59,6 +59,9 @@ const previousPath = previousNote
     })();
 const previousBasename = previousNote ? previousNote.basename : tp.date.now("YYYY-MM-DD", -1);
 
+// Check if today is a weekday (Mon-Fri = indices 1-5)
+const isWeekday = moment().day() >= 1 && moment().day() <= 5;
+
 // Execute Dataview query to get leftover tasks from previous note only
 const DataviewAPI = app.plugins.plugins.dataview?.api;
 let leftoverTasks = "No tasks found.";
@@ -86,7 +89,7 @@ title: "<% title %>"
 date: <% tp.date.now() %>
 tags:
   - <% seasonTag %>
----
+<% isWeekday ? "  - projects/dayjob" : "" %>---
 ⇐ [[<% previousPath %>|<% previousBasename %>]]
 
 ## <% WEEKDAYS[moment().day()] %>: Up Front
