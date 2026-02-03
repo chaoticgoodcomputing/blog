@@ -135,8 +135,19 @@ export const MDX: QuartzTransformerPlugin = () => {
 
                     // Handle different value types
                     if (value && typeof value === "object" && value.type === "mdxJsxAttributeValueExpression") {
-                      // Expression value - try to evaluate
-                      value = value.data?.estree?.body?.[0]?.expression?.value
+                      // Expression value - try to evaluate from estree
+                      const expression = value.data?.estree?.body?.[0]?.expression
+                      if (expression) {
+                        // Use a simple eval to convert the expression to a value
+                        // This handles arrays, objects, and literal values
+                        try {
+                          const code = value.value
+                          value = eval(`(${code})`)
+                        } catch {
+                          // Fallback to simple value extraction
+                          value = expression.value
+                        }
+                      }
                     }
 
                     props[name] = value

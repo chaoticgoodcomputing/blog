@@ -3,6 +3,7 @@ import { initialization } from "./initialization"
 import { pageAssets } from "./page-assets"
 import { gameOfLife } from "./game-of-life"
 import { probabilityConvolutions } from "./probability-convolutions"
+import { randomWalk } from "./random-walk"
 
 /**
  * Vault-specific widget registry.
@@ -17,6 +18,7 @@ export const contentWidgets: WidgetRegistry = {
   "@content/widgets/page-assets": pageAssets,
   "@content/widgets/game-of-life": gameOfLife,
   "@content/widgets/probability-convolutions": probabilityConvolutions,
+  "@content/widgets/random-walk": randomWalk,
 }
 
 /**

@@ -1,0 +1,51 @@
+---
+title: Ants in the Neighborhood
+date: 2026-02-02
+tags:
+  - engineering/data
+  - projects/games/neighborhood
+  - writing/annotations/pattern-language
+---
+
+import { RandomWalk } from '@content/widgets/random-walk'
+
+<RandomWalk
+  nodes={[
+    { id: "A", x: 50, y: 10, label: "A", color: "#90EE90" },
+    { id: "B", x: 20, y: 80, label: "B" },
+    { id: "C", x: 80, y: 80, label: "C" },
+  ]}
+  edges={[
+    { from: "A", to: "B" },
+    { from: "B", to: "C" },
+    { from: "C", to: "A" },
+  ]}
+  startNode="A"
+  height={250}
+  stepDelay={600}
+/>
+
+<RandomWalk
+  nodes={[
+    { id: "P", x: 30, y: 50, label: "P", shape: "pentagon", color: "#FFB6C1" },
+    { id: "H", x: 70, y: 50, label: "H", shape: "hexagon", color: "#FFFFFF" },
+  ]}
+  edges={[
+    { from: "P", to: "H", weight: 1 },
+    { from: "H", to: "P", weight: 1 },
+  ]}
+  startNode="P"
+  height={200}
+  stepDelay={500}
+  showProbabilities={true}
+/>
+
+![[assets/Pasted image 20260202231208.png]]
+
+![[assets/7B6FEA8A-188C-482C-B5B2-921E0598A456_1_201_a.jpeg]]
+
+![[assets/5B008E77-DF70-46D2-8D0D-B43A7096A39E_1_201_a.jpeg]]
+
+![[assets/0D1622A6-2914-4A11-A8E6-3DE0B4417BA4_1_201_a.jpeg]]
+
+![[assets/8C923F4F-DD40-4E73-ADD2-38E7AF9B4B5A_1_201_a.jpeg]]
