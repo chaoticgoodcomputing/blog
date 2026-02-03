@@ -2,12 +2,22 @@
 title: "Arc Browser: Kicking off the Season of Rhythm"
 description: |
   A review 3 years in the making for Arc Browser, the browser that ignited my burning passion for vertical tabs and keyboard shortcuts.
-date: 2024-02-28
+  
+date: "2024-02-28T00:00:00.000Z"
 tags:
-  - horticulture/seasons/rhythm
+  - "horticulture/seasons/rhythm"
+  - "private"
 ---
-[The Arc Browser](https://arc.net/gift/3389bea4) is probably the first tool that kicked off a [[content/notes/the-quest-to-slay-the-goblin|series of shake-ups]] on how I use technology to put up guard rails on being able to start - and stay - focused. It was also on their blog that I discovered [Maggie Appleton's blog](https://arc.net/l/quote/abfpadro) - so in a way, it was very much a half-step into a pool of ideas that have helped me come to terms with the slightly-more-than-standardly chaotic way that I tend to work.
 
-At some point, I'll do a review.
+This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
 
-%% TODO: Actual review %%
+If you are interested in what this note contains, please [[contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
+
+
+## Links
+
+This note originally contained the following links:
+
+- [series of shake-ups](content/notes/the-quest-to-slay-the-goblin)
+- [The Arc Browser](https://arc.net/gift/3389bea4)
+- [Maggie Appleton's blog](https://arc.net/l/quote/abfpadro)
