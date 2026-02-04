@@ -7,6 +7,7 @@ import { QuartzEmitterPlugin } from "../types"
 import { toHtml } from "hast-util-to-html"
 import { write } from "./helpers"
 import { i18n } from "../../i18n"
+import readingTime from "reading-time"
 
 export type ContentIndexMap = Map<FullSlug, ContentDetails>
 export type ContentDetails = {
@@ -19,6 +20,7 @@ export type ContentDetails = {
   richContent?: string
   date?: string  // ISO date string
   description?: string
+  hasExplicitDescription?: boolean  // Whether description was explicitly set in frontmatter
 }
 
 interface Options {
@@ -54,13 +56,36 @@ function generateSiteMap(cfg: GlobalConfiguration, idx: ContentIndexMap): string
 function generateRSSFeed(cfg: GlobalConfiguration, idx: ContentIndexMap, limit?: number): string {
   const base = cfg.baseUrl ?? ""
 
-  const createURLEntry = (slug: SimpleSlug, content: ContentDetails): string => `<item>
+  const createURLEntry = (slug: SimpleSlug, content: ContentDetails): string => {
+    // Calculate reading time
+    const { minutes } = readingTime(content.content)
+    const readingTimeText = `${Math.ceil(minutes)} min read`
+    
+    // Extract last portion of each tag for categories (e.g., "engineering/languages/csharp" -> "csharp")
+    const categories = content.tags.map(tag => {
+      const parts = tag.split('/')
+      return parts[parts.length - 1]
+    }).map(cat => `    <category>${escapeHTML(cat)}</category>`).join('\n')
+    
+    // Build description with reading time appended
+    let baseDescription = content.richContent 
+      ? content.richContent 
+      : (content.hasExplicitDescription ? content.description : '')
+    
+    // Append reading time to description
+    const descriptionWithTime = baseDescription 
+      ? `${baseDescription} (${readingTimeText})`
+      : `(${readingTimeText})`
+    
+    return `<item>
     <title>${escapeHTML(content.title)}</title>
     <link>https://${joinSegments(base, encodeURI(slug))}</link>
     <guid>https://${joinSegments(base, encodeURI(slug))}</guid>
-    <description><![CDATA[ ${content.richContent ?? content.description} ]]></description>
+    <description><![CDATA[ ${descriptionWithTime} ]]></description>
     <pubDate>${content.date?.toUTCString()}</pubDate>
+${categories}
   </item>`
+  }
 
   const items = Array.from(idx)
     .filter(([slug, content]) => {
@@ -126,6 +151,7 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
               : undefined,
             date: date,
             description: file.data.description ?? "",
+            hasExplicitDescription: !!file.data.frontmatter?.description,
           })
         }
       }
