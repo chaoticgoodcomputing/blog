@@ -19,6 +19,20 @@ const defaultOptions: SocialImageOptions = {
   imageStructure: defaultImage,
   excludeRoot: false,
   generateOnServe: false,
+  excludeTags: ["private"],
+}
+
+/**
+ * Check if a file has any excluded tags.
+ * Handles both exact matches and hierarchical tags (e.g., 'private' matches 'private/foo').
+ */
+function hasExcludedTag(fileData: QuartzPluginData, excludeTags: string[]): boolean {
+  const fileTags = fileData.frontmatter?.tags ?? []
+  return excludeTags.some(excludedTag =>
+    fileTags.some(fileTag =>
+      fileTag === excludedTag || fileTag.startsWith(`${excludedTag}/`)
+    )
+  )
 }
 
 /**
@@ -122,6 +136,7 @@ export const CustomOgImages: QuartzEmitterPlugin<Partial<SocialImageOptions>> = 
 
       for (const [_tree, vfile] of content) {
         if (vfile.data.frontmatter?.socialImage !== undefined) continue
+        if (hasExcludedTag(vfile.data, fullOptions.excludeTags)) continue
         yield processOgImage(ctx, vfile.data, fonts, fullOptions)
       }
     },
@@ -140,6 +155,7 @@ export const CustomOgImages: QuartzEmitterPlugin<Partial<SocialImageOptions>> = 
       for (const changeEvent of changeEvents) {
         if (!changeEvent.file) continue
         if (changeEvent.file.data.frontmatter?.socialImage !== undefined) continue
+        if (hasExcludedTag(changeEvent.file.data, fullOptions.excludeTags)) continue
         if (changeEvent.type === "add" || changeEvent.type === "change") {
           yield processOgImage(ctx, changeEvent.file.data, fonts, fullOptions)
         }

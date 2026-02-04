@@ -198,7 +198,10 @@ const config: QuartzConfig = {
       Plugin.Static(),
       Plugin.Favicon(),
       Plugin.NotFoundPage(),
-      Plugin.CustomOgImages({ generateOnServe: false }),
+      Plugin.CustomOgImages({
+        generateOnServe: false,
+        excludeTags: ["private"],
+      }),
     ],
   },
 }

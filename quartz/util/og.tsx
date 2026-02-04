@@ -137,6 +137,12 @@ export type SocialImageOptions = {
    */
   generateOnServe: boolean
   /**
+   * Array of tags to exclude from OG image generation.
+   * Files with any of these tags (or their hierarchical children) will use the default fallback image.
+   * Example: ["private"] will skip generation for #private and #private/foo
+   */
+  excludeTags: string[]
+  /**
    * JSX to use for generating image. See satori docs for more info (https://github.com/vercel/satori)
    */
   imageStructure: (
