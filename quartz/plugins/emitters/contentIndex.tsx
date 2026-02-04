@@ -60,22 +60,22 @@ function generateRSSFeed(cfg: GlobalConfiguration, idx: ContentIndexMap, limit?:
     // Calculate reading time
     const { minutes } = readingTime(content.content)
     const readingTimeText = `${Math.ceil(minutes)} min read`
-    
+
     // Include full tag paths as categories
     const categories = content.tags
       .map(tag => `    <category>${escapeHTML(tag)}</category>`)
       .join('\n')
-    
+
     // Build description with reading time appended
-    let baseDescription = content.richContent 
-      ? content.richContent 
+    let baseDescription = content.richContent
+      ? content.richContent
       : (content.hasExplicitDescription ? content.description : '')
-    
+
     // Append reading time to description
-    const descriptionWithTime = baseDescription 
+    const descriptionWithTime = baseDescription
       ? `${baseDescription} (${readingTimeText})`
       : `(${readingTimeText})`
-    
+
     return `<item>
     <title>${escapeHTML(content.title)}</title>
     <link>https://${joinSegments(base, encodeURI(slug))}</link>
