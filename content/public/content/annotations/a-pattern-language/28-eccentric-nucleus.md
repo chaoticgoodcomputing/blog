@@ -2,8 +2,8 @@
 title: "APL: Pattern 28; Eccentric Nucleus"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language/super"
-  - "projects/games/neighborhood"
+  - "writing/annotations/a-pattern-language"
+  - "projects/games/the-neighborhood"
   - "private"
 ---
 

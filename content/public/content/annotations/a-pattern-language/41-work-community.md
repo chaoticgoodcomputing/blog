@@ -2,8 +2,8 @@
 title: "APL: Pattern 41; Work Community"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language/super"
-  - "projects/games/neighborhood"
+  - "writing/annotations/a-pattern-language"
+  - "projects/games/the-neighborhood"
   - "private"
 ---
 

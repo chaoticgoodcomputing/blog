@@ -64,10 +64,8 @@ const config: QuartzConfig = {
         { tag: "projects/teaching", icon: "mdi:school" },
 
         // The Neighborhood/A Pattern Language
-        { tag: "projects/games/neighborhood", icon: "mdi:home-group" },
-        { tag: "writing/annotations/pattern-language", icon: "mdi:home-city" },
-        { tag: "writing/annotations/pattern-language/sub", icon: "mdi:home" },
-        { tag: "writing/annotations/pattern-language/super", icon: "mdi:city" },
+        { tag: "projects/games/the-neighborhood", icon: "mdi:city" },
+        { tag: "writing/annotations/a-pattern-language", icon: "mdi:home-city" },
         { tag: "economics/policy", icon: "mdi:script" },
 
         // Programming Languages

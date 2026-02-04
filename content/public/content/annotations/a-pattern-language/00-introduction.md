@@ -2,8 +2,8 @@
 title: "APL: Introduction"
 date: "1970-01-02T00:00:00.000Z"
 tags:
-  - "writing/annotations/pattern-language"
-  - "projects/games/neighborhood"
+  - "writing/annotations/a-pattern-language"
+  - "projects/games/the-neighborhood"
   - "private"
 ---
 

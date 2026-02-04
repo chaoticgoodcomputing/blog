@@ -2,8 +2,8 @@
 title: A Pattern Language, and a Beautiful Day in the Neighborhood
 date: 2026-02-01
 tags:
-  - projects/games/neighborhood
-  - writing/annotations/pattern-language
+  - projects/games/the-neighborhood
+  - writing/annotations/a-pattern-language
   - engineering/data
   - economics/policy
 description: "The beginning of a topological review of the 1977 urban design and architecture reference book A Pattern Language, and a journey to understand Earth's greatest graph: the Earth, itself."
@@ -103,7 +103,7 @@ My hope with *A Pattern Language* is to learn more about the relationship *betwe
 
 ### Understanding The Neighborhood
 
-This ultimately lends itself to another project that I've been hoping to work on for a very long time — [[tags/projects/games/neighborhood/index|The Neighborhood]]. What form this project will take is, to put it mildly, a bit up-in-the-air; it will really depend on how well I can analyze maps as graphs. The goal, though, is simple:
+This ultimately lends itself to another project that I've been hoping to work on for a very long time — [[tags/projects/games/the-neighborhood/index|The Neighborhood]]. What form this project will take is, to put it mildly, a bit up-in-the-air; it will really depend on how well I can analyze maps as graphs. The goal, though, is simple:
 
 We have so much data about the world around us. We've learned that it's, all things considered, fairly straightforward to simply collect everything, always, all the time:
 
@@ -117,11 +117,11 @@ My hope is to understand and apply the language to create a system that can proc
 
 I have many amorphous thoughts on what form of a game The Neighborhood will take — thoughts that I'll spare you from, until they take some more concrete, actionable and *playable* form — but I consider the graphical analysis of real map data to be at the core of the concept.
 
-## How the `#annotations/pattern-language` project will work.
+## How the `#annotations/a-pattern-language` project will work.
 
 Unfortunately, I won't be able to truly annotate the work in the same way I made the public annotations for *[[content/annotations/college-admissions-and-the-stability-of-marriage|College Admissions and the Stability of Marriage]]* or *[[content/annotations/llm-starter|The LLMs Starter]]*. I lack, at the current time, a good way to automatically trim PDF or EPUB texts into preselected chapters. Additionally, the [online source from Cornell](https://arl.human.cornell.edu/linked%20docs/Alexander_A_Pattern_Language.pdf) is, unfortunately, missing quite a bit of the text (only 313 of the full 1169-page text —  a bit over 25%).
 
-Nonetheless, I'll be annotating my physical copy of the book and moving those annotations, piecemeal, into this blog under the [[tags/writing/annotations/pattern-language/index|pattern-language]] tag. I've already pre-generated 255 notes, one for each pattern (as well as an intro and conclusion note). The reason for pre-generating them is simple: the patterns form a graph, themselves. Each pattern references other patterns. This is most clear in the first portions of each pattern entry. For example, the introduction to [[content/annotations/a-pattern-language/62-high-places|Pattern 62: High Places]]:
+Nonetheless, I'll be annotating my physical copy of the book and moving those annotations, piecemeal, into this blog under the [[tags/writing/annotations/a-pattern-language/index|pattern-language]] tag. I've already pre-generated 255 notes, one for each pattern (as well as an intro and conclusion note). The reason for pre-generating them is simple: the patterns form a graph, themselves. Each pattern references other patterns. This is most clear in the first portions of each pattern entry. For example, the introduction to [[content/annotations/a-pattern-language/62-high-places|Pattern 62: High Places]]:
 
 > [!QUOTE]
 > ... according to [[content/annotations/a-pattern-language/21-four-story-limit|Four Story Limit (21)]], most roofs in the community are no higher than four stories, about 40 or 50 feet. However, it is very important that this height limit be punctuated, just occasionally, by higher buildings which have special functions. They can help the character of the [[content/annotations/a-pattern-language/61-small-public-squares|Small Public Squares (61)]] and [[content/annotations/a-pattern-language/66-holy-ground|Holy Ground (66)]]; they can give particular identity to their communities, provided that they do not occur more frequently than one in each [[content/annotations/a-pattern-language/12-community-of-7000|Community of 7,000 (12)]].
@@ -141,7 +141,7 @@ This is a very solid piece of work, and I don't anticipate that anything from th
 
 With 253 patterns to annotate, this will doubtless be a long-running project (the scope has already annihilated the organization of my site graph). Even at a *very generous* estimated pace averaging one pattern a day, that'd make for an completion date eight months in the future — October of this year. While I have every intention, as of writing this, to read back through the text and have at least *some* annotation for each section (if only just to complete the link connections between a pattern and its neighbors), I will need to triage the pacing a bit.
 
-Above, I define the terms *substructure* to mean "structures smaller than a whole building" and *superstructure* to mean "structures larger than a whole building". I've created two subtags — [[tags/writing/annotations/pattern-language/sub/index|pattern-language/sub]] and [[tags/writing/annotations/pattern-language/super/index|pattern-language/super]] — to sort patterns into these two categories. I'll be prioritizing the `#super` patterns first, as they relate more to what I'd like to get out of this reading. The book does a preliminary grouping into *Towns, Buildings, and Construction*:
+Above, I define the terms *substructure* to mean "structures smaller than a whole building" and *superstructure* to mean "structures larger than a whole building". I've created two subtags — [[tags/writing/annotations/a-pattern-language/index|pattern-language/sub]] and [[tags/writing/annotations/a-pattern-language/index|pattern-language/super]] — to sort patterns into these two categories. I'll be prioritizing the `#super` patterns first, as they relate more to what I'd like to get out of this reading. The book does a preliminary grouping into *Towns, Buildings, and Construction*:
 
 - **Towns:** [[content/annotations/a-pattern-language/01-independent-regions|Independent Regions (01)]] to [[content/annotations/a-pattern-language/94-sleeping-in-public|Sleeping in Public (94)]]
 - **Buildings:** [[content/annotations/a-pattern-language/95-building-complex|Building Complexes (95)]] to [[content/annotations/a-pattern-language/204-secret-place|Secret Places (204)]]
