@@ -89,7 +89,8 @@ title: "<% title %>"
 date: <% tp.date.now() %>
 tags:
   - <% seasonTag %>
-<% isWeekday ? "  - projects/dayjob" : "" %>---
+<% isWeekday ? "  - projects/dayjob" : "" %>
+---
 ⇐ [[<% previousPath %>|<% previousBasename %>]]
 
 ## <% WEEKDAYS[moment().day()] %>: Up Front
