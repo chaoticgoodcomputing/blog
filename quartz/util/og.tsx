@@ -364,20 +364,24 @@ export const defaultImage: SocialImageOptions["imageStructure"] = ({
             maxWidth: "60%",
           }}
         >
-          {tags.slice(0, 3).map((tag: string) => (
-            <div
-              style={{
-                display: "flex",
-                padding: "0.5rem 1rem",
-                backgroundColor: cfg.theme.colors.highlight,
-                color: cfg.theme.colors.secondary,
-                borderRadius: "10px",
-                fontSize: 24,
-              }}
-            >
-              #{tag}
-            </div>
-          ))}
+          {tags.slice(0, 3).map((tag: string) => {
+            // Extract only the last segment for hierarchical tags
+            const displayTag = tag.split("/").pop() ?? tag
+            return (
+              <div
+                style={{
+                  display: "flex",
+                  padding: "0.5rem 1rem",
+                  backgroundColor: cfg.theme.colors.highlight,
+                  color: cfg.theme.colors.secondary,
+                  borderRadius: "10px",
+                  fontSize: 24,
+                }}
+              >
+                #{displayTag}
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>
