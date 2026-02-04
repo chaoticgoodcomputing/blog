@@ -61,11 +61,10 @@ function generateRSSFeed(cfg: GlobalConfiguration, idx: ContentIndexMap, limit?:
     const { minutes } = readingTime(content.content)
     const readingTimeText = `${Math.ceil(minutes)} min read`
     
-    // Extract last portion of each tag for categories (e.g., "engineering/languages/csharp" -> "csharp")
-    const categories = content.tags.map(tag => {
-      const parts = tag.split('/')
-      return parts[parts.length - 1]
-    }).map(cat => `    <category>${escapeHTML(cat)}</category>`).join('\n')
+    // Include full tag paths as categories
+    const categories = content.tags
+      .map(tag => `    <category>${escapeHTML(tag)}</category>`)
+      .join('\n')
     
     // Build description with reading time appended
     let baseDescription = content.richContent 
