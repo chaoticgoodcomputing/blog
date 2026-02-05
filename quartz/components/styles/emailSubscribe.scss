@@ -1,0 +1,85 @@
+/**
+ * Email subscription form component styling
+ * - Form layout and input styling
+ * - Responsive design for mobile/desktop
+ */
+
+.email-subscribe {
+
+  .email-subscribe-container {
+    margin: 0;
+    padding: 1rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 8px;
+    background: var(--light);
+  }
+
+  p {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--gray);
+    font-size: 0.8rem;
+  }
+
+  .embeddable-buttondown-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    label {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    input[type="email"] {
+      padding: 0.75rem;
+      border: 1px solid var(--lightgray);
+      border-radius: 4px;
+      font-size: 1rem;
+      background: var(--light);
+      color: var(--dark);
+      transition: border-color 0.2s;
+
+      &:focus {
+        outline: none;
+        border-color: var(--secondary);
+      }
+    }
+
+    input[type="submit"] {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 4px;
+      background: var(--secondary);
+      color: var(--light);
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 0.9;
+      }
+
+      &:active {
+        opacity: 0.8;
+      }
+    }
+
+    .powered-by {
+      margin-top: 0.5rem;
+      margin-bottom: 0;
+      text-align: center;
+      font-size: 0.8rem;
+
+      a {
+        color: var(--gray);
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}

@@ -17,6 +17,10 @@ export const notesLayout: PageLayout = {
   ],
   body: [
     Component.Content(),
+    Component.EmailSubscribe({
+      title: "Subscribe for more!",
+      description: "Be notified weekly about any fresh notes or articles!",
+    }),
     Component.ShowPageSource(),
   ],
   left: [

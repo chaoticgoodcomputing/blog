@@ -51,7 +51,7 @@ export const indexLayout: PageLayout = {
     }),
   ],
   right: [
-    Component.DesktopOnly(Component.TableOfContents()),
+    Component.EmailSubscribe(),
     Component.SocialMediaGitHub({
       username: "spelkington",
       theme: "default",

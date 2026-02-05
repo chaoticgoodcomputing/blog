@@ -32,6 +32,7 @@ import AnnotationViewer from "./AnnotationViewer"
 import ShowPageSource from "./ShowPageSource"
 import SocialMediaGitHub from "./SocialMediaGitHub"
 import SocialMediaBlueSky from "./SocialMediaBlueSky"
+import EmailSubscribe from "./EmailSubscribe"
 
 export {
   ArticleTitle,
@@ -68,4 +69,5 @@ export {
   ShowPageSource,
   SocialMediaGitHub,
   SocialMediaBlueSky,
+  EmailSubscribe,
 }
