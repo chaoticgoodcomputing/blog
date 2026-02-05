@@ -37,12 +37,22 @@ export default (() => {
     ctx,
   }: QuartzComponentProps) => {
     const titleSuffix = cfg.pageTitleSuffix ?? ""
-    const title =
-      (fileData.frontmatter?.title ?? i18n(cfg.locale).propertyDefaults.title) + titleSuffix
+    const baseTitle = fileData.frontmatter?.title ?? i18n(cfg.locale).propertyDefaults.title
+    const personalSuffix = " | Spencer Elkington"
+    
+    // Add personal suffix only if total length stays within SEO limit (70 chars)
+    const title = (baseTitle.length + personalSuffix.length <= 70)
+      ? baseTitle + personalSuffix + titleSuffix
+      : baseTitle + titleSuffix
     const description =
       fileData.frontmatter?.socialDescription ??
       fileData.frontmatter?.description ??
       unescapeHTML(fileData.description?.trim() ?? i18n(cfg.locale).propertyDefaults.description)
+
+    // Truncate description for SEO meta tag (Bing recommends 150-160 chars)
+    const metaDescription = description.length > 160
+      ? description.slice(0, 157) + "..."
+      : description
 
     const { css, js, additionalHead } = externalResources
 
@@ -113,9 +123,33 @@ export default (() => {
           </>
         )}
 
+        {/* OpenGraph Article metadata - only for content pages */}
+        {fileData.slug !== "404" && fileData.slug?.startsWith("content/") && (
+          <>
+            {fileData.dates?.published && (
+              <meta property="article:published_time" content={fileData.dates.published.toISOString()} />
+            )}
+            {fileData.dates?.modified && (
+              <meta property="article:modified_time" content={fileData.dates.modified.toISOString()} />
+            )}
+            <meta property="article:author" content={`https://${cfg.baseUrl}/about`} />
+            {fileData.frontmatter?.tags && fileData.frontmatter.tags.length > 0 && (
+              <>
+                {/* Use first top-level tag as section */}
+                <meta property="article:section" content={fileData.frontmatter.tags[0].split('/')[0]} />
+                {/* Add leaf tags only (last segment of each hierarchical tag) */}
+                {fileData.frontmatter.tags.map((tag) => {
+                  const leafTag = tag.split('/').pop() || tag
+                  return <meta property="article:tag" content={leafTag} key={tag} />
+                })}
+              </>
+            )}
+          </>
+        )}
+
         <link rel="canonical" href={socialUrl} />
         <link rel="icon" href={iconPath} />
-        <meta name="description" content={description} />
+        <meta name="description" content={metaDescription} />
         <meta name="generator" content="Quartz" />
 
         {/* Structured Data (JSON-LD) */}
@@ -125,88 +159,88 @@ export default (() => {
             dangerouslySetInnerHTML={{
               __html: JSON.stringify(
                 (() => {
-                const sdConfig = cfg.structuredData
-                const { type, section } = getStructuredDataForFile(
-                  fileData.frontmatter?.tags,
-                  sdConfig.mappings ?? [],
-                  sdConfig.defaultType ?? "Article",
-                )
+                  const sdConfig = cfg.structuredData
+                  const { type, section } = getStructuredDataForFile(
+                    fileData.frontmatter?.tags,
+                    sdConfig.mappings ?? [],
+                    sdConfig.defaultType ?? "Article",
+                  )
 
-                const author = sdConfig.author ?? {
-                  type: "Organization",
-                  name: cfg.pageTitle,
-                }
+                  const author = sdConfig.author ?? {
+                    type: "Organization",
+                    name: cfg.pageTitle,
+                  }
 
-                const publisher = sdConfig.publisher ?? author
+                  const publisher = sdConfig.publisher ?? author
 
-                // Determine OG image path (same logic as ogImage.tsx)
-                const userDefinedOgImagePath = fileData.frontmatter?.socialImage
-                const generatedOgImagePath = usesCustomOgImage
-                  ? `https://${cfg.baseUrl}/${fileData.slug}-og-image.webp`
-                  : undefined
-                const ogImagePath = userDefinedOgImagePath
-                  ? (isAbsoluteURL(userDefinedOgImagePath)
-                    ? userDefinedOgImagePath
-                    : `https://${cfg.baseUrl}/static/${userDefinedOgImagePath}`)
-                  : (generatedOgImagePath ?? ogImageDefaultPath)
+                  // Determine OG image path (same logic as ogImage.tsx)
+                  const userDefinedOgImagePath = fileData.frontmatter?.socialImage
+                  const generatedOgImagePath = usesCustomOgImage
+                    ? `https://${cfg.baseUrl}/${fileData.slug}-og-image.webp`
+                    : undefined
+                  const ogImagePath = userDefinedOgImagePath
+                    ? (isAbsoluteURL(userDefinedOgImagePath)
+                      ? userDefinedOgImagePath
+                      : `https://${cfg.baseUrl}/static/${userDefinedOgImagePath}`)
+                    : (generatedOgImagePath ?? ogImageDefaultPath)
 
-                const jsonLd: any = {
-                  "@context": "https://schema.org",
-                  "@type": type,
-                  headline: fileData.frontmatter?.title,
-                  url: socialUrl,
-                  image: ogImagePath,
-                  inLanguage: cfg.locale,
-                  mainEntityOfPage: {
-                    "@type": "WebPage",
-                    "@id": socialUrl,
-                  },
-                  author: {
-                    "@type": author.type,
-                    name: author.name,
-                    ...(author.url && { url: author.url }),
-                  },
-                  publisher: {
-                    "@type": publisher.type,
-                    name: publisher.name,
-                    ...(publisher.url && { url: publisher.url }),
-                    ...(publisher.type === "Organization" && {
-                      logo: {
-                        "@type": "ImageObject",
-                        url: `https://${cfg.baseUrl}/static/icon.png`,
-                        width: 184,
-                        height: 184,
-                      },
-                    }),
-                  },
-                }
+                  const jsonLd: any = {
+                    "@context": "https://schema.org",
+                    "@type": type,
+                    headline: fileData.frontmatter?.title,
+                    url: socialUrl,
+                    image: ogImagePath,
+                    inLanguage: cfg.locale,
+                    mainEntityOfPage: {
+                      "@type": "WebPage",
+                      "@id": socialUrl,
+                    },
+                    author: {
+                      "@type": author.type,
+                      name: author.name,
+                      ...(author.url && { url: author.url }),
+                    },
+                    publisher: {
+                      "@type": publisher.type,
+                      name: publisher.name,
+                      ...(publisher.url && { url: publisher.url }),
+                      ...(publisher.type === "Organization" && {
+                        logo: {
+                          "@type": "ImageObject",
+                          url: `https://${cfg.baseUrl}/static/icon.png`,
+                          width: 184,
+                          height: 184,
+                        },
+                      }),
+                    },
+                  }
 
-                // Add description if available
-                if (description) {
-                  jsonLd.description = description
-                }
+                  // Add description if available
+                  if (description) {
+                    jsonLd.description = description
+                  }
 
-                // Add dates if available
-                if (fileData.dates?.published) {
-                  jsonLd.datePublished = fileData.dates.published.toISOString()
-                }
-                if (fileData.dates?.modified) {
-                  jsonLd.dateModified = fileData.dates.modified.toISOString()
-                }
+                  // Add dates if available
+                  if (fileData.dates?.published) {
+                    jsonLd.datePublished = fileData.dates.published.toISOString()
+                  }
+                  if (fileData.dates?.modified) {
+                    jsonLd.dateModified = fileData.dates.modified.toISOString()
+                  }
 
-                // Add section if available
-                if (section) {
-                  jsonLd.articleSection = section
-                }
+                  // Add section if available
+                  if (section) {
+                    jsonLd.articleSection = section
+                  }
 
-                // Add keywords from all tags
-                if (fileData.frontmatter?.tags && fileData.frontmatter.tags.length > 0) {
-                  jsonLd.keywords = fileData.frontmatter.tags.join(", ")
-                }
+                  // Add keywords from all tags
+                  if (fileData.frontmatter?.tags && fileData.frontmatter.tags.length > 0) {
+                    jsonLd.keywords = fileData.frontmatter.tags.join(", ")
+                  }
 
-                return jsonLd
-              })(),
-            ),
+                  return jsonLd
+                })(),
+              ),
             }}
           />
         )}

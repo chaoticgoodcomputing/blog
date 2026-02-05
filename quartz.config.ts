@@ -15,7 +15,7 @@ const VIOLET = "#8A2BE2"
 const config: QuartzConfig = {
   configuration: {
     pageTitle: "Chaotic Good Computing",
-    pageTitleSuffix: " | Spencer Elkington",
+    pageTitleSuffix: "",
     enableSPA: true,
     enablePopovers: true,
     analytics: {
