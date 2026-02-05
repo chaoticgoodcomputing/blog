@@ -1,7 +1,7 @@
 ---
 title: Privacy Policy
 tags:
-  - writing/highglights
+  - writing/highlights
   - engineering/data
   - projects/site
 ---
