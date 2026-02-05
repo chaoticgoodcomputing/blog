@@ -2,7 +2,7 @@ import { Root } from "hast"
 import { GlobalConfiguration } from "../../cfg"
 import { getDate } from "../../components/Date"
 import { escapeHTML } from "../../util/escape"
-import { FilePath, FullSlug, SimpleSlug, joinSegments, simplifySlug } from "../../util/path"
+import { FilePath, FullSlug, SimpleSlug, joinSegments, simplifySlug, getAllSegmentPrefixes } from "../../util/path"
 import { QuartzEmitterPlugin } from "../types"
 import { toHtml } from "hast-util-to-html"
 import { write } from "./helpers"
@@ -41,16 +41,39 @@ const defaultOptions: Options = {
   includeEmptyFiles: true,
 }
 
-function generateSiteMap(cfg: GlobalConfiguration, idx: ContentIndexMap): string {
+function generateSiteMap(cfg: GlobalConfiguration, idx: ContentIndexMap, allTags: Set<string>): string {
   const base = cfg.baseUrl ?? ""
-  const createURLEntry = (slug: SimpleSlug, content: ContentDetails): string => `<url>
+  const createURLEntry = (slug: SimpleSlug, date?: Date): string => `<url>
     <loc>https://${joinSegments(base, encodeURI(slug))}</loc>
-    ${content.date && `<lastmod>${content.date.toISOString()}</lastmod>`}
+    ${date ? `<lastmod>${date.toISOString()}</lastmod>` : ''}
   </url>`
-  const urls = Array.from(idx)
-    .map(([slug, content]) => createURLEntry(simplifySlug(slug), content))
+  
+  // Filter content pages - exclude private tagged content, similar to RSS feed
+  const contentUrls = Array.from(idx)
+    .filter(([slug, content]) => {
+      // Exclude posts with "private" tag
+      if (content.tags.some((tag) => tag.toLowerCase().includes("private"))) {
+        return false
+      }
+      return true
+    })
+    .map(([slug, content]) => createURLEntry(simplifySlug(slug), content.date))
     .join("")
-  return `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${urls}</urlset>`
+  
+  // Add tag pages that aren't already in the content index
+  // (some tag pages exist as actual files and are already included above)
+  const existingTagSlugs = new Set(
+    Array.from(idx.keys())
+      .filter(slug => slug.startsWith("tags/"))
+      .map(slug => slug.replace(/^tags\//, '').replace(/\/$/, ''))
+  )
+  
+  const tagUrls = Array.from(allTags)
+    .filter(tag => !existingTagSlugs.has(tag))
+    .map((tag) => createURLEntry(`tags/${tag}` as SimpleSlug))
+    .join("")
+  
+  return `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${contentUrls}${tagUrls}</urlset>`
 }
 
 function generateRSSFeed(cfg: GlobalConfiguration, idx: ContentIndexMap, limit?: number): string {
@@ -156,9 +179,22 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
       }
 
       if (opts?.enableSiteMap) {
+        // Compute all tags from the content, similar to tag page generation
+        const allTags: Set<string> = new Set(
+          Array.from(linkIndex.values())
+            .filter(content => {
+              // Exclude private tagged content from tag computation
+              return !content.tags.some((tag) => tag.toLowerCase().includes("private"))
+            })
+            .flatMap((content) => content.tags)
+            .flatMap(getAllSegmentPrefixes)
+        )
+        // Add base tag
+        allTags.add("index")
+        
         yield write({
           ctx,
-          content: generateSiteMap(cfg, linkIndex),
+          content: generateSiteMap(cfg, linkIndex, allTags),
           slug: "sitemap" as FullSlug,
           ext: ".xml",
         })
