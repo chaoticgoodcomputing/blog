@@ -16,14 +16,9 @@ const OUTPUT_DIR = path.join(WORKSPACE_ROOT, "quartz/static/fonts")
 // Font configurations matching quartz.config.ts
 const FONTS = [
   {
-    family: "Schibsted Grotesk",
+    family: "Inter",
     weights: [400, 700],
     styles: ["normal"],
-  },
-  {
-    family: "Source Sans 3",
-    weights: [400, 600],
-    styles: ["normal", "italic"],
   },
   {
     family: "IBM Plex Mono",

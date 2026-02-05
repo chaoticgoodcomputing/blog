@@ -8,6 +8,5 @@
  * - IBM Plex Mono (code)
  */
 
-@import url('/static/fonts/schibsted-grotesk/schibsted-grotesk.css');
-@import url('/static/fonts/source-sans-3/source-sans-3.css');
+@import url('/static/fonts/inter/inter.css');
 @import url('/static/fonts/ibm-plex-mono/ibm-plex-mono.css');
