@@ -47,7 +47,7 @@ function generateSiteMap(cfg: GlobalConfiguration, idx: ContentIndexMap, allTags
     <loc>https://${joinSegments(base, encodeURI(slug))}</loc>
     ${date ? `<lastmod>${date.toISOString()}</lastmod>` : ''}
   </url>`
-  
+
   // Filter content pages - exclude private tagged content, similar to RSS feed
   const contentUrls = Array.from(idx)
     .filter(([slug, content]) => {
@@ -59,7 +59,7 @@ function generateSiteMap(cfg: GlobalConfiguration, idx: ContentIndexMap, allTags
     })
     .map(([slug, content]) => createURLEntry(simplifySlug(slug), content.date))
     .join("")
-  
+
   // Add tag pages that aren't already in the content index
   // (some tag pages exist as actual files and are already included above)
   const existingTagSlugs = new Set(
@@ -67,12 +67,12 @@ function generateSiteMap(cfg: GlobalConfiguration, idx: ContentIndexMap, allTags
       .filter(slug => slug.startsWith("tags/"))
       .map(slug => slug.replace(/^tags\//, '').replace(/\/$/, ''))
   )
-  
+
   const tagUrls = Array.from(allTags)
     .filter(tag => !existingTagSlugs.has(tag))
     .map((tag) => createURLEntry(`tags/${tag}` as SimpleSlug))
     .join("")
-  
+
   return `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${contentUrls}${tagUrls}</urlset>`
 }
 
@@ -191,7 +191,7 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
         )
         // Add base tag
         allTags.add("index")
-        
+
         yield write({
           ctx,
           content: generateSiteMap(cfg, linkIndex, allTags),

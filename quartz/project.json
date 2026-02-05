@@ -71,7 +71,8 @@
       "options": {
         "commands": [
           "cp quartz/static/robots.txt dist/public/robots.txt",
-          "cp CNAME dist/public/CNAME"
+          "cp CNAME dist/public/CNAME",
+          "cp quartz/static/a6e41ab6-6753-4d94-9b54-b4405d806883.txt dist/public/a6e41ab6-6753-4d94-9b54-b4405d806883.txt"
         ],
         "cwd": "{workspaceRoot}",
         "parallel": false
@@ -188,6 +189,17 @@
       },
       "outputs": [ "{workspaceRoot}/utils/lighthouse/assets/lighthouse-insights-multi.json" ],
       "dependsOn": [ "site:build", "_serve-static" ]
+    },
+    "indexnow": {
+      "//": "Submit sitemap URLs to IndexNow API for instant indexing by Bing, Yandex, and other search engines",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "node utils/indexnow/submit-urls.mjs {args.sitemap}"
+        ],
+        "parallel": false,
+        "cwd": "{workspaceRoot}"
+      }
     }
   }
 }

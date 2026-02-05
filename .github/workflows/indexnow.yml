@@ -1,0 +1,71 @@
+name: Trigger IndexNow Reindex
+
+# Trigger when sitemap.xml changes in the pages branch (deployment branch)
+on:
+  push:
+    branches:
+      - pages
+    paths:
+      - "sitemap.xml"
+  workflow_dispatch: # Allow manual triggering for testing
+
+jobs:
+  notify-indexnow:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Checkout pages branch sitemap
+        uses: actions/checkout@v4
+        with:
+          ref: pages
+          sparse-checkout: |
+            sitemap.xml
+          sparse-checkout-cone-mode: false
+          path: pages-sitemap
+
+      - name: Submit URLs to IndexNow
+        run: |
+          pnpm nx run site:indexnow --sitemap=pages-sitemap/sitemap.xml
+
+      - name: Summary
+        run: |
+          echo "## 🔍 IndexNow Submission Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Notified search engines about sitemap updates:" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Bing" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Yandex" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Seznam.cz" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Naver" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🌐 Site: https://blog.chaoticgood.computer" >> $GITHUB_STEP_SUMMARY
