@@ -31,13 +31,104 @@ async function authenticate() {
 }
 
 /**
- * Create a post on Bluesky
+ * Fetch URL metadata (OG tags) for external embed
  */
-async function createPost(accessJwt, did, text) {
+async function fetchUrlMetadata(url) {
+  try {
+    const response = await fetch(url)
+    if (!response.ok) {
+      return null
+    }
+
+    const html = await response.text()
+
+    // Extract OG tags
+    const titleMatch = html.match(/<meta property="og:title" content="([^"]*)"/)
+    const descMatch = html.match(/<meta property="og:description" content="([^"]*)"/)
+    const imageMatch = html.match(/<meta property="og:image" content="([^"]*)"/)
+
+    return {
+      title: titleMatch ? titleMatch[1] : url,
+      description: descMatch ? descMatch[1] : "",
+      image: imageMatch ? imageMatch[1] : null,
+    }
+  } catch (error) {
+    console.warn(`Failed to fetch metadata for ${url}:`, error.message)
+    return null
+  }
+}
+
+/**
+ * Upload an image blob and get the blob reference
+ */
+async function uploadImageBlob(accessJwt, did, imageUrl) {
+  try {
+    // Fetch the image
+    const response = await fetch(imageUrl)
+    if (!response.ok) {
+      return null
+    }
+
+    const imageData = await response.arrayBuffer()
+    const contentType = response.headers.get("content-type") || "image/jpeg"
+
+    // Upload to Bluesky
+    const uploadResponse = await fetch("https://bsky.social/xrpc/com.atproto.repo.uploadBlob", {
+      method: "POST",
+      headers: {
+        "Content-Type": contentType,
+        Authorization: `Bearer ${accessJwt}`,
+      },
+      body: imageData,
+    })
+
+    if (!uploadResponse.ok) {
+      return null
+    }
+
+    const { blob } = await uploadResponse.json()
+    return blob
+  } catch (error) {
+    console.warn(`Failed to upload image:`, error.message)
+    return null
+  }
+}
+
+/**
+ * Create a post on Bluesky with external link embed
+ */
+async function createPost(accessJwt, did, text, url, title, description) {
+  // Fetch metadata for the URL
+  console.log(`  📋 Fetching metadata...`)
+  const metadata = await fetchUrlMetadata(url)
+
   const record = {
     $type: "app.bsky.feed.post",
     text: text,
     createdAt: new Date().toISOString(),
+  }
+
+  // Add external embed with metadata
+  if (metadata) {
+    const external = {
+      uri: url,
+      title: metadata.title,
+      description: metadata.description,
+    }
+
+    // Upload thumbnail image if available
+    if (metadata.image) {
+      console.log(`  🖼️  Uploading thumbnail...`)
+      const thumb = await uploadImageBlob(accessJwt, did, metadata.image)
+      if (thumb) {
+        external.thumb = thumb
+      }
+    }
+
+    record.embed = {
+      $type: "app.bsky.embed.external",
+      external: external,
+    }
   }
 
   const response = await fetch("https://bsky.social/xrpc/com.atproto.repo.createRecord", {
@@ -137,11 +228,10 @@ async function main() {
     console.log(`Posting item ${newPosts + 1}/${unpostedItems.length}: ${title}`)
     console.log(`  URL: ${link}`)
 
-    // Create post with format: "New CGC Post!\n\n<title>\n\n<URL>"
-    const postText = `New CGC Post!\n\n${title}\n\n${link}`
+    const postText = `New blog post: "${title}"`
 
     try {
-      await createPost(accessJwt, did, postText)
+      await createPost(accessJwt, did, postText, link, title)
       newPosts++
       console.log(`  ✓ Posted successfully`)
 
