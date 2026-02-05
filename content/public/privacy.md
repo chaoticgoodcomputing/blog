@@ -1,9 +1,10 @@
 ---
 title: Privacy Policy
 tags:
-  - writing/highlights
   - engineering/data
   - projects/site
+  - writing/highlights
+description: When it comes to collecting data, there's a delicate balance between collecting what's necessary and what's invasive. To make this site more useful, I want to collect enough data to improve while respecting your privacy.
 ---
 
 In creating this site, I do collect small bits of data, primarily to fix errors and know how people prefer to navigate through the site. This policy explains what data is collected, why, and how it's protected.
