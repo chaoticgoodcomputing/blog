@@ -1,4 +1,4 @@
 ---
-title: "#projects/games/the-neighborhood"
+title: "#the-neighborhood"
 ---
 

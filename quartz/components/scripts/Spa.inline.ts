@@ -309,6 +309,28 @@ function _handleSamePageHash(url: URL): boolean {
 }
 
 /**
+ * Determine navigation source from clicked element
+ */
+function _getNavigationSource(target: Element): string {
+  const a = target.closest("a")
+  if (!a) return "unknown"
+
+  // Check for graph navigation (should be tracked separately in d3Behaviors)
+  if (a.closest(".graph")) return "graph"
+
+  // Check for tag explorer (left sidebar)
+  if (a.closest(".tag-explorer")) return "tag-explorer"
+
+  // Check for tag badges (TagList component)
+  if (a.classList.contains("tag-link") || a.closest(".tags")) return "tag-badge"
+
+  // Check for inline content links
+  if (a.classList.contains("internal")) return "inline-link"
+
+  return "other"
+}
+
+/**
  * Handle click events for SPA navigation
  */
 async function _handleClick(event: MouseEvent): Promise<void> {
@@ -320,6 +342,17 @@ async function _handleClick(event: MouseEvent): Promise<void> {
 
   if (_handleSamePageHash(url)) {
     return
+  }
+
+  // Track navigation in PostHog
+  if (_isElement(event.target) && window.posthog) {
+    const source = _getNavigationSource(event.target)
+    window.posthog.capture("navigation", {
+      source: source,
+      from_page: window.location.pathname,
+      to_page: url.pathname,
+      url: url.toString(),
+    })
   }
 
   navigate(url, false)

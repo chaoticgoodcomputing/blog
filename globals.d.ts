@@ -13,5 +13,10 @@ export declare global {
   interface Window {
     spaNavigate(url: URL, isBack: boolean = false)
     addCleanup(fn: (...args: any[]) => void)
+    posthog?: {
+      capture: (event: string, properties?: Record<string, any>) => void
+      identify: (userId: string, properties?: Record<string, any>) => void
+      reset: () => void
+    }
   }
 }
