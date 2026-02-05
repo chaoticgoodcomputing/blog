@@ -118,9 +118,11 @@ export default (() => {
 
         {/* Structured Data (JSON-LD) */}
         {cfg.structuredData && fileData.slug !== "404" && fileData.slug?.startsWith("content/") && (
-          <script type="application/ld+json">
-            {JSON.stringify(
-              (() => {
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(
+                (() => {
                 const sdConfig = cfg.structuredData
                 const { type, section } = getStructuredDataForFile(
                   fileData.frontmatter?.tags,
@@ -202,8 +204,9 @@ export default (() => {
 
                 return jsonLd
               })(),
-            )}
-          </script>
+            ),
+            }}
+          />
         )}
 
         {css.map((resource) => CSSResourceToStyleElement(resource, true))}
