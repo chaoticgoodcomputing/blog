@@ -56,6 +56,34 @@ async function cleanupPrivateTaggedFiles() {
 }
 
 /**
+ * Extract the "## Public" section from markdown content if it exists
+ * @param {string} content - The markdown content to extract from
+ * @returns {string|null} The public section content, or null if not found
+ */
+function extractPublicSection(content) {
+  // Match "## Public" followed by content until next ## heading or end of file
+  const publicSectionRegex = /^## Public\s*$/m
+  const match = content.match(publicSectionRegex)
+
+  if (!match) {
+    return null
+  }
+
+  const startIndex = match.index + match[0].length
+  const remainingContent = content.slice(startIndex)
+
+  // Find the next ## heading (not ###, ####, etc.)
+  const nextHeadingMatch = remainingContent.match(/^## (?!#)/m)
+
+  if (nextHeadingMatch) {
+    return remainingContent.slice(0, nextHeadingMatch.index).trim()
+  }
+
+  // No next heading found, use rest of content
+  return remainingContent.trim()
+}
+
+/**
  * Extract wikilinks and markdown links from content
  * @param {string} content - The markdown content to extract links from
  * @returns {string[]} Array of formatted link strings
@@ -158,20 +186,23 @@ async function extractPrivateMetadata() {
       // Parse frontmatter and content
       const { data: frontmatter, content: bodyContent } = matter(content)
 
-      // Ensure "private" tag is added to tags array
-      if (!frontmatter.tags) {
-        frontmatter.tags = []
-      } else if (!Array.isArray(frontmatter.tags)) {
-        frontmatter.tags = [frontmatter.tags]
-      }
-      if (!frontmatter.tags.includes("private")) {
-        frontmatter.tags.push("private")
+      // Check if there's a "## Public" section
+      const publicSection = extractPublicSection(bodyContent)
+
+      // Only add "private" tag if there's no public section
+      if (!publicSection) {
+        // Ensure "private" tag is added to tags array
+        if (!frontmatter.tags) {
+          frontmatter.tags = []
+        } else if (!Array.isArray(frontmatter.tags)) {
+          frontmatter.tags = [frontmatter.tags]
+        }
+        if (!frontmatter.tags.includes("private")) {
+          frontmatter.tags.push("private")
+        }
       }
 
-      // Extract links from the original content
-      const links = extractLinks(bodyContent)
-
-      // Create a markdown file with only frontmatter
+      // Create a markdown file with frontmatter
       let cleanedContent = ""
 
       if (Object.keys(frontmatter).length > 0) {
@@ -192,14 +223,22 @@ async function extractPrivateMetadata() {
         cleanedContent += "---\n\n"
       }
 
-      cleanedContent += privateBodyContent
+      // Use public section if available, otherwise use template
+      if (publicSection) {
+        cleanedContent += publicSection
+      } else {
+        // Extract links from the original content
+        const links = extractLinks(bodyContent)
 
-      // Add links section if there are any links
-      if (links.length > 0) {
-        cleanedContent += "\n\n## Links\n\n"
-        cleanedContent += "This note originally contained the following links:\n\n"
-        for (const link of links) {
-          cleanedContent += `- ${link}\n`
+        cleanedContent += privateBodyContent
+
+        // Add links section if there are any links
+        if (links.length > 0) {
+          cleanedContent += "\n\n## Links\n\n"
+          cleanedContent += "This note originally contained the following links:\n\n"
+          for (const link of links) {
+            cleanedContent += `- ${link}\n`
+          }
         }
       }
 

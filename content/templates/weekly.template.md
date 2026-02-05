@@ -98,7 +98,12 @@ const publicNotes = app.vault.getMarkdownFiles()
     const frontmatter = app.metadataCache.getFileCache(file)?.frontmatter;
     const title = frontmatter?.title || file.basename;
     const path = file.path.replace(/\.md$/, '');
-    return { path, title, date: frontmatter?.date };
+    return {
+      path,
+      title,
+      date: frontmatter?.date,
+      description: frontmatter?.description
+    };
   })
   .sort((a, b) => b.date.localeCompare(a.date));
 
@@ -122,16 +127,6 @@ tags:
 <%* } -%>
 <%* } else { -%>
 *No private notes from the past week.*
-<%* } -%>
-
-#### Public Notes
-
-<%* if (publicNotes.length > 0) { -%>
-<%* for (const note of publicNotes) { -%>
-- [[<% note.path %>|<% note.title %>]]
-<%* } -%>
-<%* } else { -%>
-*No public notes from the past week.*
 <%* } -%>
 
 #### Tasks
@@ -165,3 +160,22 @@ SORT completion DESC
 ## This Week
 
 ⋯
+
+## Public
+
+### <% title %>
+
+⋯
+
+#### Notes from this week
+
+<%* if (publicNotes.length > 0) { -%>
+<%* for (const note of publicNotes) { -%>
+- [[<% note.path %>|<% note.title %>]]
+  <%* if (note.description) { -%>
+  - <% note.date %> — <% note.description %>
+  <%* } -%>
+<%* } -%>
+<%* } else { -%>
+*No public notes from the past week.*
+<%* } -%>
