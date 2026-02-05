@@ -10,8 +10,10 @@ export const sharedPageComponents: SharedLayout = {
   header: [],
   footer: Component.Footer({
     links: {
+      "Contact": "https://blog.chaoticgood.computer/contact",
       "GitHub": "https://github.com/spelkington",
       "LinkedIn": "https://www.linkedin.com/in/spelkington",
+      "Privacy Policy": "https://chaoticgood.computer/privacy",
       "AI Policy": "https://chaoticgood.computer/ai-policy",
     },
   }),
