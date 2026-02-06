@@ -20,7 +20,7 @@ export default ((opts?: Options) => {
           ))}
         </ul>
         <p>
-          Copyright <a href="https://chaoticgood.computer/contact">Spencer Elkington</a> & <a href="https://chaoticgood.computer">Chaotic Good Computing</a> © {year}
+          Copyright <a href="https://chaoticgood.computer/contact">Spencer Elkington</a> & <a href="https://github.com/chaoticgoodcomputing">Chaotic Good Computing</a> © {year}
         </p>
         <p>
           {i18n(cfg.locale).components.footer.createdWith}{" "}
