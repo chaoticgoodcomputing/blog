@@ -5,6 +5,7 @@ tags:
   - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
+description: ""
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
