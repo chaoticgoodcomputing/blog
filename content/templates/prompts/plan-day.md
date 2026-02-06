@@ -3,7 +3,7 @@ copilot-command-context-menu-enabled: true
 copilot-command-slash-enabled: true
 copilot-command-context-menu-order: 1020
 copilot-command-model-key: ""
-copilot-command-last-used: 1770313721927
+copilot-command-last-used: 1770390601998
 ---
 ## Task
 
@@ -31,7 +31,7 @@ The task is to plan my day by filling in the Markdown quote block labelled `> [!
     - "Fresh" tasks — tasks created that day — should be prioritized first.
     - "Leftover" tasks should be prioritized in ascending date, with later tasks being prioritized first.
 - The mornings should lean towards tasks that seem easier.
-- On Fridays, break priority slightly by always using a fruit for the second Afternoon block task, regardless of project.
+- On Fridays, break priority to use any fruit task for the second Afternoon block task, regardless of project.
 
 ### Example
 
