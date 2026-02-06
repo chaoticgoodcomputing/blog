@@ -132,16 +132,17 @@ jobs:
           fi
 
   # ============================================================================
-  # STAGE 2: Build the site
+  # STAGE 2: Build and deploy the site
   # ============================================================================
 
-  build:
-    name: Build site
+  deploy:
+    name: Build and deploy
     needs: check-affected
     if: needs.check-affected.outputs.should-deploy == 'true'
     runs-on: ubuntu-latest
     outputs:
-      rss-hash: ${{ steps.hash-rss.outputs.hash }}
+      rss-changed: ${{ steps.compare-rss.outputs.changed }}
+      sitemap-changed: ${{ steps.compare-sitemap.outputs.changed }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -172,74 +173,75 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build site
-        run: pnpm nx run site:build
-
-      - name: Hash RSS feed
-        id: hash-rss
-        run: |
-          if [ -f dist/public/index.xml ]; then
-            RSS_HASH=$(sha256sum dist/public/index.xml | awk '{print $1}')
-            echo "hash=$RSS_HASH" >> $GITHUB_OUTPUT
-            echo "✓ RSS feed hash: $RSS_HASH"
-          else
-            echo "hash=" >> $GITHUB_OUTPUT
-            echo "⚠ No RSS feed found"
-          fi
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: site-build
-          path: dist/public
-          retention-days: 1
-
-  # ============================================================================
-  # STAGE 3: Deploy to GitHub Pages
-  # ============================================================================
-
-  deploy:
-    name: Deploy to pages
-    needs: build
-    runs-on: ubuntu-latest
-    outputs:
-      previous-rss-hash: ${{ steps.check-previous.outputs.hash }}
-      rss-changed: ${{ steps.compare.outputs.changed }}
-    steps:
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: site-build
-          path: dist/public
-
       - name: Check previous RSS feed
-        id: check-previous
+        id: check-previous-rss
         run: |
-          # Try to get the previous RSS feed from pages branch
           if wget -q https://blog.chaoticgood.computer/index.xml -O /tmp/previous-rss.xml 2>/dev/null; then
-            PREV_HASH=$(sha256sum /tmp/previous-rss.xml | awk '{print $1}')
-            echo "hash=$PREV_HASH" >> $GITHUB_OUTPUT
-            echo "✓ Previous RSS hash: $PREV_HASH"
+            PREV_RSS_HASH=$(sha256sum /tmp/previous-rss.xml | awk '{print $1}')
+            echo "hash=$PREV_RSS_HASH" >> $GITHUB_OUTPUT
+            echo "✓ Previous RSS hash: $PREV_RSS_HASH"
           else
             echo "hash=" >> $GITHUB_OUTPUT
             echo "○ No previous RSS feed found"
           fi
 
-      - name: Compare RSS feeds
-        id: compare
+      - name: Check previous sitemap
+        id: check-previous-sitemap
         run: |
-          CURRENT_HASH="${{ needs.build.outputs.rss-hash }}"
-          PREVIOUS_HASH="${{ steps.check-previous.outputs.hash }}"
+          if wget -q https://blog.chaoticgood.computer/sitemap.xml -O /tmp/previous-sitemap.xml 2>/dev/null; then
+            PREV_SITEMAP_HASH=$(sha256sum /tmp/previous-sitemap.xml | awk '{print $1}')
+            echo "hash=$PREV_SITEMAP_HASH" >> $GITHUB_OUTPUT
+            echo "✓ Previous sitemap hash: $PREV_SITEMAP_HASH"
+          else
+            echo "hash=" >> $GITHUB_OUTPUT
+            echo "○ No previous sitemap found"
+          fi
 
-          if [ -z "$PREVIOUS_HASH" ]; then
-            echo "changed=true" >> $GITHUB_OUTPUT
-            echo "✓ RSS changed: First deployment"
-          elif [ "$CURRENT_HASH" != "$PREVIOUS_HASH" ]; then
-            echo "changed=true" >> $GITHUB_OUTPUT
-            echo "✓ RSS changed: $PREVIOUS_HASH → $CURRENT_HASH"
+      - name: Build site
+        run: pnpm nx run site:build
+
+      - name: Compare RSS feeds
+        id: compare-rss
+        run: |
+          if [ -f dist/public/index.xml ]; then
+            CURRENT_RSS_HASH=$(sha256sum dist/public/index.xml | awk '{print $1}')
+            PREVIOUS_RSS_HASH="${{ steps.check-previous-rss.outputs.hash }}"
+            
+            if [ -z "$PREVIOUS_RSS_HASH" ]; then
+              echo "changed=true" >> $GITHUB_OUTPUT
+              echo "✓ RSS changed: First deployment"
+            elif [ "$CURRENT_RSS_HASH" != "$PREVIOUS_RSS_HASH" ]; then
+              echo "changed=true" >> $GITHUB_OUTPUT
+              echo "✓ RSS changed: $PREVIOUS_RSS_HASH → $CURRENT_RSS_HASH"
+            else
+              echo "changed=false" >> $GITHUB_OUTPUT
+              echo "○ RSS unchanged"
+            fi
           else
             echo "changed=false" >> $GITHUB_OUTPUT
-            echo "○ RSS unchanged"
+            echo "⚠ No RSS feed found"
+          fi
+
+      - name: Compare sitemaps
+        id: compare-sitemap
+        run: |
+          if [ -f dist/public/sitemap.xml ]; then
+            CURRENT_SITEMAP_HASH=$(sha256sum dist/public/sitemap.xml | awk '{print $1}')
+            PREVIOUS_SITEMAP_HASH="${{ steps.check-previous-sitemap.outputs.hash }}"
+            
+            if [ -z "$PREVIOUS_SITEMAP_HASH" ]; then
+              echo "changed=true" >> $GITHUB_OUTPUT
+              echo "✓ Sitemap changed: First deployment"
+            elif [ "$CURRENT_SITEMAP_HASH" != "$PREVIOUS_SITEMAP_HASH" ]; then
+              echo "changed=true" >> $GITHUB_OUTPUT
+              echo "✓ Sitemap changed: $PREVIOUS_SITEMAP_HASH → $CURRENT_SITEMAP_HASH"
+            else
+              echo "changed=false" >> $GITHUB_OUTPUT
+              echo "○ Sitemap unchanged"
+            fi
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "⚠ No sitemap found"
           fi
 
       - name: Deploy to pages branch
@@ -251,12 +253,12 @@ jobs:
           force_orphan: true
 
   # ============================================================================
-  # STAGE 4: Post to Bluesky (only if RSS changed)
+  # STAGE 3: Post to Bluesky (only if RSS changed)
   # ============================================================================
 
   post-to-bluesky:
     name: Post to Bluesky
-    needs: [build, deploy]
+    needs: deploy
     if: needs.deploy.outputs.rss-changed == 'true'
     runs-on: ubuntu-latest
     steps:
@@ -291,8 +293,16 @@ jobs:
         run: |
           node .github/workflows/scripts/post-to-bluesky.mjs
 
+      - name: Summary
+        run: |
+          cat >> $GITHUB_STEP_SUMMARY <<'EOF'
+          ## 🦋 Bluesky Post Complete
+
+          🌐 Profile: https://bsky.app/profile/chaoticgood.computer
+          EOF
+
   # ============================================================================
-  # STAGE 5: Send weekly email (independent of deployment)
+  # STAGE 4: Send weekly email (independent of deployment)
   # ============================================================================
 
   send-weekly-email:
@@ -322,13 +332,25 @@ jobs:
           node .github/workflows/scripts/send-weekly-email.mjs \
             --file "${{ needs.check-affected.outputs.weekly-note }}"
 
+      - name: Summary
+        run: |
+          cat >> $GITHUB_STEP_SUMMARY <<EOF
+          ## 📧 Weekly Email Sent
+
+          Successfully sent weekly email:
+          - ✅ Note: ${{ needs.check-affected.outputs.weekly-note }}
+
+          📬 Newsletter: https://buttondown.com/chaoticgoodcomputing
+          EOF
+
   # ============================================================================
-  # STAGE 6: Notify search engines (IndexNow)
+  # STAGE 5: Notify search engines (IndexNow)
   # ============================================================================
 
   notify-indexnow:
     name: Notify search engines
     needs: deploy
+    if: needs.deploy.outputs.sitemap-changed == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main branch
@@ -375,12 +397,8 @@ jobs:
 
       - name: Summary
         run: |
-          echo "## 🔍 IndexNow Submission Complete" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Notified search engines about sitemap updates:" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Bing" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Yandex" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Seznam.cz" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Naver" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "🌐 Site: https://blog.chaoticgood.computer" >> $GITHUB_STEP_SUMMARY
+          cat >> $GITHUB_STEP_SUMMARY <<'EOF'
+          ## 🔍 IndexNow Submission Complete
+
+          🌐 Site: https://blog.chaoticgood.computer
+          EOF
