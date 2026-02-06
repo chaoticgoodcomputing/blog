@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 
-import { readFileSync } from "fs"
+import { readFile, writeFile, mkdir } from "fs/promises"
+import { existsSync, readFileSync } from "fs"
+import { join } from "path"
 import { parseStringPromise } from "xml2js"
 
 const ATPROTO_IDENTIFIER = process.env.ATPROTO_IDENTIFIER
 const ATPROTO_POST_KEY = process.env.ATPROTO_POST_KEY
 const RSS_FILE = process.env.RSS_FILE
+const DRY_RUN_DIR = "content/public/assets/bsky-tests"
 const BSKY_HANDLE = "chaoticgood.computer"
 
 /**
@@ -182,12 +185,12 @@ async function getPostedUrls() {
       continue
     }
 
-    // Extract URLs from post text
-    const text = post.record.text
-    const urlRegex = /https?:\/\/[^\s]+/g
-    const matches = text.match(urlRegex)
-    if (matches) {
-      matches.forEach((url) => postedUrls.add(url.trim()))
+    // Extract URL from external embed (our posts use embeds, not text URLs)
+    if (post.record.embed?.$type === "app.bsky.embed.external") {
+      const url = post.record.embed.external?.uri
+      if (url) {
+        postedUrls.add(url)
+      }
     }
   }
 
@@ -198,11 +201,15 @@ async function getPostedUrls() {
  * Main execution
  */
 async function main() {
+  const args = process.argv.slice(2)
+  const dryRunMode = args.includes("--dry-run")
+
   if (!ATPROTO_IDENTIFIER || !ATPROTO_POST_KEY || !RSS_FILE) {
     throw new Error("Missing required environment variables")
   }
 
   console.log("Parsing RSS feed from:", RSS_FILE)
+  console.log(`   Mode: ${dryRunMode ? "DRY RUN" : "LIVE"}`)
   const items = await parseRSS(RSS_FILE)
   console.log(`Found ${items.length} items in RSS feed`)
 
@@ -210,8 +217,16 @@ async function main() {
   const postedUrls = await getPostedUrls()
   console.log(`Found ${postedUrls.size} URLs already posted`)
 
-  const { accessJwt, did } = await authenticate()
-  console.log("Authenticated successfully")
+  let accessJwt, did
+
+  if (dryRunMode) {
+    console.log("Dry-run mode: skipping authentication")
+  } else {
+    const auth = await authenticate()
+    accessJwt = auth.accessJwt
+    did = auth.did
+    console.log("Authenticated successfully")
+  }
 
   // Filter to only unposted items and reverse to chronological order (oldest first)
   const unpostedItems = items
@@ -220,34 +235,68 @@ async function main() {
 
   console.log(`Found ${unpostedItems.length} new items to post`)
 
-  let newPosts = 0
-  for (const item of unpostedItems) {
-    const link = item.link[0]
-    const title = item.title[0]
-
-    console.log(`Posting item ${newPosts + 1}/${unpostedItems.length}: ${title}`)
-    console.log(`  URL: ${link}`)
-
-    const postText = `New blog post: "${title}"`
-
-    try {
-      await createPost(accessJwt, did, postText, link, title)
-      newPosts++
-      console.log(`  ✓ Posted successfully`)
-
-      // Rate limiting: createRecord costs 3 points, limit is 5000 points/hour = 1666 creates/hour
-      // Wait 3 seconds between posts to stay well under the limit (~1200 posts/hour max)
-      if (newPosts < unpostedItems.length) {
-        console.log(`  ⏱️  Waiting 3 seconds before next post...`)
-        await new Promise((resolve) => setTimeout(resolve, 3000))
-      }
-    } catch (error) {
-      console.error(`  ✗ Failed to post: ${error.message}`)
-      // Continue with other posts even if one fails
+  if (dryRunMode) {
+    // Dry-run mode: save posts to JSON files instead of posting
+    if (!existsSync(DRY_RUN_DIR)) {
+      await mkdir(DRY_RUN_DIR, { recursive: true })
     }
-  }
 
-  console.log(`\nPosted ${newPosts} new items to Bluesky`)
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-").split("T")[0]
+    const outputFile = join(DRY_RUN_DIR, `bluesky-${timestamp}.json`)
+
+    const dryRunData = {
+      timestamp: new Date().toISOString(),
+      total_rss_items: items.length,
+      already_posted: postedUrls.size,
+      new_posts: unpostedItems.length,
+      posts: unpostedItems.map((item) => ({
+        title: item.title[0],
+        link: item.link[0],
+        pubDate: item.pubDate?.[0],
+        description: item.description?.[0],
+        text: `New blog post: "${item.title[0]}"`,
+      })),
+    }
+
+    await writeFile(outputFile, JSON.stringify(dryRunData, null, 2), "utf-8")
+
+    console.log(`\n✅ Dry-run output saved to: ${outputFile}`)
+    console.log(`\nWould post ${unpostedItems.length} items:`)
+    unpostedItems.forEach((item, idx) => {
+      console.log(`  ${idx + 1}. ${item.title[0]}`)
+      console.log(`     ${item.link[0]}`)
+    })
+  } else {
+    // Live mode: actually post to Bluesky
+    let newPosts = 0
+    for (const item of unpostedItems) {
+      const link = item.link[0]
+      const title = item.title[0]
+
+      console.log(`Posting item ${newPosts + 1}/${unpostedItems.length}: ${title}`)
+      console.log(`  URL: ${link}`)
+
+      const postText = `New blog post: "${title}"`
+
+      try {
+        await createPost(accessJwt, did, postText, link, title)
+        newPosts++
+        console.log(`  ✓ Posted successfully`)
+
+        // Rate limiting: createRecord costs 3 points, limit is 5000 points/hour = 1666 creates/hour
+        // Wait 3 seconds between posts to stay well under the limit (~1200 posts/hour max)
+        if (newPosts < unpostedItems.length) {
+          console.log(`  ⏱️  Waiting 3 seconds before next post...`)
+          await new Promise((resolve) => setTimeout(resolve, 3000))
+        }
+      } catch (error) {
+        console.error(`  ✗ Failed to post: ${error.message}`)
+        // Continue with other posts even if one fails
+      }
+    }
+
+    console.log(`\nPosted ${newPosts} new items to Bluesky`)
+  }
 }
 
 main().catch((error) => {
