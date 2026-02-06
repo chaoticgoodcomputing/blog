@@ -71,7 +71,7 @@
       "options": {
         "commands": [
           "cp quartz/static/robots.txt dist/public/robots.txt",
-          "cp CNAME dist/public/CNAME",
+          "cp quartz/static/CNAME dist/public/CNAME",
           "cp quartz/static/a6e41ab6-6753-4d94-9b54-b4405d806883.txt dist/public/a6e41ab6-6753-4d94-9b54-b4405d806883.txt",
           "cp quartz/static/BingSiteAuth.xml dist/public/BingSiteAuth.xml"
         ],

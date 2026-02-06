@@ -5,13 +5,119 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      force:
+        description: "Force deployment even if not affected"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
 
 jobs:
-  build-and-deploy:
+  # ============================================================================
+  # STAGE 1: Determine what needs to run
+  # ============================================================================
+
+  check-affected:
+    name: Check what's affected
     runs-on: ubuntu-latest
+    outputs:
+      site-affected: ${{ steps.check.outputs.site-affected }}
+      should-deploy: ${{ steps.check.outputs.should-deploy }}
+      weekly-note: ${{ steps.check-weekly.outputs.file }}
+      force-reason: ${{ steps.check.outputs.force-reason }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check if site is affected
+        id: check
+        run: |
+          FORCE_DEPLOY="false"
+          FORCE_REASON=""
+
+          # Check for force deployment via workflow dispatch
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.force }}" = "true" ]; then
+            FORCE_DEPLOY="true"
+            FORCE_REASON="Manual workflow dispatch with force=true"
+          fi
+
+          # Check for force deployment via commit message
+          if [ "${{ github.event_name }}" = "push" ]; then
+            COMMIT_MSG=$(git log -1 --pretty=%B)
+            if echo "$COMMIT_MSG" | grep -qiE '\[deploy\]|\[force-deploy\]|\[skip-affected\]'; then
+              FORCE_DEPLOY="true"
+              FORCE_REASON="Commit message contains deployment flag"
+              echo "Found deployment flag in commit message"
+            fi
+          fi
+
+          # Check if site project is affected by changes
+          if [ "${{ github.event_name }}" = "push" ] && [ "$FORCE_DEPLOY" != "true" ]; then
+            SITE_AFFECTED=$(pnpm nx show projects --affected --base=HEAD~1 --head=HEAD --targets=build | grep -q "^site$" && echo "true" || echo "false")
+            echo "site-affected=$SITE_AFFECTED" >> $GITHUB_OUTPUT
+            
+            if [ "$SITE_AFFECTED" = "true" ]; then
+              echo "should-deploy=true" >> $GITHUB_OUTPUT
+              echo "✓ Site is affected by changes - deployment needed"
+            else
+              echo "should-deploy=false" >> $GITHUB_OUTPUT
+              echo "○ Site is not affected - skipping deployment"
+            fi
+          else
+            # Force deployment
+            echo "site-affected=true" >> $GITHUB_OUTPUT
+            echo "should-deploy=true" >> $GITHUB_OUTPUT
+            echo "✓ Forcing deployment: $FORCE_REASON"
+          fi
+
+          echo "force-reason=$FORCE_REASON" >> $GITHUB_OUTPUT
+
+      - name: Check for weekly notes
+        id: check-weekly
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            # Find newly added or modified weekly notes
+            CHANGED_FILES=$(git diff --name-only --diff-filter=AM HEAD^ HEAD | grep '^content/public/content/notes/periodic/weekly/.*\.md$' || true)
+            
+            if [ -n "$CHANGED_FILES" ]; then
+              FIRST_FILE=$(echo "$CHANGED_FILES" | head -n 1)
+              echo "file=$FIRST_FILE" >> $GITHUB_OUTPUT
+              echo "✓ Found weekly note: $FIRST_FILE"
+            else
+              echo "file=" >> $GITHUB_OUTPUT
+              echo "○ No weekly notes changed"
+            fi
+          else
+            echo "file=" >> $GITHUB_OUTPUT
+          fi
+
+  # ============================================================================
+  # STAGE 2: Build the site
+  # ============================================================================
+
+  build:
+    name: Build site
+    needs: check-affected
+    if: needs.check-affected.outputs.should-deploy == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      rss-hash: ${{ steps.hash-rss.outputs.hash }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -45,6 +151,73 @@ jobs:
       - name: Build site
         run: pnpm nx run site:build
 
+      - name: Hash RSS feed
+        id: hash-rss
+        run: |
+          if [ -f dist/public/index.xml ]; then
+            RSS_HASH=$(sha256sum dist/public/index.xml | awk '{print $1}')
+            echo "hash=$RSS_HASH" >> $GITHUB_OUTPUT
+            echo "✓ RSS feed hash: $RSS_HASH"
+          else
+            echo "hash=" >> $GITHUB_OUTPUT
+            echo "⚠ No RSS feed found"
+          fi
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-build
+          path: dist/public
+          retention-days: 1
+
+  # ============================================================================
+  # STAGE 3: Deploy to GitHub Pages
+  # ============================================================================
+
+  deploy:
+    name: Deploy to pages
+    needs: build
+    runs-on: ubuntu-latest
+    outputs:
+      previous-rss-hash: ${{ steps.check-previous.outputs.hash }}
+      rss-changed: ${{ steps.compare.outputs.changed }}
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: site-build
+          path: dist/public
+
+      - name: Check previous RSS feed
+        id: check-previous
+        run: |
+          # Try to get the previous RSS feed from pages branch
+          if wget -q https://blog.chaoticgood.computer/index.xml -O /tmp/previous-rss.xml 2>/dev/null; then
+            PREV_HASH=$(sha256sum /tmp/previous-rss.xml | awk '{print $1}')
+            echo "hash=$PREV_HASH" >> $GITHUB_OUTPUT
+            echo "✓ Previous RSS hash: $PREV_HASH"
+          else
+            echo "hash=" >> $GITHUB_OUTPUT
+            echo "○ No previous RSS feed found"
+          fi
+
+      - name: Compare RSS feeds
+        id: compare
+        run: |
+          CURRENT_HASH="${{ needs.build.outputs.rss-hash }}"
+          PREVIOUS_HASH="${{ steps.check-previous.outputs.hash }}"
+
+          if [ -z "$PREVIOUS_HASH" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "✓ RSS changed: First deployment"
+          elif [ "$CURRENT_HASH" != "$PREVIOUS_HASH" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "✓ RSS changed: $PREVIOUS_HASH → $CURRENT_HASH"
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "○ RSS unchanged"
+          fi
+
       - name: Deploy to pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -52,3 +225,138 @@ jobs:
           publish_dir: ./dist/public
           publish_branch: pages
           force_orphan: true
+
+  # ============================================================================
+  # STAGE 4: Post to Bluesky (only if RSS changed)
+  # ============================================================================
+
+  post-to-bluesky:
+    name: Post to Bluesky
+    needs: [build, deploy]
+    if: needs.deploy.outputs.rss-changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Checkout pages branch RSS feed
+        uses: actions/checkout@v4
+        with:
+          ref: pages
+          sparse-checkout: |
+            index.xml
+          sparse-checkout-cone-mode: false
+          path: pages-rss
+
+      - name: Check RSS and post to Bluesky
+        env:
+          ATPROTO_POST_KEY: ${{ secrets.ATPROTO_POST_KEY }}
+          ATPROTO_IDENTIFIER: chaoticgood.computer
+          RSS_FILE: pages-rss/index.xml
+        run: |
+          node .github/workflows/scripts/post-to-bluesky.mjs
+
+  # ============================================================================
+  # STAGE 5: Send weekly email (independent of deployment)
+  # ============================================================================
+
+  send-weekly-email:
+    name: Send weekly email
+    needs: check-affected
+    if: needs.check-affected.outputs.weekly-note != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Send weekly email
+        env:
+          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_POST_KEY }}
+        run: |
+          node .github/workflows/scripts/send-weekly-email.mjs \
+            --file "${{ needs.check-affected.outputs.weekly-note }}"
+
+  # ============================================================================
+  # STAGE 6: Notify search engines (IndexNow)
+  # ============================================================================
+
+  notify-indexnow:
+    name: Notify search engines
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Checkout pages branch sitemap
+        uses: actions/checkout@v4
+        with:
+          ref: pages
+          sparse-checkout: |
+            sitemap.xml
+          sparse-checkout-cone-mode: false
+          path: pages-sitemap
+
+      - name: Submit URLs to IndexNow
+        run: |
+          pnpm nx run site:indexnow --sitemap=pages-sitemap/sitemap.xml
+
+      - name: Summary
+        run: |
+          echo "## 🔍 IndexNow Submission Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Notified search engines about sitemap updates:" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Bing" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Yandex" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Seznam.cz" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Naver" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🌐 Site: https://blog.chaoticgood.computer" >> $GITHUB_STEP_SUMMARY
