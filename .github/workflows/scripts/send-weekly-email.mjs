@@ -62,7 +62,7 @@ async function createEmail(subject, body, isDraft = false) {
     body: JSON.stringify({
       subject,
       body,
-      status: isDraft ? "draft" : "sent",
+      status: isDraft ? "draft" : "about_to_send",
       email_type: "public",
     }),
   })
