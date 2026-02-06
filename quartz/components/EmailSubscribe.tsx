@@ -12,7 +12,7 @@ interface Options {
 }
 
 const defaultOptions: Partial<Options> = {
-  buttondownUsername: "spelkington",
+  buttondownUsername: "chaoticgoodcomputing",
   title: "Newsletter",
   description: "Weekly updates about any new notes!",
 }
