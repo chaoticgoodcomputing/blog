@@ -39,7 +39,7 @@ export default (() => {
     const titleSuffix = cfg.pageTitleSuffix ?? ""
     const baseTitle = fileData.frontmatter?.title ?? i18n(cfg.locale).propertyDefaults.title
     const personalSuffix = " | Spencer Elkington"
-    
+
     // Add personal suffix only if total length stays within SEO limit (70 chars)
     const title = (baseTitle.length + personalSuffix.length <= 70)
       ? baseTitle + personalSuffix + titleSuffix
