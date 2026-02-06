@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [Agricultural Valleys](04-agricultural-valleys)
 - [Country Towns](06-country-towns)
 - [03-city-country-fingers](content/annotations/a-pattern-language/03-city-country-fingers)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

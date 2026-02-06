@@ -25,4 +25,4 @@ This note originally contained the following links:
 - [102-family-of-entrances](content/annotations/a-pattern-language/102-family-of-entrances)
 - [110-main-entrance](content/annotations/a-pattern-language/110-main-entrance)
 - [158-open-stairs](content/annotations/a-pattern-language/158-open-stairs)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

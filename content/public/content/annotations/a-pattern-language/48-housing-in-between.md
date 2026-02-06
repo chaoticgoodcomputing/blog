@@ -25,4 +25,4 @@ This note originally contained the following links:
 - [15-neighborhood-boundary](content/annotations/a-pattern-language/15-neighborhood-boundary)
 - [41-work-community](content/annotations/a-pattern-language/41-work-community)
 - [32-shopping-streets](content/annotations/a-pattern-language/32-shopping-street)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

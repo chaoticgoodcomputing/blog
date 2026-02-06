@@ -30,4 +30,4 @@ This note originally contained the following links:
 - [77-house-for-a-couple](content/annotations/a-pattern-language/77-house-for-a-couple)
 - [78-house-for-one-person](content/annotations/a-pattern-language/78-house-for-one-person)
 - [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [Building Thoroughfare](101-building-thoroughfare)
 - [Small Parking Lots](103-small-parking-lots)
 - [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

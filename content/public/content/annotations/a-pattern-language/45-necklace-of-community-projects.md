@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [44-local-town-hall](content/annotations/a-pattern-language/44-local-town-hall)
 - [43-university-as-a-marketplace](content/annotations/a-pattern-language/43-university-as-a-marketplace)
 - [47-health-center](content/annotations/a-pattern-language/47-health-center)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

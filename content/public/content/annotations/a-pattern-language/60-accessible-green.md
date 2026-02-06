@@ -24,4 +24,4 @@ This note originally contained the following links:
 - [13-subculture-boundary](content/annotations/a-pattern-language/13-subculture-boundary)
 - [15-neighborhood-boundary](content/annotations/a-pattern-language/15-neighborhood-boundary)
 - [59-quiet-backs](content/annotations/a-pattern-language/59-quiet-backs)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

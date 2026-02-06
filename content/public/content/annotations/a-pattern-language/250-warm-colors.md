@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [207-good-materials](content/annotations/a-pattern-language/207-good-materials)
 - [233-floor-surface](content/annotations/a-pattern-language/233-floor-surface)
 - [235-soft-inside-walls](content/annotations/a-pattern-language/235-soft-inside-walls)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

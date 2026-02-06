@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Small Panes](239-small-panes)
 - [221-natural-doors-and-windows](content/annotations/a-pattern-language/221-natural-doors-and-windows)
 - [223-deep-reveals](content/annotations/a-pattern-language/223-deep-reveals)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

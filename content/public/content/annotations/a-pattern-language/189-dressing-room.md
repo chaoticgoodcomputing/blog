@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [187-marriage-bed](content/annotations/a-pattern-language/187-marriage-bed)
 - [188-bed-alcove](content/annotations/a-pattern-language/188-bed-alcove)
 - [144-bathing-room](content/annotations/a-pattern-language/144-bathing-room)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

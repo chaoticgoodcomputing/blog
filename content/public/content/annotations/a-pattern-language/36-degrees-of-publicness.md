@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [14-identifiable-neighborhood](content/annotations/a-pattern-language/14-identifiable-neighborhood)
 - [30-activity-nodes](content/annotations/a-pattern-language/30-activity-nodes)
 - [29-density-rings](content/annotations/a-pattern-language/29-density-rings)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

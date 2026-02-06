@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [159-light-on-two-sides-of-every-room](content/annotations/a-pattern-language/159-light-on-two-sides-of-every-room)
 - [190-ceiling-height-variety](content/annotations/a-pattern-language/190-ceiling-height-variety)
 - [191-the-shape-of-indoor-space](content/annotations/a-pattern-language/191-the-shape-of-indoor-space)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [North Face](162-north-face)
 - [105-south-facing-outdoors](content/annotations/a-pattern-language/105-south-facing-outdoors)
 - [160-building-edge](content/annotations/a-pattern-language/160-building-edge)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

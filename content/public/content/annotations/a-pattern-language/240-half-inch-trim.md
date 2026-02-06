@@ -26,4 +26,4 @@ This note originally contained the following links:
 - [219-floor-ceiling-vaults](content/annotations/a-pattern-language/219-floor-ceiling-vaults)
 - [225-frames-as-thickened-edges](content/annotations/a-pattern-language/225-frames-as-thickened-edges)
 - [249-ornament](content/annotations/a-pattern-language/249-ornament)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

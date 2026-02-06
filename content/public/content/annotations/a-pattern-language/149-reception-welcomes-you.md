@@ -24,4 +24,4 @@ This note originally contained the following links:
 - [91-traveler-s-inn](content/annotations/a-pattern-language/91-traveler-s-inn)
 - [146-flexible-office-space](content/annotations/a-pattern-language/146-flexible-office-space)
 - [130-entrance-room](content/annotations/a-pattern-language/130-entrance-room)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

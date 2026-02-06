@@ -26,4 +26,4 @@ This note originally contained the following links:
 - [47-health-center](content/annotations/a-pattern-language/47-health-center)
 - [67-common-land](content/annotations/a-pattern-language/67-common-land)
 - [72-local-sports](content/annotations/a-pattern-language/72-local-sports)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

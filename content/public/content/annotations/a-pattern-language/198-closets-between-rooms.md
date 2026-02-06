@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [183-workspace-enclosure](content/annotations/a-pattern-language/183-workspace-enclosure)
 - [189-dressing-room](content/annotations/a-pattern-language/189-dressing-room)
 - [196-corner-doors](content/annotations/a-pattern-language/196-corner-doors)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

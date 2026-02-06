@@ -24,4 +24,4 @@ This note originally contained the following links:
 - [31-promenade](content/annotations/a-pattern-language/31-promenade)
 - [33-night-life](content/annotations/a-pattern-language/33-night-life)
 - [41-work-community](content/annotations/a-pattern-language/41-work-community)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

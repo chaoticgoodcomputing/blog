@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [A Room of One’s Own](141-a-room-of-one-s-own)
 - [Bed Cluster](143-bed-cluster)
 - [127-intimacy-gradient](content/annotations/a-pattern-language/127-intimacy-gradient)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

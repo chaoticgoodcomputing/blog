@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [206-efficient-structure](content/annotations/a-pattern-language/206-efficient-structure)
 - [213-final-column-distribution](content/annotations/a-pattern-language/213-final-column-distribution)
 - [216-box-columns](content/annotations/a-pattern-language/216-box-columns)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

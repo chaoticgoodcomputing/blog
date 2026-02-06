@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Structure Follows Social Spaces](205-structure-follows-social-spaces)
 - [197-thick-walls](content/annotations/a-pattern-language/197-thick-walls)
 - [190-ceiling-height-variety](content/annotations/a-pattern-language/190-ceiling-height-variety)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

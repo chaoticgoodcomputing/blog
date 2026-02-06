@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Garden Growing Wild](172-garden-growing-wild)
 - [104-site-repair](content/annotations/a-pattern-language/104-site-repair)
 - [170-fruit-trees](content/annotations/a-pattern-language/170-fruit-trees)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

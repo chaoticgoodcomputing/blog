@@ -23,4 +23,4 @@ This note originally contained the following links:
 - [140-private-terrace-on-the-street](content/annotations/a-pattern-language/140-private-terrace-on-the-street)
 - [59-quiet-backs](content/annotations/a-pattern-language/59-quiet-backs)
 - [60-accessible-green](content/annotations/a-pattern-language/60-accessible-green)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

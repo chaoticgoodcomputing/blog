@@ -23,4 +23,4 @@ This note originally contained the following links:
 - [134-zen-view](content/annotations/a-pattern-language/134-zen-view)
 - [159-light-on-two-sides-of-every-room](content/annotations/a-pattern-language/159-light-on-two-sides-of-every-room)
 - [164-street-windows](content/annotations/a-pattern-language/164-street-windows)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

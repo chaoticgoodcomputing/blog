@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [14-identifiable-neighborhood](content/annotations/a-pattern-language/14-identifiable-neighborhood)
 - [26-life-cycle](content/annotations/a-pattern-language/26-life-cycle)
 - [35-household-mix](content/annotations/a-pattern-language/35-household-mix)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

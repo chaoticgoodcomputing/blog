@@ -25,4 +25,4 @@ This note originally contained the following links:
 - [55-raised-walk](content/annotations/a-pattern-language/55-raised-walk)
 - [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)
 - [120-paths-and-goals](content/annotations/a-pattern-language/120-paths-and-goals)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Radiant Heat](230-radiant-heat)
 - [206-efficient-structure](content/annotations/a-pattern-language/206-efficient-structure)
 - [219-floor-ceiling-vaults](content/annotations/a-pattern-language/219-floor-ceiling-vaults)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

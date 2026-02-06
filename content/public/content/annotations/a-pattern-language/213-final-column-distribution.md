@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [212-columns-at-the-corners](content/annotations/a-pattern-language/212-columns-at-the-corners)
 - [206-efficient-structure](content/annotations/a-pattern-language/206-efficient-structure)
 - [190-ceiling-height-variety](content/annotations/a-pattern-language/190-ceiling-height-variety)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

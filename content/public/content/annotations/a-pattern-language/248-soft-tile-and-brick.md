@@ -24,4 +24,4 @@ This note originally contained the following links:
 - [233-floor-surface](content/annotations/a-pattern-language/233-floor-surface)
 - [243-sitting-wall](content/annotations/a-pattern-language/243-sitting-wall)
 - [247-paving-with-cracks-between-the-stones](content/annotations/a-pattern-language/247-paving-with-cracks-between-the-stones)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

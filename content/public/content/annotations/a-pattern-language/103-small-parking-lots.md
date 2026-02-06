@@ -27,4 +27,4 @@ This note originally contained the following links:
 - [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)
 - [97-shielded-parking](content/annotations/a-pattern-language/97-shielded-parking)
 - [22-nine-per-cent-parking](content/annotations/a-pattern-language/22-nine-per-cent-parking)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

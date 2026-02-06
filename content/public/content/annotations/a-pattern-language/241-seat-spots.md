@@ -28,4 +28,4 @@ This note originally contained the following links:
 - [168-connection-to-the-earth](content/annotations/a-pattern-language/168-connection-to-the-earth)
 - [174-trellised-walk](content/annotations/a-pattern-language/174-trellised-walk)
 - [176-garden-seat](content/annotations/a-pattern-language/176-garden-seat)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

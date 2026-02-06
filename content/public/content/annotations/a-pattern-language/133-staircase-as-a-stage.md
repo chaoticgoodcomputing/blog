@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [110-main-entrance](content/annotations/a-pattern-language/110-main-entrance)
 - [131-the-flow-through-rooms](content/annotations/a-pattern-language/131-the-flow-through-rooms)
 - [132-short-passages](content/annotations/a-pattern-language/132-short-passages)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

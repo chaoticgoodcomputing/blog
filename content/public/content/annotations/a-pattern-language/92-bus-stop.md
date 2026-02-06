@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [Traveler’s Inn](91-traveler-s-inn)
 - [Food Stands](93-food-stands)
 - [20-mini-buses](content/annotations/a-pattern-language/20-mini-buses)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

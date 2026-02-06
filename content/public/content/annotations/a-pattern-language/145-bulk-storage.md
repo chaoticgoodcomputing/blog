@@ -23,4 +23,4 @@ This note originally contained the following links:
 - [80-self-governing-workshops-and-offices](content/annotations/a-pattern-language/80-self-governing-workshops-and-offices)
 - [87-individually-owned-shops](content/annotations/a-pattern-language/87-individually-owned-shops)
 - [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

@@ -23,4 +23,4 @@ This note originally contained the following links:
 - [47-health-center](content/annotations/a-pattern-language/47-health-center)
 - [81-small-services-without-red-tape](content/annotations/a-pattern-language/81-small-services-without-red-tape)
 - [82-office-connections](content/annotations/a-pattern-language/82-office-connections)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

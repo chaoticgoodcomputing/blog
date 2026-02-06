@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Reception Welcomes You](149-reception-welcomes-you)
 - [80-self-governing-workshops-and-offices](content/annotations/a-pattern-language/80-self-governing-workshops-and-offices)
 - [146-flexible-office-space](content/annotations/a-pattern-language/146-flexible-office-space)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

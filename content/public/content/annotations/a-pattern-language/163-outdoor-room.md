@@ -26,4 +26,4 @@ This note originally contained the following links:
 - [111-half-hidden-garden](content/annotations/a-pattern-language/111-half-hidden-garden)
 - [140-private-terrace-on-the-street](content/annotations/a-pattern-language/140-private-terrace-on-the-street)
 - [161-sunny-place](content/annotations/a-pattern-language/161-sunny-place)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

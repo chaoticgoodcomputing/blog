@@ -33,4 +33,4 @@ This note originally contained the following links:
 - [172-garden-growing-wild](content/annotations/a-pattern-language/172-garden-growing-wild)
 - [241-seat-spots](content/annotations/a-pattern-language/241-seat-spots)
 - [242-front-door-bench](content/annotations/a-pattern-language/242-front-door-bench)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

@@ -24,4 +24,4 @@ This note originally contained the following links:
 - [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)
 - [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)
 - [102-family-of-entrances](content/annotations/a-pattern-language/102-family-of-entrances)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

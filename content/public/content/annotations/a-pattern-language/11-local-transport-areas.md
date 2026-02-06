@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [08-mosaic-of-subcultures](content/annotations/a-pattern-language/08-mosaic-of-subcultures)
 - [03-city-country-fingers](content/annotations/a-pattern-language/03-city-country-fingers)
 - [10-magic-of-the-city](content/annotations/a-pattern-language/10-magic-of-the-city)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

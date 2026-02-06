@@ -23,4 +23,4 @@ This note originally contained the following links:
 - [134-zen-view](content/annotations/a-pattern-language/134-zen-view)
 - [180-window-place](content/annotations/a-pattern-language/180-window-place)
 - [192-windows-overlooking-life](content/annotations/a-pattern-language/192-windows-overlooking-life)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

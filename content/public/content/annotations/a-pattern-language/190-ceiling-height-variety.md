@@ -19,4 +19,4 @@ This note originally contained the following links:
 
 - [Dressing Room](189-dressing-room)
 - [The Shape of Indoor Space](191-the-shape-of-indoor-space)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

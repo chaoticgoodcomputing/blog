@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Short Passages](132-short-passages)
 - [127-intimacy-gradient](content/annotations/a-pattern-language/127-intimacy-gradient)
 - [129-common-areas-at-the-heart](content/annotations/a-pattern-language/129-common-areas-at-the-heart)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

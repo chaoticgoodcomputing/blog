@@ -23,4 +23,4 @@ This note originally contained the following links:
 - [136-couple-s-realm](content/annotations/a-pattern-language/136-couple-s-realm)
 - [137-childrens-realm](content/annotations/a-pattern-language/137-childrens-realm)
 - [128-indoor-sunlight](content/annotations/a-pattern-language/128-indoor-sunlight)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

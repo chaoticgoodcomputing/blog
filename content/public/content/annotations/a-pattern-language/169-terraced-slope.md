@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [104-site-repair](content/annotations/a-pattern-language/104-site-repair)
 - [160-building-edge](content/annotations/a-pattern-language/160-building-edge)
 - [168-connection-to-the-earth](content/annotations/a-pattern-language/168-connection-to-the-earth)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

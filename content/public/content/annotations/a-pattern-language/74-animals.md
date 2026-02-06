@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [67-common-land](content/annotations/a-pattern-language/67-common-land)
 - [79-your-own-home](content/annotations/a-pattern-language/79-your-own-home)
 - [51-green-streets](content/annotations/a-pattern-language/51-green-streets)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

@@ -30,4 +30,4 @@ This note originally contained the following links:
 - [82-office-connections](content/annotations/a-pattern-language/82-office-connections)
 - [83-master-and-apprentices](content/annotations/a-pattern-language/83-master-and-apprentices)
 - [87-individually-owned-shops](content/annotations/a-pattern-language/87-individually-owned-shops)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

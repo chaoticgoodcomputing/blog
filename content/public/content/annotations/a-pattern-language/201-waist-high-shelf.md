@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Built-in Seats](202-built-in-seats)
 - [197-thick-walls](content/annotations/a-pattern-language/197-thick-walls)
 - [200-open-shelves](content/annotations/a-pattern-language/200-open-shelves)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

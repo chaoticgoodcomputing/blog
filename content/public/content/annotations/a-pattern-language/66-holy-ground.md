@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Common Land](67-common-land)
 - [26-life-cycle](content/annotations/a-pattern-language/26-life-cycle)
 - [24-sacred-sites](content/annotations/a-pattern-language/24-sacred-sites)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

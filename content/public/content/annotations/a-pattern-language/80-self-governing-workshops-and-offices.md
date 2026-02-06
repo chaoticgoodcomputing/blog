@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [09-scattered-work](content/annotations/a-pattern-language/09-scattered-work)
 - [42-industrial-ribbon](content/annotations/a-pattern-language/42-industrial-ribbon)
 - [41-work-community](content/annotations/a-pattern-language/41-work-community)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

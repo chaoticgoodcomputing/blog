@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Health Center](47-health-center)
 - [19-web-of-shopping](content/annotations/a-pattern-language/19-web-of-shopping)
 - [32-shopping-streets](content/annotations/a-pattern-language/32-shopping-street)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

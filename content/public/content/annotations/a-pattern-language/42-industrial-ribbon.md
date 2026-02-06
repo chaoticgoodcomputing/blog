@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [09-scattered-work](content/annotations/a-pattern-language/09-scattered-work)
 - [41-work-community](content/annotations/a-pattern-language/41-work-community)
 - [13-subculture-boundary](content/annotations/a-pattern-language/13-subculture-boundary)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

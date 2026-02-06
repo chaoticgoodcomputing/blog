@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [Communal Sleeping](186-communal-sleeping)
 - [Bed Alcove](188-bed-alcove)
 - [136-couple-s-realm](content/annotations/a-pattern-language/136-couple-s-realm)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

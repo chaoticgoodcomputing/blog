@@ -7,14 +7,12 @@ tags:
   - economics/policy
 description: Can graphs be libertarian? Authoritarian? Annotations for the introductory portion of the 1977 book A Pattern Language.
 ---
-**Previous Pattern:** [[254-conclusion|Conclusion]]
-
-**Next Pattern:** [[01-independent-regions|Independent Regions]]
+← [[254-conclusion|Conclusion]] | [[01-independent-regions|Independent Regions]] →
 
 > [!QUOTE]
 > The elements of this language are entities called *patterns.* Each pattern describes a problem which occurs over and over again in our environment, and then describes the core of the solution to that problem, in such a way that you can still use this solution a million times over, without ever doing it the same way twice.
 > 
-> — *[A Pattern Language](https://www.patternlanguage.com/)*
+> — [[tags/writing/annotations/a-pattern-language/index|A Pattern Language]] 
 
 ## Notes
 

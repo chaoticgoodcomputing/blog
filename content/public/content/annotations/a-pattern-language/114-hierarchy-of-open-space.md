@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [104-site-repair](content/annotations/a-pattern-language/104-site-repair)
 - [105-south-facing-outdoors](content/annotations/a-pattern-language/105-south-facing-outdoors)
 - [106-positive-outdoor-space](content/annotations/a-pattern-language/106-positive-outdoor-space)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

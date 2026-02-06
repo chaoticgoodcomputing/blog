@@ -25,4 +25,4 @@ This note originally contained the following links:
 - [121-path-shape](content/annotations/a-pattern-language/121-path-shape)
 - [124-activity-pockets](content/annotations/a-pattern-language/124-activity-pockets)
 - [125-stair-seats](content/annotations/a-pattern-language/125-stair-seats)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

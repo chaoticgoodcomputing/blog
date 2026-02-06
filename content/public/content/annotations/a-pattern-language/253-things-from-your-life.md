@@ -19,4 +19,4 @@ This note originally contained the following links:
 
 - [Pools of Light](252-pools-of-light)
 - [Conclusion](254-conclusion)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

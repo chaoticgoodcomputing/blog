@@ -24,4 +24,4 @@ This note originally contained the following links:
 - [112-entrance-transition](content/annotations/a-pattern-language/112-entrance-transition)
 - [113-car-connection](content/annotations/a-pattern-language/113-car-connection)
 - [140-private-terrace-on-the-street](content/annotations/a-pattern-language/140-private-terrace-on-the-street)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

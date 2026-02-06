@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [10-magic-of-the-city](content/annotations/a-pattern-language/10-magic-of-the-city)
 - [31-promenade](content/annotations/a-pattern-language/31-promenade)
 - [19-web-of-shopping](content/annotations/a-pattern-language/19-web-of-shopping)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

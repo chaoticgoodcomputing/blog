@@ -23,4 +23,4 @@ This note originally contained the following links:
 - [195-staircase-volume](content/annotations/a-pattern-language/195-staircase-volume)
 - [206-efficient-structure](content/annotations/a-pattern-language/206-efficient-structure)
 - [207-good-materials](content/annotations/a-pattern-language/207-good-materials)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

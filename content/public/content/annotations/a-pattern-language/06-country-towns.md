@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [Lace of Country Streets](05-lace-of-country-streets)
 - [The Countryside](07-the-countryside)
 - [02-the-distribution-of-towns](content/annotations/a-pattern-language/02-the-distribution-of-towns)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

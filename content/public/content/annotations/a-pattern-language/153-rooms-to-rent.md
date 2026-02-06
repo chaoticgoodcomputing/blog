@@ -27,4 +27,4 @@ This note originally contained the following links:
 - [154-teenager-s-cottage](content/annotations/a-pattern-language/154-teenager-s-cottage)
 - [155-old-age-cottage](content/annotations/a-pattern-language/155-old-age-cottage)
 - [157-home-workshop](content/annotations/a-pattern-language/157-home-workshop)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

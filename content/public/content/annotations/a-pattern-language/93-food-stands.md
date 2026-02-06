@@ -24,4 +24,4 @@ This note originally contained the following links:
 - [55-raised-walk](content/annotations/a-pattern-language/55-raised-walk)
 - [61-small-public-squares](content/annotations/a-pattern-language/61-small-public-squares)
 - [92-bus-stop](content/annotations/a-pattern-language/92-bus-stop)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

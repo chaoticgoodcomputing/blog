@@ -31,4 +31,4 @@ This note originally contained the following links:
 - [232-roof-caps](content/annotations/a-pattern-language/232-roof-caps)
 - [235-soft-inside-walls](content/annotations/a-pattern-language/235-soft-inside-walls)
 - [243-sitting-wall](content/annotations/a-pattern-language/243-sitting-wall)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [221-natural-doors-and-windows](content/annotations/a-pattern-language/221-natural-doors-and-windows)
 - [206-efficient-structure](content/annotations/a-pattern-language/206-efficient-structure)
 - [208-gradual-stiffening](content/annotations/a-pattern-language/208-gradual-stiffening)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

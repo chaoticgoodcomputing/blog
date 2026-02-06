@@ -24,4 +24,4 @@ This note originally contained the following links:
 - [136-couple-s-realm](content/annotations/a-pattern-language/136-couple-s-realm)
 - [137-childrens-realm](content/annotations/a-pattern-language/137-childrens-realm)
 - [68-connected-play](content/annotations/a-pattern-language/68-connected-play)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

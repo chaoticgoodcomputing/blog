@@ -24,4 +24,4 @@ This note originally contained the following links:
 - [132-short-passages](content/annotations/a-pattern-language/132-short-passages)
 - [133-staircase-as-a-stage](content/annotations/a-pattern-language/133-staircase-as-a-stage)
 - [120-paths-and-goals](content/annotations/a-pattern-language/120-paths-and-goals)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

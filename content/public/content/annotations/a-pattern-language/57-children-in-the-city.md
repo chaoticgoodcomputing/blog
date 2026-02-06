@@ -26,4 +26,4 @@ This note originally contained the following links:
 - [52-network-of-paths-and-cars](content/annotations/a-pattern-language/52-network-of-paths-and-cars)
 - [56-bike-paths-and-racks](content/annotations/a-pattern-language/56-bike-paths-and-racks)
 - [18-network-of-learning](content/annotations/a-pattern-language/18-network-of-learning)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

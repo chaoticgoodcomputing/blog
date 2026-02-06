@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [170-fruit-trees](content/annotations/a-pattern-language/170-fruit-trees)
 - [67-common-land](content/annotations/a-pattern-language/67-common-land)
 - [111-half-hidden-garden](content/annotations/a-pattern-language/111-half-hidden-garden)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

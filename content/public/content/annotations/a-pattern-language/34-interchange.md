@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [16-web-of-public-transportation](content/annotations/a-pattern-language/16-web-of-public-transportation)
 - [11-local-transport-areas](content/annotations/a-pattern-language/11-local-transport-areas)
 - [20-mini-buses](content/annotations/a-pattern-language/20-mini-buses)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

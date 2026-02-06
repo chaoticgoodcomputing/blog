@@ -23,4 +23,4 @@ This note originally contained the following links:
 - [224-low-doorway](content/annotations/a-pattern-language/224-low-doorway)
 - [135-tapestry-of-light-and-dark](content/annotations/a-pattern-language/135-tapestry-of-light-and-dark)
 - [194-interior-windows](content/annotations/a-pattern-language/194-interior-windows)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

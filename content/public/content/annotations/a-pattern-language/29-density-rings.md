@@ -23,4 +23,4 @@ This note originally contained the following links:
 - [08-mosaic-of-subcultures](content/annotations/a-pattern-language/08-mosaic-of-subcultures)
 - [13-subculture-boundary](content/annotations/a-pattern-language/13-subculture-boundary)
 - [12-community-of-7000](content/annotations/a-pattern-language/12-community-of-7000)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

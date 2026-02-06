@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [11-local-transport-areas](content/annotations/a-pattern-language/11-local-transport-areas)
 - [34-interchange](content/annotations/a-pattern-language/34-interchange)
 - [16-web-of-public-transportation](content/annotations/a-pattern-language/16-web-of-public-transportation)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

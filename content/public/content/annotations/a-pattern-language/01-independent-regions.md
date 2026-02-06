@@ -19,4 +19,4 @@ This note originally contained the following links:
 
 - [Introduction](00-introduction)
 - [The Distribution of Towns](02-the-distribution-of-towns)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

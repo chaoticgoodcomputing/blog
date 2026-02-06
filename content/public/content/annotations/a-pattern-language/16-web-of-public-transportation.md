@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Ring Roads](17-ring-roads)
 - [03-city-country-fingers](content/annotations/a-pattern-language/03-city-country-fingers)
 - [11-local-transport-areas](content/annotations/a-pattern-language/11-local-transport-areas)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

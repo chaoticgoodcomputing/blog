@@ -25,4 +25,4 @@ This note originally contained the following links:
 - [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)
 - [101-building-thoroughfare](content/annotations/a-pattern-language/101-building-thoroughfare)
 - [121-path-shape](content/annotations/a-pattern-language/121-path-shape)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

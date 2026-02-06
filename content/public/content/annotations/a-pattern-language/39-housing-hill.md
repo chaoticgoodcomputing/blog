@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Old People Everywhere](40-old-people-everywhere)
 - [29-density-rings](content/annotations/a-pattern-language/29-density-rings)
 - [21-four-story-limit](content/annotations/a-pattern-language/21-four-story-limit)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

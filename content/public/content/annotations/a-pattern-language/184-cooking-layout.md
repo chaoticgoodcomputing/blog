@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [Workspace Enclosure](183-workspace-enclosure)
 - [Sitting Circle](185-sitting-circle)
 - [139-farmhouse-kitchen](content/annotations/a-pattern-language/139-farmhouse-kitchen)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

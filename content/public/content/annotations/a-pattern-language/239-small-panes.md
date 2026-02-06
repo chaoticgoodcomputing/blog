@@ -24,4 +24,4 @@ This note originally contained the following links:
 - [236-windows-which-open-wide](content/annotations/a-pattern-language/236-windows-which-open-wide)
 - [237-solid-doors-with-glass](content/annotations/a-pattern-language/237-solid-doors-with-glass)
 - [225-frames-as-thickened-edges](content/annotations/a-pattern-language/225-frames-as-thickened-edges)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

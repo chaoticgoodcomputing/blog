@@ -24,4 +24,4 @@ This note originally contained the following links:
 - [111-half-hidden-garden](content/annotations/a-pattern-language/111-half-hidden-garden)
 - [51-green-streets](content/annotations/a-pattern-language/51-green-streets)
 - [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)

@@ -25,4 +25,4 @@ This note originally contained the following links:
 - [78-house-for-one-person](content/annotations/a-pattern-language/78-house-for-one-person)
 - [38-row-houses](content/annotations/a-pattern-language/38-row-houses)
 - [39-housing-hill](content/annotations/a-pattern-language/39-housing-hill)
-- [A Pattern Language](https://www.patternlanguage.com/)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)
