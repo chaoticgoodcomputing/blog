@@ -8,6 +8,7 @@ tags:
 description: Can graphs be libertarian? Authoritarian? Annotations for the introductory portion of the 1977 book A Pattern Language.
 ---
 **Previous Pattern:** [[254-conclusion|Conclusion]]
+
 **Next Pattern:** [[01-independent-regions|Independent Regions]]
 
 > [!QUOTE]
@@ -33,7 +34,7 @@ Yeah, I'll probably find some way to incorporate the variability metric — but 
 
 ### Summary of the Language
 
-This one is largely a table of contents — although it is important to note how much they stress the ordering matters. Paraphrasing the authors, they state that, even though not every project will use every pattern, the granularity *is* sorted — that is to say, they prescribe filtering, but not reordering, the patterns as you define what you intend to use for a project.
+This one is largely a table of contents — although it is important to note how much they stress a key concept: the ordering of the patterns matters. This makes a bit more sense in the section "Choosing a Language for Your Project", but the idea is that you select a subset of patterns to adhere to depending on your goal. Paraphrasing the authors, they state that, even though not every project will use every pattern, the granularity *is* sorted — that is to say, they prescribe filtering, but not reordering, the patterns as you define what you intend to use for a project.
 
 One thing did catch my eye, in the description of the first 7 patterns ([[content/annotations/a-pattern-language/01-independent-regions|01-independent-regions]] to [[content/annotations/a-pattern-language/07-the-countryside|07-the-countryside]]):
 
@@ -49,16 +50,22 @@ Well — that really puts a damper on my early drafts for [[tags/projects/games/
 
 An example of this: in the graph of my site, the tag nodes are a primarily *authoritarian* structure — I, ahead of time, decided how my tags would be laid out. However, the *post nodes* are libertarian — I don't particularly know, ahead of time, what tags a post will have (that typically comes after the writing is done. Not because I'm a libertarian soul, but because... I just forget to do them until the end).
 
-An example of this: initially, when I was using (largely) the graph rendering logic of the [vanilla Quartz site](https://quartz.jzhao.xyz/), my graph was far more... blobby.
+An example of this: initially, when I was using (largely) the graph rendering logic of the [vanilla Quartz site](https://quartz.jzhao.xyz/), my graph was far more... blobby. Any global organization was very much an afterthought. I was primarily concerned with simply churning out posts and hyperlinking where appropriate, and wasn't nearly as concerned with how the global graph looked. I'd call this a *libertarian*, *node-first* approach:
 
 ![[assets/Pasted image 20260205201309.png]]
 
-Since then — largely based on feedback from friends and family who grow less patient with "Can I show you my graph?" by the day, I cleaned up the graph (specifically the global, default view) by doing two things:
+Since then — largely based on feedback from friends and family who grow less patient with "Can I show you my graph?" by the day — I cleaned up the graph (specifically the global, default view) by doing two things:
 
 - Any tag that is at the top of the tagging hierarchy ([[tags/engineering/index|engineering]], [[tags/economics/index|economics]]) "stick" to an outer shell, and a gravitational force pulls all other nodes (subtags and nodes) into the center. This forms something closer to a [ternary plot](https://en.wikipedia.org/wiki/Ternary_plot), with the strength of the connections pulling posts closer to the edge that most closely defines them
 - Filtering to only posts in the last year (by default) in order to effectively "destroy" stale nodes over time. This recurses upward — if any tag (or its subtags) don't have direct child post for a long enough period of time, it filters out ([[tags/projects/games/roblox/index|roblox]], [[tags/projects/college/index|college]])
 
 ![[assets/Pasted image 20260205202218.png]]
+
+This, then, is a far more *authoritarian, tag-first approach*. A global superstructure, defined by the tagging system, is used to give a skeleton to the graph. Then, the post nodes fit into that skeleton to flesh it out.
+
+(Ironically, the authoritarian version of the graph kinda resembles a [Satanist pentagram](https://en.wikipedia.org/wiki/Satanism), a symbol of the highest-order libertarianism you could possibly think of.)
+
+#### Back to The Neighborhood
 
 Pulling this out of the realm of graph theory and into the real world — specifically, in the type of thinking important for The Neighborhood — let's consider zoning laws.
 
@@ -70,9 +77,11 @@ Remember — each of these zones also represent *laws*. You can literally see *t
 
 ![[assets/Pasted image 20260205203634.png]]
 
-This is almost precisely the same concept as the tag nodes of the site graph. Ahead of development, I used an overarching authority to pre-create the tags, effectively putting an economic policy in place that "on this site, *these* post categories are allowed". This dictate is the policy equivalent of a fart in the wind — I can, and will, overrule the current tags if (when) they inconvenience me. However, they are authoritative — you can't build a node in a zone of a different color unless you override the rules (overturn the laws) of that zone.
+This is almost precisely the same concept as the tag nodes of the site graph. Ahead of development, I used an overarching authority to pre-create the tags, effectively putting a zoning policy in place that "on this site, *these* post categories are allowed". Of course, this dictate is the authoritarian equivalent of a fart in the wind — I can, and will, overrule the current tags if (when) they inconvenience me. Nonetheless, they *are* still an authoritative structure — I can't build a node in a zone of any color that doesn't exist, yet, unless I override the rules (overturn the laws) of current zones.
 
-All things considered, Salt Lake City is an odd case. We're a fairly young city, established when the concept of a zoning law already existed. Before the site for the city was even *discovered*, Joseph Smith had put together [plans for a divinely-planned city](https://ensignpeakfoundation.org/wp-content/uploads/2013/08/Joseph-Smith-Urban-Planner.pdf), even going as far as to direct how big the city blocks should be. If you live in an older city, see if your city publishes a zoning map. I bet you'll see *far* more cutouts, alcoves, and islands in your zoning map than we do.
+All things considered, Salt Lake City is an odd case. We're a fairly young city, established when the concept of a zoning law already existed. A fun SLC fact: before the site for the city was even *discovered*, Joseph Smith had put together [plans for a divinely-planned city](https://ensignpeakfoundation.org/wp-content/uploads/2013/08/Joseph-Smith-Urban-Planner.pdf), even going as far as to direct the exact measurements of city blocks: [precisely 660 feet (1/8 mile) on all sides](https://gis.utah.gov/blog/2019-03-11-the-western-grid/).
+
+If you live in an older city, see if your city publishes a zoning map. I bet you'll see *far* more cutouts, alcoves, and islands in your zoning map than we do.
 
 ### Choosing a Language for Your Project & The Poetry of the Language
 
