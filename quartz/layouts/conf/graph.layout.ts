@@ -5,11 +5,11 @@ import { D3Config } from "../../components/Graph"
  * These can be overridden in individual layouts as needed.
  */
 export const defaultGraphOptions: Partial<D3Config> = {
-  scale: 0.6,
+  scale: 1,
   linkStrength: {
     tagTag: 1,
-    tagPost: 0.2,
-    postPost: 0.01,
+    tagPost: 0.5,
+    postPost: 0.05,
   },
   edgeOpacity: {
     tagTag: { min: 0.8, max: 1 },
@@ -17,7 +17,7 @@ export const defaultGraphOptions: Partial<D3Config> = {
     postPost: { min: 0.2, max: 1 },
   },
   repelForce: 3,
-  centerForce: 0.25,
+  centerForce: 1.75,
   linkDistance: {
     tagTag: 50,
     tagPost: 10,
@@ -60,11 +60,11 @@ export const defaultGraphOptions: Partial<D3Config> = {
  */
 export const defaultLocalGraphOptions: Partial<D3Config> = {
   ...defaultGraphOptions,
-  scale: 0.6,
+  scale: 1,
   linkDistance: {
-    tagTag: 15,
-    tagPost: 15,
-    postPost: 15,
+    tagTag: 30,
+    tagPost: 30,
+    postPost: 30,
   },
   linkStrength: {
     tagTag: 0.3,
@@ -73,8 +73,12 @@ export const defaultLocalGraphOptions: Partial<D3Config> = {
   },
   edgeOpacity: {
     tagTag: { min: 1, max: 1 },
-    tagPost: { min: 0.6, max: 0.8 },
-    postPost: { min: 0.6, max: 0.8 },
+    tagPost: { min: 0.75, max: 1 },
+    postPost: { min: 0.5, max: 1 },
+  },
+  baseSize: {
+    tags: 10,
+    posts: 10,
   },
 }
 
@@ -83,18 +87,6 @@ export const defaultLocalGraphOptions: Partial<D3Config> = {
  */
 export const shellGraphOptions: Partial<D3Config> = {
   ...defaultGraphOptions,
-  linkStrength: {
-    tagTag: 1,
-    tagPost: 0.2,
-    postPost: 0.1,
-  },
-  repelForce: 3,
-  centerForce: 1.75,
-  linkDistance: {
-    tagTag: 25,
-    tagPost: 5,
-    postPost: 2,
-  },
   // Pseudo-shell style configuration
   graphStyle: "pseudo-shell",
   pseudoShellConfig: {
