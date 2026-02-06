@@ -14,7 +14,7 @@
         "parallel": false,
         "cwd": "{workspaceRoot}"
       },
-      "dependsOn": [ "workspace:precommit" ]
+      "dependsOn": [ "vault:precommit" ]
     },
     "push": {
       "//": "Push both repositories (submodule first, then main repo)",

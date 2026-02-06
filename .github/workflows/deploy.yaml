@@ -69,7 +69,26 @@ jobs:
 
           # Check if site project is affected by changes
           if [ "${{ github.event_name }}" = "push" ] && [ "$FORCE_DEPLOY" != "true" ]; then
-            SITE_AFFECTED=$(pnpm nx show projects --affected --base=HEAD~1 --head=HEAD --targets=build | grep -q "^site$" && echo "true" || echo "false")
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "📊 Changed files in this push:"
+            git diff --name-only HEAD^ HEAD | while read file; do
+              echo "  - $file"
+            done
+            echo ""
+            
+            echo "🔍 Running: nx show projects --affected --base=HEAD~1 --head=HEAD --targets=build"
+            AFFECTED_PROJECTS=$(pnpm nx show projects --affected --base=HEAD~1 --head=HEAD --targets=build)
+            echo "📦 Affected projects with build targets:"
+            if [ -z "$AFFECTED_PROJECTS" ]; then
+              echo "  (none)"
+            else
+              echo "$AFFECTED_PROJECTS" | while read project; do
+                echo "  - $project"
+              done
+            fi
+            echo ""
+            
+            SITE_AFFECTED=$(echo "$AFFECTED_PROJECTS" | grep -q "^site$" && echo "true" || echo "false")
             echo "site-affected=$SITE_AFFECTED" >> $GITHUB_OUTPUT
             
             if [ "$SITE_AFFECTED" = "true" ]; then
@@ -78,7 +97,12 @@ jobs:
             else
               echo "should-deploy=false" >> $GITHUB_OUTPUT
               echo "○ Site is not affected - skipping deployment"
+              echo ""
+              echo "💡 To force deployment, use one of:"
+              echo "  - Commit message with [deploy], [force-deploy], or [skip-affected]"
+              echo "  - Manual workflow_dispatch with force=true"
             fi
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
           else
             # Force deployment
             echo "site-affected=true" >> $GITHUB_OUTPUT

@@ -4,6 +4,7 @@
   "root": "quartz",
   "sourceRoot": "quartz",
   "projectType": "application",
+  "implicitDependencies": [ "vault" ],
   "targets": {
     "clean": {
       "//": "Cleans quartz cache files and output directory",

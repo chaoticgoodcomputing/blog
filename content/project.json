@@ -3,6 +3,7 @@
   "name": "vault",
   "root": "content",
   "projectType": "library",
+  "implicitDependencies": [ "resume" ],
   "targets": {
     "precommit": {
       "//": "Runs all pre-commit tasks related to setting up the vault prior to builds and commits.",
