@@ -1,6 +1,6 @@
 ---
 title: "APL: Pattern 2; The Distribution of Towns"
-date: 1970-01-02
+date: 2026-02-07
 tags:
   - writing/annotations/a-pattern-language
   - projects/games/the-neighborhood
