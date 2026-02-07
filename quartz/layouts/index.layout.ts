@@ -22,14 +22,7 @@ export const indexLayout: PageLayout = {
   ],
   left: [
     Component.PageTitle(),
-    Component.Flex({
-      components: [
-        {
-          Component: Component.Search(),
-          grow: true,
-        },
-      ],
-    }),
+    Component.Search(),
     Component.TagExplorer({
       tagNodeSort: "count-desc",
       fileNodeSort: "date-desc",
