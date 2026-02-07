@@ -62,9 +62,9 @@ export const defaultLocalGraphOptions: Partial<D3Config> = {
   ...defaultGraphOptions,
   scale: 1,
   linkDistance: {
-    tagTag: 30,
-    tagPost: 30,
-    postPost: 30,
+    tagTag: 50,
+    tagPost: 50,
+    postPost: 50,
   },
   linkStrength: {
     tagTag: 0.3,

@@ -18,6 +18,7 @@ export const indexLayout: PageLayout = {
   pageHeader: [],
   beforeBody: [
     Component.ArticleTitle(),
+    Component.TagList({ showCount: true }),
   ],
   left: [
     Component.PageTitle(),
@@ -52,19 +53,23 @@ export const indexLayout: PageLayout = {
   ],
   right: [
     Component.EmailSubscribe(),
-    Component.SocialMediaGitHub({
-      username: "spelkington",
-      theme: "default",
-      showHeader: true,
-      showFooter: true,
-      showThumbnail: false,
-      title: "GitHub Activity",
-    }),
-    Component.SocialMediaBlueSky({
-      handle: "speen.us",
-      postLimit: 5,
-      showMetrics: false,
-      title: "ATProto Feed",
-    }),
+    Component.DesktopOnly(
+      Component.SocialMediaGitHub({
+        username: "spelkington",
+        theme: "default",
+        showHeader: true,
+        showFooter: true,
+        showThumbnail: false,
+        title: "GitHub Activity",
+      })
+    ),
+    Component.DesktopOnly(
+      Component.SocialMediaBlueSky({
+        handle: "speen.us",
+        postLimit: 5,
+        showMetrics: false,
+        title: "ATProto Feed",
+      })
+    )
   ],
 }

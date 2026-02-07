@@ -7,7 +7,7 @@ tags:
   - economics/policy
 description: Can graphs be libertarian? Authoritarian? Annotations for the introductory portion of the 1977 book A Pattern Language.
 ---
-← [[254-conclusion|Conclusion]] | [[01-independent-regions|Independent Regions]] →
+← [[content/notes/pattern-languages-of-the-neighborhood|Pattern Languages & The Neighborhood]] | [[01-independent-regions|Independent Regions]] →
 
 > [!QUOTE]
 > The elements of this language are entities called *patterns.* Each pattern describes a problem which occurs over and over again in our environment, and then describes the core of the solution to that problem, in such a way that you can still use this solution a million times over, without ever doing it the same way twice.
@@ -34,7 +34,7 @@ Yeah, I'll probably find some way to incorporate the variability metric — but 
 
 This one is largely a table of contents — although it is important to note how much they stress a key concept: the ordering of the patterns matters. This makes a bit more sense in the section "Choosing a Language for Your Project", but the idea is that you select a subset of patterns to adhere to depending on your goal. Paraphrasing the authors, they state that, even though not every project will use every pattern, the granularity *is* sorted — that is to say, they prescribe filtering, but not reordering, the patterns as you define what you intend to use for a project.
 
-One thing did catch my eye, in the description of the first 7 patterns ([[content/annotations/a-pattern-language/01-independent-regions|01-independent-regions]] to [[content/annotations/a-pattern-language/07-the-countryside|07-the-countryside]]):
+One thing did catch my eye, in the Towns precursor description of the first 7 patterns ([[content/annotations/a-pattern-language/01-independent-regions|01-independent-regions]] to [[content/annotations/a-pattern-language/07-the-countryside|07-the-countryside]]):
 
 > [!QUOTE]
 > We begin with that part of the language which defines a town or community. These patterns can never be "designed" or "built" in one fell swoop—but patient piecemeal growth, designed in such a way that every individual act is always helping to create or generate these larger global patterns, will, slowly and surely, over the years, make a community that has these global patterns in it.

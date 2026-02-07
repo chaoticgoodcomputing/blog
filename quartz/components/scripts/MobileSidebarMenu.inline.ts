@@ -28,6 +28,9 @@ function setupMobileSidebar() {
     toggle.setAttribute("aria-expanded", "true")
     // Prevent body scroll when menu is open
     document.body.style.overflow = "hidden"
+    
+    // Move toggle button to follow sidebar
+    updateTogglePosition(true)
   }
 
   function closeMenu() {
@@ -37,6 +40,22 @@ function setupMobileSidebar() {
     toggle.setAttribute("aria-expanded", "false")
     // Restore body scroll
     document.body.style.overflow = ""
+    
+    // Reset toggle button position
+    updateTogglePosition(false)
+  }
+
+  function updateTogglePosition(isOpen: boolean) {
+    if (!toggle || !container) return
+    
+    if (isOpen) {
+      // When open, position at the right edge of the sidebar
+      const sidebarWidth = container.offsetWidth
+      toggle.style.left = `${sidebarWidth - 8}px`
+    } else {
+      // When closed, position at the left edge
+      toggle.style.left = "0px"
+    }
   }
 
   // Click handlers

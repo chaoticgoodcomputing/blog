@@ -51,7 +51,8 @@
       },
       "dependsOn": [
         "site:_prepare-fonts",
-        "vault:download-annotation-pdfs"
+        "vault:download-annotation-pdfs",
+        "vault:fix-links"
       ]
     },
     "_inbuild": {

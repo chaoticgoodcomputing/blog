@@ -12,18 +12,16 @@ export default (() => {
   const MobileSidebarMenu: QuartzComponent = ({ children }: QuartzComponentProps) => {
     return (
       <>
-        {/* Hamburger button - self-contained responsive behavior in SCSS */}
+        {/* Caret toggle button - self-contained responsive behavior in SCSS */}
         <button
           class="mobile-sidebar-toggle"
           id="mobile-sidebar-toggle"
           aria-label="Toggle sidebar menu"
           aria-expanded="false"
         >
-          <div class="hamburger-icon">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
+          <svg class="caret-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
         </button>
 
         {/* Backdrop overlay - self-contained responsive behavior in SCSS */}

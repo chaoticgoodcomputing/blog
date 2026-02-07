@@ -11,29 +11,32 @@
  */
 
 /**
- * Hamburger toggle button
+ * Caret toggle button
  * - Only visible on mobile viewports
- * - Fixed position in top-left corner
- * - Animates to X icon when menu is open
+ * - Positioned to move with sidebar, maintaining fixed distance from sidebar edge
+ * - Just the icon overlay, no background
  */
 .mobile-sidebar-toggle {
   // Base styles (mobile)
   position: fixed;
-  top: 1rem;
-  left: 1rem;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
   z-index: 1001;
-  background-color: var(--light);
-  border: 2px solid var(--lightgray);
-  border-radius: 8px;
-  width: 44px;
-  height: 44px;
+  background: transparent;
+  border: none;
+  outline: none;
+  width: 32px;
+  height: 48px;
   cursor: pointer;
   padding: 0;
+  margin: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: left 0.3s ease, opacity 0.2s ease;
+  opacity: 0.5;
+  -webkit-tap-highlight-color: transparent;
 
   // Hide on non-mobile viewports
   @media all and not ($mobile) {
@@ -41,46 +44,29 @@
   }
 
   &:hover {
-    background-color: var(--lightgray);
-    border-color: var(--gray);
+    opacity: 0.9;
   }
 
   &:active {
-    transform: scale(0.95);
+    opacity: 1;
   }
 
-  // Hamburger icon structure (three horizontal lines)
-  .hamburger-icon {
-    width: 20px;
-    height: 14px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  // Caret icon (chevron)
+  .caret-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    color: var(--darkgray);
+    transition: transform 0.3s ease;
     flex-shrink: 0;
-
-    span {
-      display: block;
-      height: 2px;
-      width: 100%;
-      background-color: var(--darkgray);
-      border-radius: 2px;
-      transition: all 0.3s ease;
-      flex-shrink: 0;
-    }
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
   }
 
-  // Animate hamburger to X when menu is open
-  &[aria-expanded="true"] .hamburger-icon {
-    span:nth-child(1) {
-      transform: translateY(6px) rotate(45deg);
-    }
+  // Flip caret to point left when menu is open
+  &[aria-expanded="true"] {
+    opacity: 0.9;
 
-    span:nth-child(2) {
-      opacity: 0;
-    }
-
-    span:nth-child(3) {
-      transform: translateY(-6px) rotate(-45deg);
+    .caret-icon {
+      transform: rotate(180deg);
     }
   }
 }

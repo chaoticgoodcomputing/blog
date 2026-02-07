@@ -10,12 +10,12 @@ description: When it comes to collecting data, there's a fine line between makin
 
 In creating this site, I do collect small bits of data, primarily to fix errors and know how people prefer to navigate through the site. This policy explains what data is collected, why, and how it's protected.
 
-## Opt-out
+## How to opt out
 
-Before moving onto the nitty-gritty, here's some ways you can opt out to any data collection for this site:
+Before moving onto the nitty-gritty, you can disable all tracking on this site by:
 
-- Enable Do Not Track (DNT) in your browser; or
-- Use a browser extension that blocks ads and tracking.
+- Enabling Do Not Track (DNT) in your browser; or
+- Using a browser extension that blocks ads and tracking.
 
 ## What Data is Collected
 

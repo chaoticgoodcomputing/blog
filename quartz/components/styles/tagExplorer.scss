@@ -35,12 +35,6 @@
     opacity: 0.8;
   }
 
-  &.desktop-only {
-    @media all and not ($mobile) {
-      display: flex;
-    }
-  }
-
   svg {
     pointer-events: all;
     transition: transform 0.35s ease;

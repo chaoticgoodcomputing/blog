@@ -19,6 +19,27 @@ body {
   color: var(--darkgray);
 }
 
+/**
+ * Responsive visibility utility classes
+ * - .desktop-only: Hidden on mobile/tablet, visible on desktop
+ * - .mobile-only: Visible on mobile, hidden on tablet/desktop
+ */
+.desktop-only {
+  display: none;
+
+  @media all and not ($mobile) {
+    display: block;
+  }
+}
+
+.mobile-only {
+  display: block;
+
+  @media all and not ($mobile) {
+    display: none;
+  }
+}
+
 .text-highlight {
   background-color: var(--textHighlight);
   padding: 0 0.1rem;
@@ -186,7 +207,7 @@ a {
     }
 
     @media all and not ($desktop) {
-      padding: 0 1rem;
+      padding: 0 2rem;
     }
 
     @media all and ($mobile) {
