@@ -47,7 +47,7 @@ Where things get a little bit finicky, in my mind, is the top of the graph. In p
 
 To think about this with a real-world backing: this system puts forward that a region is comprised of 500,000 people in a city, and 7,500,000 in rural/suburban communities.
 
-![[public/assets/Pasted image 20260207124302.png]]
+![[assets/Pasted image 20260207124302.png]]
 
 (I don't typically condone the use of pie charts, but this particular viz doesn't feel like any hill worth dying on.)
 
