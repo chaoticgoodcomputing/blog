@@ -1,7 +1,7 @@
 ---
 title: "#economics"
 ---
-Economics is where I spent my [[content/notes/qamo|actual undergraduate career]]. While I work professionally as a [[tags/engineering/index|general software engineer]], the start of my career was in [[tags/economics/finance/index|finance/fintech]].
+Economics is where I spent my [[content/notes/qamo|actual undergraduate career]], and I worked as [[tags/economics/finance/index|a fintech data analyst and engineer]] in the early years of my career. While I work professionally as a more general [[tags/engineering/index|software engineer]] at this point, I still like to keep up with more econometrics and policy-focused topics.
 
 When I was studying economics, most of my academic focus was in [[tags/economics/markets/index|market design]] and non-monetary systems like:
 
