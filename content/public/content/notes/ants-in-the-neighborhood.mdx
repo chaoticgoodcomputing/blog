@@ -41,6 +41,73 @@ import { RandomWalk } from '@content/widgets/random-walk'
   showProbabilities={true}
 />
 
+<RandomWalk
+  nodes={[
+
+    // C1
+    { id: "P1", x: 10, y: 30, label: "P", shape: "pentagon", color: "#FFB6C1" },
+    { id: "H1_1", x: 10, y: 60, label: "H", shape: "hexagon", color: "#FFFFFF" },
+    { id: "H1_2", x: 10, y: 90, label: "H", shape: "hexagon", color: "#FFFFFF" },
+
+    // C2
+    { id: "H2_1", x: 20, y: 10, label: "H", shape: "hexagon", color: "#FFFFFF" },
+    { id: "H2_2", x: 20, y: 40, label: "H", shape: "hexagon", color: "#FFFFFF" },
+    { id: "P2", x: 20, y: 70, label: "P", shape: "pentagon", color: "#FFB6C1" },
+
+    // C3
+    { id: "P3", x: 30, y: 30, label: "P", shape: "pentagon", color: "#FFB6C1" },
+    { id: "H3_1", x: 30, y: 60, label: "H", shape: "hexagon", color: "#FFFFFF" },
+    { id: "H3_2", x: 30, y: 90, label: "H", shape: "hexagon", color: "#FFFFFF" },
+
+    // C4
+    { id: "H4_1", x: 40, y: 10, label: "H", shape: "hexagon", color: "#FFFFFF" },
+    { id: "H4_2", x: 40, y: 40, label: "H", shape: "hexagon", color: "#FFFFFF" },
+    { id: "P4", x: 40, y: 70, label: "P", shape: "pentagon", color: "#FFB6C1" },
+
+    // C5
+    { id: "P5", x: 50, y: 30, label: "P", shape: "pentagon", color: "#FFB6C1" },
+    { id: "H5_1", x: 50, y: 60, label: "H", shape: "hexagon", color: "#FFFFFF" },
+    { id: "H5_2", x: 50, y: 90, label: "H", shape: "hexagon", color: "#FFFFFF" },
+
+    // C6
+    { id: "H6_1", x: 60, y: 10, label: "H", shape: "hexagon", color: "#FFFFFF" },
+    { id: "H6_2", x: 60, y: 40, label: "H", shape: "hexagon", color: "#FFFFFF" },
+    { id: "P6", x: 60, y: 70, label: "P", shape: "pentagon", color: "#FFB6C1" },
+
+    // C7
+    { id: "P7", x: 70, y: 30, label: "P", shape: "pentagon", color: "#FFB6C1" },
+    { id: "H7_1", x: 70, y: 60, label: "H", shape: "hexagon", color: "#FFFFFF" },
+    { id: "H7_2", x: 70, y: 90, label: "H", shape: "hexagon", color: "#FFFFFF" },
+
+    // C8
+    { id: "H8_1", x: 80, y: 10, label: "H", shape: "hexagon", color: "#FFFFFF" },
+    { id: "H8_2", x: 80, y: 40, label: "H", shape: "hexagon", color: "#FFFFFF" },
+    { id: "P8", x: 80, y: 70, label: "P", shape: "pentagon", color: "#FFB6C1" },
+
+    // C9
+    { id: "P9", x: 90, y: 30, label: "P", shape: "pentagon", color: "#FFB6C1" },
+    { id: "H9_1", x: 90, y: 60, label: "H", shape: "hexagon", color: "#FFFFFF" },
+    { id: "H9_2", x: 90, y: 90, label: "H", shape: "hexagon", color: "#FFFFFF" },
+
+    // C10
+    { id: "H10_1", x: 100, y: 10, label: "H", shape: "hexagon", color: "#FFFFFF" },
+    { id: "H10_2", x: 100, y: 40, label: "H", shape: "hexagon", color: "#FFFFFF" },
+    { id: "P10", x: 100, y: 70, label: "P", shape: "pentagon", color: "#FFB6C1" },
+
+    // C10
+    { id: "P0", x: 55, y: 20, label: "P", shape: "pentagon", color: "#26fa57" },
+    { id: "P11", x: 55, y: 100, label: "P", shape: "pentagon", color: "#FFB6C1" },
+  ]}
+  edges={[
+    { from: "P", to: "H", weight: 1 },
+    { from: "H", to: "P", weight: 1 },
+  ]}
+  startNode="P0"
+  height={300}
+  stepDelay={500}
+  showProbabilities={true}
+/>
+
 ![[assets/Pasted image 20260202231208.png]]
 
 ![[assets/7B6FEA8A-188C-482C-B5B2-921E0598A456_1_201_a.jpeg]]

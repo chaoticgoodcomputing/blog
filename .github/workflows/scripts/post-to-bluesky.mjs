@@ -8,6 +8,7 @@ import { parseStringPromise } from "xml2js"
 const ATPROTO_IDENTIFIER = process.env.ATPROTO_IDENTIFIER
 const ATPROTO_POST_KEY = process.env.ATPROTO_POST_KEY
 const RSS_FILE = process.env.RSS_FILE
+const PAGES_DIR = process.env.PAGES_DIR || "pages-content"
 const DRY_RUN_DIR = "content/public/assets/bsky-tests"
 const BSKY_HANDLE = "chaoticgood.computer"
 
@@ -62,18 +63,42 @@ async function fetchUrlMetadata(url) {
 }
 
 /**
- * Upload an image blob and get the blob reference
+ * Get OG image path from pages checkout
+ * Converts URL slug to local filesystem path for index-og-image.webp
+ * e.g., https://blog.chaoticgood.computer/content/notes/example
+ * becomes PAGES_DIR/content/notes/example/index-og-image.webp
  */
-async function uploadImageBlob(accessJwt, did, imageUrl) {
-  try {
-    // Fetch the image
-    const response = await fetch(imageUrl)
-    if (!response.ok) {
-      return null
-    }
+function getOgImagePath(url) {
+  const urlObj = new URL(url)
+  const slug = urlObj.pathname.replace(/\/$/, "") // Remove trailing slash
+  return join(PAGES_DIR, slug, "index-og-image.webp")
+}
 
-    const imageData = await response.arrayBuffer()
-    const contentType = response.headers.get("content-type") || "image/jpeg"
+/**
+ * Upload an image blob and get the blob reference
+ * Accepts either a file path or a URL
+ */
+async function uploadImageBlob(accessJwt, did, imageSource) {
+  try {
+    let imageData
+    let contentType = "image/webp"
+
+    // Check if it's a local file path
+    if (!imageSource.startsWith("http")) {
+      if (!existsSync(imageSource)) {
+        console.warn(`Image file not found: ${imageSource}`)
+        return null
+      }
+      imageData = await readFile(imageSource)
+    } else {
+      // Fetch from URL
+      const response = await fetch(imageSource)
+      if (!response.ok) {
+        return null
+      }
+      imageData = await response.arrayBuffer()
+      contentType = response.headers.get("content-type") || "image/webp"
+    }
 
     // Upload to Bluesky
     const uploadResponse = await fetch("https://bsky.social/xrpc/com.atproto.repo.uploadBlob", {
@@ -101,37 +126,34 @@ async function uploadImageBlob(accessJwt, did, imageUrl) {
  * Create a post on Bluesky with external link embed
  */
 async function createPost(accessJwt, did, text, url, title, description) {
-  // Fetch metadata for the URL
-  console.log(`  📋 Fetching metadata...`)
-  const metadata = await fetchUrlMetadata(url)
-
   const record = {
     $type: "app.bsky.feed.post",
     text: text,
     createdAt: new Date().toISOString(),
   }
 
-  // Add external embed with metadata
-  if (metadata) {
-    const external = {
-      uri: url,
-      title: metadata.title,
-      description: metadata.description,
-    }
+  // Build external embed with title and description
+  const external = {
+    uri: url,
+    title: title,
+    description: description,
+  }
 
-    // Upload thumbnail image if available
-    if (metadata.image) {
-      console.log(`  🖼️  Uploading thumbnail...`)
-      const thumb = await uploadImageBlob(accessJwt, did, metadata.image)
-      if (thumb) {
-        external.thumb = thumb
-      }
+  // Use OG image from pages branch checkout
+  const ogImagePath = getOgImagePath(url)
+  if (existsSync(ogImagePath)) {
+    console.log(`  🖼️  Using OG image from pages: ${ogImagePath}`)
+    const thumb = await uploadImageBlob(accessJwt, did, ogImagePath)
+    if (thumb) {
+      external.thumb = thumb
     }
+  } else {
+    console.warn(`  ⚠️  OG image not found: ${ogImagePath}`)
+  }
 
-    record.embed = {
-      $type: "app.bsky.embed.external",
-      external: external,
-    }
+  record.embed = {
+    $type: "app.bsky.embed.external",
+    external: external,
   }
 
   const response = await fetch("https://bsky.social/xrpc/com.atproto.repo.createRecord", {
@@ -236,7 +258,7 @@ async function main() {
   console.log(`Found ${unpostedItems.length} new items to post`)
 
   if (dryRunMode) {
-    // Dry-run mode: save posts to JSON files instead of posting
+    // Dry-run mode: generate the exact records that would be posted
     if (!existsSync(DRY_RUN_DIR)) {
       await mkdir(DRY_RUN_DIR, { recursive: true })
     }
@@ -249,13 +271,31 @@ async function main() {
       total_rss_items: items.length,
       already_posted: postedUrls.size,
       new_posts: unpostedItems.length,
-      posts: unpostedItems.map((item) => ({
-        title: item.title[0],
-        link: item.link[0],
-        pubDate: item.pubDate?.[0],
-        description: item.description?.[0],
-        text: `New blog post: "${item.title[0]}"`,
-      })),
+      posts: unpostedItems.map((item) => {
+        const link = item.link[0]
+        const title = item.title[0]
+        const description = item.description?.[0] || ""
+        const text = `New blog post: "${title}"`
+        const ogImagePath = getOgImagePath(link)
+
+        // Build the exact record that would be posted to Bluesky
+        const record = {
+          $type: "app.bsky.feed.post",
+          text: text,
+          createdAt: new Date().toISOString(),
+          embed: {
+            $type: "app.bsky.embed.external",
+            external: {
+              uri: link,
+              title: title,
+              description: description,
+              og_image_path: ogImagePath,
+            },
+          },
+        }
+
+        return record
+      }),
     }
 
     await writeFile(outputFile, JSON.stringify(dryRunData, null, 2), "utf-8")
@@ -265,6 +305,7 @@ async function main() {
     unpostedItems.forEach((item, idx) => {
       console.log(`  ${idx + 1}. ${item.title[0]}`)
       console.log(`     ${item.link[0]}`)
+      console.log(`     OG image: ${getOgImagePath(item.link[0])}`)
     })
   } else {
     // Live mode: actually post to Bluesky

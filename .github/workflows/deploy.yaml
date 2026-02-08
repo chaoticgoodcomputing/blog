@@ -276,20 +276,22 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Checkout pages branch RSS feed
+      - name: Checkout pages branch (RSS + content for OG images)
         uses: actions/checkout@v4
         with:
           ref: pages
           sparse-checkout: |
             index.xml
+            content
           sparse-checkout-cone-mode: false
-          path: pages-rss
+          path: pages-content
 
-      - name: Check RSS and post to Bluesky
+      - name: Post to Bluesky
         env:
           ATPROTO_POST_KEY: ${{ secrets.ATPROTO_POST_KEY }}
           ATPROTO_IDENTIFIER: chaoticgood.computer
-          RSS_FILE: pages-rss/index.xml
+          RSS_FILE: pages-content/index.xml
+          PAGES_DIR: pages-content
         run: |
           node .github/workflows/scripts/post-to-bluesky.mjs
 
