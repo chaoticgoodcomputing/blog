@@ -6,7 +6,7 @@ date: 2021-07-29
 tags:
   - writing/tutorials
   - engineering/devops
-  - projects/college
+  - projects/undergrad
 ---
 
 > [!NOTE]

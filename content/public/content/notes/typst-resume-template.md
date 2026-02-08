@@ -5,7 +5,7 @@ description: |
 date: 2024-04-21
 tags:
   - writing/tutorials
-  - projects/college
+  - projects/undergrad
   - projects/teaching
   - writing/highlights
 aliases:

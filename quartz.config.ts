@@ -78,7 +78,7 @@ const config: QuartzConfig = {
         { tag: "engineering/languages/scratch", icon: "mdi:cat" },
         
         // Secondary project types
-        { tag: "projects/college", icon: "custom:uofu" },
+        { tag: "projects/undergrad", icon: "custom:uofu" },
         
         // Writing types
         { tag: "writing/annotations", icon: "mdi:chat-plus" },

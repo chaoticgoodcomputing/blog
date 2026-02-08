@@ -55,7 +55,7 @@ An example of this: initially, when I was using (largely) the graph rendering lo
 Since then — largely based on feedback from friends and family who grow less patient with "Can I show you my graph?" by the day — I cleaned up the graph (specifically the global, default view) by doing two things:
 
 - Any tag that is at the top of the tagging hierarchy ([[tags/engineering/index|engineering]], [[tags/economics/index|economics]]) "stick" to an outer shell, and a gravitational force pulls all other nodes (subtags and nodes) into the center. This forms something closer to a [ternary plot](https://en.wikipedia.org/wiki/Ternary_plot), with the strength of the connections pulling posts closer to the edge that most closely defines them
-- Filtering to only posts in the last year (by default) in order to effectively "destroy" stale nodes over time. This recurses upward — if any tag (or its subtags) don't have direct child post for a long enough period of time, it filters out ([[tags/projects/games/roblox/index|roblox]], [[tags/projects/college/index|college]])
+- Filtering to only posts in the last year (by default) in order to effectively "destroy" stale nodes over time. This recurses upward — if any tag (or its subtags) don't have direct child post for a long enough period of time, it filters out ([[tags/projects/games/roblox/index|roblox]], [[tags/projects/undergrad/index|college]])
 
 ![[assets/Pasted image 20260205202218.png]]
 

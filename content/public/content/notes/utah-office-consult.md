@@ -9,7 +9,7 @@ tags:
   - writing/annotations
   - engineering/languages/python
   - engineering/data
-  - projects/college
+  - projects/undergrad
 annotation-target: https://raw.githubusercontent.com/chaoticgoodcomputing/chaoticgoodcomputing.github.io/refs/heads/main/content/public/assets/utah_office_update.pdf
 ---
 

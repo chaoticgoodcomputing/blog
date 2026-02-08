@@ -5,7 +5,7 @@ description: |
 date: 2019-08-01
 tags:
   - engineering/languages/typescript
-  - projects/college
+  - projects/undergrad
 ---
 Beethoven was a project for [HackTheU 2019](https://hacktheu-2019.devpost.com/), where a team and I (mostly the team) created an application for providing live captions to deaf students by using a remote microphone to stream audio and captioning to a user's local device.
 

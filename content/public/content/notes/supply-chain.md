@@ -8,7 +8,7 @@ tags:
   - economics/finance
   - engineering/languages/python
   - engineering/data
-  - projects/college
+  - projects/undergrad
 ---
 Below, you'll find some graphs. These are what is known in the field of [[tags/engineering/data/index|data visualization]] as "bad."
 
