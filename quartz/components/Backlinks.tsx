@@ -30,7 +30,7 @@ export default ((opts?: Partial<BacklinksOptions>) => {
     const slug = simplifySlug(fileData.slug!)
     let backlinkFiles = allFiles.filter((file) => file.links?.includes(slug))
 
-    // Sort: public posts first, then by date descending
+    // Sort: public posts first, then by date descending, then reverse alphabetically
     backlinkFiles = backlinkFiles.sort((a, b) => {
       const aIsPrivate = a.frontmatter?.tags?.includes("private") ?? false
       const bIsPrivate = b.frontmatter?.tags?.includes("private") ?? false
@@ -43,7 +43,15 @@ export default ((opts?: Partial<BacklinksOptions>) => {
       // Then sort by date descending
       const aDate = a.dates?.modified ?? a.dates?.published ?? new Date(0)
       const bDate = b.dates?.modified ?? b.dates?.published ?? new Date(0)
-      return bDate.getTime() - aDate.getTime()
+      const dateDiff = bDate.getTime() - aDate.getTime()
+      if (dateDiff !== 0) {
+        return dateDiff
+      }
+
+      // Finally, sort reverse alphabetically by title
+      const aTitle = a.frontmatter?.title?.toLowerCase() ?? ""
+      const bTitle = b.frontmatter?.title?.toLowerCase() ?? ""
+      return bTitle.localeCompare(aTitle)
     })
 
     if (options.hideWhenEmpty && backlinkFiles.length == 0) {

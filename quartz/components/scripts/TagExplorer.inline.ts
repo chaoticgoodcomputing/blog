@@ -306,7 +306,7 @@ async function _appendChildNodes(
     }
   }
 
-  // Sort files: public first, then private; within each group, sort by date descending
+  // Sort files: public first, then by date descending, then reverse alphabetically
   filesWithTag.sort(([, a], [, b]) => {
     const aIsPrivate = a.tags.includes("private")
     const bIsPrivate = b.tags.includes("private")
@@ -317,10 +317,19 @@ async function _appendChildNodes(
     }
 
     // Within same privacy level, sort by date descending
-    if (!a.date && !b.date) return 0
+    if (!a.date && !b.date) {
+      // If both have no date, sort reverse alphabetically
+      return b.title.localeCompare(a.title, undefined, { numeric: true, sensitivity: "base" })
+    }
     if (!a.date) return 1
     if (!b.date) return -1
-    return new Date(b.date).getTime() - new Date(a.date).getTime()
+    const dateDiff = new Date(b.date).getTime() - new Date(a.date).getTime()
+    if (dateDiff !== 0) {
+      return dateDiff
+    }
+
+    // Finally, sort reverse alphabetically by title as tiebreaker
+    return b.title.localeCompare(a.title, undefined, { numeric: true, sensitivity: "base" })
   })
 
   // Add sorted file nodes

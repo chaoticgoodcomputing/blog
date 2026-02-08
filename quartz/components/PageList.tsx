@@ -19,10 +19,10 @@ export function byDateAndAlphabetical(cfg: GlobalConfiguration): SortFn {
       return 1
     }
 
-    // otherwise, sort lexographically by title
+    // otherwise, sort reverse alphabetically by title
     const f1Title = f1.frontmatter?.title.toLowerCase() ?? ""
     const f2Title = f2.frontmatter?.title.toLowerCase() ?? ""
-    return f1Title.localeCompare(f2Title)
+    return f2Title.localeCompare(f1Title)
   }
 }
 
@@ -45,10 +45,10 @@ export function byDateAndAlphabeticalFolderFirst(cfg: GlobalConfiguration): Sort
       return 1
     }
 
-    // otherwise, sort lexographically by title
+    // otherwise, sort reverse alphabetically by title
     const f1Title = f1.frontmatter?.title.toLowerCase() ?? ""
     const f2Title = f2.frontmatter?.title.toLowerCase() ?? ""
-    return f1Title.localeCompare(f2Title)
+    return f2Title.localeCompare(f1Title)
   }
 }
 

@@ -7,7 +7,6 @@ date: 2025-07-15
 tags:
   - engineering/ai
   - writing/highlights
-  - engineering/data
   - engineering/languages/csharp
   - engineering/languages/typescript
   - writing/annotations
