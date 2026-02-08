@@ -12,6 +12,7 @@ interface WidgetScriptConfig {
 
 function createWidgetScript(config: WidgetScriptConfig) {
   const cleanupHandlers = new WeakMap<HTMLElement, () => void>()
+  const elementCleanupKey = "__randomWalkCleanup"
 
   function cleanupInstance(element: HTMLElement): void {
     const cleanup = cleanupHandlers.get(element)
@@ -19,14 +20,26 @@ function createWidgetScript(config: WidgetScriptConfig) {
       cleanup()
       cleanupHandlers.delete(element)
     }
+    if (elementCleanupKey in element) {
+      delete (element as unknown as Record<string, unknown>)[elementCleanupKey]
+    }
   }
 
   function initializeAll(): void {
     const elements = document.querySelectorAll<HTMLElement>(config.selector)
     elements.forEach((element) => {
+      // Clean up any prior instance registered on the element (even across script reloads)
+      const existingCleanup = (element as unknown as Record<string, unknown>)[elementCleanupKey]
+      if (typeof existingCleanup === "function") {
+        existingCleanup()
+        delete (element as unknown as Record<string, unknown>)[elementCleanupKey]
+      }
       cleanupInstance(element)
       const cleanup = config.initialize(element)
-      if (cleanup) cleanupHandlers.set(element, cleanup)
+      if (cleanup) {
+        cleanupHandlers.set(element, cleanup)
+        ;(element as unknown as Record<string, unknown>)[elementCleanupKey] = cleanup
+      }
     })
   }
 
@@ -70,6 +83,19 @@ interface RandomWalkConfig {
   showProbabilities: boolean
   nodeRadius: number
   trackVisits: boolean
+  enableDrag: boolean
+  enableZoom: boolean
+  minScale: number
+  maxScale: number
+  initialScale: number
+  initialOffsetX: number
+  initialOffsetY: number
+  fitViewport: boolean
+  centerView: boolean
+  viewportBounds?: {
+    min: [number, number]  // [x, y]
+    max: [number, number]  // [x, y]
+  }
 }
 
 interface GraphNode extends NodeDefinition {
@@ -81,6 +107,170 @@ interface GraphNode extends NodeDefinition {
 interface GraphEdge extends EdgeDefinition {
   fromNode: GraphNode
   toNode: GraphNode
+}
+
+/**
+ * Viewport transform for pan and zoom operations
+ */
+class ViewportTransform {
+  // Viewport state (pan and zoom)
+  scale: number = 1
+  offsetX: number = 0
+  offsetY: number = 0
+
+  constructor(
+    private canvasWidth: number,
+    private canvasHeight: number,
+  ) {}
+
+  /**
+   * Update canvas dimensions
+   */
+  setCanvasDimensions(width: number, height: number): void {
+    this.canvasWidth = width
+    this.canvasHeight = height
+  }
+
+  /**
+   * Calculate the viewport bounds that should fit all nodes
+   */
+  calculateFitBounds(nodes: NodeDefinition[]): { scale: number; offsetX: number; offsetY: number } {
+    if (nodes.length === 0) {
+      return { scale: 1, offsetX: 0, offsetY: 0 }
+    }
+
+    // Find bounds of all nodes in simulation space
+    let minX = nodes[0].x
+    let maxX = nodes[0].x
+    let minY = nodes[0].y
+    let maxY = nodes[0].y
+
+    for (const node of nodes) {
+      minX = Math.min(minX, node.x)
+      maxX = Math.max(maxX, node.x)
+      minY = Math.min(minY, node.y)
+      maxY = Math.max(maxY, node.y)
+    }
+
+    // Add padding around nodes
+    const padding = 10
+    const width = maxX - minX + 2 * padding
+    const height = maxY - minY + 2 * padding
+
+    // Calculate scale to fit
+    const scaleX = this.canvasWidth / (width * (this.canvasWidth / 100))
+    const scaleY = this.canvasHeight / (height * (this.canvasHeight / 100))
+    const scale = Math.min(scaleX, scaleY)
+
+    // Center the bounds
+    const centerX = (minX + maxX) / 2
+    const centerY = (minY + maxY) / 2
+
+    return {
+      scale,
+      offsetX: 50 - centerX,
+      offsetY: 50 - centerY,
+    }
+  }
+
+  /**
+   * Calculate viewport to fit a specific bounding box
+   */
+  calculateBoundsBounds(bounds: { min: [number, number]; max: [number, number] }): { scale: number; offsetX: number; offsetY: number } {
+    const [minX, minY] = bounds.min
+    const [maxX, maxY] = bounds.max
+
+    // Calculate the size of the region in simulation space
+    const width = maxX - minX
+    const height = maxY - minY
+
+    if (width <= 0 || height <= 0) {
+      return { scale: 1, offsetX: 0, offsetY: 0 }
+    }
+
+    // Calculate scale to fit the region to the canvas
+    // The region should fill the canvas
+    const scaleX = 100 / width
+    const scaleY = 100 / height
+    const scale = Math.min(scaleX, scaleY)
+
+    // Calculate offsets to position the region
+    // We want minX to map to the left edge (screen 0) and maxX to the right edge (screen width)
+    // simToScreen equation: screenX = ((simX + offsetX) * scale / 100) * canvasWidth
+    // For left edge: 0 = ((minX + offsetX) * scale / 100) * canvasWidth
+    // Solving: offsetX = -minX
+    // But we want to center it, so we add half the difference
+    const centerX = (minX + maxX) / 2
+    const centerY = (minY + maxY) / 2
+
+    return {
+      scale,
+      offsetX: -centerX + (50 / scale),
+      offsetY: -centerY + (50 / scale),
+    }
+  }
+
+  /**
+   * Calculate center offset for the graph
+   */
+  calculateCenterOffset(): { offsetX: number; offsetY: number } {
+    return {
+      offsetX: 0,
+      offsetY: 0,
+    }
+  }
+
+  /**
+   * Transform simulation coordinates to screen coordinates
+   */
+  simToScreen(simX: number, simY: number): { screenX: number; screenY: number } {
+    // Apply viewport transform: offset then scale
+    const transformedX = (simX + this.offsetX) * this.scale
+    const transformedY = (simY + this.offsetY) * this.scale
+
+    // Map from simulation space (0-100) to canvas space
+    const screenX = (transformedX / 100) * this.canvasWidth
+    const screenY = (transformedY / 100) * this.canvasHeight
+
+    return { screenX, screenY }
+  }
+
+  /**
+   * Transform screen coordinates to simulation coordinates
+   */
+  screenToSim(screenX: number, screenY: number): { simX: number; simY: number } {
+    // Map from canvas space to simulation space (0-100)
+    const simX = (screenX / this.canvasWidth) * 100 / this.scale - this.offsetX
+    const simY = (screenY / this.canvasHeight) * 100 / this.scale - this.offsetY
+
+    return { simX, simY }
+  }
+
+  /**
+   * Zoom by a scale factor (center on a point)
+   */
+  zoom(factor: number, centerScreenX: number, centerScreenY: number, minScale: number, maxScale: number): void {
+    // Convert center point to sim coordinates BEFORE zoom
+    const { simX: centerSimX, simY: centerSimY } = this.screenToSim(centerScreenX, centerScreenY)
+
+    // Apply zoom
+    const newScale = Math.max(minScale, Math.min(maxScale, this.scale * factor))
+    this.scale = newScale
+
+    // Recalculate what the offset should be to keep the center point at the same screen position
+    // simToScreen equation: screenX = ((simX + offsetX) * scale / 100) * canvasWidth
+    // Solving for offsetX: offsetX = (screenX * 100) / (scale * canvasWidth) - simX
+    this.offsetX = (centerScreenX * 100) / (this.scale * this.canvasWidth) - centerSimX
+    this.offsetY = (centerScreenY * 100) / (this.scale * this.canvasHeight) - centerSimY
+  }
+
+  /**
+   * Pan by simulation space units
+   */
+  pan(deltaSimX: number, deltaSimY: number): void {
+    this.offsetX += deltaSimX
+    this.offsetY += deltaSimY
+  }
 }
 
 /**
@@ -98,6 +288,7 @@ class RandomWalkSimulation {
   private isPlaying: boolean = false
   private playInterval: number | null = null
   private resizeObserver: ResizeObserver | null = null
+  private viewport: ViewportTransform
 
   // UI elements
   private stepCountEl: HTMLElement | null = null
@@ -113,6 +304,19 @@ class RandomWalkSimulation {
   private animationToNode: GraphNode | null = null
   private animationFrame: number | null = null
 
+  // Pan and zoom state
+  private isPanning: boolean = false
+  private panStartX: number = 0
+  private panStartY: number = 0
+  private panStartOffsetX: number = 0
+  private panStartOffsetY: number = 0
+
+  // Bound event handlers (for reliable add/remove)
+  private onWheel: (event: WheelEvent) => void
+  private onMouseDown: (event: MouseEvent) => void
+  private onMouseMove: (event: MouseEvent) => void
+  private onMouseUp: () => void
+
   constructor(
     container: HTMLElement,
     canvas: HTMLCanvasElement,
@@ -125,6 +329,14 @@ class RandomWalkSimulation {
     this.config = config
     this.currentNodeId = config.startNode
 
+    // Initialize viewport transform
+    this.viewport = new ViewportTransform(canvas.width, canvas.height)
+
+    this.onWheel = (event: WheelEvent) => this.handleWheel(event)
+    this.onMouseDown = (event: MouseEvent) => this.handleMouseDown(event)
+    this.onMouseMove = (event: MouseEvent) => this.handleMouseMove(event)
+    this.onMouseUp = () => this.handleMouseUp()
+
     // Get UI elements
     this.stepCountEl = container.querySelector(".random-walk-step-count")
     this.currentNodeEl = container.querySelector(".random-walk-current-node")
@@ -135,6 +347,9 @@ class RandomWalkSimulation {
     this.setupResizeObserver()
     this.updateDimensions()
     this.buildGraph()
+    this.applyInitialViewport()
+    this.setupMouseHandlers()
+    canvas.style.cursor = 'grab'
     this.draw()
   }
 
@@ -157,30 +372,114 @@ class RandomWalkSimulation {
     const parentWidth = parent.clientWidth
     this.canvas.width = parentWidth
     this.canvas.height = this.config.height
+
+    // Update viewport canvas dimensions
+    this.viewport.setCanvasDimensions(parentWidth, this.config.height)
+  }
+
+  private applyInitialViewport(): void {
+    if (this.config.viewportBounds) {
+      const bounds = this.viewport.calculateBoundsBounds(this.config.viewportBounds)
+      this.viewport.scale = bounds.scale
+      this.viewport.offsetX = bounds.offsetX
+      this.viewport.offsetY = bounds.offsetY
+    } else if (this.config.fitViewport) {
+      const bounds = this.viewport.calculateFitBounds(this.config.nodes)
+      this.viewport.scale = bounds.scale
+      this.viewport.offsetX = bounds.offsetX
+      this.viewport.offsetY = bounds.offsetY
+    } else if (this.config.centerView) {
+      const center = this.viewport.calculateCenterOffset()
+      this.viewport.offsetX = center.offsetX
+      this.viewport.offsetY = center.offsetY
+    } else {
+      // Use explicit initial values
+      this.viewport.scale = this.config.initialScale
+      this.viewport.offsetX = this.config.initialOffsetX
+      this.viewport.offsetY = this.config.initialOffsetY
+    }
   }
 
   private updateNodePositions(): void {
-    const width = this.canvas.width
-    const height = this.canvas.height
-    const padding = this.config.nodeRadius + 10
+    // Transform simulation coordinates to screen coordinates using viewport
+    for (const node of this.nodes.values()) {
+      const { screenX, screenY } = this.viewport.simToScreen(node.x, node.y)
+      node.screenX = screenX
+      node.screenY = screenY
+    }
+  }
 
-    this.nodes.forEach((node) => {
-      node.screenX = padding + (node.x / 100) * (width - 2 * padding)
-      node.screenY = padding + (node.y / 100) * (height - 2 * padding)
-    })
+  private setupMouseHandlers(): void {
+    if (!this.config.enableDrag && !this.config.enableZoom) {
+      return
+    }
+
+    if (this.config.enableZoom) {
+      this.canvas.addEventListener("wheel", this.onWheel)
+    }
+
+    if (this.config.enableDrag) {
+      this.canvas.addEventListener("mousedown", this.onMouseDown)
+      document.addEventListener("mousemove", this.onMouseMove)
+      document.addEventListener("mouseup", this.onMouseUp)
+    }
+  }
+
+  private handleWheel(event: WheelEvent): void {
+    event.preventDefault()
+
+    // Zoom towards center of viewport
+    const rect = this.canvas.getBoundingClientRect()
+    const centerX = rect.width / 2
+    const centerY = rect.height / 2
+
+    // Smaller zoom factor for smoother control (5% instead of 10%)
+    const factor = event.deltaY > 0 ? 0.98 : 1.02
+    this.viewport.zoom(factor, centerX, centerY, this.config.minScale, this.config.maxScale)
+
+    this.updateNodePositions()
+    this.draw()
+  }
+
+  private handleMouseDown(event: MouseEvent): void {
+    this.isPanning = true
+    this.panStartX = event.clientX
+    this.panStartY = event.clientY
+    this.panStartOffsetX = this.viewport.offsetX
+    this.panStartOffsetY = this.viewport.offsetY
+    this.canvas.style.cursor = 'grabbing'
+  }
+
+  private handleMouseMove(event: MouseEvent): void {
+    if (!this.isPanning) return
+
+    const deltaX = event.clientX - this.panStartX
+    const deltaY = event.clientY - this.panStartY
+
+    // Convert screen delta to simulation delta
+    const rect = this.canvas.getBoundingClientRect()
+    const simDeltaX = (deltaX / rect.width) * (100 / this.viewport.scale)
+    const simDeltaY = (deltaY / rect.height) * (100 / this.viewport.scale)
+
+    this.viewport.offsetX = this.panStartOffsetX + simDeltaX
+    this.viewport.offsetY = this.panStartOffsetY + simDeltaY
+
+    this.updateNodePositions()
+    this.draw()
+  }
+
+  private handleMouseUp(): void {
+    this.isPanning = false
+    this.canvas.style.cursor = 'grab'
   }
 
   private buildGraph(): void {
-    const width = this.canvas.width
-    const height = this.canvas.height
-    const padding = this.config.nodeRadius + 10
-
     // Create nodes
     for (const nodeDef of this.config.nodes) {
       const node: GraphNode = {
         ...nodeDef,
-        screenX: padding + (nodeDef.x / 100) * (width - 2 * padding),
-        screenY: padding + (nodeDef.y / 100) * (height - 2 * padding),
+        screenX: 0,  // Will be set by updateNodePositions
+        screenY: 0,  // Will be set by updateNodePositions
         visitCount: nodeDef.id === this.config.startNode ? 1 : 0,
       }
       this.nodes.set(nodeDef.id, node)
@@ -236,6 +535,7 @@ class RandomWalkSimulation {
 
   private drawEdges(): void {
     const ctx = this.ctx
+    const scaledRadius = this.config.nodeRadius * this.viewport.scale
 
     for (const edge of this.edges) {
       const from = edge.fromNode
@@ -243,7 +543,7 @@ class RandomWalkSimulation {
 
       ctx.beginPath()
       ctx.strokeStyle = this.getEdgeColor()
-      ctx.lineWidth = 2
+      ctx.lineWidth = 2 * this.viewport.scale
 
       // Calculate edge start/end points (offset from node center)
       const dx = to.screenX - from.screenX
@@ -252,10 +552,10 @@ class RandomWalkSimulation {
       const unitX = dx / dist
       const unitY = dy / dist
 
-      const startX = from.screenX + unitX * this.config.nodeRadius
-      const startY = from.screenY + unitY * this.config.nodeRadius
-      const endX = to.screenX - unitX * this.config.nodeRadius
-      const endY = to.screenY - unitY * this.config.nodeRadius
+      const startX = from.screenX + unitX * scaledRadius
+      const startY = from.screenY + unitY * scaledRadius
+      const endX = to.screenX - unitX * scaledRadius
+      const endY = to.screenY - unitY * scaledRadius
 
       ctx.moveTo(startX, startY)
       ctx.lineTo(endX, endY)
@@ -282,7 +582,7 @@ class RandomWalkSimulation {
         }
 
         ctx.fillStyle = this.getTextColor()
-        ctx.font = "12px sans-serif"
+        ctx.font = `${12 * this.viewport.scale}px sans-serif`
         ctx.textAlign = "center"
         ctx.textBaseline = "middle"
 
@@ -303,7 +603,7 @@ class RandomWalkSimulation {
 
   private drawArrowHead(x: number, y: number, unitX: number, unitY: number): void {
     const ctx = this.ctx
-    const arrowSize = 10
+    const arrowSize = 10 * this.viewport.scale
 
     ctx.beginPath()
     ctx.fillStyle = this.getEdgeColor()
@@ -324,7 +624,7 @@ class RandomWalkSimulation {
 
   private drawNodes(): void {
     const ctx = this.ctx
-    const radius = this.config.nodeRadius
+    const radius = this.config.nodeRadius * this.viewport.scale
 
     for (const node of this.nodes.values()) {
       const isCurrent = node.id === this.currentNodeId
@@ -361,7 +661,7 @@ class RandomWalkSimulation {
       // Draw label
       if (node.label) {
         ctx.fillStyle = this.getNodeTextColor()
-        ctx.font = "bold 14px sans-serif"
+        ctx.font = `bold ${14 * this.viewport.scale}px sans-serif`
         ctx.textAlign = "center"
         ctx.textBaseline = "middle"
         ctx.fillText(node.label, node.screenX, node.screenY)
@@ -374,14 +674,14 @@ class RandomWalkSimulation {
         ctx.arc(
           node.screenX + radius * 0.7,
           node.screenY - radius * 0.7,
-          10,
+          10 * this.viewport.scale,
           0,
           Math.PI * 2,
         )
         ctx.fill()
 
         ctx.fillStyle = "#fff"
-        ctx.font = "bold 10px sans-serif"
+        ctx.font = `bold ${10 * this.viewport.scale}px sans-serif`
         ctx.fillText(
           String(node.visitCount),
           node.screenX + radius * 0.7,
@@ -446,53 +746,54 @@ class RandomWalkSimulation {
     }
 
     // Draw ant body
-    const antSize = 12
+    const antSize = 12 * this.viewport.scale
+    const scaledNodeRadius = this.config.nodeRadius * this.viewport.scale
     ctx.save()
-    ctx.translate(x, y - this.config.nodeRadius - antSize - 5)
+    ctx.translate(x, y - scaledNodeRadius - antSize - 5)
 
     // Ant body (three ovals)
     ctx.fillStyle = "#2a2a2a"
     
     // Head
     ctx.beginPath()
-    ctx.ellipse(0, -8, 4, 3.5, 0, 0, Math.PI * 2)
+    ctx.ellipse(0, -8 * this.viewport.scale, 4 * this.viewport.scale, 3.5 * this.viewport.scale, 0, 0, Math.PI * 2)
     ctx.fill()
 
     // Thorax
     ctx.beginPath()
-    ctx.ellipse(0, -2, 3.5, 4, 0, 0, Math.PI * 2)
+    ctx.ellipse(0, -2 * this.viewport.scale, 3.5 * this.viewport.scale, 4 * this.viewport.scale, 0, 0, Math.PI * 2)
     ctx.fill()
 
     // Abdomen
     ctx.beginPath()
-    ctx.ellipse(0, 6, 5, 6, 0, 0, Math.PI * 2)
+    ctx.ellipse(0, 6 * this.viewport.scale, 5 * this.viewport.scale, 6 * this.viewport.scale, 0, 0, Math.PI * 2)
     ctx.fill()
 
     // Legs (6 legs)
     ctx.strokeStyle = "#2a2a2a"
-    ctx.lineWidth = 1.5
+    ctx.lineWidth = 1.5 * this.viewport.scale
     const legPositions = [-4, -1, 2]
     legPositions.forEach((yPos) => {
       // Left leg
       ctx.beginPath()
-      ctx.moveTo(-3, yPos)
-      ctx.quadraticCurveTo(-8, yPos - 2, -10, yPos + 3)
+      ctx.moveTo(-3 * this.viewport.scale, yPos * this.viewport.scale)
+      ctx.quadraticCurveTo(-8 * this.viewport.scale, (yPos - 2) * this.viewport.scale, -10 * this.viewport.scale, (yPos + 3) * this.viewport.scale)
       ctx.stroke()
       // Right leg
       ctx.beginPath()
-      ctx.moveTo(3, yPos)
-      ctx.quadraticCurveTo(8, yPos - 2, 10, yPos + 3)
+      ctx.moveTo(3 * this.viewport.scale, yPos * this.viewport.scale)
+      ctx.quadraticCurveTo(8 * this.viewport.scale, (yPos - 2) * this.viewport.scale, 10 * this.viewport.scale, (yPos + 3) * this.viewport.scale)
       ctx.stroke()
     })
 
     // Antennae
     ctx.beginPath()
-    ctx.moveTo(-2, -10)
-    ctx.quadraticCurveTo(-4, -16, -6, -18)
+    ctx.moveTo(-2 * this.viewport.scale, -10 * this.viewport.scale)
+    ctx.quadraticCurveTo(-4 * this.viewport.scale, -16 * this.viewport.scale, -6 * this.viewport.scale, -18 * this.viewport.scale)
     ctx.stroke()
     ctx.beginPath()
-    ctx.moveTo(2, -10)
-    ctx.quadraticCurveTo(4, -16, 6, -18)
+    ctx.moveTo(2 * this.viewport.scale, -10 * this.viewport.scale)
+    ctx.quadraticCurveTo(4 * this.viewport.scale, -16 * this.viewport.scale, 6 * this.viewport.scale, -18 * this.viewport.scale)
     ctx.stroke()
 
     ctx.restore()
@@ -635,6 +936,15 @@ class RandomWalkSimulation {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect()
     }
+    // Clean up event listeners
+    if (this.config.enableZoom) {
+      this.canvas.removeEventListener("wheel", this.onWheel)
+    }
+    if (this.config.enableDrag) {
+      this.canvas.removeEventListener("mousedown", this.onMouseDown)
+      document.removeEventListener("mousemove", this.onMouseMove)
+      document.removeEventListener("mouseup", this.onMouseUp)
+    }
   }
 
   // Color helpers for theming
@@ -708,11 +1018,22 @@ createWidgetScript({
     const playBtn = element.querySelector(".random-walk-play")
     const pauseBtn = element.querySelector(".random-walk-pause")
 
-    resetBtn?.addEventListener("click", () => simulation.reset())
-    stepBtn?.addEventListener("click", () => simulation.step())
-    playBtn?.addEventListener("click", () => simulation.play())
-    pauseBtn?.addEventListener("click", () => simulation.pause())
+    const onReset = () => simulation.reset()
+    const onStep = () => simulation.step()
+    const onPlay = () => simulation.play()
+    const onPause = () => simulation.pause()
 
-    return () => simulation.destroy()
+    resetBtn?.addEventListener("click", onReset)
+    stepBtn?.addEventListener("click", onStep)
+    playBtn?.addEventListener("click", onPlay)
+    pauseBtn?.addEventListener("click", onPause)
+
+    return () => {
+      resetBtn?.removeEventListener("click", onReset)
+      stepBtn?.removeEventListener("click", onStep)
+      playBtn?.removeEventListener("click", onPlay)
+      pauseBtn?.removeEventListener("click", onPause)
+      simulation.destroy()
+    }
   },
 }).start()

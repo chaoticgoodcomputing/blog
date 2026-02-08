@@ -54,6 +54,29 @@ export interface RandomWalkProps {
   nodeRadius?: number
   /** Whether to track visit counts. @default true */
   trackVisits?: boolean
+  /** Enable interactive panning (click+drag). @default true */
+  enableDrag?: boolean
+  /** Enable interactive zooming (mouse wheel). @default true */
+  enableZoom?: boolean
+  /** Minimum zoom scale. @default 0.5 */
+  minScale?: number
+  /** Maximum zoom scale. @default 3 */
+  maxScale?: number
+  /** Initial viewport scale/zoom level. @default 1 */
+  initialScale?: number
+  /** Initial viewport X offset in simulation coordinates. @default 0 */
+  initialOffsetX?: number
+  /** Initial viewport Y offset in simulation coordinates. @default 0 */
+  initialOffsetY?: number
+  /** If true, auto-fit all nodes to viewport. @default false */
+  fitViewport?: boolean
+  /** If true, center the graph in the viewport. @default false */
+  centerView?: boolean
+  /** Define initial viewport bounds (overrides fitViewport and centerView if set) */
+  viewportBounds?: {
+    min: [number, number]  // [x, y]
+    max: [number, number]  // [x, y]
+  }
 }
 
 /**
@@ -92,6 +115,16 @@ export function RandomWalk(props: RandomWalkProps): JSX.Element {
     showProbabilities = false,
     nodeRadius = 20,
     trackVisits = true,
+    enableDrag = true,
+    enableZoom = true,
+    minScale = 0.5,
+    maxScale = 3,
+    initialScale = 1,
+    initialOffsetX = 0,
+    initialOffsetY = 0,
+    fitViewport = false,
+    centerView = false,
+    viewportBounds,
   } = props
 
   // Serialize configuration for the client script
@@ -105,6 +138,16 @@ export function RandomWalk(props: RandomWalkProps): JSX.Element {
     showProbabilities,
     nodeRadius,
     trackVisits,
+    enableDrag,
+    enableZoom,
+    minScale,
+    maxScale,
+    initialScale,
+    initialOffsetX,
+    initialOffsetY,
+    fitViewport,
+    centerView,
+    viewportBounds,
   }
 
   return (
