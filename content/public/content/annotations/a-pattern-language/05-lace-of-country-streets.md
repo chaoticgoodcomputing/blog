@@ -1,6 +1,6 @@
 ---
 title: "APL: Pattern 5; Lace of Country Streets"
-date: 1970-01-02
+date: 2026-02-08
 tags:
   - writing/annotations/a-pattern-language
   - projects/games/the-neighborhood
