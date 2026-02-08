@@ -395,7 +395,8 @@ jobs:
 
       - name: Submit URLs to IndexNow
         run: |
-          pnpm nx run site:indexnow --sitemap=pages-sitemap/sitemap.xml
+          TODAY=$(date +%Y-%m-%d)
+          pnpm nx run site:indexnow --sitemap=pages-sitemap/sitemap.xml --today=$TODAY
 
       - name: Summary
         run: |

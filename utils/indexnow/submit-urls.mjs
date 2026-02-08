@@ -4,10 +4,13 @@
  * IndexNow URL Submission Utility
  * 
  * Submits URLs to IndexNow API for instant indexing by Bing, Yandex, and other search engines.
- * Parses sitemap.xml to extract URLs and submits them in batches.
+ * Parses sitemap.xml to extract URLs and optionally filters by modification date.
  * 
  * Usage:
- *   node submit-urls.mjs <sitemap-path>
+ *   node submit-urls.mjs <sitemap-path> [--today YYYY-MM-DD]
+ *   
+ * Arguments:
+ *   --today YYYY-MM-DD - Only submit URLs modified on this date (ISO 8601 date format)
  *   
  * Environment:
  *   INDEXNOW_DRY_RUN - Set to 'true' to skip actual API submission
@@ -24,11 +27,38 @@ const BATCH_SIZE = parseInt(process.env.INDEXNOW_BATCH_SIZE || '10000', 10);
 const DRY_RUN = process.env.INDEXNOW_DRY_RUN === 'true';
 
 /**
- * Parse sitemap XML and extract all URLs
+ * Parse sitemap XML and extract all URLs with their lastmod dates
  */
 function parseSitemapUrls(sitemapXml) {
-  const urlMatches = sitemapXml.matchAll(/<loc>(.*?)<\/loc>/g);
-  return Array.from(urlMatches, match => match[1]);
+  const urlMatches = sitemapXml.matchAll(/<url>(.*?)<\/url>/gs);
+  const urls = [];
+  
+  for (const match of urlMatches) {
+    const urlBlock = match[1];
+    const locMatch = urlBlock.match(/<loc>(.*?)<\/loc>/);
+    const lastmodMatch = urlBlock.match(/<lastmod>(.*?)<\/lastmod>/);
+    
+    if (locMatch) {
+      urls.push({
+        loc: locMatch[1],
+        lastmod: lastmodMatch ? lastmodMatch[1] : null
+      });
+    }
+  }
+  
+  return urls;
+}
+
+/**
+ * Filter URLs by modification date
+ * @param {Array} urls - Array of {loc, lastmod} objects
+ * @param {string} filterDate - ISO 8601 date (YYYY-MM-DD) to filter by
+ * @returns {Array} - Filtered URLs matching the date
+ */
+function filterUrlsByDate(urls, filterDate) {
+  return urls
+    .filter(url => url.lastmod && url.lastmod.startsWith(filterDate))
+    .map(url => url.loc);
 }
 
 /**
@@ -81,9 +111,21 @@ async function submitToIndexNow(urls) {
  */
 async function main() {
   const sitemapPath = process.argv[2];
+  let filterDate = null;
+
+  // Parse --today argument
+  const todayIndex = process.argv.indexOf('--today');
+  if (todayIndex !== -1 && process.argv[todayIndex + 1]) {
+    filterDate = process.argv[todayIndex + 1];
+    // Validate date format
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(filterDate)) {
+      console.error('❌ Invalid date format. Use YYYY-MM-DD');
+      process.exit(1);
+    }
+  }
 
   if (!sitemapPath) {
-    console.error('Usage: node submit-urls.mjs <sitemap-path>');
+    console.error('Usage: node submit-urls.mjs <sitemap-path> [--today YYYY-MM-DD]');
     process.exit(1);
   }
 
@@ -92,6 +134,7 @@ async function main() {
   console.log(`   Host: ${SITE_HOST}`);
   console.log(`   Key: ${INDEXNOW_API_KEY}`);
   console.log(`   Batch size: ${BATCH_SIZE}`);
+  if (filterDate) console.log(`   Filter by date: ${filterDate}`);
   if (DRY_RUN) console.log('   Mode: DRY RUN');
   console.log();
 
@@ -100,9 +143,24 @@ async function main() {
     const sitemapXml = await readFile(resolvedPath, 'utf-8');
 
     console.log('📖 Parsing sitemap...');
-    const urls = parseSitemapUrls(sitemapXml);
-    console.log(`   Found ${urls.length} URLs`);
+    const allUrls = parseSitemapUrls(sitemapXml);
+    console.log(`   Found ${allUrls.length} total URLs`);
+    
+    // Filter by date if requested
+    let urls = allUrls.map(url => url.loc);
+    if (filterDate) {
+      urls = filterUrlsByDate(allUrls, filterDate);
+      console.log(`   Filtered to ${urls.length} URLs modified on ${filterDate}`);
+    }
     console.log();
+
+    if (urls.length === 0) {
+      console.log('⚠️  No URLs to submit');
+      if (filterDate) {
+        console.log(`    (No URLs found with lastmod date: ${filterDate})`);
+      }
+      return;
+    }
 
     // Submit in batches
     for (let i = 0; i < urls.length; i += BATCH_SIZE) {
