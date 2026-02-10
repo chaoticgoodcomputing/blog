@@ -1,6 +1,6 @@
 ---
 title: "ACME Product Notes"
-date: "2026-02-06T00:00:00.000Z"
+date: "2025-04-21T00:00:00.000Z"
 tags:
   - "projects/dayjob"
   - "engineering/languages/csharp"
