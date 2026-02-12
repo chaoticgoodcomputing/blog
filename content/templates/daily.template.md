@@ -128,9 +128,3 @@ Tasks for the day:
 > #### Evening Block
 > 
 > - 
-
-## In Review
-
-In review:
-
-- 
