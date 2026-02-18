@@ -1,6 +1,7 @@
 import { WidgetRegistry } from "./types"
 import { pdfViewer } from "./pdf-viewer"
 import { globalInitialization } from "./global-initialization"
+import { blueskyPost } from "./bluesky-post"
 
 /**
  * Central widget registry for MDX.
@@ -22,6 +23,7 @@ import { globalInitialization } from "./global-initialization"
 export const widgets: WidgetRegistry = {
   "@widgets/pdf-viewer": pdfViewer,
   "@widgets/global-initialization": globalInitialization,
+  "@widgets/bluesky-post": blueskyPost,
 }
 
 /**

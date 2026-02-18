@@ -1,0 +1,427 @@
+@import "../base/widget-base.scss";
+
+/**
+ * BlueSky Post Widget Styles
+ * 
+ * Displays a single BlueSky post with optional thread context.
+ * 
+ * States:
+ * - Loading: Spinner animation
+ * - Error: Styled error message
+ * - Loaded: Post card with optional parent/reply posts
+ */
+
+.widget-bluesky-post {
+  // Isolation - REQUIRED to prevent widget styles from affecting page layout
+  contain: layout style;
+
+  // Positioning
+  position: relative;
+
+  // Spacing
+  margin: 1rem 0;
+
+  // Center the widget
+  margin-left: auto;
+  margin-right: auto;
+
+  // Loading state
+  .bluesky-post-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    gap: 1rem;
+    background: var(--light);
+    border: 1px solid var(--lightgray);
+    border-radius: 8px;
+
+    .loading-spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--lightgray);
+      border-top-color: var(--secondary);
+      border-radius: 50%;
+      animation: widget-bluesky-post-spin 0.8s linear infinite;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.875rem;
+      color: var(--gray);
+    }
+  }
+
+  // Error state
+  .error-state {
+    padding: 2rem;
+    background: var(--light);
+    border: 1px solid var(--lightgray);
+    border-radius: 8px;
+    text-align: center;
+
+    p {
+      margin: 0 0 0.5rem 0;
+      color: var(--darkgray);
+      font-size: 0.9375rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .error-details {
+      font-size: 0.8125rem;
+      color: var(--gray);
+      font-family: var(--codeFont);
+    }
+  }
+
+  // Individual post card
+  .bluesky-post {
+    padding: 1rem;
+    background: var(--light);
+    border: 1px solid var(--lightgray);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: var(--secondary);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .post-context {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.8125rem;
+      color: var(--gray);
+
+      .context-icon {
+        width: 16px;
+        height: 16px;
+        fill: currentColor;
+        flex-shrink: 0;
+      }
+
+      span {
+        font-weight: 500;
+      }
+    }
+
+    .post-author {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+
+      .author-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+
+      .author-info {
+        flex: 1;
+        min-width: 0;
+
+        .author-name {
+          font-weight: 600;
+          font-size: 0.9375rem;
+          color: var(--dark);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .author-handle {
+          font-size: 0.8125rem;
+          color: var(--gray);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    .post-content {
+      margin-bottom: 1rem;
+
+      p {
+        margin: 0 0 0.75rem 0;
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        color: var(--darkgray);
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      // Images embedded in posts
+      .post-images {
+        margin-top: 1rem;
+        display: grid;
+        gap: 0.5rem;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+
+        .post-image {
+          width: 100%;
+          height: auto;
+          border-radius: 8px;
+          border: 1px solid var(--lightgray);
+        }
+      }
+
+      // External link preview cards
+      .post-external-link {
+        display: flex;
+        margin-top: 1rem;
+        padding: 1rem;
+        background: var(--highlight);
+        border: 1px solid var(--lightgray);
+        border-radius: 8px;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.2s ease;
+        gap: 1rem;
+
+        &:hover {
+          background: var(--light);
+          border-color: var(--secondary);
+        }
+
+        .link-thumb {
+          flex-shrink: 0;
+          width: 100px;
+          height: 100px;
+          object-fit: cover;
+          border-radius: 6px;
+        }
+
+        .link-details {
+          flex: 1;
+          min-width: 0;
+
+          .link-title {
+            font-weight: 600;
+            font-size: 0.9375rem;
+            margin-bottom: 0.375rem;
+            color: var(--dark);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+          }
+
+          .link-description {
+            font-size: 0.8125rem;
+            color: var(--gray);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+          }
+        }
+      }
+
+      // Quoted post embed
+      .quoted-post {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: var(--highlight);
+        border: 1px solid var(--lightgray);
+        border-radius: 8px;
+        border-left: 4px solid var(--secondary);
+
+        .quoted-author {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin-bottom: 0.75rem;
+
+          .quoted-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+          }
+
+          .quoted-author-info {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            min-width: 0;
+            flex: 1;
+
+            .quoted-author-name {
+              font-weight: 600;
+              font-size: 0.875rem;
+              color: var(--dark);
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+
+            .quoted-author-handle {
+              font-size: 0.8125rem;
+              color: var(--gray);
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          }
+        }
+
+        .quoted-content {
+          p {
+            margin: 0 0 0.75rem 0;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            color: var(--darkgray);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+
+          .quoted-external-link {
+            display: flex;
+            padding: 0.75rem;
+            background: var(--light);
+            border: 1px solid var(--lightgray);
+            border-radius: 6px;
+            text-decoration: none;
+            color: inherit;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+
+            &:hover {
+              background: var(--highlight);
+            }
+
+            .quoted-link-thumb {
+              flex-shrink: 0;
+              width: 70px;
+              height: 70px;
+              object-fit: cover;
+              border-radius: 4px;
+            }
+
+            .quoted-link-details {
+              flex: 1;
+              min-width: 0;
+
+              .quoted-link-title {
+                font-weight: 600;
+                font-size: 0.8125rem;
+                color: var(--dark);
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                line-clamp: 2;
+                -webkit-box-orient: vertical;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .post-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+      font-size: 0.8125rem;
+
+      time {
+        color: var(--gray);
+      }
+
+      .post-metrics {
+        display: flex;
+        gap: 1rem;
+
+        .metric {
+          display: flex;
+          align-items: center;
+          gap: 0.375rem;
+          color: var(--gray);
+
+          .icon {
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+
+    .post-link {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.8125rem;
+      color: var(--secondary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: var(--tertiary);
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+@keyframes widget-bluesky-post-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Mobile adjustments
+@media (max-width: 768px) {
+  .widget-bluesky-post {
+    .bluesky-post {
+      padding: 0.875rem;
+
+      .post-author {
+        .author-avatar {
+          width: 40px;
+          height: 40px;
+        }
+      }
+
+      .post-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+
+      .post-content {
+        .post-external-link {
+          flex-direction: column;
+
+          .link-thumb {
+            width: 100%;
+            height: 200px;
+          }
+        }
+      }
+    }
+  }
+}
