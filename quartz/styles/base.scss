@@ -404,15 +404,28 @@ body.full-width .page {
   margin: 0 auto;
 
   >#quartz-body {
-    grid-template-columns: auto;
+    grid-template-columns: 1fr;
     grid-template-areas:
       "grid-page-header"
       "grid-center"
       "grid-footer";
     padding: 0 2rem;
 
+    // Reduce padding when annotation viewer is present to maximize width
+    &:has(.annotation-viewer) {
+      padding: 0 1rem;
+
+      @media all and ($tablet) {
+        padding: 0 0.75rem;
+      }
+
+      @media all and ($mobile) {
+        padding: 0 0.5rem;
+      }
+    }
+
     @media all and ($tablet) {
-      grid-template-columns: auto;
+      grid-template-columns: 1fr;
       grid-template-areas:
         "grid-page-header"
         "grid-center"
@@ -421,7 +434,7 @@ body.full-width .page {
     }
 
     @media all and ($mobile) {
-      grid-template-columns: auto;
+      grid-template-columns: 1fr;
       grid-template-areas:
         "grid-page-header"
         "grid-center"

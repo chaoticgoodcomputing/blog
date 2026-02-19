@@ -2,19 +2,23 @@
   // Use full width to let flex children determine size naturally
   width: 100%;
   max-width: none;
-  padding-left: 2rem;
-  padding-right: 2rem;
+  // No padding - rely on parent #quartz-body padding to avoid double-padding
   height: 100vh;
   overflow: hidden;
+}
 
-  @media all and (max-width: 1250px) {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
+// SEO: Description visible to crawlers but hidden from visual users
+.annotation-description {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 
-  @media all and (max-width: 600px) {
-    padding-left: 1rem;
-    padding-right: 1rem;
+  // Ensure screen readers and crawlers can still access
+  &:not(:focus):not(:active) {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
   }
 }
 
@@ -132,6 +136,15 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+}
+
+.annotation-list-heading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--lightgray);
+  color: var(--darkgray);
 }
 
 .annotation-item {

@@ -1,7 +1,12 @@
 /**
- * Load PDF.js library from CDN
+ * Load PDF.js library from CDN (idempotent)
  */
 export async function loadPDFLib(): Promise<void> {
+  // Return early if PDF.js is already loaded
+  if (window.pdfjsLib) {
+    return
+  }
+
   // Load PDF.js viewer CSS from CDN and scope it to .annotation-viewer
   // This prevents PDF.js's bare selectors from affecting the rest of the page
   if (!document.querySelector('style[data-annotation-viewer-scoped-css]')) {

@@ -113,6 +113,15 @@ export default (() => {
     return (
       <div class={classNames(displayClass, "annotation-viewer")} data-pdf-url={localPdfPath} data-source-url={pdfUrl}>
         <script type="application/json" id="annotations-data" dangerouslySetInnerHTML={{ __html: JSON.stringify(sortedAnnotations) }} />
+
+        {/* SEO: Add semantic description for crawlers */}
+        <div class="annotation-description" aria-label="About these annotations">
+          <p>
+            This page contains {sortedAnnotations.length} annotations and commentary on the source document.
+            Each annotation includes the original text context, personal insights, and relevant connections.
+          </p>
+        </div>
+
         <div class="annotation-source-citation">
           Source document retrieved from{" "}
           <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
@@ -121,15 +130,16 @@ export default (() => {
         </div>
 
         <div class="annotation-split-view">
-          <div class="annotation-pdf-container">
+          <div class="annotation-pdf-container" aria-label="Source document viewer">
             <div id="pdf-viewer" class="pdf-canvas-wrapper">
               {/* PDF.js will be injected here via client-side script */}
-              <div class="pdf-loading">Loading PDF...</div>
+              <div class="pdf-loading" aria-hidden="true">Loading PDF...</div>
             </div>
           </div>
 
           <div class="annotation-sidebar">
-            <div class="annotation-list">
+            <article class="annotation-list" role="main" aria-label="Annotations">
+              <h2 class="annotation-list-heading">Annotations</h2>
               {sortedAnnotations.map(annotation => {
                 const textQuote = annotation.target?.[0]?.selector?.find(
                   s => s.type === "TextQuoteSelector"
@@ -139,14 +149,16 @@ export default (() => {
                 )
 
                 return (
-                  <div
+                  <article
                     class="annotation-item"
                     data-annotation-id={annotation.id}
                     data-start={textPosition?.start}
                     data-end={textPosition?.end}
+                    itemScope
+                    itemType="https://schema.org/Comment"
                   >
                     {annotation.text && (
-                      <div class="annotation-comment">
+                      <div class="annotation-comment" itemProp="text">
                         <div dangerouslySetInnerHTML={{ __html: annotation.text }} />
                       </div>
                     )}
@@ -160,14 +172,14 @@ export default (() => {
                     )}
 
                     <div class="annotation-meta">
-                      <time datetime={annotation.created}>
+                      <time datetime={annotation.created} itemProp="dateCreated">
                         {new Date(annotation.created).toLocaleDateString()}
                       </time>
                     </div>
-                  </div>
+                  </article>
                 )
               })}
-            </div>
+            </article>
           </div>
         </div>
       </div>

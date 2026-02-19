@@ -4,13 +4,6 @@ import { renderHighlights, renderAllHighlights, setActiveHighlight } from "./cor
 
 // Wrap in IIFE and handle multiple initialization scenarios
 ;(async () => {
-  // Check if annotation viewer exists on the page before loading resources
-  const viewer = document.querySelector(".annotation-viewer")
-  if (!viewer) return
-
-  // Load PDF.js library and CSS
-  await loadPDFLib()
-
   /**
    * Initialize annotation viewer (with duplicate check)
    */
@@ -21,6 +14,9 @@ import { renderHighlights, renderAllHighlights, setActiveHighlight } from "./cor
     // Check if already initialized
     if (viewer.getAttribute("data-initialized") === "true") return
     viewer.setAttribute("data-initialized", "true")
+
+    // Load PDF.js library on first encounter
+    await loadPDFLib()
 
     // Load annotations data and initialize viewer
     loadAnnotationsData()
