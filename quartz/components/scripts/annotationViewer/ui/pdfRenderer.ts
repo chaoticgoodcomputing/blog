@@ -63,6 +63,13 @@ export async function renderPageToCanvas(
           viewport: viewport,
         })
         await textLayer.render()
+
+        // PDF.js's official CSS (pdf_viewer.css) uses --total-scale-factor to
+        // calculate font-size and dimensions. The full viewer (PDFPageView) sets
+        // this automatically, but since we use the core TextLayer directly, we
+        // must set it ourselves. Without it, font-size falls back to inherited
+        // values and horizontal scaling breaks.
+        textLayerDiv.style.setProperty("--total-scale-factor", String(viewport.scale))
       }
     } catch (textError) {
       console.warn("Could not render text layer:", textError)

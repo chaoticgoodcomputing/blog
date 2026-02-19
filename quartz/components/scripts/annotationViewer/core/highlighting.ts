@@ -1,12 +1,12 @@
 import { Annotation } from "./types"
 
 /**
- * Render highlights for an annotation's quoted text using TextLayer positioning
+ * Render highlights for a single annotation
  */
-export function renderHighlights(annotation: Annotation): void {
-  // Clear existing highlights
-  document.querySelectorAll(".pdf-text-highlight").forEach((el) => el.remove())
-
+function renderAnnotationHighlights(
+  annotation: Annotation,
+  isActive: boolean = false,
+): void {
   if (!annotation.target || annotation.target.length === 0) return
 
   // Find TextPositionSelector
@@ -74,7 +74,8 @@ export function renderHighlights(annotation: Annotation): void {
     
     // Position highlight relative to the text layer (which shares parent with highlight layer)
     const highlight = document.createElement("div")
-    highlight.className = "pdf-text-highlight"
+    highlight.className = isActive ? "pdf-text-highlight active" : "pdf-text-highlight"
+    highlight.setAttribute("data-annotation-id", annotation.id)
     highlight.style.position = "absolute"
     // Use offsetLeft/offsetTop for position (relative to offsetParent)
     highlight.style.left = `${span.offsetLeft}px`
@@ -84,4 +85,45 @@ export function renderHighlights(annotation: Annotation): void {
     highlight.style.height = `${span.offsetHeight}px`
     highlightLayer.appendChild(highlight)
   }
+}
+
+/**
+ * Render highlights for all annotations at once
+ */
+export function renderAllHighlights(activeAnnotationId?: string): void {
+  // Clear existing highlights
+  document.querySelectorAll(".pdf-text-highlight").forEach((el) => el.remove())
+
+  const annotations = window.annotationsData
+  if (!annotations) return
+
+  // Render each annotation's highlights
+  annotations.forEach((annotation) => {
+    const isActive = annotation.id === activeAnnotationId
+    renderAnnotationHighlights(annotation, isActive)
+  })
+}
+
+/**
+ * Toggle which highlights are marked as active
+ */
+export function setActiveHighlight(annotationId: string): void {
+  const highlights = document.querySelectorAll(".pdf-text-highlight")
+  
+  highlights.forEach((highlight) => {
+    const highlightAnnotationId = highlight.getAttribute("data-annotation-id")
+    if (highlightAnnotationId === annotationId) {
+      highlight.classList.add("active")
+    } else {
+      highlight.classList.remove("active")
+    }
+  })
+}
+
+/**
+ * Legacy function for backward compatibility
+ * @deprecated Use renderAllHighlights() and setActiveHighlight() instead
+ */
+export function renderHighlights(annotation: Annotation): void {
+  renderAllHighlights(annotation.id)
 }

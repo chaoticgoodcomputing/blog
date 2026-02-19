@@ -73,34 +73,17 @@
   margin: 0 auto 1rem auto;
 }
 
-// TextLayer styling (for accurate text positioning and selection)
-.textLayer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow: hidden;
-  opacity: 1; // Visible for text selection
-  line-height: 1.0;
-  pointer-events: auto; // Enable text selection
-
-  >span {
-    color: transparent;
-    position: absolute;
-    white-space: pre;
-    cursor: text;
-    transform-origin: 0% 0%;
-  }
-
-  ::selection {
-    background: rgba(0, 100, 255, 0.3);
-  }
-
-  br::selection {
-    background: transparent;
-  }
-}
+/**
+ * TextLayer styling is handled almost entirely by PDF.js's official CSS
+ * (pdf_viewer.css), which is loaded and scoped to .annotation-viewer at runtime.
+ *
+ * PDF.js uses CSS custom properties (--total-scale-factor, --font-height,
+ * --scale-x) to precisely control font-size and horizontal scaling. Our SCSS
+ * must NOT override font-size, transform, position, or other layout properties
+ * on .textLayer or its children — doing so breaks PDF.js's text alignment.
+ *
+ * We only add overrides that PDF.js's CSS doesn't provide.
+ */
 
 .pdf-highlight-layer {
   position: absolute;
@@ -112,10 +95,20 @@
 
 .pdf-text-highlight {
   position: absolute;
-  background: rgba(255, 235, 59, 0.4);
-  border: 1px solid rgba(255, 193, 7, 0.6);
-  mix-blend-mode: multiply;
-  transition: opacity 0.2s ease;
+  // Inactive highlights: blue
+  background: rgba(33, 150, 243, 0.3);
+  // Use 'screen' blend mode to prevent opacity compounding on overlaps
+  // This ensures overlapping highlights maintain consistent transparency
+  mix-blend-mode: screen;
+  transition: background 0.2s ease;
+  // Re-enable pointer events for individual highlights (layer has pointer-events: none)
+  pointer-events: auto;
+  cursor: pointer;
+
+  // Active highlight: yellow
+  &.active {
+    background: rgba(255, 235, 59, 0.4);
+  }
 }
 
 .pdf-loading {

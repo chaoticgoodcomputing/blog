@@ -81,6 +81,7 @@ function createAnnotationProcessor(ctx: BuildCtx): Processor<MDRoot, Root, Root>
     'GitHubFlavoredMarkdown',
     'MDX',
     'ObsidianFlavoredMarkdown',
+    'LinkProcessing',
   ])
   
   const transformers = ctx.cfg.plugins.transformers

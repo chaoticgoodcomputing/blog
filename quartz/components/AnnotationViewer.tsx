@@ -145,16 +145,6 @@ export default (() => {
                     data-start={textPosition?.start}
                     data-end={textPosition?.end}
                   >
-                    <div class="annotation-quote">
-                      {textQuote?.prefix && (
-                        <span class="annotation-prefix">{textQuote.prefix}...</span>
-                      )}
-                      <span class="annotation-highlight">{textQuote?.exact}</span>
-                      {textQuote?.suffix && (
-                        <span class="annotation-suffix">...{textQuote.suffix}</span>
-                      )}
-                    </div>
-
                     {annotation.text && (
                       <div class="annotation-comment">
                         <div dangerouslySetInnerHTML={{ __html: annotation.text }} />

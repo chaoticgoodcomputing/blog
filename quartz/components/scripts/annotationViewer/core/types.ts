@@ -52,6 +52,8 @@ declare global {
     pdfScale: number
     annotationsData: Annotation[]
     renderHighlights: (annotation: Annotation) => void
+    renderAllHighlights: (activeAnnotationId?: string) => void
+    setActiveHighlight: (annotationId: string) => void
   }
 }
 

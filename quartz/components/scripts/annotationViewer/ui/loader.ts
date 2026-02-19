@@ -9,20 +9,10 @@ export async function loadPDFLib(): Promise<void> {
       const response = await fetch("https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.530/web/pdf_viewer.min.css")
       const originalCss = await response.text()
       
-      // Scope all CSS rules to .annotation-viewer
-      const scopedCss = originalCss.replace(
-        /([^\r\n,{}]+)(,(?=[^}]*{)|\s*{)/g,
-        (match, selector, separator) => {
-          // Skip @-rules (like @media, @keyframes, @font-face)
-          if (selector.trim().startsWith('@')) return match
-          
-          // Skip :root and html/body selectors
-          if (selector.trim().match(/^(:root|html|body)\s*$/)) return match
-          
-          // Scope the selector
-          return `.annotation-viewer ${selector}${separator}`
-        }
-      )
+      // Use @layer + @scope to properly isolate PDF.js CSS to .annotation-viewer.
+      // @scope correctly handles complex selectors like :is(), :not(), and
+      // nested pseudo-classes that naive regex-based scoping breaks.
+      const scopedCss = `@layer pdfjs-viewer {\n@scope (.annotation-viewer) {\n${originalCss}\n}\n}`
       
       const styleTag = document.createElement("style")
       styleTag.setAttribute("data-annotation-viewer-scoped-css", "true")

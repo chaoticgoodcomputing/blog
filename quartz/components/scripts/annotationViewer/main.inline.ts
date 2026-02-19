@@ -1,6 +1,6 @@
 import { loadPDFLib, loadAnnotationsData } from "./ui/loader"
 import { initPDFViewer } from "./adapters/lifecycle"
-import { renderHighlights } from "./core/highlighting"
+import { renderHighlights, renderAllHighlights, setActiveHighlight } from "./core/highlighting"
 
 // Wrap in IIFE and handle multiple initialization scenarios
 ;(async () => {
@@ -38,8 +38,10 @@ import { renderHighlights } from "./core/highlighting"
     await initAnnotationViewer()
   }
 
-  // Expose renderHighlights globally for interactive use
+  // Expose highlighting functions globally for interactive use
   window.renderHighlights = renderHighlights
+  window.renderAllHighlights = renderAllHighlights
+  window.setActiveHighlight = setActiveHighlight
 })()
 
 export default ""
