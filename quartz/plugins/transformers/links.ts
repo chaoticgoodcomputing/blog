@@ -160,6 +160,12 @@ export const CrawlLinks: QuartzTransformerPlugin<Partial<Options>> = (userOpts) 
             })
 
             file.data.links = [...outgoing]
+            
+            // Merge in any annotation links that were extracted by the Annotations transformer
+            if (file.data.annotationLinks && file.data.annotationLinks.length > 0) {
+              const allLinks = new Set([...file.data.links, ...file.data.annotationLinks])
+              file.data.links = Array.from(allLinks)
+            }
           }
         },
       ]

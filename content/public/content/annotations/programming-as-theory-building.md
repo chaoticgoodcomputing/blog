@@ -2,9 +2,12 @@
 title: Programming as Theory Building
 date: 2026-02-12
 tags:
+  - engineering/ai
+  - engineering
+  - economics/strategy
   - writing/annotations
+description: Do humans have a role in software development anymore? An annotated review of Peter Naur's 1985 essay "Programming as Theory Building"
 annotation-target: https://pablo.rauzy.name/dev/naur1985programming.pdf
-description:
 ---
 
 

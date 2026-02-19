@@ -1,22 +1,110 @@
 import { QuartzTransformerPlugin } from "../types"
 import { Root } from "hast"
+import { Element } from "hast"
 import { visit } from "unist-util-visit"
-import { unified } from "unified"
+import { unified, Processor } from "unified"
 import remarkParse from "remark-parse"
 import remarkRehype from "remark-rehype"
 import { toHtml } from "hast-util-to-html"
+import { BuildCtx } from "../../util/ctx"
+import { Root as MDRoot } from "remark-parse/lib"
+import { VFile } from "vfile"
+import { SimpleSlug, simplifySlug, stripSlashes, splitAnchor, FullSlug } from "../../util/path"
+import isAbsoluteUrl from "is-absolute-url"
 
 /**
- * Processes markdown text into HTML
+ * Extracts internal link slugs from a hast tree.
+ * This replicates the link extraction logic from CrawlLinks for annotation content.
+ * 
+ * With markdownLinkResolution: "absolute", all internal links start with "/".
  */
-async function processMarkdown(text: string): Promise<string> {
-  const processor = unified()
-    .use(remarkParse)
-    .use(remarkRehype, { allowDangerousHtml: true })
+function extractLinksFromHast(hast: Root, _curSlug: SimpleSlug): SimpleSlug[] {
+  const outgoing: Set<SimpleSlug> = new Set()
   
-  const tree = processor.parse(text)
-  const hast = await processor.run(tree)
-  return toHtml(hast as Root)
+  visit(hast, "element", (node: Element) => {
+    if (
+      node.tagName === "a" &&
+      node.properties &&
+      typeof node.properties.href === "string"
+    ) {
+      let dest = node.properties.href
+      const isExternal = isAbsoluteUrl(dest, { httpOnly: false })
+      const isInternal = !(isExternal || dest.startsWith("#"))
+      
+      if (isInternal) {
+        // With absolute link resolution, all internal links start with /
+        if (dest.startsWith("/")) {
+          dest = dest.substring(1) // Remove leading /
+        }
+        
+        const [destCanonical, _destAnchor] = splitAnchor(dest)
+        let canonical = destCanonical
+        if (canonical.endsWith("/")) {
+          canonical += "index"
+        }
+        
+        const full = decodeURIComponent(stripSlashes(canonical, true)) as FullSlug
+        const simple = simplifySlug(full)
+        outgoing.add(simple)
+      }
+    }
+  })
+  
+  return Array.from(outgoing)
+}
+
+/**
+ * Creates a unified processor for annotation text processing.
+ * 
+ * Uses a whitelist of content-level plugins. Annotation text is processed with
+ * the parent file's context (path, slug) to enable wikilink resolution.
+ * 
+ * Included plugins:
+ * - SyntaxHighlighting: code block highlighting
+ * - Latex: math rendering (KaTeX/MathJax)
+ * - GitHubFlavoredMarkdown: tables, strikethrough, task lists, etc.
+ * - MDX: JSX syntax support (if configured)
+ * - ObsidianFlavoredMarkdown: wikilink resolution using parent file context
+ * 
+ * Excluded plugins that need document-level structure:
+ * - FrontMatter: expects frontmatter at document start
+ * - CreatedModifiedDate/Lastmod: require file path for git/fs lookups
+ * - CrawlLinks: modifies link structure at document level
+ * - TableOfContents: generates document-level ToC
+ * - Description: generates page-level meta descriptions
+ */
+function createAnnotationProcessor(ctx: BuildCtx): Processor<MDRoot, Root, Root> {
+  // Whitelist of plugins that work with content fragments
+  const contentLevelPlugins = new Set([
+    'SyntaxHighlighting',
+    'Latex',
+    'GitHubFlavoredMarkdown',
+    'MDX',
+    'ObsidianFlavoredMarkdown',
+  ])
+  
+  const transformers = ctx.cfg.plugins.transformers
+    .filter(plugin => contentLevelPlugins.has(plugin.name))
+  
+  return unified()
+    // Parse markdown to AST
+    .use(remarkParse)
+    // Apply content-level markdown transformations
+    .use(transformers.flatMap(p => p.markdownPlugins?.(ctx) ?? []))
+    // Convert markdown AST to HTML AST
+    .use(remarkRehype, { 
+      allowDangerousHtml: true,
+      // Pass MDX JSX nodes through if MDX plugin is active
+      passThrough: [
+        'mdxjsEsm',
+        'mdxFlowExpression',
+        'mdxJsxFlowElement',
+        'mdxJsxTextElement',
+        'mdxTextExpression',
+      ],
+    })
+    // Apply content-level HTML transformations
+    .use(transformers.flatMap(p => p.htmlPlugins?.(ctx) ?? []))
 }
 
 export interface AnnotationData {
@@ -88,7 +176,7 @@ export const Annotations: QuartzTransformerPlugin = () => {
       
       return src
     },
-    markdownPlugins() {
+    markdownPlugins(ctx) {
       return [
         () => {
           return async (tree: Root, file) => {
@@ -112,14 +200,42 @@ export const Annotations: QuartzTransformerPlugin = () => {
             
             // Process markdown in annotation text fields (outside of visit callback)
             if (annotationsToProcess.length > 0) {
+              // Create processor once for all annotations, using content-level plugins
+              const annotationProcessor = createAnnotationProcessor(ctx)
+              const annotationLinks: SimpleSlug[] = []
+              
               for (const annotation of annotationsToProcess) {
                 if (annotation.text) {
-                  annotation.text = await processMarkdown(annotation.text)
+                  // Create a VFile for the annotation text that inherits the parent file's path context
+                  // This allows ObsidianFlavoredMarkdown to resolve wikilinks correctly
+                  const annotationFile = new VFile({
+                    value: annotation.text,
+                    path: file.path,
+                    data: {
+                      slug: file.data.slug,
+                      filePath: file.data.filePath,
+                      relativePath: file.data.relativePath,
+                    }
+                  })
+                  
+                  // Parse markdown -> apply transformations -> convert to HTML
+                  const tree = annotationProcessor.parse(annotationFile)
+                  const hast = await annotationProcessor.run(tree, annotationFile)
+                  
+                  // Extract internal links from the annotation for graph connectivity
+                  const curSlug = simplifySlug(file.data.slug!)
+                  const links = extractLinksFromHast(hast as Root, curSlug)
+                  annotationLinks.push(...links)
+                  
+                  annotation.text = toHtml(hast as Root)
                 }
               }
               
               // Store in file data for component access
               file.data.annotations = annotationsToProcess
+              
+              // Store annotation links separately - will be merged by CrawlLinks plugin
+              file.data.annotationLinks = annotationLinks
               
               // Remove the code block from output
               if (codeNode) {
@@ -134,3 +250,11 @@ export const Annotations: QuartzTransformerPlugin = () => {
     },
   }
 }
+
+declare module "vfile" {
+  interface DataMap {
+    annotations: AnnotationData[]
+    annotationLinks: SimpleSlug[]
+  }
+}
+
