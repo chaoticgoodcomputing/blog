@@ -34,14 +34,22 @@ async function fixLinksInPublicFiles() {
       let content = await readFile(publicFilePath, "utf-8")
       const originalContent = content
 
-      // Strip private/ and public/ prefixes from wikilinks
-      // Pattern: [[public/path|display]] or [[private/path]] → [[path|display]] or [[path]]
-      content = content.replace(/\[\[(?:private|public)\/([-\w\/\.]+)(\|[^\]]+)?\]\]/g, '[[$1$2]]')
+      // Strip private/ and public/ prefixes from wikilinks (with leading slash)
+      // Pattern: [[/public/path|display]] or [[/private/path]] → [[/path|display]] or [[/path]]
+      content = content.replace(/\[\[\/(?:private|public)\/([-\w\/\.]+)(\|[^\]]+)?\]\]/g, '[[/$1$2]]')
 
-      // Strip private/ and public/ prefixes from relative markdown links (not external URLs)
-      // Pattern: ](public/path) or ](private/path) → ](path)
+      // Strip private/ and public/ prefixes from wikilinks (without leading slash) and add leading slash
+      // Pattern: [[public/path|display]] or [[private/path]] → [[/path|display]] or [[/path]]
+      content = content.replace(/\[\[(?:private|public)\/([-\w\/\.]+)(\|[^\]]+)?\]\]/g, '[[/$1$2]]')
+
+      // Strip private/ and public/ prefixes from markdown links (with leading slash)
+      // Pattern: ](/public/path) or ](/private/path) → ](/path)
+      content = content.replace(/(?<!:\/\/[^\s]*)\]\(\/(?:private|public)\/([-\w\/\.]+)\)/g, '](/$1)')
+
+      // Strip private/ and public/ prefixes from markdown links (without leading slash) and add leading slash
+      // Pattern: ](public/path) or ](private/path) → ](/path)
       // Negative lookbehind ensures we don't match URLs like https://example.com/public/path
-      content = content.replace(/(?<!:\/\/[^\s]*)\]\((?:private|public)\/([-\w\/\.]+)\)/g, ']($1)')
+      content = content.replace(/(?<!:\/\/[^\s]*)\]\((?:private|public)\/([-\w\/\.]+)\)/g, '](/$1)')
 
       // Only write if changes were made
       if (content !== originalContent) {

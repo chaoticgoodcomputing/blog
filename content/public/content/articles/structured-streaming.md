@@ -58,7 +58,7 @@ agg_df = (
 
 With your new aggregated data, you can throw together a nice visualization to do... _business things_.
 
-![[assets/duu_metrics.jpg]]
+![[/assets/duu_metrics.jpg]]
 
 This works - right?
 
@@ -70,7 +70,7 @@ Modern data doesn't stop growing.
 
   The naive answer would be to just run that same code every day, but then you'd be re-processing _all_ of the data, _every_ time you run the code. Each new update means re-processing data you've already processed before. When your data gets big enough, you'll be doubling down on what you spend in time and compute costs.
 
-  ![[assets/cost_scaling_batch.jpg]]
+  ![[/assets/cost_scaling_batch.jpg]]
   _With a static analysis, you spend money on re-processing data you've already processed before_
 
   There are _very_ few modern data sources that aren't going to be updated. If you want to keep your analytics growing with the source of your data, and save yourself a fortune on compute cost, you'll need a better solution.
@@ -93,7 +93,7 @@ Modern data doesn't stop growing.
 
   It's important to re-frame how you think about _streaming data_. For many people, "streaming" means real-time data - streaming a movie, checking Twitter, checking the weather, _et cetera_. If you're an analyst, engineer, or scientist, **any data that gets updated is a stream.** The frequency of the update doesn't matter. It could be seconds, hours, days, or even months - if the data gets updated, the data is a stream. If the data is a stream, then Structured Streaming is going to save you _a lot_ of headaches.
 
-  ![[assets/cost_scaling_streaming.jpg]]
+  ![[/assets/cost_scaling_streaming.jpg]]
   _With **Structured Streaming**, you can avoid the cost of re-processing previous data_
 
 Let's step back into our hypothetical - you have an aggregate analysis that you not only need to deliver _today_, but also _keep updating_ as new data rolls in. This time, we have the `DeliveryDate` column to remind us of the futility of our previous single-shot analysis:
@@ -233,7 +233,7 @@ Let's run through each of the tweaks we made to get Structured Streaming working
 
    To illustrate: let's say this data product contains data up to the 7th of the month. We've set our watermark to 7 days. This means **aggregates from the 7th to the 1st are still "live"**. New updates could change aggregates from the 1st to the 7th, but any new data that lagged behind more than 7 days won't be included in the update - **aggregates prior to the 1st are "settled"**, and updates for that period are ignored.
 
-   ![[assets/settled_live_data.jpg]]
+   ![[/assets/settled_live_data.jpg]]
    _New data that falls outside of the watermark is not incorporated into the analysis._
 
    It's important to note that the column you use to watermark must be either a Timestamp or a Window.

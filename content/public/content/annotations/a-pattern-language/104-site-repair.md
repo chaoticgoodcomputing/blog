@@ -10,16 +10,16 @@ description: ""
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
 
-If you are interested in what this note contains, please [[contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
+If you are interested in what this note contains, please [[/contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
 
 
 ## Links
 
 This note originally contained the following links:
 
-- [Small Parking Lots](103-small-parking-lots)
-- [South Facing Outdoors](105-south-facing-outdoors)
-- [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
-- [96-number-of-stories](content/annotations/a-pattern-language/96-number-of-stories)
-- [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)
+- [Small Parking Lots](/content/annotations/a-pattern-language/103-small-parking-lots)
+- [South Facing Outdoors](/content/annotations/a-pattern-language/105-south-facing-outdoors)
+- [95-building-complex](/content/annotations/a-pattern-language/95-building-complex)
+- [96-number-of-stories](/content/annotations/a-pattern-language/96-number-of-stories)
+- [98-circulation-realms](/content/annotations/a-pattern-language/98-circulation-realms)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

@@ -11,13 +11,13 @@ tags:
 
 I think that over-engineering is the single greatest contributor to starting projects and never finishing them.
 
-> Let's define **follow-through rate** as the ratio of projects started to projects *released*. Not "completed", since [[content/notes/digital-gardening-with-quartz|that's an irrational way to think about projects.]]
+> Let's define **follow-through rate** as the ratio of projects started to projects *released*. Not "completed", since [[/content/notes/digital-gardening-with-quartz|that's an irrational way to think about projects.]]
 
 Looking back at periods of my life, I feel like my follow-through rate on projects was highest when I was 12 years old. At that point, my "projects" were:
 
 - My grades in high school
 - Writing shitty programs on my TI-84
-- [[content/articles/robloxaville|Writing small games on Roblox]]
+- [[/content/articles/robloxaville|Writing small games on Roblox]]
 
 13 years is long enough ago that, for the sake of simple math, my follow-through rate was 100%. Gee, what a reliable kid I was!
 
@@ -25,8 +25,8 @@ I can name 4 periods of my life where the amount I learned about engineering gre
 
 1. **2016**: I began studying computer science in my undergraduate
 2. **2018**: In trying to build up my resume, I started taking writing open-source and release-able projects more seriously
-3. **2020**: I got my first full-time job as a data analyst/software engineer writing data pipelines in [[tags/engineering/languages/python/index|Python]] and [[content/articles/structured-streaming|Spark]]
-4. **2023**: I got my second full-time job writing general software in [[tags/engineering/languages/csharp/index|.NET]], with incredibly smart capital-E Engineers™ that were also incredibly good mentors
+3. **2020**: I got my first full-time job as a data analyst/software engineer writing data pipelines in [[/tags/engineering/languages/python/index|Python]] and [[/content/articles/structured-streaming|Spark]]
+4. **2023**: I got my second full-time job writing general software in [[/tags/engineering/languages/csharp/index|.NET]], with incredibly smart capital-E Engineers™ that were also incredibly good mentors
 
 While it feels great to know more, learning has caused me a fundamental issue: **it's easier to be bad at something on accident than on purpose.**
 

@@ -15,13 +15,13 @@ tags:
 > - The default writing style of generative AI text models. (derogatory)
 > - Shorthand for a median style of writing, devoid of personality. (derogatory)
 
-In writing a bit more, I've been back-and-forth on the extent to which I want to swear. The style of my writing is more-or-less the way that I speak out loud (which prompted a lot of "couldn't you make this a bit more professional?" feedback on the [[content/articles/structured-streaming|Databricks post]]), and **when I speak out loud, I swear.** Obviously, the frequency depends - at work it's sparse (but not nil), on a personal level it's pretty frequent - but I do still pepper it in for effect in some places. The only times I can remember *not* swearing is when I was teaching math to K-12 students, and when writing posts here.
+In writing a bit more, I've been back-and-forth on the extent to which I want to swear. The style of my writing is more-or-less the way that I speak out loud (which prompted a lot of "couldn't you make this a bit more professional?" feedback on the [[/content/articles/structured-streaming|Databricks post]]), and **when I speak out loud, I swear.** Obviously, the frequency depends - at work it's sparse (but not nil), on a personal level it's pretty frequent - but I do still pepper it in for effect in some places. The only times I can remember *not* swearing is when I was teaching math to K-12 students, and when writing posts here.
 
 This feels somewhat... internally dissonant? personally disingenuous? If, when I speak I swear, and I tend to write like I speak, **why wouldn't I also swear in my writing?** The answer in the past has been **professionalism**. It feels *unbecoming* of a (relatively) young professional to swear in a professional context, and some of what I write here overlaps with what I do for work.
 
-Toning down my writing has been, so far, a fairly active effort. I've occasionally even gone as far as writing *with swears* and then, after-the-fact, explicitly (ha!) searching for illicit words and removing them as I see them. This was probably most apparent when writing the [[content/articles/robloxaville|Robloxaville recap article]] - it mentions a lot of my (very) early work history and, at the time, I thought that potential employers (or *youths*) might come across it, warranting a touch-up.
+Toning down my writing has been, so far, a fairly active effort. I've occasionally even gone as far as writing *with swears* and then, after-the-fact, explicitly (ha!) searching for illicit words and removing them as I see them. This was probably most apparent when writing the [[/content/articles/robloxaville|Robloxaville recap article]] - it mentions a lot of my (very) early work history and, at the time, I thought that potential employers (or *youths*) might come across it, warranting a touch-up.
 
-The world has changed quite a bit since *ye olde* 2021. I am (slightly) more established in my career, and the context of written documentation has changed quite a bit as technology has advanced. This has made me reconsider my previous policy of toning down my writing. In the process of [[content/notes/digital-gardening-with-quartz|porting over & more frequently updating]] this blog, I've made an executive decision for the foreseeable future: **I'm going to be swearing a bit more.**
+The world has changed quite a bit since *ye olde* 2021. I am (slightly) more established in my career, and the context of written documentation has changed quite a bit as technology has advanced. This has made me reconsider my previous policy of toning down my writing. In the process of [[/content/notes/digital-gardening-with-quartz|porting over & more frequently updating]] this blog, I've made an executive decision for the foreseeable future: **I'm going to be swearing a bit more.**
 
 Or, at the very least, **I'm going to be taking a dramatically less formal approach** to writing and editing, here. The spur of this decision:
 
@@ -39,7 +39,7 @@ For the purposes of this note, I am going to refer to this type of language as *
 
 GPTinglish, to me, can be described in a few ways:
 
-- It's **Business English**. Office English. [[content/notes/the-quest-to-slay-the-goblin#|LinkedIn™]] English. I hope, to those of you reading who have also worked a traditional office job, that you can recognize this shorthand as the type of thing that you'd find in your Outlook inbox;
+- It's **Business English**. Office English. [[/content/notes/the-quest-to-slay-the-goblin#|LinkedIn™]] English. I hope, to those of you reading who have also worked a traditional office job, that you can recognize this shorthand as the type of thing that you'd find in your Outlook inbox;
 - It's **Boring English**. It's the median of the language, absent of all personality or human voice; and
 - It's **Bing-English**. Meant to half-heartedly celebrate Microsoft's role in solidifying what is very likely a [self-consuming business model](https://www.youtube.com/watch?v=Si_mGxIzHlU) , poised to consume the very medium it was trained on, this is the type of English that we (currently) see from Bing Copilot, ChatGPT, Gemini, and others
 
@@ -49,16 +49,16 @@ And - unfortunately for the mediums that rely on GPTinglish - it's *wildly* auto
 
 In an effort to formalize the English language into a common median, we have all but guaranteed that the data used to train LLMs has, by definition and in practice, mastered it and put all of us that use it at risk of automation. We can also see the remnants of human efforts to curtail widely-used bots from going outside GPTinglish at their default settings:
 
-![[Pasted image 20240301125658.png]]
+![[/assets/Pasted image 20240301125658.png]]
 *ChatGPT refuses to generate even a **generic list** of English swears...*
 
-![[Pasted image 20240301125723.png]]
+![[/assets/Pasted image 20240301125723.png]]
 *...as does Raycast's AI feature, which uses either GPT-Turbo-3.5 or GPT-4...*
 
-![[Pasted image 20240301125806.png]]
+![[/assets/Pasted image 20240301125806.png]]
 *...as well as Github Copilot, which makes a bit more sense...*
 
-![[Pasted image 20240301125910.png]]
+![[/assetsPasted image 20240301125910.png]]
 *...as well as Bing Copilot, even with creative settings, which makes less sense.*
 
 The takeaway, to me, seems as clear as day.

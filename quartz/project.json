@@ -90,7 +90,7 @@
         "cwd": "{workspaceRoot}"
       },
       "continuous": true,
-      "dependsOn": [ "site:clean", "vault:sync", "site:_prebuild" ]
+      "dependsOn": [ "site:clean", "site:_prebuild" ]
     },
     "build": {
       "//": "Public build target. Orchestrates _prebuild → _inbuild → _postbuild sequence.",

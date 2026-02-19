@@ -58,7 +58,7 @@ Analytics data through Posthog is retained for **1 year**, PostHog's default ret
 
 Since no personal information is collected and all analytics are anonymous, there is no way to identify your specific data for access or deletion requests.
 
-If you believe your privacy has been violated, please contact me at the email listed on the [[content/contact|contact page]].
+If you believe your privacy has been violated, please contact me at the email listed on the [[/content/contact|contact page]].
 
 ## Changes to This Policy
 

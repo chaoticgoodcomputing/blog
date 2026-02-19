@@ -7,16 +7,16 @@ tags:
   - economics/policy
 description: Home isn't where the heart is — it's a single node on a very, very large graph. Annotations for the "Independent Regions" pattern of *A Pattern Language*.
 ---
-← [[00-introduction|Introduction]] | [[02-the-distribution-of-towns|The Distribution of Towns]] →
+← [[/content/annotations/a-pattern-language/00-introduction|Introduction]] | [[/content/annotations/a-pattern-language/02-the-distribution-of-towns|The Distribution of Towns]] →
 
 > [!QUOTE]
 > **Metropolitan regions will not come to balance until each one is small and autonomous enough to be an independent sphere of culture.**
 > 
-> — *[[tags/writing/annotations/a-pattern-language/index|A Pattern Language]]*
+> — *[[/tags/writing/annotations/a-pattern-language/index|A Pattern Language]]*
 
 ## Notes
 
-This will be a twofer — this chapter will cover both **Independent Regions**, but will also cover the precursor entry for the **Towns** subsection ([[content/annotations/a-pattern-language/01-independent-regions|Independent Regions (01)]] to [[content/annotations/a-pattern-language/94-sleeping-in-public|Sleeping in Public (94)]])
+This will be a twofer — this chapter will cover both **Independent Regions**, but will also cover the precursor entry for the **Towns** subsection ([[/content/annotations/a-pattern-language/01-independent-regions|Independent Regions (01)]] to [[/content/annotations/a-pattern-language/94-sleeping-in-public|Sleeping in Public (94)]])
 
 ### Towns
 
@@ -30,11 +30,11 @@ A lot of this portion has to do with setting up a lot of what I've been calling 
 > - **E.** House clusters and work communities: 30-50 people each.
 > - **F.** Families and work groups: 1-15 people each.
 > 
-> — *[[tags/writing/annotations/a-pattern-language/index|A Pattern Language]]*
+> — *[[/tags/writing/annotations/a-pattern-language/index|A Pattern Language]]*
 
 I *loves* me some hard numbers. Setting up this hierarchy, then, I wanted to throw together a quick flowchart to check some of the logic — specifically, some ratios:
 
-![[assets/2667A052-7382-49C4-96F3-AF1B0EDFDE3B_1_201_a.jpeg]]
+![[/assets/2667A052-7382-49C4-96F3-AF1B0EDFDE3B_1_201_a.jpeg]]
 
 My goal, here, is to think about these in ratios (A city has X communities) rather than absolute numbers. The numbers towards the bottom of the graph — the smallest collection units — feel right. For example, it feels like it'd make sense for a House Cluster or Work Community to be comprised of anywhere between 2 to 50 Families or Work Groups. Likewise, I feel that it makes sense for a town or metro community to be comprised of 5 to 20 neighborhoods.
 
@@ -47,7 +47,7 @@ Where things get a little bit finicky, in my mind, is the top of the graph. In p
 
 To think about this with a real-world backing: this system puts forward that a region is comprised of 500,000 people in a city, and 7,500,000 in rural/suburban communities.
 
-![[assets/Pasted image 20260207124302.png]]
+![[/assets/Pasted image 20260207124302.png]]
 
 (I don't typically condone the use of pie charts, but this particular viz doesn't feel like any hill worth dying on.)
 
@@ -80,23 +80,23 @@ So — is A Pattern Language... *wrong*?
 
 ["All models are wrong, but some are useful"](https://en.wikipedia.org/wiki/All_models_are_wrong), holds as true for the behavioral sciences as the natural ones. "Truth is much too complicated to allow anything but approximations" (John von Neumann, paraphrased)[^2].
 
-While trying to assign hard numbers is always a tricky business, I do think that the overall topology that they've put forward is distinct. I feel it addresses the distinct cultural difference than a metro area and suburban/rural areas in the same region, and still makes its point towards the more atomic portions of the hierarchy: that communities have a natural limit before they stop feeling *like* communities. Structures of different sizes *require* substructures that keep them intact. We see the same thing in other fields — the concept is not unlike the one put forward in [[content/annotations/evolutions-revolutions|Evolution and Revolution as Organizations Grow]].
+While trying to assign hard numbers is always a tricky business, I do think that the overall topology that they've put forward is distinct. I feel it addresses the distinct cultural difference than a metro area and suburban/rural areas in the same region, and still makes its point towards the more atomic portions of the hierarchy: that communities have a natural limit before they stop feeling *like* communities. Structures of different sizes *require* substructures that keep them intact. We see the same thing in other fields — the concept is not unlike the one put forward in [[/content/annotations/evolutions-revolutions|Evolution and Revolution as Organizations Grow]].
 
 I would be genuinely interested to, following this year's midterm elections, figure out the apportionments of how many people each seat in the U.S. House of Representatives represents. Does it match — or at least correlate — with any given level within the model hierarchy APL proposes? I'd do it now, but given the current redistricting war being waged ahead of the midterms, trying to figure out where it is (or will be in a year's time) seems like an absolute shitshow.
 
 That aside — I'll get on with the rest of the note. My last couple thoughts on the Towns intro:
 
 > [!QUOTE]
-> Another group wanting to build a small communal workshop, in a neighborhood currently zones for residential use only, can argue their case based on [[content/annotations/a-pattern-language/09-scattered-work|Scattered Work]], [[content/annotations/a-pattern-language/156-settled-work|Settled Work]], etc., and possibly get the city or zoning department to change the zoning regulation on this matter, and thereby slowly work toward introducing patterns, one at a time within the current framework of codes and zoning. 
+> Another group wanting to build a small communal workshop, in a neighborhood currently zones for residential use only, can argue their case based on [[/content/annotations/a-pattern-language/09-scattered-work|Scattered Work]], [[/content/annotations/a-pattern-language/156-settled-work|Settled Work]], etc., and possibly get the city or zoning department to change the zoning regulation on this matter, and thereby slowly work toward introducing patterns, one at a time within the current framework of codes and zoning. 
 > 
-> — *[[tags/writing/annotations/a-pattern-language/index|A Pattern Language]]*
+> — *[[/tags/writing/annotations/a-pattern-language/index|A Pattern Language]]*
 
-I'm glad that zoning came up in [[content/annotations/a-pattern-language/00-introduction|00-introduction]], as I feel like it will come up far more in future chapters, especially ones where the rubber hits the road.
+I'm glad that zoning came up in [[/content/annotations/a-pattern-language/00-introduction|00-introduction]], as I feel like it will come up far more in future chapters, especially ones where the rubber hits the road.
 
 > [!QUOTE]
 > We have worked out a partial version of this process at the Eugene campus of the University of Oregon. That work is described in Volume 3, *The Oregon Experiment*.
 > 
-> — *[[tags/writing/annotations/a-pattern-language/index|A Pattern Language]]*
+> — *[[/tags/writing/annotations/a-pattern-language/index|A Pattern Language]]*
 
 I may want to reach out to a couple people I know who are UO alums to see how they think about that campus, versus where they live now. Additionally — it may be worth investigating if the changes made in Volume 3 have persisted. That was, after all, a few decades ago.
 
@@ -119,13 +119,13 @@ Hot take: "We believe the limits are reached when the population of a region rea
 
 This certainly doesn't feel as realistic as it may've in the 70s, but I do appreciate the high-minded idealism of this chapter. Shoot for the stars, and you may land on... walkable communities and workable bike lanes.
 
-![[assets/Pasted image 20260207140254.png]]
+![[/assets/Pasted image 20260207140254.png]]
 
 ## Conclusion
 
-These are certainly far more abstract patterns than ones we might find in the future. There is some concern that, maybe, I should start at the end of Towns ([[content/annotations/a-pattern-language/94-sleeping-in-public|Sleeping in Public (94)]]) and work my way forward (from least abstract to most abstract within the Town portions). No doubt, progress on the beginning chapters will simply be slower, and the notes longer, in order to cover, here, a proportional amount of ground that the patterns themselves cover.
+These are certainly far more abstract patterns than ones we might find in the future. There is some concern that, maybe, I should start at the end of Towns ([[/content/annotations/a-pattern-language/94-sleeping-in-public|Sleeping in Public (94)]]) and work my way forward (from least abstract to most abstract within the Town portions). No doubt, progress on the beginning chapters will simply be slower, and the notes longer, in order to cover, here, a proportional amount of ground that the patterns themselves cover.
 
-I have little doubt that future patterns, like [[content/annotations/a-pattern-language/251-different-chairs|Different Chairs (251)]], will solicit far less additional thinking than Independent Regions has.
+I have little doubt that future patterns, like [[/content/annotations/a-pattern-language/251-different-chairs|Different Chairs (251)]], will solicit far less additional thinking than Independent Regions has.
 
 
 [^1]: Yes — I know that Ogden, Provo, St. George, etc. could all be considered vaguely metro areas, at least worthy of showing up on the widest view of a regional map. However, considering Salt Lake City is *already* below the limit A Pattern City uses in their overview, I'm going to say that it'll constitute as the region's 1x city. If I held to the hard limit of 500,000, we'd probably have to expand the region of Utah to include either Las Vegas or Denver, which feels blasphemous.

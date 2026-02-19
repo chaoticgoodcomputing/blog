@@ -10,15 +10,15 @@ description: ""
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
 
-If you are interested in what this note contains, please [[contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
+If you are interested in what this note contains, please [[/contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
 
 
 ## Links
 
 This note originally contained the following links:
 
-- [Sleeping to the East](138-sleeping-to-the-east)
-- [Private Terrace on the Street](140-private-terrace-on-the-street)
-- [129-common-areas-at-the-heart](content/annotations/a-pattern-language/129-common-areas-at-the-heart)
-- [147-communal-eating](content/annotations/a-pattern-language/147-communal-eating)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)
+- [Sleeping to the East](/content/annotations/a-pattern-language/138-sleeping-to-the-east)
+- [Private Terrace on the Street](/content/annotations/a-pattern-language/140-private-terrace-on-the-street)
+- [129-common-areas-at-the-heart](/content/annotations/a-pattern-language/129-common-areas-at-the-heart)
+- [147-communal-eating](/content/annotations/a-pattern-language/147-communal-eating)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

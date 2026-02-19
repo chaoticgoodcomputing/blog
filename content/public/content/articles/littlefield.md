@@ -16,7 +16,7 @@ I am **awful** at sticking to routines - the only thing I can bear to check on e
 
 ## Too much time to kill
 
-This Monday, I started the last major semester of [[content/notes/qamo|my undergraduate career]]. That's right, folks - after six years, four program changes, and [[content/notes/stability-of-marriage|one brain surgery]] (which, in my personal opinion, is one too many), I will *finally* be wrapping up my degree!
+This Monday, I started the last major semester of [[/content/notes/qamo|my undergraduate career]]. That's right, folks - after six years, four program changes, and [[/content/notes/stability-of-marriage|one brain surgery]] (which, in my personal opinion, is one too many), I will *finally* be wrapping up my degree!
 
 My last two semesters will be my first part-time courseloads of my academic career, which leaves me quite a bit of extra time. Given that there's not much to do during the quaran*time*, I took a bit of extra time to go over the top in a class I'm taking on operations and supply chain management.
 
@@ -40,7 +40,7 @@ As somebody who has been lazy for 23 years now, I've become well-acquainted with
 
 Littlefield, like the rest of everything on the internet, is scrape-able as well. The game is hosted on a web page that looks like this:
 
-![[lf_view.png]]
+![[/assets/lf_view.png]]
 
 While the page is different - and a bit harder to scrape - than your average news article or social media page, it's still just a set of links that we can get information from. Each node of the graph above leads to a page full of data about the game. If were playing this by hand, we would log in a few times each day, open up each page, and see if there were any issues or bottlenecks in need of fixing.
 
@@ -62,7 +62,7 @@ Here's what the driver sees when it opens up the game:
 >>> lfdriver.draw_graph()
 ```
 
-![[lf_graph.png]]
+![[/assets/lf_graph.png]]
 
 It's... admittedly not very pretty. At the very least, though, it shows that the program is seeing what we're seeing: the production line starts at the Orders & Material menus, which goes to the first queue, which feeds into the first station, *et cetera*.
 
@@ -72,7 +72,7 @@ When a web page is sent to your computer for your viewing pleasure, it's sent as
 
 Our target for the first round of web scraping is going to be the Littlefield data pages. These data pages give you the historical plot of whatever the selected node of the graph represents. For example, this is the data page for how many incoming job requests are received every in-game day:
 
-![[lf_dataview.png]]
+![[/assets/lf_dataview.png]]
 
 (as an aside, every time you open a data view, it annoyingly opens as an *entirely new window*, which means playing Littlefield often looks like [this](clutter.png))
 
@@ -80,7 +80,7 @@ I can *always* appreciate a clean-looking graph.
 
 To make that graph, it's actually your web browser doing all the work to turn the HTML into a neat visualization. *This* is what your computer is *actually* sent:
 
-![[html.png]]
+![[/assets/html.png]]
 
 Even when you're making a website, reading through raw HTML is *rarely* ever a fun time. Thankfully, the data we're looking for is on line 29, smack-dab in the middle of the page:
 
@@ -114,7 +114,7 @@ After scraping every single page of data in the game, we can smash it all togeth
 >>> lfdriver.data()
 ```
 
-![[lf_chart.png]]
+![[/assets/lf_chart.png]]
 
 This chart just shows the first and last 10 days of the historical data, and even from this we can gain some insights. S3UTIL, which represents the current utilization of the third station, is at 67% on Day 50 of the simulation. Judging by the rate of increase - roughly 1.3% every day on average - we should probably consider buying another machine at Station 3 prior to Day 75.
 

@@ -10,17 +10,17 @@ description: ""
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
 
-If you are interested in what this note contains, please [[contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
+If you are interested in what this note contains, please [[/contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
 
 
 ## Links
 
 This note originally contained the following links:
 
-- [Open Stairs](158-open-stairs)
-- [Building Edge](160-building-edge)
-- [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)
-- [106-positive-outdoor-space](content/annotations/a-pattern-language/106-positive-outdoor-space)
-- [109-long-thin-house](content/annotations/a-pattern-language/109-long-thin-house)
-- [116-cascade-of-roofs](content/annotations/a-pattern-language/116-cascade-of-roofs)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)
+- [Open Stairs](/content/annotations/a-pattern-language/158-open-stairs)
+- [Building Edge](/content/annotations/a-pattern-language/160-building-edge)
+- [107-wings-of-light](/content/annotations/a-pattern-language/107-wings-of-light)
+- [106-positive-outdoor-space](/content/annotations/a-pattern-language/106-positive-outdoor-space)
+- [109-long-thin-house](/content/annotations/a-pattern-language/109-long-thin-house)
+- [116-cascade-of-roofs](/content/annotations/a-pattern-language/116-cascade-of-roofs)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

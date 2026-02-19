@@ -19,11 +19,11 @@ import { GameOfLife } from "@content/widgets/game-of-life"
 
 There is nothing in this world better than a good graph. Seeing a diagram that makes a point, without noise, clutter? A good *color palette*? *Ooooohohoho*, there's nothing better. We really are in a golden age of diagrams, and I want this site to be the premier place to contribute as best I can to the era.
 
-It's not that I haven't done my best so far — I'm particularly proud of the diagrams for, say, [[content/articles/structured-streaming|structured streaming]] and [[content/annotations/college-admissions-and-the-stability-of-marriage|Gale-Shapley]] (and less proud of, say, [[content/notes/supply-chain|supply chains]] or [[content/articles/littlefield|production engineering]]). What irks me is the lack of interactivity I've been able to give them — so far.
+It's not that I haven't done my best so far — I'm particularly proud of the diagrams for, say, [[/content/articles/structured-streaming|structured streaming]] and [[/content/annotations/college-admissions-and-the-stability-of-marriage|Gale-Shapley]] (and less proud of, say, [[/content/notes/supply-chain|supply chains]] or [[/content/articles/littlefield|production engineering]]). What irks me is the lack of interactivity I've been able to give them — so far.
 
 Interactivity is an absolute boon. Really great visualizations — things that you'd see from, say, [The New York Times' *What's Going On in This Graph?*](https://www.nytimes.com/column/whats-going-on-in-this-graph), or the wonderful [Red Blob Games](https://www.redblobgames.com/) — often come with the ability to highlight, explore, really *touch* the data. It's not a hard pre-requisite — [Our World in Data](https://ourworldindata.org/) is an amazing visualization shop that outputs static graphs, no doubt because they share better on social media — but for a data-curious audience, nothing beats a tactile feel to the data.
 
-The stopper is that these interactive diagrams are just plain harder to pop into a webpage. It's easy enough to `CTRL-C`, `CTRL-V` an image of a graph into a webpage — it's far harder to render the code in a way that isn't a nightmare. Trying to get this working is the most common cause of death for the blog sites I've put together. The first Gatsby site, then the [[content/notes/digital-gardening-with-quartz|original Quartz run]], followed by knock-on Gatsby 2, Astro, Gatsby 3, and — now — this site, here. It requires a lot of under-the-hood fuckery with the way the content is rendered. It requires strong [[tags/horticulture/seasons/systems/index|systems]] that the rest of the site can be built around.
+The stopper is that these interactive diagrams are just plain harder to pop into a webpage. It's easy enough to `CTRL-C`, `CTRL-V` an image of a graph into a webpage — it's far harder to render the code in a way that isn't a nightmare. Trying to get this working is the most common cause of death for the blog sites I've put together. The first Gatsby site, then the [[/content/notes/digital-gardening-with-quartz|original Quartz run]], followed by knock-on Gatsby 2, Astro, Gatsby 3, and — now — this site, here. It requires a lot of under-the-hood fuckery with the way the content is rendered. It requires strong [[/tags/horticulture/seasons/systems/index|systems]] that the rest of the site can be built around.
 
 But now? I think I've finally got a pattern down! Without further ado: **Quartz Widgets!**
 
@@ -72,13 +72,13 @@ The rough part? This doesn't give us a lot of wiggle room for per-page code. MDX
 
 Above is an MDX widget that will calculate the data your browser had to download to visit this page. There's a few different categories of files, but the ones we're talking about here are the **`postscript.js`** and Widget Scripts entries. That's a live total (which will either be about the same, or much worse, than it is now). As of writing, though, I've got:
 
-![[assets/Pasted image 20260115164005.png]]
+![[/assets/Pasted image 20260115164005.png]]
 
 (In case you didn't believe me when I said all that stuff about everything behind-the-scenes that makes websites pleasant to visit: the **Article** entry is how much of this page contains the actual text of this post. Looking good takes a lot of data.)
 
 The problem child, here, is the ratio between Widget Scripts and `postscript.js` . On the face of it, this isn't too bad — a ratio of ~1:10 means the widgets for this page are pretty small.
 
-Remember, though — in Quartz's out-of-the-box system, anything I put in here would *always* load when you first visit the website. An extra 20KB isn't bad, but if I were to redo something like the [[content/articles/littlefield|Littlefield]] post with live graphs, those end up being about 50KB apiece. Publishing the graphs for the data behind [[tags/projects/flowthru/index|flowthru]] and [[tags/projects/games/magic-atlas/index|MagicAtlas]] will get up there in the ~3MB range.
+Remember, though — in Quartz's out-of-the-box system, anything I put in here would *always* load when you first visit the website. An extra 20KB isn't bad, but if I were to redo something like the [[/content/articles/littlefield|Littlefield]] post with live graphs, those end up being about 50KB apiece. Publishing the graphs for the data behind [[/tags/projects/flowthru/index|flowthru]] and [[/tags/projects/games/magic-atlas/index|MagicAtlas]] will get up there in the ~3MB range.
 
 Blowing up the size of the `postscript.js` — effectively slowing down how long your site takes to load the first time — isn't *horrible* on modern internet connections and device speeds, but it also isn't *good.* The downside is twofold:
 
@@ -87,11 +87,11 @@ Blowing up the size of the `postscript.js` — effectively slowing down how long
 
 Chrome's [Lighthouse](https://developer.chrome.com/docs/lighthouse/) utility is a good way to test how graciously the algorithmic overlords running our search engines will treat your site. For the actual Quartz website, the review is like we said before— not *horrible*, but not *great*:
 
-![[assets/Pasted image 20260115170012.png]]
+![[/assets/Pasted image 20260115170012.png]]
 
 Evaluating the current performance of this site, though, show's that I have already made this `postscript` problem worse with my changes to the Graph and Explorer components. From what I can tell, I caused an emulated Moto G Power commit suicide:
 
-![[assets/Pasted image 20260115170136.png]]
+![[/assets/Pasted image 20260115170136.png]]
 
 ## Workaround & Results
 
@@ -104,10 +104,10 @@ If this system feels like it works without a whole lot of maintenance, I may con
 
 In case this does end up upstream at some point, this system has two parts in my actual code:
 
-1. Quartz widgets, which are built into the actual `quartz` engine, for things that seem universally helpful like inline PDF viewers (similar, but not as custom, as the components used for [[tags/writing/annotations/index|annotations]]).
+1. Quartz widgets, which are built into the actual `quartz` engine, for things that seem universally helpful like inline PDF viewers (similar, but not as custom, as the components used for [[/tags/writing/annotations/index|annotations]]).
 2. Site widgets, which live in the actual Obsidian vault, and are custom to my website.
 
-The [[widgets/README|short widget guide]], as well as the longer [[content/notes/scratch/quartz-mdx-notes|architecture evaluation]], have more details on the source code implementations.
+The [[/widgets/README|short widget guide]], as well as the longer [[/content/notes/scratch/quartz-mdx-notes|architecture evaluation]], have more details on the source code implementations.
 
 ## Next Up
 
@@ -131,10 +131,10 @@ The [[widgets/README|short widget guide]], as well as the longer [[content/notes
   height={400}
   secondsPerFrame={0.3}
 />
-(Preview of the Game of Life widget for the published version of [[content/annotations/clinard-dissertation|a friend's dissertation]].)
+(Preview of the Game of Life widget for the published version of [[/content/annotations/clinard-dissertation|a friend's dissertation]].)
 
-I'm super excited to have a solid platform that helps get things looking, and feeling, like I intend. Expect lots more graphs, and notes from [[tags/engineering/data/index|data projects]], now that I can share them in a format that feels best!
+I'm super excited to have a solid platform that helps get things looking, and feeling, like I intend. Expect lots more graphs, and notes from [[/tags/engineering/data/index|data projects]], now that I can share them in a format that feels best!
 
 > [!UPDATE]
 > 
-> Jan 19th, 2026 — I used this system to create the post for [[content/notes/roll-advantage.mdx|visualizing probability distribution convolutions]] on dice rolls.
+> Jan 19th, 2026 — I used this system to create the post for [[/content/notes/roll-advantage.mdx|visualizing probability distribution convolutions]] on dice rolls.

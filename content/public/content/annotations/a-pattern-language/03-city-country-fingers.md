@@ -8,16 +8,16 @@ tags:
   - engineering/data
 description: City, with natural stripes — or nature, with city stripes? Annotations for A Pattern Language, and tracking public opinion of where Americans want to live over the past 50 years.
 ---
-← [[02-the-distribution-of-towns|The Distribution of Towns]] | [[04-agricultural-valleys|Agricultural Valleys]] →
+← [[/content/annotations/a-pattern-language/02-the-distribution-of-towns|The Distribution of Towns]] | [[/content/annotations/a-pattern-language/04-agricultural-valleys|Agricultural Valleys]] →
 
 > [!QUOTE]
-> ... the distribution of towns required to make a balanced region—[[content/annotations/a-pattern-language/02-the-distribution-of-towns|02-the-distribution-of-towns]]—can be further helped by controlling the balance of urban land and open countryside within the towns and cities themselves.
+> ... the distribution of towns required to make a balanced region—[[/content/annotations/a-pattern-language/02-the-distribution-of-towns|02-the-distribution-of-towns]]—can be further helped by controlling the balance of urban land and open countryside within the towns and cities themselves.
 > 
-> — *[[tags/writing/annotations/a-pattern-language/index|A Pattern Language]]*
+> — *[[/tags/writing/annotations/a-pattern-language/index|A Pattern Language]]*
 
 ## Notes
 
-Someday, I'll write APL notes for without [[tags/engineering/data/index|resorting to graphs]] — but not this time!
+Someday, I'll write APL notes for without [[/tags/engineering/data/index|resorting to graphs]] — but not this time!
 
 ### Public Opinion: Urban & Rural
 
@@ -75,11 +75,11 @@ So, there are pretty dramatic differences in polling responses. Of course, a lot
 
 As for the rest of this — I do understand the sentiment! I joke with people that I'm a real indoorsman, but my partner is very much the opposite. Utah has been a boon for her — she loves living in a city that sits so close to the outdoors. That is a *major* draw for the folks that live here.
 
-![[assets/Pasted image 20260207173300.png]]
+![[/assets/Pasted image 20260207173300.png]]
 
 In this setting, though, I'm having a hard time properly visualizing their concept of city-country fingers.
 
-![[assets/Pasted image 20260207175140.png]]
+![[/assets/Pasted image 20260207175140.png]]
 
 Part of this is that Salt Lake City sits on the Wasatch Front, a large stretch of area parallel to the Wasatch Mountains. To some extent, the entire valley is a single massive city finger, adjacent to a single massive country finger.
 
@@ -87,6 +87,6 @@ As for internally, *within* the city: Frankly, I think city-country fingers in S
 
 I grew up in St. Louis, near the Ballwin/Manchester areas. If there's one thing that feels substantially different between here and there, it's the *trees* and *rivers*. From what I can tell, natural water features make up the trunk of the fingers, and the trees make those fingers worth keeping. I think city/country fingers makes more sense when good natural settings are actually part of the ecology of the place you live.
 
-![[assets/Pasted image 20260207174951.png]]
+![[/assets/Pasted image 20260207174951.png]]
 
 [^1]: I'm not doing good statistics, here. The change in the question makes the comparison I do here *slightly* irresponsible. the modern `rural` could easily map to 1972's `small town` *or* `farm` categories, so the data may be wonky. This is why it's a really big deal when questions change, and why responsible longitudinal data analysis requires very special care. Folks doing econometrics are trained on exactly how to handle this — and if I was doing this for a real analysis, I'd take that same level of care. However, I'm not interested in having all 253 patterns take me two hours to write, so we're gonna breeze write past these concerns and cosplay as real statisticians.

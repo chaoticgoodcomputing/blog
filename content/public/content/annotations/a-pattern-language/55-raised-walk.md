@@ -10,16 +10,16 @@ description: ""
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
 
-If you are interested in what this note contains, please [[contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
+If you are interested in what this note contains, please [[/contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
 
 
 ## Links
 
 This note originally contained the following links:
 
-- [Road Crossing](54-road-crossing)
-- [Bike Paths and Racks](56-bike-paths-and-racks)
-- [52-network-of-paths-and-cars](content/annotations/a-pattern-language/52-network-of-paths-and-cars)
-- [54-road-crossing](content/annotations/a-pattern-language/54-road-crossing)
-- [23-parallel-roads](content/annotations/a-pattern-language/23-parallel-roads)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)
+- [Road Crossing](/content/annotations/a-pattern-language/54-road-crossing)
+- [Bike Paths and Racks](/content/annotations/a-pattern-language/56-bike-paths-and-racks)
+- [52-network-of-paths-and-cars](/content/annotations/a-pattern-language/52-network-of-paths-and-cars)
+- [54-road-crossing](/content/annotations/a-pattern-language/54-road-crossing)
+- [23-parallel-roads](/content/annotations/a-pattern-language/23-parallel-roads)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

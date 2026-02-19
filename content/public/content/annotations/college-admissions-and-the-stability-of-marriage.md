@@ -38,7 +38,7 @@ annotation-target: https://www.math.utoronto.ca/mccann/assignments/477/GaleShapl
 >
 >This one caught my attention, though, as it was the first technical analysis I'd seen of a topic that had some *weight* to it in my own life, and in the lives of others - partnership, romance, all the fun ones. If Arrow turned the handle on the door into this specific interest, it was Gale and Shapley that kicked it wide-open.
 >
->It was especially fun to present a summary of this paper in [[content/notes/stability-of-marriage#^635c68|Dr. Allison Stashko]]'s Non-Market Environments course. I was proud to cap off the end of the term talking to my fellow early-20s undergraduates about something we could all understand at the deepest of levels: Being Horny™
+>It was especially fun to present a summary of this paper in [[/content/notes/stability-of-marriage#^635c68|Dr. Allison Stashko]]'s Non-Market Environments course. I was proud to cap off the end of the term talking to my fellow early-20s undergraduates about something we could all understand at the deepest of levels: Being Horny™
 >%%TAGS%%
 >
 ^18iax7g01jo

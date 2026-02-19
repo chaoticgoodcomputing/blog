@@ -9,7 +9,7 @@ tags:
   - horticulture/seasons/rhythm
   - engineering/languages/typescript
 ---
-I've decided that I'm pretty bad at capital-B Blogging™. The last "post" I made (as of writing) was [[content/articles/structured-streaming|the Databricks guest post on Spark Structured Streaming]] that I did back when I worked at M Science in 2022. That particular post went through a few different stages of revisions:
+I've decided that I'm pretty bad at capital-B Blogging™. The last "post" I made (as of writing) was [[/content/articles/structured-streaming|the Databricks guest post on Spark Structured Streaming]] that I did back when I worked at M Science in 2022. That particular post went through a few different stages of revisions:
 
 1. Revising initial drafts as I learned more about Structured Streaming as a concept
 2. Revising "personally final" drafts with the Structured Streaming engineering team at Databricks
@@ -19,7 +19,7 @@ I've decided that I'm pretty bad at capital-B Blogging™. The last "post" I mad
 
 That was quite a bit more than I'd expected when initially pitching "What if we published our internal guide for everybody?". That, along with starting a new job that introduced me to a far higher standard for engineering, raised my own internal bar for "what should I put on the internet?" Since then, I've written quite a few posts that I'd describe as ~60% "done," but didn't end up hurdling internal (and arbitrary) bar for publishing.
 
-Considering [[content/articles/hello-blog|the editorial standards I started this blog with]], the idea that I've had any bar at all is a bit funny.
+Considering [[/content/articles/hello-blog|the editorial standards I started this blog with]], the idea that I've had any bar at all is a bit funny.
 
 ## The cost of learning is teaching
 
@@ -29,7 +29,7 @@ I was fortunate enough to stumble on [Maggie Appleton's Ethos on Digital Gardeni
 
 ![Maggie Appleton's diagram of digital media on a spectrum of polish, ranging from chaos to cultivated, with digital gardening between "private notes" and "classic blog posts](https://res.cloudinary.com/dg3gyk0gu/image/upload/c_scale,f_auto,q_auto:good,w_1100/v1593765637/maggieappleton.com/notes/garden-history/digital-garden.png)
 
-> **brief aside**: Maggie brings a level of polish and class to doodling that is [[content/articles/structured-streaming|frankly enviable]].
+> **brief aside**: Maggie brings a level of polish and class to doodling that is [[/content/articles/structured-streaming|frankly enviable]].
 
 ## The cost of perfection is infinite
 

@@ -411,13 +411,13 @@ description: Annotations for Greiner's 1972 paper "Evolution and Revolution as O
 
 >%%
 >```annotation-json
->{"created":"2026-01-28T23:49:31.637Z","text":"*Although...* While I don't think this applies at *all* to corporate America, I do like this set of habit and reflective structures that they've brought up, here. I'll keep an eye on that — it feels an awful lot like [[tags/horticulture/index|horticulture.]]","updated":"2026-01-28T23:49:31.637Z","document":{"title":""},"references":["iyzxr90hya"],"target":[{"source":"https://ils.unc.edu/daniel/131/cco4/Greiner.pdf"}],"uri":"https://ils.unc.edu/daniel/131/cco4/Greiner.pdf"}
+>{"created":"2026-01-28T23:49:31.637Z","text":"*Although...* While I don't think this applies at *all* to corporate America, I do like this set of habit and reflective structures that they've brought up, here. I'll keep an eye on that — it feels an awful lot like [[/tags/horticulture/index|horticulture.]]","updated":"2026-01-28T23:49:31.637Z","document":{"title":""},"references":["iyzxr90hya"],"target":[{"source":"https://ils.unc.edu/daniel/131/cco4/Greiner.pdf"}],"uri":"https://ils.unc.edu/daniel/131/cco4/Greiner.pdf"}
 >```
 >%%
 >*%%PREFIX%%%%HIGHLIGHT%% ==== %%POSTFIX%%*
 >%%LINK%%[[#^9xz6jk20ajn|show annotation]]
 >%%COMMENT%%
->*Although...* While I don't think this applies at *all* to corporate America, I do like this set of habit and reflective structures that they've brought up, here. I'll keep an eye on that — it feels an awful lot like [[tags/horticulture/index|horticulture.]]
+>*Although...* While I don't think this applies at *all* to corporate America, I do like this set of habit and reflective structures that they've brought up, here. I'll keep an eye on that — it feels an awful lot like [[/tags/horticulture/index|horticulture.]]
 >%%TAGS%%
 >
 ^9xz6jk20ajn

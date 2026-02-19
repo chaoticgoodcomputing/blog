@@ -42,7 +42,8 @@
         ],
         "parallel": false,
         "cwd": "content"
-      }
+      },
+      "dependsOn": [ "vault:sync" ]
     },
     "index-tags": {
       "//": "Generate index.md files for all tags found in markdown frontmatter.",

@@ -51,7 +51,7 @@ The term "API surface" has been flashing around in my brain a lot lately, and th
     - **🟪 Policy** entries define what actions from **🟫 Actor** can be reacted to via **🟧 Domain Event** based on the authorization, as well as state, of the application
         - **🟥 Hotspot** seems to be a subset of this for error states
 - Internals/Under-the-hoods:
-    - **🟩 Model/View** defines the actual data backing the application using strong schemas (three cheers for [[tags/projects/flowthru/index|strong schemas!]])
+    - **🟩 Model/View** defines the actual data backing the application using strong schemas (three cheers for [[/tags/projects/flowthru/index|strong schemas!]])
     - **💟 External System** defines data/state retrieved through **🟩 Model/View** that is not owned by the application (such as an external API) that the application has less control over, and must be accounted for with **🟥 Hotspot** entries
 - Conceptual:
     - **🟨 Aggregate** is used to "collect" all of the above into higher-level concepts
@@ -76,7 +76,7 @@ The Phase 1 being **🟧 Domain Event** and **🟥 Hotspot** feels somewhat conf
 
 The idea would be:
 
-1. Business Meeting: This is the portion where the business side and engineering side meet together to form the outer shape of the application. The goal is not to bikeshed implementation details (or for engineering to [[content/notes/strong-and-weak-opinions|have strong opinions]]). The goal is to agree on the user-facing shell of the application, its capabilities, and its behaviors.
+1. Business Meeting: This is the portion where the business side and engineering side meet together to form the outer shape of the application. The goal is not to bikeshed implementation details (or for engineering to [[/content/notes/strong-and-weak-opinions|have strong opinions]]). The goal is to agree on the user-facing shell of the application, its capabilities, and its behaviors.
     1. Phase 1: Chaotic Entries (🟧, 🟫)
         - **Goal:** Organize a barrage of high-level information from the business side. What is the goal of the app/feature? What should the user be able to do?
         - This provides a note-taking structure to user stories. Using **🟫 Actors** and **🟧 Domain Events**, you should be able to organize user categorize and what the users expect to be able to accomplish via **🟧 Domain Events**

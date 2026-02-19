@@ -10,15 +10,15 @@ description: ""
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
 
-If you are interested in what this note contains, please [[contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
+If you are interested in what this note contains, please [[/contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
 
 
 ## Links
 
 This note originally contained the following links:
 
-- [Scattered Work](09-scattered-work)
-- [Local Transport Areas](11-local-transport-areas)
-- [08-mosaic-of-subcultures](content/annotations/a-pattern-language/08-mosaic-of-subcultures)
-- [03-city-country-fingers](content/annotations/a-pattern-language/03-city-country-fingers)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)
+- [Scattered Work](/content/annotations/a-pattern-language/09-scattered-work)
+- [Local Transport Areas](/content/annotations/a-pattern-language/11-local-transport-areas)
+- [08-mosaic-of-subcultures](/content/annotations/a-pattern-language/08-mosaic-of-subcultures)
+- [03-city-country-fingers](/content/annotations/a-pattern-language/03-city-country-fingers)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

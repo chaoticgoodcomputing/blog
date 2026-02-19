@@ -10,7 +10,7 @@ tags:
 ---
 
 > [!NOTE]
-> There are now *way* beginner-friendlier PDF markup languages to use, such as [Typst](https://typst.app). I wrote [[content/notes/typst-resume-template|A new guide for the template here!]]
+> There are now *way* beginner-friendlier PDF markup languages to use, such as [Typst](https://typst.app). I wrote [[/content/notes/typst-resume-template|A new guide for the template here!]]
 
 After trying - and failing - to *constantly* keep my resume up-to-date in a dozen different places, I took a page out of the wild world of software development and found the solution: **continuous integration.**
 

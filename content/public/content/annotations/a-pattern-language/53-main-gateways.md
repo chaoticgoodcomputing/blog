@@ -10,18 +10,18 @@ description: ""
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
 
-If you are interested in what this note contains, please [[contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
+If you are interested in what this note contains, please [[/contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
 
 
 ## Links
 
 This note originally contained the following links:
 
-- [Network of Paths and Cars](52-network-of-paths-and-cars)
-- [Road Crossing](54-road-crossing)
-- [14-identifiable-neighborhood](content/annotations/a-pattern-language/14-identifiable-neighborhood)
-- [37-house-cluster](content/annotations/a-pattern-language/37-house-cluster)
-- [41-work-community](content/annotations/a-pattern-language/41-work-community)
-- [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
-- [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)
+- [Network of Paths and Cars](/content/annotations/a-pattern-language/52-network-of-paths-and-cars)
+- [Road Crossing](/content/annotations/a-pattern-language/54-road-crossing)
+- [14-identifiable-neighborhood](/content/annotations/a-pattern-language/14-identifiable-neighborhood)
+- [37-house-cluster](/content/annotations/a-pattern-language/37-house-cluster)
+- [41-work-community](/content/annotations/a-pattern-language/41-work-community)
+- [95-building-complex](/content/annotations/a-pattern-language/95-building-complex)
+- [98-circulation-realms](/content/annotations/a-pattern-language/98-circulation-realms)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

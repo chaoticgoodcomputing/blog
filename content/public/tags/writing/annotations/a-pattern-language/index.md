@@ -13,4 +13,4 @@ You can find *A Pattern Language*:
 
 ---
 
-This is closely tied to another project, [[tags/projects/games/the-neighborhood/index|The Neighborhood]], that I've been mulling over for a few years, now. *A Pattern Language* is large part of the research portion of The Neighborhood — you can find the kickoff and connection in [[content/notes/pattern-languages-of-the-neighborhood|Pattern Languages & The Neighborhood]].
+This is closely tied to another project, [[/tags/projects/games/the-neighborhood/index|The Neighborhood]], that I've been mulling over for a few years, now. *A Pattern Language* is large part of the research portion of The Neighborhood — you can find the kickoff and connection in [[/content/notes/pattern-languages-of-the-neighborhood|Pattern Languages & The Neighborhood]].

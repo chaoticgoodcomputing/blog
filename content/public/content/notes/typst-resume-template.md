@@ -12,9 +12,9 @@ aliases:
   - writing/notes/typst-resume-template
 ---
 
-![[Sample Resume Template.png]]
+![[/assets/Sample Resume Template.png]]
 
-> This guide is a direct copy of the Resume Template on the [Typst Universe](https://typst.app/universe/package/guided-resume-starter-cgc) portal. This is the exact system I use for [[resume.mdx|my own resume]], so this system may be updated over time.
+> This guide is a direct copy of the Resume Template on the [Typst Universe](https://typst.app/universe/package/guided-resume-starter-cgc) portal. This is the exact system I use for [[/resume|my own resume]], so this system may be updated over time.
 
 Welcome to the 2.0 version of the Super Cool Resume Template: now with 100% less LaTeX!
 
@@ -82,7 +82,7 @@ This is where you should put your name, your contact information, and your gener
 )
 ```
 
-![[Pasted image 20240421164430.png]]
+![[/assets/Pasted image 20240421164430.png]]
 
 ### Opinion: Specifying Your Location
 
@@ -149,7 +149,7 @@ This is where formal education goes! While this is usually university education,
 )
 ```
 
-![[Pasted image 20240421164456.png]]
+![[/assets/Pasted image 20240421164456.png]]
 
 If what you put here is not "education" in the normal sense and fits more with the subjects above, you may want to consider renaming it. However, the general advice I've received from technical recruiters, technical interviewers, and fellow professionals over the years is that an Education section containing university degrees should usually stay at the top of your resume.
 
@@ -329,7 +329,7 @@ This is where you make your resume shine! By and large, the advice here applies 
 )
 ```
 
-![[Pasted image 20240421170010.png]]
+![[/assets/Pasted image 20240421170010.png]]
 
 Each experience entry has the following attributes you can add:
 
@@ -580,7 +580,7 @@ In general, the only hard-advised sections of a resume that I've seen consistent
 )
 ```
 
-![[Pasted image 20240421173135.png]]
+![[/assets/Pasted image 20240421173135.png]]
 
 A flavor of section that I see a lot - and would NOT recommend - is something along the lines of "Hobbies" or "Interests". This is occasionally recommended to give "flavor" to your resume or "humanize" you in some way. 
 

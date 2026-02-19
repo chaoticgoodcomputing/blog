@@ -10,17 +10,17 @@ description: ""
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
 
-If you are interested in what this note contains, please [[contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
+If you are interested in what this note contains, please [[/contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
 
 
 ## Links
 
 This note originally contained the following links:
 
-- [Courtyards Which Live](115-courtyards-which-live)
-- [Sheltering Roof](117-sheltering-roof)
-- [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
-- [96-number-of-stories](content/annotations/a-pattern-language/96-number-of-stories)
-- [99-main-building](content/annotations/a-pattern-language/99-main-building)
-- [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)
+- [Courtyards Which Live](/content/annotations/a-pattern-language/115-courtyards-which-live)
+- [Sheltering Roof](/content/annotations/a-pattern-language/117-sheltering-roof)
+- [95-building-complex](/content/annotations/a-pattern-language/95-building-complex)
+- [96-number-of-stories](/content/annotations/a-pattern-language/96-number-of-stories)
+- [99-main-building](/content/annotations/a-pattern-language/99-main-building)
+- [107-wings-of-light](/content/annotations/a-pattern-language/107-wings-of-light)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

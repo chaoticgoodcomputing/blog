@@ -10,17 +10,17 @@ description: ""
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
 
-If you are interested in what this note contains, please [[contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
+If you are interested in what this note contains, please [[/contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
 
 
 ## Links
 
 This note originally contained the following links:
 
-- [Interchange](34-interchange)
-- [Degrees of Publicness](36-degrees-of-publicness)
-- [14-identifiable-neighborhood](content/annotations/a-pattern-language/14-identifiable-neighborhood)
-- [37-house-cluster](content/annotations/a-pattern-language/37-house-cluster)
-- [41-work-community](content/annotations/a-pattern-language/41-work-community)
-- [26-life-cycle](content/annotations/a-pattern-language/26-life-cycle)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language/index)
+- [Interchange](/content/annotations/a-pattern-language/34-interchange)
+- [Degrees of Publicness](/content/annotations/a-pattern-language/36-degrees-of-publicness)
+- [14-identifiable-neighborhood](/content/annotations/a-pattern-language/14-identifiable-neighborhood)
+- [37-house-cluster](/content/annotations/a-pattern-language/37-house-cluster)
+- [41-work-community](/content/annotations/a-pattern-language/41-work-community)
+- [26-life-cycle](/content/annotations/a-pattern-language/26-life-cycle)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

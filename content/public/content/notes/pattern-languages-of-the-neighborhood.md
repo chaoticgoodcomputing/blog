@@ -12,7 +12,7 @@ The world is too complicated a place to be understood, wholly, exactly how it is
 
 These are *patterns*, and they're our greatest tool in comprehending the basics of the incomprehensible.
 
-Patterns are prevalent in my main interest and occupation of [[tags/engineering/index|software engineering]]. Software is made up of lines of code in the same way that a building is made up of bricks and beams. They are the basic building materials, but random scatterings of code make as successful a piece of software as a random scattering of bricks would make a home. To make anything of use, you need to step back and see the bricks for what they build, or code for what process it defines; we use the phrase [design patterns](https://refactoring.guru/design-patterns) to describe the larger structures we build.
+Patterns are prevalent in my main interest and occupation of [[/tags/engineering/index|software engineering]]. Software is made up of lines of code in the same way that a building is made up of bricks and beams. They are the basic building materials, but random scatterings of code make as successful a piece of software as a random scattering of bricks would make a home. To make anything of use, you need to step back and see the bricks for what they build, or code for what process it defines; we use the phrase [design patterns](https://refactoring.guru/design-patterns) to describe the larger structures we build.
 
 For a long time, I had assumed that "design patterns" was a term *coined* by software engineers, most famously in the 1990 book [Design Patterns: Elements of Reusable Object-Oriented Software](https://cs.gonzaga.edu/faculty/crandall/misc/GoF.pdf) — even if they did leverage terms from other fields. Especially in object-oriented programming, many [creational](https://refactoring.guru/design-patterns/creational-patterns) and [structural](https://refactoring.guru/design-patterns/structural-patterns) patterns actually *do* borrow, directly from physical spaces[^1]. Factories, builders, bridges, facades — they may deal with data and information instead of physical structures, but the patterns' purposes do match fairly well to their real-world analogs. Thinking in design patterns is, I think, what differentiates the role of software *development* — laying down the bricks of code — from software *architecture* — using patterns and theory to lay out the superstructures of the software.
 
@@ -83,7 +83,7 @@ As we move forward in the pattern listing, concepts begin to abstract away and d
 
 The most abstract — **Pattern 1**, fittingly — is Independent Regions: a case that independent regions should be... well, independent.
 
-![[assets/Pasted image 20260201161641.png]]
+![[/assets/Pasted image 20260201161641.png]]
 
 That is all to say: *A Pattern Language* seeks to cover a wide-ranging set of patterns to encapsulate all levels of structure that human beings could possibly dwell in. There are some patterns I agree with more than others. The amount of effort, however, that the authors have put into 253 separate rules seeking to cover the entirety of human habitat while being generalizable enough to cover many cultures? It's herculean.
 
@@ -93,9 +93,9 @@ Although my initial interest in *A Pattern Language* started with software desig
 
 When I say graphs, I don't mean a line graph on an X-Y plot — I mean it in the most abstract sense — dots that represent *things*, and lines that *connect* those things. This is the foundation of [graph theory](https://en.wikipedia.org/wiki/Graph_theory). Maps as graphs feels like an apt return to form — the study of graph theory itself formed in 1736 when Leonhard Euler (of the number ***e***), solved a puzzle about [seven bridges in the city of Königsberg](https://en.wikipedia.org/wiki/Seven_Bridges_of_K%C3%B6nigsberg):
 
-![[assets/Pasted image 20260201163320.png]]
+![[/assets/Pasted image 20260201163320.png]]
 
-![[assets/Pasted image 20260201163331.png]]
+![[/assets/Pasted image 20260201163331.png]]
 
 Maps are simply graphs of the real world. In fact, whenever a device shows you a map, gives you directions, it's not *seeing* left turns and right turns, streets and buildings — it's seeing nodes on a graph, and the edges that connect them.
 
@@ -103,28 +103,28 @@ My hope with *A Pattern Language* is to learn more about the relationship *betwe
 
 ### Understanding The Neighborhood
 
-This ultimately lends itself to another project that I've been hoping to work on for a very long time — [[tags/projects/games/the-neighborhood/index|The Neighborhood]]. What form this project will take is, to put it mildly, a bit up-in-the-air; it will really depend on how well I can analyze maps as graphs. The goal, though, is simple:
+This ultimately lends itself to another project that I've been hoping to work on for a very long time — [[/tags/projects/games/the-neighborhood/index|The Neighborhood]]. What form this project will take is, to put it mildly, a bit up-in-the-air; it will really depend on how well I can analyze maps as graphs. The goal, though, is simple:
 
 We have so much data about the world around us. We've learned that it's, all things considered, fairly straightforward to simply collect everything, always, all the time:
 
-![[assets/Pasted image 20260201164026.png]]
+![[/assets/Pasted image 20260201164026.png]]
 
 However, you and I don't see our communities as nodes and edges. We see them as alive — they're the places we rest, where we work, the friends in our lives, our connection to others. The literal places and the ways they're connected are all in the raw data, but their *meaning* — the *semantics* of data, to each of us — is a superstructure. The deeper connections are not the lines on the graph — they're somewhere hidden between them.
 
 My hope is to understand and apply the language to create a system that can process the raw data and boil it down to something smaller, but representative. Given an area of data, The Neighborhood's first goal is to understand the abstract, conceptual relationships and generate a toy model of the area — a simpler graph that maintains complex structures and relationships, but is simple enough that it could be printed on one of those old-school Playskool Village rugs for kids.
 
-![[assets/Pasted image 20260201164502.png]]
+![[/assets/Pasted image 20260201164502.png]]
 
 I have many amorphous thoughts on what form of a game The Neighborhood will take — thoughts that I'll spare you from, until they take some more concrete, actionable and *playable* form — but I consider the graphical analysis of real map data to be at the core of the concept.
 
 ## How the `#annotations/a-pattern-language` project will work.
 
-Unfortunately, I won't be able to truly annotate the work in the same way I made the public annotations for *[[content/annotations/college-admissions-and-the-stability-of-marriage|College Admissions and the Stability of Marriage]]* or *[[content/annotations/llm-starter|The LLMs Starter]]*. I lack, at the current time, a good way to automatically trim PDF or EPUB texts into preselected chapters. Additionally, the [online source from Cornell](https://arl.human.cornell.edu/linked%20docs/Alexander_A_Pattern_Language.pdf) is, unfortunately, missing quite a bit of the text (only 313 of the full 1169-page text —  a bit over 25%).
+Unfortunately, I won't be able to truly annotate the work in the same way I made the public annotations for *[[/content/annotations/college-admissions-and-the-stability-of-marriage|College Admissions and the Stability of Marriage]]* or *[[/content/annotations/llm-starter|The LLMs Starter]]*. I lack, at the current time, a good way to automatically trim PDF or EPUB texts into preselected chapters. Additionally, the [online source from Cornell](https://arl.human.cornell.edu/linked%20docs/Alexander_A_Pattern_Language.pdf) is, unfortunately, missing quite a bit of the text (only 313 of the full 1169-page text —  a bit over 25%).
 
-Nonetheless, I'll be annotating my physical copy of the book and moving those annotations, piecemeal, into this blog under the [[tags/writing/annotations/a-pattern-language/index|pattern-language]] tag. I've already pre-generated 255 notes, one for each pattern (as well as an intro and conclusion note). The reason for pre-generating them is simple: the patterns form a graph, themselves. Each pattern references other patterns. This is most clear in the first portions of each pattern entry. For example, the introduction to [[content/annotations/a-pattern-language/62-high-places|Pattern 62: High Places]]:
+Nonetheless, I'll be annotating my physical copy of the book and moving those annotations, piecemeal, into this blog under the [[/tags/writing/annotations/a-pattern-language/index|pattern-language]] tag. I've already pre-generated 255 notes, one for each pattern (as well as an intro and conclusion note). The reason for pre-generating them is simple: the patterns form a graph, themselves. Each pattern references other patterns. This is most clear in the first portions of each pattern entry. For example, the introduction to [[/content/annotations/a-pattern-language/62-high-places|Pattern 62: High Places]]:
 
 > [!QUOTE]
-> ... according to [[content/annotations/a-pattern-language/21-four-story-limit|Four Story Limit (21)]], most roofs in the community are no higher than four stories, about 40 or 50 feet. However, it is very important that this height limit be punctuated, just occasionally, by higher buildings which have special functions. They can help the character of the [[content/annotations/a-pattern-language/61-small-public-squares|Small Public Squares (61)]] and [[content/annotations/a-pattern-language/66-holy-ground|Holy Ground (66)]]; they can give particular identity to their communities, provided that they do not occur more frequently than one in each [[content/annotations/a-pattern-language/12-community-of-7000|Community of 7,000 (12)]].
+> ... according to [[/content/annotations/a-pattern-language/21-four-story-limit|Four Story Limit (21)]], most roofs in the community are no higher than four stories, about 40 or 50 feet. However, it is very important that this height limit be punctuated, just occasionally, by higher buildings which have special functions. They can help the character of the [[/content/annotations/a-pattern-language/61-small-public-squares|Small Public Squares (61)]] and [[/content/annotations/a-pattern-language/66-holy-ground|Holy Ground (66)]]; they can give particular identity to their communities, provided that they do not occur more frequently than one in each [[/content/annotations/a-pattern-language/12-community-of-7000|Community of 7,000 (12)]].
 
 The amount of explicit links between patterns is practically *begging* to be graphed out like the other pages on this site. To better learn this information for understanding the graphs formed by maps of the world, I also want to understand the graph of these patterns' connections to one another.
 
@@ -141,15 +141,15 @@ This is a very solid piece of work, and I don't anticipate that anything from th
 
 With 253 patterns to annotate, this will doubtless be a long-running project (the scope has already annihilated the organization of my site graph). Even at a *very generous* estimated pace averaging one pattern a day, that'd make for an completion date eight months in the future — October of this year. While I have every intention, as of writing this, to read back through the text and have at least *some* annotation for each section (if only just to complete the link connections between a pattern and its neighbors), I will need to triage the pacing a bit.
 
-Above, I define the terms *substructure* to mean "structures smaller than a whole building" and *superstructure* to mean "structures larger than a whole building". I've created two subtags — [[tags/writing/annotations/a-pattern-language/index|pattern-language/sub]] and [[tags/writing/annotations/a-pattern-language/index|pattern-language/super]] — to sort patterns into these two categories. I'll be prioritizing the `#super` patterns first, as they relate more to what I'd like to get out of this reading. The book does a preliminary grouping into *Towns, Buildings, and Construction*:
+Above, I define the terms *substructure* to mean "structures smaller than a whole building" and *superstructure* to mean "structures larger than a whole building". I've created two subtags — [[/tags/writing/annotations/a-pattern-language/index|pattern-language/sub]] and [[/tags/writing/annotations/a-pattern-language/index|pattern-language/super]] — to sort patterns into these two categories. I'll be prioritizing the `#super` patterns first, as they relate more to what I'd like to get out of this reading. The book does a preliminary grouping into *Towns, Buildings, and Construction*:
 
-- **Towns:** [[content/annotations/a-pattern-language/01-independent-regions|Independent Regions (01)]] to [[content/annotations/a-pattern-language/94-sleeping-in-public|Sleeping in Public (94)]]
-- **Buildings:** [[content/annotations/a-pattern-language/95-building-complex|Building Complexes (95)]] to [[content/annotations/a-pattern-language/204-secret-place|Secret Places (204)]]
-- **Construction:** [[content/annotations/a-pattern-language/205-structure-follows-social-spaces|Structure Follows Social Spaces (205)]] to [[content/annotations/a-pattern-language/253-things-from-your-life|Things From Your Life (253)]]
+- **Towns:** [[/content/annotations/a-pattern-language/01-independent-regions|Independent Regions (01)]] to [[/content/annotations/a-pattern-language/94-sleeping-in-public|Sleeping in Public (94)]]
+- **Buildings:** [[/content/annotations/a-pattern-language/95-building-complex|Building Complexes (95)]] to [[/content/annotations/a-pattern-language/204-secret-place|Secret Places (204)]]
+- **Construction:** [[/content/annotations/a-pattern-language/205-structure-follows-social-spaces|Structure Follows Social Spaces (205)]] to [[/content/annotations/a-pattern-language/253-things-from-your-life|Things From Your Life (253)]]
 
-For now, I've designated anything in *Towns* to superstructure patterns, and anything from *Buildings* and *Construction* to substructure patterns. However, I can already see that these categories will be fluid, with some current superstructure patterns being better suited to substructures (e.g. [[content/annotations/a-pattern-language/92-bus-stop|Bus Stops (92)]]) or some current substructures being better suited as superstructures (e.g. [[content/annotations/a-pattern-language/120-paths-and-goals|Paths and Goals (120)]]). Those re-categorizations will track here with time, but don't expect my distribution or classification to be as clean-cut as the book itself makes them out to be.
+For now, I've designated anything in *Towns* to superstructure patterns, and anything from *Buildings* and *Construction* to substructure patterns. However, I can already see that these categories will be fluid, with some current superstructure patterns being better suited to substructures (e.g. [[/content/annotations/a-pattern-language/92-bus-stop|Bus Stops (92)]]) or some current substructures being better suited as superstructures (e.g. [[/content/annotations/a-pattern-language/120-paths-and-goals|Paths and Goals (120)]]). Those re-categorizations will track here with time, but don't expect my distribution or classification to be as clean-cut as the book itself makes them out to be.
 
-Finally: the text itself groups patterns into broader categories — for example, a transit category composed of the rules between [[content/annotations/a-pattern-language/49-looped-local-roads|Looped Local Roads (49)]] and [[content/annotations/a-pattern-language/57-children-in-the-city|Children in the City (57)]]. I may do larger composite notes for these groups, especially as they relate to the graph introspection goals of The Neighborhood.
+Finally: the text itself groups patterns into broader categories — for example, a transit category composed of the rules between [[/content/annotations/a-pattern-language/49-looped-local-roads|Looped Local Roads (49)]] and [[/content/annotations/a-pattern-language/57-children-in-the-city|Children in the City (57)]]. I may do larger composite notes for these groups, especially as they relate to the graph introspection goals of The Neighborhood.
 
 ## Conclusion
 

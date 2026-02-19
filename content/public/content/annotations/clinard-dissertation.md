@@ -9,14 +9,14 @@ tags:
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
 
-If you are interested in what this note contains, please [[contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
+If you are interested in what this note contains, please [[/contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
 
 
 ## Links
 
 This note originally contained the following links:
 
-- [AI gold rush](content/notes/hostage-negotiations)
+- [AI gold rush](/content/notes/hostage-negotiations)
 - [lithotripsy for kidney stone removal](https://en.wikipedia.org/wiki/Kidney_stone_disease#Lithotripsy)
 - [k-wave](http://www.k-wave.org/)
 - [simulating acoustic waves in designed environments](https://k-wave-python.readthedocs.io/en/latest/)
