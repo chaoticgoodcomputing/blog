@@ -114,14 +114,6 @@ export default (() => {
       <div class={classNames(displayClass, "annotation-viewer")} data-pdf-url={localPdfPath} data-source-url={pdfUrl}>
         <script type="application/json" id="annotations-data" dangerouslySetInnerHTML={{ __html: JSON.stringify(sortedAnnotations) }} />
 
-        {/* SEO: Add semantic description for crawlers */}
-        <div class="annotation-description" aria-label="About these annotations">
-          <p>
-            This page contains {sortedAnnotations.length} annotations and commentary on the source document.
-            Each annotation includes the original text context, personal insights, and relevant connections.
-          </p>
-        </div>
-
         <div class="annotation-source-citation">
           Source document retrieved from{" "}
           <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
