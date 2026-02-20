@@ -1,5 +1,5 @@
 import { loadPDFLib, loadAnnotationsData } from "./ui/loader"
-import { initPDFViewer } from "./adapters/lifecycle"
+import { initPDFViewer, cleanupPDFViewer } from "./adapters/lifecycle"
 import { renderHighlights, renderAllHighlights, setActiveHighlight } from "./core/highlighting"
 
 // Wrap in IIFE and handle multiple initialization scenarios
@@ -12,7 +12,10 @@ import { renderHighlights, renderAllHighlights, setActiveHighlight } from "./cor
     if (!viewer) return
 
     // Check if already initialized
-    if (viewer.getAttribute("data-initialized") === "true") return
+    if (viewer.getAttribute("data-initialized") === "true") {
+      console.log("[AnnotationViewer] Already initialized, skipping")
+      return
+    }
     viewer.setAttribute("data-initialized", "true")
 
     // Load PDF.js library on first encounter
@@ -21,6 +24,14 @@ import { renderHighlights, renderAllHighlights, setActiveHighlight } from "./cor
     // Load annotations data and initialize viewer
     loadAnnotationsData()
     await initPDFViewer()
+    
+    // Register cleanup for SPA navigation
+    if (window.addCleanup) {
+      window.addCleanup(() => {
+        console.log("[AnnotationViewer] Cleaning up for navigation")
+        cleanupPDFViewer()
+      })
+    }
   }
 
   // Initialize on page load

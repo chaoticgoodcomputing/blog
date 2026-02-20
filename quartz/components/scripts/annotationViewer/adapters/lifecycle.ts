@@ -2,6 +2,54 @@ import { extractPageText } from "../core/textExtraction"
 import { createPageWrapper, renderPageToCanvas } from "../ui/pdfRenderer"
 import { setupScrollSync } from "./scrollSync"
 
+// Store current PDF document for cleanup
+let currentPdfDocument: any = null
+
+/**
+ * Clean up PDF.js resources before navigation
+ */
+export function cleanupPDFViewer(): void {
+  // Destroy PDF.js document instance
+  if (currentPdfDocument) {
+    currentPdfDocument.destroy()
+    currentPdfDocument = null
+  }
+  
+  // Clear global state
+  delete window.pdfTextData
+  delete window.pdfScale
+  delete window.annotationsData
+  
+  // Clear initialization flag
+  const viewer = document.querySelector(".annotation-viewer")
+  if (viewer) {
+    viewer.removeAttribute("data-initialized")
+  }
+}
+
+/**
+ * Wait for element to have valid dimensions
+ */
+async function waitForLayout(element: Element): Promise<void> {
+  return new Promise((resolve) => {
+    // Check if dimensions are already valid
+    if (element.clientWidth > 0) {
+      resolve()
+      return
+    }
+    
+    // Wait for next frame and check again
+    requestAnimationFrame(() => {
+      if (element.clientWidth > 0) {
+        resolve()
+      } else {
+        // If still no dimensions, wait one more frame
+        requestAnimationFrame(() => resolve())
+      }
+    })
+  })
+}
+
 /**
  * Initialize the PDF viewer and set up annotation highlighting
  */
@@ -14,10 +62,16 @@ export async function initPDFViewer(): Promise<void> {
 
   const container = viewer.querySelector("#pdf-viewer")
   if (!container) return
+  
+  // Wait for container to have valid dimensions
+  await waitForLayout(container.parentElement || container)
 
   try {
     const loadingTask = window.pdfjsLib.getDocument(pdfUrl)
     const pdf = await loadingTask.promise
+    
+    // Store for cleanup
+    currentPdfDocument = pdf
 
     container.innerHTML = ""
 
