@@ -304,11 +304,11 @@ jobs:
           EOF
 
   # ============================================================================
-  # STAGE 4: Send weekly email (independent of deployment)
+  # STAGE 4: Create weekly email draft (independent of deployment)
   # ============================================================================
 
   send-weekly-email:
-    name: Send weekly email
+    name: Create weekly email draft
     needs: check-affected
     if: needs.check-affected.outputs.weekly-note != ''
     runs-on: ubuntu-latest
@@ -327,7 +327,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Send weekly email
+      - name: Create weekly email draft
         env:
           BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_POST_KEY }}
         run: |
@@ -337,10 +337,11 @@ jobs:
       - name: Summary
         run: |
           cat >> $GITHUB_STEP_SUMMARY <<EOF
-          ## 📧 Weekly Email Sent
+          ## 📧 Weekly Email Draft Created
 
-          Successfully sent weekly email:
+          Successfully created weekly email draft:
           - ✅ Note: ${{ needs.check-affected.outputs.weekly-note }}
+          - ⚠️  Review and send manually from Buttondown dashboard
 
           📬 Newsletter: https://buttondown.com/chaoticgoodcomputing
           EOF

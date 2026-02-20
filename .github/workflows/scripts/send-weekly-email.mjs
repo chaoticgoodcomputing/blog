@@ -155,14 +155,15 @@ async function main() {
       throw new Error("Missing BUTTONDOWN_API_KEY environment variable")
     }
 
-    console.log("\n📤 Sending email via Buttondown...")
+    console.log("\n📤 Creating email draft in Buttondown...")
 
-    const result = await createEmail(subject, body, false)
+    const result = await createEmail(subject, body, true)
 
-    console.log(`\n✅ Email sent successfully!`)
+    console.log(`\n✅ Email draft created successfully!`)
     console.log(`   Email ID: ${result.id}`)
     console.log(`   URL: ${result.absolute_url}`)
     console.log(`   Status: ${result.status}`)
+    console.log(`\n⚠️  Draft created - review and send manually from Buttondown dashboard`)
   }
 }
 
