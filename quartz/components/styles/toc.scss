@@ -1,4 +1,5 @@
-@use "../../styles/variables.scss" as *;
+@use "../../styles/settings" as *;
+@use "../../styles/tools" as *;
 
 .toc {
   display: flex;
@@ -6,6 +7,7 @@
   overflow-y: hidden;
   min-height: 1.4rem;
   flex: 0 0.5 auto;
+
   &:has(button.toc-header.collapsed) {
     flex: 0 1 1.4rem;
   }
@@ -47,12 +49,13 @@ ul.toc-content.overflow {
   overscroll-behavior: contain;
   list-style: none;
 
-  & > li > a {
+  &>li>a {
     color: var(--dark);
     opacity: 0.35;
     transition:
       0.5s ease opacity,
       0.3s ease color;
+
     &.in-view {
       opacity: 0.75;
     }

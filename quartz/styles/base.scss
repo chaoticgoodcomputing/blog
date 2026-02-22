@@ -1,8 +1,23 @@
+/**
+ * DEPRECATED - DO NOT IMPORT THIS FILE
+ * 
+ * This file has been split into ITCSS-based layer files for better organization.
+ * Import quartz/styles/custom.scss instead, which includes all styles with proper @layer ordering.
+ * 
+ * Migration:
+ * - Generic resets → _generic.scss
+ * - Element styles → _elements.scss
+ * - Layout patterns → _objects.scss
+ * - Utility classes → _utilities.scss
+ * - Mixins/functions → _tools.scss
+ * - Variables → _settings.scss
+ * 
+ * This file is kept temporarily for reference but should not be imported.
+ */
+
 @use "sass:map";
 
-@use "./variables.scss" as *;
-@use "./syntax.scss";
-@use "./callouts.scss";
+@use "./settings" as *;
 
 html {
   scroll-behavior: smooth;

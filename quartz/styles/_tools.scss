@@ -1,0 +1,59 @@
+@use "sass:map";
+@use "./settings" as *;
+
+/**
+ * SCSS Tools Layer
+ * 
+ * Mixins and functions used throughout the codebase.
+ * This file contains no CSS output on its own.
+ */
+
+/**
+ * Responsive breakpoint mixin
+ * 
+ * Usage:
+ *   @include respond-to(mobile) { ... }
+ *   @include respond-to(not-desktop) { ... }
+ * 
+ * Available breakpoints:
+ * - mobile: max-width 1000px
+ * - tablet: between 1000px and 1300px
+ * - desktop: min-width 1300px
+ * - not-mobile: min-width 1000px
+ * - not-desktop: max-width 1300px
+ */
+@mixin respond-to($breakpoint) {
+  @if $breakpoint ==mobile {
+    @media all and ($mobile) {
+      @content;
+    }
+  }
+
+  @else if $breakpoint ==tablet {
+    @media all and ($tablet) {
+      @content;
+    }
+  }
+
+  @else if $breakpoint ==desktop {
+    @media all and ($desktop) {
+      @content;
+    }
+  }
+
+  @else if $breakpoint ==not-mobile {
+    @media all and not ($mobile) {
+      @content;
+    }
+  }
+
+  @else if $breakpoint ==not-desktop {
+    @media all and not ($desktop) {
+      @content;
+    }
+  }
+
+  @else {
+    @error "Unknown breakpoint: #{$breakpoint}. Use mobile, tablet, desktop, not-mobile, or not-desktop.";
+  }
+}

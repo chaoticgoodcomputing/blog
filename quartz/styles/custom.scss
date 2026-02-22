@@ -1,21 +1,44 @@
-@use "./base.scss";
+/**
+ * Custom Styles Entry Point with CSS Cascade Layers
+ * 
+ * This file orchestrates the ITCSS-based architecture using CSS @layer.
+ * Layers are applied in order of specificity (lowest to highest):
+ * 
+ * 1. generic    - Resets, box-sizing, global behavior
+ * 2. elements   - Bare HTML element styling (h1, a, pre, etc.)
+ * 3. objects    - Layout patterns (grid, sidebars)
+ * 4. components - Component-specific styles (loaded separately)
+ * 5. utilities  - Single-purpose helpers (.desktop-only, .spacer)
+ * 
+ * Later layers automatically win over earlier layers, regardless of specificity.
+ * This eliminates most needs for !important and makes overrides predictable.
+ */
+
+// Import layer files first (@use must come before any other rules)
+@use "./generic";
+@use "./elements";
+@use "./syntax";
+@use "./callouts";
+@use "./objects";
+@use "./utilities";
+
+// Define layer order
+@layer generic, elements, objects, components, utilities;
 
 /**
- * Image display constraints
- * - Limits image height for better page flow
- * - Maintains aspect ratio while scaling width
- * - Centers images within content area
+ * Additional element-layer styles
  */
-img {
-  max-height: 500px;
-  width: auto;
-  height: auto;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+@layer elements {
+  img {
+    max-height: 500px;
+    width: auto;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 
-  // Mobile: slightly smaller max height
-  @media (max-width: 800px) {
-    max-height: 400px;
+    @media (max-width: 800px) {
+      max-height: 400px;
+    }
   }
 }

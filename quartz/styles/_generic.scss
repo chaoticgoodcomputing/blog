@@ -1,0 +1,28 @@
+/**
+ * Generic Layer - Resets and Global Behavior
+ * 
+ * Box-sizing, scroll behavior, and other low-specificity foundational rules.
+ * This layer has the lowest specificity and broadest reach.
+ */
+
+@layer generic {
+  html {
+    scroll-behavior: smooth;
+    text-size-adjust: none;
+    overflow-x: hidden;
+    width: 100vw;
+  }
+
+  body {
+    margin: 0;
+    box-sizing: border-box;
+    background-color: var(--light);
+    font-family: var(--bodyFont);
+    color: var(--darkgray);
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--tertiary) 60%, rgba(255, 255, 255, 0));
+    color: var(--darkgray);
+  }
+}

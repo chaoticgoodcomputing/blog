@@ -4,7 +4,8 @@
  * Portable styling that works in any layout position.
  */
 
-@use "../../styles/variables.scss" as *;
+@use "../../styles/settings" as *;
+@use "../../styles/tools" as *;
 
 .page-source {
   display: block;

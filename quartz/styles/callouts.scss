@@ -1,4 +1,4 @@
-@use "./variables.scss" as *;
+@use "./settings" as *;
 @use "sass:color";
 
 .callout {
@@ -9,12 +9,12 @@
   overflow-y: hidden;
   box-sizing: border-box;
 
-  & > .callout-content {
+  &>.callout-content {
     display: grid;
     transition: grid-template-rows 0.1s cubic-bezier(0.02, 0.01, 0.47, 1);
     overflow: hidden;
 
-    & > :first-child {
+    &> :first-child {
       margin-top: 0;
     }
   }
@@ -119,12 +119,12 @@
   }
 
   &.is-collapsed {
-    & > .callout-title > .fold-callout-icon {
+    &>.callout-title>.fold-callout-icon {
       transform: rotateZ(-90deg);
     }
 
     .callout-content {
-      & > * {
+      &>* {
         transition:
           height 0.1s cubic-bezier(0.02, 0.01, 0.47, 1),
           margin 0.1s cubic-bezier(0.02, 0.01, 0.47, 1),
@@ -136,7 +136,8 @@
         padding-bottom: 0;
         padding-top: 0;
       }
-      & > :first-child {
+
+      &> :first-child {
         margin-top: -1rem;
       }
     }
@@ -159,7 +160,7 @@
     --callout-icon: var(--callout-icon-fold);
   }
 
-  & > .callout-title-inner > p {
+  &>.callout-title-inner>p {
     color: var(--color);
     margin: 0;
   }

@@ -1,0 +1,391 @@
+@use "sass:map";
+@use "./settings" as *;
+@use "./tools" as *;
+
+/**
+ * Objects Layer - Layout Patterns
+ * 
+ * Structural components that define page layout and positioning.
+ * These are design-agnostic patterns (grid, sidebars, containers).
+ * No cosmetic styling (colors, borders, shadows) should appear here.
+ */
+
+@layer objects {
+
+  // ============================================================================
+  // Page Container
+  // ============================================================================
+
+  .page {
+    max-width: calc(#{map.get($breakpoints, desktop)} + 300px);
+    margin: 0 auto;
+
+    & article {
+      &>h1 {
+        font-size: 2rem;
+      }
+
+      & li:has(> input[type="checkbox"]) {
+        list-style-type: none;
+        padding-left: 0;
+      }
+
+      & li:has(> input[type="checkbox"]:checked) {
+        text-decoration: line-through;
+        text-decoration-color: var(--gray);
+        color: var(--gray);
+      }
+
+      & li>* {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+
+      p>strong {
+        color: var(--dark);
+      }
+    }
+  }
+
+  // ============================================================================
+  // Main Grid Layout
+  // ============================================================================
+
+  .page>#quartz-body {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: #{map.get($desktopGrid, templateColumns)};
+    grid-template-rows: #{map.get($desktopGrid, templateRows)};
+    column-gap: #{map.get($desktopGrid, columnGap)};
+    row-gap: #{map.get($desktopGrid, rowGap)};
+    grid-template-areas: #{map.get($desktopGrid, templateAreas)};
+
+    @include respond-to(tablet) {
+      grid-template-columns: #{map.get($tabletGrid, templateColumns)};
+      grid-template-rows: #{map.get($tabletGrid, templateRows)};
+      column-gap: #{map.get($tabletGrid, columnGap)};
+      row-gap: #{map.get($tabletGrid, rowGap)};
+      grid-template-areas: #{map.get($tabletGrid, templateAreas)};
+    }
+
+    @include respond-to(mobile) {
+      grid-template-columns: #{map.get($mobileGrid, templateColumns)};
+      grid-template-rows: #{map.get($mobileGrid, templateRows)};
+      column-gap: #{map.get($mobileGrid, columnGap)};
+      row-gap: #{map.get($mobileGrid, rowGap)};
+      grid-template-areas: #{map.get($mobileGrid, templateAreas)};
+    }
+
+    @include respond-to(not-desktop) {
+      padding: 0 2rem;
+    }
+
+    @include respond-to(mobile) {
+      margin: 0 auto;
+    }
+  }
+
+  // ============================================================================
+  // Sidebars
+  // ============================================================================
+
+  .page>#quartz-body .sidebar {
+    gap: 1.2rem;
+    top: 0;
+    box-sizing: border-box;
+    padding: $topSpacing 1.5rem 2rem 1.5rem;
+    display: flex;
+    max-height: 100vh;
+    overflow-y: auto;
+    position: sticky;
+  }
+
+  .page>#quartz-body .sidebar.left {
+    z-index: 1;
+    grid-area: grid-sidebar-left;
+    flex-direction: column;
+
+    @include respond-to(mobile) {
+      gap: 0;
+      align-items: center;
+      position: initial;
+      display: flex;
+      height: unset;
+      flex-direction: row;
+      padding: 0;
+      padding-top: 2rem;
+    }
+  }
+
+  .page>#quartz-body .sidebar.right {
+    grid-area: grid-sidebar-right;
+    margin-right: 0;
+    flex-direction: column;
+
+    @include respond-to(mobile) {
+      margin-left: inherit;
+      margin-right: inherit;
+    }
+
+    @include respond-to(not-desktop) {
+      position: initial;
+      height: unset;
+      width: 100%;
+      flex-direction: column;
+      padding: 0;
+
+      // Constrain right sidebar content to match body width in tablet/mobile
+      max-width: 40em;
+      margin-left: auto;
+      margin-right: auto;
+
+      &>* {
+        flex: 0 1 auto;
+        max-height: 24rem;
+      }
+
+      &>.toc {
+        display: none;
+      }
+    }
+  }
+
+  /**
+ * Section-Based Header Hierarchy
+ * 
+ * Components within the same grid section should have consistent header styling.
+ * This defines a standard hierarchy based on layout position rather than component type.
+ * 
+ * Hierarchy:
+ * - Sidebars (left/right): h3 at 1rem - compact, secondary navigation/metadata
+ * - Page header (beforeBody): h3 at 1rem - consistent with sidebar styling
+ * - Main content (.center): Uses natural h1-h6 hierarchy (defined in elements layer)
+ * 
+ * Components should use semantic HTML heading levels (h2, h3, etc.) without
+ * custom font-size declarations - the section will apply appropriate sizing.
+ */
+  .page>#quartz-body .sidebar.left,
+  .page>#quartz-body .sidebar.right {
+    h3 {
+      font-size: 1rem;
+      margin: 0.75rem 0 0.25rem 0;
+    }
+  }
+
+  // ============================================================================
+  // Page Header (beforeBody section)
+  // ============================================================================
+
+  .page>#quartz-body .page-header {
+    margin-top: 1rem;
+
+    // Ensure components stack vertically, never side-by-side
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+
+    // Page-header component headers: match sidebar styling for consistency
+    h3 {
+      font-size: 1rem;
+      margin: 0.75rem 0 0.25rem 0;
+    }
+
+    @include respond-to(mobile) {
+      margin-top: 0;
+      padding: 0;
+    }
+  }
+
+  .page>#quartz-body .page-level-header {
+    grid-area: grid-page-header;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+
+    @include respond-to(desktop) {
+      padding: $topSpacing 2rem;
+    }
+
+    @include respond-to(not-desktop) {
+      padding: 2rem 1rem;
+    }
+  }
+
+  .page>#quartz-body:has(.page-level-header) .page-header {
+    margin-top: 0;
+  }
+
+  // ============================================================================
+  // Center Content Area
+  // ============================================================================
+
+  .page>#quartz-body .center {
+    grid-area: grid-center;
+    max-width: 100%;
+    min-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+
+    /**
+   * Constrain all content to ~70 characters per line for readability.
+   * - Includes page-header (title, meta, tags), article, graphs, post listings
+   * - 40em ≈ 70 characters in proportional fonts
+   * - Centered for visual balance
+   * - Exception: annotation-viewer needs full width for PDF + sidebar layout
+   */
+    &>*:not(.annotation-viewer) {
+      max-width: 40em;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @include respond-to(tablet) {
+      margin-right: 0;
+    }
+
+    @include respond-to(mobile) {
+      margin-right: 0;
+      margin-left: 0;
+    }
+  }
+
+  // ============================================================================
+  // Footer
+  // ============================================================================
+
+  .page>#quartz-body footer {
+    grid-area: grid-footer;
+    margin-left: auto;
+    max-width: 40em;
+    margin-right: auto;
+
+    @include respond-to(tablet) {
+      margin-right: 0;
+      margin-left: 0;
+    }
+
+    @include respond-to(mobile) {
+      margin-right: 0;
+      margin-left: 0;
+    }
+  }
+
+  // ============================================================================
+  // Layout Variations
+  // ============================================================================
+
+  /**
+ * Full-width layout when sidebars are empty
+ */
+  body.full-width .page {
+    max-width: 1600px;
+    margin: 0 auto;
+
+    >#quartz-body {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "grid-page-header"
+        "grid-center"
+        "grid-footer";
+      padding: 0 2rem;
+
+      // Reduce padding when annotation viewer is present to maximize width
+      &:has(.annotation-viewer) {
+        padding: 0 1rem;
+
+        @include respond-to(tablet) {
+          padding: 0 0.75rem;
+        }
+
+        @include respond-to(mobile) {
+          padding: 0 0.5rem;
+        }
+      }
+
+      @include respond-to(tablet) {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "grid-page-header"
+          "grid-center"
+          "grid-footer";
+        padding: 0 1.5rem;
+      }
+
+      @include respond-to(mobile) {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "grid-page-header"
+          "grid-center"
+          "grid-footer";
+        padding: 0 1rem;
+      }
+
+      & .center {
+        max-width: none;
+
+        // Keep beforeBody section at normal width, centered
+        & .page-header {
+          max-width: 850px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        // Constrain body content for readability even in full-width layout
+        // Exception: annotation-viewer needs full width for PDF + sidebar layout
+        &>*:not(.page-header):not(.annotation-viewer) {
+          max-width: 40em;
+          margin-left: auto;
+          margin-right: auto;
+        }
+      }
+
+      & footer {
+        max-width: 40em;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+  }
+
+  /**
+ * Layout with only right sidebar
+ */
+  body.no-left .page>#quartz-body {
+    grid-template-columns: auto #{$sidePanelWidth};
+    grid-template-areas:
+      "grid-page-header grid-page-header"
+      "grid-center grid-sidebar-right"
+      "grid-footer .";
+
+    @include respond-to(tablet) {
+      grid-template-columns: auto;
+      grid-template-areas:
+        "grid-page-header"
+        "grid-center"
+        "grid-sidebar-right"
+        "grid-footer";
+    }
+  }
+
+  /**
+ * Layout with only left sidebar
+ */
+  body.no-right .page>#quartz-body {
+    grid-template-columns: #{$sidePanelWidth} auto;
+    grid-template-areas:
+      "grid-page-header grid-page-header"
+      "grid-sidebar-left grid-center"
+      ". grid-footer";
+
+    @include respond-to(tablet) {
+      grid-template-columns: #{$sidePanelWidth} auto;
+      grid-template-areas:
+        "grid-page-header grid-page-header"
+        "grid-sidebar-left grid-center"
+        "grid-sidebar-left grid-footer";
+    }
+  }
+
+}
+
+// end @layer objects

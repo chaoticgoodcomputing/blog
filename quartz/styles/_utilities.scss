@@ -1,0 +1,113 @@
+@use "./tools" as *;
+
+/**
+ * Utilities Layer - Single-Purpose Helper Classes
+ * 
+ * Atomic utility classes that do one thing.
+ * These have the highest specificity (via cascade layers) and can override
+ * component styles when explicitly applied.
+ */
+
+@layer utilities {
+
+  // ============================================================================
+  // Responsive Visibility
+  // ============================================================================
+
+  /**
+ * Responsive visibility utility classes
+ * - .desktop-only: Hidden on mobile/tablet, visible on desktop
+ * - .mobile-only: Visible on mobile, hidden on tablet/desktop
+ */
+  .desktop-only {
+    display: none;
+
+    @include respond-to(not-mobile) {
+      display: block;
+    }
+  }
+
+  .mobile-only {
+    display: block;
+
+    @include respond-to(not-mobile) {
+      display: none;
+    }
+  }
+
+  // ============================================================================
+  // Text Styling
+  // ============================================================================
+
+  .text-highlight {
+    background-color: var(--textHighlight);
+    padding: 0 0.1rem;
+    border-radius: 5px;
+  }
+
+  // ============================================================================
+  // Layout Utilities
+  // ============================================================================
+
+  /**
+ * Base utility for Flex component
+ */
+  .flex-component {
+    display: flex;
+  }
+
+  /**
+ * Flexible spacer for pushing content apart
+ */
+  .spacer {
+    flex: 2 1 auto;
+  }
+
+  // ============================================================================
+  // Overflow Management
+  // ============================================================================
+
+  div:has(> .overflow) {
+    max-height: 100%;
+    overflow-y: hidden;
+  }
+
+  ul.overflow,
+  ol.overflow {
+    max-height: 100%;
+    overflow-y: auto;
+    width: 100%;
+    margin-bottom: 0;
+
+    // clearfix
+    content: "";
+    clear: both;
+
+    &>li.overflow-end {
+      height: 0.5rem;
+      margin: 0;
+    }
+
+    &.gradient-active {
+      mask-image: linear-gradient(to bottom, black calc(100% - 50px), transparent 100%);
+    }
+  }
+
+  // ============================================================================
+  // Navigation Progress Indicator
+  // ============================================================================
+
+  .navigation-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: var(--secondary);
+    transition: width 0.2s ease;
+    z-index: 9999;
+  }
+
+}
+
+// end @layer utilities

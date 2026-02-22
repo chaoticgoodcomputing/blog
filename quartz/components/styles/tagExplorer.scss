@@ -1,4 +1,5 @@
-@use "../../styles/variables.scss" as *;
+@use "../../styles/settings" as *;
+@use "../../styles/tools" as *;
 
 .tag-explorer {
   display: flex;
