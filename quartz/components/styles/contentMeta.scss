@@ -1,23 +1,25 @@
 @use "../../styles/settings" as *;
 @use "../../styles/tools" as *;
 
-.content-meta {
-  margin-top: 0;
-  color: var(--darkgray);
+@layer components {
+  .content-meta {
+    margin-top: 0;
+    color: var(--darkgray);
 
-  &[show-comma="true"] {
-    >*:not(:last-child) {
-      margin-right: 8px;
+    &[show-comma="true"] {
+      >*:not(:last-child) {
+        margin-right: 8px;
 
-      &::after {
-        content: ",";
+        &::after {
+          content: ",";
+        }
       }
     }
   }
-}
 
-@media all and ($mobile) {
-  .content-meta {
-    text-align: center;
+  @media all and ($mobile) {
+    .content-meta {
+      text-align: center;
+    }
   }
 }

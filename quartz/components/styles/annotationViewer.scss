@@ -1,83 +1,87 @@
-.annotation-viewer {
-  // Use full width to let flex children determine size naturally
-  width: 100%;
-  max-width: none;
-  // No padding - rely on parent #quartz-body padding to avoid double-padding
-  height: 100vh;
-  overflow: hidden;
-}
+@use "../../styles/settings" as *;
+@use "../../styles/tools" as *;
 
-// SEO: Description visible to crawlers but hidden from visual users
-.annotation-description {
-  position: absolute;
-  left: -10000px;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-
-  // Ensure screen readers and crawlers can still access
-  &:not(:focus):not(:active) {
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
+@layer components {
+  .annotation-viewer {
+    // Use full width to let flex children determine size naturally
+    width: 100%;
+    max-width: none;
+    // No padding - rely on parent #quartz-body padding to avoid double-padding
+    height: 100vh;
+    overflow: hidden;
   }
-}
 
-.annotation-source-citation {
-  padding: 0.75rem 1rem;
-  background: var(--lightgray);
-  border-bottom: 1px solid var(--gray);
-  font-size: 0.9rem;
-  color: var(--darkgray);
-}
+  // SEO: Description visible to crawlers but hidden from visual users
+  .annotation-description {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
 
-.annotation-source-citation a {
-  color: var(--secondary);
-  text-decoration: none;
-  font-weight: 500;
-}
+    // Ensure screen readers and crawlers can still access
+    &:not(:focus):not(:active) {
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+    }
+  }
 
-.annotation-source-citation a:hover {
-  text-decoration: underline;
-}
+  .annotation-source-citation {
+    padding: 0.75rem 1rem;
+    background: var(--lightgray);
+    border-bottom: 1px solid var(--gray);
+    font-size: 0.9rem;
+    color: var(--darkgray);
+  }
 
-.annotation-split-view {
-  display: flex;
-  height: calc(100% - 3rem);
-  gap: 1rem;
-}
+  .annotation-source-citation a {
+    color: var(--secondary);
+    text-decoration: none;
+    font-weight: 500;
+  }
 
-.annotation-pdf-container {
-  flex: 1 1 auto; // Allow growth and shrinkage
-  min-width: 600px; // Minimum reasonable PDF viewing width
-  overflow-y: auto;
-  overflow-x: hidden;
-  background: var(--light);
-  border: 1px solid var(--lightgray);
-  border-radius: 0.5rem;
-}
+  .annotation-source-citation a:hover {
+    text-decoration: underline;
+  }
 
-.pdf-canvas-wrapper {
-  width: 100%;
-  min-height: 100%;
-  position: relative;
-  padding: 1rem;
-}
+  .annotation-split-view {
+    display: flex;
+    height: calc(100% - 3rem);
+    gap: 1rem;
+  }
 
-.pdf-page {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 auto 1rem auto;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  position: relative;
-}
+  .annotation-pdf-container {
+    flex: 1 1 auto; // Allow growth and shrinkage
+    min-width: 600px; // Minimum reasonable PDF viewing width
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: var(--light);
+    border: 1px solid var(--lightgray);
+    border-radius: 0.5rem;
+  }
 
-.pdf-page-wrapper {
-  position: relative;
-  margin: 0 auto 1rem auto;
-}
+  .pdf-canvas-wrapper {
+    width: 100%;
+    min-height: 100%;
+    position: relative;
+    padding: 1rem;
+  }
 
-/**
+  .pdf-page {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto 1rem auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+
+  .pdf-page-wrapper {
+    position: relative;
+    margin: 0 auto 1rem auto;
+  }
+
+  /**
  * TextLayer styling is handled almost entirely by PDF.js's official CSS
  * (pdf_viewer.css), which is loaded and scoped to .annotation-viewer at runtime.
  *
@@ -89,141 +93,142 @@
  * We only add overrides that PDF.js's CSS doesn't provide.
  */
 
-.pdf-highlight-layer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 2; // Above text layer
-}
-
-.pdf-text-highlight {
-  position: absolute;
-  // Inactive highlights: blue
-  background: rgba(33, 150, 243, 0.3);
-  // Use 'screen' blend mode to prevent opacity compounding on overlaps
-  // This ensures overlapping highlights maintain consistent transparency
-  mix-blend-mode: screen;
-  transition: background 0.2s ease;
-  // Re-enable pointer events for individual highlights (layer has pointer-events: none)
-  pointer-events: auto;
-  cursor: pointer;
-
-  // Active highlight: yellow
-  &.active {
-    background: rgba(255, 235, 59, 0.4);
+  .pdf-highlight-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 2; // Above text layer
   }
-}
 
-.pdf-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  color: var(--gray);
-}
+  .pdf-text-highlight {
+    position: absolute;
+    // Inactive highlights: blue
+    background: rgba(33, 150, 243, 0.3);
+    // Use 'screen' blend mode to prevent opacity compounding on overlaps
+    // This ensures overlapping highlights maintain consistent transparency
+    mix-blend-mode: screen;
+    transition: background 0.2s ease;
+    // Re-enable pointer events for individual highlights (layer has pointer-events: none)
+    pointer-events: auto;
+    cursor: pointer;
 
-.annotation-sidebar {
-  flex: 0 0 400px;
-  overflow-y: auto;
-  padding: 1rem;
-  background: var(--light);
-  border: 1px solid var(--lightgray);
-  border-radius: 0.5rem;
-}
+    // Active highlight: yellow
+    &.active {
+      background: rgba(255, 235, 59, 0.4);
+    }
+  }
 
-.annotation-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.annotation-list-heading {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin: 0 0 1rem 0;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--lightgray);
-  color: var(--darkgray);
-}
-
-.annotation-item {
-  padding: 1rem;
-  background: var(--light);
-  border: 1px solid var(--lightgray);
-  border-radius: 0.5rem;
-  transition: all 0.2s ease;
-}
-
-.annotation-item.active {
-  border-color: var(--secondary);
-  box-shadow: 0 0 0 2px var(--secondary-light);
-}
-
-.annotation-quote {
-  font-size: 0.9rem;
-  line-height: 1.6;
-  margin-bottom: 0.75rem;
-  color: var(--darkgray);
-}
-
-.annotation-prefix,
-.annotation-suffix {
-  opacity: 0.6;
-  font-style: italic;
-}
-
-.annotation-highlight {
-  background: var(--highlight);
-  padding: 0.1rem 0.2rem;
-  border-radius: 0.2rem;
-  font-weight: 500;
-}
-
-.annotation-comment {
-  margin: 0.75rem 0;
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: var(--dark);
-}
-
-.annotation-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin: 0.75rem 0;
-}
-
-.annotation-tag {
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  background: var(--lightgray);
-  color: var(--secondary);
-  border-radius: 0.25rem;
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-
-.annotation-meta {
-  margin-top: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--lightgray);
-  font-size: 0.85rem;
-  color: var(--gray);
-}
-
-@media (max-width: 1200px) {
-  .annotation-split-view {
-    flex-direction: column;
+  .pdf-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    color: var(--gray);
   }
 
   .annotation-sidebar {
-    flex: 0 0 auto;
-    max-height: 50vh;
+    flex: 0 0 400px;
+    overflow-y: auto;
+    padding: 1rem;
+    background: var(--light);
+    border: 1px solid var(--lightgray);
+    border-radius: 0.5rem;
   }
 
-  .annotation-pdf-container {
-    flex: 1;
-    min-height: 50vh;
+  .annotation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .annotation-list-heading {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--lightgray);
+    color: var(--darkgray);
+  }
+
+  .annotation-item {
+    padding: 1rem;
+    background: var(--light);
+    border: 1px solid var(--lightgray);
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .annotation-item.active {
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 2px var(--secondary-light);
+  }
+
+  .annotation-quote {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+    color: var(--darkgray);
+  }
+
+  .annotation-prefix,
+  .annotation-suffix {
+    opacity: 0.6;
+    font-style: italic;
+  }
+
+  .annotation-highlight {
+    background: var(--highlight);
+    padding: 0.1rem 0.2rem;
+    border-radius: 0.2rem;
+    font-weight: 500;
+  }
+
+  .annotation-comment {
+    margin: 0.75rem 0;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--dark);
+  }
+
+  .annotation-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+  }
+
+  .annotation-tag {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background: var(--lightgray);
+    color: var(--secondary);
+    border-radius: 0.25rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .annotation-meta {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--lightgray);
+    font-size: 0.85rem;
+    color: var(--gray);
+  }
+
+  @include respond-to(not-desktop) {
+    .annotation-split-view {
+      flex-direction: column;
+    }
+
+    .annotation-sidebar {
+      flex: 0 0 auto;
+      max-height: 50vh;
+    }
+
+    .annotation-pdf-container {
+      flex: 1;
+      min-height: 50vh;
+    }
   }
 }

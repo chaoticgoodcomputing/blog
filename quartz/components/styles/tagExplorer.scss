@@ -1,218 +1,198 @@
 @use "../../styles/settings" as *;
 @use "../../styles/tools" as *;
 
-.tag-explorer {
-  display: flex;
-  flex-direction: column;
-  overflow-y: hidden;
+@layer components {
+  .tag-explorer {
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
 
-  min-height: 1.2rem;
-  flex: 0 1 auto;
+    min-height: 1.2rem;
+    flex: 0 1 auto;
 
-  // Ensure tag explorer respects search modal z-index
-  position: relative;
-  z-index: 1;
+    // Ensure tag explorer respects search modal z-index
+    position: relative;
+    z-index: 1;
 
-  // Hide TagExplorer on mobile when search is active
-  @media all and ($mobile) {
-    .left.sidebar:has(.search-container.active) & {
-      display: none;
+    // Hide TagExplorer on mobile when search is active
+    @media all and ($mobile) {
+      .left.sidebar:has(.search-container.active) & {
+        display: none;
+      }
     }
-  }
 
-  // Header styling inherited from section-based hierarchy (base.scss)
+    // Header styling inherited from section-based hierarchy (base.scss)
 
-  &.collapsed {
-    flex: 0 1 1.2rem;
+    &.collapsed {
+      flex: 0 1 1.2rem;
+
+      & .fold {
+        transform: rotateZ(-90deg);
+      }
+    }
 
     & .fold {
-      transform: rotateZ(-90deg);
+      margin-left: 0.5rem;
+      transition: transform 0.3s ease;
+      opacity: 0.8;
     }
-  }
 
-  & .fold {
-    margin-left: 0.5rem;
-    transition: transform 0.3s ease;
-    opacity: 0.8;
-  }
-
-  svg {
-    pointer-events: all;
-    transition: transform 0.35s ease;
-
-    &>polyline {
-      pointer-events: none;
-    }
-  }
-}
-
-button.tag-explorer-toggle {
-  background-color: transparent;
-  border: none;
-  text-align: left;
-  cursor: pointer;
-  padding: 0;
-  color: var(--dark);
-  display: flex;
-  align-items: center;
-
-  & h2 {
-    font-size: 1rem;
-    display: inline-block;
-    margin: 0;
-  }
-}
-
-.tag-explorer-content {
-  list-style: none;
-  overflow: hidden;
-  overflow-y: auto;
-  margin-top: 0.5rem;
-
-  & ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    overscroll-behavior: contain;
-
-    & li>a.file-link {
-      color: var(--dark);
-      opacity: 0.75;
+    svg {
       pointer-events: all;
-      font-weight: $normalWeight;
+      transition: transform 0.35s ease;
 
-      &.active {
-        opacity: 1;
-        color: var(--tertiary);
+      &>polyline {
+        pointer-events: none;
       }
     }
   }
 
-  .tag-outer {
-    visibility: collapse;
-    display: grid;
-    grid-template-rows: 0fr;
-    transition-property: grid-template-rows, visibility;
-    transition-duration: 0.3s;
-    transition-timing-function: ease-in-out;
-  }
-
-  .tag-outer.open {
-    visibility: visible;
-    grid-template-rows: 1fr;
-  }
-
-  .tag-outer>ul {
-    overflow: hidden;
-    margin-left: 6px;
-    padding-left: 0.8rem;
-    border-left: 1px solid var(--lightgray);
-  }
-}
-
-.tag-container {
-  flex-direction: row;
-  display: flex;
-  align-items: center;
-  user-select: none;
-  gap: 0.25rem;
-
-  & div>a.tag-link {
-    color: var(--secondary);
-    font-family: var(--headerFont);
-    font-size: 0.95rem;
-    font-weight: $semiBoldWeight;
-    line-height: 1.5rem;
-    display: inline-flex;
-    align-items: center;
-
-    & .tag-count {
-      color: var(--gray);
-      font-size: 0.85rem;
-      margin-left: 0.25rem;
-    }
-  }
-
-  & div>a.tag-link:hover {
-    color: var(--tertiary);
-  }
-
-  & div>button.tag-button {
-    color: var(--dark);
+  button.tag-explorer-toggle {
     background-color: transparent;
     border: none;
     text-align: left;
     cursor: pointer;
-    padding-left: 0;
-    padding-right: 0;
+    padding: 0;
+    color: var(--dark);
     display: flex;
     align-items: center;
-    font-family: var(--headerFont);
 
-    & .tag-title {
-      font-size: 0.95rem;
+    & h2 {
+      font-size: 1rem;
       display: inline-block;
-      color: var(--secondary);
-      font-weight: $semiBoldWeight;
       margin: 0;
+    }
+  }
+
+  .tag-explorer-content {
+    list-style: none;
+    overflow: hidden;
+    overflow-y: auto;
+    margin-top: 0.5rem;
+
+    & ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      overscroll-behavior: contain;
+
+      & li>a.file-link {
+        color: var(--dark);
+        opacity: 0.75;
+        pointer-events: all;
+        font-weight: $normalWeight;
+
+        &.active {
+          opacity: 1;
+          color: var(--tertiary);
+        }
+      }
+    }
+
+    .tag-outer {
+      visibility: collapse;
+      display: grid;
+      grid-template-rows: 0fr;
+      transition-property: grid-template-rows, visibility;
+      transition-duration: 0.3s;
+      transition-timing-function: ease-in-out;
+    }
+
+    .tag-outer.open {
+      visibility: visible;
+      grid-template-rows: 1fr;
+    }
+
+    .tag-outer>ul {
+      overflow: hidden;
+      margin-left: 6px;
+      padding-left: 0.8rem;
+      border-left: 1px solid var(--lightgray);
+    }
+  }
+
+  .tag-container {
+    flex-direction: row;
+    display: flex;
+    align-items: center;
+    user-select: none;
+    gap: 0.25rem;
+
+    & div>a.tag-link {
+      color: var(--secondary);
+      font-family: var(--headerFont);
+      font-size: 0.95rem;
+      font-weight: $semiBoldWeight;
       line-height: 1.5rem;
-      pointer-events: none;
+      display: inline-flex;
+      align-items: center;
+
+      & .tag-count {
+        color: var(--gray);
+        font-size: 0.85rem;
+        margin-left: 0.25rem;
+      }
     }
 
-    & .tag-count {
-      color: var(--gray);
-      font-size: 0.85rem;
-      margin-left: 0.25rem;
-      pointer-events: none;
+    & div>a.tag-link:hover {
+      color: var(--tertiary);
+    }
+
+    & div>button.tag-button {
+      color: var(--dark);
+      background-color: transparent;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      padding-left: 0;
+      padding-right: 0;
+      display: flex;
+      align-items: center;
+      font-family: var(--headerFont);
+
+      & .tag-title {
+        font-size: 0.95rem;
+        display: inline-block;
+        color: var(--secondary);
+        font-weight: $semiBoldWeight;
+        margin: 0;
+        line-height: 1.5rem;
+        pointer-events: none;
+      }
+
+      & .tag-count {
+        color: var(--gray);
+        font-size: 0.85rem;
+        margin-left: 0.25rem;
+        pointer-events: none;
+      }
     }
   }
-}
 
-.tag-fold-icon {
-  margin-right: 5px;
-  color: var(--secondary);
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  backface-visibility: visible;
-  flex-shrink: 0;
-}
-
-li:has(> .tag-outer:not(.open))>.tag-container>.tag-fold-icon {
-  transform: rotate(-90deg);
-}
-
-.tag-fold-icon:hover {
-  color: var(--tertiary);
-}
-
-.file-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 2px;
-  flex-shrink: 0;
-  min-width: 16px;
-  height: 1.5rem;
-
-  // Default bullet for public posts (when empty)
-  &:empty::before {
-    content: "•";
-    color: var(--gray);
-    font-size: 1rem;
-    line-height: 1;
+  .tag-fold-icon {
+    margin-right: 5px;
+    color: var(--secondary);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    backface-visibility: visible;
+    flex-shrink: 0;
   }
 
-  // Override inline margin on SVG and ensure proper sizing
-  & svg {
-    margin-right: 0 !important;
-    width: 12px;
-    height: 12px;
-    display: block;
+  li:has(> .tag-outer:not(.open))>.tag-container>.tag-fold-icon {
+    transform: rotate(-90deg);
   }
-}
 
-li>a.file-link {
-  display: flex;
-  align-items: flex-start;
-  text-indent: 0;
+  .tag-fold-icon:hover {
+    color: var(--tertiary);
+  }
+
+  .file-icon {
+    @include file-icon(1.5rem, 2px);
+  }
+
+  li>a.file-link {
+    display: flex;
+    align-items: flex-start;
+    text-indent: 0;
+  }
 }

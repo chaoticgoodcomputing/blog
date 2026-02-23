@@ -11,97 +11,99 @@
  * All responsive behavior is self-contained within this component.
  */
 
-/**
- * Caret toggle button
- * - Only visible on mobile viewports
- * - Positioned to move with sidebar, maintaining fixed distance from sidebar edge
- * - Just the icon overlay, no background
- */
-.mobile-sidebar-toggle {
-  // Base styles (mobile)
-  position: fixed;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  z-index: 1001;
-  background: transparent;
-  border: none;
-  outline: none;
-  width: 32px;
-  height: 48px;
-  cursor: pointer;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: left 0.3s ease, opacity 0.2s ease;
-  opacity: 0.5;
-  -webkit-tap-highlight-color: transparent;
+@layer components {
 
-  // Hide on non-mobile viewports
-  @media all and not ($mobile) {
-    display: none;
-  }
+  /**
+   * Caret toggle button
+   * - Only visible on mobile viewports
+   * - Positioned to move with sidebar, maintaining fixed distance from sidebar edge
+   * - Just the icon overlay, no background
+   */
+  .mobile-sidebar-toggle {
+    // Base styles (mobile)
+    position: fixed;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    z-index: 1001;
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 32px;
+    height: 48px;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: left 0.3s ease, opacity 0.2s ease;
+    opacity: 0.5;
+    -webkit-tap-highlight-color: transparent;
 
-  &:hover {
-    opacity: 0.9;
-  }
+    // Hide on non-mobile viewports
+    @media all and not ($mobile) {
+      display: none;
+    }
 
-  &:active {
-    opacity: 1;
-  }
+    &:hover {
+      opacity: 0.9;
+    }
 
-  // Caret icon (chevron)
-  .caret-icon {
-    width: 2.5rem;
-    height: 2.5rem;
-    color: var(--darkgray);
-    transition: transform 0.3s ease;
-    flex-shrink: 0;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
-  }
+    &:active {
+      opacity: 1;
+    }
 
-  // Flip caret to point left when menu is open
-  &[aria-expanded="true"] {
-    opacity: 0.9;
-
+    // Caret icon (chevron)
     .caret-icon {
-      transform: rotate(180deg);
+      width: 2.5rem;
+      height: 2.5rem;
+      color: var(--darkgray);
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+    }
+
+    // Flip caret to point left when menu is open
+    &[aria-expanded="true"] {
+      opacity: 0.9;
+
+      .caret-icon {
+        transform: rotate(180deg);
+      }
     }
   }
-}
 
-/**
+  /**
  * Backdrop overlay
  * - Semi-transparent dark overlay that appears behind the sidebar
  * - Only visible when menu is open on mobile
  * - Click to close sidebar
  */
-.mobile-sidebar-backdrop {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-
-  &.visible {
-    display: block;
-    opacity: 1;
-  }
-
-  // Only relevant on mobile viewports
-  @media all and not ($mobile) {
+  .mobile-sidebar-backdrop {
     display: none;
-  }
-}
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 
-/**
+    &.visible {
+      display: block;
+      opacity: 1;
+    }
+
+    // Only relevant on mobile viewports
+    @media all and not ($mobile) {
+      display: none;
+    }
+  }
+
+  /**
  * Mobile sidebar container
  * - On desktop/tablet: Invisible passthrough container (display: contents)
  * - On mobile: Fixed off-canvas sidebar that slides in from left
@@ -110,76 +112,42 @@
  * that was previously defined in base.scss, eliminating the need for
  * !important overrides.
  */
-.mobile-sidebar-container {
+  .mobile-sidebar-container {
 
-  // On desktop/tablet: just pass through with no visual presence
-  @media all and not ($mobile) {
-    display: contents;
-  }
-
-  // On mobile: fixed off-canvas sidebar
-  @media all and ($mobile) {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 80%;
-    max-width: 320px;
-    background-color: var(--light);
-    z-index: 1000;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-    overflow-y: auto;
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
-
-    // Allow fixed children (like search) to escape containment
-    // when search is active, remove transform/overflow that create containing blocks
-    &:has(.search-container.active) {
-      overflow: visible;
-      transform: none; // Remove transform to allow position:fixed children to escape
+    // On desktop/tablet: just pass through with no visual presence
+    @media all and not ($mobile) {
+      display: contents;
     }
 
-    &.open {
-      transform: translateX(0);
-
-      // When sidebar is open AND search is active, keep sidebar visible
-      &:has(.search-container.active) {
-        transform: translateX(0);
-      }
-    }
-
-    /**
-     * Left sidebar styles when inside mobile container
-     * - Overrides base.scss .page>#quartz-body .sidebar.left styles for mobile viewport
-     * - Matches exact selector structure from base.scss for proper specificity
-     * - Full control over mobile sidebar layout
-     */
-    .page>#quartz-body & .left.sidebar {
-      position: static;
+    // On mobile: fixed off-canvas sidebar
+    @media all and ($mobile) {
+      position: fixed;
+      top: 0;
+      left: 0;
       height: 100%;
-      max-height: none;
-      padding: 5rem 1.5rem 2rem 1.5rem;
-      gap: 1.5rem;
-      flex-direction: column;
+      width: 80%;
+      max-width: 320px;
+      background-color: var(--light);
+      z-index: 1000;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
       overflow-y: auto;
-      top: auto;
-      align-items: stretch;
-      display: flex;
+      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
 
-      // Ensure all direct children stack vertically
-      &>* {
-        width: 100%;
-        flex-shrink: 0;
-        position: relative;
-        z-index: 1;
+      // Allow fixed children (like search) to escape containment
+      // when search is active, remove transform/overflow that create containing blocks
+      &:has(.search-container.active) {
+        overflow: visible;
+        transform: none; // Remove transform to allow position:fixed children to escape
       }
 
-      // Override spacer flex-grow behavior in mobile sidebar
-      &>.spacer {
-        flex-grow: 0;
-        flex-shrink: 1;
-        flex-basis: auto;
-        height: 1.5rem;
+      &.open {
+        transform: translateX(0);
+
+        // When sidebar is open AND search is active, keep sidebar visible
+        &:has(.search-container.active) {
+          transform: translateX(0);
+        }
       }
     }
   }

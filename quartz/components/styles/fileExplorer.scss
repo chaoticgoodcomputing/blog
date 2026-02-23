@@ -9,181 +9,184 @@
  * All responsive behavior is self-contained within this component.
  */
 
-/**
- * Main explorer container
- * - Flex column layout for title + content
- * - Collapsible via .collapsed class
- */
-.explorer {
-  display: flex;
-  flex-direction: column;
-  overflow-y: hidden;
-  min-height: 1.2rem;
-  flex: 0 1 auto;
+@layer components {
 
-  &.collapsed {
-    flex: 0 1 1.2rem;
+  /**
+   * Main explorer container
+   * - Flex column layout for title + content
+   * - Collapsible via .collapsed class
+   */
+  .explorer {
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+    min-height: 1.2rem;
+    flex: 0 1 auto;
+
+    &.collapsed {
+      flex: 0 1 1.2rem;
+
+      & .fold {
+        transform: rotateZ(-90deg);
+      }
+    }
 
     & .fold {
-      transform: rotateZ(-90deg);
+      margin-left: 0.5rem;
+      transition: transform 0.3s ease;
+      opacity: 0.8;
     }
-  }
 
-  & .fold {
-    margin-left: 0.5rem;
-    transition: transform 0.3s ease;
-    opacity: 0.8;
-  }
-
-  svg {
-    pointer-events: all;
-    transition: transform 0.35s ease;
-
-    &>polyline {
-      pointer-events: none;
-    }
-  }
-}
-
-/**
- * Explorer toggle button
- * - Collapses/expands the file tree
- * - Styled as transparent button with fold indicator
- */
-button.explorer-toggle {
-  background-color: transparent;
-  border: none;
-  text-align: left;
-  cursor: pointer;
-  padding: 0;
-  color: var(--dark);
-  display: flex;
-  align-items: center;
-
-  & h2 {
-    font-size: 1rem;
-    display: inline-block;
-    margin: 0;
-  }
-}
-
-/**
- * Explorer content area
- * - Contains the scrollable file tree
- * - Nested <ul> structure for hierarchy
- */
-.explorer-content {
-  list-style: none;
-  overflow: hidden;
-  overflow-y: auto;
-  margin-top: 0.5rem;
-
-  & ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    overscroll-behavior: contain;
-
-    & li>a {
-      color: var(--dark);
-      opacity: 0.75;
+    svg {
       pointer-events: all;
+      transition: transform 0.35s ease;
 
-      &.active {
-        opacity: 1;
-        color: var(--tertiary);
+      &>polyline {
+        pointer-events: none;
       }
     }
   }
 
-  .folder-outer {
-    visibility: collapse;
-    display: grid;
-    grid-template-rows: 0fr;
-    transition-property: grid-template-rows, visibility;
-    transition-duration: 0.3s;
-    transition-timing-function: ease-in-out;
-  }
-
-  .folder-outer.open {
-    visibility: visible;
-    grid-template-rows: 1fr;
-  }
-
-  .folder-outer>ul {
-    overflow: hidden;
-    margin-left: 6px;
-    padding-left: 0.8rem;
-    border-left: 1px solid var(--lightgray);
-  }
-}
-
-/**
- * Folder container
- * - Holds folder icon, button, and link
- * - Flexbox row layout for horizontal alignment
+  /**
+ * Explorer toggle button
+ * - Collapses/expands the file tree
+ * - Styled as transparent button with fold indicator
  */
-.folder-container {
-  flex-direction: row;
-  display: flex;
-  align-items: center;
-  user-select: none;
-
-  & div>a {
-    color: var(--secondary);
-    font-family: var(--headerFont);
-    font-size: 0.95rem;
-    font-weight: $semiBoldWeight;
-    line-height: 1.5rem;
-    display: inline-block;
-  }
-
-  & div>a:hover {
-    color: var(--tertiary);
-  }
-
-  & div>button {
-    color: var(--dark);
+  button.explorer-toggle {
     background-color: transparent;
     border: none;
     text-align: left;
     cursor: pointer;
-    padding-left: 0;
-    padding-right: 0;
+    padding: 0;
+    color: var(--dark);
     display: flex;
     align-items: center;
-    font-family: var(--headerFont);
 
-    & span {
-      font-size: 0.95rem;
+    & h2 {
+      font-size: 1rem;
       display: inline-block;
-      color: var(--secondary);
-      font-weight: $semiBoldWeight;
       margin: 0;
-      line-height: 1.5rem;
-      pointer-events: none;
     }
   }
-}
 
-/**
+  /**
+ * Explorer content area
+ * - Contains the scrollable file tree
+ * - Nested <ul> structure for hierarchy
+ */
+  .explorer-content {
+    list-style: none;
+    overflow: hidden;
+    overflow-y: auto;
+    margin-top: 0.5rem;
+
+    & ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      overscroll-behavior: contain;
+
+      & li>a {
+        color: var(--dark);
+        opacity: 0.75;
+        pointer-events: all;
+
+        &.active {
+          opacity: 1;
+          color: var(--tertiary);
+        }
+      }
+    }
+
+    .folder-outer {
+      visibility: collapse;
+      display: grid;
+      grid-template-rows: 0fr;
+      transition-property: grid-template-rows, visibility;
+      transition-duration: 0.3s;
+      transition-timing-function: ease-in-out;
+    }
+
+    .folder-outer.open {
+      visibility: visible;
+      grid-template-rows: 1fr;
+    }
+
+    .folder-outer>ul {
+      overflow: hidden;
+      margin-left: 6px;
+      padding-left: 0.8rem;
+      border-left: 1px solid var(--lightgray);
+    }
+  }
+
+  /**
+ * Folder container
+ * - Holds folder icon, button, and link
+ * - Flexbox row layout for horizontal alignment
+ */
+  .folder-container {
+    flex-direction: row;
+    display: flex;
+    align-items: center;
+    user-select: none;
+
+    & div>a {
+      color: var(--secondary);
+      font-family: var(--headerFont);
+      font-size: 0.95rem;
+      font-weight: $semiBoldWeight;
+      line-height: 1.5rem;
+      display: inline-block;
+    }
+
+    & div>a:hover {
+      color: var(--tertiary);
+    }
+
+    & div>button {
+      color: var(--dark);
+      background-color: transparent;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      padding-left: 0;
+      padding-right: 0;
+      display: flex;
+      align-items: center;
+      font-family: var(--headerFont);
+
+      & span {
+        font-size: 0.95rem;
+        display: inline-block;
+        color: var(--secondary);
+        font-weight: $semiBoldWeight;
+        margin: 0;
+        line-height: 1.5rem;
+        pointer-events: none;
+      }
+    }
+  }
+
+  /**
  * Folder icon (chevron)
  * - Rotates -90deg when folder is collapsed
  * - Transition handled by parent .folder-outer state
  */
-.folder-icon {
-  margin-right: 5px;
-  color: var(--secondary);
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  backface-visibility: visible;
-  flex-shrink: 0;
-}
+  .folder-icon {
+    margin-right: 5px;
+    color: var(--secondary);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    backface-visibility: visible;
+    flex-shrink: 0;
+  }
 
-li:has(> .folder-outer:not(.open))>.folder-container>svg {
-  transform: rotate(-90deg);
-}
+  li:has(> .folder-outer:not(.open))>.folder-container>svg {
+    transform: rotate(-90deg);
+  }
 
-.folder-icon:hover {
-  color: var(--tertiary);
+  .folder-icon:hover {
+    color: var(--tertiary);
+  }
 }

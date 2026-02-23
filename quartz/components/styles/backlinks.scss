@@ -1,60 +1,40 @@
 @use "../../styles/settings" as *;
 @use "../../styles/tools" as *;
 
-.backlinks {
-  flex-direction: column;
+@layer components {
+  .backlinks {
+    flex-direction: column;
 
-  // Header styling inherited from section-based hierarchy (base.scss)
+    // Header styling inherited from section-based hierarchy (base.scss)
 
-  &>ul.overflow {
-    list-style: none;
-    padding: 0;
-    margin: 0.5rem 0;
-    max-height: calc(100% - 2rem);
-    overscroll-behavior: contain;
+    &>ul.overflow {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0;
+      max-height: calc(100% - 2rem);
+      overscroll-behavior: contain;
 
-    &>li {
-      &>a {
-        background-color: transparent;
+      &>li {
+        &>a {
+          background-color: transparent;
+        }
       }
     }
   }
-}
 
-// File link styling (similar to tag explorer)
-a.file-link {
-  display: flex;
-  align-items: flex-start;
-  text-indent: 0;
-  text-decoration: none;
-}
-
-.file-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 8px;
-  flex-shrink: 0;
-  min-width: 16px;
-  height: 1.6rem;
-
-  // Default bullet for public posts (when empty)
-  &:empty::before {
-    content: "•";
-    color: var(--gray);
-    font-size: 1rem;
-    line-height: 1;
+  // File link styling (similar to tag explorer)
+  a.file-link {
+    display: flex;
+    align-items: flex-start;
+    text-indent: 0;
+    text-decoration: none;
   }
 
-  // Override inline margin on SVG and ensure proper sizing
-  & svg {
-    margin-right: 0 !important;
-    width: 12px;
-    height: 12px;
-    display: block;
+  .file-icon {
+    @include file-icon(1.6rem, 8px);
   }
-}
 
-.file-title {
-  flex: 1;
+  .file-title {
+    flex: 1;
+  }
 }

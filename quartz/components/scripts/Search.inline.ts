@@ -488,7 +488,7 @@ function _createResultCardGenerator(
   return function resultToHTML({ slug, title, content, tags }: Item): HTMLAnchorElement {
     const htmlTags = tags.length > 0 ? `<ul class="tags">${tags.join("")}</ul>` : ``
     const itemTile = document.createElement("a")
-    itemTile.classList.add("result-card")
+    itemTile.classList.add("search-result-card")
     itemTile.id = slug
     itemTile.href = resolveUrl(slug).toString()
     itemTile.innerHTML = `
@@ -525,7 +525,7 @@ function _createResultCardGenerator(
  * Display "no results" message
  */
 function _displayNoResults(results: HTMLElement, preview: HTMLDivElement | undefined) {
-  results.innerHTML = `<a class="result-card no-match">
+  results.innerHTML = `<a class="search-result-card no-match">
       <h3>No results.</h3>
       <p>Try another search term?</p>
   </a>`
@@ -672,7 +672,7 @@ async function _handleEnterKey(
     await displayPreview(active)
     active.click()
   } else {
-    const anchor = document.getElementsByClassName("result-card")[0] as HTMLInputElement | null
+    const anchor = document.getElementsByClassName("search-result-card")[0] as HTMLInputElement | null
     if (!anchor || anchor.classList.contains("no-match")) return
     await displayPreview(anchor)
     anchor.click()
@@ -708,7 +708,7 @@ async function _handleArrowDown(
 ): Promise<void> {
   if (document.activeElement === searchBar || currentHoverRef.value !== null) {
     const firstResult = currentHoverRef.value ||
-      (document.getElementsByClassName("result-card")[0] as HTMLInputElement | null)
+      (document.getElementsByClassName("search-result-card")[0] as HTMLInputElement | null)
     const secondResult = firstResult?.nextElementSibling as HTMLInputElement | null
     firstResult?.classList.remove("focus")
     secondResult?.focus()
@@ -855,13 +855,13 @@ async function setupSearch(searchElement: Element, currentSlug: FullSlug) {
   const idDataMap = Object.keys(data) as FullSlug[]
   const enablePreview = searchLayout.dataset.preview === "true"
   const results = document.createElement("div")
-  results.className = "results-container"
+  results.className = "search-results-container"
   searchLayout.appendChild(results)
 
   let preview: HTMLDivElement | undefined = undefined
   if (enablePreview) {
     preview = document.createElement("div")
-    preview.className = "preview-container"
+    preview.className = "search-preview-container"
     searchLayout.appendChild(preview)
   }
 

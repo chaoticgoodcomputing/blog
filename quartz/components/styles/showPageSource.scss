@@ -7,31 +7,33 @@
 @use "../../styles/settings" as *;
 @use "../../styles/tools" as *;
 
-.page-source {
-  display: block;
-  margin: 1rem 0;
-}
+@layer components {
+  .page-source {
+    display: block;
+    margin: 1rem 0;
+  }
 
-.page-source a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--lightgray);
-  border-radius: 5px;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  font-size: 0.9rem;
-  color: var(--darkgray);
-  background: var(--light);
-}
+  .page-source a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 5px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    color: var(--darkgray);
+    background: var(--light);
+  }
 
-.page-source a:hover {
-  background: var(--lightgray);
-  border-color: var(--secondary);
-  color: var(--dark);
-}
+  .page-source a:hover {
+    background: var(--lightgray);
+    border-color: var(--secondary);
+    color: var(--dark);
+  }
 
-.page-source svg {
-  flex-shrink: 0;
+  .page-source svg {
+    flex-shrink: 0;
+  }
 }

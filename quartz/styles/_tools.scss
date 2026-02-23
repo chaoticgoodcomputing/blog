@@ -57,3 +57,43 @@
     @error "Unknown breakpoint: #{$breakpoint}. Use mobile, tablet, desktop, not-mobile, or not-desktop.";
   }
 }
+
+/**
+ * File icon mixin
+ * 
+ * Creates consistent styling for file icons used in navigation components.
+ * Handles both SVG icons and default bullet fallback for empty icons.
+ * 
+ * @param {length} $height - Icon container height (default: 1.5rem)
+ * @param {length} $margin-right - Space after icon (default: 8px)
+ * 
+ * Usage:
+ *   .file-icon {
+ *     @include file-icon(1.6rem, 8px);
+ *   }
+ */
+@mixin file-icon($height: 1.5rem, $margin-right: 8px) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: $margin-right;
+  flex-shrink: 0;
+  min-width: 16px;
+  height: $height;
+
+  // Default bullet for public posts (when empty)
+  &:empty::before {
+    content: "•";
+    color: var(--gray);
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  // Override inline margin on SVG and ensure proper sizing
+  & svg {
+    margin-right: 0 !important;
+    width: 12px;
+    height: 12px;
+    display: block;
+  }
+}
