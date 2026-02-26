@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Small Parking Lots](/content/annotations/a-pattern-language/103-small-parking-lots)
-- [South Facing Outdoors](/content/annotations/a-pattern-language/105-south-facing-outdoors)
-- [95-building-complex](/content/annotations/a-pattern-language/95-building-complex)
-- [96-number-of-stories](/content/annotations/a-pattern-language/96-number-of-stories)
-- [98-circulation-realms](/content/annotations/a-pattern-language/98-circulation-realms)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Small Parking Lots](/public/content/annotations/a-pattern-language/103-small-parking-lots)
+- [South Facing Outdoors](/public/content/annotations/a-pattern-language/105-south-facing-outdoors)
+- [95-building-complex](/public/content/annotations/a-pattern-language/95-building-complex)
+- [96-number-of-stories](/public/content/annotations/a-pattern-language/96-number-of-stories)
+- [98-circulation-realms](/public/content/annotations/a-pattern-language/98-circulation-realms)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

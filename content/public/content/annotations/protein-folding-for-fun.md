@@ -5,6 +5,7 @@ tags:
   - engineering/bio
   - engineering/data
   - engineering/languages/python
+  - projects/homelab
   - writing/annotations
 annotation-target: https://www.biorxiv.org/content/10.1101/2021.08.15.456425v1.full.pdf
 description: Amaze (or bore) your friends and family by picking up on a hot new hobby that's all the rage — protein folding! An annotated starter to the 2021 paper "ColabFold - Making protein folding accessible to all"

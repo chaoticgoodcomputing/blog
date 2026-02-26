@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Shopping Street](/content/annotations/a-pattern-language/32-shopping-street)
-- [Interchange](/content/annotations/a-pattern-language/34-interchange)
-- [10-magic-of-the-city](/content/annotations/a-pattern-language/10-magic-of-the-city)
-- [12-community-of-7000](/content/annotations/a-pattern-language/12-community-of-7000)
-- [31-promenade](/content/annotations/a-pattern-language/31-promenade)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Shopping Street](/public/content/annotations/a-pattern-language/32-shopping-street)
+- [Interchange](/public/content/annotations/a-pattern-language/34-interchange)
+- [10-magic-of-the-city](/public/content/annotations/a-pattern-language/10-magic-of-the-city)
+- [12-community-of-7000](/public/content/annotations/a-pattern-language/12-community-of-7000)
+- [31-promenade](/public/content/annotations/a-pattern-language/31-promenade)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
