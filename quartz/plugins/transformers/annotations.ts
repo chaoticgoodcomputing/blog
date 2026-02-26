@@ -77,7 +77,7 @@ function createAnnotationProcessor(ctx: BuildCtx): Processor<MDRoot, Root, Root>
   // Whitelist of plugins that work with content fragments
   const contentLevelPlugins = new Set([
     'SyntaxHighlighting',
-    'Latex',
+    // 'Latex', Removed because the dollar signs annoy me.
     'GitHubFlavoredMarkdown',
     'MDX',
     'ObsidianFlavoredMarkdown',
