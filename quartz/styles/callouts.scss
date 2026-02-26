@@ -1,7 +1,8 @@
 @use "./settings" as *;
 @use "sass:color";
 
-.callout {
+@layer components {
+  .callout {
   border: 1px solid var(--border);
   background-color: var(--bg);
   border-radius: 5px;
@@ -185,4 +186,5 @@
   .callout-title-inner {
     font-weight: $semiBoldWeight;
   }
+}
 }
