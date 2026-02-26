@@ -141,8 +141,24 @@ export default ((userOpts?: Partial<AnnotationViewerOptions>) => {
         data-pdf-url={localPdfPath}
         data-source-url={pdfUrl}
         style={`--pdf-flex: ${pdfFlex}; --sidebar-flex: ${sidebarFlex};`}
+        itemScope
+        itemType="https://schema.org/DigitalDocument"
       >
         <script type="application/json" id="annotations-data" dangerouslySetInnerHTML={{ __html: JSON.stringify(sortedAnnotations) }} />
+
+        {/* Hidden embed for search engine PDF detection */}
+        <embed
+          src={localPdfPath}
+          type="application/pdf"
+          style="position: absolute; width: 0; height: 0; border: 0;"
+          aria-hidden="true"
+          tabIndex={-1}
+        />
+
+        {/* Schema.org metadata for document */}
+        <meta itemProp="encodingFormat" content="application/pdf" />
+        <link itemProp="url" href={localPdfPath} />
+        <meta itemProp="name" content={fileData.frontmatter?.title as string || 'Annotated Document'} />
 
         <div class="annotation-source-citation">
           Source document retrieved from{" "}
