@@ -17,7 +17,7 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Mosaic of Subcultures](/public/content/annotations/a-pattern-language/08-mosaic-of-subcultures)
-- [Magic of the City](/public/content/annotations/a-pattern-language/10-magic-of-the-city)
-- [08-mosaic-of-subcultures](/public/content/annotations/a-pattern-language/08-mosaic-of-subcultures)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Mosaic of Subcultures](/content/annotations/a-pattern-language/08-mosaic-of-subcultures)
+- [Magic of the City](/content/annotations/a-pattern-language/10-magic-of-the-city)
+- [08-mosaic-of-subcultures](/content/annotations/a-pattern-language/08-mosaic-of-subcultures)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

@@ -6,6 +6,7 @@ import { FilePath, joinSegments } from "../util/path"
 import ArticleTitle from "./ArticleTitle"
 import ContentMeta from "./ContentMeta"
 import TagList from "./TagList"
+import PageTitle from "./PageTitle"
 // @ts-ignore
 import script from "./scripts/annotationViewer/main.inline"
 import style from "./styles/annotationViewer.scss"
@@ -131,6 +132,7 @@ export default ((userOpts?: Partial<AnnotationViewerOptions>) => {
     const sidebarFlex = 100 - pdfFlex
 
     // Render page metadata components
+    const SiteTitle = PageTitle()
     const Title = ArticleTitle()
     const Meta = ContentMeta()
     const Tags = TagList()
@@ -181,6 +183,7 @@ export default ((userOpts?: Partial<AnnotationViewerOptions>) => {
 
           <div class="annotation-sidebar">
             <div class="annotation-sidebar-header">
+              <SiteTitle {...componentProps} />
               <Title {...componentProps} />
               <Meta {...componentProps} />
               <Tags {...componentProps} />

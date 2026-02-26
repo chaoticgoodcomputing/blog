@@ -17,7 +17,7 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Lace of Country Streets](/public/content/annotations/a-pattern-language/05-lace-of-country-streets)
-- [The Countryside](/public/content/annotations/a-pattern-language/07-the-countryside)
-- [02-the-distribution-of-towns](/public/content/annotations/a-pattern-language/02-the-distribution-of-towns)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Lace of Country Streets](/content/annotations/a-pattern-language/05-lace-of-country-streets)
+- [The Countryside](/content/annotations/a-pattern-language/07-the-countryside)
+- [02-the-distribution-of-towns](/content/annotations/a-pattern-language/02-the-distribution-of-towns)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

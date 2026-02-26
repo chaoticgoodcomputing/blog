@@ -16,9 +16,7 @@ import {
  * - Responsive design collapses to stacked layout on smaller screens
  */
 export const annotationsLayout: PageLayout = {
-  beforeBody: [
-    // Page metadata (title, date, tags) rendered inside AnnotationViewer sidebar
-  ],
+  beforeBody: [],
   body: [
     Component.AnnotationViewer(),
     Component.Graph({

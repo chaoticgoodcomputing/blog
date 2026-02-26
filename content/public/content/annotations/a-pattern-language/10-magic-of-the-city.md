@@ -17,8 +17,8 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Scattered Work](/public/content/annotations/a-pattern-language/09-scattered-work)
-- [Local Transport Areas](/public/content/annotations/a-pattern-language/11-local-transport-areas)
-- [08-mosaic-of-subcultures](/public/content/annotations/a-pattern-language/08-mosaic-of-subcultures)
-- [03-city-country-fingers](/public/content/annotations/a-pattern-language/03-city-country-fingers)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Scattered Work](/content/annotations/a-pattern-language/09-scattered-work)
+- [Local Transport Areas](/content/annotations/a-pattern-language/11-local-transport-areas)
+- [08-mosaic-of-subcultures](/content/annotations/a-pattern-language/08-mosaic-of-subcultures)
+- [03-city-country-fingers](/content/annotations/a-pattern-language/03-city-country-fingers)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

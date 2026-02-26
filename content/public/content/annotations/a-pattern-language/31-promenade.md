@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Activity Nodes](/public/content/annotations/a-pattern-language/30-activity-nodes)
-- [Shopping Street](/public/content/annotations/a-pattern-language/32-shopping-street)
-- [08-mosaic-of-subcultures](/private/content/annotations/a-pattern-language/08-mosaic-of-subcultures)
-- [12-community-of-7000](/private/content/annotations/a-pattern-language/12-community-of-7000)
-- [30-activity-nodes](/private/content/annotations/a-pattern-language/30-activity-nodes)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Activity Nodes](/content/annotations/a-pattern-language/30-activity-nodes)
+- [Shopping Street](/content/annotations/a-pattern-language/32-shopping-street)
+- [08-mosaic-of-subcultures](/content/annotations/a-pattern-language/08-mosaic-of-subcultures)
+- [12-community-of-7000](/content/annotations/a-pattern-language/12-community-of-7000)
+- [30-activity-nodes](/content/annotations/a-pattern-language/30-activity-nodes)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

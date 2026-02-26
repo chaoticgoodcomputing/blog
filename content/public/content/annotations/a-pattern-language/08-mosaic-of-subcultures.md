@@ -17,7 +17,7 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [The Countryside](/public/content/annotations/a-pattern-language/07-the-countryside)
-- [Scattered Work](/public/content/annotations/a-pattern-language/09-scattered-work)
-- [03-city-country-fingers](/public/content/annotations/a-pattern-language/03-city-country-fingers)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [The Countryside](/content/annotations/a-pattern-language/07-the-countryside)
+- [Scattered Work](/content/annotations/a-pattern-language/09-scattered-work)
+- [03-city-country-fingers](/content/annotations/a-pattern-language/03-city-country-fingers)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
