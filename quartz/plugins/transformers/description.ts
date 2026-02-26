@@ -42,6 +42,11 @@ export const Description: QuartzTransformerPlugin<Partial<Options>> = (userOpts)
             if (frontMatterDescription) {
               file.data.description = frontMatterDescription
               file.data.text = text
+              
+              // Append annotation text for search and reading time
+              if (file.data.annotationText) {
+                file.data.text += ' ' + file.data.annotationText
+              }
               return
             }
 
@@ -75,6 +80,11 @@ export const Description: QuartzTransformerPlugin<Partial<Options>> = (userOpts)
                 ? finalDesc.slice(0, opts.maxDescriptionLength) + "..."
                 : finalDesc
             file.data.text = text
+            
+            // Append annotation text for search and reading time
+            if (file.data.annotationText) {
+              file.data.text += ' ' + file.data.annotationText
+            }
           }
         },
       ]

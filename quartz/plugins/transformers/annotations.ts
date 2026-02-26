@@ -6,6 +6,7 @@ import { unified, Processor } from "unified"
 import remarkParse from "remark-parse"
 import remarkRehype from "remark-rehype"
 import { toHtml } from "hast-util-to-html"
+import { toString } from "hast-util-to-string"
 import { BuildCtx } from "../../util/ctx"
 import { Root as MDRoot } from "remark-parse/lib"
 import { VFile } from "vfile"
@@ -204,6 +205,7 @@ export const Annotations: QuartzTransformerPlugin = () => {
               // Create processor once for all annotations, using content-level plugins
               const annotationProcessor = createAnnotationProcessor(ctx)
               const annotationLinks: SimpleSlug[] = []
+              const annotationPlainTexts: string[] = []
               
               for (const annotation of annotationsToProcess) {
                 if (annotation.text) {
@@ -228,6 +230,10 @@ export const Annotations: QuartzTransformerPlugin = () => {
                   const links = extractLinksFromHast(hast as Root, curSlug)
                   annotationLinks.push(...links)
                   
+                  // Extract plain text for search indexing and reading time
+                  const plainText = toString(hast as Root)
+                  annotationPlainTexts.push(plainText)
+                  
                   annotation.text = toHtml(hast as Root)
                 }
               }
@@ -237,6 +243,9 @@ export const Annotations: QuartzTransformerPlugin = () => {
               
               // Store annotation links separately - will be merged by CrawlLinks plugin
               file.data.annotationLinks = annotationLinks
+              
+              // Store concatenated plain text for search and reading time
+              file.data.annotationText = annotationPlainTexts.join(' ')
               
               // Remove the code block from output
               if (codeNode) {
@@ -256,6 +265,7 @@ declare module "vfile" {
   interface DataMap {
     annotations: AnnotationData[]
     annotationLinks: SimpleSlug[]
+    annotationText: string
   }
 }
 
