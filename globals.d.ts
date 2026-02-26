@@ -18,5 +18,15 @@ export declare global {
       identify: (userId: string, properties?: Record<string, any>) => void
       reset: () => void
     }
+    // PDF.js and annotation viewer state
+    pdfjsLib?: any
+    currentPdfDocument?: any
+    currentPdfUrl?: string | null
+    pdfTextData?: any[]
+    pdfScale?: number
+    annotationsData?: any[]
+    renderHighlights?: (annotationId: string) => void
+    renderAllHighlights?: () => void
+    setActiveHighlight?: (annotationId: string) => void
   }
 }

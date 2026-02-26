@@ -17,9 +17,7 @@ import {
  */
 export const annotationsLayout: PageLayout = {
   beforeBody: [
-    Component.ArticleTitle(),
-    Component.ContentMeta(),
-    Component.TagList(),
+    // Page metadata (title, date, tags) rendered inside AnnotationViewer sidebar
   ],
   body: [
     Component.AnnotationViewer(),

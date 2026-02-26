@@ -3,9 +3,25 @@ import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } fro
 import { classNames } from "../util/lang"
 import { readFileSync } from "fs"
 import { FilePath, joinSegments } from "../util/path"
+import ArticleTitle from "./ArticleTitle"
+import ContentMeta from "./ContentMeta"
+import TagList from "./TagList"
 // @ts-ignore
 import script from "./scripts/annotationViewer/main.inline"
 import style from "./styles/annotationViewer.scss"
+
+interface AnnotationViewerOptions {
+  /**
+   * Percentage of width allocated to PDF viewer (0-100).
+   * Sidebar receives the remaining width.
+   * @default 65
+   */
+  pdfWidthPercent?: number
+}
+
+const defaultOptions: AnnotationViewerOptions = {
+  pdfWidthPercent: 65,
+}
 
 interface AnnotationData {
   id: string
@@ -59,16 +75,16 @@ function parseAnnotations(content: string): AnnotationData[] {
  * 
  * Layout:
  * - Left side: PDF viewer using PDF.js
- * - Right side: Annotations list synced to PDF scroll position
+ * - Right side: Annotations list with page metadata and synced annotations
  * 
  * The component uses TextPositionSelector data from annotations to determine
  * which page and position each annotation corresponds to.
  */
-export default (() => {
-  const AnnotationViewer: QuartzComponent = ({
-    fileData,
-    displayClass,
-  }: QuartzComponentProps) => {
+export default ((userOpts?: Partial<AnnotationViewerOptions>) => {
+  const opts = { ...defaultOptions, ...userOpts }
+
+  const AnnotationViewer: QuartzComponent = (componentProps: QuartzComponentProps) => {
+    const { fileData, displayClass } = componentProps
     const pdfUrl = fileData.frontmatter?.["annotation-target"] as string | undefined
 
     if (!pdfUrl) {
@@ -110,8 +126,22 @@ export default (() => {
       return aPos - bPos
     })
 
+    // Calculate flex-grow values for width ratio
+    const pdfFlex = opts.pdfWidthPercent || 65
+    const sidebarFlex = 100 - pdfFlex
+
+    // Render page metadata components
+    const Title = ArticleTitle()
+    const Meta = ContentMeta()
+    const Tags = TagList()
+
     return (
-      <div class={classNames(displayClass, "annotation-viewer")} data-pdf-url={localPdfPath} data-source-url={pdfUrl}>
+      <div
+        class={classNames(displayClass, "annotation-viewer")}
+        data-pdf-url={localPdfPath}
+        data-source-url={pdfUrl}
+        style={`--pdf-flex: ${pdfFlex}; --sidebar-flex: ${sidebarFlex};`}
+      >
         <script type="application/json" id="annotations-data" dangerouslySetInnerHTML={{ __html: JSON.stringify(sortedAnnotations) }} />
 
         <div class="annotation-source-citation">
@@ -129,7 +159,17 @@ export default (() => {
             </div>
           </div>
 
+          <div class="annotation-resize-handle" role="separator" aria-label="Resize PDF and annotations" title="Drag to resize">
+            <div class="annotation-resize-handle-line"></div>
+          </div>
+
           <div class="annotation-sidebar">
+            <div class="annotation-sidebar-header">
+              <Title {...componentProps} />
+              <Meta {...componentProps} />
+              <Tags {...componentProps} />
+            </div>
+
             <article class="annotation-list" role="main" aria-label="Annotations">
               <h2 class="annotation-list-heading">Annotations</h2>
               {sortedAnnotations.map(annotation => {

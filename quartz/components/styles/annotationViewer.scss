@@ -9,6 +9,11 @@
     // No padding - rely on parent #quartz-body padding to avoid double-padding
     height: 100vh;
     overflow: hidden;
+
+    // CSS custom properties for configurable width ratio
+    // Default: 65% PDF, 35% sidebar
+    --pdf-flex: 65;
+    --sidebar-flex: 35;
   }
 
   // SEO: Description visible to crawlers but hidden from visual users
@@ -47,12 +52,65 @@
   .annotation-split-view {
     display: flex;
     height: calc(100% - 3rem);
-    gap: 1rem;
+    gap: 0; // Gap handled by resize handle
   }
 
+  /**
+   * Draggable resize handle between PDF and sidebar.
+   * Provides visual feedback and cursor indication for resizing.
+   */
+  .annotation-resize-handle {
+    flex: 0 0 auto;
+    width: 6px;
+    position: relative;
+    cursor: col-resize;
+    background: var(--lightgray);
+    border-radius: 3px;
+    transition: background 0.2s ease;
+    z-index: 10;
+
+    // Increase hit area for easier dragging
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -5px;
+      right: -5px;
+      bottom: 0;
+    }
+
+    &:hover,
+    &.dragging {
+      background: var(--secondary);
+    }
+
+    // Visual indicator line
+    .annotation-resize-handle-line {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 2px;
+      height: 40px;
+      background: var(--darkgray);
+      border-radius: 1px;
+      pointer-events: none;
+    }
+
+    &:hover .annotation-resize-handle-line,
+    &.dragging .annotation-resize-handle-line {
+      background: var(--light);
+    }
+  }
+
+  /**
+   * PDF container uses configurable flex-grow value.
+   * Default 65% width via --pdf-flex custom property.
+   * Maintains minimum width for readability.
+   */
   .annotation-pdf-container {
-    flex: 1 1 auto; // Allow growth and shrinkage
-    min-width: 600px; // Minimum reasonable PDF viewing width
+    flex: var(--pdf-flex) 1 0;
+    min-width: 400px; // Minimum reasonable PDF viewing width (relaxed for flex)
     overflow-y: auto;
     overflow-x: hidden;
     background: var(--light);
@@ -127,13 +185,45 @@
     color: var(--gray);
   }
 
+  /**
+   * Sidebar uses configurable flex-grow value.
+   * Default 35% width via --sidebar-flex custom property.
+   * Minimum width ensures metadata remains readable.
+   */
   .annotation-sidebar {
-    flex: 0 0 400px;
+    flex: var(--sidebar-flex) 1 0;
+    min-width: 280px;
     overflow-y: auto;
     padding: 1rem;
     background: var(--light);
     border: 1px solid var(--lightgray);
     border-radius: 0.5rem;
+  }
+
+  /**
+   * Sidebar header contains page metadata (title, date, reading time, tags).
+   * Separated from annotation list for visual hierarchy.
+   */
+  .annotation-sidebar-header {
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--lightgray);
+
+    // Reset article-title margins for sidebar context
+    .article-title {
+      margin-top: 0;
+      font-size: 1.5rem;
+    }
+
+    // Adjust content-meta spacing
+    .content-meta {
+      margin: 0.5rem 0;
+    }
+
+    // Adjust tag list spacing
+    .tags {
+      margin-top: 1rem;
+    }
   }
 
   .annotation-list {
@@ -216,19 +306,24 @@
     color: var(--gray);
   }
 
-  @include respond-to(not-desktop) {
-    .annotation-split-view {
-      flex-direction: column;
+  /**
+   * Mobile responsive behavior: Hide PDF viewer entirely
+   * Shows annotations list only (temporary stopgap until proper mobile layout)
+   * Tablet views remain side-by-side.
+   */
+  @include respond-to(mobile) {
+    .annotation-pdf-container {
+      display: none;
+    }
+
+    .annotation-resize-handle {
+      display: none;
     }
 
     .annotation-sidebar {
-      flex: 0 0 auto;
-      max-height: 50vh;
-    }
-
-    .annotation-pdf-container {
       flex: 1;
-      min-height: 50vh;
+      max-height: none;
+      min-width: 0; // Allow sidebar to shrink below 320px on mobile
     }
   }
 }

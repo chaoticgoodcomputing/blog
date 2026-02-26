@@ -1,6 +1,7 @@
 import { loadPDFLib, loadAnnotationsData } from "./ui/loader"
-import { initPDFViewer, cleanupPDFViewer } from "./adapters/lifecycle"
+import { initPDFViewer, cleanupPDFViewer, rerenderPDF } from "./adapters/lifecycle"
 import { renderHighlights, renderAllHighlights, setActiveHighlight } from "./core/highlighting"
+import { initResizeHandle } from "./ui/resizeHandle"
 
 // Wrap in IIFE and handle multiple initialization scenarios
 ;(async () => {
@@ -25,10 +26,21 @@ import { renderHighlights, renderAllHighlights, setActiveHighlight } from "./cor
     loadAnnotationsData()
     await initPDFViewer()
     
+    // Initialize resize handle
+    initResizeHandle()
+    
+    // Listen for resize events from drag handle
+    const handleResize = () => {
+      console.log("[AnnotationViewer] Resize triggered, re-rendering PDF")
+      rerenderPDF()
+    }
+    viewer.addEventListener("pdf-resize", handleResize)
+    
     // Register cleanup for SPA navigation
     if (window.addCleanup) {
       window.addCleanup(() => {
         console.log("[AnnotationViewer] Cleaning up for navigation")
+        viewer.removeEventListener("pdf-resize", handleResize)
         cleanupPDFViewer()
       })
     }
