@@ -43,12 +43,14 @@
 
 /**
  * Additional element-layer styles
+ * 
+ * Note: Do not set width/height to auto on img elements globally,
+ * as this overrides component-specific sizing (e.g., avatars in widgets).
+ * Browser defaults for width/height are already 'auto'.
  */
 @layer elements {
   img {
     max-height: 500px;
-    width: auto;
-    height: auto;
     display: block;
     margin-left: auto;
     margin-right: auto;
