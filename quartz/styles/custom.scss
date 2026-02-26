@@ -14,7 +14,18 @@
  * This eliminates most needs for !important and makes overrides predictable.
  */
 
-// Import layer files first (@use must come before any other rules)
+/**
+ * Custom Styles Entry Point with CSS Cascade Layers
+ * 
+ * This file establishes the CSS @layer cascade order and imports layer implementations.
+ * The key fix: this file is loaded BEFORE component styles in componentResources.ts,
+ * ensuring @layer order is declared before component @layer usage blocks.
+ * 
+ * Layer specificity order (lowest to highest):
+ * generic → elements → objects → components → utilities
+ */
+
+// Import layer implementation files
 @use "./generic";
 @use "./elements";
 @use "./syntax";
@@ -22,7 +33,12 @@
 @use "./objects";
 @use "./utilities";
 
-// Define layer order
+/**
+ * Establish CSS Cascade Layer Order
+ * This  declaration must appear BEFORE any @layer usage blocks in compiled CSS.
+ * Since componentResources.ts now loads custom.scss before component styles,
+ * this declaration will establish the correct layer priority.
+ */
 @layer generic, elements, objects, components, utilities;
 
 /**

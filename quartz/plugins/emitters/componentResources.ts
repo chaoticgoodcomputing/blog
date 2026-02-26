@@ -340,8 +340,8 @@ export const ComponentResources: QuartzEmitterPlugin = () => {
       const stylesheet = joinStyles(
         ctx.cfg.configuration.theme,
         googleFontsStyleSheet,
-        ...componentResources.css,
-        styles,
+        styles, // custom.scss FIRST - establishes @layer order
+        ...componentResources.css, // Component styles AFTER - use established layers
       )
 
       const [prescript, postscript] = await Promise.all([
