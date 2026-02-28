@@ -7,7 +7,7 @@ tags:
   - engineering/languages/python
   - writing/annotations
 annotation-target: https://www.nature.com/articles/s41587-023-01840-6.pdf
-description:
+description: The rubber hits the road on ColabFold! I hope that's rubber I'm smelling — although it may be the computer. A replication attempt of a protein fold figure in K. Pedram et all (2023).
 ---
 
 
