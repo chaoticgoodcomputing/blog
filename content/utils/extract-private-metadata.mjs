@@ -202,6 +202,9 @@ async function extractPrivateMetadata() {
         }
       }
 
+      // Remove annotation-target to prevent triggering annotation rendering
+      delete frontmatter['annotation-target']
+
       // Create a markdown file with frontmatter
       let cleanedContent = ""
 

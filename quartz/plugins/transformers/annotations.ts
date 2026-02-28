@@ -74,7 +74,10 @@ function extractLinksFromHast(hast: Root, _curSlug: SimpleSlug): SimpleSlug[] {
  * - TableOfContents: generates document-level ToC
  * - Description: generates page-level meta descriptions
  */
-function createAnnotationProcessor(ctx: BuildCtx): Processor<MDRoot, Root, Root> {
+function createAnnotationProcessor(ctx: BuildCtx): {
+  processor: Processor<MDRoot, Root, Root>
+  textTransforms: Array<(ctx: BuildCtx, src: string) => string>
+} {
   // Whitelist of plugins that work with content fragments
   const contentLevelPlugins = new Set([
     'SyntaxHighlighting',
@@ -88,7 +91,7 @@ function createAnnotationProcessor(ctx: BuildCtx): Processor<MDRoot, Root, Root>
   const transformers = ctx.cfg.plugins.transformers
     .filter(plugin => contentLevelPlugins.has(plugin.name))
   
-  return unified()
+  const processor = unified()
     // Parse markdown to AST
     .use(remarkParse)
     // Apply content-level markdown transformations
@@ -107,6 +110,13 @@ function createAnnotationProcessor(ctx: BuildCtx): Processor<MDRoot, Root, Root>
     })
     // Apply content-level HTML transformations
     .use(transformers.flatMap(p => p.htmlPlugins?.(ctx) ?? []))
+  
+  // Collect text transforms from whitelisted plugins
+  const textTransforms = transformers
+    .filter(p => p.textTransform)
+    .map(p => p.textTransform!)
+  
+  return { processor, textTransforms }
 }
 
 export interface AnnotationData {
@@ -203,16 +213,22 @@ export const Annotations: QuartzTransformerPlugin = () => {
             // Process markdown in annotation text fields (outside of visit callback)
             if (annotationsToProcess.length > 0) {
               // Create processor once for all annotations, using content-level plugins
-              const annotationProcessor = createAnnotationProcessor(ctx)
+              const { processor: annotationProcessor, textTransforms } = createAnnotationProcessor(ctx)
               const annotationLinks: SimpleSlug[] = []
               const annotationPlainTexts: string[] = []
               
               for (const annotation of annotationsToProcess) {
                 if (annotation.text) {
+                  // Apply text transforms (e.g., wikilink pre-processing) before parsing
+                  let processedText = annotation.text
+                  for (const transform of textTransforms) {
+                    processedText = transform(ctx, processedText)
+                  }
+                  
                   // Create a VFile for the annotation text that inherits the parent file's path context
                   // This allows ObsidianFlavoredMarkdown to resolve wikilinks correctly
                   const annotationFile = new VFile({
-                    value: annotation.text,
+                    value: processedText,
                     path: file.path,
                     data: {
                       slug: file.data.slug,

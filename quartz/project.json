@@ -7,11 +7,12 @@
   "implicitDependencies": [ "vault" ],
   "targets": {
     "clean": {
-      "//": "Cleans quartz cache files and output directory",
+      "//": "Cleans quartz cache files and output directories",
       "executor": "nx:run-commands",
       "options": {
         "commands": [
           "rm -rf dist/public",
+          "rm -rf dist/dev",
           "rm -rf quartz/.quartz-cache"
         ],
         "cwd": "{workspaceRoot}",
@@ -85,7 +86,7 @@
       "//": "Dev server with hot reload",
       "executor": "nx:run-commands",
       "options": {
-        "commands": [ "./quartz/bootstrap-cli.mjs build --serve -d content/public" ],
+        "commands": [ "./quartz/bootstrap-cli.mjs build --serve --output dist/dev -d content/public" ],
         "parallel": false,
         "cwd": "{workspaceRoot}"
       },
