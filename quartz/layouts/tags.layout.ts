@@ -28,6 +28,7 @@ export const tagsLayout: PageLayout = {
     }),
   ],
   right: [
+    Component.EmailSubscribe(),
     Component.Backlinks()
   ],
   body: [
