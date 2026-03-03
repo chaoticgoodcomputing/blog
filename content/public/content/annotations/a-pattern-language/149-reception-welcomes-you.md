@@ -17,11 +17,11 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Small Work Groups](/public/content/annotations/a-pattern-language/148-small-work-groups)
-- [A Place to Wait](/public/content/annotations/a-pattern-language/150-a-place-to-wait)
-- [80-self-governing-workshops-and-offices](/public/content/annotations/a-pattern-language/80-self-governing-workshops-and-offices)
-- [81-small-services-without-red-tape](/public/content/annotations/a-pattern-language/81-small-services-without-red-tape)
-- [91-traveler-s-inn](/public/content/annotations/a-pattern-language/91-traveler-s-inn)
-- [146-flexible-office-space](/public/content/annotations/a-pattern-language/146-flexible-office-space)
-- [130-entrance-room](/public/content/annotations/a-pattern-language/130-entrance-room)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Small Work Groups](/content/annotations/a-pattern-language/148-small-work-groups)
+- [A Place to Wait](/content/annotations/a-pattern-language/150-a-place-to-wait)
+- [80-self-governing-workshops-and-offices](/content/annotations/a-pattern-language/80-self-governing-workshops-and-offices)
+- [81-small-services-without-red-tape](/content/annotations/a-pattern-language/81-small-services-without-red-tape)
+- [91-traveler-s-inn](/content/annotations/a-pattern-language/91-traveler-s-inn)
+- [146-flexible-office-space](/content/annotations/a-pattern-language/146-flexible-office-space)
+- [130-entrance-room](/content/annotations/a-pattern-language/130-entrance-room)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

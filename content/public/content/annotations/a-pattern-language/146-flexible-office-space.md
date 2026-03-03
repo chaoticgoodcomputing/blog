@@ -17,10 +17,10 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Bulk Storage](/public/content/annotations/a-pattern-language/145-bulk-storage)
-- [Communal Eating](/public/content/annotations/a-pattern-language/147-communal-eating)
-- [80-self-governing-workshops-and-offices](/public/content/annotations/a-pattern-language/80-self-governing-workshops-and-offices)
-- [82-office-connections](/public/content/annotations/a-pattern-language/82-office-connections)
-- [127-intimacy-gradient](/public/content/annotations/a-pattern-language/127-intimacy-gradient)
-- [129-common-areas-at-the-heart](/public/content/annotations/a-pattern-language/129-common-areas-at-the-heart)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Bulk Storage](/content/annotations/a-pattern-language/145-bulk-storage)
+- [Communal Eating](/content/annotations/a-pattern-language/147-communal-eating)
+- [80-self-governing-workshops-and-offices](/content/annotations/a-pattern-language/80-self-governing-workshops-and-offices)
+- [82-office-connections](/content/annotations/a-pattern-language/82-office-connections)
+- [127-intimacy-gradient](/content/annotations/a-pattern-language/127-intimacy-gradient)
+- [129-common-areas-at-the-heart](/content/annotations/a-pattern-language/129-common-areas-at-the-heart)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

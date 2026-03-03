@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Something Roughly in the Middle](/public/content/annotations/a-pattern-language/126-something-roughly-in-the-middle)
-- [Indoor Sunlight](/public/content/annotations/a-pattern-language/128-indoor-sunlight)
-- [107-wings-of-light](/public/content/annotations/a-pattern-language/107-wings-of-light)
-- [96-number-of-stories](/public/content/annotations/a-pattern-language/96-number-of-stories)
-- [110-main-entrance](/public/content/annotations/a-pattern-language/110-main-entrance)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Something Roughly in the Middle](/content/annotations/a-pattern-language/126-something-roughly-in-the-middle)
+- [Indoor Sunlight](/content/annotations/a-pattern-language/128-indoor-sunlight)
+- [107-wings-of-light](/content/annotations/a-pattern-language/107-wings-of-light)
+- [96-number-of-stories](/content/annotations/a-pattern-language/96-number-of-stories)
+- [110-main-entrance](/content/annotations/a-pattern-language/110-main-entrance)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

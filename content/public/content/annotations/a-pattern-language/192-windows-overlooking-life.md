@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [The Shape of Indoor Space](/public/content/annotations/a-pattern-language/191-the-shape-of-indoor-space)
-- [Half-Open Wall](/public/content/annotations/a-pattern-language/193-half-open-wall)
-- [159-light-on-two-sides-of-every-room](/public/content/annotations/a-pattern-language/159-light-on-two-sides-of-every-room)
-- [190-ceiling-height-variety](/public/content/annotations/a-pattern-language/190-ceiling-height-variety)
-- [191-the-shape-of-indoor-space](/public/content/annotations/a-pattern-language/191-the-shape-of-indoor-space)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [The Shape of Indoor Space](/content/annotations/a-pattern-language/191-the-shape-of-indoor-space)
+- [Half-Open Wall](/content/annotations/a-pattern-language/193-half-open-wall)
+- [159-light-on-two-sides-of-every-room](/content/annotations/a-pattern-language/159-light-on-two-sides-of-every-room)
+- [190-ceiling-height-variety](/content/annotations/a-pattern-language/190-ceiling-height-variety)
+- [191-the-shape-of-indoor-space](/content/annotations/a-pattern-language/191-the-shape-of-indoor-space)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

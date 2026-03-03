@@ -17,8 +17,8 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Building Edge](/public/content/annotations/a-pattern-language/160-building-edge)
-- [North Face](/public/content/annotations/a-pattern-language/162-north-face)
-- [105-south-facing-outdoors](/public/content/annotations/a-pattern-language/105-south-facing-outdoors)
-- [160-building-edge](/public/content/annotations/a-pattern-language/160-building-edge)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Building Edge](/content/annotations/a-pattern-language/160-building-edge)
+- [North Face](/content/annotations/a-pattern-language/162-north-face)
+- [105-south-facing-outdoors](/content/annotations/a-pattern-language/105-south-facing-outdoors)
+- [160-building-edge](/content/annotations/a-pattern-language/160-building-edge)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

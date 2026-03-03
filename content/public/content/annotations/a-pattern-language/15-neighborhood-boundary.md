@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Identifiable Neighborhood](/public/content/annotations/a-pattern-language/14-identifiable-neighborhood)
-- [Web of Public Transportation](/public/content/annotations/a-pattern-language/16-web-of-public-transportation)
-- [12-community-of-7000](/public/content/annotations/a-pattern-language/12-community-of-7000)
-- [13-subculture-boundary](/public/content/annotations/a-pattern-language/13-subculture-boundary)
-- [14-identifiable-neighborhood](/public/content/annotations/a-pattern-language/14-identifiable-neighborhood)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Identifiable Neighborhood](/content/annotations/a-pattern-language/14-identifiable-neighborhood)
+- [Web of Public Transportation](/content/annotations/a-pattern-language/16-web-of-public-transportation)
+- [12-community-of-7000](/content/annotations/a-pattern-language/12-community-of-7000)
+- [13-subculture-boundary](/content/annotations/a-pattern-language/13-subculture-boundary)
+- [14-identifiable-neighborhood](/content/annotations/a-pattern-language/14-identifiable-neighborhood)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

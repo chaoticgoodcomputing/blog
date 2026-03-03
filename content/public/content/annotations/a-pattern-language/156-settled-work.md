@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Old Age Cottage](/public/content/annotations/a-pattern-language/155-old-age-cottage)
-- [Home Workshop](/public/content/annotations/a-pattern-language/157-home-workshop)
-- [75-the-family](/public/content/annotations/a-pattern-language/75-the-family)
-- [155-old-age-cottage](/public/content/annotations/a-pattern-language/155-old-age-cottage)
-- [141-a-room-of-one-s-own](/public/content/annotations/a-pattern-language/141-a-room-of-one-s-own)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Old Age Cottage](/content/annotations/a-pattern-language/155-old-age-cottage)
+- [Home Workshop](/content/annotations/a-pattern-language/157-home-workshop)
+- [75-the-family](/content/annotations/a-pattern-language/75-the-family)
+- [155-old-age-cottage](/content/annotations/a-pattern-language/155-old-age-cottage)
+- [141-a-room-of-one-s-own](/content/annotations/a-pattern-language/141-a-room-of-one-s-own)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

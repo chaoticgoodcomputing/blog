@@ -17,10 +17,10 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Interchange](/public/content/annotations/a-pattern-language/34-interchange)
-- [Degrees of Publicness](/public/content/annotations/a-pattern-language/36-degrees-of-publicness)
-- [14-identifiable-neighborhood](/public/content/annotations/a-pattern-language/14-identifiable-neighborhood)
-- [37-house-cluster](/public/content/annotations/a-pattern-language/37-house-cluster)
-- [41-work-community](/public/content/annotations/a-pattern-language/41-work-community)
-- [26-life-cycle](/public/content/annotations/a-pattern-language/26-life-cycle)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Interchange](/content/annotations/a-pattern-language/34-interchange)
+- [Degrees of Publicness](/content/annotations/a-pattern-language/36-degrees-of-publicness)
+- [14-identifiable-neighborhood](/content/annotations/a-pattern-language/14-identifiable-neighborhood)
+- [37-house-cluster](/content/annotations/a-pattern-language/37-house-cluster)
+- [41-work-community](/content/annotations/a-pattern-language/41-work-community)
+- [26-life-cycle](/content/annotations/a-pattern-language/26-life-cycle)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

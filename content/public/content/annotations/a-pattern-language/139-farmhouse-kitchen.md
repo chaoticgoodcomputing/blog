@@ -17,8 +17,8 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Sleeping to the East](/public/content/annotations/a-pattern-language/138-sleeping-to-the-east)
-- [Private Terrace on the Street](/public/content/annotations/a-pattern-language/140-private-terrace-on-the-street)
-- [129-common-areas-at-the-heart](/public/content/annotations/a-pattern-language/129-common-areas-at-the-heart)
-- [147-communal-eating](/public/content/annotations/a-pattern-language/147-communal-eating)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Sleeping to the East](/content/annotations/a-pattern-language/138-sleeping-to-the-east)
+- [Private Terrace on the Street](/content/annotations/a-pattern-language/140-private-terrace-on-the-street)
+- [129-common-areas-at-the-heart](/content/annotations/a-pattern-language/129-common-areas-at-the-heart)
+- [147-communal-eating](/content/annotations/a-pattern-language/147-communal-eating)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

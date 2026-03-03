@@ -17,10 +17,10 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Rooms to Rent](/public/content/annotations/a-pattern-language/153-rooms-to-rent)
-- [Old Age Cottage](/public/content/annotations/a-pattern-language/155-old-age-cottage)
-- [75-the-family](/public/content/annotations/a-pattern-language/75-the-family)
-- [76-house-for-a-small-family](/public/content/annotations/a-pattern-language/76-house-for-a-small-family)
-- [141-a-room-of-one-s-own](/public/content/annotations/a-pattern-language/141-a-room-of-one-s-own)
-- [153-rooms-to-rent](/public/content/annotations/a-pattern-language/153-rooms-to-rent)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Rooms to Rent](/content/annotations/a-pattern-language/153-rooms-to-rent)
+- [Old Age Cottage](/content/annotations/a-pattern-language/155-old-age-cottage)
+- [75-the-family](/content/annotations/a-pattern-language/75-the-family)
+- [76-house-for-a-small-family](/content/annotations/a-pattern-language/76-house-for-a-small-family)
+- [141-a-room-of-one-s-own](/content/annotations/a-pattern-language/141-a-room-of-one-s-own)
+- [153-rooms-to-rent](/content/annotations/a-pattern-language/153-rooms-to-rent)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

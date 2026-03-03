@@ -17,6 +17,6 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Dressing Room](/public/content/annotations/a-pattern-language/189-dressing-room)
-- [The Shape of Indoor Space](/public/content/annotations/a-pattern-language/191-the-shape-of-indoor-space)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Dressing Room](/content/annotations/a-pattern-language/189-dressing-room)
+- [The Shape of Indoor Space](/content/annotations/a-pattern-language/191-the-shape-of-indoor-space)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

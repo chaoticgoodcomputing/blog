@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Tree Places](/public/content/annotations/a-pattern-language/171-tree-places)
-- [Garden Wall](/public/content/annotations/a-pattern-language/173-garden-wall)
-- [169-terraced-slope](/public/content/annotations/a-pattern-language/169-terraced-slope)
-- [170-fruit-trees](/public/content/annotations/a-pattern-language/170-fruit-trees)
-- [171-tree-places](/public/content/annotations/a-pattern-language/171-tree-places)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Tree Places](/content/annotations/a-pattern-language/171-tree-places)
+- [Garden Wall](/content/annotations/a-pattern-language/173-garden-wall)
+- [169-terraced-slope](/content/annotations/a-pattern-language/169-terraced-slope)
+- [170-fruit-trees](/content/annotations/a-pattern-language/170-fruit-trees)
+- [171-tree-places](/content/annotations/a-pattern-language/171-tree-places)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

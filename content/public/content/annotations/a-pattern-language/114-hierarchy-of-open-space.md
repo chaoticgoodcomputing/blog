@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Car Connection](/public/content/annotations/a-pattern-language/113-car-connection)
-- [Courtyards Which Live](/public/content/annotations/a-pattern-language/115-courtyards-which-live)
-- [104-site-repair](/public/content/annotations/a-pattern-language/104-site-repair)
-- [105-south-facing-outdoors](/public/content/annotations/a-pattern-language/105-south-facing-outdoors)
-- [106-positive-outdoor-space](/public/content/annotations/a-pattern-language/106-positive-outdoor-space)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Car Connection](/content/annotations/a-pattern-language/113-car-connection)
+- [Courtyards Which Live](/content/annotations/a-pattern-language/115-courtyards-which-live)
+- [104-site-repair](/content/annotations/a-pattern-language/104-site-repair)
+- [105-south-facing-outdoors](/content/annotations/a-pattern-language/105-south-facing-outdoors)
+- [106-positive-outdoor-space](/content/annotations/a-pattern-language/106-positive-outdoor-space)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

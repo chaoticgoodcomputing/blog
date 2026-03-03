@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Sequence of Sitting Spaces](/public/content/annotations/a-pattern-language/142-sequence-of-sitting-spaces)
-- [Bathing Room](/public/content/annotations/a-pattern-language/144-bathing-room)
-- [136-couple-s-realm](/public/content/annotations/a-pattern-language/136-couple-s-realm)
-- [137-childrens-realm](/public/content/annotations/a-pattern-language/137-childrens-realm)
-- [138-sleeping-to-the-east](/public/content/annotations/a-pattern-language/138-sleeping-to-the-east)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Sequence of Sitting Spaces](/content/annotations/a-pattern-language/142-sequence-of-sitting-spaces)
+- [Bathing Room](/content/annotations/a-pattern-language/144-bathing-room)
+- [136-couple-s-realm](/content/annotations/a-pattern-language/136-couple-s-realm)
+- [137-childrens-realm](/content/annotations/a-pattern-language/137-childrens-realm)
+- [138-sleeping-to-the-east](/content/annotations/a-pattern-language/138-sleeping-to-the-east)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

@@ -17,8 +17,8 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Cooking Layout](/public/content/annotations/a-pattern-language/184-cooking-layout)
-- [Communal Sleeping](/public/content/annotations/a-pattern-language/186-communal-sleeping)
-- [142-sequence-of-sitting-spaces](/public/content/annotations/a-pattern-language/142-sequence-of-sitting-spaces)
-- [127-intimacy-gradient](/public/content/annotations/a-pattern-language/127-intimacy-gradient)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Cooking Layout](/content/annotations/a-pattern-language/184-cooking-layout)
+- [Communal Sleeping](/content/annotations/a-pattern-language/186-communal-sleeping)
+- [142-sequence-of-sitting-spaces](/content/annotations/a-pattern-language/142-sequence-of-sitting-spaces)
+- [127-intimacy-gradient](/content/annotations/a-pattern-language/127-intimacy-gradient)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

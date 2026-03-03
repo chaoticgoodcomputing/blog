@@ -17,5 +17,5 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Things from your Life](/public/content/annotations/a-pattern-language/253-things-from-your-life)
-- [Introduction](/public/content/annotations/a-pattern-language/00-introduction)
+- [Things from your Life](/content/annotations/a-pattern-language/253-things-from-your-life)
+- [Introduction](/content/annotations/a-pattern-language/00-introduction)

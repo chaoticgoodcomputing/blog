@@ -17,10 +17,10 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Childrens’ Realm](/public/content/annotations/a-pattern-language/137-childrens-realm)
-- [Farmhouse Kitchen](/public/content/annotations/a-pattern-language/139-farmhouse-kitchen)
-- [127-intimacy-gradient](/public/content/annotations/a-pattern-language/127-intimacy-gradient)
-- [136-couple-s-realm](/public/content/annotations/a-pattern-language/136-couple-s-realm)
-- [137-childrens-realm](/public/content/annotations/a-pattern-language/137-childrens-realm)
-- [128-indoor-sunlight](/public/content/annotations/a-pattern-language/128-indoor-sunlight)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Childrens’ Realm](/content/annotations/a-pattern-language/137-childrens-realm)
+- [Farmhouse Kitchen](/content/annotations/a-pattern-language/139-farmhouse-kitchen)
+- [127-intimacy-gradient](/content/annotations/a-pattern-language/127-intimacy-gradient)
+- [136-couple-s-realm](/content/annotations/a-pattern-language/136-couple-s-realm)
+- [137-childrens-realm](/content/annotations/a-pattern-language/137-childrens-realm)
+- [128-indoor-sunlight](/content/annotations/a-pattern-language/128-indoor-sunlight)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

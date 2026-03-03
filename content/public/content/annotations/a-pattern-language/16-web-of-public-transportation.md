@@ -17,8 +17,8 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Neighborhood Boundary](/public/content/annotations/a-pattern-language/15-neighborhood-boundary)
-- [Ring Roads](/public/content/annotations/a-pattern-language/17-ring-roads)
-- [03-city-country-fingers](/public/content/annotations/a-pattern-language/03-city-country-fingers)
-- [11-local-transport-areas](/public/content/annotations/a-pattern-language/11-local-transport-areas)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Neighborhood Boundary](/content/annotations/a-pattern-language/15-neighborhood-boundary)
+- [Ring Roads](/content/annotations/a-pattern-language/17-ring-roads)
+- [03-city-country-fingers](/content/annotations/a-pattern-language/03-city-country-fingers)
+- [11-local-transport-areas](/content/annotations/a-pattern-language/11-local-transport-areas)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

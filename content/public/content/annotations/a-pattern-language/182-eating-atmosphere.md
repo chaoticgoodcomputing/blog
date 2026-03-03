@@ -17,8 +17,8 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [The Fire](/public/content/annotations/a-pattern-language/181-the-fire)
-- [Workspace Enclosure](/public/content/annotations/a-pattern-language/183-workspace-enclosure)
-- [147-communal-eating](/public/content/annotations/a-pattern-language/147-communal-eating)
-- [139-farmhouse-kitchen](/public/content/annotations/a-pattern-language/139-farmhouse-kitchen)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [The Fire](/content/annotations/a-pattern-language/181-the-fire)
+- [Workspace Enclosure](/content/annotations/a-pattern-language/183-workspace-enclosure)
+- [147-communal-eating](/content/annotations/a-pattern-language/147-communal-eating)
+- [139-farmhouse-kitchen](/content/annotations/a-pattern-language/139-farmhouse-kitchen)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

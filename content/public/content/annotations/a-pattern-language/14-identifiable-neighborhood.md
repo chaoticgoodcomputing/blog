@@ -17,8 +17,8 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Subculture Boundary](/public/content/annotations/a-pattern-language/13-subculture-boundary)
-- [Neighborhood Boundary](/public/content/annotations/a-pattern-language/15-neighborhood-boundary)
-- [08-mosaic-of-subcultures](/public/content/annotations/a-pattern-language/08-mosaic-of-subcultures)
-- [12-community-of-7000](/public/content/annotations/a-pattern-language/12-community-of-7000)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Subculture Boundary](/content/annotations/a-pattern-language/13-subculture-boundary)
+- [Neighborhood Boundary](/content/annotations/a-pattern-language/15-neighborhood-boundary)
+- [08-mosaic-of-subcultures](/content/annotations/a-pattern-language/08-mosaic-of-subcultures)
+- [12-community-of-7000](/content/annotations/a-pattern-language/12-community-of-7000)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

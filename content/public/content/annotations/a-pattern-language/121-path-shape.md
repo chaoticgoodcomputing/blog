@@ -17,12 +17,12 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Paths and Goals](/public/content/annotations/a-pattern-language/120-paths-and-goals)
-- [Building Fronts](/public/content/annotations/a-pattern-language/122-building-fronts)
-- [31-promenade](/public/content/annotations/a-pattern-language/31-promenade)
-- [32-shopping-street](/public/content/annotations/a-pattern-language/32-shopping-street)
-- [52-network-of-paths-and-cars](/public/content/annotations/a-pattern-language/52-network-of-paths-and-cars)
-- [55-raised-walk](/public/content/annotations/a-pattern-language/55-raised-walk)
-- [100-pedestrian-street](/public/content/annotations/a-pattern-language/100-pedestrian-street)
-- [120-paths-and-goals](/public/content/annotations/a-pattern-language/120-paths-and-goals)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Paths and Goals](/content/annotations/a-pattern-language/120-paths-and-goals)
+- [Building Fronts](/content/annotations/a-pattern-language/122-building-fronts)
+- [31-promenade](/content/annotations/a-pattern-language/31-promenade)
+- [32-shopping-street](/content/annotations/a-pattern-language/32-shopping-street)
+- [52-network-of-paths-and-cars](/content/annotations/a-pattern-language/52-network-of-paths-and-cars)
+- [55-raised-walk](/content/annotations/a-pattern-language/55-raised-walk)
+- [100-pedestrian-street](/content/annotations/a-pattern-language/100-pedestrian-street)
+- [120-paths-and-goals](/content/annotations/a-pattern-language/120-paths-and-goals)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

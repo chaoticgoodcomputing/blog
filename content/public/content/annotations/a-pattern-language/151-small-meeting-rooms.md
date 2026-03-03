@@ -17,11 +17,11 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [A Place to Wait](/public/content/annotations/a-pattern-language/150-a-place-to-wait)
-- [Half-Private Office](/public/content/annotations/a-pattern-language/152-half-private-office)
-- [43-university-as-a-marketplace](/public/content/annotations/a-pattern-language/43-university-as-a-marketplace)
-- [44-local-town-hall](/public/content/annotations/a-pattern-language/44-local-town-hall)
-- [83-master-and-apprentices](/public/content/annotations/a-pattern-language/83-master-and-apprentices)
-- [146-flexible-office-space](/public/content/annotations/a-pattern-language/146-flexible-office-space)
-- [148-small-work-groups](/public/content/annotations/a-pattern-language/148-small-work-groups)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [A Place to Wait](/content/annotations/a-pattern-language/150-a-place-to-wait)
+- [Half-Private Office](/content/annotations/a-pattern-language/152-half-private-office)
+- [43-university-as-a-marketplace](/content/annotations/a-pattern-language/43-university-as-a-marketplace)
+- [44-local-town-hall](/content/annotations/a-pattern-language/44-local-town-hall)
+- [83-master-and-apprentices](/content/annotations/a-pattern-language/83-master-and-apprentices)
+- [146-flexible-office-space](/content/annotations/a-pattern-language/146-flexible-office-space)
+- [148-small-work-groups](/content/annotations/a-pattern-language/148-small-work-groups)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

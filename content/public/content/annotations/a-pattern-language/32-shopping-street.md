@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Promenade](/public/content/annotations/a-pattern-language/31-promenade)
-- [Night Life](/public/content/annotations/a-pattern-language/33-night-life)
-- [10-magic-of-the-city](/public/content/annotations/a-pattern-language/10-magic-of-the-city)
-- [31-promenade](/public/content/annotations/a-pattern-language/31-promenade)
-- [19-web-of-shopping](/public/content/annotations/a-pattern-language/19-web-of-shopping)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Promenade](/content/annotations/a-pattern-language/31-promenade)
+- [Night Life](/content/annotations/a-pattern-language/33-night-life)
+- [10-magic-of-the-city](/content/annotations/a-pattern-language/10-magic-of-the-city)
+- [31-promenade](/content/annotations/a-pattern-language/31-promenade)
+- [19-web-of-shopping](/content/annotations/a-pattern-language/19-web-of-shopping)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

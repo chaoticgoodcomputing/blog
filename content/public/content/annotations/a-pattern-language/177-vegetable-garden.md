@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Garden Seat](/public/content/annotations/a-pattern-language/176-garden-seat)
-- [Compost](/public/content/annotations/a-pattern-language/178-compost)
-- [170-fruit-trees](/public/content/annotations/a-pattern-language/170-fruit-trees)
-- [67-common-land](/public/content/annotations/a-pattern-language/67-common-land)
-- [111-half-hidden-garden](/public/content/annotations/a-pattern-language/111-half-hidden-garden)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Garden Seat](/content/annotations/a-pattern-language/176-garden-seat)
+- [Compost](/content/annotations/a-pattern-language/178-compost)
+- [170-fruit-trees](/content/annotations/a-pattern-language/170-fruit-trees)
+- [67-common-land](/content/annotations/a-pattern-language/67-common-land)
+- [111-half-hidden-garden](/content/annotations/a-pattern-language/111-half-hidden-garden)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

@@ -17,8 +17,8 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Intimacy Gradient](/public/content/annotations/a-pattern-language/127-intimacy-gradient)
-- [Common Areas at the Heart](/public/content/annotations/a-pattern-language/129-common-areas-at-the-heart)
-- [105-south-facing-outdoors](/public/content/annotations/a-pattern-language/105-south-facing-outdoors)
-- [127-intimacy-gradient](/public/content/annotations/a-pattern-language/127-intimacy-gradient)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Intimacy Gradient](/content/annotations/a-pattern-language/127-intimacy-gradient)
+- [Common Areas at the Heart](/content/annotations/a-pattern-language/129-common-areas-at-the-heart)
+- [105-south-facing-outdoors](/content/annotations/a-pattern-language/105-south-facing-outdoors)
+- [127-intimacy-gradient](/content/annotations/a-pattern-language/127-intimacy-gradient)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

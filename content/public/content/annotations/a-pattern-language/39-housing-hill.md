@@ -17,8 +17,8 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Row Houses](/public/content/annotations/a-pattern-language/38-row-houses)
-- [Old People Everywhere](/public/content/annotations/a-pattern-language/40-old-people-everywhere)
-- [29-density-rings](/public/content/annotations/a-pattern-language/29-density-rings)
-- [21-four-story-limit](/public/content/annotations/a-pattern-language/21-four-story-limit)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Row Houses](/content/annotations/a-pattern-language/38-row-houses)
+- [Old People Everywhere](/content/annotations/a-pattern-language/40-old-people-everywhere)
+- [29-density-rings](/content/annotations/a-pattern-language/29-density-rings)
+- [21-four-story-limit](/content/annotations/a-pattern-language/21-four-story-limit)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

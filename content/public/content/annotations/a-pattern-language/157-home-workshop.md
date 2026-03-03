@@ -17,11 +17,11 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Settled Work](/public/content/annotations/a-pattern-language/156-settled-work)
-- [Open Stairs](/public/content/annotations/a-pattern-language/158-open-stairs)
-- [37-house-cluster](/public/content/annotations/a-pattern-language/37-house-cluster)
-- [79-your-own-home](/public/content/annotations/a-pattern-language/79-your-own-home)
-- [09-scattered-work](/public/content/annotations/a-pattern-language/09-scattered-work)
-- [18-network-of-learning](/public/content/annotations/a-pattern-language/18-network-of-learning)
-- [27-men-and-women](/public/content/annotations/a-pattern-language/27-men-and-women)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Settled Work](/content/annotations/a-pattern-language/156-settled-work)
+- [Open Stairs](/content/annotations/a-pattern-language/158-open-stairs)
+- [37-house-cluster](/content/annotations/a-pattern-language/37-house-cluster)
+- [79-your-own-home](/content/annotations/a-pattern-language/79-your-own-home)
+- [09-scattered-work](/content/annotations/a-pattern-language/09-scattered-work)
+- [18-network-of-learning](/content/annotations/a-pattern-language/18-network-of-learning)
+- [27-men-and-women](/content/annotations/a-pattern-language/27-men-and-women)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

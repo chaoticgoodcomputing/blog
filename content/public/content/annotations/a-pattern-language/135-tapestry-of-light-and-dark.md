@@ -17,10 +17,10 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Zen View](/public/content/annotations/a-pattern-language/134-zen-view)
-- [Couple’s Realm](/public/content/annotations/a-pattern-language/136-couple-s-realm)
-- [131-the-flow-through-rooms](/public/content/annotations/a-pattern-language/131-the-flow-through-rooms)
-- [132-short-passages](/public/content/annotations/a-pattern-language/132-short-passages)
-- [133-staircase-as-a-stage](/public/content/annotations/a-pattern-language/133-staircase-as-a-stage)
-- [134-zen-view](/public/content/annotations/a-pattern-language/134-zen-view)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Zen View](/content/annotations/a-pattern-language/134-zen-view)
+- [Couple’s Realm](/content/annotations/a-pattern-language/136-couple-s-realm)
+- [131-the-flow-through-rooms](/content/annotations/a-pattern-language/131-the-flow-through-rooms)
+- [132-short-passages](/content/annotations/a-pattern-language/132-short-passages)
+- [133-staircase-as-a-stage](/content/annotations/a-pattern-language/133-staircase-as-a-stage)
+- [134-zen-view](/content/annotations/a-pattern-language/134-zen-view)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

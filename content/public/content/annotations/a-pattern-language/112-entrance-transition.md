@@ -17,10 +17,10 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Half-Hidden Garden](/public/content/annotations/a-pattern-language/111-half-hidden-garden)
-- [Car Connection](/public/content/annotations/a-pattern-language/113-car-connection)
-- [53-main-gateways](/public/content/annotations/a-pattern-language/53-main-gateways)
-- [102-family-of-entrances](/public/content/annotations/a-pattern-language/102-family-of-entrances)
-- [110-main-entrance](/public/content/annotations/a-pattern-language/110-main-entrance)
-- [111-half-hidden-garden](/public/content/annotations/a-pattern-language/111-half-hidden-garden)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Half-Hidden Garden](/content/annotations/a-pattern-language/111-half-hidden-garden)
+- [Car Connection](/content/annotations/a-pattern-language/113-car-connection)
+- [53-main-gateways](/content/annotations/a-pattern-language/53-main-gateways)
+- [102-family-of-entrances](/content/annotations/a-pattern-language/102-family-of-entrances)
+- [110-main-entrance](/content/annotations/a-pattern-language/110-main-entrance)
+- [111-half-hidden-garden](/content/annotations/a-pattern-language/111-half-hidden-garden)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

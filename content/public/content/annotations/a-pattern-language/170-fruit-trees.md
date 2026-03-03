@@ -17,8 +17,8 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Terraced Slope](/public/content/annotations/a-pattern-language/169-terraced-slope)
-- [Tree Places](/public/content/annotations/a-pattern-language/171-tree-places)
-- [67-common-land](/public/content/annotations/a-pattern-language/67-common-land)
-- [111-half-hidden-garden](/public/content/annotations/a-pattern-language/111-half-hidden-garden)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Terraced Slope](/content/annotations/a-pattern-language/169-terraced-slope)
+- [Tree Places](/content/annotations/a-pattern-language/171-tree-places)
+- [67-common-land](/content/annotations/a-pattern-language/67-common-land)
+- [111-half-hidden-garden](/content/annotations/a-pattern-language/111-half-hidden-garden)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

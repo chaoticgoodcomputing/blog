@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Bed Alcove](/public/content/annotations/a-pattern-language/188-bed-alcove)
-- [Ceiling Height Variety](/public/content/annotations/a-pattern-language/190-ceiling-height-variety)
-- [187-marriage-bed](/public/content/annotations/a-pattern-language/187-marriage-bed)
-- [188-bed-alcove](/public/content/annotations/a-pattern-language/188-bed-alcove)
-- [144-bathing-room](/public/content/annotations/a-pattern-language/144-bathing-room)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Bed Alcove](/content/annotations/a-pattern-language/188-bed-alcove)
+- [Ceiling Height Variety](/content/annotations/a-pattern-language/190-ceiling-height-variety)
+- [187-marriage-bed](/content/annotations/a-pattern-language/187-marriage-bed)
+- [188-bed-alcove](/content/annotations/a-pattern-language/188-bed-alcove)
+- [144-bathing-room](/content/annotations/a-pattern-language/144-bathing-room)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

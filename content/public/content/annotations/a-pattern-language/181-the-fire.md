@@ -17,7 +17,7 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Window Place](/public/content/annotations/a-pattern-language/180-window-place)
-- [Eating Atmosphere](/public/content/annotations/a-pattern-language/182-eating-atmosphere)
-- [129-common-areas-at-the-heart](/public/content/annotations/a-pattern-language/129-common-areas-at-the-heart)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Window Place](/content/annotations/a-pattern-language/180-window-place)
+- [Eating Atmosphere](/content/annotations/a-pattern-language/182-eating-atmosphere)
+- [129-common-areas-at-the-heart](/content/annotations/a-pattern-language/129-common-areas-at-the-heart)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

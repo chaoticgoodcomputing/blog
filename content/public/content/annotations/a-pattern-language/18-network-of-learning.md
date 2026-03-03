@@ -17,6 +17,6 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Ring Roads](/public/content/annotations/a-pattern-language/17-ring-roads)
-- [Web of Shopping](/public/content/annotations/a-pattern-language/19-web-of-shopping)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Ring Roads](/content/annotations/a-pattern-language/17-ring-roads)
+- [Web of Shopping](/content/annotations/a-pattern-language/19-web-of-shopping)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

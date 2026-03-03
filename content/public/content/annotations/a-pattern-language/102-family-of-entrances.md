@@ -17,7 +17,7 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Building Thoroughfare](/public/content/annotations/a-pattern-language/101-building-thoroughfare)
-- [Small Parking Lots](/public/content/annotations/a-pattern-language/103-small-parking-lots)
-- [98-circulation-realms](/public/content/annotations/a-pattern-language/98-circulation-realms)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Building Thoroughfare](/content/annotations/a-pattern-language/101-building-thoroughfare)
+- [Small Parking Lots](/content/annotations/a-pattern-language/103-small-parking-lots)
+- [98-circulation-realms](/content/annotations/a-pattern-language/98-circulation-realms)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

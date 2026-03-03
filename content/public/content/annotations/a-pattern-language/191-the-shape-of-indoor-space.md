@@ -17,7 +17,7 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Ceiling Height Variety](/public/content/annotations/a-pattern-language/190-ceiling-height-variety)
-- [Windows Overlooking Life](/public/content/annotations/a-pattern-language/192-windows-overlooking-life)
-- [190-ceiling-height-variety](/public/content/annotations/a-pattern-language/190-ceiling-height-variety)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Ceiling Height Variety](/content/annotations/a-pattern-language/190-ceiling-height-variety)
+- [Windows Overlooking Life](/content/annotations/a-pattern-language/192-windows-overlooking-life)
+- [190-ceiling-height-variety](/content/annotations/a-pattern-language/190-ceiling-height-variety)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

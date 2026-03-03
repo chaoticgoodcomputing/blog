@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Warm Colors](/public/content/annotations/a-pattern-language/250-warm-colors)
-- [Pools of Light](/public/content/annotations/a-pattern-language/252-pools-of-light)
-- [142-sequence-of-sitting-spaces](/public/content/annotations/a-pattern-language/142-sequence-of-sitting-spaces)
-- [185-sitting-circle](/public/content/annotations/a-pattern-language/185-sitting-circle)
-- [202-built-in-seats](/public/content/annotations/a-pattern-language/202-built-in-seats)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Warm Colors](/content/annotations/a-pattern-language/250-warm-colors)
+- [Pools of Light](/content/annotations/a-pattern-language/252-pools-of-light)
+- [142-sequence-of-sitting-spaces](/content/annotations/a-pattern-language/142-sequence-of-sitting-spaces)
+- [185-sitting-circle](/content/annotations/a-pattern-language/185-sitting-circle)
+- [202-built-in-seats](/content/annotations/a-pattern-language/202-built-in-seats)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

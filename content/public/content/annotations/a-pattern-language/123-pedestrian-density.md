@@ -17,11 +17,11 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Building Fronts](/public/content/annotations/a-pattern-language/122-building-fronts)
-- [Activity Pockets](/public/content/annotations/a-pattern-language/124-activity-pockets)
-- [31-promenade](/public/content/annotations/a-pattern-language/31-promenade)
-- [61-small-public-squares](/public/content/annotations/a-pattern-language/61-small-public-squares)
-- [100-pedestrian-street](/public/content/annotations/a-pattern-language/100-pedestrian-street)
-- [101-building-thoroughfare](/public/content/annotations/a-pattern-language/101-building-thoroughfare)
-- [121-path-shape](/public/content/annotations/a-pattern-language/121-path-shape)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Building Fronts](/content/annotations/a-pattern-language/122-building-fronts)
+- [Activity Pockets](/content/annotations/a-pattern-language/124-activity-pockets)
+- [31-promenade](/content/annotations/a-pattern-language/31-promenade)
+- [61-small-public-squares](/content/annotations/a-pattern-language/61-small-public-squares)
+- [100-pedestrian-street](/content/annotations/a-pattern-language/100-pedestrian-street)
+- [101-building-thoroughfare](/content/annotations/a-pattern-language/101-building-thoroughfare)
+- [121-path-shape](/content/annotations/a-pattern-language/121-path-shape)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

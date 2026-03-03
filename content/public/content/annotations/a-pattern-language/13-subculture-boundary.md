@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Community of 7000](/public/content/annotations/a-pattern-language/12-community-of-7000)
-- [Identifiable Neighborhood](/public/content/annotations/a-pattern-language/14-identifiable-neighborhood)
-- [08-mosaic-of-subcultures](/public/content/annotations/a-pattern-language/08-mosaic-of-subcultures)
-- [12-community-of-7000](/public/content/annotations/a-pattern-language/12-community-of-7000)
-- [14-identifiable-neighborhood](/public/content/annotations/a-pattern-language/14-identifiable-neighborhood)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Community of 7000](/content/annotations/a-pattern-language/12-community-of-7000)
+- [Identifiable Neighborhood](/content/annotations/a-pattern-language/14-identifiable-neighborhood)
+- [08-mosaic-of-subcultures](/content/annotations/a-pattern-language/08-mosaic-of-subcultures)
+- [12-community-of-7000](/content/annotations/a-pattern-language/12-community-of-7000)
+- [14-identifiable-neighborhood](/content/annotations/a-pattern-language/14-identifiable-neighborhood)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

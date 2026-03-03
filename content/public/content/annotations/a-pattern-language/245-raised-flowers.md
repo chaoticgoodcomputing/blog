@@ -17,12 +17,12 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Canvas Roofs](/public/content/annotations/a-pattern-language/244-canvas-roofs)
-- [Climbing Plants](/public/content/annotations/a-pattern-language/246-climbing-plants)
-- [243-sitting-wall](/public/content/annotations/a-pattern-language/243-sitting-wall)
-- [169-terraced-slope](/public/content/annotations/a-pattern-language/169-terraced-slope)
-- [120-paths-and-goals](/public/content/annotations/a-pattern-language/120-paths-and-goals)
-- [125-stair-seats](/public/content/annotations/a-pattern-language/125-stair-seats)
-- [160-building-edge](/public/content/annotations/a-pattern-language/160-building-edge)
-- [173-garden-wall](/public/content/annotations/a-pattern-language/173-garden-wall)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Canvas Roofs](/content/annotations/a-pattern-language/244-canvas-roofs)
+- [Climbing Plants](/content/annotations/a-pattern-language/246-climbing-plants)
+- [243-sitting-wall](/content/annotations/a-pattern-language/243-sitting-wall)
+- [169-terraced-slope](/content/annotations/a-pattern-language/169-terraced-slope)
+- [120-paths-and-goals](/content/annotations/a-pattern-language/120-paths-and-goals)
+- [125-stair-seats](/content/annotations/a-pattern-language/125-stair-seats)
+- [160-building-edge](/content/annotations/a-pattern-language/160-building-edge)
+- [173-garden-wall](/content/annotations/a-pattern-language/173-garden-wall)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

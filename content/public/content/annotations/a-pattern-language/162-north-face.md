@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Sunny Place](/public/content/annotations/a-pattern-language/161-sunny-place)
-- [Outdoor Room](/public/content/annotations/a-pattern-language/163-outdoor-room)
-- [105-south-facing-outdoors](/public/content/annotations/a-pattern-language/105-south-facing-outdoors)
-- [128-indoor-sunlight](/public/content/annotations/a-pattern-language/128-indoor-sunlight)
-- [161-sunny-place](/public/content/annotations/a-pattern-language/161-sunny-place)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Sunny Place](/content/annotations/a-pattern-language/161-sunny-place)
+- [Outdoor Room](/content/annotations/a-pattern-language/163-outdoor-room)
+- [105-south-facing-outdoors](/content/annotations/a-pattern-language/105-south-facing-outdoors)
+- [128-indoor-sunlight](/content/annotations/a-pattern-language/128-indoor-sunlight)
+- [161-sunny-place](/content/annotations/a-pattern-language/161-sunny-place)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

@@ -17,10 +17,10 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Alcoves](/public/content/annotations/a-pattern-language/179-alcoves)
-- [The Fire](/public/content/annotations/a-pattern-language/181-the-fire)
-- [130-entrance-room](/public/content/annotations/a-pattern-language/130-entrance-room)
-- [134-zen-view](/public/content/annotations/a-pattern-language/134-zen-view)
-- [159-light-on-two-sides-of-every-room](/public/content/annotations/a-pattern-language/159-light-on-two-sides-of-every-room)
-- [164-street-windows](/public/content/annotations/a-pattern-language/164-street-windows)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Alcoves](/content/annotations/a-pattern-language/179-alcoves)
+- [The Fire](/content/annotations/a-pattern-language/181-the-fire)
+- [130-entrance-room](/content/annotations/a-pattern-language/130-entrance-room)
+- [134-zen-view](/content/annotations/a-pattern-language/134-zen-view)
+- [159-light-on-two-sides-of-every-room](/content/annotations/a-pattern-language/159-light-on-two-sides-of-every-room)
+- [164-street-windows](/content/annotations/a-pattern-language/164-street-windows)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

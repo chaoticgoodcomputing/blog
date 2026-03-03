@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [House Cluster](/public/content/annotations/a-pattern-language/37-house-cluster)
-- [Housing Hill](/public/content/annotations/a-pattern-language/39-housing-hill)
-- [37-house-cluster](/public/content/annotations/a-pattern-language/37-house-cluster)
-- [29-density-rings](/public/content/annotations/a-pattern-language/29-density-rings)
-- [36-degrees-of-publicness](/public/content/annotations/a-pattern-language/36-degrees-of-publicness)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [House Cluster](/content/annotations/a-pattern-language/37-house-cluster)
+- [Housing Hill](/content/annotations/a-pattern-language/39-housing-hill)
+- [37-house-cluster](/content/annotations/a-pattern-language/37-house-cluster)
+- [29-density-rings](/content/annotations/a-pattern-language/29-density-rings)
+- [36-degrees-of-publicness](/content/annotations/a-pattern-language/36-degrees-of-publicness)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)

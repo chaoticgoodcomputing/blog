@@ -17,11 +17,11 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Couple’s Realm](/public/content/annotations/a-pattern-language/136-couple-s-realm)
-- [Sleeping to the East](/public/content/annotations/a-pattern-language/138-sleeping-to-the-east)
-- [76-house-for-a-small-family](/public/content/annotations/a-pattern-language/76-house-for-a-small-family)
-- [129-common-areas-at-the-heart](/public/content/annotations/a-pattern-language/129-common-areas-at-the-heart)
-- [136-couple-s-realm](/public/content/annotations/a-pattern-language/136-couple-s-realm)
-- [137-childrens-realm](/public/content/annotations/a-pattern-language/137-childrens-realm)
-- [68-connected-play](/public/content/annotations/a-pattern-language/68-connected-play)
-- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
+- [Couple’s Realm](/content/annotations/a-pattern-language/136-couple-s-realm)
+- [Sleeping to the East](/content/annotations/a-pattern-language/138-sleeping-to-the-east)
+- [76-house-for-a-small-family](/content/annotations/a-pattern-language/76-house-for-a-small-family)
+- [129-common-areas-at-the-heart](/content/annotations/a-pattern-language/129-common-areas-at-the-heart)
+- [136-couple-s-realm](/content/annotations/a-pattern-language/136-couple-s-realm)
+- [137-childrens-realm](/content/annotations/a-pattern-language/137-childrens-realm)
+- [68-connected-play](/content/annotations/a-pattern-language/68-connected-play)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
