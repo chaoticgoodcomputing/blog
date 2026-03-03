@@ -17,13 +17,13 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Main Entrance](/content/annotations/a-pattern-language/110-main-entrance)
-- [Entrance Transition](/content/annotations/a-pattern-language/112-entrance-transition)
-- [37-house-cluster](/content/annotations/a-pattern-language/37-house-cluster)
-- [38-row-houses](/content/annotations/a-pattern-language/38-row-houses)
-- [41-work-community](/content/annotations/a-pattern-language/41-work-community)
-- [79-your-own-home](/content/annotations/a-pattern-language/79-your-own-home)
-- [95-building-complex](/content/annotations/a-pattern-language/95-building-complex)
-- [105-south-facing-outdoors](/content/annotations/a-pattern-language/105-south-facing-outdoors)
-- [104-site-repair](/content/annotations/a-pattern-language/104-site-repair)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Main Entrance](/public/content/annotations/a-pattern-language/110-main-entrance)
+- [Entrance Transition](/public/content/annotations/a-pattern-language/112-entrance-transition)
+- [37-house-cluster](/public/content/annotations/a-pattern-language/37-house-cluster)
+- [38-row-houses](/public/content/annotations/a-pattern-language/38-row-houses)
+- [41-work-community](/public/content/annotations/a-pattern-language/41-work-community)
+- [79-your-own-home](/public/content/annotations/a-pattern-language/79-your-own-home)
+- [95-building-complex](/public/content/annotations/a-pattern-language/95-building-complex)
+- [105-south-facing-outdoors](/public/content/annotations/a-pattern-language/105-south-facing-outdoors)
+- [104-site-repair](/public/content/annotations/a-pattern-language/104-site-repair)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

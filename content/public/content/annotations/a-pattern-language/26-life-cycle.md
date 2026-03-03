@@ -17,8 +17,8 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Access to Water](/content/annotations/a-pattern-language/25-access-to-water)
-- [Men and Women](/content/annotations/a-pattern-language/27-men-and-women)
-- [12-community-of-7000](/content/annotations/a-pattern-language/12-community-of-7000)
-- [14-identifiable-neighborhood](/content/annotations/a-pattern-language/14-identifiable-neighborhood)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Access to Water](/public/content/annotations/a-pattern-language/25-access-to-water)
+- [Men and Women](/public/content/annotations/a-pattern-language/27-men-and-women)
+- [12-community-of-7000](/private/content/annotations/a-pattern-language/12-community-of-7000)
+- [14-identifiable-neighborhood](/private/content/annotations/a-pattern-language/14-identifiable-neighborhood)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

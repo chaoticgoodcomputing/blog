@@ -17,10 +17,10 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Eating Atmosphere](/content/annotations/a-pattern-language/182-eating-atmosphere)
-- [Cooking Layout](/content/annotations/a-pattern-language/184-cooking-layout)
-- [146-flexible-office-space](/content/annotations/a-pattern-language/146-flexible-office-space)
-- [152-half-private-office](/content/annotations/a-pattern-language/152-half-private-office)
-- [157-home-workshop](/content/annotations/a-pattern-language/157-home-workshop)
-- [179-alcoves](/content/annotations/a-pattern-language/179-alcoves)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Eating Atmosphere](/public/content/annotations/a-pattern-language/182-eating-atmosphere)
+- [Cooking Layout](/public/content/annotations/a-pattern-language/184-cooking-layout)
+- [146-flexible-office-space](/public/content/annotations/a-pattern-language/146-flexible-office-space)
+- [152-half-private-office](/public/content/annotations/a-pattern-language/152-half-private-office)
+- [157-home-workshop](/public/content/annotations/a-pattern-language/157-home-workshop)
+- [179-alcoves](/public/content/annotations/a-pattern-language/179-alcoves)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

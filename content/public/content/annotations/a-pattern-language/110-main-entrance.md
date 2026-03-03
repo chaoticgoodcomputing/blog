@@ -17,11 +17,11 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Long Thin House](/content/annotations/a-pattern-language/109-long-thin-house)
-- [Half-Hidden Garden](/content/annotations/a-pattern-language/111-half-hidden-garden)
-- [104-site-repair](/content/annotations/a-pattern-language/104-site-repair)
-- [105-south-facing-outdoors](/content/annotations/a-pattern-language/105-south-facing-outdoors)
-- [107-wings-of-light](/content/annotations/a-pattern-language/107-wings-of-light)
-- [98-circulation-realms](/content/annotations/a-pattern-language/98-circulation-realms)
-- [102-family-of-entrances](/content/annotations/a-pattern-language/102-family-of-entrances)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Long Thin House](/public/content/annotations/a-pattern-language/109-long-thin-house)
+- [Half-Hidden Garden](/public/content/annotations/a-pattern-language/111-half-hidden-garden)
+- [104-site-repair](/public/content/annotations/a-pattern-language/104-site-repair)
+- [105-south-facing-outdoors](/public/content/annotations/a-pattern-language/105-south-facing-outdoors)
+- [107-wings-of-light](/public/content/annotations/a-pattern-language/107-wings-of-light)
+- [98-circulation-realms](/public/content/annotations/a-pattern-language/98-circulation-realms)
+- [102-family-of-entrances](/public/content/annotations/a-pattern-language/102-family-of-entrances)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

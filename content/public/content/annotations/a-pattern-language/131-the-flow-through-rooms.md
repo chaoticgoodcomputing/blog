@@ -17,8 +17,8 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Entrance Room](/content/annotations/a-pattern-language/130-entrance-room)
-- [Short Passages](/content/annotations/a-pattern-language/132-short-passages)
-- [127-intimacy-gradient](/content/annotations/a-pattern-language/127-intimacy-gradient)
-- [129-common-areas-at-the-heart](/content/annotations/a-pattern-language/129-common-areas-at-the-heart)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Entrance Room](/public/content/annotations/a-pattern-language/130-entrance-room)
+- [Short Passages](/public/content/annotations/a-pattern-language/132-short-passages)
+- [127-intimacy-gradient](/public/content/annotations/a-pattern-language/127-intimacy-gradient)
+- [129-common-areas-at-the-heart](/public/content/annotations/a-pattern-language/129-common-areas-at-the-heart)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

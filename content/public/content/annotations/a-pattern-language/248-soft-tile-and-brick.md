@@ -17,11 +17,11 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Paving with Cracks Between the Stones](/content/annotations/a-pattern-language/247-paving-with-cracks-between-the-stones)
-- [Ornament](/content/annotations/a-pattern-language/249-ornament)
-- [168-connection-to-the-earth](/content/annotations/a-pattern-language/168-connection-to-the-earth)
-- [207-good-materials](/content/annotations/a-pattern-language/207-good-materials)
-- [233-floor-surface](/content/annotations/a-pattern-language/233-floor-surface)
-- [243-sitting-wall](/content/annotations/a-pattern-language/243-sitting-wall)
-- [247-paving-with-cracks-between-the-stones](/content/annotations/a-pattern-language/247-paving-with-cracks-between-the-stones)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Paving with Cracks Between the Stones](/public/content/annotations/a-pattern-language/247-paving-with-cracks-between-the-stones)
+- [Ornament](/public/content/annotations/a-pattern-language/249-ornament)
+- [168-connection-to-the-earth](/public/content/annotations/a-pattern-language/168-connection-to-the-earth)
+- [207-good-materials](/public/content/annotations/a-pattern-language/207-good-materials)
+- [233-floor-surface](/public/content/annotations/a-pattern-language/233-floor-surface)
+- [243-sitting-wall](/public/content/annotations/a-pattern-language/243-sitting-wall)
+- [247-paving-with-cracks-between-the-stones](/public/content/annotations/a-pattern-language/247-paving-with-cracks-between-the-stones)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

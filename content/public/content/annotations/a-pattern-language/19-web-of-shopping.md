@@ -17,10 +17,10 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Network of Learning](/content/annotations/a-pattern-language/18-network-of-learning)
-- [Mini-buses](/content/annotations/a-pattern-language/20-mini-buses)
-- [08-mosaic-of-subcultures](/content/annotations/a-pattern-language/08-mosaic-of-subcultures)
-- [13-subculture-boundary](/content/annotations/a-pattern-language/13-subculture-boundary)
-- [09-scattered-work](/content/annotations/a-pattern-language/09-scattered-work)
-- [11-local-transport-areas](/content/annotations/a-pattern-language/11-local-transport-areas)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Network of Learning](/public/content/annotations/a-pattern-language/18-network-of-learning)
+- [Mini-buses](/public/content/annotations/a-pattern-language/20-mini-buses)
+- [08-mosaic-of-subcultures](/private/content/annotations/a-pattern-language/08-mosaic-of-subcultures)
+- [13-subculture-boundary](/private/content/annotations/a-pattern-language/13-subculture-boundary)
+- [09-scattered-work](/private/content/annotations/a-pattern-language/09-scattered-work)
+- [11-local-transport-areas](/private/content/annotations/a-pattern-language/11-local-transport-areas)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

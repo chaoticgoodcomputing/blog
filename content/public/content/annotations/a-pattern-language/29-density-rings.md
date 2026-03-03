@@ -17,10 +17,10 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Eccentric Nucleus](/content/annotations/a-pattern-language/28-eccentric-nucleus)
-- [Activity Nodes](/content/annotations/a-pattern-language/30-activity-nodes)
-- [28-eccentric-nucleus](/content/annotations/a-pattern-language/28-eccentric-nucleus)
-- [08-mosaic-of-subcultures](/content/annotations/a-pattern-language/08-mosaic-of-subcultures)
-- [13-subculture-boundary](/content/annotations/a-pattern-language/13-subculture-boundary)
-- [12-community-of-7000](/content/annotations/a-pattern-language/12-community-of-7000)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Eccentric Nucleus](/public/content/annotations/a-pattern-language/28-eccentric-nucleus)
+- [Activity Nodes](/public/content/annotations/a-pattern-language/30-activity-nodes)
+- [28-eccentric-nucleus](/public/content/annotations/a-pattern-language/28-eccentric-nucleus)
+- [08-mosaic-of-subcultures](/public/content/annotations/a-pattern-language/08-mosaic-of-subcultures)
+- [13-subculture-boundary](/public/content/annotations/a-pattern-language/13-subculture-boundary)
+- [12-community-of-7000](/public/content/annotations/a-pattern-language/12-community-of-7000)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

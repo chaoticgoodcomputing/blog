@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Sheltering Roof](/content/annotations/a-pattern-language/117-sheltering-roof)
-- [Arcades](/content/annotations/a-pattern-language/119-arcades)
-- [117-sheltering-roof](/content/annotations/a-pattern-language/117-sheltering-roof)
-- [107-wings-of-light](/content/annotations/a-pattern-language/107-wings-of-light)
-- [116-cascade-of-roofs](/content/annotations/a-pattern-language/116-cascade-of-roofs)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Sheltering Roof](/public/content/annotations/a-pattern-language/117-sheltering-roof)
+- [Arcades](/public/content/annotations/a-pattern-language/119-arcades)
+- [117-sheltering-roof](/public/content/annotations/a-pattern-language/117-sheltering-roof)
+- [107-wings-of-light](/public/content/annotations/a-pattern-language/107-wings-of-light)
+- [116-cascade-of-roofs](/public/content/annotations/a-pattern-language/116-cascade-of-roofs)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

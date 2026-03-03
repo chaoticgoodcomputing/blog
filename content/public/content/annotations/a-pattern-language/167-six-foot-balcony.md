@@ -17,8 +17,8 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Gallery Surround](/content/annotations/a-pattern-language/166-gallery-surround)
-- [Connection to the Earth](/content/annotations/a-pattern-language/168-connection-to-the-earth)
-- [119-arcades](/content/annotations/a-pattern-language/119-arcades)
-- [166-gallery-surround](/content/annotations/a-pattern-language/166-gallery-surround)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Gallery Surround](/public/content/annotations/a-pattern-language/166-gallery-surround)
+- [Connection to the Earth](/public/content/annotations/a-pattern-language/168-connection-to-the-earth)
+- [119-arcades](/public/content/annotations/a-pattern-language/119-arcades)
+- [166-gallery-surround](/public/content/annotations/a-pattern-language/166-gallery-surround)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

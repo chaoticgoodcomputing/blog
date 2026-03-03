@@ -17,6 +17,6 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Pools of Light](/content/annotations/a-pattern-language/252-pools-of-light)
-- [Conclusion](/content/annotations/a-pattern-language/254-conclusion)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Pools of Light](/public/content/annotations/a-pattern-language/252-pools-of-light)
+- [Conclusion](/public/content/annotations/a-pattern-language/254-conclusion)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

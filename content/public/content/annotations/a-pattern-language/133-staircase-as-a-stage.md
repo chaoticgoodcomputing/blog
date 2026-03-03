@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Short Passages](/content/annotations/a-pattern-language/132-short-passages)
-- [Zen View](/content/annotations/a-pattern-language/134-zen-view)
-- [110-main-entrance](/content/annotations/a-pattern-language/110-main-entrance)
-- [131-the-flow-through-rooms](/content/annotations/a-pattern-language/131-the-flow-through-rooms)
-- [132-short-passages](/content/annotations/a-pattern-language/132-short-passages)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Short Passages](/public/content/annotations/a-pattern-language/132-short-passages)
+- [Zen View](/public/content/annotations/a-pattern-language/134-zen-view)
+- [110-main-entrance](/public/content/annotations/a-pattern-language/110-main-entrance)
+- [131-the-flow-through-rooms](/public/content/annotations/a-pattern-language/131-the-flow-through-rooms)
+- [132-short-passages](/public/content/annotations/a-pattern-language/132-short-passages)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

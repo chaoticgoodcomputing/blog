@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Light on Two Sides of Every Room](/content/annotations/a-pattern-language/159-light-on-two-sides-of-every-room)
-- [Sunny Place](/content/annotations/a-pattern-language/161-sunny-place)
-- [159-light-on-two-sides-of-every-room](/content/annotations/a-pattern-language/159-light-on-two-sides-of-every-room)
-- [107-wings-of-light](/content/annotations/a-pattern-language/107-wings-of-light)
-- [106-positive-outdoor-space](/content/annotations/a-pattern-language/106-positive-outdoor-space)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Light on Two Sides of Every Room](/public/content/annotations/a-pattern-language/159-light-on-two-sides-of-every-room)
+- [Sunny Place](/public/content/annotations/a-pattern-language/161-sunny-place)
+- [159-light-on-two-sides-of-every-room](/public/content/annotations/a-pattern-language/159-light-on-two-sides-of-every-room)
+- [107-wings-of-light](/public/content/annotations/a-pattern-language/107-wings-of-light)
+- [106-positive-outdoor-space](/public/content/annotations/a-pattern-language/106-positive-outdoor-space)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

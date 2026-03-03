@@ -17,10 +17,10 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Teenager’s Cottage](/content/annotations/a-pattern-language/154-teenager-s-cottage)
-- [Settled Work](/content/annotations/a-pattern-language/156-settled-work)
-- [40-old-people-everywhere](/content/annotations/a-pattern-language/40-old-people-everywhere)
-- [75-the-family](/content/annotations/a-pattern-language/75-the-family)
-- [153-rooms-to-rent](/content/annotations/a-pattern-language/153-rooms-to-rent)
-- [154-teenager-s-cottage](/content/annotations/a-pattern-language/154-teenager-s-cottage)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Teenager’s Cottage](/public/content/annotations/a-pattern-language/154-teenager-s-cottage)
+- [Settled Work](/public/content/annotations/a-pattern-language/156-settled-work)
+- [40-old-people-everywhere](/public/content/annotations/a-pattern-language/40-old-people-everywhere)
+- [75-the-family](/public/content/annotations/a-pattern-language/75-the-family)
+- [153-rooms-to-rent](/public/content/annotations/a-pattern-language/153-rooms-to-rent)
+- [154-teenager-s-cottage](/public/content/annotations/a-pattern-language/154-teenager-s-cottage)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

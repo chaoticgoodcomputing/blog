@@ -17,13 +17,13 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Garden Wall](/content/annotations/a-pattern-language/173-garden-wall)
-- [Greenhouse](/content/annotations/a-pattern-language/175-greenhouse)
-- [163-outdoor-room](/content/annotations/a-pattern-language/163-outdoor-room)
-- [171-tree-places](/content/annotations/a-pattern-language/171-tree-places)
-- [175-greenhouse](/content/annotations/a-pattern-language/175-greenhouse)
-- [170-fruit-trees](/content/annotations/a-pattern-language/170-fruit-trees)
-- [120-paths-and-goals](/content/annotations/a-pattern-language/120-paths-and-goals)
-- [106-positive-outdoor-space](/content/annotations/a-pattern-language/106-positive-outdoor-space)
-- [112-entrance-transition](/content/annotations/a-pattern-language/112-entrance-transition)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Garden Wall](/public/content/annotations/a-pattern-language/173-garden-wall)
+- [Greenhouse](/public/content/annotations/a-pattern-language/175-greenhouse)
+- [163-outdoor-room](/public/content/annotations/a-pattern-language/163-outdoor-room)
+- [171-tree-places](/public/content/annotations/a-pattern-language/171-tree-places)
+- [175-greenhouse](/public/content/annotations/a-pattern-language/175-greenhouse)
+- [170-fruit-trees](/public/content/annotations/a-pattern-language/170-fruit-trees)
+- [120-paths-and-goals](/public/content/annotations/a-pattern-language/120-paths-and-goals)
+- [106-positive-outdoor-space](/public/content/annotations/a-pattern-language/106-positive-outdoor-space)
+- [112-entrance-transition](/public/content/annotations/a-pattern-language/112-entrance-transition)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

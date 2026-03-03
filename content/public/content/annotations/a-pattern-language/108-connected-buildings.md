@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Wings of Light](/content/annotations/a-pattern-language/107-wings-of-light)
-- [Long Thin House](/content/annotations/a-pattern-language/109-long-thin-house)
-- [95-building-complex](/content/annotations/a-pattern-language/95-building-complex)
-- [107-wings-of-light](/content/annotations/a-pattern-language/107-wings-of-light)
-- [106-positive-outdoor-space](/content/annotations/a-pattern-language/106-positive-outdoor-space)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Wings of Light](/public/content/annotations/a-pattern-language/107-wings-of-light)
+- [Long Thin House](/public/content/annotations/a-pattern-language/109-long-thin-house)
+- [95-building-complex](/public/content/annotations/a-pattern-language/95-building-complex)
+- [107-wings-of-light](/public/content/annotations/a-pattern-language/107-wings-of-light)
+- [106-positive-outdoor-space](/public/content/annotations/a-pattern-language/106-positive-outdoor-space)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

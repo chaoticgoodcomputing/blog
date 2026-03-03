@@ -17,7 +17,7 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [A Room of One’s Own](/content/annotations/a-pattern-language/141-a-room-of-one-s-own)
-- [Bed Cluster](/content/annotations/a-pattern-language/143-bed-cluster)
-- [127-intimacy-gradient](/content/annotations/a-pattern-language/127-intimacy-gradient)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Room of One’s Own](/public/content/annotations/a-pattern-language/141-a-room-of-one-s-own)
+- [Bed Cluster](/public/content/annotations/a-pattern-language/143-bed-cluster)
+- [127-intimacy-gradient](/public/content/annotations/a-pattern-language/127-intimacy-gradient)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

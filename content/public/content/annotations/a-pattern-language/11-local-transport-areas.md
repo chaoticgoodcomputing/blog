@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Magic of the City](/content/annotations/a-pattern-language/10-magic-of-the-city)
-- [Community of 7000](/content/annotations/a-pattern-language/12-community-of-7000)
-- [08-mosaic-of-subcultures](/content/annotations/a-pattern-language/08-mosaic-of-subcultures)
-- [03-city-country-fingers](/content/annotations/a-pattern-language/03-city-country-fingers)
-- [10-magic-of-the-city](/content/annotations/a-pattern-language/10-magic-of-the-city)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Magic of the City](/public/content/annotations/a-pattern-language/10-magic-of-the-city)
+- [Community of 7000](/public/content/annotations/a-pattern-language/12-community-of-7000)
+- [08-mosaic-of-subcultures](/public/content/annotations/a-pattern-language/08-mosaic-of-subcultures)
+- [03-city-country-fingers](/public/content/annotations/a-pattern-language/03-city-country-fingers)
+- [10-magic-of-the-city](/public/content/annotations/a-pattern-language/10-magic-of-the-city)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

@@ -17,8 +17,8 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Raised Flowers](/content/annotations/a-pattern-language/245-raised-flowers)
-- [Paving with Cracks Between the Stones](/content/annotations/a-pattern-language/247-paving-with-cracks-between-the-stones)
-- [174-trellised-walk](/content/annotations/a-pattern-language/174-trellised-walk)
-- [238-filtered-light](/content/annotations/a-pattern-language/238-filtered-light)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Raised Flowers](/public/content/annotations/a-pattern-language/245-raised-flowers)
+- [Paving with Cracks Between the Stones](/public/content/annotations/a-pattern-language/247-paving-with-cracks-between-the-stones)
+- [174-trellised-walk](/public/content/annotations/a-pattern-language/174-trellised-walk)
+- [238-filtered-light](/public/content/annotations/a-pattern-language/238-filtered-light)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

@@ -17,10 +17,10 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Men and Women](/content/annotations/a-pattern-language/27-men-and-women)
-- [Density Rings](/content/annotations/a-pattern-language/29-density-rings)
-- [21-four-story-limit](/content/annotations/a-pattern-language/21-four-story-limit)
-- [10-magic-of-the-city](/content/annotations/a-pattern-language/10-magic-of-the-city)
-- [12-community-of-7000](/content/annotations/a-pattern-language/12-community-of-7000)
-- [13-subculture-boundary](/content/annotations/a-pattern-language/13-subculture-boundary)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Men and Women](/public/content/annotations/a-pattern-language/27-men-and-women)
+- [Density Rings](/public/content/annotations/a-pattern-language/29-density-rings)
+- [21-four-story-limit](/public/content/annotations/a-pattern-language/21-four-story-limit)
+- [10-magic-of-the-city](/public/content/annotations/a-pattern-language/10-magic-of-the-city)
+- [12-community-of-7000](/public/content/annotations/a-pattern-language/12-community-of-7000)
+- [13-subculture-boundary](/public/content/annotations/a-pattern-language/13-subculture-boundary)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

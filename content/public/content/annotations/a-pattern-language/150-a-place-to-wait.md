@@ -17,10 +17,10 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Reception Welcomes You](/content/annotations/a-pattern-language/149-reception-welcomes-you)
-- [Small Meeting Rooms](/content/annotations/a-pattern-language/151-small-meeting-rooms)
-- [34-interchange](/content/annotations/a-pattern-language/34-interchange)
-- [47-health-center](/content/annotations/a-pattern-language/47-health-center)
-- [81-small-services-without-red-tape](/content/annotations/a-pattern-language/81-small-services-without-red-tape)
-- [82-office-connections](/content/annotations/a-pattern-language/82-office-connections)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Reception Welcomes You](/public/content/annotations/a-pattern-language/149-reception-welcomes-you)
+- [Small Meeting Rooms](/public/content/annotations/a-pattern-language/151-small-meeting-rooms)
+- [34-interchange](/public/content/annotations/a-pattern-language/34-interchange)
+- [47-health-center](/public/content/annotations/a-pattern-language/47-health-center)
+- [81-small-services-without-red-tape](/public/content/annotations/a-pattern-language/81-small-services-without-red-tape)
+- [82-office-connections](/public/content/annotations/a-pattern-language/82-office-connections)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

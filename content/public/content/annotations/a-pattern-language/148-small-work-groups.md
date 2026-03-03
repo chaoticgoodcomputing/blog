@@ -17,8 +17,8 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Communal Eating](/content/annotations/a-pattern-language/147-communal-eating)
-- [Reception Welcomes You](/content/annotations/a-pattern-language/149-reception-welcomes-you)
-- [80-self-governing-workshops-and-offices](/content/annotations/a-pattern-language/80-self-governing-workshops-and-offices)
-- [146-flexible-office-space](/content/annotations/a-pattern-language/146-flexible-office-space)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Communal Eating](/public/content/annotations/a-pattern-language/147-communal-eating)
+- [Reception Welcomes You](/public/content/annotations/a-pattern-language/149-reception-welcomes-you)
+- [80-self-governing-workshops-and-offices](/public/content/annotations/a-pattern-language/80-self-governing-workshops-and-offices)
+- [146-flexible-office-space](/public/content/annotations/a-pattern-language/146-flexible-office-space)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

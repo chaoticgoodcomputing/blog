@@ -17,12 +17,12 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Stair Seats](/content/annotations/a-pattern-language/125-stair-seats)
-- [Intimacy Gradient](/content/annotations/a-pattern-language/127-intimacy-gradient)
-- [61-small-public-squares](/content/annotations/a-pattern-language/61-small-public-squares)
-- [67-common-land](/content/annotations/a-pattern-language/67-common-land)
-- [115-courtyards-which-live](/content/annotations/a-pattern-language/115-courtyards-which-live)
-- [121-path-shape](/content/annotations/a-pattern-language/121-path-shape)
-- [124-activity-pockets](/content/annotations/a-pattern-language/124-activity-pockets)
-- [125-stair-seats](/content/annotations/a-pattern-language/125-stair-seats)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Stair Seats](/public/content/annotations/a-pattern-language/125-stair-seats)
+- [Intimacy Gradient](/public/content/annotations/a-pattern-language/127-intimacy-gradient)
+- [61-small-public-squares](/public/content/annotations/a-pattern-language/61-small-public-squares)
+- [67-common-land](/public/content/annotations/a-pattern-language/67-common-land)
+- [115-courtyards-which-live](/public/content/annotations/a-pattern-language/115-courtyards-which-live)
+- [121-path-shape](/public/content/annotations/a-pattern-language/121-path-shape)
+- [124-activity-pockets](/public/content/annotations/a-pattern-language/124-activity-pockets)
+- [125-stair-seats](/public/content/annotations/a-pattern-language/125-stair-seats)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

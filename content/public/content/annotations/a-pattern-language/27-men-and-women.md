@@ -17,9 +17,9 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Life Cycle](/content/annotations/a-pattern-language/26-life-cycle)
-- [Eccentric Nucleus](/content/annotations/a-pattern-language/28-eccentric-nucleus)
-- [12-community-of-7000](/content/annotations/a-pattern-language/12-community-of-7000)
-- [14-identifiable-neighborhood](/content/annotations/a-pattern-language/14-identifiable-neighborhood)
-- [26-life-cycle](/content/annotations/a-pattern-language/26-life-cycle)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Life Cycle](/public/content/annotations/a-pattern-language/26-life-cycle)
+- [Eccentric Nucleus](/public/content/annotations/a-pattern-language/28-eccentric-nucleus)
+- [12-community-of-7000](/public/content/annotations/a-pattern-language/12-community-of-7000)
+- [14-identifiable-neighborhood](/public/content/annotations/a-pattern-language/14-identifiable-neighborhood)
+- [26-life-cycle](/public/content/annotations/a-pattern-language/26-life-cycle)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

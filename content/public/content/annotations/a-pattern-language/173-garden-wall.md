@@ -17,10 +17,10 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Garden Growing Wild](/content/annotations/a-pattern-language/172-garden-growing-wild)
-- [Trellised Walk](/content/annotations/a-pattern-language/174-trellised-walk)
-- [111-half-hidden-garden](/content/annotations/a-pattern-language/111-half-hidden-garden)
-- [140-private-terrace-on-the-street](/content/annotations/a-pattern-language/140-private-terrace-on-the-street)
-- [59-quiet-backs](/content/annotations/a-pattern-language/59-quiet-backs)
-- [60-accessible-green](/content/annotations/a-pattern-language/60-accessible-green)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Garden Growing Wild](/public/content/annotations/a-pattern-language/172-garden-growing-wild)
+- [Trellised Walk](/public/content/annotations/a-pattern-language/174-trellised-walk)
+- [111-half-hidden-garden](/public/content/annotations/a-pattern-language/111-half-hidden-garden)
+- [140-private-terrace-on-the-street](/public/content/annotations/a-pattern-language/140-private-terrace-on-the-street)
+- [59-quiet-backs](/public/content/annotations/a-pattern-language/59-quiet-backs)
+- [60-accessible-green](/public/content/annotations/a-pattern-language/60-accessible-green)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

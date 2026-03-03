@@ -17,10 +17,10 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Bathing Room](/content/annotations/a-pattern-language/144-bathing-room)
-- [Flexible Office Space](/content/annotations/a-pattern-language/146-flexible-office-space)
-- [76-house-for-a-small-family](/content/annotations/a-pattern-language/76-house-for-a-small-family)
-- [80-self-governing-workshops-and-offices](/content/annotations/a-pattern-language/80-self-governing-workshops-and-offices)
-- [87-individually-owned-shops](/content/annotations/a-pattern-language/87-individually-owned-shops)
-- [95-building-complex](/content/annotations/a-pattern-language/95-building-complex)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Bathing Room](/public/content/annotations/a-pattern-language/144-bathing-room)
+- [Flexible Office Space](/public/content/annotations/a-pattern-language/146-flexible-office-space)
+- [76-house-for-a-small-family](/public/content/annotations/a-pattern-language/76-house-for-a-small-family)
+- [80-self-governing-workshops-and-offices](/public/content/annotations/a-pattern-language/80-self-governing-workshops-and-offices)
+- [87-individually-owned-shops](/public/content/annotations/a-pattern-language/87-individually-owned-shops)
+- [95-building-complex](/public/content/annotations/a-pattern-language/95-building-complex)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

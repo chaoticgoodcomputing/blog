@@ -17,8 +17,8 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Fruit Trees](/content/annotations/a-pattern-language/170-fruit-trees)
-- [Garden Growing Wild](/content/annotations/a-pattern-language/172-garden-growing-wild)
-- [104-site-repair](/content/annotations/a-pattern-language/104-site-repair)
-- [170-fruit-trees](/content/annotations/a-pattern-language/170-fruit-trees)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Fruit Trees](/public/content/annotations/a-pattern-language/170-fruit-trees)
+- [Garden Growing Wild](/public/content/annotations/a-pattern-language/172-garden-growing-wild)
+- [104-site-repair](/public/content/annotations/a-pattern-language/104-site-repair)
+- [170-fruit-trees](/public/content/annotations/a-pattern-language/170-fruit-trees)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

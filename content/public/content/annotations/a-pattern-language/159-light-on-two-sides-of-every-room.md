@@ -17,10 +17,10 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Open Stairs](/content/annotations/a-pattern-language/158-open-stairs)
-- [Building Edge](/content/annotations/a-pattern-language/160-building-edge)
-- [107-wings-of-light](/content/annotations/a-pattern-language/107-wings-of-light)
-- [106-positive-outdoor-space](/content/annotations/a-pattern-language/106-positive-outdoor-space)
-- [109-long-thin-house](/content/annotations/a-pattern-language/109-long-thin-house)
-- [116-cascade-of-roofs](/content/annotations/a-pattern-language/116-cascade-of-roofs)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Open Stairs](/public/content/annotations/a-pattern-language/158-open-stairs)
+- [Building Edge](/public/content/annotations/a-pattern-language/160-building-edge)
+- [107-wings-of-light](/public/content/annotations/a-pattern-language/107-wings-of-light)
+- [106-positive-outdoor-space](/public/content/annotations/a-pattern-language/106-positive-outdoor-space)
+- [109-long-thin-house](/public/content/annotations/a-pattern-language/109-long-thin-house)
+- [116-cascade-of-roofs](/public/content/annotations/a-pattern-language/116-cascade-of-roofs)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

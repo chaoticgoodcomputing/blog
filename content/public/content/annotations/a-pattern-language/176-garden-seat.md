@@ -17,8 +17,8 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Greenhouse](/content/annotations/a-pattern-language/175-greenhouse)
-- [Vegetable Garden](/content/annotations/a-pattern-language/177-vegetable-garden)
-- [172-garden-growing-wild](/content/annotations/a-pattern-language/172-garden-growing-wild)
-- [161-sunny-place](/content/annotations/a-pattern-language/161-sunny-place)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Greenhouse](/public/content/annotations/a-pattern-language/175-greenhouse)
+- [Vegetable Garden](/public/content/annotations/a-pattern-language/177-vegetable-garden)
+- [172-garden-growing-wild](/public/content/annotations/a-pattern-language/172-garden-growing-wild)
+- [161-sunny-place](/public/content/annotations/a-pattern-language/161-sunny-place)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

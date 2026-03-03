@@ -27,7 +27,7 @@ description: The rubber hits the road on ColabFold! I hope that's rubber I'm sme
 
 >%%
 >```annotation-json
->{"text":"Some context — Dr. Bertozzi was one of the the [2022 Nobel Laureates in Chemistry](https://www.nobelprize.org/prizes/chemistry/2022/bertozzi/facts/) for her contributions to developing [click](https://en.wikipedia.org/wiki/Click_chemistry) and [bioorthogonal](https://en.wikipedia.org/wiki/Bioorthogonal_chemistry) chemistries.\n\nMy understanding is that the basis for a lot of mucin research, especially in the synthesis space, is built on click chemistry — a general overview being that click chemistry is good for attaching complicated things to other complicated things. That explanation does the process zero justice, but it's the best I've got.\n\nThe catch, here, is that click chemistry attaches two complex structures together. If you're linking two big, rigid things together, you have some options in how flexible or stiff the connection point can be. The goal, then, is to use ColabFold to measure flexibility between two rigid structures.\n\nThe point of reading this paper is to look into ColabFold hyperparameters. Here, we have an established, published use of ColabFold for specifically this domain. If we can replicate the models, here, using the current hyperparameters (the defaults), then we can have some confidence that the current hyperparameters could apply well to other problems in this domain. If it doesn't match up, then we need to worry more about the hyperparameters.","target":[{"source":"https://www.nature.com/articles/s41587-023-01840-6.pdf","selector":[{"type":"TextPositionSelector","start":622,"end":644},{"type":"TextQuoteSelector","exact":" Carolyn R. Bertozzi  ","prefix":"Weaver    4,9, Heinz Läubli2,3 &","suffix":"1,10  Targeted protein degrada"}]}],"created":"2026-02-28T19:55:01.027Z","updated":"2026-02-28T19:55:01.027Z","document":{"title":"Design of a mucin-selective protease for targeted degradation of cancer-associated mucins","link":[{"href":"urn:x-pdf:05688d5cb251214f88ff40cb330bdcef"},{"href":"https://www.nature.com/articles/s41587-023-01840-6.pdf"}],"documentFingerprint":"05688d5cb251214f88ff40cb330bdcef"},"uri":"https://www.nature.com/articles/s41587-023-01840-6.pdf"}
+>{"text":"Some context — Dr. Bertozzi was one of the the [2022 Nobel Laureates in Chemistry](https://www.nobelprize.org/prizes/chemistry/2022/bertozzi/facts/) for her contributions to developing [click](https://en.wikipedia.org/wiki/Click_chemistry) and [bioorthogonal](https://en.wikipedia.org/wiki/Bioorthogonal_chemistry) chemistries.\n\n> [!UPDATE]\n> My partner did review my annotations on this paper, and the previous explanation of click chemistry comically missed the mark. \"Comically\" isn't a hyperbole — she literally laughed in my face.\n> \n> I've removed the original elaboration on click chemistry from the live site. Although this paper does have Bertozzi as the most senior author, it has nothing to do with click chemistry. Oops!","target":[{"source":"https://www.nature.com/articles/s41587-023-01840-6.pdf","selector":[{"type":"TextPositionSelector","start":622,"end":644},{"type":"TextQuoteSelector","exact":" Carolyn R. Bertozzi  ","prefix":"Weaver    4,9, Heinz Läubli2,3 &","suffix":"1,10  Targeted protein degrada"}]}],"created":"2026-02-28T19:55:01.027Z","updated":"2026-02-28T19:55:01.027Z","document":{"title":"Design of a mucin-selective protease for targeted degradation of cancer-associated mucins","link":[{"href":"urn:x-pdf:05688d5cb251214f88ff40cb330bdcef"},{"href":"https://www.nature.com/articles/s41587-023-01840-6.pdf"}],"documentFingerprint":"05688d5cb251214f88ff40cb330bdcef"},"uri":"https://www.nature.com/articles/s41587-023-01840-6.pdf"}
 >```
 >%%
 >*%%PREFIX%%Weaver    4,9, Heinz Läubli2,3 &%%HIGHLIGHT%% ==Carolyn R. Bertozzi== %%POSTFIX%%1,10  Targeted protein degrada*
@@ -35,11 +35,10 @@ description: The rubber hits the road on ColabFold! I hope that's rubber I'm sme
 >%%COMMENT%%
 >Some context — Dr. Bertozzi was one of the the [2022 Nobel Laureates in Chemistry](https://www.nobelprize.org/prizes/chemistry/2022/bertozzi/facts/) for her contributions to developing [click](https://en.wikipedia.org/wiki/Click_chemistry) and [bioorthogonal](https://en.wikipedia.org/wiki/Bioorthogonal_chemistry) chemistries.
 >
->My understanding is that the basis for a lot of mucin research, especially in the synthesis space, is built on click chemistry — a general overview being that click chemistry is good for attaching complicated things to other complicated things. That explanation does the process zero justice, but it's the best I've got.
->
->The catch, here, is that click chemistry attaches two complex structures together. If you're linking two big, rigid things together, you have some options in how flexible or stiff the connection point can be. The goal, then, is to use ColabFold to measure flexibility between two rigid structures.
->
->The point of reading this paper is to look into ColabFold hyperparameters. Here, we have an established, published use of ColabFold for specifically this domain. If we can replicate the models, here, using the current hyperparameters (the defaults), then we can have some confidence that the current hyperparameters could apply well to other problems in this domain. If it doesn't match up, then we need to worry more about the hyperparameters.
+>> [!UPDATE]
+>> My partner did review my annotations on this paper, and the previous explanation of click chemistry comically missed the mark. "Comically" isn't a hyperbole — she literally laughed in my face.
+>> 
+>> I've removed the original elaboration on click chemistry from the live site. Although this paper does have Bertozzi as the most senior author, it has nothing to do with click chemistry. Oops!
 >%%TAGS%%
 >
 ^e48qxcfcrom
@@ -87,3 +86,62 @@ description: The rubber hits the road on ColabFold! I hope that's rubber I'm sme
 >
 ^vhtmwrcrjds
 
+
+
+
+
+>%%
+>```annotation-json
+>{"created":"2026-03-03T07:18:31.971Z","text":"(This annotation has nothing to do with 4d — I'm just placing it here for its proximity to figure 4a)\n\nAfter reviewing this annotation set with my partner, she did point me in the right direction (read: she actually read the upstream paper and told me exactly what I was missing. *Nerd.*)\n\nFrom up upstream paper, they do highlight domains differently than the NIH structural source does — the NIH source also has a beginning sequence, called the signal sequence (SS), chopped off of it (we think):\n\n> [!QUOTE]\n>\n> ![[/assets/Pasted image 20260302215331.png]]\n>\n> — [Structural Insight into the Bacterial Mucinase StcE Essential to Adhesion and Immune Evasion during Enterohemorrhagic E. coli Infection](https://www.cell.com/action/showPdf?pii=S0969-2126(12)00095-0)\n\nShe was very nice, and reconstructed the amino acid sequence based on the StcE DNA sequence. What we found is that the upstream NIH source is weird. From the beginning of that sequence:\n\n> [!QUOTE]\n> GSH**MAS**ADNNSA...\n>\n> —[3UJZ/StcE, NCBI](https://www.ncbi.nlm.nih.gov/Structure/pdb/3UJZ)\n\nParaphrasing her, the \"important\" part of the sequence starts after the `MAS` sequence. I asked her why this is the case, and she gave me a very long, well-researched answer. When I asked her to dumb it down for me, she said it's \"because of the way proteins are.\" I'll take her word for it.\n\nFor our purposes, we can trust that everything before (and including) MAS is the signal sequence, which this paper cut off prior to the fold. While I *didn't* do that, the preceding `GSHMAS` sequence probably won't effect the fold very much. However, it does let us know that we need to do some offset math when highlighting the domains in the same way Yu et al. does. We know that the sample we folded only cut off 29 of the 35 SS-domain amino acids, so we need to offset all of the highlights by 29.\n\nDoing that math, then, the two subsequences we need to highlight are:\n\n- **INS Domain:** [121, 216]\n- **C Domain:** [775, 869]\n\nUsing these domain sets gives us a FAR clearer picture than we had, before:\n\n![[/assets/Pasted image 20260302235555.png]]\n\n![[/assets/Pasted image 20260302235321.png]]\n\n(the extra red highlight is the `GSHMAS` erroneous part of the sequence that we were un-offsetting for — given that it's in a tail offshoot, I'm not too concerned about it affecting the rest of the fold.)\n\nThe differences in angles between the three loose domains against the core rigid body is expected — those were the sources of uncertainty on the graph above, which is still correct. However, this is confirmation that the C and INS domains are correctly confined to the spokes of the protein. I think that the second, rotated figure also gives a strong confirmation — the shape is close enough that, if I was the type of person qualified to guesstimate, I'd be able to loosely point out where the mutated residues and Zn^2+ active sites were, in a pseudo-academic pin-the-Zn^2+-active-sites-on-the-protein-donkey kind of way.\n\nI feel *far* more settled than before that the fold they did here *were* using the default ColabFold hyperparameters. I do wish they posted their output `config.json`, as that'd settle any speculation on the matter. However, my partner tipped me off to two academic courtesies:\n\n1. When you have questions on a paper, it is standard to email the *last* (most senior) author on the paper. That's why Bertozzi's name is the only one in the authorship line with an email icon next to it.\n2. I should *not*, under *any circumstance*, cold-email 2022 Nobel Laureate Dr. Carolyn R. Bertozzi asking for a `config.json` from three years ago.\n\nThis likely closes out the replication investigation. The default hyperparameters can give close enough results that, given we're dealing with a statistical model, I'd be willing to thumb it and say we're close enough. However, this is *not* a lock on extended data from ColabFold — which, if I understand correctly, is how things like active sites can be investigated from ColabFold output. Perhaps this is where it ends, perhaps not. It is, however, as far as I'm going to dig into this particular set of annotations.","updated":"2026-03-03T07:18:31.971Z","document":{"title":"Design of a mucin-selective protease for targeted degradation of cancer-associated mucins","link":[{"href":"urn:x-pdf:05688d5cb251214f88ff40cb330bdcef"},{"href":"https://www.nature.com/articles/s41587-023-01840-6.pdf"}],"documentFingerprint":"05688d5cb251214f88ff40cb330bdcef"},"uri":"https://www.nature.com/articles/s41587-023-01840-6.pdf","target":[{"source":"https://www.nature.com/articles/s41587-023-01840-6.pdf","selector":[{"type":"TextPositionSelector","start":25887,"end":26190},{"type":"TextQuoteSelector","exact":"d, Setup for flow cytometry assays measuring cell-surface activity and binding of StcE and StcE mutants. e, Representative flow plots showing surface MUC1 levels of HeLa cells treated with StcE mutants at the indicated concentrations. For flow plots of all other StcE mutants, see Supplementary Fig. 1d.","prefix":"(n = 4 independent digestions). ","suffix":" f, EC50 values derived from qua"}]}]}
+>```
+>%%
+>*%%PREFIX%%(n = 4 independent digestions).%%HIGHLIGHT%% ==d, Setup for flow cytometry assays measuring cell-surface activity and binding of StcE and StcE mutants. e, Representative flow plots showing surface MUC1 levels of HeLa cells treated with StcE mutants at the indicated concentrations. For flow plots of all other StcE mutants, see Supplementary Fig. 1d.== %%POSTFIX%%f, EC50 values derived from qua*
+>%%LINK%%[[#^z2rvt8kocg|show annotation]]
+>%%COMMENT%%
+>(This annotation has nothing to do with 4d — I'm just placing it here for its proximity to figure 4a)
+>
+>After reviewing this annotation set with my partner, she did point me in the right direction (read: she actually read the upstream paper and told me exactly what I was missing. *Nerd.*)
+>
+>From up upstream paper, they do highlight domains differently than the NIH structural source does — the NIH source also has a beginning sequence, called the signal sequence (SS), chopped off of it (we think):
+>
+>> [!QUOTE]
+>>
+>> ![[/assets/Pasted image 20260302215331.png]]
+>>
+>> — [Structural Insight into the Bacterial Mucinase StcE Essential to Adhesion and Immune Evasion during Enterohemorrhagic E. coli Infection](https://www.cell.com/action/showPdf?pii=S0969-2126(12)00095-0)
+>
+>She was very nice, and reconstructed the amino acid sequence based on the StcE DNA sequence. What we found is that the upstream NIH source is weird. From the beginning of that sequence:
+>
+>> [!QUOTE]
+>> GSH**MAS**ADNNSA...
+>>
+>> —[3UJZ/StcE, NCBI](https://www.ncbi.nlm.nih.gov/Structure/pdb/3UJZ)
+>
+>Paraphrasing her, the "important" part of the sequence starts after the `MAS` sequence. I asked her why this is the case, and she gave me a very long, well-researched answer. When I asked her to dumb it down for me, she said it's "because of the way proteins are." I'll take her word for it.
+>
+>For our purposes, we can trust that everything before (and including) MAS is the signal sequence, which this paper cut off prior to the fold. While I *didn't* do that, the preceding `GSHMAS` sequence probably won't effect the fold very much. However, it does let us know that we need to do some offset math when highlighting the domains in the same way Yu et al. does. We know that the sample we folded only cut off 29 of the 35 SS-domain amino acids, so we need to offset all of the highlights by 29.
+>
+>Doing that math, then, the two subsequences we need to highlight are:
+>
+>- **INS Domain:** [121, 216]
+>- **C Domain:** [775, 869]
+>
+>Using these domain sets gives us a FAR clearer picture than we had, before:
+>
+>![[/assets/Pasted image 20260302235555.png]]
+>
+>![[/assets/Pasted image 20260302235321.png]]
+>
+>(the extra red highlight is the `GSHMAS` erroneous part of the sequence that we were un-offsetting for — given that it's in a tail offshoot, I'm not too concerned about it affecting the rest of the fold.)
+>
+>The differences in angles between the three loose domains against the core rigid body is expected — those were the sources of uncertainty on the graph above, which is still correct. However, this is confirmation that the C and INS domains are correctly confined to the spokes of the protein. I think that the second, rotated figure also gives a strong confirmation — the shape is close enough that, if I was the type of person qualified to guesstimate, I'd be able to loosely point out where the mutated residues and Zn^2+ active sites were, in a pseudo-academic pin-the-Zn^2+-active-sites-on-the-protein-donkey kind of way.
+>
+>I feel *far* more settled than before that the fold they did here *were* using the default ColabFold hyperparameters. I do wish they posted their output `config.json`, as that'd settle any speculation on the matter. However, my partner tipped me off to two academic courtesies:
+>
+>1. When you have questions on a paper, it is standard to email the *last* (most senior) author on the paper. That's why Bertozzi's name is the only one in the authorship line with an email icon next to it.
+>2. I should *not*, under *any circumstance*, cold-email 2022 Nobel Laureate Dr. Carolyn R. Bertozzi asking for a `config.json` from three years ago.
+>
+>This likely closes out the replication investigation. The default hyperparameters can give close enough results that, given we're dealing with a statistical model, I'd be willing to thumb it and say we're close enough. However, this is *not* a lock on extended data from ColabFold — which, if I understand correctly, is how things like active sites can be investigated from ColabFold output. Perhaps this is where it ends, perhaps not. It is, however, as far as I'm going to dig into this particular set of annotations.
+>%%TAGS%%
+>
+^z2rvt8kocg

@@ -17,7 +17,7 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Workspace Enclosure](/content/annotations/a-pattern-language/183-workspace-enclosure)
-- [Sitting Circle](/content/annotations/a-pattern-language/185-sitting-circle)
-- [139-farmhouse-kitchen](/content/annotations/a-pattern-language/139-farmhouse-kitchen)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Workspace Enclosure](/public/content/annotations/a-pattern-language/183-workspace-enclosure)
+- [Sitting Circle](/public/content/annotations/a-pattern-language/185-sitting-circle)
+- [139-farmhouse-kitchen](/public/content/annotations/a-pattern-language/139-farmhouse-kitchen)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

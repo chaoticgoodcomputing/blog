@@ -17,10 +17,10 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Roof Garden](/content/annotations/a-pattern-language/118-roof-garden)
-- [Paths and Goals](/content/annotations/a-pattern-language/120-paths-and-goals)
-- [116-cascade-of-roofs](/content/annotations/a-pattern-language/116-cascade-of-roofs)
-- [100-pedestrian-street](/content/annotations/a-pattern-language/100-pedestrian-street)
-- [108-connected-buildings](/content/annotations/a-pattern-language/108-connected-buildings)
-- [98-circulation-realms](/content/annotations/a-pattern-language/98-circulation-realms)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Roof Garden](/public/content/annotations/a-pattern-language/118-roof-garden)
+- [Paths and Goals](/public/content/annotations/a-pattern-language/120-paths-and-goals)
+- [116-cascade-of-roofs](/public/content/annotations/a-pattern-language/116-cascade-of-roofs)
+- [100-pedestrian-street](/public/content/annotations/a-pattern-language/100-pedestrian-street)
+- [108-connected-buildings](/public/content/annotations/a-pattern-language/108-connected-buildings)
+- [98-circulation-realms](/public/content/annotations/a-pattern-language/98-circulation-realms)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

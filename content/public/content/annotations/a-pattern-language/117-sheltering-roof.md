@@ -17,8 +17,8 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Cascade of Roofs](/content/annotations/a-pattern-language/116-cascade-of-roofs)
-- [Roof Garden](/content/annotations/a-pattern-language/118-roof-garden)
-- [107-wings-of-light](/content/annotations/a-pattern-language/107-wings-of-light)
-- [116-cascade-of-roofs](/content/annotations/a-pattern-language/116-cascade-of-roofs)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Cascade of Roofs](/public/content/annotations/a-pattern-language/116-cascade-of-roofs)
+- [Roof Garden](/public/content/annotations/a-pattern-language/118-roof-garden)
+- [107-wings-of-light](/public/content/annotations/a-pattern-language/107-wings-of-light)
+- [116-cascade-of-roofs](/public/content/annotations/a-pattern-language/116-cascade-of-roofs)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)

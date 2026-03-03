@@ -17,12 +17,12 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Pedestrian Density](/content/annotations/a-pattern-language/123-pedestrian-density)
-- [Stair Seats](/content/annotations/a-pattern-language/125-stair-seats)
-- [31-promenade](/content/annotations/a-pattern-language/31-promenade)
-- [61-small-public-squares](/content/annotations/a-pattern-language/61-small-public-squares)
-- [69-public-outdoor-room](/content/annotations/a-pattern-language/69-public-outdoor-room)
-- [100-pedestrian-street](/content/annotations/a-pattern-language/100-pedestrian-street)
-- [101-building-thoroughfare](/content/annotations/a-pattern-language/101-building-thoroughfare)
-- [121-path-shape](/content/annotations/a-pattern-language/121-path-shape)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [Pedestrian Density](/public/content/annotations/a-pattern-language/123-pedestrian-density)
+- [Stair Seats](/public/content/annotations/a-pattern-language/125-stair-seats)
+- [31-promenade](/public/content/annotations/a-pattern-language/31-promenade)
+- [61-small-public-squares](/public/content/annotations/a-pattern-language/61-small-public-squares)
+- [69-public-outdoor-room](/public/content/annotations/a-pattern-language/69-public-outdoor-room)
+- [100-pedestrian-street](/public/content/annotations/a-pattern-language/100-pedestrian-street)
+- [101-building-thoroughfare](/public/content/annotations/a-pattern-language/101-building-thoroughfare)
+- [121-path-shape](/public/content/annotations/a-pattern-language/121-path-shape)
+- [A Pattern Language](/public/tags/writing/annotations/a-pattern-language/index)
