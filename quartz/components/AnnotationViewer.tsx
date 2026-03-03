@@ -116,6 +116,11 @@ export default ((userOpts?: Partial<AnnotationViewerOptions>) => {
     const localPdfPath = getLocalPdfPath(pdfUrl)
     const sourceDomain = getSourceDomain(pdfUrl)
 
+    // Get site author for annotation authorship
+    const authorConfig = componentProps.cfg.structuredData?.author
+    const authorName = authorConfig?.name || componentProps.cfg.pageTitle
+    const authorUrl = authorConfig?.url
+
     // Get pre-parsed annotations from fileData (populated by Annotations transformer plugin)
     const annotations = (fileData.annotations as AnnotationData[]) || []
     console.log('[AnnotationViewer] Annotations from transformer:', annotations.length)
@@ -205,9 +210,16 @@ export default ((userOpts?: Partial<AnnotationViewerOptions>) => {
                     data-annotation-id={annotation.id}
                     data-start={textPosition?.start}
                     data-end={textPosition?.end}
+                    itemProp="comment"
                     itemScope
                     itemType="https://schema.org/Comment"
                   >
+                    {/* Author metadata for Schema.org */}
+                    <meta itemProp="author" itemScope itemType={`https://schema.org/${authorConfig?.type || 'Person'}`}>
+                      <meta itemProp="name" content={authorName} />
+                      {authorUrl && <link itemProp="url" href={authorUrl} />}
+                    </meta>
+
                     {annotation.text && (
                       <div class="annotation-comment" itemProp="text">
                         <div dangerouslySetInnerHTML={{ __html: annotation.text }} />
