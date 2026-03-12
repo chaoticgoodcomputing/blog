@@ -47,7 +47,7 @@ export const defaultGraphOptions: Partial<D3Config> = {
   privatePostSizeMultiplier: 0.8,  // Private posts are half the size
   removeTags: ["private"],
   defaultFilterState: {
-    timePeriod: "year",        // Default to showing posts from the last year
+    timePeriod: "month",        // Default to showing posts from the last year
     includePrivate: false,     // Exclude private posts by default
   },
   expandSelectedSize: 1.4,
