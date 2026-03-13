@@ -34,7 +34,10 @@ async function downloadPDF(url, outputPath) {
 function getFilenameFromUrl(url) {
   const urlObj = new URL(url)
   const pathname = urlObj.pathname
-  const filename = decodeURIComponent(path.basename(pathname))
+  let filename = decodeURIComponent(path.basename(pathname))
+
+  // Sanitize filename: replace spaces and problematic characters with hyphens
+  filename = filename.replace(/[\s]+/g, '-')
 
   // Ensure it has .pdf extension
   if (!filename.toLowerCase().endsWith('.pdf')) {

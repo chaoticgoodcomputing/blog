@@ -96,7 +96,9 @@ export default ((userOpts?: Partial<AnnotationViewerOptions>) => {
     const getLocalPdfPath = (url: string): string => {
       try {
         const urlObj = new URL(url)
-        const filename = decodeURIComponent(urlObj.pathname.split('/').pop() || 'document.pdf')
+        let filename = decodeURIComponent(urlObj.pathname.split('/').pop() || 'document.pdf')
+        // Sanitize filename: replace spaces and problematic characters with hyphens
+        filename = filename.replace(/[\s]+/g, '-')
         return `/assets/annotated-documents/${filename}`
       } catch {
         return url // Fallback to original URL if parsing fails
