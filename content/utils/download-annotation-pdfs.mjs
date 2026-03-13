@@ -34,7 +34,7 @@ async function downloadPDF(url, outputPath) {
 function getFilenameFromUrl(url) {
   const urlObj = new URL(url)
   const pathname = urlObj.pathname
-  const filename = path.basename(pathname)
+  const filename = decodeURIComponent(path.basename(pathname))
 
   // Ensure it has .pdf extension
   if (!filename.toLowerCase().endsWith('.pdf')) {
