@@ -1,0 +1,2388 @@
+commit 2eb14e43e1911193404e1b6bae1da20c2602dbd4
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Mar 12 18:25:22 2026 -0600
+
+    fix: resolved loading annotation pdfs with spaces
+
+commit 14bc1ffb4af7856c163c83ce8374e31ac3e407ee
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Mar 12 18:14:45 2026 -0600
+
+    chore: update from obsidian
+
+commit 16d43dea29fa255355dfd3e165c58378e7fffca8
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Mar 12 17:57:02 2026 -0600
+
+    chore: update from obsidian
+
+commit 344549073aed3c131dc276325fea38b681befcf1
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Mar 3 01:11:08 2026 -0700
+
+    fix: SEO opts for annotations pages
+
+commit 727fa4a1dc66487cb32b78cf8d2557669b14e688
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Mar 3 00:31:33 2026 -0700
+
+    fix: post fix
+
+commit 98e6c8d4e21ded126c22b07e7fff900ae67b86f0
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Mar 3 00:26:07 2026 -0700
+
+    chore: update from obsidian
+
+commit ff6bd6720567423a1619a9117d08eff0c0d2ea70
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Mar 2 00:17:56 2026 -0700
+
+    chore: update from obsidian
+
+commit d6829632e936acd219f67ff490f092379e00fef6
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Mar 1 23:03:38 2026 -0700
+
+    chore: add email subscribe to left bar on tags pages
+
+commit d27b874fd9435a47716278a09a6605bdd4d77318
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Mar 1 22:49:49 2026 -0700
+
+    chore: update from obsidian
+
+commit 111b359393e86da7ff14fd5589bdd1a4a3c528ca
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Feb 28 15:33:26 2026 -0700
+
+    chore: update from obsidian
+
+commit 4e322895aa66e7f23af1a8950144c8145ae42b86
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Feb 28 15:15:17 2026 -0700
+
+    chore: update from obsidian
+
+commit 38560dbdbbd0c25c8a42493f7548d0fcb796db9a
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Feb 28 15:07:30 2026 -0700
+
+    chore: update from obsidian
+
+commit 17e056bc75c6c59b53cb3861a6641d4b8b9a84fb
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Feb 28 15:01:47 2026 -0700
+
+    chore: update from obsidian
+
+commit 3542919e8acd2ae87bb91c54f0f8ffaa60f7c2bc
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Feb 28 14:59:17 2026 -0700
+
+    chore: update from obsidian
+
+commit 140f4aaddda5fdb44a829533fe7eb5cdf87bef04
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Feb 28 12:49:15 2026 -0700
+
+    fix: proteins paper source
+
+commit 5689471876f9dea94f373712b83be8b67296402f
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Feb 28 08:48:57 2026 -0700
+
+    chore: update from obsidian
+
+commit 74cc36d52379cdff9e4d85ed4d58f48971773f61
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Feb 28 08:44:53 2026 -0700
+
+    chore: update from obsidian
+
+commit 1c81809783433a2bdc9e7bec743bde74916e6267
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Feb 27 09:17:46 2026 -0700
+
+    chore: update from obsidian
+
+commit 538279b5a9d3abc3a6f8c22bb4d7024353133995
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 26 04:21:32 2026 -0700
+
+    fix: robots ignore private pages
+
+commit 1d854fe55dac369b1f25287881e62d6aacb22157
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 26 04:02:11 2026 -0700
+
+    chore: update from obsidian
+
+commit c36f1be65222c95cbfd4bf8cb8be6f7bf4cd8f36
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 26 03:46:12 2026 -0700
+
+    fix: pdf seo for annotations pages
+
+commit 3f32d7171c459fcbedb8ef1ab255e562ae33ff3b
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 26 03:41:53 2026 -0700
+
+    chore: typo fix
+
+commit a32c22d28d0c0988072396772caea33de38634b0
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 26 03:05:51 2026 -0700
+
+    fix: cube stylings. always cube stylings.
+
+commit f85230b01bb42aa5ac5f542380071f0277f69c1e
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 26 02:50:48 2026 -0700
+
+    fix: title, viewport slider adjustment on annotations
+
+commit 1bd6c73ea6546a9f170a7be51305830ffe596359
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 26 02:24:32 2026 -0700
+
+    fix: annotations searchable, metadata available
+
+commit a80de1be504ba5718a9eadb84620cbd32fe6480f
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 26 02:09:26 2026 -0700
+
+    fix: social media component styling
+
+commit dd0c8c93a8713f8b4016343cb60068e5d80cb9da
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 26 01:41:15 2026 -0700
+
+    fix: latex removed from annotation pipeline because it annoyed me
+
+commit 9371f04056e79b70c1f8e6f587634125c3d93e73
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 26 01:36:42 2026 -0700
+
+    chore: update from obsidian
+
+commit 9d0c9697e0e737e08ea32c671ad30c108229d172
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Feb 23 08:36:17 2026 -0700
+
+    fix: CUBE CSS styling conformation
+
+commit 1c08f507181fcf95c99c345258f4bdd155733997
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Feb 22 12:13:15 2026 -0700
+
+    chore: scss reorg
+
+commit 9af85c904b09a6263cea7ab76443e1f5bffe9e45
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Feb 20 15:01:40 2026 -0700
+
+    chore: disable direct email send in actions
+
+commit a4ec07e2d7725121802ce01da14ae4a370476b5a
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Feb 20 10:35:07 2026 -0700
+
+    chore: update from obsidian
+
+commit a3559f6207be4ca2266b7f1d44cf3aa75298a11b
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 19 14:22:53 2026 -0700
+
+    fix: remove SEO annotation count
+
+commit e31c6ba23a84cb0e6e767ce660a7c953e089c886
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 19 14:19:10 2026 -0700
+
+    chore: update from obsidian
+
+commit 21781013335a5955675993f6273df0502e220bb3
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 19 13:23:14 2026 -0700
+
+    fix: links in annotation pdfs
+
+commit 69d309044904d9beb2cefe94609dcdf0b7203ee2
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 19 12:21:50 2026 -0700
+
+    fix: absolute linking across vault
+
+commit 4ab620feb2b572d81315e49347228514cc19b98b
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 19 11:33:24 2026 -0700
+
+    fix: annotation markdown progress
+
+commit 259ed09f0570c841aa76b6406429d01dcc335823
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Feb 18 14:05:41 2026 -0700
+
+    feat: programming-as-theory-building annotation
+
+commit 6a711af4c9d827d8019402a14bbe4434c6e01cb1
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 12 10:50:35 2026 -0700
+
+    chore: update from obsidian
+
+commit 51dd2bd94b07f0a2fa5a7441697fc11e0577b3c7
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Feb 9 17:06:06 2026 -0700
+
+    chore: update from obsidian
+
+commit 3bb5d1a58996fe0df887cf8206e4dc81790e1bc6
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Feb 9 09:45:58 2026 -0700
+
+    chore: update from obsidian
+
+commit e85ab6e95ceb80273d2953a8167d201b9492a306
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Feb 8 16:57:22 2026 -0700
+
+    chore: update from obsidian
+
+commit 50cf3a512610c74d46f035418041be4b447d244b
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Feb 8 16:52:29 2026 -0700
+
+    chore: update from obsidian
+
+commit bb8d8a6a138b75ae1fd265f0eca2b71951f96716
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Feb 8 16:01:02 2026 -0700
+
+    chore: apl annotations 4-5
+
+commit d84bacaa940906b453168daa64a82953fddd1bc7
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Feb 8 00:55:56 2026 -0700
+
+    fix: distribution of towns note link
+
+commit 7ce062ebbc15c3a9e3ecb08e68e54a1e4dfef529
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Feb 8 00:28:46 2026 -0700
+
+    chore: update from obsidian
+
+commit 723671362dc9c879cf49de35422288eb86e6c898
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Feb 7 21:58:33 2026 -0700
+
+    fix: atproto post embed straight from filesystem
+
+commit d954e9d45d337064c6c215e9105a04bbbda0f848
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Feb 7 20:56:12 2026 -0700
+
+    chore: rename college to undergrad
+
+commit d2a9484c6a4c63a52738380a4483e8621c30a1a8
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Feb 7 20:28:36 2026 -0700
+
+    fix: minor graph changes
+
+commit a9087e85ef4d79bc1a41c23f45cdf6c93b91f905
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Feb 7 20:16:25 2026 -0700
+
+    fix: reverse alph ordering on lists
+
+commit f8722782e703c65cdd0ce8bdf14fe42b22fcdeb3
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Feb 7 18:35:30 2026 -0700
+
+    chore: update from obsidian
+
+commit 0414e250acc54d8f4656ed7c56e319c4121b3b76
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Feb 7 17:59:09 2026 -0700
+
+    chore: update from obsidian
+
+commit 9e3baf3950601ac176d6b5bf4e2b6b68ef00d849
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Feb 7 16:42:34 2026 -0700
+
+    chore: update from obsidian
+
+commit f0adcabb0d2d08451240a7efa8247e2841e2f27c
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Feb 7 16:41:43 2026 -0700
+
+    chore: update from obsidian
+
+commit 6d1575d3231b25f8c1f5872eb979bdea7d00e382
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Feb 7 15:05:57 2026 -0700
+
+    chore: update from obsidian
+
+commit a988c9b710d692267f5558fed607622fc97dfd60
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Feb 7 15:02:59 2026 -0700
+
+    chore: update from obsidian
+
+commit de2ee256223339e849e6e4e92aa66212a0596976
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Feb 6 08:11:24 2026 -0700
+
+    chore: update from obsidian
+
+commit 2df4a3c9b286ddbe3bd075116867c4238406eb4c
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Feb 6 00:18:15 2026 -0700
+
+    chore: update from obsidian
+
+commit 8d9fcf0473b0242f3729a52fb814a4e790ace676
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 23:44:33 2026 -0700
+
+    fix: deploy action
+
+commit 3e0efd2e83770fba60c648a720352e36d0337b9a
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 23:32:56 2026 -0700
+
+    fix: dependency chain
+
+commit 026340b29ffaa88267451859691b4ba7a62b91dd
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 23:16:19 2026 -0700
+
+    chore: minor content change
+
+commit 4823cce05f21937d7e210af760535509f0e35a13
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 23:15:51 2026 -0700
+
+    chore: footer link change
+
+commit b9e995aac30e8d02d4dd30a05453ba2cbc5c2292
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 23:14:24 2026 -0700
+
+    chore: minor APL formatting changes
+
+commit 25013408368eacd2bcab0801de889a5e9ca86ae3
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 23:00:46 2026 -0700
+
+    chore: reduce sensitivity of deployment system
+
+commit d62c17cc81ab55b08f3bc6b5750fb3a2dc6cf6f4
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 22:12:28 2026 -0700
+
+    chore: update from obsidian
+
+commit bdb67b7d6bb6e8191d9a3e7d2ef78228415edbeb
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 20:53:44 2026 -0700
+
+    fix: minor heading format
+
+commit 5224acf7d9c218db3b285fe9b6c7225d1a7e562d
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 20:53:07 2026 -0700
+
+    feat: APL pattern 0
+
+commit 4e5dab073d452a65f4dfe0ff192d6a61d1e5781a
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 19:35:31 2026 -0700
+
+    fix: update privacy notice, email target
+
+commit 815bc5004fbd62aea4e9ad35e91bfc19c2d4fa4d
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 18:02:24 2026 -0700
+
+    fix: email send process status code
+
+commit 12c7d25ba6091e4e2583be1e0ae073611133e609
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 17:57:07 2026 -0700
+
+    fix: remove duplicate weekly
+
+commit 51f3a259832d01735f47b0f6b1e30c3d4febb524
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 17:53:36 2026 -0700
+
+    chore: update from obsidian
+
+commit e082ffd550d36641989a5bd393533dd3ca171b43
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 17:33:19 2026 -0700
+
+    chore: update from obsidian
+
+commit f6c55de122ff6db27b93b9a7a7c1e26b42e18804
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 17:33:03 2026 -0700
+
+    gitaac "fix: temporary weekly note removal"
+
+commit b22bddb2b78cdcfd6a5f342f0fc84ac9f0475f70
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 16:59:51 2026 -0700
+
+    feat: safety commit before email test
+
+commit c4e4709d830d7e5d4235f28f395f27e2cbbbfae2
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 16:13:03 2026 -0700
+
+    feat: add buttondown subscription
+
+commit a84b1512e1417fd6217969bfbc6f292b41fd141f
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 14:58:50 2026 -0700
+
+    fix: proper embeds for posts
+
+commit 55892035dbe58b78d4ed90729cad6d8594a924ef
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 14:50:27 2026 -0700
+
+    fix: un-specify pnpm version in actions
+
+commit 88d5d404adf9caba87f7b4bacd27f1a20f1a0791
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 14:48:38 2026 -0700
+
+    fix: add package manager
+
+commit 85608024705af4f7a14c541059d31f2755e52532
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 14:45:29 2026 -0700
+
+    feat: atproto post
+
+commit 9d006d17ad215077f0f53e50b4a6bb774c48bcde
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 13:52:56 2026 -0700
+
+    fix: meta tag cleanup in head
+
+commit 71c016bc7efe940c55c0ebd7d12cf2130123bb8d
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 13:15:23 2026 -0700
+
+    fix: canonical filenames fixed in head
+
+commit 20e21a9ffbae708e527c97a4a062181271ef5a42
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 13:02:36 2026 -0700
+
+    fix: json-ld malformat
+
+commit afa288f4497d07caee8a5d371bb59503841da136
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 12:48:18 2026 -0700
+
+    fix: bing property auth
+
+commit 7471094ec2da96ee909864e9d10d935392659e5f
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 12:23:30 2026 -0700
+
+    feat: indexnow push on sitemap update
+
+commit 44d7fa5d787e7b7d61804296aeb31262a15ba9d3
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 12:12:54 2026 -0700
+
+    fix: sitemap gen
+
+commit 6ccada711ee8df7c4c18f4ed7d52e007b191522d
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 11:55:40 2026 -0700
+
+    chore: update from obsidian
+
+commit f1903db8235c8973e7ac59bb2ab9f952a7ad10dd
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 11:49:18 2026 -0700
+
+    fix: font issue
+
+commit 636b0730c75da16afc1545d04988a5b61333e366
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 10:51:21 2026 -0700
+
+    chore: update from obsidian
+
+commit 5653b8b6d25e971e75381d332844c1df8aa21460
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 10:12:22 2026 -0700
+
+    chore: update from obsidian
+
+commit 6e33a83410ef282c3256927a435c6ceab9edf5e3
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Feb 5 10:09:24 2026 -0700
+
+    feat: privacy policy
+
+commit 236694f27f64368c0aefe3b993f126af6172b449
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Feb 4 20:52:55 2026 -0700
+
+    feat: posthog
+
+commit 1b6822af95baf757a5bad60a6171e65792ac83a5
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Feb 4 02:15:08 2026 -0700
+
+    chore: update from obsidian
+
+commit 8f6b22a4a585c07bf0058448748c63af9437495c
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Feb 4 02:09:22 2026 -0700
+
+    feat: trim OG image gen process
+
+commit ce51502c26db1fdc7de7724a4a2d714634131549
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Feb 4 02:06:16 2026 -0700
+
+    feat: trim OG image gen process
+
+commit 4d1e7ded7acdfb7730c757a3a1cd80690680dc01
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Feb 4 02:01:19 2026 -0700
+
+    chore: denesting pattern-language
+
+commit 11f3181da88acd81326e4cac79616090fc8bbcf5
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Feb 4 01:55:00 2026 -0700
+
+    chore: update from obsidian
+
+commit 5da1daf19d34c33013cdb11d8ca864f3f5f8b9b4
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Feb 3 23:42:34 2026 -0700
+
+    fix: include full tag slugs in RSS
+
+commit 1790587c8218ced06104fc6ad57976e28b145d7a
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Feb 3 23:28:49 2026 -0700
+
+    feat: improved RSS feed metadata
+
+commit e13bb37c478b2f9a6b6fef264edea252991210dd
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Feb 3 13:54:01 2026 -0700
+
+    fix: widget stylings
+
+commit 89a80b0a55d2fe28775c11d83f9e0ec6879bb4d3
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Feb 3 02:31:17 2026 -0700
+
+    chore: update from obsidian
+
+commit 59e4d5ee27cf48ea3e99c9085299f2aa328865bf
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Feb 3 02:27:47 2026 -0700
+
+    chore: update from obsidian
+
+commit 9657434c74d8bb102c8ac6cab720f1b7af98a06c
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Feb 3 01:50:40 2026 -0700
+
+    chore: update from obsidian
+
+commit 1ae33de354580fedda1fa15deaa40fcdc1d730aa
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Feb 3 01:44:56 2026 -0700
+
+    chore: update from obsidian
+
+commit 24edacdbb784a6e3d1317a9c6b46c79de512f6a1
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Feb 2 23:08:01 2026 -0700
+
+    chore: proper quotes on APL
+
+commit 05d05a92e2fe06a1864aacb82b58145f303217c4
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Feb 2 22:54:29 2026 -0700
+
+    feat: finish initial notations for ALP patterns
+
+commit 2d6f9224872ad84c8a48a36814e251c1c47d3d0f
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Feb 2 20:51:31 2026 -0700
+
+    chore: update from obsidian
+
+commit a9a2c22475dcc41b7842873dcc8565fb66a467fa
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Feb 2 18:32:32 2026 -0700
+
+    chore: update from obsidian
+
+commit 136bd439e806a76f4dcba9095632abb1693f4ae1
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Feb 2 11:08:57 2026 -0700
+
+    chore: update from obsidian
+
+commit 43ac5ed5f71ddfbc2487f47e2a8fe6075bbd4110
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Feb 2 10:29:04 2026 -0700
+
+    chore: update from obsidian
+
+commit 4c02a1e4abb340f2784a58e2a7f67e0d02ed509b
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Feb 2 09:52:01 2026 -0700
+
+    chore: update from obsidian
+
+commit 3af18bd1602d097731137665cda7a3f5b27a1c86
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Feb 2 01:45:17 2026 -0700
+
+    chore: update from obsidian
+
+commit 5ea094df4e530cb1cb05b45f08a3599ed418f5c0
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Feb 2 01:25:57 2026 -0700
+
+    chore: update from obsidian
+
+commit 4d96bca9908f88f911cf2e9a681bb3f0b8ece7ac
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Feb 2 01:15:59 2026 -0700
+
+    chore: update from obsidian
+
+commit 7fcc97d88e4eebad5075aded630bd79f6521c1ad
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Feb 2 00:00:51 2026 -0700
+
+    chore: update from obsidian
+
+commit 85f6e20a8bedece81b2367d77191723c85d6b24f
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Feb 1 23:32:41 2026 -0700
+
+    chore: update from obsidian
+
+commit 39aeb4d8f42167e3574109a3f58207230a1e2df8
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Feb 1 23:27:53 2026 -0700
+
+    chore: update from obsidian
+
+commit c53c27f0f1b9d4bc007b170bfbfacac33b4bc8d0
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Feb 1 23:20:29 2026 -0700
+
+    chore: update from obsidian
+
+commit 9e926615c50f10ee266a5bfb00ec41d5f47bc6da
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Feb 1 23:19:37 2026 -0700
+
+    chore: update from obsidian
+
+commit a362b4db7e233e15bbae1148615164949cfabe6f
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Feb 1 23:16:20 2026 -0700
+
+    chore: update from obsidian
+
+commit 50c49908a672a801412d4584d08a818901feedc6
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Feb 1 16:48:16 2026 -0700
+
+    fix: resume fix
+
+commit 775d54b4ce18bc071ea37ec531aae6d0459444b7
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Feb 1 16:47:24 2026 -0700
+
+    chore: update from obsidian
+
+commit a5447e0128e24309b352e4492e44dd3052f104e2
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Feb 1 08:44:43 2026 -0700
+
+    fix: resume evergreen fix
+
+commit 5b230113930d2bdd599cba77ab8531a1a73fd1d2
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Feb 1 08:42:15 2026 -0700
+
+    chore: update from obsidian
+
+commit ec750a7abf286584879b0059cf3584f45fac1dc1
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Feb 1 08:25:37 2026 -0700
+
+    chore: update from obsidian
+
+commit f9b2bad3e33ca770c5c3573cdbc6715d05df2b37
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Feb 1 08:16:57 2026 -0700
+
+    chore: update from obsidian
+
+commit 4878e8038bdd6837da564f03503a1ac735d1c85b
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 31 15:45:05 2026 -0700
+
+    chore: update from obsidian
+
+commit 41c0c8b0bbebb3d2df374f6cc12882ffbc798d73
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 31 15:30:45 2026 -0700
+
+    chore: update from obsidian
+
+commit f5b172e5f55098962178ada8c36a63aab30ae26d
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 31 12:54:10 2026 -0700
+
+    chore: update from obsidian
+
+commit 664964fcd04ad823418956bd3fb0eb951b584bcf
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 31 12:51:43 2026 -0700
+
+    chore: update from obsidian
+
+commit 934facb70be6db45f3fc2b67accfc469a7081fe8
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 31 12:35:06 2026 -0700
+
+    chore: update from obsidian
+
+commit 7f3fa7b08bbf0654191104e0b8626b95f5aea53f
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 30 09:38:06 2026 -0700
+
+    chore: update from obsidian
+
+commit 095d35e59ed7604f58581010878871f0628b3b8a
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 30 09:13:01 2026 -0700
+
+    chore: update from obsidian
+
+commit a70c42af79b00da7a13b1b4beb8116cc11a8aecc
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 29 17:50:45 2026 -0700
+
+    chore: update from obsidian
+
+commit 0007a8233752fd2999b7798aa19b5b72edc1a613
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 29 14:46:08 2026 -0700
+
+    chore: update from obsidian
+
+commit 28bf1faaf7a6424f1a3b7bfe3acf98a0b5f4c692
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Jan 28 17:23:26 2026 -0700
+
+    chore: update from obsidian
+
+commit c3fc482447af6a9f57fdaa1ad358cd5fab22a24f
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Jan 28 14:40:47 2026 -0700
+
+    fix: annotations
+
+commit 98cc049b15a46079711291129d13d70b234c64ff
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Jan 28 13:09:28 2026 -0700
+
+    chore: update from obsidian
+
+commit c5d01f80c5b563e07dc9bcd9bd044d33f7aff6f4
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Jan 28 13:02:06 2026 -0700
+
+    feat: editorial column styling
+
+commit 4cdb411719cca5ae3b085dcaef63913d00584303
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Jan 28 11:24:23 2026 -0700
+
+    fix: tag priorities
+
+commit c67f0577b6ceeacd94d4b2b5724415b2646897ce
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Jan 28 10:37:16 2026 -0700
+
+    fix: iframe/html elements on non-mdx pages
+
+commit 9e1fe1c67ac8cfd070eb0aa32b4f9eba6c37a2b7
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 27 19:27:34 2026 -0700
+
+    chore: update from obsidian
+
+commit 8d28d6a01533b69802014c6477ff6ce55f5bd252
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 27 19:27:17 2026 -0700
+
+    chore: convert tutorials icon to map
+
+commit 0b07d8a03d8333e2051a9cc7b1ee0a13e120b219
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 27 19:25:53 2026 -0700
+
+    fix: specify legacy links to index pages
+
+commit b79ac4d5aab105bb8079769ab3b009668399d5da
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 27 19:21:32 2026 -0700
+
+    chore: update from obsidian
+
+commit 3f29ed3014715a8c0217ed95ec16c7ef2a560c7a
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 27 19:18:09 2026 -0700
+
+    chore: update from obsidian
+
+commit a74dc0c8e63418c71678e101d1273df5d1ea0140
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 27 19:14:30 2026 -0700
+
+    chore: update from obsidian
+
+commit fb218b6ed6727e99e2b853a7fd84c0f8447ba9a7
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 27 18:57:59 2026 -0700
+
+    chore: update from obsidian
+
+commit 35eab4f369cc7a871bcf701e5fb5e46fbbc6c51e
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 27 18:57:02 2026 -0700
+
+    fix: link alias for resume template post
+
+commit dab9d5099d3bd4b6778c4695d44eea381e5390dd
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 27 18:32:16 2026 -0700
+
+    chore: update from obsidian
+
+commit 5d78cbadb6d5ea8467e0434ca338e4f3ec5ddae8
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 27 15:14:23 2026 -0700
+
+    fix: angular forces on graph
+
+commit 76b6ecfb1a6c883f8067bcdb78d661146b5ed4f6
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 27 00:39:50 2026 -0700
+
+    chore: update from obsidian
+
+commit 6c660c35cb1dddb4e48003c9ee5f055e12d03a8b
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 27 00:37:24 2026 -0700
+
+    chore: update from obsidian
+
+commit 917d810906e52e9d839ab586b310bf9a954fe0c6
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 27 00:17:25 2026 -0700
+
+    feat: graph breathing for active node
+
+commit 75006f66754177a8774358fc3f190d8c1f185319
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 27 00:06:40 2026 -0700
+
+    chore: quartz svg
+
+commit e8ea138b46fd1c278e48a28c35d7bf2b4c716a36
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Jan 26 22:14:43 2026 -0700
+
+    chore: update from obsidian
+
+commit ff4e736a679ed6755d7bcbcf5d60dcbec3fa880b
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Jan 26 22:06:23 2026 -0700
+
+    feat: post icon selected from frontmatter
+
+commit 85878891c7c658f92d85823098b4ee269b8a30f2
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Jan 25 21:38:36 2026 -0700
+
+    chore: update from obsidian
+
+commit 1d038fcdbeed0f6e65e8e7f2ca5b863a3187122a
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Jan 25 21:36:44 2026 -0700
+
+    chore: update from obsidian
+
+commit 86593bad7cee2c88f84a0bd2efbdcb52dee9c8f9
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Jan 25 21:24:52 2026 -0700
+
+    chore: update from obsidian
+
+commit 3cb52d5a3b4d5d05f0c5bd8e8f646e397c634de8
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Jan 25 20:13:03 2026 -0700
+
+    chore: update from obsidian
+
+commit 59c5d9651f1362354b9b4a990304b68db73569b0
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Jan 25 20:10:44 2026 -0700
+
+    chore: update from obsidian
+
+commit f156f1345bc292fbfac672072b4d868de8c9820a
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Jan 25 19:04:21 2026 -0700
+
+    chore: update from obsidian
+
+commit a61ffeed0c34c341dd3e06502a8d6e00b7969cf2
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Jan 25 18:58:34 2026 -0700
+
+    chore: update from obsidian
+
+commit 1c0a7db2321cd1a0b676472504054b1fc40ab81b
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 24 21:52:12 2026 -0700
+
+    fix: allow for graph highlighting on mobile drag
+
+commit 9283e0a567c29c59533eb986f2655b295992267b
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 24 18:54:56 2026 -0700
+
+    fix: kill reader mode
+
+commit dfef26456b7d637fe2898d7ff0295399af9a6811
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 24 18:51:29 2026 -0700
+
+    chore: change wording on graph filter
+
+commit 05d6eaef8c91025db146797120971a00893f5c16
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 24 18:46:37 2026 -0700
+
+    fix: description fix
+
+commit 3f123aa851af9f58bc29b54450197fc958be0c69
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 24 18:44:01 2026 -0700
+
+    chore: update from obsidian
+
+commit 646140586e2717616ddcf998bb36b9a88a5a1440
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 24 12:57:38 2026 -0700
+
+    chore: apply evergreen to resume
+
+commit 830195d11db620346d150267592685e96e77e77d
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 24 03:32:13 2026 -0700
+
+    fix: test
+
+commit 809351d13cabe779a1469643d6568dcc9921c4fb
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 24 03:31:56 2026 -0700
+
+    fix: resume link
+
+commit 70b550b5ab5d00d5772bc4f3c7d01ad32d76916c
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 24 03:24:27 2026 -0700
+
+    fix: mistags
+
+commit 63c67b0d2f78fef23e83246531a74b3d65c99ad9
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 24 03:24:14 2026 -0700
+
+    fix: mistags
+
+commit 121d90584d088f4aca664ae7765f84856996fa2e
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 24 03:18:19 2026 -0700
+
+    fix: global graph conif
+
+commit 670c45f1b6c68028124dfe637bd4210cb694f660
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 24 03:04:51 2026 -0700
+
+    fix: minor content
+
+commit d5ff6a85800eb315da40b5e84a714ac33d6bb0a9
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 24 02:23:30 2026 -0700
+
+    fix: skip private tag purge if submodule unavailable
+
+commit 4a5b88d4ad9f3d7f4f66093b6313c1a6ff291523
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 24 02:09:14 2026 -0700
+
+    chore: update from obsidian
+
+commit 551d998895bceb444518e0341afb0e210a1bd7f9
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 24 01:49:11 2026 -0700
+
+    feat: valence shell global graph
+
+commit b2a1055eda7ed9f0e5771da120a4a23f86913070
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 23 16:18:36 2026 -0700
+
+    chore: update from obsidian
+
+commit 129a1e212ea011d192fb2c627503e538dbd05558
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 23 04:34:10 2026 -0700
+
+    chore: update from obsidian
+
+commit 5674f161ff0b5c364f782443fe76867eec72497c
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 23 04:20:56 2026 -0700
+
+    fix: minor graph updates
+
+commit db84942abd86fbc0179eab3196e0c19f4634e7bf
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 23 03:53:55 2026 -0700
+
+    fix: scrub hyperlinks out of private tag index
+
+commit dd4d7a9e1fbf0c1f95e272070d471bf3e539343d
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 23 03:52:35 2026 -0700
+
+    fix: scrub private tag hyperlinks
+
+commit 512f9e893dc0b154fa3507077775c69bb36a350d
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 23 03:52:16 2026 -0700
+
+    fix: scrub private tag hyperlinks
+
+commit a22f4eff412588b03388659cdd5331dc59824db1
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 23 03:49:25 2026 -0700
+
+    chore: title and metadata for LLM primer
+
+commit e78b401db6b3a22f66ccf86f6d1d5be3dce4b8d2
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 23 03:42:26 2026 -0700
+
+    init: llm annotation
+
+commit 0694e86694fe5922367df4c2a7b098a3c72ca308
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 23 03:34:42 2026 -0700
+
+    chore: move llms pdf
+
+commit dbf32dfd1d7e9059c15f28aaaa2d30d4f53020b7
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 23 03:30:53 2026 -0700
+
+    fix: remove private node from graph view
+
+commit fca4d1cb19102f19cda915b7be86b0516f5dbcd6
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 23 03:25:41 2026 -0700
+
+    fix: search on sidebar
+
+commit d7d868e75080db785d4463830f68367f414d8758
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 23 02:55:09 2026 -0700
+
+    fix: add evergreen category
+
+commit e6d87b4ebd91a0c00a4f850d0da9130133166c0c
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 23 02:30:28 2026 -0700
+
+    feat: graph filtering options
+
+commit e923b691601c7b302937a94249783e28a8257a01
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 23 01:10:50 2026 -0700
+
+    fix: gitattributes to remove Pages gen from attribution
+
+commit f56a3ad8ee22e3b917cf6023a0c4bdaf254278bb
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 23 01:05:11 2026 -0700
+
+    chore: update from obsidian
+
+commit cba2bda2931500a3abf9127183ff12ddc3998f10
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 22 13:04:37 2026 -0700
+
+    chore: update from obsidian
+
+commit 085c476f675289ccd31ecdc8ffcd4db69bd32410
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 22 12:43:47 2026 -0700
+
+    fix: atproto formatting
+
+commit 810572df2ce3379b904100fc5d58a99842dc51b6
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 22 11:13:38 2026 -0700
+
+    chore: update from obsidian
+
+commit 69fcd1dc0dd714cdf30812a428350496226fc6d5
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Jan 21 18:10:24 2026 -0700
+
+    chore: update from obsidian
+
+commit 13a1dccaf74e3957eaff66590121912172883ac5
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Jan 21 18:08:44 2026 -0700
+
+    feat: social media feeds on index
+
+commit 07b07ea16339d01bf9429a91b1ccacf028152c24
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Jan 21 16:45:00 2026 -0700
+
+    chore: update from obsidian
+
+commit 92a11bc5518cd12c8afaa027b1c90ef34512ff26
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Jan 21 15:58:24 2026 -0700
+
+    chore: update from obsidian
+
+commit 0657725066d4fcb00fe30557d3b168abef0151ba
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Jan 21 15:08:04 2026 -0700
+
+    chore: update from obsidian
+
+commit 2c35114de7e801d1382391bf6910ab58ae21e75f
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Jan 21 13:40:31 2026 -0700
+
+    chore: update from obsidian
+
+commit e2e485ca16c8ac94e1eb77c7eafd8b28cef06c12
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Jan 21 13:36:10 2026 -0700
+
+    chore: update from obsidian
+
+commit b0254ee8ecc13193e3d947b47354255e2a0ed5b2
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Jan 21 13:29:59 2026 -0700
+
+    chore: update from obsidian
+
+commit 3acd4dbec3d3d8971ba8513477d8a808c5171695
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Jan 21 12:47:11 2026 -0700
+
+    chore: update from obsidian
+
+commit eb5df7082c7f7559302f193573d574494170eca3
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 20 23:55:36 2026 -0700
+
+    chore: update from obsidian
+
+commit cdc5aef967fc7fcaee6741199057591daaa1831c
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 20 23:21:27 2026 -0700
+
+    fix: local graph adjustments
+
+commit 353ae657f65d808e9c89da7014da920b82e338f2
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 20 23:12:46 2026 -0700
+
+    fix: minor graph, tag changes
+
+commit cf64e122e7ced83500d5141d8072b8e048ad0695
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 20 22:45:18 2026 -0700
+
+    fix: minor graph, tag changes
+
+commit ae29f53ced5b5e9bfc7320ead695e5a8aac54e31
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 20 22:32:42 2026 -0700
+
+    fix: title snap on SPA nav
+
+commit 8c877cabd0982261c624b2d6c0fa85f0e6fffe38
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 20 22:24:35 2026 -0700
+
+    fix: consolidation of emitters for content pages
+
+commit 040edf788d35c16d4e3a38dcd54261aedfeb543d
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 20 21:36:36 2026 -0700
+
+    fix: tags, and graph visibility improvements
+
+commit db9386db7b0b8dc2166fc3296aabcf968703adfe
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 20 18:30:06 2026 -0700
+
+    fix: minor graphing changes
+
+commit 3a1ba8dffe906a329249eae47d9e8a7284cd6f28
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 20 15:56:16 2026 -0700
+
+    fix: dice roll widgets light mode, plotly.js consistent styling
+
+commit 2f3c907009f16a738c3833283cc9252b9ff63ba0
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 20 15:54:28 2026 -0700
+
+    fix: dice roll widgets light mode, plotly.js consistent styling
+
+commit 80545ac9ec578b7048c9511c03baef068fb97a23
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 20 15:35:40 2026 -0700
+
+    chore: dark mode removed
+
+commit 537c8218715c5fc51b356657dd9ef6bd93b3295e
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 20 08:58:21 2026 -0700
+
+    chore: update from obsidian
+
+commit 283db2e5a5e5267fe193317f87294aa34b13b219
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Jan 19 22:41:21 2026 -0700
+
+    fix: minor style
+
+commit 27a638a695b7bbec43167e504938011befb6ebea
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Jan 19 22:39:45 2026 -0700
+
+    fix: minor style
+
+commit 06a5a2b8e6cd579da4d17c91a71404b18ab18a84
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Jan 19 22:30:42 2026 -0700
+
+    feat: dice roll widget, post
+
+commit 88206dee0a6fef73e463d326809bd27506fc1f23
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Jan 19 14:15:30 2026 -0700
+
+    fix: styling on post listings
+
+commit ccfd78904314a8f5617e233c52dbb0e03da6e67f
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Jan 19 14:12:23 2026 -0700
+
+    chore: format
+
+commit f9fe68dd06d7210deabff48ee81bd966148e9cd7
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Jan 19 14:11:27 2026 -0700
+
+    chore: update from obsidian
+
+commit 10671c5e171e99b3efde36b5b1be44180aea7379
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Jan 19 14:08:26 2026 -0700
+
+    fix: mobile tag view
+
+commit 3d0d55ea68982df81c2b37ab699abae2d41cd992
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Jan 19 13:55:05 2026 -0700
+
+    fix: mobile layout, afterBody styling issues
+
+commit da55d78f651437f1f8891ee718b7d674cfee55da
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Jan 19 10:58:30 2026 -0700
+
+    chore: update from obsidian
+
+commit 7686c3403431c658d8c9e9affaa6ad8d5d4460be
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Jan 19 10:08:15 2026 -0700
+
+    chore: update from obsidian
+
+commit d59a0e4d57269266084c7f1cfbc4adf4b742a3c4
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Jan 18 14:48:08 2026 -0700
+
+    fix: trash top-level artifacts
+
+commit c25dcae6c764eec7b2e35e1b6bfee827c999b73f
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Jan 18 14:46:29 2026 -0700
+
+    fix: nx convention for building into dist
+
+commit d625bef96c6fae8e41631d514b0a15b0d1f36f97
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Jan 18 14:14:41 2026 -0700
+
+    fix: debounce on hot reload to prevent reload loop
+
+commit b39a864f21464af3f653e97b57cd7a46d43a9066
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Jan 18 12:52:13 2026 -0700
+
+    chore: update from obsidian
+
+commit ff7b849f5681d5a14548c266e0fd3d3d607bd50f
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 17 23:04:38 2026 -0700
+
+    chore: update from obsidian
+
+commit 83801c8a427617433063f4ad1029d13c040f69e2
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 17 01:36:22 2026 -0700
+
+    chore: update from obsidian
+
+commit 1edd57d25835d36a4dc84a5669724fc09e0aeb63
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 16 12:45:35 2026 -0700
+
+    fix: link fixes
+
+commit 13788e5e63ad661eda895cceb2668d33d4e20897
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 16 12:30:26 2026 -0700
+
+    fix: public link fixes in mdx
+
+commit aa1ff9e4fa2f5de0f32fde9e32cfefd6c85a3954
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 16 11:45:58 2026 -0700
+
+    perf: performance benchmark, writeup
+
+commit 2b6152f9e875ace6f46697434254ff3d3ea18af4
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 16 11:25:50 2026 -0700
+
+    perf: pre-check, commit lighthouse sanitized assets
+
+commit 8559e2c21fcf1d8a066b0b022d9494c0bc60ff91
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 16 10:48:55 2026 -0700
+
+    feat: umap opts, applied to magic atlas
+
+commit 08745af78562737022b88b0f034286a7cff04e13
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 16 10:07:38 2026 -0700
+
+    perf: build-time font inclusion
+
+commit d0ed036877708b128575223cd7a31f3d7ab00f4b
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 16 09:51:33 2026 -0700
+
+    perf: replace graph logic from pixi-js to canvas2d
+
+commit 0b0a4be835c28f90bc67242e0303cb46614dddf7
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 16 01:11:14 2026 -0700
+
+    chore: update from obsidian
+
+commit 470437f6f235e64425e651c8c32c6a846d9d1d94
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 16 00:38:55 2026 -0700
+
+    chore: update from obsidian
+
+commit 9dea1b53ee867c0337cbca1d8e0fd8496c86a06f
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 16 00:38:18 2026 -0700
+
+    chore: update from obsidian
+
+commit f4c2de93350ec1405757630a0b6c61d5edf441cd
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 16 00:29:28 2026 -0700
+
+    fix: auto-populate, auto-update resume
+
+commit ee86fa804525b0d41e7f5b94e2efe3eaa4028ab1
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 16 00:24:08 2026 -0700
+
+    test: update resume via automated workflow
+
+commit 69eb42555f6027eb24e1391e9a9bd1835c0456cc
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 16 00:12:00 2026 -0700
+
+    fix: cut out relative link glitches
+
+commit 22b3f7661f0b39c4d741a2ad638e2dbcf971fd23
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 15 23:37:34 2026 -0700
+
+    feat: PDF viewer widget
+
+commit 743ee7fe2193ae11c5fd0e480ed3a441022b14ed
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 15 18:25:12 2026 -0700
+
+    fix: align legacy daily titles
+
+commit eba3b6998c39141d7a8bb9d1106c64c318d31bbb
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 15 18:24:54 2026 -0700
+
+    fix: tag explorer post ordering
+
+commit e54b1ef1458f29deece6f179f80cdca6046ddc4c
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 15 18:20:47 2026 -0700
+
+    fix: styling, layout issues with subcomponents
+
+commit ad195fe3aa1cb0735d2503e1d8910a5d96951b63
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 15 18:00:08 2026 -0700
+
+    fix: align legacy daily titles
+
+commit fb7cf8738e8428286dd644f88452f1983121b82b
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 15 17:58:38 2026 -0700
+
+    fix: minor script for legacy daily rename
+
+commit 7c552c9fa11dbe9a488022f363b897f908a11a50
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 15 17:30:10 2026 -0700
+
+    chore: update from obsidian
+
+commit e83b217e27e29816afb523db5ff3260b7afa3d93
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 15 17:19:35 2026 -0700
+
+    chore: update from obsidian
+
+commit a15bd339ea38d7d4df50ae037bc5420241450391
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 15 13:22:32 2026 -0700
+
+    chore: layout fix
+
+commit 863616353ed125c2a034ed69342637ec525a53a0
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 15 12:53:46 2026 -0700
+
+    feat: additional widgets, widget stability fixes
+
+commit 53ce2edab80305258e738bec9882f7264850681a
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Jan 14 22:16:41 2026 -0700
+
+    fix: mdx widget SPA hydration fix
+
+commit b9545ccb9de4786cbe8cc63e3dabfcbd5ee0af52
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Jan 14 17:23:46 2026 -0700
+
+    feat: complete widget systems for mdx processing
+
+commit 7660c5186f3b6939b7e95b0d7ed6d254780cf7b1
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Jan 14 11:21:02 2026 -0700
+
+    feat: mdx support foundation
+
+commit 6ff6d569f1fdc8b923334e78eb6d83d581f58cec
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Jan 12 12:38:42 2026 -0700
+
+    feat: resume build, lint system online
+
+commit db90d6fd8e71042532e6480850a99e4b929a5f48
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 10 19:52:39 2026 -0700
+
+    fix: lighthouse urls, gitignore, and CNAME fixes
+
+commit b31f834f169ee87da643e288d535e7e5cb0c8f34
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 10 19:07:59 2026 -0700
+
+    feat: enhanced lighthouse reporting system
+
+commit 0aeb957a4e582abf027c657b30a535ee33d707a9
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 10 18:32:04 2026 -0700
+
+    fix: seo and performance improvements
+
+commit a415e971302a2961e6557ef028171a49709a0305
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 10 00:59:47 2026 -0700
+
+    chore: update from obsidian
+
+commit 2888a4fb537cb3a9bcf8be5f4a3784341ee24613
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 10 00:56:41 2026 -0700
+
+    chore: update from obsidian
+
+commit 0e87a1ea0a05bab7cb601e6568201357b20e0d22
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 10 00:50:58 2026 -0700
+
+    chore: update from obsidian
+
+commit 47e2fbf70dc6825f4413a8a9e0dabf221fa47fb7
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 10 00:48:48 2026 -0700
+
+    chore: title tune-ups, description starts
+
+commit a1f2241e4a15f35b0c0fc7165b5bee412a02e991
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 10 00:12:18 2026 -0700
+
+    chore: title tune-ups, description starts
+
+commit fe356bd6af19c6cfe263dd915b3707864b5b3054
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 9 23:45:25 2026 -0700
+
+    fix: script tweak
+
+commit b07ee540bb867da7385c65b6e65b5b66b3124076
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 9 22:29:24 2026 -0700
+
+    fix: minor build, writing improvements
+
+commit f380279a9e6e87d72c4b83ff6962443a4c192856
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 9 22:28:11 2026 -0700
+
+    fix: minor build, writing improvements
+
+commit ce998613fa01ecb41677f6c9632c66973611c483
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 9 22:03:43 2026 -0700
+
+    chore: fill in tag index pages
+
+commit 3fff980eb14acf3055ca76b4e9d23b25783738da
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 9 18:47:34 2026 -0700
+
+    chore: update from obsidian
+
+commit 85ae29d6142de8672b66e769f4aa39ca88fdbdfd
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 9 18:38:06 2026 -0700
+
+    feat: trimmed top-level tags, centralized tagging service
+
+commit 1216bc29d7218ab229838189acec3a2d9f5bf8af
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 9 16:37:33 2026 -0700
+
+    feat: core central tagging system added
+
+commit db102d85f1f4f62fab4085bfed7bb6a9970004c6
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 9 13:31:17 2026 -0700
+
+    chore: update from obsidian
+
+commit 54567574a0828989568b9b1eb14a93e67e9d6fa4
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 9 13:31:06 2026 -0700
+
+    feat: better 404 page, consolidated into layouts
+
+commit 12fbfff2960de614e8fed924b140e1f89f7ab975
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 9 12:30:34 2026 -0700
+
+    chore: update from obsidian
+
+commit 08d467ae07ac001e295715714d015c2d295cd49b
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 9 12:29:52 2026 -0700
+
+    minor index changes
+
+commit 7ea62442de8e1ac9ec1a250cadcf25642eac519d
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 9 11:56:28 2026 -0700
+
+    chore: update from obsidian
+
+commit d686cc7a3208555b7faabff1747cffeeca599d28
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 9 11:06:02 2026 -0700
+
+    chore: update from obsidian
+
+commit b1995fe0f69d39d3efa137980e98709619a6eebd
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 9 09:45:45 2026 -0700
+
+    chore: update from obsidian
+
+commit 5dcc303f08aba190a5a3f2d1de8375586344a0c1
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 9 00:00:47 2026 -0700
+
+    chore: update from obsidian
+
+commit 635b7898f6b59e1ec67c813eb8659f2ced673ddc
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 8 23:41:47 2026 -0700
+
+    fix: remove sync action from prebuild
+
+commit 2d3113d0e56ef919f4617a9b65c5d54022e7b278
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 8 23:23:12 2026 -0700
+
+    chore: update from obsidian
+
+commit 442972df6ae55da1a7da18d6d382abea250ef7d7
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 8 23:21:58 2026 -0700
+
+    feat: annotations rendering 🎉
+
+commit 0a0d5823108a1a8cbecd14185d91eac58958f47f
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 8 20:20:02 2026 -0700
+
+    chore: upgrade preact depend to 10.28.2 for sec warn
+
+commit 53e8c52ff9e6da8db827e914b463aa234bffe5ba
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 8 20:15:39 2026 -0700
+
+    fix: resolve issue with non-root page direct navigation improperly loading styling
+
+commit 00a930edf72590818a01732509398c2854a0ee55
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 8 20:02:08 2026 -0700
+
+    chore: update from obsidian
+
+commit 944778e520603b81b179cdb027a7e92718f96357
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 8 19:43:57 2026 -0700
+
+    chore:
+
+commit 4fdc8779438726ad9705fdbdfbcb885a9e2804c4
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 8 19:37:45 2026 -0700
+
+    chore:
+
+commit 28322dda517f4b4a1ac81ff53999b3d383d6ac96
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 8 19:35:19 2026 -0700
+
+    chore:
+
+commit 73011a3b962b645b4190379984657a83748be659
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 8 19:01:10 2026 -0700
+
+    chore:
+
+commit 1ad68d9c6f64954435637489f71776d3d4e665c4
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Jan 7 11:09:43 2026 -0700
+
+    chore:
+
+commit d5c8931e00a81c2ebae54cb9d1f1a22582b2ae0d
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 6 17:04:30 2026 -0700
+
+    chore:
+
+commit d99b90d5eb4f009594049cebb710cbd0c9272d27
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 6 16:59:36 2026 -0700
+
+    chore:
+
+commit 3c817d3bb18593aec530aab9437fea52b9678960
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 6 16:19:26 2026 -0700
+
+    chore:
+
+commit 667d48a9f6233987fd539d6f73ce52af181aff3a
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 6 14:19:00 2026 -0700
+
+    chore:
+
+commit 76c22aaabcbe27d1d4b1eca55cd1fab3141a1c6a
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 6 13:29:31 2026 -0700
+
+    chore:
+
+commit 35e0ab753f0f35f6da415768507648c600f25457
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Jan 6 09:49:53 2026 -0700
+
+    chore:
+
+commit ef6a4c2705ea1dec8868ab22ea79df4b52dbffab
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Jan 5 13:33:02 2026 -0700
+
+    fix
+
+commit c1d671762d0ce44f5af93bdbcc6cd6d0743a773d
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Jan 5 10:49:22 2026 -0700
+
+    fix
+
+commit 17f85eee11e64d309eb65de7a5a4614bb4cb3991
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Mon Jan 5 10:06:36 2026 -0700
+
+    chore:
+
+commit 1f78bb5ecb971fdf1b599fa782cd30c9b4bd7f6d
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Jan 4 13:09:08 2026 -0700
+
+    chore:
+
+commit 283196e6f73233d599247cfb8b110f9a1122aaf9
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 3 00:46:11 2026 -0700
+
+    fix: re-add missing private files
+
+commit 235bf5f2cd03d1f86f93f4bb6241fca40423af58
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 3 00:36:10 2026 -0700
+
+    force push
+
+commit bd09abb64a965af0db1f71147830d0d64fc8ea5d
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 3 00:33:53 2026 -0700
+
+    fix: caps
+
+commit de34d4595af8e8cc4b7e5fee71c9834225f02615
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 3 00:29:02 2026 -0700
+
+    fix: caps
+
+commit a98a87596367cad2e43c0a63d0f3aeb52bd1de4b
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 3 00:20:18 2026 -0700
+
+    feat: autodeploy to pages
+
+commit 2465a8f2c05ed0d66ed218a079b421d9944d0715
+Merge: 8cea7aa8 8d9e063b
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 3 00:10:57 2026 -0700
+
+    Merge branch 'main' of https://github.com/chaoticgoodcomputing/blog
+
+commit 8cea7aa80df4663363b56aeff52ec1a637bb1158
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 3 00:10:49 2026 -0700
+
+    tagpage fixes
+
+commit 8d9e063bd9c5f5231cf5f18d31befa45b949b69f
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 3 00:10:21 2026 -0700
+
+    Update CNAME
+
+commit a3cb69c4e7826bd5ef5b585d0fe2d8ad49792b37
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Jan 3 00:07:00 2026 -0700
+
+    Create CNAME
+
+commit 0261de0b9dd202195b68f979344700ca97992caf
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 2 23:46:47 2026 -0700
+
+    fix: icon
+
+commit 3ffbc38a2e03906ad3746b75f920f68f45a5a1ce
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 2 23:29:45 2026 -0700
+
+    fix
+
+commit 99020802afe1918f24b9508003b8f60c0b8c0711
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 2 23:18:14 2026 -0700
+
+    fix
+
+commit 90e2cb3c5b12656251fe74f254533ee2cf5d2fb1
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 2 23:05:58 2026 -0700
+
+    fix
+
+commit aadd683e5ecc6028a79d23c309a932d1ab33ad62
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 2 22:40:30 2026 -0700
+
+    fix
+
+commit 99bff8fe6b271026e859dc110708c16c476884d0
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 2 18:50:05 2026 -0700
+
+    chore
+
+commit 8bcd0ef40be3e75f16cf61d307fe1ee586c75051
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 2 15:42:06 2026 -0700
+
+    fix: attempt to render graph in same orientation as viewport
+
+commit f4030a5008b8ee0e2ad65ad3c8bab271b48cd1f8
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 2 14:56:01 2026 -0700
+
+    fix mobile layout issues
+
+commit fbf4fd43140c1a759d323d2649f8131d7eaa6fc6
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 2 13:46:40 2026 -0700
+
+    fix
+
+commit b39ffa62876b951229afe28af498c530e45e6fc0
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Jan 2 13:03:07 2026 -0700
+
+    fix
+
+commit c290d70a39b47e1db09e6ba64d07480e2e6fccc0
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 1 19:56:58 2026 -0700
+
+    chore:
+
+commit f3d875b25d0af948cc3b90862c2dea79444c0a6c
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 1 19:52:45 2026 -0700
+
+    fix
+
+commit 38307b5b99c79f439d64c4f608a145d44ccfbc01
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Jan 1 19:49:13 2026 -0700
+
+    chore:
+
+commit 785bce7f7e6cbf03567488eb84659642bef5cfbc
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 30 13:23:12 2025 -0700
+
+    chore:
+
+commit ff7a87432bd9faf35cb566fdda1c15d847b34265
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 30 13:05:29 2025 -0700
+
+    chore:
+
+commit 0b86035b1475afbe2a288c8f7a8ea0a429894b02
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 30 12:53:52 2025 -0700
+
+    chore:
+
+commit dd8b0435a4074626f9686d770d0fb6ead2361415
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Dec 28 16:00:35 2025 -0700
+
+    chore:
+
+commit 5f2ae42ac9dffd02b087bf123b1c65acb8e105e3
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Dec 21 02:38:37 2025 -0700
+
+    fix: delete legacyts file
+
+commit c4a5a8d88f0353e31305fb0e45399785654792da
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Dec 21 02:37:21 2025 -0700
+
+    chore:
+
+commit cf139bf01228f3ca5fe8095d37d3dce3882488d1
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Dec 21 02:34:25 2025 -0700
+
+    chore: push complex inlines into defined structure
+
+commit 44a2dc431322defee249d47b8401ca8b87796e6e
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Dec 21 00:47:22 2025 -0700
+
+    chore:
+
+commit 4097a8d8a920000c827c0fb2f20e9018ce8e1de4
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sun Dec 21 00:30:38 2025 -0700
+
+    chore:
+
+commit 0753262ac097937d04099ad4a7cdfc949dad05c4
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Dec 20 16:26:04 2025 -0700
+
+    fix: progress on rewiring periodic notes
+
+commit 8d598d77b2e2f3129ffbbbe639f84567953ccb29
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Dec 20 16:25:08 2025 -0700
+
+    fix:
+
+commit 87612a04c23a0c47da1498325277cae9b6145d13
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Sat Dec 20 11:38:19 2025 -0700
+
+    fix: downfactor graph forces to reduce jitter
+
+commit c28a51d49b6bea7fd7d7de45f1e800e8d3b536f3
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Fri Dec 19 16:01:35 2025 -0700
+
+    feat:
+
+commit 23ec28c5627be50db6d2b3a71ef3cb489daaa944
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Dec 18 19:06:36 2025 -0700
+
+    fix:
+
+commit d76619fc1c3e29b604667074c81a1600fe2374ff
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Dec 18 17:10:55 2025 -0700
+
+    fix:
+
+commit cb5f1ac427e7dae50a7aa1841eda99ba77338cbf
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Dec 18 16:50:50 2025 -0700
+
+    fix:
+
+commit 72861cb9abdfeffbe054af915f847f21916cc51d
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Dec 18 16:23:57 2025 -0700
+
+    chore:
+
+commit 2056db2e559db34f3234ab19400010a7c33a26bc
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Dec 18 16:23:06 2025 -0700
+
+    fix
+
+commit 4baacda7e968d28d331c493e87a1df62f6a938d7
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Dec 18 16:18:09 2025 -0700
+
+    fix:
+
+commit 516a0266d17336e572f6fd7b830ed7f20fdd2941
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Dec 18 16:07:04 2025 -0700
+
+    fix:
+
+commit 667ff098c8b6f8722627b4627b34af9b9c452373
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Dec 18 05:35:57 2025 -0700
+
+    feat: connection types on graph implemented
+
+commit ad5d1b295c94d1cdb1966c1ee18cd9cc323f8284
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Dec 18 04:59:04 2025 -0700
+
+    feat: connection types on graph implemented
+
+commit 4bfa3ea82e04e786fe888985d83cea7a6ff0c519
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Dec 18 04:33:54 2025 -0700
+
+    fix: minor typing fix on spa
+
+commit 3815be935c50da873c6973063cc066120a0b5fa3
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Dec 18 04:32:08 2025 -0700
+
+    chore: inline scripts fully cleaned
+
+commit 3cdd930ae37930c2678b05ae436975b2242161df
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Dec 18 03:54:26 2025 -0700
+
+    chore:
+
+commit 1942bed679192014a31a80ba371459c99f052519
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Dec 18 02:53:24 2025 -0700
+
+    chore:
+
+commit a59ba33bbee13b68b1edb31968e83dc1cfc621f4
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Dec 18 01:41:52 2025 -0700
+
+    fix: qol improvements to dev build task
+
+commit 42a446b8199834cb41e48d2b93843ab604abdcf6
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Dec 18 01:41:38 2025 -0700
+
+    feat: refinements to tag explorer
+
+commit df8ce3d159886f26839f464ca3bc5e9fa8cb9c40
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Dec 18 01:41:01 2025 -0700
+
+    chore: remove tag index pages
+
+commit e9e2a3af71834804847b38891d740f524d55a3a7
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Dec 18 00:58:18 2025 -0700
+
+    fix:
+
+commit 5d03c0e6935b521295a8025bcd2128a6fa67a83b
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Thu Dec 18 00:09:27 2025 -0700
+
+    fix: agent fixes for long-running tasks
+
+commit 39c0b0dfe381a2258e56095f61a73dbffeeb0fd1
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Dec 17 15:32:55 2025 -0700
+
+    fix:
+
+commit 7bcbfdcf8bacd109b18c519671e530a4890af48a
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Dec 17 15:29:53 2025 -0700
+
+    fix:
+
+commit 75013ec2c7aa318b310f933c927b68903a652e26
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Dec 17 15:27:35 2025 -0700
+
+    test
+
+commit 0ddaa7a52b05993c59337c16a2a62ed126a107c4
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Dec 17 15:26:04 2025 -0700
+
+    chore: re-add non-sensitive private notes to public vault
+
+commit 853e1595753e136e31c89b43a986f2aa11b37f19
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Dec 17 15:17:00 2025 -0700
+
+    feat: add private tag to private vault-synced notes
+
+commit 4c5be0fdacfe7a9c93c185a5f1760c369a0a3f8e
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Dec 17 15:06:07 2025 -0700
+
+    fix: commit script syncing via nx dep
+
+commit 5df5133fe883afb97ba30ee949e039202e0412a1
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Dec 17 15:03:14 2025 -0700
+
+    test commit
+
+commit 2ed460528b23662ecc8819840a7814f5fbf4d362
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Dec 17 15:02:01 2025 -0700
+
+    fix: broken links
+
+commit 0ed724ffd896abd08c1eb3b340040434d713eaff
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Wed Dec 17 15:01:17 2025 -0700
+
+    fix: broken links in private note transfers
+
+commit 1ee1c0eec85da7d5cefbb68fef98f1039380a586
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 16:55:12 2025 -0700
+
+    fix: remove notes/daily from daily notes set
+
+commit 9c833aa36600c987159a58aec6c78362b4477b21
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 16:39:06 2025 -0700
+
+    Add resilient retry logic to git hooks to prevent index.lock conflicts
+
+commit 621a38a1f3261b7ac7f971d6c47d96aa3f37a380
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 16:27:20 2025 -0700
+
+    Fix pre-commit hook to properly stage extracted metadata
+
+commit b22e8107bde1813c41dbf7af79bd8f86dd85f4d1
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 16:24:55 2025 -0700
+
+    fix: correct private file references to be full paths
+
+commit c1044681757c12f5c360a69a5a5125eb245c88e1
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 16:19:28 2025 -0700
+
+    Fix pre-push hook to handle detached HEAD state in submodule
+
+commit 595ae4830e1ecb926bec7a60c333d8edc7057f50
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 16:16:08 2025 -0700
+
+    fix: project.json changes
+
+commit 9a5148c2009de0876e341ef627c8d728e433d27f
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 16:15:28 2025 -0700
+
+    Add link extraction to private note metadata sync
+
+commit 868c70cfae0cbf636a9876cc81424bc89a3e06b0
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 16:05:33 2025 -0700
+
+    Add link rewriting from private/ to public/ paths
+
+commit d6e9f642b585618994efc9129e13ed875b56cf16
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 16:01:28 2025 -0700
+
+    Fix post-push hook logic and update submodule reference
+
+commit 2f40559690a246b3fae60531973ae2ec921fba79
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 16:00:43 2025 -0700
+
+    Add sync marker to track private vault changes
+
+commit d3014c98a096599c8d63e06181d9140b298037a7
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 15:54:28 2025 -0700
+
+    Force overwrite private metadata files instead of skipping
+
+commit 25b8ee081c89eb069c661d12363853005849acfd
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 15:53:00 2025 -0700
+
+    chore: modify private note message
+
+commit fc2a808b9799cee91c2468672fc4aae7d70d0bd1
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 15:48:18 2025 -0700
+
+    change organization for private files
+
+commit 4199564634008c30d44683341d876fffbfca5d39
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 15:46:43 2025 -0700
+
+    Add customizable private file body template
+
+commit bd2468c0b8602e866afd7ebdf76c36917ec2a5c3
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 15:42:10 2025 -0700
+
+    Add metadata extraction to pre-commit hook
+
+commit 73c37d5d9b8ded9d0c1fd8c9b48123cd42acc588
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 15:40:26 2025 -0700
+
+    Add post-push hook to auto-update submodule reference
+
+commit 28b0011bb01f7d47db4be30482d3f7124314feec
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 15:39:11 2025 -0700
+
+    Update private submodule reference
+
+commit fdf72ec2a42098d4a09518e7a6e0b3d57630c9a3
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 15:32:31 2025 -0700
+
+    Add content/public directory to repository
+
+commit b37a3ff470f36e199476240b820871f94fa008ae
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 15:26:43 2025 -0700
+
+    Fix GIT_DIR issue in post-commit hook
+
+commit 6c40e38333429825d98e8282a9c70dfa3c777bcc
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 15:26:33 2025 -0700
+
+    Test hook with GIT_DIR unset
+
+commit 3945e69ee70d7392dc57ab3e7fe42ccace4d18de
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 15:26:12 2025 -0700
+
+    Add docs gitignore
+
+commit 3d7712d6983bb8a97aa469d3e8c3679e9c89a64f
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 15:25:39 2025 -0700
+
+    Update private submodule to latest commit and improve error handling
+
+commit 20d926e3035401b0af4f43fbcc0575ccae642b56
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 15:24:10 2025 -0700
+
+    Remove test file
+
+commit e5366e23211bb3dfaaa9a0d35efc4305132feeb8
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 15:23:53 2025 -0700
+
+    Test commit
+
+commit 5b6236675e12506e438a92eebf5d5fe892be5cbe
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 15:23:40 2025 -0700
+
+    Fix Husky hooks to use subshells
+
+commit dcf00a753d5cade75537eeb61b65163bdd4e7e43
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 15:22:51 2025 -0700
+
+    Add Husky hooks for soft submodule synchronization
+
+commit a026db46e74d46abdb5bf43ed58fb262da28f6bc
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 14:18:37 2025 -0700
+
+    chore: cleanup, nx integration
+
+commit c0e9bbeebe98f68d2ed48ac8aa73022691d7802a
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 12:54:21 2025 -0700
+
+    chore: nx setup
+
+commit 3884d4567b09b4bf2f97187e1923746928d4827f
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 12:30:37 2025 -0700
+
+    chore: add nx
+
+commit a67ec1468f52f37961df37d0c1ce5cedf5c4c96e
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 12:30:29 2025 -0700
+
+    chore: move docs down to xdocs for quartz
+
+commit f7bd74cd2cb9259139fdc330415e9fe826b2402b
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 12:18:33 2025 -0700
+
+    fix: connect via pnpm, nvm
+
+commit bf4bfa0d40596bac54b76f44432e0089b45eaa8a
+Author: Spencer Elkington <spelkington@gmail.com>
+Date:   Tue Dec 16 12:08:31 2025 -0700
+
+    init
