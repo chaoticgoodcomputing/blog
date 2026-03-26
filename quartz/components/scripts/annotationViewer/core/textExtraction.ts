@@ -10,7 +10,9 @@ export async function extractPageText(
   cumulativeOffset: number,
 ): Promise<PDFPageData> {
   const viewport = page.getViewport({ scale })
-  const textContent = await page.getTextContent()
+  // normalizeWhitespace matches the option Hypothesis sets when creating TextPositionSelector
+  // offsets — without it the extracted string diverges from the one used at annotation time.
+  const textContent = await page.getTextContent({ normalizeWhitespace: true })
   const pageText = textContent.items.map((item: any) => item.str).join("")
 
   return {

@@ -45,6 +45,17 @@ export async function renderPageToCanvas(
   const context = canvas.getContext("2d")
   if (!context) return
 
+  // Scale the canvas backing store by devicePixelRatio so the rendered bitmap
+  // matches the physical screen resolution. CSS size stays at layout dimensions
+  // so the surrounding DOM (text layer, highlight layer, scroll sync) is
+  // unaffected — only the painted pixels are sharper.
+  const dpr = window.devicePixelRatio || 1
+  canvas.style.width = `${viewport.width}px`
+  canvas.style.height = `${viewport.height}px`
+  canvas.width = Math.floor(viewport.width * dpr)
+  canvas.height = Math.floor(viewport.height * dpr)
+  context.scale(dpr, dpr)
+
   // Render the page canvas
   await page.render({ canvasContext: context, viewport: viewport }).promise
 

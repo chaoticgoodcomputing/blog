@@ -219,8 +219,16 @@ export const Annotations: QuartzTransformerPlugin = () => {
               
               for (const annotation of annotationsToProcess) {
                 if (annotation.text) {
-                  // Apply text transforms (e.g., wikilink pre-processing) before parsing
+                  // Prepend a [!QUOTE] callout with the highlighted text before the comment
+                  const exactText: string | undefined = annotation.target?.[0]?.selector?.find(
+                    (s: any) => s.type === "TextQuoteSelector"
+                  )?.exact
                   let processedText = annotation.text
+                  if (exactText) {
+                    const quotedLines = exactText.split('\n').map((line: string) => `> ${line}`).join('\n')
+                    processedText = `> [!QUOTE]\n${quotedLines}\n\n${processedText}`
+                  }
+                  // Apply text transforms (e.g., wikilink pre-processing) before parsing
                   for (const transform of textTransforms) {
                     processedText = transform(ctx, processedText)
                   }

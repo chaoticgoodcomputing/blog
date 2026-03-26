@@ -138,7 +138,14 @@ export async function initPDFViewer(): Promise<void> {
   await waitForLayout(container.parentElement || container)
 
   try {
-    const loadingTask = window.pdfjsLib.getDocument(pdfUrl)
+    const PDFJS_CDN = "https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.530/"
+    const loadingTask = window.pdfjsLib.getDocument({
+      url: pdfUrl,
+      // Required for JPEG 2000 (openjpeg.wasm) and ICC CMYK (qcms_bg.wasm) decoding.
+      // Without this, CMYK JPX images (like those in the Valve handbook) silently fail.
+      // The wasm/ directory is separate from build/ in pdfjs-dist 5.x.
+      wasmUrl: `${PDFJS_CDN}wasm/`,
+    })
     const pdf = await loadingTask.promise
     
     // Store for cleanup and re-rendering
