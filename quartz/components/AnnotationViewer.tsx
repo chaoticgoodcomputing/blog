@@ -6,7 +6,9 @@ import { FilePath, joinSegments } from "../util/path"
 import ArticleTitle from "./ArticleTitle"
 import ContentMeta from "./ContentMeta"
 import TagList from "./TagList"
+import EmailSubscribe from "./EmailSubscribe"
 import PageTitle from "./PageTitle"
+import Graph from "./Graph"
 // @ts-ignore
 import script from "./scripts/annotationViewer/main.inline"
 import style from "./styles/annotationViewer.scss"
@@ -143,6 +145,8 @@ export default ((userOpts?: Partial<AnnotationViewerOptions>) => {
     const Title = ArticleTitle()
     const Meta = ContentMeta()
     const Tags = TagList()
+    // const PostGraph = Graph()
+    const Subscribe = EmailSubscribe()
 
     return (
       <div
@@ -194,6 +198,7 @@ export default ((userOpts?: Partial<AnnotationViewerOptions>) => {
               <Title {...componentProps} />
               <Meta {...componentProps} />
               <Tags {...componentProps} />
+              <Subscribe {...componentProps} />
             </div>
 
             <article class="annotation-list" role="main" aria-label="Annotations">
