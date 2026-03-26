@@ -5,7 +5,7 @@ tags:
   - economics/strategy
   - engineering
   - engineering/ai
-  - writingcontent/annotations
+  - writing/annotations
 annotation-target: https://media.steampowered.com/apps/valve/Valve_Handbook_LowRes.pdf
 description: Many an engineer has heard tales of Valve's "flat" organization structure — what is fact, what is fiction, and how does it actually work? An annotated copy of the 2012 First Edition of Valve's Employee Handbook.
 ---
