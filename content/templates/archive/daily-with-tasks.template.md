@@ -93,10 +93,38 @@ tags:
 ---
 ⇐ [[<% previousPath %>|<% previousBasename %>]]
 
-## <% WEEKDAYS[moment().day()] %> Daily
+## <% WEEKDAYS[moment().day()] %>: Up Front
 
 What is my day going to look like?
+
+### Tasks
+
+Tasks for the day:
+
+#### Leftovers
+
+<% leftoverTasks %>
+#### Fresh
+
+- [x] #tasks/fruit Start <% tp.date.now("YYYY-MM-DD") %> daily note [created:: <% tp.date.now("YYYY-MM-DD") %>] [completion:: <% tp.date.now("YYYY-MM-DD") %>]
+- 
 
 ### Thoughts
 
 - 
+
+### Plans
+
+> [!ASSISTANT]
+> 
+> #### Morning Block
+> 
+> - 
+> 
+> #### Afternoon Block
+> 
+> - 
+> 
+> #### Evening Block
+> 
+> - 
