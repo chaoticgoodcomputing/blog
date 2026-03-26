@@ -1,5 +1,5 @@
 ---
-title: 'Working with Valves: Understanding the Structure and tradeoffs of "Flat" Organizations'
+title: 'Working with Valves: Understanding the Structure of "Flat" Organizations'
 date: 2026-03-26
 tags:
   - economics/strategy
