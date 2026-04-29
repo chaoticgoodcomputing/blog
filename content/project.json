@@ -11,7 +11,6 @@
       "options": {
         "commands": [
           "nx run vault:sync",
-          "nx run vault:fix-links",
           "nx run vault:index-tags"
         ],
         "cwd": "content",
@@ -23,27 +22,16 @@
       ]
     },
     "sync": {
-      "//": "Extract frontmatter from private content and create cleaned versions in public.",
+      "//": "Run private scrub.mjs to populate private/dist, copy scrubbed content into public/, then normalize all internal links.",
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "node utils/extract-private-metadata.mjs"
-        ],
-        "parallel": false,
-        "cwd": "content"
-      }
-    },
-    "fix-links": {
-      "//": "Fix all internal wikilinks and markdown links to be relative to public/ directory root.",
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
+          "node utils/extract-private-metadata.mjs",
           "node utils/fix-vault-links.mjs"
         ],
         "parallel": false,
         "cwd": "content"
-      },
-      "dependsOn": [ "vault:sync" ]
+      }
     },
     "index-tags": {
       "//": "Generate index.md files for all tags found in markdown frontmatter.",
