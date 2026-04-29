@@ -13,3 +13,5 @@ dist
 .nx/workspace-data
 
 .lighthouseci
+
+.claude
