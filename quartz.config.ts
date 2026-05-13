@@ -178,10 +178,11 @@ const config: QuartzConfig = {
       }),
       Plugin.GitHubFlavoredMarkdown(),
       Plugin.TableOfContents(),
-      Plugin.CrawlLinks({ 
+      Plugin.CrawlLinks({
         markdownLinkResolution: "absolute",
         openLinksInNewTab: true,
       }),
+      Plugin.ExternalCrossGraph(),
       Plugin.Description(),
       Plugin.Latex({ renderEngine: "katex" }),
     ],

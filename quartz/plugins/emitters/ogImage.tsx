@@ -135,6 +135,7 @@ export const CustomOgImages: QuartzEmitterPlugin<Partial<SocialImageOptions>> = 
       for (const [_tree, vfile] of content) {
         if (vfile.data.frontmatter?.socialImage !== undefined) continue
         if (hasExcludedTag(vfile.data, fullOptions.excludeTags)) continue
+        if (vfile.data.external) continue
         yield processOgImage(ctx, vfile.data, fonts, fullOptions)
       }
     },
@@ -154,6 +155,7 @@ export const CustomOgImages: QuartzEmitterPlugin<Partial<SocialImageOptions>> = 
         if (!changeEvent.file) continue
         if (changeEvent.file.data.frontmatter?.socialImage !== undefined) continue
         if (hasExcludedTag(changeEvent.file.data, fullOptions.excludeTags)) continue
+        if (changeEvent.file.data.external) continue
         if (changeEvent.type === "add" || changeEvent.type === "change") {
           yield processOgImage(ctx, changeEvent.file.data, fonts, fullOptions)
         }

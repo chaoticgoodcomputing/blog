@@ -21,6 +21,7 @@ export type ContentDetails = {
   date?: string  // ISO date string
   description?: string
   hasExplicitDescription?: boolean  // Whether description was explicitly set in frontmatter
+  external?: string  // External URL when this entry references off-site documentation
 }
 
 interface Options {
@@ -53,6 +54,10 @@ function generateSiteMap(cfg: GlobalConfiguration, idx: ContentIndexMap, allTags
     .filter(([slug, content]) => {
       // Exclude posts with "private" tag
       if (content.tags.some((tag) => tag.toLowerCase().includes("private"))) {
+        return false
+      }
+      // Exclude external content - these slugs do not resolve to local URLs
+      if (content.external) {
         return false
       }
       return true
@@ -119,6 +124,10 @@ ${categories}
       if (content.tags.some((tag) => tag.toLowerCase().includes("private"))) {
         return false
       }
+      // Exclude external content - off-site, no canonical local URL
+      if (content.external) {
+        return false
+      }
       return true
     })
     .sort(([_, f1], [__, f2]) => {
@@ -174,6 +183,7 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
             date: date,
             description: file.data.description ?? "",
             hasExplicitDescription: !!file.data.frontmatter?.description,
+            external: file.data.external,
           })
         }
       }

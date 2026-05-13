@@ -28,6 +28,8 @@ export const ContentPage: QuartzEmitterPlugin<Partial<FullPageLayout>> = (userOp
 
         // only process home page, non-tag pages, and non-index pages
         if (slug.endsWith("/index") || slug.startsWith("tags/")) continue
+        // external content is referenced in the graph/index but lives off-site
+        if (file.data.external) continue
 
         // Select layout based on slug and frontmatter
         let pageLayout
@@ -68,6 +70,7 @@ export const ContentPage: QuartzEmitterPlugin<Partial<FullPageLayout>> = (userOp
         const slug = file.data.slug!
         if (!changedSlugs.has(slug)) continue
         if (slug.endsWith("/index") || slug.startsWith("tags/")) continue
+        if (file.data.external) continue
 
         // Select layout based on slug and frontmatter
         let pageLayout

@@ -1,12 +1,12 @@
 ---
-title: "ACME Project Completion and Migration Setup"
-date: "2026-04-28T18:35:08.961Z"
-duration_seconds: 156
-language: "en"
-is_diarised: false
+title: "Autonomous Software Factories: NX Notes"
+date: "2026-05-13T00:00:00.000Z"
 tags:
-  - "writing"
+  - "engineering/ai"
+  - "horticulture/seasons/systems"
+  - "writing/annotations"
   - "private"
+description: null
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.

@@ -202,7 +202,10 @@ export default ((userOpts?: Partial<PostListingOptions>) => {
             <div class="section">
               <div class="desc">
                 <h3>
-                  <a href={resolveAbsolute(page.slug!)} class="post-link">
+                  <a
+                    href={page.external ?? resolveAbsolute(page.slug!)}
+                    class={page.external ? "post-link cross-graph" : "post-link"}
+                  >
                     {title}
                   </a>
                 </h3>

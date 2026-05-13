@@ -29,6 +29,7 @@ export interface BuildCtx {
   allFiles: FilePath[]
   trie?: FileTrieNode<BuildTimeTrieData>
   incremental: boolean
+  externalUrlMap: Map<string, FullSlug>
 }
 
 export function trieFromAllFiles(allFiles: QuartzPluginData[]): FileTrieNode<BuildTimeTrieData> {

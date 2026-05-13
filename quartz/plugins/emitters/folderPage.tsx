@@ -82,13 +82,15 @@ export const FolderPage: QuartzEmitterPlugin<Partial<FolderPageOptions>> = (user
       const cfg = ctx.cfg.configuration
 
       const folders: Set<SimpleSlug> = new Set(
-        allFiles.flatMap((data) => {
-          return data.slug
-            ? _getFolders(data.slug).filter(
-              (folderName) => folderName !== "." && !folderName.startsWith("tags"),
-            )
-            : []
-        }),
+        allFiles
+          .filter((data) => !data.external)
+          .flatMap((data) => {
+            return data.slug
+              ? _getFolders(data.slug).filter(
+                (folderName) => folderName !== "." && !folderName.startsWith("tags"),
+              )
+              : []
+          }),
       )
 
       const folderInfo = computeFolderInfo(folders, content, cfg.locale)

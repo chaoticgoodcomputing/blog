@@ -144,6 +144,7 @@ export function constructGraphNodes(
       id: url,
       text: data.get(url)?.title ?? url,
       tags: data.get(url)?.tags ?? [],
+      external: data.get(url)?.external,
     }
   })
 }

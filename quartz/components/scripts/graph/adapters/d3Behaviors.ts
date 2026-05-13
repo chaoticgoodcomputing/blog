@@ -92,18 +92,26 @@ export function setupDragBehavior(
           const node = graphData.nodes.find((n) => n.id === event.subject.id) as NodeData
           // node.id already has leading slash for index page ("/"), so don't double up
           const targ = node.id.startsWith("/") ? node.id : "/" + node.id
-          
+
           // Track graph navigation in PostHog
           if (window.posthog) {
             window.posthog.capture("navigation", {
               source: "graph-drag-click",
               from_page: window.location.pathname,
-              to_page: targ,
-              node_type: node.tags && node.tags.length > 0 ? "tag" : "page",
+              to_page: node.external ?? targ,
+              node_type: node.external
+                ? "external"
+                : node.tags && node.tags.length > 0
+                  ? "tag"
+                  : "page",
             })
           }
-          
-          window.spaNavigate(new URL(targ, window.location.toString()))
+
+          if (node.external) {
+            window.open(node.external, "_blank")
+          } else {
+            window.spaNavigate(new URL(targ, window.location.toString()))
+          }
         }
       }),
   )
@@ -139,18 +147,23 @@ export function setupClickBehavior(
       if (distance < node.radius) {
         // node.id already has leading slash for index page ("/"), so don't double up
         const targ = node.simulationData.id.startsWith("/") ? node.simulationData.id : "/" + node.simulationData.id
-        
+        const external = node.simulationData.external
+
         // Track graph navigation in PostHog
         if (window.posthog) {
           window.posthog.capture("navigation", {
             source: "graph-click",
             from_page: window.location.pathname,
-            to_page: targ,
-            node_type: node.nodeType,
+            to_page: external ?? targ,
+            node_type: external ? "external" : node.nodeType,
           })
         }
-        
-        window.spaNavigate(new URL(targ, window.location.toString()))
+
+        if (external) {
+          window.open(external, "_blank")
+        } else {
+          window.spaNavigate(new URL(targ, window.location.toString()))
+        }
         break
       }
     }

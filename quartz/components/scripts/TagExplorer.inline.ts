@@ -185,7 +185,12 @@ async function _createFileNode(currentSlug: FullSlug, fileSlug: FullSlug, detail
   const iconSpan = li.querySelector(".file-icon") as HTMLElement
   const titleSpan = li.querySelector(".file-title") as HTMLElement
 
-  a.href = resolveAbsolute(details.slug)
+  if (details.external) {
+    a.href = details.external
+    a.classList.add("cross-graph")
+  } else {
+    a.href = resolveAbsolute(details.slug)
+  }
   a.dataset.for = details.slug
   titleSpan.textContent = details.title
 

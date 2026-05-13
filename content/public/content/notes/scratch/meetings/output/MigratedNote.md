@@ -1,9 +1,4 @@
 ---
-title: "ACME Project Completion and Migration Setup"
-date: "2026-04-28T18:35:08.961Z"
-duration_seconds: 156
-language: "en"
-is_diarised: false
 tags:
   - "writing"
   - "private"

@@ -7,6 +7,7 @@ export type NodeData = {
   id: SimpleSlug
   text: string
   tags: string[]
+  external?: string
 } & SimulationNodeDatum
 
 export type SimpleLinkData = {

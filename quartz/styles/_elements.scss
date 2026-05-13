@@ -84,7 +84,8 @@
       }
     }
 
-    &.external .external-icon {
+    &.external .external-icon,
+    &.cross-graph .external-icon {
       height: 1ex;
       margin: 0 0.15em;
 

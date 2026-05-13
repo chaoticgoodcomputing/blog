@@ -8,6 +8,7 @@ import { styleText } from "util"
 import { parseMarkdown } from "./processors/parse"
 import { filterContent } from "./processors/filter"
 import { emitContent } from "./processors/emit"
+import { loadExternalContent } from "./plugins/external/inject"
 import cfg from "../quartz.config"
 import { FilePath, joinSegments, slugifyFilePath } from "./util/path"
 import chokidar from "chokidar"
@@ -50,6 +51,7 @@ async function buildQuartz(argv: Argv, mut: Mutex, clientRefresh: () => void) {
     allSlugs: [],
     allFiles: [],
     incremental: false,
+    externalUrlMap: new Map(),
   }
 
   const perf = new PerfTimer()
@@ -81,8 +83,17 @@ async function buildQuartz(argv: Argv, mut: Mutex, clientRefresh: () => void) {
   ctx.allFiles = allFiles
   ctx.allSlugs = allFiles.map((fp) => slugifyFilePath(fp as FilePath))
 
+  // Load external content stubs (synthetic VFiles representing external docs)
+  // before parseMarkdown so their slugs are visible to the link transformer.
+  const externalContent = await loadExternalContent(ctx)
+  ctx.allSlugs = [
+    ...ctx.allSlugs,
+    ...externalContent.map(([_, vf]) => vf.data.slug!),
+  ]
+
   const parsedFiles = await parseMarkdown(ctx, filePaths)
-  const filteredContent = filterContent(ctx, parsedFiles)
+  const allContent = [...parsedFiles, ...externalContent]
+  const filteredContent = filterContent(ctx, allContent)
 
   await emitContent(ctx, filteredContent)
   console.log(
@@ -92,7 +103,7 @@ async function buildQuartz(argv: Argv, mut: Mutex, clientRefresh: () => void) {
 
   if (argv.watch) {
     ctx.incremental = true
-    return startWatching(ctx, mut, parsedFiles, clientRefresh)
+    return startWatching(ctx, mut, allContent, clientRefresh)
   }
 }
 
