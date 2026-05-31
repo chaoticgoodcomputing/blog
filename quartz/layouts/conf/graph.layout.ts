@@ -50,7 +50,7 @@ export const defaultGraphOptions: Partial<D3Config> = {
     timePeriod: "month",        // Static fallback (ignored when adaptiveTimePeriod resolves)
     includePrivate: false,     // Exclude private posts by default
     adaptiveTimePeriod: {       // Auto-widen the span until at least minPosts are in view
-      minPosts: 1,              // Narrowest period with ≥1 visible post wins
+      minPosts: 3,              // Narrowest period with ≥1 visible post wins
       // order defaults to month→year→all
     },
   },
