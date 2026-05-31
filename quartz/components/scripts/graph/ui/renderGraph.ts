@@ -36,7 +36,7 @@ import {
   normalizeTagColorGradient,
   normalizePseudoShellConfig,
 } from "../adapters/configAdapter"
-import { createFilterControls, FilterState } from "./filters"
+import { createFilterControls, FilterState, resolveTimePeriod } from "./filters"
 import { filterGraphData } from "./filterLogic"
 
 export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
@@ -116,12 +116,16 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   // Apply initial filter state for global graphs before first render
   // Note: For global graph, graphConfig IS the globalGraph config (parsed from data-cfg)
   const globalGraphConfig = isGlobalGraph ? graphConfig : null
+  let initialFilterState: FilterState | null = null
   if (globalGraphConfig?.defaultFilterState) {
     const defaultState = globalGraphConfig.defaultFilterState
-    const initialFilterState: FilterState = {
-      timePeriod: defaultState.timePeriod ?? "all",
-      includePrivate: defaultState.includePrivate ?? true,
-    }
+    const includePrivate = defaultState.includePrivate ?? true
+    // Adaptive scoping resolves the default span from in-period post counts,
+    // overriding the static timePeriod when configured.
+    const timePeriod = defaultState.adaptiveTimePeriod
+      ? resolveTimePeriod(graphData.nodes, data, defaultState.adaptiveTimePeriod, includePrivate)
+      : defaultState.timePeriod ?? "all"
+    initialFilterState = { timePeriod, includePrivate }
     graphData = filterGraphData(graphData.nodes, graphData.links, data, initialFilterState)
   }
 
@@ -369,7 +373,7 @@ export async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       await rebuildGraph(graphData, true)
     }
 
-    const filterControls = createFilterControls(graph, handleFilterChange, globalGraphConfig?.defaultFilterState)
+    const filterControls = createFilterControls(graph, handleFilterChange, initialFilterState ?? globalGraphConfig?.defaultFilterState)
     filterCleanup = filterControls.cleanup
   }
 

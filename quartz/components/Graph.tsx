@@ -81,6 +81,10 @@ export interface D3Config {
   defaultFilterState?: {
     timePeriod?: 'all' | 'year' | 'month'  // Default time period filter (default: 'all')
     includePrivate?: boolean               // Default private post visibility (default: true)
+    adaptiveTimePeriod?: {                 // When set, resolves timePeriod at runtime from post counts (overrides timePeriod)
+      minPosts: number                     // Settle on the narrowest period with at least this many posts
+      order?: ('all' | 'year' | 'month')[] // Narrow→wide preference (default: ['month', 'year', 'all'])
+    }
   }
   expandSelectedSize?: number             // Percentage multiplier for expanded size (e.g., 1.5 = 150% of base size)
   expandSelectedOscillationTime?: number  // Time in seconds for full expand-contract cycle

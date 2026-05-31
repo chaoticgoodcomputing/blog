@@ -2,11 +2,20 @@
  * Graph filtering UI and logic for the global graph view
  */
 
+import type { ContentDetails } from "../../../../plugins/emitters/contentIndex"
+import type { SimpleSlug } from "../../../../util/path"
+import type { NodeData } from "../core/types"
+
 export type TimePeriod = "all" | "year" | "month"
 
 export interface FilterState {
   timePeriod: TimePeriod
   includePrivate: boolean
+}
+
+export interface AdaptiveTimePeriodConfig {
+  minPosts: number          // settle on the narrowest period with at least this many posts
+  order?: TimePeriod[]      // narrow→wide preference; default ["month", "year", "all"]
 }
 
 /**
@@ -117,4 +126,67 @@ export function getTimePeriodCutoff(period: TimePeriod): Date | null {
   }
 
   return cutoff
+}
+
+/**
+ * Count post nodes that fall within a given time period.
+ *
+ * Mirrors the post-node criteria of `shouldIncludeNode`: tag nodes are
+ * ignored, the private toggle is respected so the count reflects what the
+ * viewer will actually see, and nodes are kept when their date passes the
+ * period cutoff.
+ */
+export function countPostsInPeriod(
+  nodes: NodeData[],
+  data: Map<SimpleSlug, ContentDetails>,
+  period: TimePeriod,
+  includePrivate: boolean,
+): number {
+  const cutoffDate = getTimePeriodCutoff(period)
+  let count = 0
+
+  for (const node of nodes) {
+    if (node.id.startsWith("tags/")) continue
+
+    const contentDetails = data.get(node.id)
+    if (!contentDetails) continue
+
+    if (!includePrivate) {
+      const hasPrivateTag = contentDetails.tags.some((tag) => tag.toLowerCase() === "private")
+      if (hasPrivateTag) continue
+    }
+
+    if (cutoffDate && contentDetails.date && new Date(contentDetails.date) < cutoffDate) {
+      continue
+    }
+
+    count++
+  }
+
+  return count
+}
+
+/**
+ * Resolve the effective default time period adaptively against the data.
+ *
+ * Walks `order` from narrowest to widest and returns the first period whose
+ * in-period post count meets `minPosts`. Falls through to the widest period
+ * in `order` (defaults guarantee "all", which is always non-empty).
+ */
+export function resolveTimePeriod(
+  nodes: NodeData[],
+  data: Map<SimpleSlug, ContentDetails>,
+  config: AdaptiveTimePeriodConfig,
+  includePrivate: boolean,
+): TimePeriod {
+  const order: TimePeriod[] =
+    config.order && config.order.length > 0 ? config.order : ["month", "year", "all"]
+
+  for (const period of order) {
+    if (countPostsInPeriod(nodes, data, period, includePrivate) >= config.minPosts) {
+      return period
+    }
+  }
+
+  return order[order.length - 1]
 }
