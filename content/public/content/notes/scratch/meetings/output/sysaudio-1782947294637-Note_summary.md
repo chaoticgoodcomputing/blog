@@ -1,15 +1,10 @@
 ---
-title: "Front Page GraphQL Architecture"
-date: "2026-05-07T16:58:05.934Z"
-duration_seconds: 2264
+title: "CI Restoration and Storage Optimizations"
+date: "2026-07-01T23:18:55.796Z"
+duration_seconds: 103
 language: "en"
 is_diarised: false
 tags:
-  - "projects/dayjob"
-  - "engineering/frontend"
-  - "engineering/data"
-  - "engineering/languages/csharp"
-  - "engineering/languages/typescript"
   - "writing/annotations"
   - "private"
 ---

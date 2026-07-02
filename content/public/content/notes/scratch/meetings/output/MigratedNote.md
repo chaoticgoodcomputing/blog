@@ -1,6 +1,6 @@
 ---
 tags:
-  - "writing"
+  - "writing/annotations"
   - "private"
 ---
 

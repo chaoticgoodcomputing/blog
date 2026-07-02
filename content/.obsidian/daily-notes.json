@@ -1,0 +1,5 @@
+{
+  "format": "YYYY/MM/YYYY-MM-DD",
+  "folder": "private/content/notes/periodic/daily",
+  "template": "templates/daily.template"
+}

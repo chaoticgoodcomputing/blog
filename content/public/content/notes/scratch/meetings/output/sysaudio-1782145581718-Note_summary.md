@@ -1,15 +1,10 @@
 ---
-title: "Front Page GraphQL Architecture"
-date: "2026-05-07T16:58:05.934Z"
-duration_seconds: 2264
+title: "Front End Development Progress Update"
+date: "2026-06-22T16:38:39.254Z"
+duration_seconds: 699
 language: "en"
 is_diarised: false
 tags:
-  - "projects/dayjob"
-  - "engineering/frontend"
-  - "engineering/data"
-  - "engineering/languages/csharp"
-  - "engineering/languages/typescript"
   - "writing/annotations"
   - "private"
 ---

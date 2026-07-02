@@ -1,15 +1,10 @@
 ---
-title: "Front Page GraphQL Architecture"
-date: "2026-05-07T16:58:05.934Z"
-duration_seconds: 2264
+title: "Flow Through Publishing Upgrade and Deployment"
+date: "2026-07-01T20:23:50.659Z"
+duration_seconds: 79
 language: "en"
-is_diarised: false
+is_diarised: true
 tags:
-  - "projects/dayjob"
-  - "engineering/frontend"
-  - "engineering/data"
-  - "engineering/languages/csharp"
-  - "engineering/languages/typescript"
   - "writing/annotations"
   - "private"
 ---

@@ -1,15 +1,11 @@
 ---
-title: "Front Page GraphQL Architecture"
-date: "2026-05-07T16:58:05.934Z"
-duration_seconds: 2264
+title: "Ownership Transfer of Mock Frontend Data, Philosophy for Mock Backend Data"
+date: "2026-06-22T17:46:19.693Z"
+duration_seconds: 1311
 language: "en"
-is_diarised: false
+is_diarised: true
+updated_at: "2026-06-22T21:11:01.999Z"
 tags:
-  - "projects/dayjob"
-  - "engineering/frontend"
-  - "engineering/data"
-  - "engineering/languages/csharp"
-  - "engineering/languages/typescript"
   - "writing/annotations"
   - "private"
 ---

@@ -100,3 +100,6 @@ What is my day going to look like?
 ### Thoughts
 
 - 
+
+### Notes
+

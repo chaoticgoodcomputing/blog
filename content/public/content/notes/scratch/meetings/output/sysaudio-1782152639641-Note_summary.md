@@ -1,15 +1,11 @@
 ---
-title: "Front Page GraphQL Architecture"
-date: "2026-05-07T16:58:05.934Z"
-duration_seconds: 2264
+title: "1Password and NX Integration, Admin UI Refinement"
+date: "2026-06-22T20:23:48.981Z"
+duration_seconds: 5832
 language: "en"
-is_diarised: false
+is_diarised: true
+updated_at: "2026-06-22T21:10:29.905Z"
 tags:
-  - "projects/dayjob"
-  - "engineering/frontend"
-  - "engineering/data"
-  - "engineering/languages/csharp"
-  - "engineering/languages/typescript"
   - "writing/annotations"
   - "private"
 ---

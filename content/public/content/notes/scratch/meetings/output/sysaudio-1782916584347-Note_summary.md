@@ -1,14 +1,11 @@
 ---
-title: "ACME Project Completion and Migration Setup"
-date: "2026-04-28T12:35:08.961Z"
-duration_seconds: 156
+title: "Post-break NWYC Alignment"
+date: "2026-07-01T15:58:32.808Z"
+duration_seconds: 3559
 language: "en"
-is_diarised: false
+is_diarised: true
 tags:
-  - "projects/dayjob"
-  - "projects/homelab"
-  - "engineering/data"
-  - "writing"
+  - "writing/annotations"
   - "private"
 ---
 

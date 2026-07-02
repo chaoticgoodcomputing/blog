@@ -1,15 +1,11 @@
 ---
-title: "Front Page GraphQL Architecture"
-date: "2026-05-07T16:58:05.934Z"
-duration_seconds: 2264
+title: "NWYC Docker Compose Sweet Mirror Instance"
+date: "2026-06-22T16:29:19.278Z"
+duration_seconds: 3308
 language: "en"
-is_diarised: false
+is_diarised: true
+updated_at: "2026-06-22T21:11:17.090Z"
 tags:
-  - "projects/dayjob"
-  - "engineering/frontend"
-  - "engineering/data"
-  - "engineering/languages/csharp"
-  - "engineering/languages/typescript"
   - "writing/annotations"
   - "private"
 ---
