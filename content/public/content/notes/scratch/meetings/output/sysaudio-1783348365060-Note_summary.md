@@ -1,8 +1,10 @@
 ---
-title: "AW: Thesis Presentation Notes"
-date: "2026-01-23T00:00:00.000Z"
+title: "Sprint Planning and Project Status Review"
+date: "2026-07-06T15:15:07.591Z"
+duration_seconds: 2074
+language: "en"
+is_diarised: true
 tags:
-  - "engineering/bio"
   - "writing/annotations"
   - "private"
 ---

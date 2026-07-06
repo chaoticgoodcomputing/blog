@@ -1,8 +1,10 @@
 ---
-title: "AW: Thesis Presentation Notes"
-date: "2026-01-23T00:00:00.000Z"
+title: "Dashboard Roadmap and Infrastructure Sync"
+date: "2026-07-06T16:01:19.645Z"
+duration_seconds: 2677
+language: "en"
+is_diarised: true
 tags:
-  - "engineering/bio"
   - "writing/annotations"
   - "private"
 ---

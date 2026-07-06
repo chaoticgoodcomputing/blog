@@ -17,8 +17,4 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [National Write Your Congressman](https://www.nwyc.com/frontpage)
-- [Constituent Voice](https://constituentvoice.com/)
 - [PointyPal](https://github.com/UtahTriangle/pointypal)
-- [M Science](https://mscience.com/)
-- [Project Embrace](https://www.projectembrace.org/)

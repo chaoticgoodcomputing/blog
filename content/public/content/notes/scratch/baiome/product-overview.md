@@ -15,10 +15,5 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [DeepWiki: Agent Orchestration System](https://deepwiki.com/github/copilot-cli/6.5-agent-orchestration-system)
 - [LICENSE.txt](../external/vs-copilot/repo/LICENSE.txt)
-- [DeepWiki: Copilot CLI Agent Orchestration](https://deepwiki.com/github/copilot-cli/6.5-agent-orchestration-system)
-- [GitHub Blog: Mission Control](https://github.blog/ai-and-ml/github-copilot/how-to-orchestrate-agents-using-mission-control/)
 - [vs-copilot Repository](docs/reference/external/vs-copilot/repo/)
-- [Claude Agent SDK Docs](https://platform.claude.com/docs/en/agent-sdk/overview)
-- [VS Code Chat API](https://code.visualstudio.com/api/extension-guides/chat)

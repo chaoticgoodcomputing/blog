@@ -1,8 +1,10 @@
 ---
-title: "AW: Thesis Presentation Notes"
-date: "2026-01-23T00:00:00.000Z"
+title: "Dev Infrastructure and Login Triage"
+date: "2026-07-06T16:28:30.575Z"
+duration_seconds: 1832
+language: "en"
+is_diarised: true
 tags:
-  - "engineering/bio"
   - "writing/annotations"
   - "private"
 ---
