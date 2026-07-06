@@ -1,12 +1,16 @@
 ---
-title: "Flow Through Publishing Upgrade and Deployment"
+title: "Meeting 2026-07-01 14:23"
 date: "2026-07-01T20:23:50.659Z"
 duration_seconds: 79
 language: "en"
 is_diarised: true
 tags:
+  - "engineering/ai"
+  - "projects/flowthru"
+  - "writing/annotations"
   - "writing/annotations"
   - "private"
+auto_tagged: true
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.

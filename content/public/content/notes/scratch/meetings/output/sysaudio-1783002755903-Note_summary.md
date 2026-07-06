@@ -1,12 +1,16 @@
 ---
-title: "Sprint Progress and Migration Updates"
+title: "Meeting 2026-07-02 09:04"
 date: "2026-07-02T15:04:36.891Z"
 duration_seconds: 1484
 language: "en"
 is_diarised: true
 tags:
   - "writing/annotations"
+  - "projects/flowthru"
+  - "horticulture/seasons/systems"
+  - "writing/annotations"
   - "private"
+auto_tagged: true
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.

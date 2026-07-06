@@ -1,12 +1,16 @@
 ---
-title: "Dev Infrastructure and Login Triage"
+title: "Meeting 2026-07-06 10:28"
 date: "2026-07-06T16:28:30.575Z"
 duration_seconds: 1832
 language: "en"
 is_diarised: true
 tags:
+  - "engineering/ai"
+  - "engineering/languages/csharp"
+  - "projects/flowthru"
   - "writing/annotations"
   - "private"
+auto_tagged: true
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.

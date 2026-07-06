@@ -1,12 +1,16 @@
 ---
-title: "CI Restoration and Storage Optimizations"
+title: "Meeting 2026-07-01 17:18"
 date: "2026-07-01T23:18:55.796Z"
 duration_seconds: 103
 language: "en"
 is_diarised: false
 tags:
+  - "engineering/ai"
+  - "projects/flowthru"
+  - "writing/annotations"
   - "writing/annotations"
   - "private"
+auto_tagged: true
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.

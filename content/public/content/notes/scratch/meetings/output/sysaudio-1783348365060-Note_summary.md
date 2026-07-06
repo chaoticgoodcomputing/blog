@@ -1,12 +1,15 @@
 ---
-title: "Sprint Planning and Project Status Review"
+title: "Meeting 2026-07-06 09:15"
 date: "2026-07-06T15:15:07.591Z"
 duration_seconds: 2074
 language: "en"
 is_diarised: true
 tags:
+  - "engineering/languages/csharp"
+  - "projects/flowthru"
   - "writing/annotations"
   - "private"
+auto_tagged: true
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.

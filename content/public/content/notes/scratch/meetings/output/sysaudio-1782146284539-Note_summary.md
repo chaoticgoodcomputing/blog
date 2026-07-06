@@ -1,13 +1,15 @@
 ---
-title: "Ownership Transfer of Mock Frontend Data, Philosophy for Mock Backend Data"
+title: "Meeting 2026-06-22 11:46"
 date: "2026-06-22T17:46:19.693Z"
 duration_seconds: 1311
 language: "en"
 is_diarised: true
 updated_at: "2026-06-22T21:11:01.999Z"
 tags:
+  - "engineering/ai"
   - "writing/annotations"
   - "private"
+auto_tagged: true
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.

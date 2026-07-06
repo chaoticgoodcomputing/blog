@@ -1,16 +1,15 @@
 ---
-title: "Meeting 2026-05-05 12:13"
-date: "2026-05-05T12:13:18.823Z"
-duration_seconds: 7425
+title: "Meeting 2026-07-06 12:22"
+date: "2026-07-06T18:22:08.610Z"
+duration_seconds: 461
 language: "en"
-is_diarised: false
+is_diarised: true
 tags:
-  - "projects/dayjob"
-  - "economics/finance"
-  - "engineering/frontend"
-  - "engineering/languages/csharp"
+  - "engineering/ai"
+  - "engineering"
   - "writing/annotations"
   - "private"
+auto_tagged: true
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
@@ -22,4 +21,4 @@ If you are interested in what this note contains, please [[/contact|reach out to
 
 This note originally contained the following links:
 
-- [Daily Note](/content/notes/periodic/daily/2026/05/2026-05-05)
+- [Daily Note](/content/notes/periodic/daily/2026/07/2026-07-06)

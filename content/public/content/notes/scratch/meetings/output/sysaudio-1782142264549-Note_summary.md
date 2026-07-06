@@ -1,13 +1,16 @@
 ---
-title: "NWYC Docker Compose Sweet Mirror Instance"
+title: "Meeting 2026-06-22 10:29"
 date: "2026-06-22T16:29:19.278Z"
 duration_seconds: 3308
 language: "en"
 is_diarised: true
 updated_at: "2026-06-22T21:11:17.090Z"
 tags:
+  - "engineering/languages/csharp"
+  - "engineering/ai"
   - "writing/annotations"
   - "private"
+auto_tagged: true
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.

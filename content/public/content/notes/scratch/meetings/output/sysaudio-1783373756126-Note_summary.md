@@ -1,12 +1,16 @@
 ---
-title: "Stack Redeployment and Execution Plan"
-date: "2026-07-06T16:45:42.113Z"
-duration_seconds: 1241
+title: "Meeting 2026-07-06 16:13"
+date: "2026-07-06T22:13:19.625Z"
+duration_seconds: 1908
 language: "en"
 is_diarised: true
 tags:
+  - "engineering/languages/csharp"
+  - "economics/finance"
+  - "projects/flowthru"
   - "writing/annotations"
   - "private"
+auto_tagged: true
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.

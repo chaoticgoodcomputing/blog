@@ -1,13 +1,15 @@
 ---
-title: "1Password and NX Integration, Admin UI Refinement"
+title: "Meeting 2026-06-22 14:23"
 date: "2026-06-22T20:23:48.981Z"
 duration_seconds: 5832
 language: "en"
 is_diarised: true
 updated_at: "2026-06-22T21:10:29.905Z"
 tags:
+  - "engineering/ai"
   - "writing/annotations"
   - "private"
+auto_tagged: true
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
