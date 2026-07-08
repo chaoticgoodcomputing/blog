@@ -85,6 +85,8 @@ const config: QuartzConfig = {
         { tag: "writing/articles", icon: "mdi:file-edit" },
         { tag: "writing/tutorials", icon: "mdi:map" },
 
+        { tag: "writing/annotations/meetings", icon: "mdi:account-group" },
+
         { tag: "horticulture/seasons", icon: "mdi:weather-sunny" },
         
         // Top-level Categories

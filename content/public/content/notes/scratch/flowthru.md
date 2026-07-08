@@ -13,7 +13,7 @@ description: "Closing out the season of systems with a broader release of Flowth
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
 
-If you are interested in what this note contains, please [[/contact|reach out to me!]] If it's not anything terribly sensitive, I'm happy to chat about it!
+If you are interested in what this note contains, please reach out! If it's not anything terribly sensitive, I'm happy to chat about it!
 
 
 ## Links
