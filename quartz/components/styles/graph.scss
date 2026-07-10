@@ -9,30 +9,37 @@
       border-radius: 5px;
       border: 1px solid var(--lightgray);
       box-sizing: border-box;
-      height: 250px;
+      // Keep the graph box square: its height always tracks its width.
+      aspect-ratio: 1 / 1;
       margin: 0.5em 0;
       position: relative;
       overflow: hidden;
 
+      &>.graph-container {
+        position: absolute;
+        inset: 0;
+      }
+
       &>.global-graph-icon {
         cursor: pointer;
-        background: none;
         border: none;
         color: var(--dark);
         opacity: 0.5;
-        width: 24px;
-        height: 24px;
         position: absolute;
-        padding: 0.2rem;
+        padding: 0.2rem 0.4rem;
         margin: 0.3rem;
         top: 0;
         right: 0;
         border-radius: 4px;
         background-color: transparent;
-        transition: background-color 0.5s ease;
-        cursor: pointer;
+        font-family: var(--codeFont);
+        font-size: 0.7rem;
+        line-height: 1;
+        white-space: nowrap;
+        transition: background-color 0.5s ease, opacity 0.5s ease;
 
         &:hover {
+          opacity: 1;
           background-color: var(--lightgray);
         }
       }

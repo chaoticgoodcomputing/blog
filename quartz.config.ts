@@ -85,8 +85,6 @@ const config: QuartzConfig = {
         { tag: "writing/articles", icon: "mdi:file-edit" },
         { tag: "writing/tutorials", icon: "mdi:map" },
 
-        { tag: "writing/annotations/meetings", icon: "mdi:account-group" },
-
         { tag: "horticulture/seasons", icon: "mdi:weather-sunny" },
         
         // Top-level Categories
@@ -105,6 +103,9 @@ const config: QuartzConfig = {
 
         // Dayjob
         { tag: "projects/dayjob", icon: "mdi:vote" },
+
+        // Misc
+        { tag: "writing/annotations/meetings", icon: "mdi:account-group" },
 
         // Access/Privacy
         { tag: "private", icon: "mdi:lock" },

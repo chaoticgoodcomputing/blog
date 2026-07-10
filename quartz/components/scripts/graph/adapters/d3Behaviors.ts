@@ -243,64 +243,20 @@ export function setupHoverBehavior(
     
     // Update hover state if changed
     if (hoveredNode !== hoverState.hoveredNodeId) {
-      hoverState.hoveredNodeId = hoveredNode
-      
-      // Update active/hover states for nodes and links
-      if (hoveredNode) {
-        const hoveredNodeData = nodeRenderData.find(n => n.simulationData.id === hoveredNode)
-        if (hoveredNodeData) {
-          // Calculate neighborhood
-          const neighbors = new Set<string>()
-          for (const link of linkRenderData) {
-            if (link.simulationData.source.id === hoveredNode) {
-              neighbors.add(link.simulationData.target.id)
-            }
-            if (link.simulationData.target.id === hoveredNode) {
-              neighbors.add(link.simulationData.source.id)
-            }
-          }
-          hoverState.hoveredNeighbours = neighbors
-          
-          // Update active states
-          for (const node of nodeRenderData) {
-            node.active = node.simulationData.id === hoveredNode || neighbors.has(node.simulationData.id)
-          }
-          for (const link of linkRenderData) {
-            link.active = link.simulationData.source.id === hoveredNode || 
-                         link.simulationData.target.id === hoveredNode
-          }
-        }
-        canvas.style.cursor = "pointer"
-      } else {
-        // Clear active states
-        for (const node of nodeRenderData) {
-          node.active = false
-        }
-        for (const link of linkRenderData) {
-          link.active = false
-        }
-        hoverState.hoveredNeighbours.clear()
-        canvas.style.cursor = "default"
-      }
-      
+      // Recompute active/hover states, recursing through tag subtrees for tags
+      updateHoverInfo(hoverState, linkRenderData, nodeRenderData, hoveredNode)
+      canvas.style.cursor = hoveredNode ? "pointer" : "default"
+
       if (!hoverState.dragging) {
         renderAll()
       }
     }
   })
-  
+
   canvas.addEventListener("mouseleave", () => {
     if (hoverState.hoveredNodeId !== null) {
-      hoverState.hoveredNodeId = null
-      hoverState.hoveredNeighbours.clear()
-      
-      for (const node of nodeRenderData) {
-        node.active = false
-      }
-      for (const link of linkRenderData) {
-        link.active = false
-      }
-      
+      updateHoverInfo(hoverState, linkRenderData, nodeRenderData, null)
+
       canvas.style.cursor = "default"
       if (!hoverState.dragging) {
         renderAll()
