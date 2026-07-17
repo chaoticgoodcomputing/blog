@@ -8,8 +8,8 @@ tags:
   - "engineering/devops"
   - "engineering/ai"
   - "economics/finance"
-  - "writing/annotations/meetings"
   - "projects/dayjob"
+  - "writing/annotations/meetings"
   - "private"
 auto_tagged: true
 ---

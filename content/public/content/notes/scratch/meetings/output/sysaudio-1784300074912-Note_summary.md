@@ -1,13 +1,12 @@
 ---
-title: "Meeting 2026-07-07 09:44"
-date: "2026-07-07T15:44:02.449Z"
-duration_seconds: 1622
+title: "Meeting 2026-07-17 10:40"
+date: "2026-07-17T16:40:48.271Z"
+duration_seconds: 5413
 language: "en"
 is_diarised: true
 tags:
-  - "engineering/data"
-  - "engineering/ai"
   - "engineering/languages/csharp"
+  - "engineering/ai"
   - "projects/dayjob"
   - "writing/annotations/meetings"
   - "private"
@@ -23,4 +22,4 @@ If you are interested in what this note contains, please reach out! If it's not 
 
 This note originally contained the following links:
 
-- [Daily Note](/content/notes/periodic/daily/2026/07/2026-07-07)
+- [Daily Note](/content/notes/periodic/daily/2026/07/2026-07-17)

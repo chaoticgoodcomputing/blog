@@ -6,10 +6,11 @@ language: "en"
 is_diarised: true
 updated_at: "2026-06-22T21:11:17.090Z"
 tags:
-  - "writing/annotations/meetings"
-  - "projects/dayjob"
+  - "engineering/data"
   - "engineering/languages/csharp"
   - "engineering/ai"
+  - "projects/dayjob"
+  - "writing/annotations/meetings"
   - "private"
 auto_tagged: true
 ---

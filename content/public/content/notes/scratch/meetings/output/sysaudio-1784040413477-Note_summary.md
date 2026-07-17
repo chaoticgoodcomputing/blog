@@ -6,8 +6,8 @@ language: "en"
 is_diarised: true
 tags:
   - "engineering/languages/csharp"
-  - "writing/annotations/meetings"
   - "projects/dayjob"
+  - "writing/annotations/meetings"
   - "private"
 auto_tagged: true
 ---

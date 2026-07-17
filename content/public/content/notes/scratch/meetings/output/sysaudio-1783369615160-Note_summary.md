@@ -5,10 +5,11 @@ duration_seconds: 162
 language: "en"
 is_diarised: true
 tags:
-  - "writing/annotations/meetings"
-  - "projects/dayjob"
+  - "engineering/data"
   - "engineering/languages/csharp"
   - "horticulture/seasons/systems"
+  - "projects/dayjob"
+  - "writing/annotations/meetings"
   - "private"
 auto_tagged: true
 ---

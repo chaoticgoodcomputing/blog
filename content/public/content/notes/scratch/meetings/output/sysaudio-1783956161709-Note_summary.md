@@ -7,8 +7,8 @@ is_diarised: true
 tags:
   - "projects/flowthru"
   - "engineering/languages/csharp"
-  - "writing/annotations/meetings"
   - "projects/dayjob"
+  - "writing/annotations/meetings"
   - "private"
 auto_tagged: true
 ---

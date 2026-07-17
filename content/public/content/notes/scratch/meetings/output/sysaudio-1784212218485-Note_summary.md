@@ -8,8 +8,8 @@ tags:
   - "engineering/ai"
   - "projects/games/magic-atlas"
   - "engineering/languages/csharp"
-  - "writing/annotations/meetings"
   - "projects/dayjob"
+  - "writing/annotations/meetings"
   - "private"
 auto_tagged: true
 ---

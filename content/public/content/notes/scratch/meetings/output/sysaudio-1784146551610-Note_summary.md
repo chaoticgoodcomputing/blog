@@ -7,8 +7,8 @@ is_diarised: true
 tags:
   - "engineering/ai"
   - "projects/games/magic-atlas"
-  - "writing/annotations/meetings"
   - "projects/dayjob"
+  - "writing/annotations/meetings"
   - "private"
 auto_tagged: true
 ---

@@ -6,8 +6,9 @@ language: "en"
 is_diarised: true
 auto_tagged: true
 tags:
-  - "writing/annotations/meetings"
+  - "engineering/data"
   - "projects/dayjob"
+  - "writing/annotations/meetings"
   - "private"
 ---
 

@@ -5,11 +5,12 @@ duration_seconds: 1484
 language: "en"
 is_diarised: true
 tags:
-  - "writing/annotations/meetings"
-  - "projects/dayjob"
+  - "engineering/data"
   - "writing/annotations"
   - "projects/flowthru"
   - "horticulture/seasons/systems"
+  - "projects/dayjob"
+  - "writing/annotations/meetings"
   - "private"
 auto_tagged: true
 ---

@@ -5,11 +5,12 @@ duration_seconds: 1908
 language: "en"
 is_diarised: true
 tags:
-  - "writing/annotations/meetings"
-  - "projects/dayjob"
+  - "engineering/data"
   - "engineering/languages/csharp"
   - "economics/finance"
   - "projects/flowthru"
+  - "projects/dayjob"
+  - "writing/annotations/meetings"
   - "private"
 auto_tagged: true
 ---

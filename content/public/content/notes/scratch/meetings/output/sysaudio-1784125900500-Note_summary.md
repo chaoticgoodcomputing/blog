@@ -8,8 +8,8 @@ tags:
   - "engineering/languages/csharp"
   - "engineering/ai"
   - "projects/flowthru"
-  - "writing/annotations/meetings"
   - "projects/dayjob"
+  - "writing/annotations/meetings"
   - "private"
 auto_tagged: true
 ---
