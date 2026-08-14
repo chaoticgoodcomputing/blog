@@ -1,0 +1,794 @@
+{
+  "tags": {
+    "economics": {
+      "tag": "economics",
+      "slug": "tags/economics",
+      "color": "#de8200",
+      "icon": "mdi:earth",
+      "parent": null,
+      "children": [
+        "economics/finance",
+        "economics/markets",
+        "economics/policy",
+        "economics/strategy"
+      ],
+      "ancestors": [],
+      "descendants": [
+        "economics/finance",
+        "economics/markets",
+        "economics/policy",
+        "economics/strategy"
+      ],
+      "depth": 0,
+      "postCount": 5,
+      "totalPostCount": 33
+    },
+    "economics/finance": {
+      "tag": "economics/finance",
+      "slug": "tags/economics/finance",
+      "color": "#de8200",
+      "icon": "mdi:currency-usd",
+      "parent": "economics",
+      "children": [],
+      "ancestors": [
+        "economics"
+      ],
+      "descendants": [],
+      "depth": 1,
+      "postCount": 11,
+      "totalPostCount": 11
+    },
+    "economics/markets": {
+      "tag": "economics/markets",
+      "slug": "tags/economics/markets",
+      "color": "#de8200",
+      "icon": "mdi:handshake",
+      "parent": "economics",
+      "children": [],
+      "ancestors": [
+        "economics"
+      ],
+      "descendants": [],
+      "depth": 1,
+      "postCount": 6,
+      "totalPostCount": 6
+    },
+    "economics/policy": {
+      "tag": "economics/policy",
+      "slug": "tags/economics/policy",
+      "color": "#de8200",
+      "icon": "mdi:script",
+      "parent": "economics",
+      "children": [],
+      "ancestors": [
+        "economics"
+      ],
+      "descendants": [],
+      "depth": 1,
+      "postCount": 5,
+      "totalPostCount": 5
+    },
+    "economics/strategy": {
+      "tag": "economics/strategy",
+      "slug": "tags/economics/strategy",
+      "color": "#de8200",
+      "icon": "mdi:arrow-decision",
+      "parent": "economics",
+      "children": [],
+      "ancestors": [
+        "economics"
+      ],
+      "descendants": [],
+      "depth": 1,
+      "postCount": 6,
+      "totalPostCount": 6
+    },
+    "engineering": {
+      "tag": "engineering",
+      "slug": "tags/engineering",
+      "color": "#008CFF",
+      "icon": "mdi:wrench",
+      "parent": null,
+      "children": [
+        "engineering/ai",
+        "engineering/bio",
+        "engineering/data",
+        "engineering/devops",
+        "engineering/frontend",
+        "engineering/languages"
+      ],
+      "ancestors": [],
+      "descendants": [
+        "engineering/ai",
+        "engineering/bio",
+        "engineering/data",
+        "engineering/devops",
+        "engineering/frontend",
+        "engineering/languages",
+        "engineering/languages/csharp",
+        "engineering/languages/lua",
+        "engineering/languages/python",
+        "engineering/languages/scratch",
+        "engineering/languages/typescript"
+      ],
+      "depth": 0,
+      "postCount": 10,
+      "totalPostCount": 262
+    },
+    "engineering/ai": {
+      "tag": "engineering/ai",
+      "slug": "tags/engineering/ai",
+      "color": "#008CFF",
+      "icon": "mdi:robot",
+      "parent": "engineering",
+      "children": [],
+      "ancestors": [
+        "engineering"
+      ],
+      "descendants": [],
+      "depth": 1,
+      "postCount": 45,
+      "totalPostCount": 45
+    },
+    "engineering/bio": {
+      "tag": "engineering/bio",
+      "slug": "tags/engineering/bio",
+      "color": "#008CFF",
+      "icon": "mdi:dna",
+      "parent": "engineering",
+      "children": [],
+      "ancestors": [
+        "engineering"
+      ],
+      "descendants": [],
+      "depth": 1,
+      "postCount": 12,
+      "totalPostCount": 12
+    },
+    "engineering/data": {
+      "tag": "engineering/data",
+      "slug": "tags/engineering/data",
+      "color": "#008CFF",
+      "icon": "mdi:pulse",
+      "parent": "engineering",
+      "children": [],
+      "ancestors": [
+        "engineering"
+      ],
+      "descendants": [],
+      "depth": 1,
+      "postCount": 47,
+      "totalPostCount": 47
+    },
+    "engineering/devops": {
+      "tag": "engineering/devops",
+      "slug": "tags/engineering/devops",
+      "color": "#008CFF",
+      "icon": "mdi:cloud",
+      "parent": "engineering",
+      "children": [],
+      "ancestors": [
+        "engineering"
+      ],
+      "descendants": [],
+      "depth": 1,
+      "postCount": 20,
+      "totalPostCount": 20
+    },
+    "engineering/frontend": {
+      "tag": "engineering/frontend",
+      "slug": "tags/engineering/frontend",
+      "color": "#008CFF",
+      "icon": "mdi:palette",
+      "parent": "engineering",
+      "children": [],
+      "ancestors": [
+        "engineering"
+      ],
+      "descendants": [],
+      "depth": 1,
+      "postCount": 15,
+      "totalPostCount": 15
+    },
+    "engineering/languages": {
+      "tag": "engineering/languages",
+      "slug": "tags/engineering/languages",
+      "color": "#008CFF",
+      "icon": "mdi:code-braces",
+      "parent": "engineering",
+      "children": [
+        "engineering/languages/csharp",
+        "engineering/languages/lua",
+        "engineering/languages/python",
+        "engineering/languages/scratch",
+        "engineering/languages/typescript"
+      ],
+      "ancestors": [
+        "engineering"
+      ],
+      "descendants": [
+        "engineering/languages/csharp",
+        "engineering/languages/lua",
+        "engineering/languages/python",
+        "engineering/languages/scratch",
+        "engineering/languages/typescript"
+      ],
+      "depth": 1,
+      "postCount": 0,
+      "totalPostCount": 113
+    },
+    "engineering/languages/csharp": {
+      "tag": "engineering/languages/csharp",
+      "slug": "tags/engineering/languages/csharp",
+      "color": "#008CFF",
+      "icon": "mdi:language-csharp",
+      "parent": "engineering/languages",
+      "children": [],
+      "ancestors": [
+        "engineering/languages",
+        "engineering"
+      ],
+      "descendants": [],
+      "depth": 2,
+      "postCount": 63,
+      "totalPostCount": 63
+    },
+    "engineering/languages/lua": {
+      "tag": "engineering/languages/lua",
+      "slug": "tags/engineering/languages/lua",
+      "color": "#008CFF",
+      "icon": "mdi:language-lua",
+      "parent": "engineering/languages",
+      "children": [],
+      "ancestors": [
+        "engineering/languages",
+        "engineering"
+      ],
+      "descendants": [],
+      "depth": 2,
+      "postCount": 2,
+      "totalPostCount": 2
+    },
+    "engineering/languages/python": {
+      "tag": "engineering/languages/python",
+      "slug": "tags/engineering/languages/python",
+      "color": "#008CFF",
+      "icon": "mdi:language-python",
+      "parent": "engineering/languages",
+      "children": [],
+      "ancestors": [
+        "engineering/languages",
+        "engineering"
+      ],
+      "descendants": [],
+      "depth": 2,
+      "postCount": 14,
+      "totalPostCount": 14
+    },
+    "engineering/languages/scratch": {
+      "tag": "engineering/languages/scratch",
+      "slug": "tags/engineering/languages/scratch",
+      "color": "#008CFF",
+      "icon": "mdi:cat",
+      "parent": "engineering/languages",
+      "children": [],
+      "ancestors": [
+        "engineering/languages",
+        "engineering"
+      ],
+      "descendants": [],
+      "depth": 2,
+      "postCount": 3,
+      "totalPostCount": 3
+    },
+    "engineering/languages/typescript": {
+      "tag": "engineering/languages/typescript",
+      "slug": "tags/engineering/languages/typescript",
+      "color": "#008CFF",
+      "icon": "mdi:language-typescript",
+      "parent": "engineering/languages",
+      "children": [],
+      "ancestors": [
+        "engineering/languages",
+        "engineering"
+      ],
+      "descendants": [],
+      "depth": 2,
+      "postCount": 31,
+      "totalPostCount": 31
+    },
+    "horticulture": {
+      "tag": "horticulture",
+      "slug": "tags/horticulture",
+      "color": "#00FF00",
+      "icon": "mdi:flower",
+      "parent": null,
+      "children": [
+        "horticulture/seasons"
+      ],
+      "ancestors": [],
+      "descendants": [
+        "horticulture/seasons",
+        "horticulture/seasons/rhythm",
+        "horticulture/seasons/systems"
+      ],
+      "depth": 0,
+      "postCount": 0,
+      "totalPostCount": 180
+    },
+    "horticulture/seasons": {
+      "tag": "horticulture/seasons",
+      "slug": "tags/horticulture/seasons",
+      "color": "#00FF00",
+      "icon": "mdi:weather-sunny",
+      "parent": "horticulture",
+      "children": [
+        "horticulture/seasons/rhythm",
+        "horticulture/seasons/systems"
+      ],
+      "ancestors": [
+        "horticulture"
+      ],
+      "descendants": [
+        "horticulture/seasons/rhythm",
+        "horticulture/seasons/systems"
+      ],
+      "depth": 1,
+      "postCount": 0,
+      "totalPostCount": 180
+    },
+    "horticulture/seasons/rhythm": {
+      "tag": "horticulture/seasons/rhythm",
+      "slug": "tags/horticulture/seasons/rhythm",
+      "color": "#00FF00",
+      "icon": "mdi:music-note",
+      "parent": "horticulture/seasons",
+      "children": [],
+      "ancestors": [
+        "horticulture/seasons",
+        "horticulture"
+      ],
+      "descendants": [],
+      "depth": 2,
+      "postCount": 55,
+      "totalPostCount": 55
+    },
+    "horticulture/seasons/systems": {
+      "tag": "horticulture/seasons/systems",
+      "slug": "tags/horticulture/seasons/systems",
+      "color": "#00FF00",
+      "icon": "mdi:connection",
+      "parent": "horticulture/seasons",
+      "children": [],
+      "ancestors": [
+        "horticulture/seasons",
+        "horticulture"
+      ],
+      "descendants": [],
+      "depth": 2,
+      "postCount": 125,
+      "totalPostCount": 125
+    },
+    "private": {
+      "tag": "private",
+      "slug": "tags/private",
+      "color": "#FF0000",
+      "icon": "mdi:lock",
+      "parent": null,
+      "children": [],
+      "ancestors": [],
+      "descendants": [],
+      "depth": 0,
+      "postCount": 483,
+      "totalPostCount": 483
+    },
+    "projects": {
+      "tag": "projects",
+      "slug": "tags/projects",
+      "color": "#FF0000",
+      "icon": "mdi:source-branch",
+      "parent": null,
+      "children": [
+        "projects/dayjob",
+        "projects/flowthru",
+        "projects/games",
+        "projects/homelab",
+        "projects/site",
+        "projects/teaching",
+        "projects/undergrad"
+      ],
+      "ancestors": [],
+      "descendants": [
+        "projects/dayjob",
+        "projects/flowthru",
+        "projects/games",
+        "projects/games/magic-atlas",
+        "projects/games/roblox",
+        "projects/games/the-neighborhood",
+        "projects/homelab",
+        "projects/site",
+        "projects/teaching",
+        "projects/undergrad"
+      ],
+      "depth": 0,
+      "postCount": 1,
+      "totalPostCount": 494
+    },
+    "projects/dayjob": {
+      "tag": "projects/dayjob",
+      "slug": "tags/projects/dayjob",
+      "color": "#FF0000",
+      "icon": "mdi:vote",
+      "parent": "projects",
+      "children": [],
+      "ancestors": [
+        "projects"
+      ],
+      "descendants": [],
+      "depth": 1,
+      "postCount": 166,
+      "totalPostCount": 166
+    },
+    "projects/flowthru": {
+      "tag": "projects/flowthru",
+      "slug": "tags/projects/flowthru",
+      "color": "#FF0000",
+      "icon": "mdi:graph-outline",
+      "parent": "projects",
+      "children": [],
+      "ancestors": [
+        "projects"
+      ],
+      "descendants": [],
+      "depth": 1,
+      "postCount": 14,
+      "totalPostCount": 14
+    },
+    "projects/games": {
+      "tag": "projects/games",
+      "slug": "tags/projects/games",
+      "color": "#FF0000",
+      "icon": "custom:d20",
+      "parent": "projects",
+      "children": [
+        "projects/games/magic-atlas",
+        "projects/games/roblox",
+        "projects/games/the-neighborhood"
+      ],
+      "ancestors": [
+        "projects"
+      ],
+      "descendants": [
+        "projects/games/magic-atlas",
+        "projects/games/roblox",
+        "projects/games/the-neighborhood"
+      ],
+      "depth": 1,
+      "postCount": 3,
+      "totalPostCount": 269
+    },
+    "projects/games/magic-atlas": {
+      "tag": "projects/games/magic-atlas",
+      "slug": "tags/projects/games/magic-atlas",
+      "color": "#FF0000",
+      "icon": "mdi:cards-outline",
+      "parent": "projects/games",
+      "children": [],
+      "ancestors": [
+        "projects/games",
+        "projects"
+      ],
+      "descendants": [],
+      "depth": 2,
+      "postCount": 7,
+      "totalPostCount": 7
+    },
+    "projects/games/roblox": {
+      "tag": "projects/games/roblox",
+      "slug": "tags/projects/games/roblox",
+      "color": "#FF0000",
+      "icon": "custom:roblox",
+      "parent": "projects/games",
+      "children": [],
+      "ancestors": [
+        "projects/games",
+        "projects"
+      ],
+      "descendants": [],
+      "depth": 2,
+      "postCount": 2,
+      "totalPostCount": 2
+    },
+    "projects/games/the-neighborhood": {
+      "tag": "projects/games/the-neighborhood",
+      "slug": "tags/projects/games/the-neighborhood",
+      "color": "#FF0000",
+      "icon": "mdi:city",
+      "parent": "projects/games",
+      "children": [],
+      "ancestors": [
+        "projects/games",
+        "projects"
+      ],
+      "descendants": [],
+      "depth": 2,
+      "postCount": 257,
+      "totalPostCount": 257
+    },
+    "projects/homelab": {
+      "tag": "projects/homelab",
+      "slug": "tags/projects/homelab",
+      "color": "#FF0000",
+      "icon": "mdi:home-sound-out",
+      "parent": "projects",
+      "children": [],
+      "ancestors": [
+        "projects"
+      ],
+      "descendants": [],
+      "depth": 1,
+      "postCount": 14,
+      "totalPostCount": 14
+    },
+    "projects/site": {
+      "tag": "projects/site",
+      "slug": "tags/projects/site",
+      "color": "#FF0000",
+      "icon": "custom:quartz-filled",
+      "parent": "projects",
+      "children": [],
+      "ancestors": [
+        "projects"
+      ],
+      "descendants": [],
+      "depth": 1,
+      "postCount": 14,
+      "totalPostCount": 14
+    },
+    "projects/teaching": {
+      "tag": "projects/teaching",
+      "slug": "tags/projects/teaching",
+      "color": "#FF0000",
+      "icon": "mdi:school",
+      "parent": "projects",
+      "children": [],
+      "ancestors": [
+        "projects"
+      ],
+      "descendants": [],
+      "depth": 1,
+      "postCount": 4,
+      "totalPostCount": 4
+    },
+    "projects/undergrad": {
+      "tag": "projects/undergrad",
+      "slug": "tags/projects/undergrad",
+      "color": "#FF0000",
+      "icon": "custom:uofu",
+      "parent": "projects",
+      "children": [],
+      "ancestors": [
+        "projects"
+      ],
+      "descendants": [],
+      "depth": 1,
+      "postCount": 12,
+      "totalPostCount": 12
+    },
+    "writing": {
+      "tag": "writing",
+      "slug": "tags/writing",
+      "color": "#FFD637",
+      "icon": "mdi:pencil",
+      "parent": null,
+      "children": [
+        "writing/annotations",
+        "writing/articles",
+        "writing/highlights",
+        "writing/tutorials"
+      ],
+      "ancestors": [],
+      "descendants": [
+        "writing/annotations",
+        "writing/annotations/a-pattern-language",
+        "writing/annotations/meetings",
+        "writing/articles",
+        "writing/highlights",
+        "writing/tutorials"
+      ],
+      "depth": 0,
+      "postCount": 4,
+      "totalPostCount": 361
+    },
+    "writing/annotations": {
+      "tag": "writing/annotations",
+      "slug": "tags/writing/annotations",
+      "color": "#FFD637",
+      "icon": "mdi:chat-plus",
+      "parent": "writing",
+      "children": [
+        "writing/annotations/a-pattern-language",
+        "writing/annotations/meetings"
+      ],
+      "ancestors": [
+        "writing"
+      ],
+      "descendants": [
+        "writing/annotations/a-pattern-language",
+        "writing/annotations/meetings"
+      ],
+      "depth": 1,
+      "postCount": 26,
+      "totalPostCount": 335
+    },
+    "writing/annotations/a-pattern-language": {
+      "tag": "writing/annotations/a-pattern-language",
+      "slug": "tags/writing/annotations/a-pattern-language",
+      "color": "#FFD637",
+      "icon": "mdi:home-city",
+      "parent": "writing/annotations",
+      "children": [],
+      "ancestors": [
+        "writing/annotations",
+        "writing"
+      ],
+      "descendants": [],
+      "depth": 2,
+      "postCount": 257,
+      "totalPostCount": 257
+    },
+    "writing/annotations/meetings": {
+      "tag": "writing/annotations/meetings",
+      "slug": "tags/writing/annotations/meetings",
+      "color": "#FFD637",
+      "icon": "mdi:account-group",
+      "parent": "writing/annotations",
+      "children": [],
+      "ancestors": [
+        "writing/annotations",
+        "writing"
+      ],
+      "descendants": [],
+      "depth": 2,
+      "postCount": 52,
+      "totalPostCount": 52
+    },
+    "writing/articles": {
+      "tag": "writing/articles",
+      "slug": "tags/writing/articles",
+      "color": "#FFD637",
+      "icon": "mdi:file-edit",
+      "parent": "writing",
+      "children": [],
+      "ancestors": [
+        "writing"
+      ],
+      "descendants": [],
+      "depth": 1,
+      "postCount": 6,
+      "totalPostCount": 6
+    },
+    "writing/highlights": {
+      "tag": "writing/highlights",
+      "slug": "tags/writing/highlights",
+      "color": "#FFD637",
+      "icon": "mdi:star",
+      "parent": "writing",
+      "children": [],
+      "ancestors": [
+        "writing"
+      ],
+      "descendants": [],
+      "depth": 1,
+      "postCount": 11,
+      "totalPostCount": 11
+    },
+    "writing/tutorials": {
+      "tag": "writing/tutorials",
+      "slug": "tags/writing/tutorials",
+      "color": "#FFD637",
+      "icon": "mdi:map",
+      "parent": "writing",
+      "children": [],
+      "ancestors": [
+        "writing"
+      ],
+      "descendants": [],
+      "depth": 1,
+      "postCount": 5,
+      "totalPostCount": 5
+    }
+  },
+  "topLevelTags": [
+    "economics",
+    "engineering",
+    "horticulture",
+    "private",
+    "projects",
+    "writing"
+  ],
+  "allTags": [
+    "economics",
+    "economics/finance",
+    "economics/markets",
+    "economics/policy",
+    "economics/strategy",
+    "engineering",
+    "engineering/ai",
+    "engineering/bio",
+    "engineering/data",
+    "engineering/devops",
+    "engineering/frontend",
+    "engineering/languages",
+    "engineering/languages/csharp",
+    "engineering/languages/lua",
+    "engineering/languages/python",
+    "engineering/languages/scratch",
+    "engineering/languages/typescript",
+    "horticulture",
+    "horticulture/seasons",
+    "horticulture/seasons/rhythm",
+    "horticulture/seasons/systems",
+    "private",
+    "projects",
+    "projects/dayjob",
+    "projects/flowthru",
+    "projects/games",
+    "projects/games/magic-atlas",
+    "projects/games/roblox",
+    "projects/games/the-neighborhood",
+    "projects/homelab",
+    "projects/site",
+    "projects/teaching",
+    "projects/undergrad",
+    "writing",
+    "writing/annotations",
+    "writing/annotations/a-pattern-language",
+    "writing/annotations/meetings",
+    "writing/articles",
+    "writing/highlights",
+    "writing/tutorials"
+  ],
+  "iconConfigOrder": [
+    "writing/highlights",
+    "projects/games/roblox",
+    "projects/games/magic-atlas",
+    "projects/flowthru",
+    "projects/homelab",
+    "engineering/bio",
+    "engineering/languages",
+    "engineering/data",
+    "engineering/devops",
+    "engineering/frontend",
+    "engineering/ai",
+    "economics/strategy",
+    "economics/finance",
+    "economics/markets",
+    "projects/games",
+    "projects/teaching",
+    "projects/games/the-neighborhood",
+    "writing/annotations/a-pattern-language",
+    "economics/policy",
+    "engineering/languages/python",
+    "engineering/languages/typescript",
+    "engineering/languages/csharp",
+    "engineering/languages/lua",
+    "engineering/languages/scratch",
+    "projects/undergrad",
+    "writing/annotations",
+    "writing/articles",
+    "writing/tutorials",
+    "horticulture/seasons",
+    "writing",
+    "horticulture",
+    "economics",
+    "engineering",
+    "projects",
+    "horticulture/seasons/rhythm",
+    "horticulture/seasons/systems",
+    "projects/site",
+    "projects/dayjob",
+    "writing/annotations/meetings",
+    "private"
+  ]
+}

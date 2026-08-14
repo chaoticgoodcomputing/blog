@@ -1,0 +1,155 @@
+/**
+ * Styles for Probability Convolutions widget
+ * Uses a light color scheme for better data visualization
+ */
+
+.widget-probability-convolutions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .prob-conv-input-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .prob-conv-label {
+      font-weight: 600;
+      color: #424242;
+      white-space: nowrap;
+    }
+
+    .prob-conv-expression-input {
+      flex: 1;
+      padding: 0.5rem;
+      border: 2px solid #bdbdbd;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      background-color: #ffffff;
+      color: #212121;
+      transition: border-color 0.2s ease;
+
+      &:focus {
+        outline: none;
+        border-color: #1976d2;
+      }
+
+      &::placeholder {
+        color: #9e9e9e;
+        font-style: italic;
+      }
+    }
+  }
+
+  .prob-conv-chart-container {
+    min-height: 300px;
+    background-color: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 0.5rem;
+  }
+
+  .prob-conv-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    background-color: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 0.95rem;
+
+    .prob-conv-stat {
+      display: flex;
+      gap: 0.25rem;
+
+      strong {
+        color: #424242;
+      }
+
+      .prob-conv-mean,
+      .prob-conv-median {
+        color: #212121;
+        font-family: 'JetBrains Mono', monospace;
+      }
+    }
+
+    .prob-conv-stat-separator {
+      color: #757575;
+      font-weight: bold;
+    }
+  }
+
+  .prob-conv-threshold-stats {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+
+    .prob-conv-threshold-box {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      flex: 1;
+      justify-content: center;
+
+      .prob-conv-threshold-label {
+        font-size: 1rem;
+        font-weight: 600;
+        opacity: 0.9;
+      }
+
+      .prob-conv-threshold-value {
+        font-size: 1.1rem;
+        font-weight: bold;
+      }
+
+      .prob-conv-threshold-prob {
+        font-size: 1.1rem;
+      }
+
+      &.prob-conv-threshold-below-box {
+        background-color: #e0e0e0;
+        color: #616161;
+
+        .prob-conv-threshold-label,
+        .prob-conv-threshold-prob {
+          color: #616161;
+        }
+      }
+
+      &.prob-conv-threshold-above-box {
+        background-color: #c8e6c9;
+        color: #2e7d32;
+
+        .prob-conv-threshold-label,
+        .prob-conv-threshold-prob {
+          color: #2e7d32;
+        }
+      }
+    }
+  }
+
+  .prob-conv-error {
+    padding: 0.75rem;
+    background-color: #ffebee;
+    border: 2px solid #ffcdd2;
+    border-radius: 4px;
+    color: #c62828;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+  }
+}

@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+    <channel>
+      <title>Chaotic Good Computing</title>
+      <link>https://blog.chaoticgood.computer</link>
+      <description>Last 40 notes on Chaotic Good Computing</description>
+      <generator>Quartz -- quartz.jzhao.xyz</generator>
+      <item>
+    <title>Working with Valves: Understanding the Structure of &quot;Flat&quot; Organizations</title>
+    <link>https://blog.chaoticgood.computer/content/annotations/valve-handbook</link>
+    <guid>https://blog.chaoticgood.computer/content/annotations/valve-handbook</guid>
+    <description><![CDATA[ Many an engineer has heard tales of Valve's "flat" organization structure — what is fact, what is fiction, and how does it actually work? An annotated copy of the 2012 First Edition of Valve's Employee Handbook. (23 min read) ]]></description>
+    <pubDate>Thu, 26 Mar 2026 00:00:00 GMT</pubDate>
+    <category>economics/strategy</category>
+    <category>engineering</category>
+    <category>engineering/ai</category>
+    <category>writing/annotations</category>
+  </item><item>
+    <title>The Theory of Stupidity (and the graph inside you)</title>
+    <link>https://blog.chaoticgood.computer/content/annotations/theory-of-stupidity</link>
+    <guid>https://blog.chaoticgood.computer/content/annotations/theory-of-stupidity</guid>
+    <description><![CDATA[ Our lives are all dominated by a little graph in our hearts — and sometimes, that graph gets wacky. A review of Dietrich Bonhoeffer's "Theory of Stupidity", part of his larger ~1943-1945 work "Letters and Papers from Prison." (12 min read) ]]></description>
+    <pubDate>Thu, 12 Mar 2026 00:00:00 GMT</pubDate>
+    <category>writing/annotations</category>
+    <category>economics</category>
+  </item><item>
+    <title>Systems: Week 11</title>
+    <link>https://blog.chaoticgood.computer/content/notes/periodic/weekly/2026/2026-W10</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/periodic/weekly/2026/2026-W10</guid>
+    <description><![CDATA[ Watch a human cope about bots taking his job in real time. Is he cooked? Find out tonight in Season of Systems: Week 11! (6 min read) ]]></description>
+    <pubDate>Sun, 01 Mar 2026 00:00:00 GMT</pubDate>
+    <category>horticulture/seasons/systems</category>
+    <category>engineering/ai</category>
+    <category>engineering/bio</category>
+    <category>economics</category>
+  </item><item>
+    <title>Design of a mucin-selective protease for targeted degradation of cancer-associated mucins</title>
+    <link>https://blog.chaoticgood.computer/content/annotations/bertozzi-stickies</link>
+    <guid>https://blog.chaoticgood.computer/content/annotations/bertozzi-stickies</guid>
+    <description><![CDATA[ The rubber hits the road on ColabFold! I hope that's rubber I'm smelling — although it may be the computer. A replication attempt of a protein fold figure in K. Pedram et al (2023). (8 min read) ]]></description>
+    <pubDate>Sat, 28 Feb 2026 00:00:00 GMT</pubDate>
+    <category>engineering/bio</category>
+    <category>engineering/data</category>
+    <category>engineering/languages/python</category>
+    <category>writing/annotations</category>
+  </item><item>
+    <title>An Annotated Guide to Hobbyist Protein Folding</title>
+    <link>https://blog.chaoticgood.computer/content/annotations/protein-folding-for-fun</link>
+    <guid>https://blog.chaoticgood.computer/content/annotations/protein-folding-for-fun</guid>
+    <description><![CDATA[ Amaze (or bore) your friends and family by picking up on a hot new hobby that's all the rage — protein folding! An annotated starter to the 2021 paper "ColabFold - Making protein folding accessible to all" (10 min read) ]]></description>
+    <pubDate>Wed, 25 Feb 2026 00:00:00 GMT</pubDate>
+    <category>engineering/bio</category>
+    <category>engineering/data</category>
+    <category>engineering/languages/python</category>
+    <category>projects/homelab</category>
+    <category>writing/annotations</category>
+  </item><item>
+    <title>Agentic Programming as Theory Building</title>
+    <link>https://blog.chaoticgood.computer/content/annotations/programming-as-theory-building</link>
+    <guid>https://blog.chaoticgood.computer/content/annotations/programming-as-theory-building</guid>
+    <description><![CDATA[ Do humans have a role in software development anymore? Absolutely — but we need to rethink what it means to program. An modern review of Peter Naur's 1985 essay "Programming as Theory Building" (40 min read) ]]></description>
+    <pubDate>Thu, 12 Feb 2026 00:00:00 GMT</pubDate>
+    <category>writing/highlights</category>
+    <category>engineering/ai</category>
+    <category>engineering</category>
+    <category>economics/strategy</category>
+    <category>writing/annotations</category>
+  </item><item>
+    <title>APL: Pattern 4; Agricultural Valleys</title>
+    <link>https://blog.chaoticgood.computer/content/annotations/a-pattern-language/04-agricultural-valleys</link>
+    <guid>https://blog.chaoticgood.computer/content/annotations/a-pattern-language/04-agricultural-valleys</guid>
+    <description><![CDATA[ Urban development has the high ground over agricultural and ecological preservation — and it should! *A Pattern Language* annotations on Pattern 4: Agricultural Valleys (2 min read) ]]></description>
+    <pubDate>Sun, 08 Feb 2026 00:00:00 GMT</pubDate>
+    <category>writing/annotations/a-pattern-language</category>
+    <category>projects/games/the-neighborhood</category>
+  </item><item>
+    <title>APL: Pattern 5; Lace of Country Streets</title>
+    <link>https://blog.chaoticgood.computer/content/annotations/a-pattern-language/05-lace-of-country-streets</link>
+    <guid>https://blog.chaoticgood.computer/content/annotations/a-pattern-language/05-lace-of-country-streets</guid>
+    <description><![CDATA[ How dense is too dense? How sparse is too sparse? Annotations for A Pattern Language's proposals for the density of metro-adjacent country streets for agriculture, recreation, and preservation. (3 min read) ]]></description>
+    <pubDate>Sun, 08 Feb 2026 00:00:00 GMT</pubDate>
+    <category>writing/annotations/a-pattern-language</category>
+    <category>projects/games/the-neighborhood</category>
+    <category>economics/policy</category>
+  </item><item>
+    <title>Systems: Week 8</title>
+    <link>https://blog.chaoticgood.computer/content/notes/periodic/weekly/2026/2026-W07</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/periodic/weekly/2026/2026-W07</guid>
+    <description><![CDATA[ (4 min read) ]]></description>
+    <pubDate>Sun, 08 Feb 2026 00:00:00 GMT</pubDate>
+    <category>horticulture/seasons/systems</category>
+  </item><item>
+    <title>APL: Pattern 1; Independent Regions</title>
+    <link>https://blog.chaoticgood.computer/content/annotations/a-pattern-language/01-independent-regions</link>
+    <guid>https://blog.chaoticgood.computer/content/annotations/a-pattern-language/01-independent-regions</guid>
+    <description><![CDATA[ Home isn't where the heart is — it's a single node on a very, very large graph. Annotations for the "Independent Regions" pattern of *A Pattern Language*. (10 min read) ]]></description>
+    <pubDate>Sat, 07 Feb 2026 00:00:00 GMT</pubDate>
+    <category>writing/annotations/a-pattern-language</category>
+    <category>projects/games/the-neighborhood</category>
+    <category>economics/policy</category>
+  </item><item>
+    <title>APL: Pattern 2; The Distribution of Towns</title>
+    <link>https://blog.chaoticgood.computer/content/annotations/a-pattern-language/02-the-distribution-of-towns</link>
+    <guid>https://blog.chaoticgood.computer/content/annotations/a-pattern-language/02-the-distribution-of-towns</guid>
+    <description><![CDATA[ How close is too close? How far is too far? *A Pattern Language* annotations related to the statistical, economic, and ecologic concerns in balancing how dense human habitats ought to be. (5 min read) ]]></description>
+    <pubDate>Sat, 07 Feb 2026 00:00:00 GMT</pubDate>
+    <category>writing/annotations/a-pattern-language</category>
+    <category>projects/games/the-neighborhood</category>
+    <category>economics/policy</category>
+  </item><item>
+    <title>APL: Pattern 3; City Country Fingers</title>
+    <link>https://blog.chaoticgood.computer/content/annotations/a-pattern-language/03-city-country-fingers</link>
+    <guid>https://blog.chaoticgood.computer/content/annotations/a-pattern-language/03-city-country-fingers</guid>
+    <description><![CDATA[ City, with natural stripes — or nature, with city stripes? Annotations for A Pattern Language, and tracking public opinion of where Americans want to live over the past 50 years. (4 min read) ]]></description>
+    <pubDate>Sat, 07 Feb 2026 00:00:00 GMT</pubDate>
+    <category>writing/annotations/a-pattern-language</category>
+    <category>projects/games/the-neighborhood</category>
+    <category>economics/markets</category>
+    <category>engineering/data</category>
+  </item><item>
+    <title>APL: Pattern 0; Introduction</title>
+    <link>https://blog.chaoticgood.computer/content/annotations/a-pattern-language/00-introduction</link>
+    <guid>https://blog.chaoticgood.computer/content/annotations/a-pattern-language/00-introduction</guid>
+    <description><![CDATA[ Can graphs be libertarian? Authoritarian? Annotations for the introductory portion of the 1977 book A Pattern Language. (9 min read) ]]></description>
+    <pubDate>Thu, 05 Feb 2026 00:00:00 GMT</pubDate>
+    <category>writing/annotations/a-pattern-language</category>
+    <category>projects/games/the-neighborhood</category>
+    <category>economics/policy</category>
+  </item><item>
+    <title>Ants in the Neighborhood</title>
+    <link>https://blog.chaoticgood.computer/content/notes/ants-in-the-neighborhood</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/ants-in-the-neighborhood</guid>
+    <description><![CDATA[ Is Jane Street run by soccer-loving ants? Inconclusive. We *can* conclude that they're fans of Markov Chains, though — an invaluable tool for understanding complex data structures. (1 min read) ]]></description>
+    <pubDate>Mon, 02 Feb 2026 00:00:00 GMT</pubDate>
+    <category>engineering/data</category>
+    <category>projects/games/the-neighborhood</category>
+    <category>writing/annotations/a-pattern-language</category>
+  </item><item>
+    <title>A Pattern Language, and a Beautiful Day in the Neighborhood</title>
+    <link>https://blog.chaoticgood.computer/content/notes/pattern-languages-of-the-neighborhood</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/pattern-languages-of-the-neighborhood</guid>
+    <description><![CDATA[ The beginning of a topological review of the 1977 urban design and architecture reference book A Pattern Language, and a journey to understand Earth's greatest graph: the Earth, itself. (12 min read) ]]></description>
+    <pubDate>Sun, 01 Feb 2026 00:00:00 GMT</pubDate>
+    <category>projects/games/the-neighborhood</category>
+    <category>writing/annotations/a-pattern-language</category>
+    <category>engineering/data</category>
+    <category>economics/policy</category>
+  </item><item>
+    <title>Systems: Week 7</title>
+    <link>https://blog.chaoticgood.computer/content/notes/periodic/weekly/2026/2026-W06</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/periodic/weekly/2026/2026-W06</guid>
+    <description><![CDATA[ (1 min read) ]]></description>
+    <pubDate>Sun, 01 Feb 2026 00:00:00 GMT</pubDate>
+    <category>horticulture/seasons/systems</category>
+  </item><item>
+    <title>Evolution and Revolution as Organizations Grow</title>
+    <link>https://blog.chaoticgood.computer/content/annotations/evolutions-revolutions</link>
+    <guid>https://blog.chaoticgood.computer/content/annotations/evolutions-revolutions</guid>
+    <description><![CDATA[ Annotations for Greiner's 1972 paper "Evolution and Revolution as Organizations Grow", about the structural composition of organizations at different sizes and requirements. (16 min read) ]]></description>
+    <pubDate>Wed, 28 Jan 2026 00:00:00 GMT</pubDate>
+    <category>economics/strategy</category>
+    <category>writing/annotations</category>
+    <category>projects/dayjob</category>
+  </item><item>
+    <title>Quick Fix: Tone Down Obsidian List/Header Padding</title>
+    <link>https://blog.chaoticgood.computer/content/notes/fixing-obsidian-paddings-and-margins</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/fixing-obsidian-paddings-and-margins</guid>
+    <description><![CDATA[ Annoyed by Obsidian Live Preview over-padding headers and aggressively indenting? Some snippets to help keep your notes from jumping around, so you can focus on actually writing them. (3 min read) ]]></description>
+    <pubDate>Sat, 24 Jan 2026 00:00:00 GMT</pubDate>
+    <category>projects/site</category>
+    <category>engineering/frontend</category>
+  </item><item>
+    <title>The Advantages of Advantage: Intro to Probability Convolutions</title>
+    <link>https://blog.chaoticgood.computer/content/notes/roll-advantage</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/roll-advantage</guid>
+    <description><![CDATA[ What *is* the advantage of rolling with advantage? Exploring dice roll combinations and probability convolutions. (8 min read) ]]></description>
+    <pubDate>Mon, 19 Jan 2026 00:00:00 GMT</pubDate>
+    <category>projects/games</category>
+    <category>engineering/data</category>
+    <category>writing/articles</category>
+    <category>writing/highlights</category>
+  </item><item>
+    <title>Dice Roll Distribution Widget</title>
+    <link>https://blog.chaoticgood.computer/content/notes/scratch/dice-widget</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/scratch/dice-widget</guid>
+    <description><![CDATA[ Discover the probability distributions of different dice roll combinations (1 min read) ]]></description>
+    <pubDate>Mon, 19 Jan 2026 00:00:00 GMT</pubDate>
+    <category>projects/games</category>
+    <category>engineering/data</category>
+  </item><item>
+    <title>Quartz Widgets: Graphs, Galore!</title>
+    <link>https://blog.chaoticgood.computer/content/notes/mdx-widgets-test</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/mdx-widgets-test</guid>
+    <description><![CDATA[ I killed 4 of my blogs trying to implement MDX support. Will this one be next?
+Using MDX with Quartz to create interactive graphs, diagrams, and demos — clear as day.
+ (9 min read) ]]></description>
+    <pubDate>Thu, 15 Jan 2026 00:00:00 GMT</pubDate>
+    <category>projects/site</category>
+    <category>horticulture/seasons/systems</category>
+    <category>engineering/languages/typescript</category>
+    <category>engineering/frontend</category>
+    <category>writing/articles</category>
+  </item><item>
+    <title>LLMs; or, How to Run Your Own Hostage Negotiation</title>
+    <link>https://blog.chaoticgood.computer/content/notes/hostage-negotiations</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/hostage-negotiations</guid>
+    <description><![CDATA[ LLMs: Are we doomed to die, or born to garden?
+I'd like to make the case that AI is less like Terminator, and more like tomatoes.
+ (8 min read) ]]></description>
+    <pubDate>Sat, 10 Jan 2026 00:00:00 GMT</pubDate>
+    <category>engineering/ai</category>
+    <category>writing/articles</category>
+  </item><item>
+    <title>Intro to Event Storming</title>
+    <link>https://blog.chaoticgood.computer/content/notes/event-storming-intro</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/event-storming-intro</guid>
+    <description><![CDATA[ Notes from learning Event Storming for domain-driven design. Thoughts on phases,
+color-coded chaos, and how to transition from fast pitches to full products.
+ (6 min read) ]]></description>
+    <pubDate>Tue, 06 Jan 2026 00:00:00 GMT</pubDate>
+    <category>engineering</category>
+    <category>writing/annotations</category>
+    <category>projects/dayjob</category>
+    <category>horticulture/seasons/systems</category>
+  </item><item>
+    <title>Kickoff: Season of Systems</title>
+    <link>https://blog.chaoticgood.computer/content/notes/kickoff-season-of-systems</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/kickoff-season-of-systems</guid>
+    <description><![CDATA[ I'm learning to live with the systems that stole my beloved em-dash.
+A season dedicated to negotiating how to live with the agentic models that have turned my career upside-down.
+ (8 min read) ]]></description>
+    <pubDate>Sun, 04 Jan 2026 00:00:00 GMT</pubDate>
+    <category>horticulture/seasons/systems</category>
+    <category>engineering/ai</category>
+    <category>projects/homelab</category>
+    <category>projects/site</category>
+  </item><item>
+    <title>Review: Season of Rhythm</title>
+    <link>https://blog.chaoticgood.computer/content/notes/season-of-rhythm-in-review</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/season-of-rhythm-in-review</guid>
+    <description><![CDATA[ Looking back at my year-long attempt to build up long-lasting habits.
+A retrospective on routines, remote work transitions, and learning the art of slow-and-steady. (7 min read) ]]></description>
+    <pubDate>Fri, 26 Dec 2025 00:00:00 GMT</pubDate>
+    <category>horticulture/seasons/rhythm</category>
+    <category>projects/site</category>
+  </item><item>
+    <title>LLMs: A Primer Presentation for Our Newest, Scariest Tool</title>
+    <link>https://blog.chaoticgood.computer/content/annotations/llm-starter</link>
+    <guid>https://blog.chaoticgood.computer/content/annotations/llm-starter</guid>
+    <description><![CDATA[ An engineer-focused primer on the mechanisms that drive Large Language Models. Basics on how we got here,
+how they work, and how to use them without feeling an apocalyptic dread.
+ (1 min read) ]]></description>
+    <pubDate>Tue, 15 Jul 2025 00:00:00 GMT</pubDate>
+    <category>engineering/ai</category>
+    <category>writing/highlights</category>
+    <category>engineering/languages/csharp</category>
+    <category>engineering/languages/typescript</category>
+    <category>writing/annotations</category>
+    <category>projects/teaching</category>
+  </item><item>
+    <title>Typst Resume Template</title>
+    <link>https://blog.chaoticgood.computer/content/notes/typst-resume-template</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/typst-resume-template</guid>
+    <description><![CDATA[ A beginner-friendly resume template in Typst — 100% less LaTeX, 100% more opinions.
+ (38 min read) ]]></description>
+    <pubDate>Sun, 21 Apr 2024 00:00:00 GMT</pubDate>
+    <category>writing/tutorials</category>
+    <category>projects/undergrad</category>
+    <category>projects/teaching</category>
+    <category>writing/highlights</category>
+  </item><item>
+    <title>Terraform LocalStack Testing</title>
+    <link>https://blog.chaoticgood.computer/content/notes/scratch/terraform-localstack</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/scratch/terraform-localstack</guid>
+    <description><![CDATA[ $70/mo/seat? Just using live AWS may be cheaper.
+An evaluation of LocalStack as a testbed for Account Factory Terraform.
+ (5 min read) ]]></description>
+    <pubDate>Thu, 18 Apr 2024 00:00:00 GMT</pubDate>
+    <category>engineering/devops</category>
+    <category>writing/annotations</category>
+  </item><item>
+    <title>The Simple Economics of Open Source</title>
+    <link>https://blog.chaoticgood.computer/content/annotations/simple-economics-of-open-source</link>
+    <guid>https://blog.chaoticgood.computer/content/annotations/simple-economics-of-open-source</guid>
+    <description><![CDATA[ Why do we do what we do? "Egoboo."
+Exploring economic models of OSS contributions beyond altruism and ego.
+ (15 min read) ]]></description>
+    <pubDate>Sun, 17 Mar 2024 00:00:00 GMT</pubDate>
+    <category>economics/markets</category>
+    <category>writing/annotations</category>
+    <category>engineering</category>
+  </item><item>
+    <title>College Admissions and the Stability of Marriage</title>
+    <link>https://blog.chaoticgood.computer/content/annotations/college-admissions-and-the-stability-of-marriage</link>
+    <guid>https://blog.chaoticgood.computer/content/annotations/college-admissions-and-the-stability-of-marriage</guid>
+    <description><![CDATA[ A dive into the hottest algorithm of the 1960s: Gale-Shapley matchmaking. Who knew that the mysteries of the heart could be solved with a matrix?
+ (6 min read) ]]></description>
+    <pubDate>Thu, 14 Mar 2024 00:00:00 GMT</pubDate>
+    <category>economics/markets</category>
+    <category>writing/annotations</category>
+  </item><item>
+    <title>Feeling Right, Nothing Done: Don&#039;t Be the Death of Consensus</title>
+    <link>https://blog.chaoticgood.computer/content/notes/strong-and-weak-opinions</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/strong-and-weak-opinions</guid>
+    <description><![CDATA[ Classifying opinions as "strong" or "weak" to stop wasting hours in fruitless engineering debates.
+How consensus can beat being "right", and an open letter for the tactically apathetic.
+ (7 min read) ]]></description>
+    <pubDate>Tue, 05 Mar 2024 00:00:00 GMT</pubDate>
+    <category>engineering</category>
+    <category>horticulture/seasons/rhythm</category>
+  </item><item>
+    <title>Before You Slabtop Your Laptop: A Brief Warning</title>
+    <link>https://blog.chaoticgood.computer/content/notes/scratch/warning-about-slabtops</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/scratch/warning-about-slabtops</guid>
+    <description><![CDATA[ PSA: Check if your laptop needs an LCD for POST before removing the screen.
+Learned this the hard way after 5 hours and a fried motherboard. Learn from my dumb mistakes.
+ (2 min read) ]]></description>
+    <pubDate>Sun, 03 Mar 2024 00:00:00 GMT</pubDate>
+    <category>projects/homelab</category>
+    <category>engineering/devops</category>
+    <category>writing/tutorials</category>
+  </item><item>
+    <title>GPTinglish: Unnatural Language Processing</title>
+    <link>https://blog.chaoticgood.computer/content/articles/binglish</link>
+    <guid>https://blog.chaoticgood.computer/content/articles/binglish</guid>
+    <description><![CDATA[ The only market crashing is the market for sanitized language. Stay human. Embrace typos.
+ (7 min read) ]]></description>
+    <pubDate>Fri, 01 Mar 2024 00:00:00 GMT</pubDate>
+    <category>writing/highlights</category>
+    <category>engineering/ai</category>
+    <category>projects/site</category>
+  </item><item>
+    <title>Turning SelfControl into Self Restraint</title>
+    <link>https://blog.chaoticgood.computer/content/notes/putting-selfcontrol-on-raycast</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/putting-selfcontrol-on-raycast</guid>
+    <description><![CDATA[ Building a Raycast plugin to schedule website blocks — because checking news "just one more time" destroys flow.
+Automate SelfControl and self control: take your laptop back.
+ (4 min read) ]]></description>
+    <pubDate>Wed, 28 Feb 2024 00:00:00 GMT</pubDate>
+    <category>engineering/languages/typescript</category>
+    <category>horticulture/seasons/rhythm</category>
+  </item><item>
+    <title>Caveat Lector: Reader Beware</title>
+    <link>https://blog.chaoticgood.computer/content/notes/caveat-lector</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/caveat-lector</guid>
+    <description><![CDATA[ I'm embracing being wrong on the internet in an effort to learn in public.
+A disclaimer on digital gardening, dead pixels, and the fear of terminal online-ness.
+ (3 min read) ]]></description>
+    <pubDate>Tue, 27 Feb 2024 00:00:00 GMT</pubDate>
+    <category>horticulture/seasons/rhythm</category>
+    <category>projects/site</category>
+  </item><item>
+    <title>The Quest to Slay The Goblin</title>
+    <link>https://blog.chaoticgood.computer/content/notes/the-quest-to-slay-the-goblin</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/the-quest-to-slay-the-goblin</guid>
+    <description><![CDATA[ My life devolves into sleep-eat-procrastinate cycles without structure—I call this "The Goblin."
+Productivity tools, hating on hustle culture, and a new definition for horticulture.
+ (2 min read) ]]></description>
+    <pubDate>Tue, 27 Feb 2024 00:00:00 GMT</pubDate>
+    <category>horticulture/seasons/rhythm</category>
+  </item><item>
+    <title>Some initial thoughts about time tracking</title>
+    <link>https://blog.chaoticgood.computer/content/notes/time-tracking</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/time-tracking</guid>
+    <description><![CDATA[ TODO.
+ (1 min read) ]]></description>
+    <pubDate>Tue, 27 Feb 2024 00:00:00 GMT</pubDate>
+    <category>horticulture/seasons/rhythm</category>
+    <category>engineering/data</category>
+    <category>engineering/devops</category>
+  </item><item>
+    <title>Quantitative Analysis of Markets &amp; Organizations</title>
+    <link>https://blog.chaoticgood.computer/content/notes/qamo</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/qamo</guid>
+    <description><![CDATA[ My time at the University of Utah was longer than I'd planned, cut shorter than expected by COVID-19.
+I was very lucky to have mentorship to push me across the finish line.
+ (1 min read) ]]></description>
+    <pubDate>Mon, 26 Feb 2024 00:00:00 GMT</pubDate>
+    <category>economics</category>
+    <category>projects/undergrad</category>
+  </item><item>
+    <title>Breaking Ground on Digital Gardening</title>
+    <link>https://blog.chaoticgood.computer/content/notes/digital-gardening-with-quartz</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/digital-gardening-with-quartz</guid>
+    <description><![CDATA[ Why I stopped hoarding 60%-done drafts and started publishing messy thoughts instead.
+Embracing digital gardening, from-chaos-to-cultivated, and a healthy dose of imperfection.
+ (3 min read) ]]></description>
+    <pubDate>Sun, 25 Feb 2024 00:00:00 GMT</pubDate>
+    <category>projects/site</category>
+    <category>horticulture/seasons/rhythm</category>
+    <category>engineering/languages/typescript</category>
+  </item><item>
+    <title>Kickoff: Season of Rhythm</title>
+    <link>https://blog.chaoticgood.computer/content/notes/kickoff-season-of-rhythm</link>
+    <guid>https://blog.chaoticgood.computer/content/notes/kickoff-season-of-rhythm</guid>
+    <description><![CDATA[ "Fight or flight" is a rough way to treat white-collar life. My Season of Rhythm is dedicated to
+transitioning from constant sprints to slow-and-steady.
+ (3 min read) ]]></description>
+    <pubDate>Sun, 25 Feb 2024 00:00:00 GMT</pubDate>
+    <category>horticulture/seasons/rhythm</category>
+    <category>projects/site</category>
+  </item>
+    </channel>
+  </rss>

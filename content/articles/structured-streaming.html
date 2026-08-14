@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>Don't Double Down: Structured Streaming to Wrangle Data</title><meta charset="utf-8"/><link rel="stylesheet" href="/static/fonts/fonts.css"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Chaotic Good Computing"/><meta property="og:title" content="Don't Double Down: Structured Streaming to Wrangle Data"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Don't Double Down: Structured Streaming to Wrangle Data"/><meta name="twitter:description" content="Stop reprocessing your entire dataset every time new data arrives.
+A practical guide to Spark Structured Streaming with code examples and cost logic.
+"/><meta property="og:description" content="Stop reprocessing your entire dataset every time new data arrives.
+A practical guide to Spark Structured Streaming with code examples and cost logic.
+"/><meta property="og:image:alt" content="Stop reprocessing your entire dataset every time new data arrives.
+A practical guide to Spark Structured Streaming with code examples and cost logic.
+"/><meta property="twitter:domain" content="blog.chaoticgood.computer"/><meta property="og:url" content="https://blog.chaoticgood.computer/content/articles/structured-streaming"/><meta property="twitter:url" content="https://blog.chaoticgood.computer/content/articles/structured-streaming"/><meta property="article:published_time" content="2022-07-14T00:00:00.000Z"/><meta property="article:modified_time" content="2022-07-14T00:00:00.000Z"/><meta property="article:author" content="https://blog.chaoticgood.computer/about"/><meta property="article:section" content="engineering"/><meta property="article:tag" content="data"/><meta property="article:tag" content="devops"/><meta property="article:tag" content="python"/><meta property="article:tag" content="tutorials"/><meta property="article:tag" content="finance"/><meta property="article:tag" content="dayjob"/><link rel="canonical" href="https://blog.chaoticgood.computer/content/articles/structured-streaming"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="Stop reprocessing your entire dataset every time new data arrives.
+A practical guide to Spark Structured Streaming with code examples and cost logic.
+"/><meta name="generator" content="Quartz"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","headline":"Don't Double Down: Structured Streaming to Wrangle Data","url":"https://blog.chaoticgood.computer/content/articles/structured-streaming","image":"https://blog.chaoticgood.computer/content/articles/structured-streaming-og-image.webp","inLanguage":"en-US","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.chaoticgood.computer/content/articles/structured-streaming"},"author":{"@type":"Person","name":"Spencer Elkington","url":"https://blog.chaoticgood.computer/about"},"publisher":{"@type":"Organization","name":"Chaotic Good Computing","url":"https://blog.chaoticgood.computer/about","logo":{"@type":"ImageObject","url":"https://blog.chaoticgood.computer/static/icon.png","width":184,"height":184}},"description":"Stop reprocessing your entire dataset every time new data arrives.\nA practical guide to Spark Structured Streaming with code examples and cost logic.\n","datePublished":"2022-07-14T00:00:00.000Z","dateModified":"2022-07-14T00:00:00.000Z","articleSection":"Tutorials","keywords":"engineering/data, engineering/devops, engineering/languages/python, writing/tutorials, economics/finance, projects/dayjob"}</script><link href="/index.css" rel="stylesheet" type="text/css" data-persist="true"/><style>@layer components {
+  .expand-button {
+    position: absolute;
+    display: flex;
+    float: right;
+    padding: 0.4rem;
+    margin: 0.3rem;
+    right: 0;
+    color: var(--gray);
+    border-color: var(--dark);
+    background-color: var(--light);
+    border: 1px solid;
+    border-radius: 5px;
+    opacity: 0;
+    transition: 0.2s;
+  }
+  .expand-button > svg {
+    fill: var(--light);
+    filter: contrast(0.3);
+  }
+  .expand-button:hover {
+    cursor: pointer;
+    border-color: var(--secondary);
+  }
+  .expand-button:focus {
+    outline: 0;
+  }
+  pre:hover > .expand-button {
+    opacity: 1;
+    transition: 0.2s;
+  }
+  #mermaid-container {
+    position: fixed;
+    contain: layout;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: none;
+    backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.5);
+  }
+  #mermaid-container.active {
+    display: inline-block;
+  }
+  #mermaid-container > #mermaid-space {
+    border: 1px solid var(--lightgray);
+    background-color: var(--light);
+    border-radius: 5px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 80vh;
+    width: 80vw;
+    overflow: hidden;
+  }
+  #mermaid-container > #mermaid-space > .mermaid-content {
+    position: relative;
+    transform-origin: 0 0;
+    transition: transform 0.1s ease;
+    overflow: visible;
+    min-height: 200px;
+    min-width: 200px;
+  }
+  #mermaid-container > #mermaid-space > .mermaid-content pre {
+    margin: 0;
+    border: none;
+  }
+  #mermaid-container > #mermaid-space > .mermaid-content svg {
+    max-width: none;
+    height: auto;
+  }
+  #mermaid-container > #mermaid-space > .mermaid-controls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    background: var(--light);
+    border: 1px solid var(--lightgray);
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+  }
+  #mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid var(--lightgray);
+    background: var(--light);
+    color: var(--dark);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: var(--bodyFont);
+    transition: all 0.2s ease;
+  }
+  #mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+    background: var(--lightgray);
+  }
+  #mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+    transform: translateY(1px);
+  }
+  #mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+    width: auto;
+    padding: 0 12px;
+    font-size: 14px;
+  }
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvYmxvZy9ibG9nL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0lBQ0U7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7O0VBRUE7SUFDRTtJQUNBOztFQUdGO0lBQ0U7SUFDQTs7RUFHRjtJQUNFOztFQUtGO0lBQ0U7SUFDQTs7RUFJSjtJQUNFO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7O0VBRUE7SUFDRTs7RUFHRjtJQUNFO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBOztFQUVBO0lBQ0U7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBOztFQUVBO0lBQ0U7SUFDQTs7RUFHRjtJQUNFO0lBQ0E7O0VBSUo7SUFDRTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBOztFQUVBO0lBQ0U7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTs7RUFFQTtJQUNFOztFQUdGO0lBQ0U7O0VBSUY7SUFDRTtJQUNBO0lBQ0EiLCJzb3VyY2VzQ29udGVudCI6WyJAbGF5ZXIgY29tcG9uZW50cyB7XG4gIC5leHBhbmQtYnV0dG9uIHtcbiAgICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gICAgZGlzcGxheTogZmxleDtcbiAgICBmbG9hdDogcmlnaHQ7XG4gICAgcGFkZGluZzogMC40cmVtO1xuICAgIG1hcmdpbjogMC4zcmVtO1xuICAgIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICAgIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgICBib3JkZXItY29sb3I6IHZhcigtLWRhcmspO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXI6IDFweCBzb2xpZDtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgb3BhY2l0eTogMDtcbiAgICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICAgJj5zdmcge1xuICAgICAgZmlsbDogdmFyKC0tbGlnaHQpO1xuICAgICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICAgIH1cblxuICAgICY6aG92ZXIge1xuICAgICAgY3Vyc29yOiBwb2ludGVyO1xuICAgICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICAgIH1cblxuICAgICY6Zm9jdXMge1xuICAgICAgb3V0bGluZTogMDtcbiAgICB9XG4gIH1cblxuICBwcmUge1xuICAgICY6aG92ZXI+LmV4cGFuZC1idXR0b24ge1xuICAgICAgb3BhY2l0eTogMTtcbiAgICAgIHRyYW5zaXRpb246IDAuMnM7XG4gICAgfVxuICB9XG5cbiAgI21lcm1haWQtY29udGFpbmVyIHtcbiAgICBwb3NpdGlvbjogZml4ZWQ7XG4gICAgY29udGFpbjogbGF5b3V0O1xuICAgIHotaW5kZXg6IDk5OTtcbiAgICBsZWZ0OiAwO1xuICAgIHRvcDogMDtcbiAgICB3aWR0aDogMTAwdnc7XG4gICAgaGVpZ2h0OiAxMDB2aDtcbiAgICBvdmVyZmxvdzogaGlkZGVuO1xuICAgIGRpc3BsYXk6IG5vbmU7XG4gICAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gICAgYmFja2dyb3VuZDogcmdiYSgwLCAwLCAwLCAwLjUpO1xuXG4gICAgJi5hY3RpdmUge1xuICAgICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICAgIH1cblxuICAgICY+I21lcm1haWQtc3BhY2Uge1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICAgIHRvcDogNTAlO1xuICAgICAgbGVmdDogNTAlO1xuICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgICBoZWlnaHQ6IDgwdmg7XG4gICAgICB3aWR0aDogODB2dztcbiAgICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAgICY+Lm1lcm1haWQtY29udGVudCB7XG4gICAgICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgICBvdmVyZmxvdzogdmlzaWJsZTtcbiAgICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgICAgcHJlIHtcbiAgICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgICB9XG5cbiAgICAgICAgc3ZnIHtcbiAgICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgICAgaGVpZ2h0OiBhdXRvO1xuICAgICAgICB9XG4gICAgICB9XG5cbiAgICAgICY+Lm1lcm1haWQtY29udHJvbHMge1xuICAgICAgICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gICAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGdhcDogOHB4O1xuICAgICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgICBib3gtc2hhZG93OiAwIDJweCA0cHggcmdiYSgwLCAwLCAwLCAwLjEpO1xuICAgICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgICAgd2lkdGg6IDMycHg7XG4gICAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICAgIGJvcmRlci1yYWRpdXM6IDRweDtcbiAgICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICAgIGZvbnQtZmFtaWx5OiB2YXIoLS1ib2R5Rm9udCk7XG4gICAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAgICY6aG92ZXIge1xuICAgICAgICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgICAgICB9XG5cbiAgICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZVkoMXB4KTtcbiAgICAgICAgICB9XG5cbiAgICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICAgJjpudGgtY2hpbGQoMikge1xuICAgICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgICBmb250LXNpemU6IDE0cHg7XG4gICAgICAgICAgfVxuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="/prescript.js" type="application/javascript"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("/static/contentIndex.json").then(data => data.json())</script><script type="application/javascript" data-persist="true">const fetchTagData = fetch("/static/tagIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://blog.chaoticgood.computer/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://blog.chaoticgood.computer/content/articles/structured-streaming-og-image.webp"/><meta property="og:image:url" content="https://blog.chaoticgood.computer/content/articles/structured-streaming-og-image.webp"/><meta name="twitter:image" content="https://blog.chaoticgood.computer/content/articles/structured-streaming-og-image.webp"/><meta property="og:image:type" content="image/webp"/></head><body data-slug="content/articles/structured-streaming" class><div id="quartz-root" class="page"><div id="quartz-body"><button class="mobile-sidebar-toggle" id="mobile-sidebar-toggle" aria-label="Toggle sidebar menu" aria-expanded="false"><svg class="caret-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></button><div class="mobile-sidebar-backdrop" id="mobile-sidebar-backdrop"></div><div class="mobile-sidebar-container" id="mobile-sidebar-container"><div class="left sidebar"><h2 class="page-title"><a href="/"><img src="/static/icon.png" class="page-title-icon" alt/><div class="page-title-text"><span class="page-title-name">Chaotic Good Computing</span><span class="page-title-author">by Spencer Elkington</span></div></a></h2><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div><div class="tag-explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-opts="{&quot;tagNodeSort&quot;:&quot;count-desc&quot;,&quot;fileNodeSort&quot;:&quot;date-desc&quot;,&quot;excludeTags&quot;:[&quot;private&quot;],&quot;showFileCount&quot;:true}" data-use-tag-index="true"><h3>Tag Explorer</h3><div id="tag-explorer-338" class="tag-explorer-content" role="group"><ul class="tag-explorer-ul overflow" id="list-1"><li class="overflow-end"></li></ul></div><template id="template-tag-node"><li><div class="tag-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="6 9 12 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tag-fold-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="tag-button"><span class="tag-title"></span><span class="tag-count"></span></button></div></div><div class="tag-outer"><ul class="content"></ul></div></li></template><template id="template-file-node"><li><a href="#" class="file-link"><span class="file-icon"></span><span class="file-title"></span></a></li></template></div></div></div><div class="center"><div class="page-header"><div class="popover-hint"><h1 class="article-title">Don't Double Down: Structured Streaming to Wrangle Data</h1><p show-comma="true" class="content-meta"><time datetime="2022-07-14T00:00:00.000Z">Jul 14, 2022</time><span>9 min read</span></p><ul class="tags" data-showtags="true" data-showsubtags="false" data-showparenttag="false" data-showcount="true" data-currentslug="content/articles/structured-streaming"><li class="tag-item" data-tag="engineering/data"><a href="#" class="internal tag-link"><span class="tag-icon-badge"></span><span class="tag-name"></span><span class="tag-count"></span></a></li><li class="tag-item" data-tag="engineering/devops"><a href="#" class="internal tag-link"><span class="tag-icon-badge"></span><span class="tag-name"></span><span class="tag-count"></span></a></li><li class="tag-item" data-tag="engineering/languages/python"><a href="#" class="internal tag-link"><span class="tag-icon-badge"></span><span class="tag-name"></span><span class="tag-count"></span></a></li><li class="tag-item" data-tag="writing/tutorials"><a href="#" class="internal tag-link"><span class="tag-icon-badge"></span><span class="tag-name"></span><span class="tag-count"></span></a></li><li class="tag-item" data-tag="economics/finance"><a href="#" class="internal tag-link"><span class="tag-icon-badge"></span><span class="tag-name"></span><span class="tag-count"></span></a></li><li class="tag-item" data-tag="projects/dayjob"><a href="#" class="internal tag-link"><span class="tag-icon-badge"></span><span class="tag-name"></span><span class="tag-count"></span></a></li></ul></div></div><article class="popover-hint"><p>Let’s say that <em>you</em>, a ✨ <em>humble data plumber</em> ✨ of the Big Data era, have been tasked to create an analytics solution for <a href="https://github.com/databricks/Spark-The-Definitive-Guide/blob/master/data/retail-data/all/online-retail-dataset.csv" class="external" target="_blank">an online retail dataset<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th style="text-align:left;">InvoiceNo</th><th style="text-align:left;">StockCode</th><th style="text-align:left;">Description</th><th style="text-align:right;">Quantity</th><th style="text-align:left;">InvoiceDate</th><th style="text-align:right;">UnitPrice</th><th style="text-align:left;">CustomerID</th><th style="text-align:left;">Country</th></tr></thead><tbody><tr><td style="text-align:left;">536365</td><td style="text-align:left;">85123A</td><td style="text-align:left;">WHITE HANGING HEA…</td><td style="text-align:right;">6</td><td style="text-align:left;">2012-01-10</td><td style="text-align:right;">$2.55</td><td style="text-align:left;">17850</td><td style="text-align:left;">United Kingdom</td></tr><tr><td style="text-align:left;">536365</td><td style="text-align:left;">71053</td><td style="text-align:left;">WHITE METAL LANTERN</td><td style="text-align:right;">6</td><td style="text-align:left;">2012-01-10</td><td style="text-align:right;">$3.39</td><td style="text-align:left;">17850</td><td style="text-align:left;">United Kingdom</td></tr><tr><td style="text-align:left;">536365</td><td style="text-align:left;">84406B</td><td style="text-align:left;">CREAM CUPID HEART…</td><td style="text-align:right;">8</td><td style="text-align:left;">2012-01-10</td><td style="text-align:right;">$2.75</td><td style="text-align:left;">17850</td><td style="text-align:left;">United Kingdom</td></tr><tr><td style="text-align:left;">…</td><td style="text-align:left;">…</td><td style="text-align:left;">…</td><td style="text-align:right;">…</td><td style="text-align:left;">…</td><td style="text-align:right;">…</td><td style="text-align:left;">…</td><td style="text-align:left;">…</td></tr></tbody></table></div>
+<p>The analysis you’ve been asked for is simple - an aggregation of the number of dollars, units sold, and unique users for each day, and across each stock code. With just a few lines of PySpark, we can transform our raw data into a usable aggregate:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="py" data-theme="github-light github-dark"><code data-language="py" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> pyspark.sql.functions </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">as</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> F</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">df </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> spark.table(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;default.online_retail_data&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">agg_df </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  df</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  # Group data by month, item code and country</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  .groupBy(</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;InvoiceDate&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;StockCode&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  )</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  # Return aggregate totals of dollars, units sold, and unique users</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  .agg(</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    F.sum(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;UnitPrice&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">      .alias(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Dollars&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    F.sum(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Quantity&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">      .alias(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Units&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    F.countDistinct(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;CustomerID&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">      .alias(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Users&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  )</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  agg_df.write</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  .format(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'delta'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  .mode(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'overwrite'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  .saveAsTable(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;analytics.online_retail_aggregations&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span></code></pre></figure>
+<p>With your new aggregated data, you can throw together a nice visualization to do… <em>business things</em>.</p>
+<p><img src="/assets/duu_metrics.jpg" width="auto" height="auto" alt/></p>
+<p>This works - right?</p>
+<p>An ETL process like will work great for a <em>static</em> analysis, where you don’t expect the data to ever be updated - you assume the data you have <em>now</em> is going to be the only data you <em>ever</em> have. The problem with a static analysis?</p>
+<p>Modern data doesn’t stop growing.</p>
+<p>What are you going to do when you get <em>more</em> data?</p>
+<p>The naive answer would be to just run that same code every day, but then you’d be re-processing <em>all</em> of the data, <em>every</em> time you run the code. Each new update means re-processing data you’ve already processed before. When your data gets big enough, you’ll be doubling down on what you spend in time and compute costs.</p>
+<p><img src="/assets/cost_scaling_batch.jpg" width="auto" height="auto" alt/>
+<em>With a static analysis, you spend money on re-processing data you’ve already processed before</em></p>
+<p>There are <em>very</em> few modern data sources that aren’t going to be updated. If you want to keep your analytics growing with the source of your data, and save yourself a fortune on compute cost, you’ll need a better solution.</p>
+<h2 id="what-do-we-do-when-our-data-grows">What do we do when our data grows?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-do-we-do-when-our-data-grows" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>In the past few years, the term “<em>Big</em> Data” has become… <em>lacking</em>. As the sheer volume of data has grown and more of life has moved online, the era of <em>Big</em> Data has started to become the era of “<em>God Help Us, It Just Won’t Stop Getting Bigger</em> Data.” A good data source doesn’t stop growing while you work, and this growth can make keeping data products up-to-date a monumental task.</p>
+<p>At <a href="https://www.mscience.com" class="external" target="_blank">M Science<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>, our mission is to use <strong>alternative data</strong> - data outside of your typical quarterly report or stock trend data sources - to analyze, refine, and predict change in the market and economy.</p>
+<p>Every day, our analysts and engineers face a challenge: <strong>alternative data grows <em>really</em> fast.</strong> I’d even go as far to say that, if our data ever <em>stops</em> growing, something in the economy has gone very, very wrong.</p>
+<p>As our data grows, our analytics solutions need to handle that growth. Not only do we need to account for growth, we also need to account for data that may come in late or out-of-order. This is a vital part of our mission - every new batch of data could be the batch that signals a dramatic change in the economy.</p>
+<p>To make scalable solutions to the analytics products that <a href="https://www.mscience.com" class="external" target="_blank">M Science<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> analysts and clients depend on every day, we use <strong>Databricks Structured Streaming</strong>. Structured Streaming gives us the assurance that, as our data grows, our solutions will scale as well.</p>
+<h2 id="using-spark-structured-streaming">Using Spark Structured Streaming<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#using-spark-structured-streaming" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Structured Streaming comes into play when new batches of data are being introduced into your data sources. Structured Streaming leverages <a href="https://databricks.com/product/delta-lake-on-databricks?utm_medium=cpc&amp;utm_source=google&amp;utm_campaign=14270641620&amp;utm_offer=product_delta-lake-on-databricks&amp;utm_content=delta&amp;utm_term=delta%20databricks&amp;utm_ad_group_c=CTX-Delta-Core-P&amp;gclid=Cj0KCQjwkIGKBhCxARIsAINMioKY7YUppXgeo1abMFo6kC20pkSg8WXLFYAGiRfLuh67ERh3a1bFQEMaAnDkEALw_wcB" class="external" target="_blank">Delta Lake’s ability to track changes in your data<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> to determine what data is part of an update and <strong>re-computes only the parts of your analysis that are affected by the new data.</strong></p>
+<p>It’s important to re-frame how you think about <em>streaming data</em>. For many people, “streaming” means real-time data - streaming a movie, checking Twitter, checking the weather, <em>et cetera</em>. If you’re an analyst, engineer, or scientist, <strong>any data that gets updated is a stream.</strong> The frequency of the update doesn’t matter. It could be seconds, hours, days, or even months - if the data gets updated, the data is a stream. If the data is a stream, then Structured Streaming is going to save you <em>a lot</em> of headaches.</p>
+<p><img src="/assets/cost_scaling_streaming.jpg" width="auto" height="auto" alt/>
+<em>With <strong>Structured Streaming</strong>, you can avoid the cost of re-processing previous data</em></p>
+<p>Let’s step back into our hypothetical - you have an aggregate analysis that you not only need to deliver <em>today</em>, but also <em>keep updating</em> as new data rolls in. This time, we have the <code>DeliveryDate</code> column to remind us of the futility of our previous single-shot analysis:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>InvoiceNo</th><th>StockCode</th><th>Description</th><th>Quantity</th><th>InvoiceDate</th><th><em>DeliveryDate</em></th><th>UnitPrice</th><th>CustomerID</th><th>Country</th></tr></thead><tbody><tr><td>536365</td><td>85123A</td><td>WHITE HANGING HEA…</td><td>6</td><td>2012-01-10</td><td><strong>2012-01-17</strong></td><td>2.55</td><td>17850</td><td>United Kingdom</td></tr><tr><td>536365</td><td>71053</td><td>WHITE METAL LANTERN</td><td>6</td><td>2012-01-10</td><td><strong>2012-01-15</strong></td><td>3.39</td><td>17850</td><td>United Kingdom</td></tr><tr><td>536365</td><td>84406B</td><td>CREAM CUPID HEART…</td><td>8</td><td>2012-01-10</td><td><strong>2012-01-16</strong></td><td>2.75</td><td>17850</td><td>United Kingdom</td></tr><tr><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td><td><strong>…</strong></td><td>…</td><td>…</td><td>…</td></tr></tbody></table></div>
+<p>Thankfully, the interface for Structured Streaming is incredibly similar to your original PySpark snippet. Here is your original static batch analysis code:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="py" data-theme="github-light github-dark"><code data-language="py" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># =================================</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># ===== OLD STATIC BATCH CODE =====</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># =================================</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">import</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> pyspark.sql.functions </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">as</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> F</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">df </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> spark.table(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;default.online_retail_data&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">agg_df </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> (</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  df</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  # Group data by date &amp; item code</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  .groupBy(</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;InvoiceDate&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">    &quot;StockCode&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  )</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;">  # Return aggregate totals of dollars, units sold, and unique users</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  .agg(</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    F.sum(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;UnitPrice&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">      .alias(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Dollars&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    F.sum(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Quantity&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">      .alias(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Units&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    F.countDistinct(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;CustomerID&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">      .alias(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Users&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  )</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  agg_df.write</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  .format(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'delta'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  .mode(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">'overwrite'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  .saveAsTable(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;analytics.online_retail_aggregations&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span></code></pre></figure>
+<p>With just a few tweaks, we can adjust this to leverage Structured Streaming. To convert your previous code, you’ll:</p>
+<ol>
+<li>Read our input table as a <strong>stream</strong> instead of a static batch of data</li>
+<li>Make a directory in your file system where <strong>checkpoints</strong> will be stored</li>
+<li>Set a <strong>watermark</strong> to establish a boundary for how late data can arrive before it is ignored in the analysis</li>
+<li>Modify some of your transformations to keep the saved checkpoint state from getting too large</li>
+<li>Write your final analysis table as a stream that incrementally processes the input data</li>
+</ol>
+<p>We’ll apply these tweaks, run through each change, and give you a few options for how to configure the behavior of your stream.</p>
+<p>Here is the ✨ <em>stream-ified</em> ✨ version of your old code:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="diff" data-theme="github-light github-dark"><code data-language="diff" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># =========================================</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># ===== NEW STRUCTURED STREAMING CODE =====</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D;"># =========================================</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+ CHECKPOINT_DIRECTORY = &quot;/delta/checkpoints/online_retail_analysis&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+ dbutils.fs.mkdirs(CHECKPOINT_DIRECTORY)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+ df = spark.readStream.table(&quot;default.online_retail_data&quot;)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">agg_df = (</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  df</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+ # Watermark data with an InvoiceDate of -7 days</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+ .withWatermark(&quot;InvoiceDate&quot;, f&quot;7 days&quot;)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  # Group data by date &amp; item code</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  .groupBy(</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    &quot;InvoiceDate&quot;,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    &quot;StockCode&quot;,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  )</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  # Return aggregate totals of dollars, units sold, and unique users</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  .agg(</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    F.sum(&quot;UnitPrice&quot;)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    .alias(&quot;Dollars&quot;),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    F.sum(&quot;Quantity&quot;)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    .alias(&quot;Units&quot;),</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+   F.approx_count_distinct(&quot;CustomerID&quot;, 0.05)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    .alias(&quot;Users&quot;),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  )</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+ agg_df.writeStream</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  .format(&quot;delta&quot;)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+ .outputMode(&quot;update&quot;)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+ .trigger(once = True)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+ .option(&quot;checkpointLocation&quot;, CHECKPOINT_DIR)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+ .toTable(&quot;analytics.online_retail_aggregations&quot;)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span></code></pre></figure>
+<p>Let’s run through each of the tweaks we made to get Structured Streaming working:</p>
+<ol>
+<li><a href="https://docs.databricks.com/delta/delta-streaming.html#delta-table-as-a-source" class="external" target="_blank"><strong>Stream from a Delta Table</strong><svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="diff" data-theme="github-light github-dark"><code data-language="diff" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+ df = spark.readStream.table(&quot;default.online_retail_data&quot;)</span></span></code></pre></figure>
+<p>Of all of Delta tables’ nifty features, this may be the niftiest: <strong>you can treat them like a stream</strong>. Because <a href="https://docs.databricks.com/delta/delta-streaming.html#delta-table-as-a-source" class="external" target="_blank">Delta keeps track of updates<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>, you can use <code>.readStream.table()</code> to stream new updates each time you run the process.</p>
+<p>It’s important to note that your input table <strong>must</strong> be a Delta table for this to work. It’s possible to stream other data formats with different methods, but <code>.readStream.table()</code> <strong>requires</strong> a Delta table</p>
+<ol start="2">
+<li><a href="https://spark.apache.org/docs/latest/streaming-programming-guide.html#checkpointing" class="external" target="_blank"><strong>Declare a checkpoint location</strong><svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="diff" data-theme="github-light github-dark"><code data-language="diff" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+ # Create checkpoint directory</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+ CHECKPOINT_DIRECTORY = &quot;/delta/checkpoints/online_retail_analysis&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+ dbutils.fs.mkdirs(CHECKPOINT_DIRECTORY)</span></span></code></pre></figure>
+<p>In Structured Streaming-jargon, the aggregation in this analysis is a <a href="https://spark.apache.org/docs/latest/streaming-programming-guide.html#checkpointing" class="external" target="_blank">stateful transformation<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>. Without getting too far in the weeds, Structured Streaming saves out the state of the aggregation as a <strong>checkpoint</strong> every time the analysis is updated.</p>
+<p>This is what saves you a fortune in compute cost: instead of re-processing <em>all</em> the data from scratch every time, updates simply pick up where the last update left off.</p>
+<ol start="3">
+<li><a href="https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html#handling-late-data-and-watermarking" class="external" target="_blank"><strong>Define a watermark</strong><svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="diff" data-theme="github-light github-dark"><code data-language="diff" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+ # Watermark data with an InvoiceDate of -7 days</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+ .withWatermark(&quot;InvoiceDate&quot;, f&quot;7 days&quot;)</span></span></code></pre></figure>
+<p>When you get new data, there’s a good chance that you may receive data out-of-order. <strong>Watermarking</strong> your data lets you define a cutoff for how far back aggregates can be updated. In a sense, <strong>it creates a boundary between “live” and “settled” data.</strong></p>
+<p>To illustrate: let’s say this data product contains data up to the 7th of the month. We’ve set our watermark to 7 days. This means <strong>aggregates from the 7th to the 1st are still “live”</strong>. New updates could change aggregates from the 1st to the 7th, but any new data that lagged behind more than 7 days won’t be included in the update - <strong>aggregates prior to the 1st are “settled”</strong>, and updates for that period are ignored.</p>
+<p><img src="/assets/settled_live_data.jpg" width="auto" height="auto" alt/>
+<em>New data that falls outside of the watermark is not incorporated into the analysis.</em></p>
+<p>It’s important to note that the column you use to watermark must be either a Timestamp or a Window.</p>
+<ol start="4">
+<li><a href="https://docs.databricks.com/delta/delta-streaming.html#delta-table-as-a-sink" class="external" target="_blank"><strong>Use Structured Streaming-compatible transformations</strong><svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="diff" data-theme="github-light github-dark"><code data-language="diff" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+ F.approx_count_distinct(&quot;CustomerID&quot;, 0.05)</span></span></code></pre></figure>
+<p>In order to keep your checkpoint states from ballooning, you may need to replace some of your transformations with more storage-efficient alternatives. For a column that may contain lots of unique individual values, the <a href="https://spark.apache.org/docs/3.1.1/api/python/reference/api/pyspark.sql.functions.approx_count_distinct.html" class="external" target="_blank"><code>approx_count_distinct</code><svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> function will get you results within a defined relative standard deviation.</p>
+<ol start="5">
+<li><a href="https://docs.databricks.com/delta/delta-streaming.html#delta-table-as-a-sink" class="external" target="_blank"><strong>Create the output stream</strong><svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="diff" data-theme="github-light github-dark"><code data-language="diff" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+ agg_df.writeStream</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">   .format(&quot;delta&quot;)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+   .outputMode(&quot;update&quot;)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+   .trigger(once = True)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+   .option(&quot;checkpointLocation&quot;, CHECKPOINT_DIR)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#85E89D;">+   .toTable(&quot;analytics.online_retail_aggregations&quot;)</span></span></code></pre></figure>
+<p>The final step is to output the analysis into a Delta table. With this comes a few options that determine how your stream will behave:</p>
+<ul>
+<li><code>.outputMode(&quot;update&quot;)</code> configures the stream so that, each time the code runs, the aggregation will pick up where it left off instead of running from scratch. To re-do an aggregation from scratch, you can use <code>&quot;complete&quot;</code> - in effect, doing a traditional batch aggregate while still preserving the aggregation state for a future <code>&quot;update&quot;</code> run.</li>
+<li><code>trigger(once = True)</code> will trigger the query once when the line of output code is started, and then stop the query once all of the new data has been processed.</li>
+<li><code>&quot;checkpointLocation&quot;</code> lets the program know where checkpoints should be stored.</li>
+</ul>
+<p>These configuration options make the stream behave most closely like the original one-shot solution.</p>
+<p>This all comes together to create a scalable solution to your growing data. If new data is added to your source, your analysis will take into account the new data without costing an arm and a leg.</p>
+<p>You’d be hard pressed to find any context where data isn’t going to be updated at some point. It’s a soft agreement that data analysts, engineers, and scientists make when we work with modern data - it’s going to grow, and we have to find ways to handle that growth.</p>
+<p>With Spark Structured Streaming, we can use the latest and greatest data to deliver the best products, without the headaches that come with scale.</p>
+<blockquote>
+<p>This post was written during my time as a software engineer at M Science as a joint project with Databricks. You can view the original post <a href="https://www.databricks.com/blog/2022/07/14/using-spark-structured-streaming-to-scale-your-analytics.html" class="external" target="_blank">here<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+</blockquote></article><div class="email-subscribe"><h3>Subscribe for more!</h3><div class="email-subscribe-container"><p>Be notified weekly about any fresh notes or articles!</p><form action="https://buttondown.com/api/emails/embed-subscribe/chaoticgoodcomputing" method="post" class="embeddable-buttondown-form"><input type="email" name="email" id="bd-email" placeholder="you@youmail.com" required/><input type="submit" value="Subscribe"/></form></div></div><div class="page-source"><a href="https://github.com/chaoticgoodcomputing/chaoticgoodcomputing.github.io/blob/main/content/public/content/articles/structured-streaming.md" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>View source on GitHub</a></div><hr/></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1,&quot;repelForce&quot;:3,&quot;centerForce&quot;:1.75,&quot;linkDistance&quot;:{&quot;tagTag&quot;:50,&quot;tagPost&quot;:50,&quot;postPost&quot;:50},&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[&quot;private&quot;],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false,&quot;linkStrength&quot;:{&quot;tagTag&quot;:0.3,&quot;tagPost&quot;:0.3,&quot;postPost&quot;:0.3},&quot;tagColorGradient&quot;:[&quot;#FF0000&quot;,&quot;#00FF00&quot;,&quot;#0000FF&quot;],&quot;edgeOpacity&quot;:{&quot;tagTag&quot;:{&quot;min&quot;:1,&quot;max&quot;:1},&quot;tagPost&quot;:{&quot;min&quot;:0.75,&quot;max&quot;:1},&quot;postPost&quot;:{&quot;min&quot;:0.5,&quot;max&quot;:1}},&quot;baseSize&quot;:{&quot;tags&quot;:10,&quot;posts&quot;:10},&quot;sizeScaling&quot;:{&quot;tags&quot;:1.2,&quot;posts&quot;:1},&quot;labelAnchor&quot;:{&quot;baseY&quot;:1.2,&quot;scaleFactor&quot;:0.05},&quot;nodeColors&quot;:{&quot;private&quot;:&quot;#c54040&quot;},&quot;linkStyle&quot;:{&quot;tagTag&quot;:&quot;solid&quot;,&quot;tagPost&quot;:&quot;solid&quot;,&quot;postPost&quot;:&quot;dotted&quot;},&quot;privatePostSizeMultiplier&quot;:0.8,&quot;expandSelectedSize&quot;:1.4,&quot;expandSelectedOscillationTime&quot;:2,&quot;defaultFilterState&quot;:{&quot;timePeriod&quot;:&quot;month&quot;,&quot;includePrivate&quot;:false,&quot;adaptiveTimePeriod&quot;:{&quot;minPosts&quot;:3}}}"></div><button class="global-graph-icon" aria-label="View Global Graph">View Global Graph</button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:1,&quot;repelForce&quot;:3,&quot;centerForce&quot;:1.75,&quot;linkDistance&quot;:{&quot;tagTag&quot;:50,&quot;tagPost&quot;:10,&quot;postPost&quot;:10},&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[&quot;private&quot;],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true,&quot;linkStrength&quot;:{&quot;tagTag&quot;:1,&quot;tagPost&quot;:0.5,&quot;postPost&quot;:0.05},&quot;tagColorGradient&quot;:[&quot;#FF0000&quot;,&quot;#FF7F00&quot;,&quot;#FFFF00&quot;,&quot;#00FF00&quot;,&quot;#0000FF&quot;,&quot;#4B0082&quot;,&quot;#9400D3&quot;],&quot;edgeOpacity&quot;:{&quot;tagTag&quot;:{&quot;min&quot;:0.8,&quot;max&quot;:1},&quot;tagPost&quot;:{&quot;min&quot;:0.2,&quot;max&quot;:1},&quot;postPost&quot;:{&quot;min&quot;:0.2,&quot;max&quot;:1}},&quot;baseSize&quot;:{&quot;tags&quot;:15,&quot;posts&quot;:10},&quot;sizeScaling&quot;:{&quot;tags&quot;:1.2,&quot;posts&quot;:1},&quot;labelAnchor&quot;:{&quot;baseY&quot;:1.2,&quot;scaleFactor&quot;:0.05},&quot;nodeColors&quot;:{&quot;private&quot;:&quot;#c54040&quot;},&quot;linkStyle&quot;:{&quot;tagTag&quot;:&quot;solid&quot;,&quot;tagPost&quot;:&quot;solid&quot;,&quot;postPost&quot;:&quot;dotted&quot;},&quot;privatePostSizeMultiplier&quot;:0.8,&quot;defaultFilterState&quot;:{&quot;timePeriod&quot;:&quot;month&quot;,&quot;includePrivate&quot;:false,&quot;adaptiveTimePeriod&quot;:{&quot;minPosts&quot;:3}},&quot;expandSelectedSize&quot;:1.4,&quot;expandSelectedOscillationTime&quot;:2,&quot;graphStyle&quot;:&quot;pseudo-shell&quot;,&quot;pseudoShellConfig&quot;:{&quot;radiusBase&quot;:90,&quot;radiusScale&quot;:40,&quot;circumferentialRepulsion&quot;:4,&quot;zoomMargin&quot;:80,&quot;pinnedTags&quot;:[&quot;engineering&quot;,&quot;writing&quot;,&quot;horticulture&quot;,&quot;projects&quot;,&quot;economics&quot;],&quot;showShell&quot;:true,&quot;shellStyle&quot;:{&quot;opacity&quot;:0.5,&quot;lineStyle&quot;:&quot;dotted&quot;,&quot;lineWidth&quot;:2}}}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-8" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-2" class="toc-content overflow"><li class="depth-0"><a href="#what-do-we-do-when-our-data-grows" data-for="what-do-we-do-when-our-data-grows">What do we do when our data grows?</a></li><li class="depth-0"><a href="#using-spark-structured-streaming" data-for="using-spark-structured-streaming">Using Spark Structured Streaming</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Backlinks</h3><ul id="list-3" class="overflow"><li><a href="/tags/economics/finance/" class="false file-link"><span class="file-icon"></span><span class="file-title">#finance</span></a></li><li><a href="/tags/economics/" class="false file-link"><span class="file-icon"></span><span class="file-title">#economics</span></a></li><li><a href="/content/notes/mdx-widgets-test" class="false file-link"><span class="file-icon"></span><span class="file-title">Quartz Widgets: Graphs, Galore!</span></a></li><li><a href="/content/articles/binglish" class="false file-link"><span class="file-icon"></span><span class="file-title">GPTinglish: Unnatural Language Processing</span></a></li><li><a href="/content/notes/over-under-engineering" class="false file-link"><span class="file-icon"></span><span class="file-title">The Over/Unders of Over- and Under-Engineering</span></a></li><li><a href="/content/notes/digital-gardening-with-quartz" class="false file-link"><span class="file-icon"></span><span class="file-title">Breaking Ground on Digital Gardening</span></a></li><li class="overflow-end"></li></ul></div></div><footer class="site-footer "><ul><li><a href="https://blog.chaoticgood.computer/contact">Contact</a></li><li><a href="https://github.com/spelkington">GitHub</a></li><li><a href="https://www.linkedin.com/in/spelkington">LinkedIn</a></li><li><a href="https://chaoticgood.computer/privacy">Privacy Policy</a></li><li><a href="https://chaoticgood.computer/ai-policy">AI Policy</a></li></ul><p>Copyright <a href="https://chaoticgood.computer/contact">Spencer Elkington</a> &amp; <a href="https://github.com/chaoticgoodcomputing">Chaotic Good Computing</a> © 2026</p><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz</a> © 2026</p></footer></div></div><script type="application/javascript">var m=Object.create;var f=Object.defineProperty;var x=Object.getOwnPropertyDescriptor;var S=Object.getOwnPropertyNames;var y=Object.getPrototypeOf,b=Object.prototype.hasOwnProperty;var R=(t,e)=>()=>(e||t((e={exports:{}}).exports,e),e.exports);var j=(t,e,n,E)=>{if(e&&typeof e=="object"||typeof e=="function")for(let i of S(e))!b.call(t,i)&&i!==n&&f(t,i,{get:()=>e[i],enumerable:!(E=x(e,i))||E.enumerable});return t};var v=(t,e,n)=>(n=t!=null?m(y(t)):{},j(e||!t||!t.__esModule?f(n,"default",{value:t,enumerable:!0}):n,t));var p=R((M,g)=>{"use strict";g.exports=w;function B(t){return t instanceof Buffer?Buffer.from(t):new t.constructor(t.buffer.slice(),t.byteOffset,t.length)}function w(t){if(t=t||{},t.circles)return L(t);let e=new Map;if(e.set(Date,F=>new Date(F)),e.set(Map,(F,l)=>new Map(E(Array.from(F),l))),e.set(Set,(F,l)=>new Set(E(Array.from(F),l))),t.constructorHandlers)for(let F of t.constructorHandlers)e.set(F[0],F[1]);let n=null;return t.proto?o:i;function E(F,l){let u=Object.keys(F),D=new Array(u.length);for(let s=0;s<u.length;s++){let r=u[s],A=F[r];typeof A!="object"||A===null?D[r]=A:A.constructor!==Object&&(n=e.get(A.constructor))?D[r]=n(A,l):ArrayBuffer.isView(A)?D[r]=B(A):D[r]=l(A)}return D}function i(F){if(typeof F!="object"||F===null)return F;if(Array.isArray(F))return E(F,i);if(F.constructor!==Object&&(n=e.get(F.constructor)))return n(F,i);let l={};for(let u in F){if(Object.hasOwnProperty.call(F,u)===!1)continue;let D=F[u];typeof D!="object"||D===null?l[u]=D:D.constructor!==Object&&(n=e.get(D.constructor))?l[u]=n(D,i):ArrayBuffer.isView(D)?l[u]=B(D):l[u]=i(D)}return l}function o(F){if(typeof F!="object"||F===null)return F;if(Array.isArray(F))return E(F,o);if(F.constructor!==Object&&(n=e.get(F.constructor)))return n(F,o);let l={};for(let u in F){let D=F[u];typeof D!="object"||D===null?l[u]=D:D.constructor!==Object&&(n=e.get(D.constructor))?l[u]=n(D,o):ArrayBuffer.isView(D)?l[u]=B(D):l[u]=o(D)}return l}}function L(t){let e=[],n=[],E=new Map;if(E.set(Date,u=>new Date(u)),E.set(Map,(u,D)=>new Map(o(Array.from(u),D))),E.set(Set,(u,D)=>new Set(o(Array.from(u),D))),t.constructorHandlers)for(let u of t.constructorHandlers)E.set(u[0],u[1]);let i=null;return t.proto?l:F;function o(u,D){let s=Object.keys(u),r=new Array(s.length);for(let A=0;A<s.length;A++){let c=s[A],C=u[c];if(typeof C!="object"||C===null)r[c]=C;else if(C.constructor!==Object&&(i=E.get(C.constructor)))r[c]=i(C,D);else if(ArrayBuffer.isView(C))r[c]=B(C);else{let a=e.indexOf(C);a!==-1?r[c]=n[a]:r[c]=D(C)}}return r}function F(u){if(typeof u!="object"||u===null)return u;if(Array.isArray(u))return o(u,F);if(u.constructor!==Object&&(i=E.get(u.constructor)))return i(u,F);let D={};e.push(u),n.push(D);for(let s in u){if(Object.hasOwnProperty.call(u,s)===!1)continue;let r=u[s];if(typeof r!="object"||r===null)D[s]=r;else if(r.constructor!==Object&&(i=E.get(r.constructor)))D[s]=i(r,F);else if(ArrayBuffer.isView(r))D[s]=B(r);else{let A=e.indexOf(r);A!==-1?D[s]=n[A]:D[s]=F(r)}}return e.pop(),n.pop(),D}function l(u){if(typeof u!="object"||u===null)return u;if(Array.isArray(u))return o(u,l);if(u.constructor!==Object&&(i=E.get(u.constructor)))return i(u,l);let D={};e.push(u),n.push(D);for(let s in u){let r=u[s];if(typeof r!="object"||r===null)D[s]=r;else if(r.constructor!==Object&&(i=E.get(r.constructor)))D[s]=i(r,l);else if(ArrayBuffer.isView(r))D[s]=B(r);else{let A=e.indexOf(r);A!==-1?D[s]=n[A]:D[s]=l(r)}}return e.pop(),n.pop(),D}}});var $=Object.hasOwnProperty;var h=v(p(),1),O=(0,h.default)();function d(t){return t.document.body.dataset.slug}function k(t){return`${d(window)}-checkbox-${t}`}function U(t,e){let n=t.target?.checked?"true":"false";localStorage.setItem(e,n)}function W(){document.querySelectorAll("input.checkbox-toggle").forEach((e,n)=>{let E=k(n),i=o=>U(o,E);e.addEventListener("change",i),window.addCleanup(()=>e.removeEventListener("change",i)),localStorage.getItem(E)==="true"&&(e.checked=!0)})}document.addEventListener("nav",W);
+</script><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function h(i,e){if(!i)return;function t(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function n(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",t),window.addCleanup(()=>i?.removeEventListener("click",t)),document.addEventListener("keydown",n),window.addCleanup(()=>document.removeEventListener("keydown",n))}function m(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var d=class{constructor(e,t){this.container=e;this.content=t;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),t=this.onMouseMove.bind(this),n=this.onMouseUp.bind(this),o=this.onTouchStart.bind(this),r=this.onTouchMove.bind(this),s=this.onTouchEnd.bind(this),a=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",t),document.addEventListener("mouseup",n),this.container.addEventListener("touchstart",o,{passive:!1}),document.addEventListener("touchmove",r,{passive:!1}),document.addEventListener("touchend",s),window.addEventListener("resize",a),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",t),()=>document.removeEventListener("mouseup",n),()=>this.container.removeEventListener("touchstart",o),()=>document.removeEventListener("touchmove",r),()=>document.removeEventListener("touchend",s),()=>window.removeEventListener("resize",a))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let t=this.createButton("+",()=>this.zoom(.1)),n=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(n),e.appendChild(o),e.appendChild(t),this.container.appendChild(e)}createButton(e,t){let n=document.createElement("button");return n.textContent=e,n.className="mermaid-control-button",n.addEventListener("click",t),window.addCleanup(()=>n.removeEventListener("click",t)),n}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}onTouchStart(e){if(e.touches.length!==1)return;this.isDragging=!0;let t=e.touches[0];this.startPan={x:t.clientX-this.currentPan.x,y:t.clientY-this.currentPan.y}}onTouchMove(e){if(!this.isDragging||e.touches.length!==1)return;e.preventDefault();let t=e.touches[0];this.currentPan={x:t.clientX-this.startPan.x,y:t.clientY-this.startPan.y},this.updateTransform()}onTouchEnd(){this.isDragging=!1}zoom(e){let t=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),n=this.content.getBoundingClientRect(),o=n.width/2,r=n.height/2,s=t-this.scale;this.currentPan.x-=o*s,this.currentPan.y-=r*s,this.scale=t,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){let t=this.content.querySelector("svg").getBoundingClientRect(),n=t.width/this.scale,o=t.height/this.scale;this.scale=1,this.currentPan={x:(this.container.clientWidth-n)/2,y:(this.container.clientHeight-o)/2},this.updateTransform()}},E=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"];function f(){return E.reduce((i,e)=>(i[e]=window.getComputedStyle(document.documentElement).getPropertyValue(e),i),{})}function L(i,e,t){let n=window.getComputedStyle(e),o=e.offsetWidth+parseFloat(n.marginLeft||"0")+parseFloat(n.marginRight||"0");t.style.right=`calc(${o}px + 0.3rem)`,i.prepend(t)}function y(i,e){let t=null;function n(){let r=e.querySelector("#mermaid-space"),s=e.querySelector(".mermaid-content");if(!s)return;m(s);let a=i.querySelector("svg").cloneNode(!0);s.appendChild(a),e.classList.add("active"),r.style.cursor="grab",t=new d(r,s)}function o(){e.classList.remove("active"),t?.cleanup(),t=null}return{show:n,hide:o,panZoom:t}}var p;async function M(){let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;p||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let t=p.default,n=new WeakMap;for(let r of e)n.set(r,r.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=n.get(s);a&&(s.innerHTML=a)}let r=f();t.initialize({startOnLoad:!1,securityLevel:"loose",theme:"dark",themeVariables:{fontFamily:r["--codeFont"],primaryColor:r["--light"],primaryTextColor:r["--darkgray"],primaryBorderColor:r["--tertiary"],lineColor:r["--darkgray"],secondaryColor:r["--secondary"],tertiaryColor:r["--tertiary"],clusterBkg:r["--light"],edgeLabelBackground:r["--highlight"]}}),await t.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let r=0;r<e.length;r++){let s=e[r],a=s.parentElement,v=a.querySelector(".clipboard-button"),c=a.querySelector(".expand-button");L(a,v,c);let l=a.querySelector("#mermaid-container");if(!l)continue;let{show:u,hide:g}=y(s,l);c.addEventListener("click",u),h(l,g),window.addCleanup(()=>{c.removeEventListener("click",u)})}}document.addEventListener("nav",M);
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="/postscript.js" type="module"></script></body></html>

@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>Typst Resume Template | Spencer Elkington</title><meta charset="utf-8"/><link rel="stylesheet" href="/static/fonts/fonts.css"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Chaotic Good Computing"/><meta property="og:title" content="Typst Resume Template | Spencer Elkington"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Typst Resume Template | Spencer Elkington"/><meta name="twitter:description" content="A beginner-friendly resume template in Typst — 100% less LaTeX, 100% more opinions.
+"/><meta property="og:description" content="A beginner-friendly resume template in Typst — 100% less LaTeX, 100% more opinions.
+"/><meta property="og:image:alt" content="A beginner-friendly resume template in Typst — 100% less LaTeX, 100% more opinions.
+"/><meta property="twitter:domain" content="blog.chaoticgood.computer"/><meta property="og:url" content="https://blog.chaoticgood.computer/content/notes/typst-resume-template"/><meta property="twitter:url" content="https://blog.chaoticgood.computer/content/notes/typst-resume-template"/><meta property="article:published_time" content="2024-04-21T00:00:00.000Z"/><meta property="article:modified_time" content="2024-04-21T00:00:00.000Z"/><meta property="article:author" content="https://blog.chaoticgood.computer/about"/><meta property="article:section" content="writing"/><meta property="article:tag" content="tutorials"/><meta property="article:tag" content="undergrad"/><meta property="article:tag" content="teaching"/><meta property="article:tag" content="highlights"/><link rel="canonical" href="https://blog.chaoticgood.computer/content/notes/typst-resume-template"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="A beginner-friendly resume template in Typst — 100% less LaTeX, 100% more opinions.
+"/><meta name="generator" content="Quartz"/><script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","headline":"Typst Resume Template","url":"https://blog.chaoticgood.computer/content/notes/typst-resume-template","image":"https://blog.chaoticgood.computer/content/notes/typst-resume-template-og-image.webp","inLanguage":"en-US","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.chaoticgood.computer/content/notes/typst-resume-template"},"author":{"@type":"Person","name":"Spencer Elkington","url":"https://blog.chaoticgood.computer/about"},"publisher":{"@type":"Organization","name":"Chaotic Good Computing","url":"https://blog.chaoticgood.computer/about","logo":{"@type":"ImageObject","url":"https://blog.chaoticgood.computer/static/icon.png","width":184,"height":184}},"description":"A beginner-friendly resume template in Typst — 100% less LaTeX, 100% more opinions.\n","datePublished":"2024-04-21T00:00:00.000Z","dateModified":"2024-04-21T00:00:00.000Z","articleSection":"Tutorials","keywords":"writing/tutorials, projects/undergrad, projects/teaching, writing/highlights"}</script><link href="/index.css" rel="stylesheet" type="text/css" data-persist="true"/><style>@layer components {
+  .expand-button {
+    position: absolute;
+    display: flex;
+    float: right;
+    padding: 0.4rem;
+    margin: 0.3rem;
+    right: 0;
+    color: var(--gray);
+    border-color: var(--dark);
+    background-color: var(--light);
+    border: 1px solid;
+    border-radius: 5px;
+    opacity: 0;
+    transition: 0.2s;
+  }
+  .expand-button > svg {
+    fill: var(--light);
+    filter: contrast(0.3);
+  }
+  .expand-button:hover {
+    cursor: pointer;
+    border-color: var(--secondary);
+  }
+  .expand-button:focus {
+    outline: 0;
+  }
+  pre:hover > .expand-button {
+    opacity: 1;
+    transition: 0.2s;
+  }
+  #mermaid-container {
+    position: fixed;
+    contain: layout;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: none;
+    backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.5);
+  }
+  #mermaid-container.active {
+    display: inline-block;
+  }
+  #mermaid-container > #mermaid-space {
+    border: 1px solid var(--lightgray);
+    background-color: var(--light);
+    border-radius: 5px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 80vh;
+    width: 80vw;
+    overflow: hidden;
+  }
+  #mermaid-container > #mermaid-space > .mermaid-content {
+    position: relative;
+    transform-origin: 0 0;
+    transition: transform 0.1s ease;
+    overflow: visible;
+    min-height: 200px;
+    min-width: 200px;
+  }
+  #mermaid-container > #mermaid-space > .mermaid-content pre {
+    margin: 0;
+    border: none;
+  }
+  #mermaid-container > #mermaid-space > .mermaid-content svg {
+    max-width: none;
+    height: auto;
+  }
+  #mermaid-container > #mermaid-space > .mermaid-controls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    background: var(--light);
+    border: 1px solid var(--lightgray);
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+  }
+  #mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid var(--lightgray);
+    background: var(--light);
+    color: var(--dark);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: var(--bodyFont);
+    transition: all 0.2s ease;
+  }
+  #mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+    background: var(--lightgray);
+  }
+  #mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+    transform: translateY(1px);
+  }
+  #mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+    width: auto;
+    padding: 0 12px;
+    font-size: 14px;
+  }
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvYmxvZy9ibG9nL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0lBQ0U7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7O0VBRUE7SUFDRTtJQUNBOztFQUdGO0lBQ0U7SUFDQTs7RUFHRjtJQUNFOztFQUtGO0lBQ0U7SUFDQTs7RUFJSjtJQUNFO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7O0VBRUE7SUFDRTs7RUFHRjtJQUNFO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBOztFQUVBO0lBQ0U7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBOztFQUVBO0lBQ0U7SUFDQTs7RUFHRjtJQUNFO0lBQ0E7O0VBSUo7SUFDRTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBOztFQUVBO0lBQ0U7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTtJQUNBO0lBQ0E7SUFDQTs7RUFFQTtJQUNFOztFQUdGO0lBQ0U7O0VBSUY7SUFDRTtJQUNBO0lBQ0EiLCJzb3VyY2VzQ29udGVudCI6WyJAbGF5ZXIgY29tcG9uZW50cyB7XG4gIC5leHBhbmQtYnV0dG9uIHtcbiAgICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gICAgZGlzcGxheTogZmxleDtcbiAgICBmbG9hdDogcmlnaHQ7XG4gICAgcGFkZGluZzogMC40cmVtO1xuICAgIG1hcmdpbjogMC4zcmVtO1xuICAgIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICAgIGNvbG9yOiB2YXIoLS1ncmF5KTtcbiAgICBib3JkZXItY29sb3I6IHZhcigtLWRhcmspO1xuICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICBib3JkZXI6IDFweCBzb2xpZDtcbiAgICBib3JkZXItcmFkaXVzOiA1cHg7XG4gICAgb3BhY2l0eTogMDtcbiAgICB0cmFuc2l0aW9uOiAwLjJzO1xuXG4gICAgJj5zdmcge1xuICAgICAgZmlsbDogdmFyKC0tbGlnaHQpO1xuICAgICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICAgIH1cblxuICAgICY6aG92ZXIge1xuICAgICAgY3Vyc29yOiBwb2ludGVyO1xuICAgICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1zZWNvbmRhcnkpO1xuICAgIH1cblxuICAgICY6Zm9jdXMge1xuICAgICAgb3V0bGluZTogMDtcbiAgICB9XG4gIH1cblxuICBwcmUge1xuICAgICY6aG92ZXI+LmV4cGFuZC1idXR0b24ge1xuICAgICAgb3BhY2l0eTogMTtcbiAgICAgIHRyYW5zaXRpb246IDAuMnM7XG4gICAgfVxuICB9XG5cbiAgI21lcm1haWQtY29udGFpbmVyIHtcbiAgICBwb3NpdGlvbjogZml4ZWQ7XG4gICAgY29udGFpbjogbGF5b3V0O1xuICAgIHotaW5kZXg6IDk5OTtcbiAgICBsZWZ0OiAwO1xuICAgIHRvcDogMDtcbiAgICB3aWR0aDogMTAwdnc7XG4gICAgaGVpZ2h0OiAxMDB2aDtcbiAgICBvdmVyZmxvdzogaGlkZGVuO1xuICAgIGRpc3BsYXk6IG5vbmU7XG4gICAgYmFja2Ryb3AtZmlsdGVyOiBibHVyKDRweCk7XG4gICAgYmFja2dyb3VuZDogcmdiYSgwLCAwLCAwLCAwLjUpO1xuXG4gICAgJi5hY3RpdmUge1xuICAgICAgZGlzcGxheTogaW5saW5lLWJsb2NrO1xuICAgIH1cblxuICAgICY+I21lcm1haWQtc3BhY2Uge1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICAgIHRvcDogNTAlO1xuICAgICAgbGVmdDogNTAlO1xuICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgICBoZWlnaHQ6IDgwdmg7XG4gICAgICB3aWR0aDogODB2dztcbiAgICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAgICY+Lm1lcm1haWQtY29udGVudCB7XG4gICAgICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgICBvdmVyZmxvdzogdmlzaWJsZTtcbiAgICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgICAgcHJlIHtcbiAgICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgICB9XG5cbiAgICAgICAgc3ZnIHtcbiAgICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgICAgaGVpZ2h0OiBhdXRvO1xuICAgICAgICB9XG4gICAgICB9XG5cbiAgICAgICY+Lm1lcm1haWQtY29udHJvbHMge1xuICAgICAgICBwb3NpdGlvbjogYWJzb2x1dGU7XG4gICAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGdhcDogOHB4O1xuICAgICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgICBib3gtc2hhZG93OiAwIDJweCA0cHggcmdiYSgwLCAwLCAwLCAwLjEpO1xuICAgICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgICAgd2lkdGg6IDMycHg7XG4gICAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICAgIGJvcmRlci1yYWRpdXM6IDRweDtcbiAgICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICAgIGZvbnQtZmFtaWx5OiB2YXIoLS1ib2R5Rm9udCk7XG4gICAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAgICY6aG92ZXIge1xuICAgICAgICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgICAgICB9XG5cbiAgICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgICB0cmFuc2Zvcm06IHRyYW5zbGF0ZVkoMXB4KTtcbiAgICAgICAgICB9XG5cbiAgICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICAgJjpudGgtY2hpbGQoMikge1xuICAgICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgICBmb250LXNpemU6IDE0cHg7XG4gICAgICAgICAgfVxuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="/prescript.js" type="application/javascript"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("/static/contentIndex.json").then(data => data.json())</script><script type="application/javascript" data-persist="true">const fetchTagData = fetch("/static/tagIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://blog.chaoticgood.computer/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://blog.chaoticgood.computer/content/notes/typst-resume-template-og-image.webp"/><meta property="og:image:url" content="https://blog.chaoticgood.computer/content/notes/typst-resume-template-og-image.webp"/><meta name="twitter:image" content="https://blog.chaoticgood.computer/content/notes/typst-resume-template-og-image.webp"/><meta property="og:image:type" content="image/webp"/></head><body data-slug="content/notes/typst-resume-template" class><div id="quartz-root" class="page"><div id="quartz-body"><button class="mobile-sidebar-toggle" id="mobile-sidebar-toggle" aria-label="Toggle sidebar menu" aria-expanded="false"><svg class="caret-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></button><div class="mobile-sidebar-backdrop" id="mobile-sidebar-backdrop"></div><div class="mobile-sidebar-container" id="mobile-sidebar-container"><div class="left sidebar"><h2 class="page-title"><a href="/"><img src="/static/icon.png" class="page-title-icon" alt/><div class="page-title-text"><span class="page-title-name">Chaotic Good Computing</span><span class="page-title-author">by Spencer Elkington</span></div></a></h2><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div><div class="tag-explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-opts="{&quot;tagNodeSort&quot;:&quot;count-desc&quot;,&quot;fileNodeSort&quot;:&quot;date-desc&quot;,&quot;excludeTags&quot;:[&quot;private&quot;],&quot;showFileCount&quot;:true}" data-use-tag-index="true"><h3>Tag Explorer</h3><div id="tag-explorer-604" class="tag-explorer-content" role="group"><ul class="tag-explorer-ul overflow" id="list-1"><li class="overflow-end"></li></ul></div><template id="template-tag-node"><li><div class="tag-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="6 9 12 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tag-fold-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="tag-button"><span class="tag-title"></span><span class="tag-count"></span></button></div></div><div class="tag-outer"><ul class="content"></ul></div></li></template><template id="template-file-node"><li><a href="#" class="file-link"><span class="file-icon"></span><span class="file-title"></span></a></li></template></div></div></div><div class="center"><div class="page-header"><div class="popover-hint"><h1 class="article-title">Typst Resume Template</h1><p show-comma="true" class="content-meta"><time datetime="2024-04-21T00:00:00.000Z">Apr 21, 2024</time><span>38 min read</span></p><ul class="tags" data-showtags="true" data-showsubtags="false" data-showparenttag="false" data-showcount="true" data-currentslug="content/notes/typst-resume-template"><li class="tag-item" data-tag="writing/tutorials"><a href="#" class="internal tag-link"><span class="tag-icon-badge"></span><span class="tag-name"></span><span class="tag-count"></span></a></li><li class="tag-item" data-tag="projects/undergrad"><a href="#" class="internal tag-link"><span class="tag-icon-badge"></span><span class="tag-name"></span><span class="tag-count"></span></a></li><li class="tag-item" data-tag="projects/teaching"><a href="#" class="internal tag-link"><span class="tag-icon-badge"></span><span class="tag-name"></span><span class="tag-count"></span></a></li><li class="tag-item" data-tag="writing/highlights"><a href="#" class="internal tag-link"><span class="tag-icon-badge"></span><span class="tag-name"></span><span class="tag-count"></span></a></li></ul></div></div><article class="popover-hint"><p><img src="/assets/Sample-Resume-Template.png" width="auto" height="auto" alt/></p>
+<blockquote>
+<p>This guide is a direct copy of the Resume Template on the <a href="https://typst.app/universe/package/guided-resume-starter-cgc" class="external" target="_blank">Typst Universe<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> portal. This is the exact system I use for <a href="/resume" class="internal alias" data-slug="resume">my own resume</a>, so this system may be updated over time.</p>
+</blockquote>
+<p>Welcome to the 2.0 version of the Super Cool Resume Template: now with 100% less LaTeX!</p>
+<p>This is a second major iteration of the Resume Template made by Spencer Elkington, originally created for the University of Utah’s Triangle Engineering Professional Education students. It is now also used for Chaotic Good Computing professional development mentoring &amp; consulting. You can find more resources at <a href="https://blog.chaoticgood.computer" class="external" target="_blank">https://blog.chaoticgood.computer<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<p>If you have any questions, feedback, or advice, please feel free to contact me at <a href="mailto:spencer@chaoticgood.computer" class="external" target="_blank">spencer@chaoticgood.computer<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<p>If you publicly post or share the source code to your resume, you’re totally allowed (and I would encourage you) to delete all of the commented sections in the template.</p>
+<h2 id="quickstart-how-to-use-this-template">Quickstart: How to use this template<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quickstart-how-to-use-this-template" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li>If you haven’t already, create a (free!) Typst account at <a href="https://typst.app" class="external" target="_blank">https://typst.app<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>Once you have an account, go to <a href="https://typst.app/universe/package/guided-resume-starter-cgc" class="external" target="_blank">Typst Universe and select the CGC template<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>Click on “Create Project in App”, give your project a title, and press “Create”</li>
+<li>Start editing! This copy is your own personal copy to edit however you want!
+<ul>
+<li>If you would like to edit a copy of the resume without the guide, use the <code>resume.typ</code> file.</li>
+</ul>
+</li>
+</ol>
+<h3 id="opinion-why-should-you-use-this-template">Opinion: Why should you use this template?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-why-should-you-use-this-template" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>This template will handle 99.9% of your resume’s formatting for you so you don’t have to spend time massaging the formatting in an editor like Word or Google Docs, or worry that the template you’re using doesn’t mesh with the jobs you’re applying for. Having the formatting pre-baked means you can take more time to focus on your content - easily the most important part of your applications.</p>
+<p>To be clear: the formatting here is OPINIONATED. Although the format has been refined over a period of about 4 years based on a number of meetings with recruiters, hiring managers, and employees at both small and large companies across a number of technical and professional industries, it does still represent many of my own opinions. That said, it’ll provide you with a good starting point to work off of as you slowly develop your own resume &amp; style moving forward.</p>
+<p>If this is your first resume, I’d recommend sticking with this formatting for now. However, if you’re either recreating a previous resume, or if you get far along enough into your career that you want to flavor it up a bit, you can find all of the templating in the <code>resume.typ</code> file included in this project.</p>
+<h3 id="basics-of-resumes">Basics of Resumes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#basics-of-resumes" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>In general, resumes ought to be <em>one page</em> of concise, bulleted, well-formatted descriptions of things about yourself and things you’ve done that explain who you are and what you can do to somebody who’s looking to hire somebody like you.</p>
+<p>While there are exceptions to the one-page rule (which would make it a CV, reserved for people with Ph.Ds and many publications, or those with decades in their field and significant and notable achievements), you should keep it to one page. Having more than one page on your resume will lead to one of two likely reactions:</p>
+<ol>
+<li>“This person clearly didn’t need to use two (or more) pages”, which immediately shifts the reviewer to a mindset that you’re overestimating your credentials; or</li>
+<li>The person reviewing your resume doesn’t even think to check how many pages there are and only sees the first one anyway</li>
+</ol>
+<p>In general, if you want to include more information about yourself that would spill your resume past the first page, you should use LinkedIn as your “full” resume and continue to keep this document to just a one-page review of the most relevant things about yourself.</p>
+<p>Along with this, there are two sections that people expect to see on resumes:</p>
+<ol>
+<li>Education (or equivalent) section (see the Education section for more details)</li>
+<li>Experience section (see the Experience section for more details)</li>
+</ol>
+<h3 id="basics-of-typst">Basics of Typst<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#basics-of-typst" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Previously, this template was created in LaTeX, another PDF typesetting language. To celebrate its 40th(!) birthday, we’re killing it in favor of Typst!</p>
+<p>Typst is a gentler PDF typesetting language that supports putting far more of the “noise” of your formatting into a separate file. That way, the only thing you really have to worry about is putting your content into this file.</p>
+<p>To learn more about Typst, you can find the documentation here: <a href="https://typst.app/docs" class="external" target="_blank">https://typst.app/docs<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<h2 id="header--contact-information">Header &amp; Contact Information<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#header--contact-information" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This is where you should put your name, your contact information, and your general location!</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="typ" data-theme="github-light github-dark"><code data-language="typ" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">#import</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> &quot;util/resume.template.typ&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">*</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;">#show</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: resume.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">with</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  author</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Dr. Emmit </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">Doc</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;"> Brown&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  location</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Hill Valley, CA&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  contacts</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: (</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    [</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">#link</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;mailto:sample_resume@chaoticgood.computer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)[Email]],</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    [</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">#link</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;https://chaoticgood.computer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)[Website]],</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    [</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">#link</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;https://github.com/spelkington&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)[GitHub]],</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    [</span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">#link</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;https://linkedin.com/in/spelkington&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)[LinkedIn]],</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  )</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span></code></pre></figure>
+<p><img src="/assets/Pasted-image-20240421164430.png" width="auto" height="auto" alt/></p>
+<h3 id="opinion-specifying-your-location">Opinion: Specifying Your Location<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-specifying-your-location" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Sometimes, people put their full mailing address on their resume. I personally believe that you should leave your location to ONLY the general metropolitan area you’re in. This is for a few reasons:</p>
+<ul>
+<li>Full mailing addresses are noisy, and wherever possible you should try to eliminate noise from your resume. Recruiters only really need to know your general location, so it’s better to just keep it short and simple.</li>
+<li>As a general safety rule-of-thumb, you should try to not publicly post the address of the place you sleep on the internet. ¯\<em>(ツ)</em>/¯</li>
+</ul>
+<h3 id="opinion-including-your-phone-number">Opinion: Including Your Phone Number<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-including-your-phone-number" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Personally, I would HIGHLY advise you leave your personal phone number off of your resume. Odds are, you’ll be sending this resume to one of two types of places:</p>
+<ol>
+<li>Public areas, such as LinkedIn, Indeed, a website you own, etc.</li>
+<li>Private areas, such as a potential employer’s application portal or a private message</li>
+</ol>
+<p>Given that this may be in public areas, posting your phone number on the resume itself may pose the risk of opening you up to unsolicited calls &amp; harassment. As somebody who has had their number leaked and been harassed with it since then, that’s a hard genie to put back into the bottle - I strongly advise against taking that risk.</p>
+<p>However, when you’re privately sending your resume, you’re likely to be putting your phone number into a separate application field anyway, or even sending your resume over a private channel directly. In that case, a private recipient will <em>already have your contact information, including your phone number</em>. This means that having your phone number here has a lot of risk and virtually no added reward.</p>
+<p>Unless you have a good, explicit reason for doing so, don’t put your phone number on your resume.</p>
+<h3 id="opinion-use-hyperlinks">Opinion: Use Hyperlinks!<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-use-hyperlinks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>In the year of our lord 20XX, it is <em>vastly</em> more likely that somebody reviewing your resume is using a digital, internet-connected device. This may vary industry-to-industry, but the chances of a person printing your resume to review it become lower and lower each year.</p>
+<p>When somebody is viewing your resume digitally, you have the massive advantage of being able to include hyperlinks to other areas of the internet on your resume! This effectively turns the document into a landing page for other valuable resources:</p>
+<ul>
+<li>Your LinkedIn, email, GitHub, website, etc.</li>
+<li>The sites of companies that you’ve worked for to provide additional context about where you worked</li>
+<li>Elaborate or “follow up” projects you’ve done and skills you’ve had with real-world proof that you’ve posted on the internet</li>
+</ul>
+<p>On the other hand, there is a risk that somebody out there is still printing stacks of resumes to review. Additionally, you may have to print off your resume from time to time - something that can come of often if you’re, for example, a student attending your university’s job fairs. In that case, you may need to tune your hyperlinks to still be usable on printed paper.</p>
+<blockquote>
+<p>IF YOU’RE WORRIED YOUR RESUME WILL BE PRINTED, MODIFY THE TEXT OF THE HYPERLINK TO BE THE SAME AS THE LINK ITSELF.</p>
+</blockquote>
+<h2 id="education">Education<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#education" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This is where formal education goes! While this is usually university education, it doesn’t have to be. You can also include:</p>
+<ul>
+<li>Certification Programs</li>
+<li>Boot Camps</li>
+<li>Associates/college degrees</li>
+</ul>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="typ" data-theme="github-light github-dark"><code data-language="typ" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold;">= Education</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">#edu</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  institution</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;University of California, Berkeley&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  date</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Aug 1953&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  location</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Berkeley, CA&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  degrees</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: (</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    (</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Ph.D.&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Theoretical Physics&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  ),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">#edu</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  institution</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;University of Colombia&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  date</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Aug 1948&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  gpa</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;3.9 of 4.0, Summa Cum Laude&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  degrees</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: (</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    (</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Bachelor's of Science&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Nuclear Engineering&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    (</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Minors&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Automobile Design, Arabic&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    (</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Focus&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Childcare, Education&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  ),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span></code></pre></figure>
+<p><img src="/assets/Pasted-image-20240421164456.png" width="auto" height="auto" alt/></p>
+<p>If what you put here is not “education” in the normal sense and fits more with the subjects above, you may want to consider renaming it. However, the general advice I’ve received from technical recruiters, technical interviewers, and fellow professionals over the years is that an Education section containing university degrees should usually stay at the top of your resume.</p>
+<p><strong>TIP FOR UNIVERSITY STUDENTS:</strong> Companies will use this information to background check to confirm you have the degree you claim to have. Because this is one of the background check entries that HAS to check out, <strong>DO NOT MODIFY THE TYPE, NAME, OR GRADUATION DATE OF YOUR DEGREES, MINORS, OR EMPHASES.</strong></p>
+<p>Believe me — as somebody who has a degree in “Quantitative Analysis of Markets and Organizations,” I sure do wish I could abbreviate that down to “Quantitative Economics” for the sake of space and not having to explain what the hell that means. <em>However</em> — because that is the God-given name of my degree, that HAS to stay EXACTLY consistent in order to comply properly with background checks.</p>
+<p>However, as a sneaky way around that requirement, you <em>can</em> add additional information here in an <em>unofficial</em> way. For example, “Focus” is not typically a University-registered piece of information, and something you have a bit of wiggle room on. For example, if you studied Computer Science and your coursework <em>mainly focused</em> on front-end development, but you didn’t get a <em>formal emphasis</em> in “Frontend Development”, you could do:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="typ" data-theme="github-light github-dark"><code data-language="typ" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">degrees: (</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  (&quot;Bachelor's of Science&quot;, &quot;Computer Science&quot;),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  (&quot;Focus&quot;, &quot;Frontend Development&quot;)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span></code></pre></figure>
+<p>Degree paths on the university level can vary from very broad to very specific - especially on a graduate level. This additional degree entree field trick is a good way to sneak additional context into your education section in a way that won’t hit snags during a background check.</p>
+<h3 id="opinion-including-your-gpa">Opinion: Including Your GPA<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-including-your-gpa" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>GPA is a testy subject. Some of us have great GPAs, some of us have alright GPAs, and some of us had an off year (or two, if you were in college during COVID) and if you ask us about it, we’ll avoid the subject entirely. Additionally, some companies require a GPA, others would prefer you have it, and some (the cool ones) don’t give a hoot what your GPA is. Here is the general rule-of-thumb for when to (or to not) include your GPA:</p>
+<ul>
+<li><strong>DEFINITELY</strong> include your GPA <strong>IF</strong>:
+<ul>
+<li>it is above a ~3.5/4.0 (which is usually the threshold of Deans List or your university’s equivalent); OR</li>
+<li>you know for a fact that the company you’re applying for requires it.</li>
+</ul>
+</li>
+<li><strong>POSSIBLY</strong> include your GPA <strong>IF</strong>:
+<ul>
+<li>your GPA is between a 3.0 and 3.5, and you feel it would help your applications.</li>
+</ul>
+</li>
+<li><strong>PROBABLY</strong> don’t include your GPA <strong>IF</strong>: It’s below a 3.0.</li>
+</ul>
+<p>If you do want to include your GPA, the <code>#edu</code> section will automatically format it for you if you add a <code>gpa</code> value to your entry.</p>
+<p>You can also use the <code>gpa:</code> field to elaborate on extra tags like “Dean’s List”, “Honors”, “(Summa) Cum Laude”, etc.</p>
+<h3 id="opinion-including-a-graduation-date">Opinion: Including a Graduation Date<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-including-a-graduation-date" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>If you’re currently in an education program, you should put the estimated month and year you believe you’ll be finishing your program. You have two ways you can do this:</p>
+<ol>
+<li>Set the <code>date</code> field to some variant of “Estimated MONTH 20XX”</li>
+<li>Just put the month and year in the future that you intend to graduate.</li>
+</ol>
+<p>Prior to graduating, I opted to go with option 2 and never ran into issues. In general, people and Applicant Tracking Systems (ATS) are smart enough to intuit that a graduation date in the future means that you’re still a student.</p>
+<h2 id="skills">Skills<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#skills" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>The Skills section is where you can give an overarching view of what you’re good at and what you know! This section is broken out into categories. In general, here are some breakouts that I’ve used in the past:</p>
+<ul>
+<li><strong>Expertise/Key Skills:</strong> Subjects, fields, and “soft” skills that you’re knowledgeable in. KEEP THIS ONE.</li>
+<li><strong>Software:</strong> specific pieces of software relevant to your industry that you’re comfortable using</li>
+<li><strong>Languages:</strong> Usually this means “programming languages,” but I’ve seen the polyglots among us use a Languages section for written/spoken languages as well</li>
+<li><strong>Certifications:</strong> If you feel like certifications you have don’t fit into your Education section well, or you don’t want to spend as much vertical space listing them, you can place them here instead</li>
+</ul>
+<h3 id="opinion-what-should-you-put-here">Opinion: What Should You Put Here?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-what-should-you-put-here" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>So, one thing you <em>have</em> to understand is that human reviewers are <em>not</em> the only audience for your resume. When you’re applying to for jobs and not personally handing off your resume to another human being, you should assume that your resume is going to be reviewed by an Applicant Tracking System (ATS) before it ever even sees human eyes.</p>
+<p>ATS are bots used to pre-review resumes. <em>In general,</em> these bots are doing a comparison analysis of your resume against the description of the job you’re applying for. One of the primary things it does is a <em>keyword analysis,</em> where it is more-or-less asking the question:</p>
+<blockquote>
+<p>How many keywords in this resume match keywords in the job description?</p>
+</blockquote>
+<p>THIS SECTION IS THE PLACE TO MATCH THOSE KEYWORDS.</p>
+<p>This section will be the part of your resume that changes <em>the most.</em> Ideally, you’ll be fine-tuning this section for each application you do to best fit your resume against the description of the job you’re applying for.</p>
+<p>This is where “commenting out” comes in handy. In Typst, you can add <code>//</code> (or <code>Ctrl+/</code>, if you’re using the Typst editor) before any text to remove the text from your final resume WITHOUT removing it from this file. This makes it very easy to make new versions of your resume without actually permanently deleting it.</p>
+<p>In general, the workflow I advise for creating this section is an “everything in the kitchen sink” approach:</p>
+<ol>
+<li>Put in ALL of your skills and interests, all the languages you comfortably know, all the software you know how to use, etc., into each category.</li>
+<li>Order each section by how comfortable or skilled you are with what you’ve listed. For example, if you put “Python” and “JavaScript” into the Languages section and are more comfortable with Python, put that first in the list.</li>
+<li>Comment out the entire list.</li>
+<li>Take the job description of a job you’d like to apply for and put it into a keyword analysis service like JobScan (<a href="https://jobscan.io" class="external" target="_blank">https://jobscan.io<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>) or ChatGPT to get all the job’s keywords out of the description.</li>
+<li>Uncomment (remove the <code>//</code>) of things in each section that match the job description until the category is a line long OR you hit the end of your list</li>
+<li>(Optional) If you noticed keywords in the job description that you would be comfortable adding, add them to the list.</li>
+</ol>
+<h3 id="opinion-including-programming-languages">Opinion: Including Programming Languages<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-including-programming-languages" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote>
+<p>If a technical interviewer sees a programming language on your resume, they will assume it’s fair game for a technical interview.</p>
+</blockquote>
+<p>Now - how does this mesh with the advice above to add things in the job description to your resume? Here’s the rule of thumb for whether or not to include a language on your resume:</p>
+<p>You should include a programming language <strong>IF</strong>:</p>
+<ol>
+<li>You are already comfortable enough with that language to do a technical interview using that language; OR</li>
+<li>You are reasonably acquainted with a language AND feel that you can learn enough — fast enough — to do a technical interview in that programming language in 2 or less full-time, dedicated days of brushing up on that language</li>
+</ol>
+<p>Option 2 is an ethically dicey and professionally risky move to make, but not totally unrealistic. I’d advise that the line you should draw is:</p>
+<blockquote>
+<p>If I’ll need to frequently look up basic syntax in that language by the time I apply for this job, I probably shouldn’t include it.</p>
+</blockquote>
+<h3 id="opinion-including-software">Opinion: Including Software<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-including-software" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Software will be incredibly industry- and job-specific. It would be impossible to give a comprehensive list of things you should include across all industries - however, I can give you some advice on what <em>not</em> to include:</p>
+<ul>
+<li>Do NOT include text editors. If you’re in the software industry, this includes your IDE!</li>
+<li>Do NOT include operating systems UNLESS:
+<ul>
+<li>It is a niche and specific operating system (e.g., Red Hat Linux); AND/OR</li>
+<li>It is because you’ve done OS-level development on it, in which case you should be VERY specific (e.g., Linux Kernel Dev, Windows PowerShell, etc.); OR</li>
+<li>It is specifically mentioned in the requirements for the job.</li>
+</ul>
+</li>
+<li>Do NOT include professional chat apps like Slack, Teams, Discord, etc. UNLESS:
+<ul>
+<li>You have done some kind of advanced development on it, in which case you should be VERY specific (e.g., Slack Bots)</li>
+<li>For whatever reason, the job description explicitly mentions it. Keep in mind: if the job description says anything along the lines of “Familiar with [APP]”, you should giggle to yourself because that’s an objectively weird thing to list in your job description.</li>
+</ul>
+</li>
+<li>AND PLEASE
+<ul>
+<li>FOR THE LOVE OF GOD
+<ul>
+<li>DO NOT
+<ul>
+<li>INCLUDE
+<ul>
+<li>MICROSOFT WORD OR OFFICE 365
+<ul>
+<li>BECAUSE IF YOU INCLUDE THOSE
+<ul>
+<li>EVERYONE WHO READS YOUR RESUME
+<ul>
+<li>WILL MAKE FUN OF YOU BEHIND YOUR BACK
+<ul>
+<li>OR POSSIBLY EVEN TO YOUR FACE
+<ul>
+<li>BECAUSE IT IS
+<ul>
+<li>THE MODERN EQUIVALENT
+<ul>
+<li>OF LISTING “TYPING” AS A SKILL</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>If you have a buddy, contact, or even friend-of-a-friend working in the industry you’re applying for, it’d be in your best interest to ask them for a once-over to make sure nothing you put here feels silly.</p>
+<h3 id="opinion-stating-proficiency-in-a-language">Opinion: Stating Proficiency in a Language<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-stating-proficiency-in-a-language" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>For both natural languages and programming languages, I have sometimes seen people list their proficiency next to the languages: e.g.</p>
+<blockquote>
+<p>Languages: C# (advanced), Python (proficient), …</p>
+</blockquote>
+<p>or</p>
+<blockquote>
+<p>Languages: English (fluent), Spanish (fluent), Arabic (conversational)…</p>
+</blockquote>
+<p>I would highly recommend this for natural languages. I would somewhat, possibly — <em>maybe</em> — recommend it for programming languages. If you do it for one language, though, you should really do it for all languages. Only doing it for one or two languages — but none of the others — may seem to imply you don’t know the other languages as well and are listing it as a form of cheap talk.</p>
+<p>If you want to emphasize particular skill with a programming language, you can also:</p>
+<ol>
+<li>List it towards the start of the list; and</li>
+<li>Inline-bold it to emphasize expertise.</li>
+</ol>
+<p>This strategy allows the design to convey the idea of proficiency through emphasis, and doesn’t require you to waste valuable space to declare proficiency for all the languages you list.</p>
+<h3 id="opinion-hyperlink-your-skills">Opinion: Hyperlink Your Skills<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-hyperlink-your-skills" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>I personally believe that this area is a good candidate for hyperlinks. For example, I tend to hyperlink my strongest areas/software/languages in particular to examples of when I’ve worked with or done those things in the wild. This is a good reason you should strive to make projects of yours open source with good <code>README</code>s, or post your accomplishments somewhere (a website, blog, LinkedIn, Twitter, Instagram, etc.).</p>
+<h3 id="opinion-dedicating-an-entire-section-to-skills">Opinion: Dedicating an Entire Section to Skills<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-dedicating-an-entire-section-to-skills" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>When you’re trying to keep your resume down to one page, vertical space is a valuable resource. In that regard, section headers are pretty expensive, taking up about ~3 bullet points for each one you use. While they’re important for breaking up your resume into sections for comprehensibility reasons, too many can become a waste of vertical space that could otherwise be used in better ways.</p>
+<p>I included a Skills header in this template because people explicitly break this section out often enough that I wanted to make it plug-and-play for those transferring old resumes over. However, I’d highly recommend rolling your Skills section into your Education section by deleting (or commenting out) the <code>Skills</code> line below.</p>
+<p>The exception to this rule is that you should have a dedicated skills section if you’re largely self-taught and feel that an Education section may not be a good fit.</p>
+<h2 id="work-experience">Work Experience<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#work-experience" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This is where you make your resume shine! By and large, the advice here applies to all other sections of your resume, as the pattern through the rest of the resume uses the same “Experience” (<code>#exp</code>) method for formatting.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="typ" data-theme="github-light github-dark"><code data-language="typ" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold;">= Experience</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">#exp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  role</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Theoretical Physics Consultant&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  project</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Doc Brown's Garage&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  date</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;June 1953 - Oct 2015&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  location</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Hill Valley, CA&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  summary</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Specializing in development of time travel devices and student tutoring&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  details</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    - Lead development of time travel devices, resulting in the ability to travel back and forth through time</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    - Managed and executed a budget of </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;">\$</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">14 million dollars gained from an unexplained family fortune</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    - Oversaw QA testing for time travel devices, minimizing risk of maternal time-travel related incidents</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  ]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">#exp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  role</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Teaching Assistant&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  project</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;University of Colombia, Wernher von Braun Lab&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  date</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Oct 1949 - June 1953&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  summary</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Integrating German scientists' curriculi for undergraduate audiences&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  details</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    - Assisted in designing physics course structure and assignments in English, Spanish and German</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    - Designed confidential rocket designs used in NASA Space Race initiatives and the Apollo Program</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    - Developed and executed university DEI initiatives and onboarding programs for transfer professors</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  ]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span></code></pre></figure>
+<p><img src="/assets/Pasted-image-20240421170010.png" width="auto" height="auto" alt/></p>
+<p>Each experience entry has the following attributes you can add:</p>
+<ol>
+<li>Job Title (<code>role:</code>)</li>
+<li>Employer/Project Title (<code>project:</code>)</li>
+<li>Date (<code>date:</code>)</li>
+</ol>
+<ul>
+<li>This should be a <code>MONTH 20XX - MONTH 20XX</code> entry, using “Present” or “Current” to denote the position you currently work at.</li>
+<li>For these dates — and, in general, all dates on your resume - I’d recommend abbreviating months (e.g., <code>January -> Jan</code>, <code>December -> Dec</code>, etc.) to conserve space.</li>
+</ul>
+<ol start="4">
+<li>Location (<code>location:</code>) (OPTIONAL)</li>
+</ol>
+<ul>
+<li>In the era of remote work, the location of a job has lost quite a bit of signal. IN MY OPINION, the location you state in your header would provide an interviewer or recruiter with enough information about your location, causing additional role locations to fall a bit into the same “noise” category we talked about above. However, some reasons you may want to include it are:
+<ul>
+<li>You’re applying for a job that you know will be doing a more thorough background check, such as a government, military-adjacent, or high-security position</li>
+<li>You want to put “Remote” for some of your positions to make it incredibly clear that you are a remote worker with no interest in relocating to an office.</li>
+<li>You’re using cool places you’ve worked to flavor your resume and start conversations in your interviews (e.g., “Oh, wow, you’ve been to France/worked in New York/yodeled in Singapore/etc. etc.? Tell me more about that!”)</li>
+</ul>
+</li>
+</ul>
+<ol start="5">
+<li>Role/employer/project summary (<code>summary:</code>) (OPTIONAL)</li>
+</ol>
+<ul>
+<li>I’ve seen this on enough resumes, and have warmed up to it over time. This can be used to give a <em>brief(!!!)</em> description of the company you worked at, projects you focused on, or role you worked in.</li>
+<li>This can be especially helpful at both larger companies to specify what specific vertical you worked in, or at smaller companies to give on-page context to who they are and what they do.</li>
+<li>In some circumstances, it can substitute as a bullet point and give you more room in your bullet points to drill down into specifics without having to give overarching context.</li>
+</ul>
+<ol start="6">
+<li>Details — VERY IDEALLY BULLET POINTS — describing the entry (<code>details:</code>)</li>
+</ol>
+<h3 id="opinion-creating-new-entries">Opinion: Creating New Entries<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-creating-new-entries" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>For the details section of your experience entries, I would HIGHLY recommend keeping it to exclusively bullet points. Typically, the range of bullet points you should have for an experience entry is:</p>
+<ul>
+<li>Three bullet points by default; with</li>
+<li>(Maybe) Four bullet points for your current (or particularly cool or relevant) positions and projects; and</li>
+<li>(Possibly) Two bullet points for old or “thinner” projects or experiences (e.g. seasonal employments, short-term projects, old experience, etc.)</li>
+</ul>
+<p><em>That’s a lot of bullet points</em>, which means that the bulk of your resume will be SHORT, CONCISE SNIPPETS describing aspects of your experiences.</p>
+<h3 id="opinion-creating-well-structured-bullet-points">Opinion: Creating Well-Structured Bullet Points<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-creating-well-structured-bullet-points" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<blockquote>
+<p>IF YOU TAKE NOTHING ELSE AWAY FROM THIS TEMPLATE, IT SHOULD BE THIS.</p>
+</blockquote>
+<p>Bullet points are going to be making up the bulk of your resume, so it’s important to make sure that they’re concise, to-the-point, and convey exactly why you’re a good fit for the job you’re applying for. This structure is informed by a <em>lot</em> of reviews with technical recruiters, professionals/engineers, and hiring managers at companies of many different sizes. You should do your best to make sure that every bullet point has these three components - known as an XYZ structure:</p>
+<ul>
+<li><strong>X:</strong> What you did</li>
+<li><strong>Y:</strong> How you did it</li>
+<li><strong>Z:</strong> The (measurable) result</li>
+</ul>
+<p>While there are <em>a lot</em> of ways to include these three components in your bullet points, the general “out-of-the-box” structure is below:</p>
+<blockquote>
+<p>[VERB] a [NOUN] using [METHOD] for [REASON], resulting in [RESULT]</p>
+</blockquote>
+<p>If that makes zero sense, don’t worry — here’s an example:</p>
+<blockquote>
+<p>Optimized data pipelines written in <strong>Spark/AWS</strong> for financial analysis, resulting in >$1M annual compute cost reductions</p>
+</blockquote>
+<p>That one matches almost one-to-one with the structure above and has all three components:</p>
+<ul>
+<li><strong>X:</strong> What you did (Optimized data pipelines)</li>
+<li><strong>Y:</strong> How you did it (Used knowledge of Spark and AWS)</li>
+<li><strong>Z:</strong> The (measurable) result (Saved lots of money on compute costs)</li>
+</ul>
+<p>For the sake of brevity, we’ll do just the one example up here. However, I’ll post samples of other bullet points from other resumes that do a good job of including these three components.</p>
+<p>If you’re trying to hammer out your first few bullet points in that structure and are thinking to yourself, “Wow, this is hard!” — don’t worry! It takes awhile (and a lot of trial-and-error) to get the hang of, but will become a lot easier as you write more.</p>
+<p>Additionally, this is a really good reason to have somebody else review your bullet points (and your resume in general) — to this day, I still ask people to review my resume to make sure my bullet points get the point across well, and convey the three points from that structure concisely.</p>
+<h3 id="opinion-including-measurable-results">Opinion: Including Measurable Results<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-including-measurable-results" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>In general, if you have measurable results of your actions that you can include in bullet points, you should. It demonstrates to others the effectiveness of the actions you took in terms of metrics that people understand how to interpret. However, it is <em>by far</em> the hardest part of a bullet point to include, and you may not be able to include a measurable result for a couple different reasons:</p>
+<ol>
+<li>You simply don’t have a measurable result associated with the bullet point</li>
+<li>You may be constrained by an NDA or equivalent restriction on publicly providing hard numbers, metrics, or details</li>
+</ol>
+<p>If you don’t have a measurable result to include, don’t worry — the X (what) and Y (how) components are still enough to make a good bullet point. However, if you’re in a position to gather those metrics (for example, if you’re still at your current company and have the ability to measure or find that data), I’d advise taking the time to go do that.</p>
+<p>This is also a matter of opinion! Sometimes — especially if you work at a company that doesn’t religiously measure Key Performance Indicators (KPIs) — the exactness of the metrics you have access to will vary wildly. If you’re in a scientific field, you may have <em>very precise</em> measurements down to a lot of significant figures. On the other hand, in industry, maybe your measurements are ballpark estimates, like the type you’d find in an executive summary.</p>
+<p>In general, I’d limit the number of “significant figures” of your metrics to 2 digits. 2 digits is enough to get a whole-number percent (e.g. 25%) or a good monetary estimate (e.g. <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">120</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">000</span><span class="mord mathnormal" style="margin-right:0.02778em;">or</span></span></span></span>120k).</p>
+<p>Additionally, the exactness of a measurable result you include should be something you can justify to both yourself and others.</p>
+<p>Philosophically, I’d consider the ability to justify a statement to be the difference between “an estimate” and “bullshit.”</p>
+<p><strong>FOR EXAMPLE:</strong> I worked in a job where, as an employee, I proposed a new system we use now for replicating AWS environments and spinning up new infrastructure (TL;DR copy and pasting big pieces of technology automagically). Before we had that system, engineers would just do the whole thing by hand.</p>
+<p>Before I worked there, there was an occasion where the team had to reconstruct an entirely sandboxed copy of an application, by hand, for a new client. If memory serves, this took a few engineers roughly 4 months. Now, with the new system, we can do the same task in about 3 hours.</p>
+<p><em>On paper</em>, the actual optimization would be:</p>
+<blockquote>
+<p>3 engineers * 40 hours * 12 weeks = 1440 hours
+1440 hours previously - 3 hours now,
+1437 saved / 1440 hours originally =</p>
+<p>a 99.7% time optimization.</p>
+</blockquote>
+<p>HOWEVER — I hadn’t done that math until literally just now, as I was typing it. When I wrote the bullet point for that entry on my own resume, I vaguely went “3 hours now versus 3 months before? That’s probably more than 90% ¯\<em>(ツ)</em>/¯”</p>
+<p>As of writing, that bullet point on my entry is:</p>
+<blockquote>
+<p>Create <strong>Terraform/AWS</strong> deployment systems, reducing new AWS application spin-up times by >90%</p>
+</blockquote>
+<p>Is it precise? Absolutely not. Can I justify it? Probably, if I had to. So that’s the metric that I used.</p>
+<p>(Although I probably will make it more specific now that I’ve done the math.)</p>
+<p>When it comes to results that you know exist beyond a shadow of a doubt, but don’t have incredibly hard data on, using a <code>~</code> in front of the number is your best friend.</p>
+<p>(Of all the characters available on the standard keyboard, <code>~</code> is certainly the one that most represents the mathematical equivalent of “vibes.”)</p>
+<p>For example, if you improve, refine, or automate a tedious process at work and the consensus among the people you’ve helped is “This is about twice as fast now!”, you shouldn’t hesitate to throw down a “~50% improvement” as a measurable result.</p>
+<p>If you’re looking for measurable results at your current position, you have the incredible advantage of <em>still being at your current position.</em> KPIs - the things you can measure to gauge the success of your work - are both a difficult thing to collect and a valuable thing to have, as they can help you get new job or build a case for increased compensation at your current job now. If you can, take time at your current job to build structures that allow you to accurately measure results of your actions.</p>
+<h3 id="opinion-keep-your-bullets-concise">Opinion: Keep Your Bullets Concise!<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-keep-your-bullets-concise" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>When you’re writing bullet points, you should try to keep them to a whole-integer number of lines used. Here’s a less-weirdly-phrased example to illustrate what I mean:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="typ" data-theme="github-light github-dark"><code data-language="typ" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">- Lead development of time travel devices, resulting in the &lt;LINE BREAK> </span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  ability to travel back and forth through time ........................</span></span></code></pre></figure>
+<p>In that case, see how there’s quite a bit of space remaining on the second line? We usually refer to this as a <em>“hanging bullet point”</em>. Hanging bullet points are an issue for a few reasons:</p>
+<ol>
+<li>Vertical space on your resume is a valuable resource, especially if you’re doing a RESUME resume (and not a CV) where you should limit yourself to one page. In this case, you’re sacrificing an extra line for only half as much information, when it may be better spent creating a separate bullet point.</li>
+<li>The reader has to now read into a second line. When somebody is quickly reviewing your resume, they may not bother reading that far into a single bullet point.</li>
+<li>In a very wishy-washy “the-vibes-are-off” kind of way, it causes the whitespace of your resume to look uneven and your resume to look slightly incomplete, especially if the second line is only one or two words.</li>
+</ol>
+<p>In general, you should really aim to avoid these instances altogether. A few solutions you have (in the order I’d recommend them) are:</p>
+<ol>
+<li>Trim the bullet point to fit onto a single line.</li>
+</ol>
+<ul>
+<li>This is what I recommend most of the time, as it also has the added benefit of forcing you to be more concise in your wording to get the point across</li>
+</ul>
+<ol start="2">
+<li>Split the bullet point into two distinct bullet points.</li>
+</ol>
+<ul>
+<li>In this case, you may be able to massage things around in a way that gives you two concise points rather than one inconcise one</li>
+</ul>
+<ol start="3">
+<li>Add more context to the bullet point (a method you used or another measurable result) to strengthen the point in the space that you have</li>
+</ol>
+<ul>
+<li><strong>I don’t recommend this</strong>. While I’ve seen it done well (in cases where there was no logical way to split the bullet point AND the extra space was used to add really good metrics), I’d wager that 99% of the time people use two lines for a bullet point, it’s because they’re rambling and should’ve done Option 1 or Option 2 instead.</li>
+</ul>
+<h3 id="opinion-mention-your-skills-and-make-them-bold">Opinion: Mention Your Skills (and make them bold!)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-mention-your-skills-and-make-them-bold" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Often, in constructing your bullet points, the Y component (how you did it) will involve a specific technology, process, skill, or programming language. In that case, I highly advise that you inline bold (surround the text with asterisks, e.g. <code>*Python*</code>, <code>*Illustrator*</code>, etc).</p>
+<p>The reason I recommend this is because of the “talk is cheap” principal. In the Skills section of a resume, it is very, <em>very</em> easy for people to overestimate their skill in things. I can vividly recall the time I put <code>SQL</code> in my Skills section, only to absolutely eat shit on a SQL technical interview I got as a result.</p>
+<p>(I did not get the job.)</p>
+<p>Interviewers understand that this section is very easy to overpack, which is why I said above that the section is largely for the benefit of strengthening your ability to get past ATS by including tokens from the job description. However, your projects and experience - especially ones that you can hyperlink to - are far less likely to be total bullshit, and so mentions of specific technologies, languages, and skills here hold far more signal potential for reviewers.</p>
+<p>By inline-bolding specific mentions of technology, software, and languages you use, you’re both encouraged to mention them more often (which strengthens your match score with ATS) and also gives interviewers a very quick second confirmation that you can back up the skills you’ve put in your Skills section.</p>
+<p>I have also seen people inline bold the measurable results they include in their bullet points. I’m personally pretty neutral on this practice, as it has the potential to highlight your more impressive achievements, but also potentially adds noise to your resume. <em>Caveat lector</em> - reader beware!</p>
+<h3 id="opinion-but-i-dont-want-to-use-bullet-points">Opinion: “But I don’t want to use bullet points!”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-but-i-dont-want-to-use-bullet-points" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>You really should. Especially at large companies, your resume will largely be viewed at a glance and the conciseness of well-structured bullet points reflects that reality.</p>
+<p>The exception is those of you making a CV, which means you probably (you <em>should</em>) have a PhD or many, <em>many</em> years of professional experience and massive accomplishments to boot. If that’s the case, this template is still able to accommodate much of what you need. In your case, though, the expectation is likely that you describe things like publications, papers, presentations, etc. with concise abstracts (abstract-of-your-abstract) rather than bullet points.</p>
+<p>If that does apply to you (once again, if you’re not sure it does then it probably doesn’t), the <code>details:</code> field of the <code>#exp</code> format does allow you to do non-bulleted descriptions while still taking advantage of the built-in formatting for everything else.</p>
+<h3 id="opinion-ordering-your-experience">Opinion: Ordering Your Experience<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-ordering-your-experience" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>As you get further into your working life, old experiences may start to feel “stale”, either because they were many years ago or because they don’t fit as well with your current career aspirations. If you start running out of vertical space to keep your resume under one page and feel you want to trim down your Experience section, my general guidelines would be:</p>
+<ol>
+<li>Always order your experiences chronologically.
+<ul>
+<li>There is a bit of wiggle room with jobs that you hold (or have held) concurrently. In those cases, I’d recommend breaking ties for which experience should go first by which one feels more relevant to the job you’re currently applying for.</li>
+</ul>
+</li>
+<li>If you don’t have a very long history of work (for example, you’re still very new to working professionally), trim bullet points that aren’t relevant to your current applications off of some entries. Prioritize trimming bullets from older experiences first!</li>
+<li>If you’re trimming an experience to just one bullet point, you should remove it altogether.</li>
+</ol>
+<p>WHEN YOU’RE TRIMMING THINGS OFF <em>ANYWHERE</em> OFF OF YOUR RESUME, YOU SHOULD PREFER TO COMMENT THEM OUT RATHER THAN DELETE THEM ENTIRELY.</p>
+<p>From the bajillion requisites of what constitutes a good bullet point, you should assume that they’re a real pain in the ass to get right. Once you’ve made good bullet points for an entry, lean towards commenting that entry (or individual bullet points) out rather than deleting them entirely.</p>
+<p>It could be the case later that an entry you’ve trimmed previously would be a good fit with your current applications. In that case, rather than have to re-make the entry from scratch, you can simply uncomment the relevant information and restore it to your resume as-is.</p>
+<h3 id="opinion-listing-gap-periods">Opinion: Listing Gap Periods<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-listing-gap-periods" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>When trimming experience, one thing you want to avoid is gaps on your resume. The entries in your experience section should ideally represent one continuous block of time, with potentially some occasional one-month gaps between entries.</p>
+<p>While I (as a reviewer) tend to ignore gaps because there’s a billion totally valid reasons those can happen (Maybe they were a full-time student, or taking care of a loved one, or got laid off and worked in an unrelated field to make ends meet, or took care of a child or parent, or they stumbled on a bag of money and fucked off to bike Europe for a year, etc.). However, sometimes significant resume gaps freak people out.</p>
+<p>If you’re in the process of removing non-relevant experience from your resume and find yourself with a noticeable gap (>4 months), I’d recommend adding a summarized-but-not-detailed entry for the gap period.</p>
+<p>For example:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="typ" data-theme="github-light github-dark"><code data-language="typ" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">#exp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  role</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Caretaker&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  project</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Gap Period&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  date</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;April 2020 - March 2021&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  summary</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Provided full-time support to vulnerable family members during COVID-19&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  details</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: []</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span></code></pre></figure>
+<p>This entry is concise, explains the gap period, and conserves vertical space on your resume.</p>
+<p>Honestly? If anybody has a problem with a well-explained gap period, they have no business leading or hiring people.</p>
+<h3 id="opinion-hyperlinking-in-your-experience">Opinion: Hyperlinking in your Experience<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-hyperlinking-in-your-experience" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>As usual, I’d recommend including some hyperlinks in these sections under the assumption that a reviewer will be seeing this on a digital device and could hypothetically click on the links for additional context.</p>
+<p>In general, the hyperlinks I tend to include are:</p>
+<ul>
+<li>In the headers, with links to the company’s website or product that you worked on; and</li>
+<li>Sparingly in the bullet points, with links to publicized achievements or products you helped work on and mention explicitly in a bullet point.</li>
+<li>In some cases, links to additional resources mentioned in your bullet points
+<ul>
+<li>I see this used most often in fields related to “real science” (e.g. chemistry, biology, mechanical engineering) or in cases where industries are regulated (education, manufacturing, safety, environmental consulting) where it can be worth relating to specific documentation for procedures, legal compliance documentation, public-use datasets, or firm-level certification processes</li>
+</ul>
+</li>
+</ul>
+<h2 id="additional-sections">Additional Sections<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#additional-sections" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>In general, the only hard-advised sections of a resume that I’ve seen consistently recommended are the Education (or equivalent) and Experience sections. The other sections are largely up to you. However, here are some recommendations based on other sections I’ve seen people use to great effect, or use on my own resume:</p>
+<ul>
+<li>Projects, especially if you’re in the tech industry where personal projects are encouraged or expected</li>
+<li>Volunteering</li>
+<li>Charity</li>
+<li>Leadership</li>
+<li>Awards (which, depending on your preferences, could reasonably use a different entry format)</li>
+</ul>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="typ" data-theme="github-light github-dark"><code data-language="typ" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold;">= Projects</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">#exp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  role</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">link</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;https://www.imdb.com/title/tt0088763/&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)[The Delorean],</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  project</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Doc Brown's Garage&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  date</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;May 1954 - June 1985&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  summary</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;A stylish and fully-featured vehicle capable of time travel - with mixed results&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  details</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    - Designed vehicle modifications allowing for time travel and </span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#E1E4E8;--shiki-dark-font-weight:bold;">*37% increased cup holder capacity*</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    - Ethically sourced materials from various international Colombian and Libyan providers</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    - Coordinated business relationships with potential clients and interested parties</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  ]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">#exp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  role</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Doc Brown's Mega Cup-o-Matic&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  project</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Doc Brown's Garage&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  date</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;October 1949 - June 1953&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  details</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    - Filed a patent for a new type of car cupholder, for storing cups of nuclear material up to 1L</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    - Developed nuclear hazard procedures for high school students interested in time and nuclear physics</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  ]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#79B8FF;--shiki-dark-font-weight:bold;">= Volunteering</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#B392F0;">#exp</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">(</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  role</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Student Advisor&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  project</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Doc's Kidz After-School Child Care Service&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  date</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;May 1954 - June 1985&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  summary</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;">&quot;Giving random highschoolers hands-on experience in live nuclear engineering&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70;">  details</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    - Created community initiative to teach local student(s) about the wonders of nuclear physics</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">    - Provided interesting time travel research opportunities for students to add to their college applications</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">  ]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;">)</span></span></code></pre></figure>
+<p><img src="/assets/Pasted-image-20240421173135.png" width="auto" height="auto" alt/></p>
+<p>A flavor of section that I see a lot - and would NOT recommend - is something along the lines of “Hobbies” or “Interests”. This is occasionally recommended to give “flavor” to your resume or “humanize” you in some way.</p>
+<p>(I understand that putting quotes around “flavor” and “humanize” make me sound like a boring robot of a person, but bear with me, here.)</p>
+<blockquote>
+<p>If you’re tempted to make (or are transferring over from an old resume that has) a Hobbies (or Hobbies-adjacent) section, I would advise you structure your hobbies as Projects and use a Projects section instead.</p>
+</blockquote>
+<p>Many hobbies (sports, programming, gaming, knitting(?), graphic design/drawing, writing, woodworking, baking, etc) can be safely structured in the same way Projects would be, and allow you to highlight interesting things about yourself in a way that follows the same design pattern as the rest of your experiences.</p>
+<h3 id="opinion-making-additional-sections-work">Opinion: Making Additional Sections Work<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#opinion-making-additional-sections-work" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>If you’re making a resume for the first time or are early in your career, you may feel yourself straining to fill vertical space. If that’s the case - or if you’re just looking to liven up your resume a bit - I’d recommend doing a “throw it all in the kitchen sink” approach.</p>
+<p>With this approach, create new entries for anything that you could possibly conceive of as being interesting, taught you skills, or could be an even half-viable answer to somebody asking you “So, what have you done with your life?” A lot of things that don’t feel like they’d fit into the hand-shakey, back-pat-y world of business, industry, and academia can be spun into things that feel like they belong on a resume.</p>
+<p>Some examples of experiences people have put that have been used to great effect, and some general examples of how I’ve seen them stated, are:</p>
+<ul>
+<li>Sports Leagues/Fitness (intramural, professional, etc)
+<ul>
+<li>Constructing routines</li>
+<li>Designing training plans</li>
+<li>Cooperation/collaboration</li>
+</ul>
+</li>
+<li>Gaming (competitively, recreationally, collaboratively (e.g. D&amp;D))
+<ul>
+<li>Competitively (cooperation/team-building/recruiting)</li>
+<li>Speedrunning (attention to detail, QA, methodology)</li>
+<li>Creating games as a learning experience</li>
+<li>Playing/leading D&amp;D as a design experience (homebrewed content, especially), coordinating people, etc.</li>
+</ul>
+</li>
+<li>Woodworking/Construction</li>
+<li>Planning projects</li>
+<li>Creating designs</li>
+<li>Solving problems</li>
+<li>Making brownies
+<ul>
+<li>This isn’t even a bit. The guy’s name is Dylan, and his brownies kicked so much ass that they got these-brownies-kicked-ass-type awards. He had it on his CV and got into MIT — probably not <em>solely</em> off the brownies, but I’d take an even-money bet that it helped.</li>
+</ul>
+</li>
+</ul>
+<p>In general, whatever you throw in the kitchen sink, the key is describing it with the same structure and detail as your experience, trying to fit it into the XYZ bullet structure as well as possible. Even if your experience is really weird, the way you describe it can be the difference between “Why did they even bother mentioning that?” and “Oh, that is pretty impressive!”</p>
+<p>I would also recommend having the same approach with these entries as you’d take for your Skills section, where you pretty judicially add and remove (comment out!) things from this section for the jobs you’re applying for, based on what might fight best with the general “vibe” of the applications you’re doing. While your job experience is a pretty binary “Describe the last X jobs you’ve had over the last Y years”, this section is very fluid by comparison.</p>
+<p>In this section especially, I’d recommend following the guidance for hyperlinking mentioned in the Experience section above.</p></article><div class="email-subscribe"><h3>Subscribe for more!</h3><div class="email-subscribe-container"><p>Be notified weekly about any fresh notes or articles!</p><form action="https://buttondown.com/api/emails/embed-subscribe/chaoticgoodcomputing" method="post" class="embeddable-buttondown-form"><input type="email" name="email" id="bd-email" placeholder="you@youmail.com" required/><input type="submit" value="Subscribe"/></form></div></div><div class="page-source"><a href="https://github.com/chaoticgoodcomputing/chaoticgoodcomputing.github.io/blob/main/content/public/content/notes/typst-resume-template.md" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>View source on GitHub</a></div><hr/></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1,&quot;repelForce&quot;:3,&quot;centerForce&quot;:1.75,&quot;linkDistance&quot;:{&quot;tagTag&quot;:50,&quot;tagPost&quot;:50,&quot;postPost&quot;:50},&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[&quot;private&quot;],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false,&quot;linkStrength&quot;:{&quot;tagTag&quot;:0.3,&quot;tagPost&quot;:0.3,&quot;postPost&quot;:0.3},&quot;tagColorGradient&quot;:[&quot;#FF0000&quot;,&quot;#00FF00&quot;,&quot;#0000FF&quot;],&quot;edgeOpacity&quot;:{&quot;tagTag&quot;:{&quot;min&quot;:1,&quot;max&quot;:1},&quot;tagPost&quot;:{&quot;min&quot;:0.75,&quot;max&quot;:1},&quot;postPost&quot;:{&quot;min&quot;:0.5,&quot;max&quot;:1}},&quot;baseSize&quot;:{&quot;tags&quot;:10,&quot;posts&quot;:10},&quot;sizeScaling&quot;:{&quot;tags&quot;:1.2,&quot;posts&quot;:1},&quot;labelAnchor&quot;:{&quot;baseY&quot;:1.2,&quot;scaleFactor&quot;:0.05},&quot;nodeColors&quot;:{&quot;private&quot;:&quot;#c54040&quot;},&quot;linkStyle&quot;:{&quot;tagTag&quot;:&quot;solid&quot;,&quot;tagPost&quot;:&quot;solid&quot;,&quot;postPost&quot;:&quot;dotted&quot;},&quot;privatePostSizeMultiplier&quot;:0.8,&quot;expandSelectedSize&quot;:1.4,&quot;expandSelectedOscillationTime&quot;:2,&quot;defaultFilterState&quot;:{&quot;timePeriod&quot;:&quot;month&quot;,&quot;includePrivate&quot;:false,&quot;adaptiveTimePeriod&quot;:{&quot;minPosts&quot;:3}}}"></div><button class="global-graph-icon" aria-label="View Global Graph">View Global Graph</button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:1,&quot;repelForce&quot;:3,&quot;centerForce&quot;:1.75,&quot;linkDistance&quot;:{&quot;tagTag&quot;:50,&quot;tagPost&quot;:10,&quot;postPost&quot;:10},&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[&quot;private&quot;],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true,&quot;linkStrength&quot;:{&quot;tagTag&quot;:1,&quot;tagPost&quot;:0.5,&quot;postPost&quot;:0.05},&quot;tagColorGradient&quot;:[&quot;#FF0000&quot;,&quot;#FF7F00&quot;,&quot;#FFFF00&quot;,&quot;#00FF00&quot;,&quot;#0000FF&quot;,&quot;#4B0082&quot;,&quot;#9400D3&quot;],&quot;edgeOpacity&quot;:{&quot;tagTag&quot;:{&quot;min&quot;:0.8,&quot;max&quot;:1},&quot;tagPost&quot;:{&quot;min&quot;:0.2,&quot;max&quot;:1},&quot;postPost&quot;:{&quot;min&quot;:0.2,&quot;max&quot;:1}},&quot;baseSize&quot;:{&quot;tags&quot;:15,&quot;posts&quot;:10},&quot;sizeScaling&quot;:{&quot;tags&quot;:1.2,&quot;posts&quot;:1},&quot;labelAnchor&quot;:{&quot;baseY&quot;:1.2,&quot;scaleFactor&quot;:0.05},&quot;nodeColors&quot;:{&quot;private&quot;:&quot;#c54040&quot;},&quot;linkStyle&quot;:{&quot;tagTag&quot;:&quot;solid&quot;,&quot;tagPost&quot;:&quot;solid&quot;,&quot;postPost&quot;:&quot;dotted&quot;},&quot;privatePostSizeMultiplier&quot;:0.8,&quot;defaultFilterState&quot;:{&quot;timePeriod&quot;:&quot;month&quot;,&quot;includePrivate&quot;:false,&quot;adaptiveTimePeriod&quot;:{&quot;minPosts&quot;:3}},&quot;expandSelectedSize&quot;:1.4,&quot;expandSelectedOscillationTime&quot;:2,&quot;graphStyle&quot;:&quot;pseudo-shell&quot;,&quot;pseudoShellConfig&quot;:{&quot;radiusBase&quot;:90,&quot;radiusScale&quot;:40,&quot;circumferentialRepulsion&quot;:4,&quot;zoomMargin&quot;:80,&quot;pinnedTags&quot;:[&quot;engineering&quot;,&quot;writing&quot;,&quot;horticulture&quot;,&quot;projects&quot;,&quot;economics&quot;],&quot;showShell&quot;:true,&quot;shellStyle&quot;:{&quot;opacity&quot;:0.5,&quot;lineStyle&quot;:&quot;dotted&quot;,&quot;lineWidth&quot;:2}}}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-23" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-2" class="toc-content overflow"><li class="depth-0"><a href="#quickstart-how-to-use-this-template" data-for="quickstart-how-to-use-this-template">Quickstart: How to use this template</a></li><li class="depth-1"><a href="#opinion-why-should-you-use-this-template" data-for="opinion-why-should-you-use-this-template">Opinion: Why should you use this template?</a></li><li class="depth-1"><a href="#basics-of-resumes" data-for="basics-of-resumes">Basics of Resumes</a></li><li class="depth-1"><a href="#basics-of-typst" data-for="basics-of-typst">Basics of Typst</a></li><li class="depth-0"><a href="#header--contact-information" data-for="header--contact-information">Header &amp; Contact Information</a></li><li class="depth-1"><a href="#opinion-specifying-your-location" data-for="opinion-specifying-your-location">Opinion: Specifying Your Location</a></li><li class="depth-1"><a href="#opinion-including-your-phone-number" data-for="opinion-including-your-phone-number">Opinion: Including Your Phone Number</a></li><li class="depth-1"><a href="#opinion-use-hyperlinks" data-for="opinion-use-hyperlinks">Opinion: Use Hyperlinks!</a></li><li class="depth-0"><a href="#education" data-for="education">Education</a></li><li class="depth-1"><a href="#opinion-including-your-gpa" data-for="opinion-including-your-gpa">Opinion: Including Your GPA</a></li><li class="depth-1"><a href="#opinion-including-a-graduation-date" data-for="opinion-including-a-graduation-date">Opinion: Including a Graduation Date</a></li><li class="depth-0"><a href="#skills" data-for="skills">Skills</a></li><li class="depth-1"><a href="#opinion-what-should-you-put-here" data-for="opinion-what-should-you-put-here">Opinion: What Should You Put Here?</a></li><li class="depth-1"><a href="#opinion-including-programming-languages" data-for="opinion-including-programming-languages">Opinion: Including Programming Languages</a></li><li class="depth-1"><a href="#opinion-including-software" data-for="opinion-including-software">Opinion: Including Software</a></li><li class="depth-1"><a href="#opinion-stating-proficiency-in-a-language" data-for="opinion-stating-proficiency-in-a-language">Opinion: Stating Proficiency in a Language</a></li><li class="depth-1"><a href="#opinion-hyperlink-your-skills" data-for="opinion-hyperlink-your-skills">Opinion: Hyperlink Your Skills</a></li><li class="depth-1"><a href="#opinion-dedicating-an-entire-section-to-skills" data-for="opinion-dedicating-an-entire-section-to-skills">Opinion: Dedicating an Entire Section to Skills</a></li><li class="depth-0"><a href="#work-experience" data-for="work-experience">Work Experience</a></li><li class="depth-1"><a href="#opinion-creating-new-entries" data-for="opinion-creating-new-entries">Opinion: Creating New Entries</a></li><li class="depth-1"><a href="#opinion-creating-well-structured-bullet-points" data-for="opinion-creating-well-structured-bullet-points">Opinion: Creating Well-Structured Bullet Points</a></li><li class="depth-1"><a href="#opinion-including-measurable-results" data-for="opinion-including-measurable-results">Opinion: Including Measurable Results</a></li><li class="depth-1"><a href="#opinion-keep-your-bullets-concise" data-for="opinion-keep-your-bullets-concise">Opinion: Keep Your Bullets Concise!</a></li><li class="depth-1"><a href="#opinion-mention-your-skills-and-make-them-bold" data-for="opinion-mention-your-skills-and-make-them-bold">Opinion: Mention Your Skills (and make them bold!)</a></li><li class="depth-1"><a href="#opinion-but-i-dont-want-to-use-bullet-points" data-for="opinion-but-i-dont-want-to-use-bullet-points">Opinion: “But I don’t want to use bullet points!”</a></li><li class="depth-1"><a href="#opinion-ordering-your-experience" data-for="opinion-ordering-your-experience">Opinion: Ordering Your Experience</a></li><li class="depth-1"><a href="#opinion-listing-gap-periods" data-for="opinion-listing-gap-periods">Opinion: Listing Gap Periods</a></li><li class="depth-1"><a href="#opinion-hyperlinking-in-your-experience" data-for="opinion-hyperlinking-in-your-experience">Opinion: Hyperlinking in your Experience</a></li><li class="depth-0"><a href="#additional-sections" data-for="additional-sections">Additional Sections</a></li><li class="depth-1"><a href="#opinion-making-additional-sections-work" data-for="opinion-making-additional-sections-work">Opinion: Making Additional Sections Work</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Backlinks</h3><ul id="list-3" class="overflow"><li><a href="/content/articles/resume-ci-pipeline" class="false file-link"><span class="file-icon"></span><span class="file-title">Say Goodbye to Untitled (5) — GitHub Actions for Resumes</span></a></li><li class="overflow-end"></li></ul></div></div><footer class="site-footer "><ul><li><a href="https://blog.chaoticgood.computer/contact">Contact</a></li><li><a href="https://github.com/spelkington">GitHub</a></li><li><a href="https://www.linkedin.com/in/spelkington">LinkedIn</a></li><li><a href="https://chaoticgood.computer/privacy">Privacy Policy</a></li><li><a href="https://chaoticgood.computer/ai-policy">AI Policy</a></li></ul><p>Copyright <a href="https://chaoticgood.computer/contact">Spencer Elkington</a> &amp; <a href="https://github.com/chaoticgoodcomputing">Chaotic Good Computing</a> © 2026</p><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz</a> © 2026</p></footer></div></div><script type="application/javascript">var m=Object.create;var f=Object.defineProperty;var x=Object.getOwnPropertyDescriptor;var S=Object.getOwnPropertyNames;var y=Object.getPrototypeOf,b=Object.prototype.hasOwnProperty;var R=(t,e)=>()=>(e||t((e={exports:{}}).exports,e),e.exports);var j=(t,e,n,E)=>{if(e&&typeof e=="object"||typeof e=="function")for(let i of S(e))!b.call(t,i)&&i!==n&&f(t,i,{get:()=>e[i],enumerable:!(E=x(e,i))||E.enumerable});return t};var v=(t,e,n)=>(n=t!=null?m(y(t)):{},j(e||!t||!t.__esModule?f(n,"default",{value:t,enumerable:!0}):n,t));var p=R((M,g)=>{"use strict";g.exports=w;function B(t){return t instanceof Buffer?Buffer.from(t):new t.constructor(t.buffer.slice(),t.byteOffset,t.length)}function w(t){if(t=t||{},t.circles)return L(t);let e=new Map;if(e.set(Date,F=>new Date(F)),e.set(Map,(F,l)=>new Map(E(Array.from(F),l))),e.set(Set,(F,l)=>new Set(E(Array.from(F),l))),t.constructorHandlers)for(let F of t.constructorHandlers)e.set(F[0],F[1]);let n=null;return t.proto?o:i;function E(F,l){let u=Object.keys(F),D=new Array(u.length);for(let s=0;s<u.length;s++){let r=u[s],A=F[r];typeof A!="object"||A===null?D[r]=A:A.constructor!==Object&&(n=e.get(A.constructor))?D[r]=n(A,l):ArrayBuffer.isView(A)?D[r]=B(A):D[r]=l(A)}return D}function i(F){if(typeof F!="object"||F===null)return F;if(Array.isArray(F))return E(F,i);if(F.constructor!==Object&&(n=e.get(F.constructor)))return n(F,i);let l={};for(let u in F){if(Object.hasOwnProperty.call(F,u)===!1)continue;let D=F[u];typeof D!="object"||D===null?l[u]=D:D.constructor!==Object&&(n=e.get(D.constructor))?l[u]=n(D,i):ArrayBuffer.isView(D)?l[u]=B(D):l[u]=i(D)}return l}function o(F){if(typeof F!="object"||F===null)return F;if(Array.isArray(F))return E(F,o);if(F.constructor!==Object&&(n=e.get(F.constructor)))return n(F,o);let l={};for(let u in F){let D=F[u];typeof D!="object"||D===null?l[u]=D:D.constructor!==Object&&(n=e.get(D.constructor))?l[u]=n(D,o):ArrayBuffer.isView(D)?l[u]=B(D):l[u]=o(D)}return l}}function L(t){let e=[],n=[],E=new Map;if(E.set(Date,u=>new Date(u)),E.set(Map,(u,D)=>new Map(o(Array.from(u),D))),E.set(Set,(u,D)=>new Set(o(Array.from(u),D))),t.constructorHandlers)for(let u of t.constructorHandlers)E.set(u[0],u[1]);let i=null;return t.proto?l:F;function o(u,D){let s=Object.keys(u),r=new Array(s.length);for(let A=0;A<s.length;A++){let c=s[A],C=u[c];if(typeof C!="object"||C===null)r[c]=C;else if(C.constructor!==Object&&(i=E.get(C.constructor)))r[c]=i(C,D);else if(ArrayBuffer.isView(C))r[c]=B(C);else{let a=e.indexOf(C);a!==-1?r[c]=n[a]:r[c]=D(C)}}return r}function F(u){if(typeof u!="object"||u===null)return u;if(Array.isArray(u))return o(u,F);if(u.constructor!==Object&&(i=E.get(u.constructor)))return i(u,F);let D={};e.push(u),n.push(D);for(let s in u){if(Object.hasOwnProperty.call(u,s)===!1)continue;let r=u[s];if(typeof r!="object"||r===null)D[s]=r;else if(r.constructor!==Object&&(i=E.get(r.constructor)))D[s]=i(r,F);else if(ArrayBuffer.isView(r))D[s]=B(r);else{let A=e.indexOf(r);A!==-1?D[s]=n[A]:D[s]=F(r)}}return e.pop(),n.pop(),D}function l(u){if(typeof u!="object"||u===null)return u;if(Array.isArray(u))return o(u,l);if(u.constructor!==Object&&(i=E.get(u.constructor)))return i(u,l);let D={};e.push(u),n.push(D);for(let s in u){let r=u[s];if(typeof r!="object"||r===null)D[s]=r;else if(r.constructor!==Object&&(i=E.get(r.constructor)))D[s]=i(r,l);else if(ArrayBuffer.isView(r))D[s]=B(r);else{let A=e.indexOf(r);A!==-1?D[s]=n[A]:D[s]=l(r)}}return e.pop(),n.pop(),D}}});var $=Object.hasOwnProperty;var h=v(p(),1),O=(0,h.default)();function d(t){return t.document.body.dataset.slug}function k(t){return`${d(window)}-checkbox-${t}`}function U(t,e){let n=t.target?.checked?"true":"false";localStorage.setItem(e,n)}function W(){document.querySelectorAll("input.checkbox-toggle").forEach((e,n)=>{let E=k(n),i=o=>U(o,E);e.addEventListener("change",i),window.addCleanup(()=>e.removeEventListener("change",i)),localStorage.getItem(E)==="true"&&(e.checked=!0)})}document.addEventListener("nav",W);
+</script><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function h(i,e){if(!i)return;function t(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function n(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",t),window.addCleanup(()=>i?.removeEventListener("click",t)),document.addEventListener("keydown",n),window.addCleanup(()=>document.removeEventListener("keydown",n))}function m(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var d=class{constructor(e,t){this.container=e;this.content=t;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),t=this.onMouseMove.bind(this),n=this.onMouseUp.bind(this),o=this.onTouchStart.bind(this),r=this.onTouchMove.bind(this),s=this.onTouchEnd.bind(this),a=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",t),document.addEventListener("mouseup",n),this.container.addEventListener("touchstart",o,{passive:!1}),document.addEventListener("touchmove",r,{passive:!1}),document.addEventListener("touchend",s),window.addEventListener("resize",a),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",t),()=>document.removeEventListener("mouseup",n),()=>this.container.removeEventListener("touchstart",o),()=>document.removeEventListener("touchmove",r),()=>document.removeEventListener("touchend",s),()=>window.removeEventListener("resize",a))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let t=this.createButton("+",()=>this.zoom(.1)),n=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(n),e.appendChild(o),e.appendChild(t),this.container.appendChild(e)}createButton(e,t){let n=document.createElement("button");return n.textContent=e,n.className="mermaid-control-button",n.addEventListener("click",t),window.addCleanup(()=>n.removeEventListener("click",t)),n}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}onTouchStart(e){if(e.touches.length!==1)return;this.isDragging=!0;let t=e.touches[0];this.startPan={x:t.clientX-this.currentPan.x,y:t.clientY-this.currentPan.y}}onTouchMove(e){if(!this.isDragging||e.touches.length!==1)return;e.preventDefault();let t=e.touches[0];this.currentPan={x:t.clientX-this.startPan.x,y:t.clientY-this.startPan.y},this.updateTransform()}onTouchEnd(){this.isDragging=!1}zoom(e){let t=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),n=this.content.getBoundingClientRect(),o=n.width/2,r=n.height/2,s=t-this.scale;this.currentPan.x-=o*s,this.currentPan.y-=r*s,this.scale=t,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){let t=this.content.querySelector("svg").getBoundingClientRect(),n=t.width/this.scale,o=t.height/this.scale;this.scale=1,this.currentPan={x:(this.container.clientWidth-n)/2,y:(this.container.clientHeight-o)/2},this.updateTransform()}},E=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"];function f(){return E.reduce((i,e)=>(i[e]=window.getComputedStyle(document.documentElement).getPropertyValue(e),i),{})}function L(i,e,t){let n=window.getComputedStyle(e),o=e.offsetWidth+parseFloat(n.marginLeft||"0")+parseFloat(n.marginRight||"0");t.style.right=`calc(${o}px + 0.3rem)`,i.prepend(t)}function y(i,e){let t=null;function n(){let r=e.querySelector("#mermaid-space"),s=e.querySelector(".mermaid-content");if(!s)return;m(s);let a=i.querySelector("svg").cloneNode(!0);s.appendChild(a),e.classList.add("active"),r.style.cursor="grab",t=new d(r,s)}function o(){e.classList.remove("active"),t?.cleanup(),t=null}return{show:n,hide:o,panZoom:t}}var p;async function M(){let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;p||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let t=p.default,n=new WeakMap;for(let r of e)n.set(r,r.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=n.get(s);a&&(s.innerHTML=a)}let r=f();t.initialize({startOnLoad:!1,securityLevel:"loose",theme:"dark",themeVariables:{fontFamily:r["--codeFont"],primaryColor:r["--light"],primaryTextColor:r["--darkgray"],primaryBorderColor:r["--tertiary"],lineColor:r["--darkgray"],secondaryColor:r["--secondary"],tertiaryColor:r["--tertiary"],clusterBkg:r["--light"],edgeLabelBackground:r["--highlight"]}}),await t.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let r=0;r<e.length;r++){let s=e[r],a=s.parentElement,v=a.querySelector(".clipboard-button"),c=a.querySelector(".expand-button");L(a,v,c);let l=a.querySelector("#mermaid-container");if(!l)continue;let{show:u,hide:g}=y(s,l);c.addEventListener("click",u),h(l,g),window.addCleanup(()=>{c.removeEventListener("click",u)})}}document.addEventListener("nav",M);
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="/postscript.js" type="module"></script></body></html>

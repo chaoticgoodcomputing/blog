@@ -1,0 +1,76 @@
+/**
+ * Styles for Game of Life widget
+ */
+
+.widget-game-of-life {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  background-color: var(--lightgray);
+  border-radius: 8px;
+  overflow: hidden;
+
+  .game-of-life-controls {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 10;
+
+    .game-of-life-refresh {
+      width: 32px;
+      height: 32px;
+      border: 2px solid white;
+      background-color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray);
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+
+      &:hover {
+        opacity: 1;
+      }
+
+      &:active {
+        opacity: 0.5;
+      }
+    }
+  }
+
+  .game-of-life-canvas {
+    display: block;
+    border: 1px solid var(--gray);
+    background-color: white;
+    cursor: crosshair;
+  }
+}
+
+// Dark mode support
+[saved-theme="dark"] .widget-game-of-life {
+  background-color: var(--darkgray);
+
+  .game-of-life-controls {
+    .game-of-life-refresh {
+      background-color: #2a2a2a;
+      border-color: var(--lightgray);
+      color: var(--light);
+
+      &:hover {
+        background-color: #3a3a3a;
+        border-color: var(--light);
+      }
+    }
+  }
+
+  .game-of-life-canvas {
+    background-color: #1a1a1a;
+    border-color: var(--lightgray);
+  }
+}

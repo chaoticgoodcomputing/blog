@@ -1,0 +1,65 @@
+/**
+ * Styles for Game of Life widget
+ */
+.widget-game-of-life {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  background-color: var(--lightgray);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.widget-game-of-life .game-of-life-controls {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 10;
+}
+.widget-game-of-life .game-of-life-controls .game-of-life-refresh {
+  width: 32px;
+  height: 32px;
+  border: 2px solid white;
+  background-color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray);
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+.widget-game-of-life .game-of-life-controls .game-of-life-refresh:hover {
+  opacity: 1;
+}
+.widget-game-of-life .game-of-life-controls .game-of-life-refresh:active {
+  opacity: 0.5;
+}
+.widget-game-of-life .game-of-life-canvas {
+  display: block;
+  border: 1px solid var(--gray);
+  background-color: white;
+  cursor: crosshair;
+}
+
+[saved-theme=dark] .widget-game-of-life {
+  background-color: var(--darkgray);
+}
+[saved-theme=dark] .widget-game-of-life .game-of-life-controls .game-of-life-refresh {
+  background-color: #2a2a2a;
+  border-color: var(--lightgray);
+  color: var(--light);
+}
+[saved-theme=dark] .widget-game-of-life .game-of-life-controls .game-of-life-refresh:hover {
+  background-color: #3a3a3a;
+  border-color: var(--light);
+}
+[saved-theme=dark] .widget-game-of-life .game-of-life-canvas {
+  background-color: #1a1a1a;
+  border-color: var(--lightgray);
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvYmxvZy9ibG9nL2NvbnRlbnQvcHVibGljL3dpZGdldHMvZ2FtZS1vZi1saWZlIiwic291cmNlcyI6WyJzdHlsZS5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtBQUFBO0FBQUE7QUFJQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFOztBQUtOO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7OztBQUtKO0VBQ0U7O0FBR0U7RUFDRTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUtOO0VBQ0U7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi8qKlxuICogU3R5bGVzIGZvciBHYW1lIG9mIExpZmUgd2lkZ2V0XG4gKi9cblxuLndpZGdldC1nYW1lLW9mLWxpZmUge1xuICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBtYXJnaW46IDFyZW0gMDtcbiAgcGFkZGluZzogMC41cmVtO1xuICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodGdyYXkpO1xuICBib3JkZXItcmFkaXVzOiA4cHg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgLmdhbWUtb2YtbGlmZS1jb250cm9scyB7XG4gICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgIHRvcDogMC41cmVtO1xuICAgIGxlZnQ6IDAuNXJlbTtcbiAgICB6LWluZGV4OiAxMDtcblxuICAgIC5nYW1lLW9mLWxpZmUtcmVmcmVzaCB7XG4gICAgICB3aWR0aDogMzJweDtcbiAgICAgIGhlaWdodDogMzJweDtcbiAgICAgIGJvcmRlcjogMnB4IHNvbGlkIHdoaXRlO1xuICAgICAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XG4gICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICBmb250LXNpemU6IDE2cHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgY29sb3I6IHZhcigtLWdyYXkpO1xuICAgICAgb3BhY2l0eTogMC43O1xuICAgICAgdHJhbnNpdGlvbjogb3BhY2l0eSAwLjJzIGVhc2U7XG5cbiAgICAgICY6aG92ZXIge1xuICAgICAgICBvcGFjaXR5OiAxO1xuICAgICAgfVxuXG4gICAgICAmOmFjdGl2ZSB7XG4gICAgICAgIG9wYWNpdHk6IDAuNTtcbiAgICAgIH1cbiAgICB9XG4gIH1cblxuICAuZ2FtZS1vZi1saWZlLWNhbnZhcyB7XG4gICAgZGlzcGxheTogYmxvY2s7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tZ3JheSk7XG4gICAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XG4gICAgY3Vyc29yOiBjcm9zc2hhaXI7XG4gIH1cbn1cblxuLy8gRGFyayBtb2RlIHN1cHBvcnRcbltzYXZlZC10aGVtZT1cImRhcmtcIl0gLndpZGdldC1nYW1lLW9mLWxpZmUge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1kYXJrZ3JheSk7XG5cbiAgLmdhbWUtb2YtbGlmZS1jb250cm9scyB7XG4gICAgLmdhbWUtb2YtbGlmZS1yZWZyZXNoIHtcbiAgICAgIGJhY2tncm91bmQtY29sb3I6ICMyYTJhMmE7XG4gICAgICBib3JkZXItY29sb3I6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICBjb2xvcjogdmFyKC0tbGlnaHQpO1xuXG4gICAgICAmOmhvdmVyIHtcbiAgICAgICAgYmFja2dyb3VuZC1jb2xvcjogIzNhM2EzYTtcbiAgICAgICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgICB9XG4gICAgfVxuICB9XG5cbiAgLmdhbWUtb2YtbGlmZS1jYW52YXMge1xuICAgIGJhY2tncm91bmQtY29sb3I6ICMxYTFhMWE7XG4gICAgYm9yZGVyLWNvbG9yOiB2YXIoLS1saWdodGdyYXkpO1xuICB9XG59XG4iXX0= */
