@@ -100,7 +100,8 @@
   details: [
     - Create *Terraform/AWS* deployment systems, reducing new AWS application spin-up times by >90%
     - Port legacy microservices to *ASP.NET/EFCore* to boost capacity of Congressional scheduling services
-    - Lead & manage creation of unified *GitHub Projects* scheduling system to de-silo development work
+    - Lead & manage creation of unifsed *GitHub Projects* scheduling system to de-silo development work
+    - test!
   ],
 )
 

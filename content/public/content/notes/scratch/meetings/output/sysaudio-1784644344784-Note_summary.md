@@ -1,18 +1,14 @@
 ---
-title: "Meeting 2026-07-02 09:04"
-date: "2026-07-02T13:04:36.891Z"
-duration_seconds: 1484
+title: "Meeting 2026-07-21 09:07"
+date: "2026-07-21T13:07:47.213Z"
+duration_seconds: 1739
 language: "en"
 is_diarised: true
+auto_tagged: true
 tags:
-  - "engineering/data"
-  - "writing/annotations"
-  - "projects/flowthru"
-  - "horticulture/seasons/systems"
   - "projects/dayjob"
   - "writing/annotations/meetings"
   - "private"
-auto_tagged: true
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
@@ -24,4 +20,4 @@ If you are interested in what this note contains, please reach out! If it's not 
 
 This note originally contained the following links:
 
-- [Daily Note](/content/notes/periodic/daily/2026/07/2026-07-02)
+- [Daily Note](/content/notes/periodic/daily/2026/07/2026-07-21)

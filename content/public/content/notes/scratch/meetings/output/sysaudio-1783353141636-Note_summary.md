@@ -1,6 +1,6 @@
 ---
 title: "Meeting 2026-07-06 10:28"
-date: "2026-07-06T16:28:30.575Z"
+date: "2026-07-06T14:28:30.575Z"
 duration_seconds: 1832
 language: "en"
 is_diarised: true
