@@ -1,6 +1,10 @@
 # Issue tracker: GitHub
 
-Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all operations.
+Issues and specs for this repo live as GitHub issues.
+
+Reach for the **`github-cgc`** MCP server (tools named `mcp__github-cgc__*`) for every operation it covers: create, read, list, comment, label, assign, and close, on issues and PRs alike. Fall back to the `gh` CLI for the gap — chiefly the sub-issue and dependency endpoints under [Wayfinding operations](#wayfinding-operations), which the MCP server does not expose. The `gh` commands below are that fallback, and stay the reference for exact flags and payloads.
+
+Both paths read credentials from 1Password: the MCP server resolves a PAT via `op` on startup, and `gh` is shell-aliased to `op plugin run -- gh`. Without an unlocked `op`, the server fails to connect and every `gh` call returns `interactive IO not available`. Unlock with `eval $(op signin)` before the first write, or export a `GH_TOKEN` to use `gh` directly.
 
 ## Conventions
 
@@ -11,7 +15,7 @@ Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all o
 - **Apply / remove labels**: `gh issue edit <number> --add-label "..."` / `--remove-label "..."`
 - **Close**: `gh issue close <number> --comment "..."`
 
-Infer the repo from `git remote -v`; `gh` does this automatically when run inside a clone.
+Infer the repo from `git remote -v`. `gh` does this automatically inside a clone; MCP tools take `owner` and `repo` explicitly.
 
 ## Pull requests as a triage surface
 
