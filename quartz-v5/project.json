@@ -9,7 +9,7 @@
       "//": "Verify the vendored copy is byte-identical to its pinned upstream commit. Exits non-zero on drift, so it doubles as a CI guard for ADR-0001.",
       "executor": "nx:run-commands",
       "options": {
-        "commands": [ "node utils/quartz-v5/upstream.mjs diff" ],
+        "commands": ["node utils/quartz-v5/upstream.mjs diff"],
         "cwd": "{workspaceRoot}",
         "parallel": false
       }
@@ -18,7 +18,7 @@
       "//": "Informational: what an upgrade to the tip of the tracked branch would pull in.",
       "executor": "nx:run-commands",
       "options": {
-        "commands": [ "node utils/quartz-v5/upstream.mjs diff --latest" ],
+        "commands": ["node utils/quartz-v5/upstream.mjs diff --latest"],
         "cwd": "{workspaceRoot}",
         "parallel": false
       }
@@ -27,7 +27,7 @@
       "//": "Re-vendor at a new upstream ref. Refuses to run if the current copy has drifted, so local changes are never silently discarded. Usage: nx run site-v5:sync --args=\"--ref=<commit|branch>\"",
       "executor": "nx:run-commands",
       "options": {
-        "commands": [ "node utils/quartz-v5/upstream.mjs sync {args.ref}" ],
+        "commands": ["node utils/quartz-v5/upstream.mjs sync {args.ref}"],
         "cwd": "{workspaceRoot}",
         "parallel": false
       }
@@ -36,7 +36,7 @@
       "//": "Install the vendored copy's own dependencies. Upstream uses npm, and its versions conflict with the v4 tree at the repo root, so this is deliberately isolated from the root pnpm install.",
       "executor": "nx:run-commands",
       "options": {
-        "commands": [ "npm install --no-audit --no-fund" ],
+        "commands": ["npm install --no-audit --no-fund"],
         "cwd": "{workspaceRoot}/quartz-v5/quartz",
         "parallel": false
       }
@@ -45,17 +45,17 @@
       "//": "Build the vendored Quartz. Defaults to its own docs/ as content until the migration points it at content/public.",
       "executor": "nx:run-commands",
       "options": {
-        "commands": [ "npx quartz build -d docs --output public" ],
+        "commands": ["npx quartz build -d docs --output public"],
         "cwd": "{workspaceRoot}/quartz-v5/quartz",
         "parallel": false
       },
-      "outputs": [ "{workspaceRoot}/quartz-v5/quartz/public" ]
+      "outputs": ["{workspaceRoot}/quartz-v5/quartz/public"]
     },
     "serve": {
       "//": "Dev server for the vendored Quartz.",
       "executor": "nx:run-commands",
       "options": {
-        "commands": [ "npx quartz build --serve -d docs --output public" ],
+        "commands": ["npx quartz build --serve -d docs --output public"],
         "cwd": "{workspaceRoot}/quartz-v5/quartz",
         "parallel": false
       },
@@ -65,10 +65,7 @@
       "//": "Remove build output and caches from the vendored copy.",
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "rm -rf quartz-v5/quartz/public",
-          "rm -rf quartz-v5/quartz/.quartz-cache"
-        ],
+        "commands": ["rm -rf quartz-v5/quartz/public", "rm -rf quartz-v5/quartz/.quartz-cache"],
         "cwd": "{workspaceRoot}",
         "parallel": true
       }

@@ -23,18 +23,18 @@ quartz-v5/
 └── quartz/          the vendored copy: upstream's repo root, verbatim
 ```
 
-Everything of ours lives *outside* `quartz/`. That is what makes the invariant below absolute
+Everything of ours lives _outside_ `quartz/`. That is what makes the invariant below absolute
 rather than "identical except for a few files of ours".
 
 ## Provenance
 
-| | |
-| --- | --- |
-| Upstream | https://github.com/jackyzha0/quartz |
-| Branch | `v5` |
-| Commit | `97a2d05f80c4c50534959b1d0d41cc4b3895625e` |
-| Version | 5.0.0 |
-| Vendored | 2026-09-24 |
+|          |                                            |
+| -------- | ------------------------------------------ |
+| Upstream | https://github.com/jackyzha0/quartz        |
+| Branch   | `v5`                                       |
+| Commit   | `97a2d05f80c4c50534959b1d0d41cc4b3895625e` |
+| Version  | 5.0.0                                      |
+| Vendored | 2026-09-24                                 |
 
 Authoritative values live in [`upstream.json`](./upstream.json); this table mirrors them for
 readers. If they disagree, `upstream.json` wins — it is what the tooling reads.
@@ -52,8 +52,9 @@ a CI guard. Anything it reports is either a change that needs a ticket and a `qu
 label, or a change that needs reverting.
 
 This matters because it is easy to violate by accident. `nx run site:format` runs
-`prettier . --write` from the repo root and *will* rewrite upstream files unless `quartz-v5` is
-excluded in `.prettierignore` — which is why it is.
+`prettier . --write` from the repo root and _will_ rewrite upstream files unless
+`quartz-v5/quartz` is excluded in `.prettierignore` — which is why it is. The ignore is scoped to
+the vendored subtree deliberately, so our own files under `quartz-v5/` are still formatted.
 
 ## Upgrading
 
@@ -73,7 +74,7 @@ discarded. After syncing, update the Provenance table above.
 
 Self-contained in `quartz/node_modules`. Upstream uses **npm** with its own `package-lock.json`,
 and its versions conflict with the v4 tree at the repo root (preact, unified, shiki). This
-directory is deliberately *not* a pnpm workspace package, so the root `pnpm install` ignores it.
+directory is deliberately _not_ a pnpm workspace package, so the root `pnpm install` ignores it.
 
 ## Relationship to `quartz/` at the repo root
 
