@@ -16,3 +16,7 @@ dist
 
 .claude
 .agents
+
+# Vendored Quartz v5 (see quartz-v5/VENDORED.md)
+quartz-v5/quartz/public
+quartz-v5/quartz/.quartz/
