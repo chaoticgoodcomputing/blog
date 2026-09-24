@@ -36,8 +36,8 @@ _position_ — ITCSS, CUBE, utility-first — therefore cannot be expressed from
 single fact decides this ADR.
 
 **A plugin gets no scope.** No CSS modules (stated outright, above). No shadow DOM. No selector
-rewriting: the only transforms applied to a plugin's CSS are the layer wrap and minification, and
-the content hashing is over file bytes for cache-busting, not over class names. Encapsulation is
+rewriting: the only transforms applied to a plugin's CSS are the layer wrap, minification and
+syntax lowering (_corrected by the colour-value amendment below_), and the content hashing is over file bytes for cache-busting, not over class names. Encapsulation is
 available only by naming.
 
 **Theming already works the way OOCSS says it should.** Skin travels as custom properties from one
@@ -75,7 +75,9 @@ moved together; now they do not.
 4. **Keep selectors shallow** — SMACSS's _depth of applicability_. Depth is coupling to someone else's
    DOM shape.
 5. **Ship structure, consume skin.** No colour or `font-family` literal inside a plugin. Both come from
-   custom properties; that is what makes a plugin themeable at all.
+   custom properties; that is what makes a plugin themeable at all. _Extended by the colour-value
+   amendment below:_ every colour-valued plugin **option** takes a colour value, never a hex-only
+   string.
 6. **Consume only documented properties** — the nine colours and four font families, plus our own. The
    ~45 Obsidian aliases are undocumented internals, and depending on them is depending on a
    compatibility shim.
@@ -205,3 +207,36 @@ since a repeated name is a no-op.
   ([config-loader.ts:542](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L542)).
 - **`order` does two jobs.** For a transformer it sets pipeline position as well as CSS position, so
   the engine's `order` puts a floor under every consumer's pipeline position.
+
+## Amendment: colour values
+
+_2026-09-24, from [Tag colours: accept a theme variable as well as a hex](https://github.com/chaoticgoodcomputing/blog/issues/31).
+Evidence: the local `research/theme-colour-conventions` branch (commit `be47561`), at
+`docs/research/theme-colour-conventions.md`._
+
+**Rule 5 reaches options, not only stylesheets.** A hex in plugin configuration is skin baked into
+data. It is reachable by no theme, the same as a literal in the plugin's CSS. So every colour-valued
+option on a `cgc-*` plugin takes a **colour value**: anything CSS accepts as a colour, `var(--…)`
+references and `light-dark()` included. A plugin validates the syntax at build time and fails the
+build on anything that won't parse. It cannot check that a referenced property exists, since a theme
+defines it at runtime. A plugin's built-in defaults are theme references too, never literals.
+
+Nothing in the ecosystem gives a precedent for a light/dark *pair* option. No community plugin takes
+one; they all consume `var()`. So a scheme split is expressed in the value, with `light-dark()` or a
+reference to a property the theme or site already splits, never as a second option.
+
+**Correction: lightningcss lowers syntax.** Core runs `index.css` and every component stylesheet
+through lightningcss with fixed targets (Safari 15.6, Chrome 109, Edge 115, Firefox 102;
+[componentResources.ts:391-418](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/emitters/componentResources.ts#L391-L418)).
+Syntax newer than those targets is rewritten, not passed through. The case that matters is
+`light-dark()`: it becomes a space toggle driven by `--lightningcss-light` / `--lightningcss-dark`, and
+those are defined only where a `color-scheme` declaration also went through lightningcss. In
+practice that means the darkmode plugin's `:root[saved-theme=…] { color-scheme: … }` rule.
+
+- **A site that uses `light-dark()` values needs a `color-scheme` source**: the darkmode plugin, or
+  the same rule in its own `custom.scss`. Without one, the lowered value is invalid at computed-value
+  time and the colour silently inherits. A plugin that emits a site's colour values documents this
+  as a requirement on the site.
+- **Canvas and WebGL consumers never draw a colour value directly.** `getComputedStyle` returns a
+  custom property as token text, so a native `light-dark()`, `color-mix()` or `var()` chain arrives
+  unresolved. They resolve through a probe element's computed `color` and normalise from there.

@@ -83,6 +83,8 @@ turned it red, and the failure named every affected element and `normal → 2px`
 6. **The suite gates CI.** The workflow itself is deferred to the deployment work, alongside
    [Per-package Nx projects break the deploy gate's affected check](https://github.com/chaoticgoodcomputing/blog/issues/33).
    Nothing is pushed before cutover.
+7. **Fixture specs run in both colour schemes**, light and dark, by flipping `saved-theme` on the
+   rendered page. No-bleed runs twice too. _Added by the amendment below._
 
 ## Considered alternatives
 
@@ -115,3 +117,14 @@ turned it red, and the failure named every affected element and `normal → 2px`
   question, and nothing here answers it yet.
 - **Both site variants share the vendored copy's transpile cache** through the symlinks. They have
   run in parallel without a race. If they ever do race, build them one after the other.
+
+## Amendment: both colour schemes
+
+_2026-09-24, from [Tag colours: accept a theme variable as well as a hex](https://github.com/chaoticgoodcomputing/blog/issues/31)._
+
+Our site has been dark-only since v4, because of the difficulty of sharing styling into MDX and
+custom components, which is what ADR-0003 exists to fix. A downstream site may well have a light
+scheme, and the shareability test covers it: a plugin that only looks right in dark mode doesn't
+pass. Whether our own site brings its light scheme back is decided separately. The guarantee can't
+depend on it, so the harness provides it: every fixture spec renders under both `saved-theme`
+values, and a plugin that assumes dark fails the suite.

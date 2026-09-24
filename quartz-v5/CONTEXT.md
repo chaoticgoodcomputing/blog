@@ -97,6 +97,21 @@ The site's single `@layer` statement naming every layer on the page in order. Wh
 takes precedence over the order plugins load in.
 _Avoid_: layer order, cascade config
 
+### Colour
+
+**Colour value**:
+Anything CSS accepts as a colour, including a `var(--…)` reference to a custom property that a
+theme or the site defines. Every colour-valued option on a family plugin takes one, never a
+hex-only string. A reference is the form that follows the theme; a literal asserts its own colour.
+_Avoid_: hex, colour code, colour string
+
+**Tag colour**:
+The colour value a tag carries, inherited from its nearest ancestor that has one, and published
+as one `--cgc-tag-<tag>` custom property per tag. It is decorative: it paints marks (the badge
+ring, the icon glyph, the graph node) and never text, and never sits under text. Not the same
+thing as a theme's `--tag-color`, which is the text colour of a stock tag pill.
+_Avoid_: tag background, category colour, `--tag-color` (for ours)
+
 ### Icons
 
 **Icon id**:
