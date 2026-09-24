@@ -77,6 +77,19 @@ plugin config. Deliberately _not_ a **Plugin** — it sits outside the plugin sy
 the shareability test.
 _Avoid_: utility plugin, non-visual plugin, helper plugin
 
+### Icons
+
+**Icon id**:
+A `prefix:name` string naming one icon, such as `mdi:robot` or `custom:d20`. Engines publish
+icon ids, never drawn icons; the plugin that draws one resolves the id itself.
+_Avoid_: icon (for the string), icon name, icon key
+
+**Icon collection**:
+A named set of icons addressed by one prefix. Either an installed third-party set (`mdi`) or one
+a site supplies from its own SVG files (`custom`). A collection belongs to whoever supplies it, and
+a site-supplied one is site configuration, never part of a shareable plugin or library.
+_Avoid_: icon provider, icon pack, icon library
+
 ### Distinguishing the two copies
 
 **`quartz/`** (repo root):
