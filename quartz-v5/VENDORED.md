@@ -16,15 +16,52 @@ each one needs a ticket plus a strategy for proposing it upstream, tracked under
 
 ```
 quartz-v5/
-├── project.json     Nx targets (this project is `site-v5`)
-├── CONTEXT.md       glossary for this context
-├── VENDORED.md      this file
-├── upstream.json    the pinned upstream ref — machine-readable source of truth
-└── quartz/          the vendored copy: upstream's repo root, verbatim
+├── project.json          Nx targets (this project is `site-v5`)
+├── CONTEXT.md            glossary for this context
+├── VENDORED.md           this file
+├── upstream.json         the pinned upstream ref — machine-readable source of truth
+├── quartz.config.yaml    our Quartz 5 configuration — tracked here, symlinked into quartz/
+├── plugins/              our Quartz plugins (`cgc-*`)
+├── libs/                 our non-plugin packages (`@cgc/*`)
+├── tests/                Playwright suite and `content-fixture/`
+├── utils/                tooling for this context — `upstream.mjs`
+└── quartz/               the vendored copy: upstream's repo root, verbatim
 ```
 
-Everything of ours lives _outside_ `quartz/`. That is what makes the invariant below absolute
-rather than "identical except for a few files of ours".
+Every file of ours that is _tracked_ lives _outside_ `quartz/`. That is what makes the invariant
+below meaningful rather than "identical except for a few files of ours".
+
+## The one file of ours that has to sit inside
+
+`quartz.config.yaml` is the exception, and it is forced rather than chosen. Source links below
+point at upstream at [`97a2d05`](https://github.com/jackyzha0/quartz/tree/97a2d05f80c4c50534959b1d0d41cc4b3895625e) (v5.0.0), the ref
+[`upstream.json`](./upstream.json) pins:
+
+- [`config-loader.ts:35`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L35) reads `path.join(process.cwd(), "quartz.config.yaml")`.
+- cwd cannot be moved up to `quartz-v5/`. [`constants.js:15`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/cli/constants.js#L15) does
+  `readFileSync("./package.json")` at module load and [`:14`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/cli/constants.js#L14)
+  sets `fp = "./quartz/build.ts"`, both
+  relative to cwd — so cwd must be the directory holding upstream's `package.json` and its `quartz/`
+  source dir, which is `quartz-v5/quartz/`.
+- There is no `--config` flag ([`args.js`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/cli/args.js)) and no environment override.
+
+So the tracked file is `quartz-v5/quartz.config.yaml`, and `quartz-v5/quartz/quartz.config.yaml`
+is a symlink to it, created by a `site-v5` prebuild step. The symlink is gitignored and excluded
+from the drift check; `sync` destroys it along with the rest of the tree, and prebuild recreates it.
+
+> **Not yet wired.** Neither the tracked config nor the prebuild step exists yet — this records the
+> arrangement decided on [#22](https://github.com/chaoticgoodcomputing/blog/issues/22), so that the
+> guard rails (`.gitignore`, `EXCLUDES`) are in place before the first plugin needs them. Do not
+> create an empty `quartz.config.yaml` as a placeholder:
+> [`resolveConfigPath`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/install-plugins.ts#L14-L17)
+> prefers it over `quartz.config.default.yaml`, so an empty one silently disables every default
+> plugin.
+
+One consequence to remember: `source:` entries inside that config are resolved with
+`path.resolve()` against cwd ([`gitLoader.ts:99`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L99)), which is the
+vendored root —
+**not** the directory the tracked file lives in. Local plugins are therefore `../plugins/cgc-tags`,
+not `./plugins/cgc-tags`.
 
 ## Provenance
 
@@ -41,7 +78,13 @@ readers. If they disagree, `upstream.json` wins — it is what the tooling reads
 
 ## The invariant
 
-`quartz-v5/quartz/` is **byte-identical to the pinned commit. No exceptions, no additions.**
+`quartz-v5/quartz/` is **byte-identical to the pinned commit across every tracked file.**
+
+The only things permitted inside it are generated and gitignored, and they are an explicit
+allowlist rather than a judgement call — `EXCLUDES` in `quartz-v5/utils/upstream.mjs`:
+`node_modules/`, `.quartz/`, `.quartz-cache/`, `public/`, `tsconfig.tsbuildinfo`, and
+`quartz.config.yaml` (see above). **Nothing else, ever, and nothing of ours committed.** Adding to
+that list is a decision about the invariant itself, not a convenience.
 
 ```bash
 pnpm nx run site-v5:diff-upstream

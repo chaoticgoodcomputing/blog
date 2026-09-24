@@ -2,7 +2,7 @@
 
 ### Issue tracker
 
-Issues are tracked in GitHub Issues for `chaoticgoodcomputing/blog`.
+Issues are tracked in GitHub Issues for `chaoticgoodcomputing/blog`. Use GitHub MCP servers over the `gh` CLI.
 
 ### Triage labels
 

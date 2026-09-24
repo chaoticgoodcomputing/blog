@@ -2,9 +2,9 @@
 /**
  * Vendored-Quartz upstream tooling.
  *
- *   node utils/quartz-v5/upstream.mjs diff          diff the vendored copy against its pinned ref
- *   node utils/quartz-v5/upstream.mjs diff --latest diff against the tip of the tracked branch
- *   node utils/quartz-v5/upstream.mjs sync <ref>    re-vendor at <ref> (commit, tag, or branch)
+ *   node quartz-v5/utils/upstream.mjs diff          diff the vendored copy against its pinned ref
+ *   node quartz-v5/utils/upstream.mjs diff --latest diff against the tip of the tracked branch
+ *   node quartz-v5/utils/upstream.mjs sync <ref>    re-vendor at <ref> (commit, tag, or branch)
  *
  * The vendored tree must stay byte-identical to its pinned upstream commit — see ADR-0001 and
  * quartz-v5/VENDORED.md. `diff` is what makes that checkable: a clean run means we carry no
@@ -21,8 +21,20 @@ const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..")
 const VENDOR_DIR = join(REPO_ROOT, "quartz-v5", "quartz")
 const MANIFEST = join(REPO_ROOT, "quartz-v5", "upstream.json")
 
-// Build artefacts and installed deps are not part of the vendored source.
-const EXCLUDES = [".git", "node_modules", ".quartz", ".quartz-cache", "public", "tsconfig.tsbuildinfo"]
+// Build artefacts, installed deps and generated files are not part of the vendored source.
+// `quartz.config.yaml` is ours but has to sit here: quartz/cli/constants.js reads ./package.json
+// at module load and quartz/plugins/loader/config-loader.ts reads process.cwd()/quartz.config.yaml,
+// so cwd is pinned to the vendored root and there is no --config flag. It is a gitignored symlink
+// to ../quartz.config.yaml, recreated by prebuild. See quartz-v5/VENDORED.md.
+const EXCLUDES = [
+  ".git",
+  "node_modules",
+  ".quartz",
+  ".quartz-cache",
+  "public",
+  "tsconfig.tsbuildinfo",
+  "quartz.config.yaml",
+]
 
 const sh = (cmd, args, opts = {}) =>
   execFileSync(cmd, args, { encoding: "utf-8", stdio: "pipe", ...opts })
@@ -85,7 +97,8 @@ function cmdDiff({ latest }) {
         : `\n  ${lines.length} difference(s) vs tip of ${m.branch} (pinned at ${m.commit.slice(0, 12)}):\n`,
     )
     lines.forEach((l) => console.log(`    ${l}`))
-    if (lines.length) console.log(`\n  To take them:  pnpm nx run site-v5:sync --args="--ref=${ref}"\n`)
+    if (lines.length)
+      console.log(`\n  To take them:  pnpm nx run site-v5:sync --args="--ref=${ref}"\n`)
     return 0
   } finally {
     rmSync(dir, { recursive: true, force: true })
@@ -94,7 +107,7 @@ function cmdDiff({ latest }) {
 
 function cmdSync(ref) {
   const m = readManifest()
-  if (!ref) throw new Error("sync needs a ref: --args=\"--ref=<commit|tag|branch>\"")
+  if (!ref) throw new Error('sync needs a ref: --args="--ref=<commit|tag|branch>"')
 
   const drift = (() => {
     const d = cloneUpstream(m.repo, m.commit)
@@ -105,7 +118,9 @@ function cmdSync(ref) {
     }
   })()
   if (drift.length) {
-    console.error(`\n  REFUSING TO SYNC — the vendored copy has ${drift.length} uncommitted difference(s)`)
+    console.error(
+      `\n  REFUSING TO SYNC — the vendored copy has ${drift.length} uncommitted difference(s)`,
+    )
     console.error(`  from its pinned ref. Syncing would silently discard them:\n`)
     drift.forEach((l) => console.error(`    ${l}`))
     console.error(`\n  Resolve these first (see quartz-v5/VENDORED.md), then sync.\n`)
