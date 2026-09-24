@@ -87,9 +87,15 @@ moved together; now they do not.
    media-query conditions — and they should not be themeable. Each package carries its own literals, or
    uses container queries where a component should respond to its own space rather than the viewport.
 9. **Vendored third-party CSS goes below us**, in a layer that loses to core by construction, rather
-   than being fought with `!important`.
-10. **At the site, ITCSS via `@layer` stays.** `custom.scss` is unlayered and ours; its existing layer
-    order ([custom.scss:42](https://github.com/chaoticgoodcomputing/blog/blob/9e48f89b256f511a94f07d473d46395d91730c53/quartz/styles/custom.scss#L42)) is application CSS and keeps working.
+   than being fought with `!important`. _Mechanism, per the amendment below:_ a nested
+   `@layer vendor {…}` inside the plugin's `Component.css`.
+10. **At the site, ITCSS via `@layer` stays.** `custom.scss` is ours; its existing layer
+    order ([custom.scss:42](https://github.com/chaoticgoodcomputing/blog/blob/9e48f89b256f511a94f07d473d46395d91730c53/quartz/styles/custom.scss#L42)) is application CSS. _Corrected by the amendment below:_ it does **not**
+    keep working unchanged. Only unlayered rules in `custom.scss` win outright. Its named layers rank
+    below every plugin layer unless the site declares the whole stack.
+11. **A package's own CSS goes in the family layer**, `@layer cgc.<package>`, emitted from
+    `externalResources()`. `Component.css` carries only rule 9's vendor sublayer. _Added by the
+    amendment below._
 
 ## Considered alternatives
 
@@ -102,13 +108,8 @@ moved together; now they do not.
 - **CSS Modules.** Unavailable; the docs rule it out explicitly.
 - **Shadow DOM.** Incompatible with server-rendered markdown content — Quartz renders hast to static
   HTML, and content must inherit the page's typography.
-- **Claiming our own named layer via `externalResources()`.** **Deferred, not rejected.** That path is
-  not layer-wrapped by core, so it would restore ordering and make a tiered methodology viable again.
-  But the `@layer` declaration must be emitted exactly once and before any rule using it, and
-  `externalResources()` CSS is ordered by plugin iteration from `quartz.config.yaml` — so its position
-  is config-dependent, and getting it wrong yields undefined order rather than a visible error. It
-  needs a prototype before it can be a decision. If it lands, rules 1–9 are unchanged; it only adds a
-  tier above them.
+- **Claiming our own named layer via `externalResources()`.** Deferred when this ADR was accepted,
+  and **adopted** by the amendment below, after a prototype.
 - **No methodology**, the ecosystem default. We have the v4 evidence for how that ends.
 
 ## Consequences
@@ -135,3 +136,72 @@ The decision is assembled from established methodologies rather than invented:
   thing rejected for plugins.
 - **CUBE CSS** — Andy Bell, <https://cube.fyi>. Considered and rejected.
 - **Cascade layers** — MDN's `@layer` documentation and Miriam Suzanne's writing. Rules 9 and 10.
+
+## Amendment: the family layer
+
+_2026-09-24, from [Can the cgc family hold its own cascade layer?](https://github.com/chaoticgoodcomputing/blog/issues/30).
+Evidence: the local `prototype/cgc-layer` branch (commit `8cbf5e8`), at `quartz-v5/tests/proto-layer/PROTOTYPE.md`.
+Stub plugins were built into the fixture site under 16 config permutations and read back in Chromium._
+
+The deferral's fear, that position would be "config-dependent" and so undefined, turned out
+to be half true. Cascade order is fixed by the **first** time each layer name appears, in document
+order. The first stylesheet on every page is `index.css`, which opens with `@layer quartz-base`
+([renderPage.tsx:80-83](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/components/renderPage.tsx#L80-L83)).
+So **any layer a plugin declares from `externalResources()` sits above `quartz-base` under every
+config.** Only its position relative to *other plugins'* layers (themes, `quartz-fonts`) depends on
+config, and `order` decides that. The declaration doesn't have to be emitted exactly once either,
+since a repeated name is a no-op.
+
+**Decided:**
+
+- **The family layer is `cgc`, with one sublayer per package** (`cgc.tags`, `cgc.annotator`, …),
+  written from `externalResources()`. Our structure decisions about our own blocks now win over
+  core, stock plugins and themes by position, whatever their specificity. Examples are the
+  explorer's `.page > #quartz-body > :not(…)` carve-outs and an Obsidian theme's bare `button` rules.
+  That's OOCSS container-independence, enforced from the content's side. Our **reach** doesn't
+  change: rule 2 still limits what we select, so the layer gives precedence and nothing more.
+  **Skin** doesn't change either: it still arrives as custom properties (rule 5), wherever any
+  layer sits.
+- **Above themes.** A theme is skin. Placed above it, a theme can reskin our blocks through the
+  variables we consume, but can't restructure them.
+- **A `cgc-styles` engine owns the position.** It emits `@layer cgc;` and nothing else, and every
+  styled `cgc-*` package lists it in `manifest.dependencies`. The loader then **refuses** to build
+  if a consumer is ordered before the engine, or if the engine is missing
+  ([config-loader.ts:142](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L142)).
+  This is ADR-0002's engine shape with a cascade position as its published artifact, and it plays
+  the part of ITCSS's settings tier for the family: one declaration, one knob. Its `order` must
+  exceed any theme's (`@quartz-themes/core` defaults to 10). _Open:_ the dependency string is matched exactly and is
+  relative to the site root, so one `package.json` can't yet satisfy both the site and the e2e
+  fixture. See [One manifest.dependencies string can't match both the site and the e2e fixture](https://github.com/chaoticgoodcomputing/blog/issues/40).
+- **Rule 9 needs no family layer.** Core wraps each `Component.css` in `@layer quartz-base {…}`
+  ([componentResources.ts:411](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/emitters/componentResources.ts#L411)),
+  so a nested `@layer vendor {…}` inside it becomes `quartz-base.vendor`. That sublayer loses to
+  every unlayered rule in `quartz-base`, which is all of core. It was verified against a bare pdf.js-style
+  `.sidebar { display: none }`, which left Quartz's sidebars untouched.
+- **The site names the whole stack.** `custom.scss` is concatenated into `index.css` right after
+  `quartz-base`
+  ([componentResources.ts:347](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/emitters/componentResources.ts#L347)),
+  so a statement there fixes the order of every layer on the page, ahead of all plugin `order`s.
+  Without that statement, v4's five tiers land **below** themes, `quartz-fonts` and `cgc`. With it,
+  the site regains the last tier:
+
+  ```css
+  @layer quartz-base, obsidian-theme, quartz-themes-base, obsidian-theme-overrides, quartz-fonts, cgc, site;
+  @layer site { @layer generic, elements, objects, components, utilities; }
+  ```
+
+  Naming layers the site doesn't own is application CSS owning its cascade. Rule 2 binds libraries,
+  not the site. It also makes the engine's `order` a default that a site can overrule.
+
+**Traps, measured:**
+
+- **lightningcss 1.33.0 silently inverts sublayer order** when one file names a sublayer both dotted
+  (`cgc.tags`) and nested (`@layer cgc { @layer tags {} }`). Use one spelling per file. Dotted is simpler.
+- **Still outranking the family:** everything unlayered. That's `custom.scss`'s plain rules, frame CSS,
+  syntax-highlighting's button rules, and `quartz-fonts`' `h1,…,h6 { font-family }`. The last beats
+  any heading font a `cgc-*` component sets on its own headings.
+- **A CSS-only transformer needs a no-op hook** (`htmlPlugins: () => []`). Otherwise the loader skips it
+  with only a warning
+  ([config-loader.ts:542](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L542)).
+- **`order` does two jobs.** For a transformer it sets pipeline position as well as CSS position, so
+  the engine's `order` puts a floor under every consumer's pipeline position.

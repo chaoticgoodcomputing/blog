@@ -77,6 +77,26 @@ plugin config. Deliberately _not_ a **Plugin** — it sits outside the plugin sy
 the shareability test.
 _Avoid_: utility plugin, non-visual plugin, helper plugin
 
+### Styling
+
+How our CSS takes a place in the page's cascade. Recorded in
+[ADR-0003](../docs/adr/0003-library-css-in-plugins-application-css-at-the-site.md) and its amendment.
+
+**Family layer**:
+The `cgc` cascade layer, with one sublayer per package, that holds our plugins' own CSS. It sits
+above core and themes, and below the site.
+_Avoid_: cgc layer (in prose), plugin layer, our layer
+
+**Vendor layer**:
+A sublayer nested inside core's layer that holds third-party CSS a package bundles, so the
+third-party CSS loses to core by construction.
+_Avoid_: third-party layer, reset layer
+
+**Stack declaration**:
+The site's single `@layer` statement naming every layer on the page in order. Whatever it names
+takes precedence over the order plugins load in.
+_Avoid_: layer order, cascade config
+
 ### Icons
 
 **Icon id**:
