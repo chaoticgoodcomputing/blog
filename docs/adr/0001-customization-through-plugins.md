@@ -73,6 +73,7 @@ file it before we depend on the change rather than after.
 ## Consequences
 
 - The tickets *are* the inventory of what we carry. Without them this decision has no teeth.
+  - These inventory tickets should use the `quartz:vendored` label.
 - A plugin that fails the shareability test is still allowed, but it is knowingly unshareable
   until its upstream dependency lands. That state should be visible on the ticket, not implicit.
 - Some customizations cost more up front as plugins than as direct edits. Accepted deliberately.
