@@ -1,0 +1,12 @@
+{
+  "name": "site-v5-e2e",
+  "private": true,
+  "type": "module",
+  "//": "End-to-end suite for cgc-* plugins, built against content-fixture/. Isolated npm install, like the vendored copy. See docs/adr/0004.",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0"
+  }
+}

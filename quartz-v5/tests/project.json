@@ -1,0 +1,27 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "site-v5-e2e",
+  "root": "quartz-v5/tests",
+  "projectType": "application",
+  "tags": ["cgc"],
+  "implicitDependencies": ["site-v5"],
+  "targets": {
+    "install": {
+      "//": "Isolated npm install, like the vendored copy, plus the one browser the suite uses.",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["npm install --no-audit --no-fund", "npx playwright install chromium"],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      }
+    },
+    "e2e": {
+      "//": "Build every cgc-* plugin and the fixture site (twice: with and without them), then run the suite. Narrow it with --args, e.g. --args=\"../plugins/cgc-tags -g colour\". See docs/adr/0004.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx playwright test {args.args}",
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

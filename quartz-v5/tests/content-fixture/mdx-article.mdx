@@ -1,0 +1,53 @@
+---
+title: MDX Article
+description: The page that decides the ticket.
+tags:
+  - fixture
+  - mdx
+created: 2026-01-15
+---
+
+import { Callout } from '@widgets/callout'
+
+# MDX Article
+
+This page is `.mdx`. If you are reading it as rendered HTML, a plugin put it
+here without any change to Quartz core.
+
+## Transformer chain checks
+
+A wikilink back to [[plain-note]], and one to [[index|the vault root]].
+
+**GFM table** (github-flavored-markdown):
+
+| Transformer | Expected |
+| --- | --- |
+| OFM | wikilinks above resolve |
+| GFM | this table renders |
+
+**Syntax highlighting** (shiki, via syntax-highlighting):
+
+```ts
+const answer: string = "rendered through the configured pipeline"
+```
+
+**Latex** (katex): $e^{i\pi} + 1 = 0$
+
+> [!note] Obsidian callout
+> This is OFM callout syntax, not the widget below.
+
+## Widget check
+
+The widget below is a Preact component compiled into the plugin bundle and
+hydrated client-side:
+
+<Callout kind="success" label="Widget mounted">
+  If this box is styled and the counter increments, widget compilation under
+  tsup works.
+</Callout>
+
+## Footnote check
+
+A footnote reference[^1].
+
+[^1]: Footnote body, rendered by GFM.
