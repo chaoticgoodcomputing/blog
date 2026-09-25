@@ -22,3 +22,5 @@ quartz-v5/quartz/public
 quartz-v5/quartz/.quartz/
 # generated: symlink to ../quartz.config.yaml, created by site-v5 prebuild
 quartz-v5/quartz/quartz.config.yaml
+
+.op
