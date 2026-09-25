@@ -22,7 +22,7 @@ quartz-v5/
 ├── upstream.json         the pinned upstream ref — machine-readable source of truth
 ├── quartz.config.yaml    our Quartz 5 configuration — tracked here, symlinked into quartz/
 ├── plugins/              our Quartz plugins (`cgc-*`)
-├── libs/                 our non-plugin packages (`@cgc/*`)
+├── libs/                 our non-plugin packages (`@chaoticgoodcomputing/*`)
 ├── tests/                Playwright suite and `content-fixture/`
 ├── utils/                tooling for this context — `upstream.mjs`
 └── quartz/               the vendored copy: upstream's repo root, verbatim

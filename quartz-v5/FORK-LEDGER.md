@@ -37,8 +37,8 @@ The **~18.3k added lines** divide as follows: about 13.3k Plugin, 3.0k Native an
 
 - `cgc-graph`: ~2.9k lines of graph runtime.
 - `cgc-annotator`: ~1.7k.
-- `cgc-tags` and `@cgc/tags-core`: ~0.7k of tag utilities, plus the TagExplorer, TagList and PostListing consumers.
-- The widget library: `pdf-viewer`, `bluesky-post` and `blueskyService`.
+- `cgc-tags` and `@chaoticgoodcomputing/tags-core`: ~0.7k of tag utilities, plus the TagExplorer, TagList and PostListing consumers.
+- The widget library, `@chaoticgoodcomputing/widgets`: `pdf-viewer`, `bluesky-post` and `blueskyService` (as its `/bluesky` export).
 - The site's ITCSS partials.
 
 ## Upstream: empty
@@ -167,7 +167,7 @@ The `.ts`/`.tsx` files under `components/`.
 |---|---|---|---|---|---|
 | components/ArticleTitle.tsx | 6 | Plugin | site application CSS | Adds only `@media (max-width:800px){.article-title{text-align:center}}`. Stock `@quartz-community/article-title` has no options, so this is a site CSS rule. | |
 | components/Backlinks.tsx (absolute hrefs) | 56 (split) | Native | — | `resolveRelative`→`resolveAbsolute`. Absolute link resolution is the v5 default. | |
-| components/Backlinks.tsx (public-first sort, date/reverse-alpha, lock icon for private) | 56 (split) | Plugin | cgc backlinks replacement (unassigned, a `cgc-tags`/`@cgc/icons` consumer) | Sorts backlinks with public pages first, then by date descending, then reverse-alphabetical. Adds a `.file-link.private` class and a `Backlinks.inline` script that injects the `mdi:lock` icon through IconService. Stock `@quartz-community/backlinks` only has `hideWhenEmpty`, so we need our own component. | |
+| components/Backlinks.tsx (public-first sort, date/reverse-alpha, lock icon for private) | 56 (split) | Plugin | cgc backlinks replacement (unassigned, a `cgc-tags`/`@chaoticgoodcomputing/icons` consumer) | Sorts backlinks with public pages first, then by date descending, then reverse-alphabetical. Adds a `.file-link.private` class and a `Backlinks.inline` script that injects the `mdi:lock` icon through IconService. Stock `@quartz-community/backlinks` only has `hideWhenEmpty`, so we need our own component. | |
 | components/Body.tsx | 2 | Native | — | Only renames the import (`Clipboard.inline`). v5 core `components/Body.tsx` is the same component. | |
 | components/Breadcrumbs.tsx | 4 | Native | — | `resolveRelative`→`resolveAbsolute` only. `@quartz-community/breadcrumbs` combined with v5 absolute link resolution covers it. | |
 | components/Comments.tsx | 2 | Native | — | Only renames the import (`Comments.inline`). Replaced by stock `@quartz-community/comments` (giscus). | |
@@ -195,7 +195,7 @@ The `.ts`/`.tsx` files under `components/`.
 | components/RecentNotes.tsx | 8 | Native | — | `resolveAbsolute` only, and no layout uses RecentNotes. Stock `@quartz-community/recent-notes` covers it. | |
 | components/Search.tsx | 2 | Native | — | Only renames the import. Stock `@quartz-community/search`. | |
 | components/TableOfContents.tsx | 2 | Native | — | Only renames the import. Stock `@quartz-community/table-of-contents`. | |
-| components/TagList.tsx | 195 | Plugin | cgc-tags consumer (TagList replacement), using `@cgc/tags-core` and `@cgc/icons` | Rewrites TagList as a client-hydrated list: icon badge in `--tag-color`, name and count, `showSubtags` on tag pages, `showParentTag`, `showCount`, mobile icon-only mode with long-press expand, and data from `tagIndex.json`. Stock `@quartz-community/tag-list` has none of this. | |
+| components/TagList.tsx | 195 | Plugin | cgc-tags consumer (TagList replacement), using `@chaoticgoodcomputing/tags-core` and `@chaoticgoodcomputing/icons` | Rewrites TagList as a client-hydrated list: icon badge in `--tag-color`, name and count, `showSubtags` on tag pages, `showParentTag`, `showCount`, mobile icon-only mode with long-press expand, and data from `tagIndex.json`. Stock `@quartz-community/tag-list` has none of this. | |
 | components/renderPage.tsx (mobile sidebar wrapper: `MobileSidebarMenu` around left sidebar) | 139 (split) | Plugin | custom `PageFrame` shipped in a cgc package's manifest `frames` (package unassigned) | v5 frames are plugin-loadable (`plugins/loader/frameLoader.ts`, `frameRegistry`). `DefaultFrame` renders a plain `.left.sidebar` with no drawer, so a cgc frame can wrap `left` with no core change. | |
 | components/renderPage.tsx (full-width body class when both sidebars are empty) | 139 (split) | Native | `frame: full-width` per page type | v5 `frames/FullWidthFrame.tsx`, selected through the page-type/layout `frame`. | |
 | components/renderPage.tsx (`no-left` / `no-right` body classes) | 139 (split) | Plugin | same custom cgc `PageFrame` as the mobile wrapper | v5 ships only default/full-width/minimal. `DefaultFrame` always emits both sidebar divs, so a one-sided frame is ours. Frames are plugin-registrable. | |
@@ -203,7 +203,7 @@ The `.ts`/`.tsx` files under `components/`.
 | components/renderPage.tsx (`pageHeader[]` slot / `.page-level-header`) | 139 (split) | Dead | — | Every layout that sets `pageHeader` sets it to `[]` (index, 404), so it's vestigial. | |
 | components/renderPage.tsx (per-page resources: `pageResources(…, fileData)`, `fileData.pageResources` css/js) | 139 (split) | Dead | — | Replaced by the island runtime (map decision). | |
 | components/renderPage.tsx (afterDOMReady scripts moved inside `<body>` "for micromorph") | 139 (split) | Dead | — | Only needed so per-page JS was diffed by SPA nav. Per-page resources are Dead, and v5 keeps these scripts after `</body>` with preserve=true. | |
-| components/renderPage.tsx (global `fetchTagData` = `fetch("/static/tagIndex.json")` beforeDOMReady) | 139 (split) | Plugin | `cgc-tags` (publishes `static/cgcTags.json`; the engine or `@cgc/tags-core` exposes the client fetch) | A global prefetch of our tag artifact, consumed by the TagList, TagExplorer, PostListing and graph scripts. Can ship as the cgc-tags plugin's own beforeDOMReady resource, so no core change is needed. | |
+| components/renderPage.tsx (global `fetchTagData` = `fetch("/static/tagIndex.json")` beforeDOMReady) | 139 (split) | Plugin | `cgc-tags` (publishes `static/cgcTags.json`; the engine or `@chaoticgoodcomputing/tags-core` exposes the client fetch) | A global prefetch of our tag artifact, consumed by the TagList, TagExplorer, PostListing and graph scripts. Can ship as the cgc-tags plugin's own beforeDOMReady resource, so no core change is needed. | |
 | components/renderPage.tsx (root-absolute `/index.css`, `/prescript.js`, `/postscript.js`, `/static/contentIndex.json`) | 139 (split) | Native | — | Absolute resolution is the v5 default. v5 `renderPage.tsx` also handles `baseDir`/`data-basepath`. | |
 | components/renderPage.tsx (circular transclusion guard with `visited` set) | 139 (split) | Native | — | v5 `components/renderPage.tsx` L118–L293 has the same `visited` guard and warning text, and also allows sibling embeds of the same target. | |
 
@@ -284,11 +284,11 @@ Files with no upstream path. Renamed or split upstream code is classified by wha
 | components/FileExplorer.tsx | 165 | Dead | — | Renamed upstream Explorer with no logic change; not used in any layout (TagExplorer replaces it). Stock `@quartz-community/explorer` covers it if ever wanted | |
 | components/scripts/FileExplorer.inline.ts | 385 | Dead | — | Refactor of explorer.inline.ts for the unused FileExplorer | |
 | components/styles/fileExplorer.scss | 192 | Dead | — | ITCSS/`@layer` port of explorer.scss for the unused FileExplorer | |
-| components/TagExplorer.tsx | 126 | Plugin | cgc-tags consumer: TagExplorer plugin | Tag-hierarchy sidebar navigator (tag/file sort, excludeTags, file counts); a consumer of cgc-tags / @cgc/tags-core | |
-| components/scripts/TagExplorer.inline.ts | 620 | Plugin | cgc-tags consumer: TagExplorer plugin | Client-side tag tree built from `fetchTagData`, collapse state, lock icons, public-first sort. Tag data comes from `static/cgcTags.json`; icons come from @cgc/icons | |
+| components/TagExplorer.tsx | 126 | Plugin | cgc-tags consumer: TagExplorer plugin | Tag-hierarchy sidebar navigator (tag/file sort, excludeTags, file counts); a consumer of cgc-tags / @chaoticgoodcomputing/tags-core | |
+| components/scripts/TagExplorer.inline.ts | 620 | Plugin | cgc-tags consumer: TagExplorer plugin | Client-side tag tree built from `fetchTagData`, collapse state, lock icons, public-first sort. Tag data comes from `static/cgcTags.json`; icons come from @chaoticgoodcomputing/icons | |
 | components/styles/tagExplorer.scss | 198 | Plugin | TagExplorer plugin library CSS | Component styles for TagExplorer | |
 | components/scripts/TagList.inline.ts | 289 | Plugin | cgc-tags consumer: TagList plugin | Fills tag badges with colour/icon/count from TagIndex on the client, plus mobile long-press expansion. Colour/icon should move to build time via cgc-tags fileData + `--cgc-tag-*`; the long-press script stays | |
-| components/scripts/Backlinks.inline.ts | 34 | Plugin | Backlinks replacement plugin (cgc-tags consumer, unassigned) | Adds a lock icon to private backlinks on the client via IconService. Private treatment belongs to whichever plugin replaces Backlinks; render at build time with @cgc/icons | |
+| components/scripts/Backlinks.inline.ts | 34 | Plugin | Backlinks replacement plugin (cgc-tags consumer, unassigned) | Adds a lock icon to private backlinks on the client via IconService. Private treatment belongs to whichever plugin replaces Backlinks; render at build time with @chaoticgoodcomputing/icons | |
 | components/PostListing.tsx | 272 | Plugin | cgc-tags consumer: tag page body (reserved `tag` slot) + a post-listing component | Tag-filtered listing (filterToCurrentTag, includeSubtags, excludeTags private, collapsed details, descriptions, reading time). Stock `recent-notes` has no collapse, descriptions or tag-scoped filter | owner? |
 | components/scripts/PostListing.inline.ts | 216 | Plugin | Same as PostListing | Client-side tag badge colouring/icons (should move to build time via cgc-tags) plus long-press expansion | owner? |
 | components/styles/postListing.scss | 150 | Plugin | Post-listing plugin library CSS | Component styles | owner? |
@@ -297,13 +297,13 @@ Files with no upstream path. Renamed or split upstream code is classified by wha
 | components/styles/mobileSidebarMenu.scss | 154 | Plugin | Same custom frame library CSS | Drawer styles (breakpoints 1000/1300) | owner? |
 | components/EmailSubscribe.tsx | 44 | Plugin | Small site component plugin (unassigned) | Buttondown subscribe form used on index, notes, tags and annotations layouts | owner? |
 | components/styles/emailSubscribe.scss | 87 | Plugin | Same, library CSS | Component styles | owner? |
-| components/SocialMediaGitHub.tsx | 62 | Plugin | Widget/component library package (ticket #36, name TBD) | GitHub contributions sidebar widget on index (DesktopOnly) | owner? |
+| components/SocialMediaGitHub.tsx | 62 | Plugin | Sidebar plugin, unassigned (not the widget library: a library has no Quartz hooks, per #36) | GitHub contributions sidebar widget on index (DesktopOnly) | owner? |
 | components/scripts/socialMediaGitHub.inline.ts | 172 | Plugin | Same | Fetches api.github.com + github-contributions-api on the client | owner? |
 | components/styles/socialMediaGitHub.scss | 215 | Plugin | Same, library CSS | Component styles | owner? |
-| components/SocialMediaBlueSky.tsx | 50 | Plugin | Widget/component library package (ticket #36) | Bluesky feed sidebar widget on index (DesktopOnly) | owner? |
+| components/SocialMediaBlueSky.tsx | 50 | Plugin | Sidebar plugin, unassigned, depending on `@chaoticgoodcomputing/widgets/bluesky` (#36) | Bluesky feed sidebar widget on index (DesktopOnly) | owner? |
 | components/scripts/socialMediaBlueSky.inline.ts | 109 | Plugin | Same | Fetches the Bluesky feed on the client | owner? |
 | components/styles/socialMediaBlueSky.scss | 401 | Plugin | Same, library CSS | Component styles | owner? |
-| components/SOCIAL_MEDIA_WIDGETS.md | 99 | Plugin | README of the #36 package | Usage docs for the two social widgets | owner? |
+| components/SOCIAL_MEDIA_WIDGETS.md | 99 | Plugin | README of the sidebar plugin, if kept | Usage docs for the two social widgets | owner? |
 | components/ShowPageSource.tsx | 57 | Plugin | Small site component plugin (unassigned) | "View source on GitHub" link built from `repoUrl` + filePath, used on notes. No stock plugin does this | |
 | components/styles/showPageSource.scss | 39 | Plugin | Same, library CSS | Component styles | |
 | components/IndexTitle.tsx | 32 | Dead | — | Not used in any layout; stock `page-title` / `article-title` cover it | |
@@ -323,7 +323,7 @@ Files with no upstream path. Renamed or split upstream code is classified by wha
 | layouts/conf/graph.layout.ts | 116 | Plugin | cgc-graph options in site `quartz.config.yaml` | D3 tuning, the pseudo-shell config, pinned tags and private-node colour all become options of the cgc-graph plugin that we ship. | |
 | plugins/emitters/pageHelpers.ts | 89 | Native | v5 page-type dispatcher (`plugins/pageTypes/dispatcher.ts`) + `components/frames/*` + `renderPage.tsx` | These are layout-merge, render and write helpers for our custom page emitters. v5 page types and frames (Default/FullWidth/Minimal) handle this. MobileSidebarMenu goes with the frame/sidebar owner. | |
 | plugins/emitters/tagIndex.tsx | 131 | Plugin | cgc-tags (emitter publishing `static/cgcTags.json`) | Emits the tag hierarchy, colour, icon and count index. The map already assigns this job to cgc-tags. | |
-| plugins/emitters/widgetScripts.ts | 59 | Dead | replaced by island runtime (`@cgc/island-runtime` lib, bundled by cgc-mdx) | Minifies and emits every registered widget to `/static/widgets/*.js` so pages can inject them. Islands are real ES imports bundled per page, so this emitter has no purpose. | |
+| plugins/emitters/widgetScripts.ts | 59 | Dead | replaced by island runtime (`@chaoticgoodcomputing/island-runtime` lib, bundled by cgc-mdx) | Minifies and emits every registered widget to `/static/widgets/*.js` so pages can inject them. Islands are real ES imports bundled per page, so this emitter has no purpose. | |
 | plugins/external/loader.ts, inject.ts, types.ts | 226 | Plugin | external stubs pre-build step (unassigned) | Loads off-site markdown into synthetic ProcessedContent and fills `ctx.externalUrlMap`. The map replaces this with pre-build stub `.md` files that carry the URL in frontmatter. | |
 | plugins/transformers/external.ts | 106 | Plugin | external stubs pre-build step (unassigned); the link rewrite and off-site icon need a small transformer that reads stub frontmatter | Rewrites links to stub slugs so they point at the external URL and adds the off-site SVG. It currently depends on `ctx.externalUrlMap`, which is Dead, so it has to read the URL from frontmatter instead. | |
 | plugins/transformers/mdx.ts | 203 | Plugin | cgc-mdx | Runs remark-mdx, detects widget imports, renders placeholders and injects scripts per page. cgc-mdx replaces all of it with islands. | |
@@ -341,20 +341,20 @@ Files with no upstream path. Renamed or split upstream code is classified by wha
 | static/robots.txt | 4 | Plugin | cgc-seo (emit `robots.txt` with a `Sitemap:` line built from `baseUrl`) | Its only content is Allow-all plus the sitemap URL. cgc-seo owns the sitemap and which pages are indexable, so it should also own robots.txt. | |
 | static/BingSiteAuth.xml, ./static/a6e41ab6-6753-4d94-9b54-b4405d806883.txt | 4 | Plugin | site-owned root files, copied by a site-v5 post-build target (or a site static-root step) | These are the Bing Webmaster verification file and the IndexNow key file (`utils/indexnow/submit-urls.mjs:23`). They must be served at the root, and the Static emitter publishes only under `/static/`. | |
 | static/fonts/** (fonts.css, inter/*, ibm-plex-mono/*) | 138 | Native | v5 `theme.fontOrigin: googleFonts`, `cdnCaching: false`; typography via theme or `@quartz-community/quartz-fonts` | These are generated self-hosted Inter and IBM Plex Mono files, linked by our Head.tsx. v5 core downloads Google Fonts to `static/fonts/` at build time. | |
-| static/icons/d20.svg, roblox.svg, uofu.svg, quartz-filled.svg | 102 | Plugin | site-owned `quartz-v5/icons/` (served through @cgc/icons) | These are `custom:` tag icons referenced in `quartz.config.ts` tag icon config (L46, 65, 81, 102). | |
+| static/icons/d20.svg, roblox.svg, uofu.svg, quartz-filled.svg | 102 | Plugin | site-owned `quartz-v5/icons/` (served through @chaoticgoodcomputing/icons) | These are `custom:` tag icons referenced in `quartz.config.ts` tag icon config (L46, 65, 81, 102). | |
 | static/icons/quartz.svg | 128 | Dead | — | Nothing references it. The config uses only `quartz-filled`. | |
 | styles/_settings.scss | 56 | Plugin | site application CSS | Breakpoints 1000/1300 and the grid maps. It mirrors v5 `styles/variables.scss`, which is 800/1200. See Notes. | |
 | styles/_tools.scss | 99 | Plugin | site application CSS (`respond-to`); `file-icon` mixin → library CSS of the Backlinks and TagExplorer consumer plugins | These are Sass mixins only and produce no CSS output. `file-icon` is used by `backlinks.scss` and `tagExplorer.scss`. | |
 | styles/_generic.scss, _elements.scss | 463 | Plugin | site application CSS (ITCSS `@layer generic/elements`) | These split upstream `base.scss` into ITCSS layers and add our typography, link and table tweaks. Only the differences from v5 `base.scss` should survive. | |
 | styles/_objects.scss | 431 | Plugin | site application CSS; full-width, no-left and no-right variants → Native v5 frames (`FullWidthFrame`, `MinimalFrame`, base.scss L316+) | This is the page grid, sidebars, the page-header area, the mobile off-canvas sidebar and layout variations. v5 base.scss already has the grid and the full-width frame. What is left is site width and breakpoint overrides. | |
 | styles/_utilities.scss | 113 | Native | v5 `styles/base.scss` (`.desktop-only` L136, `.mobile-only` L149, `.navigation-progress` L675; spacer and flex exist too) | These are upstream base.scss rules moved into `@layer utilities`. Any cosmetic difference goes to site application CSS. | |
-| util/tags.ts | 544 | Plugin | `@cgc/tags-core` (resolution rule, hierarchy helpers) + cgc-tags (index building) | The map already assigns this. | |
-| util/tagTrie.ts | 146 | Plugin | `@cgc/tags-core` / cgc-tags | The tag trie used by TagExplorer. The map already assigns this. | |
-| util/iconService.ts | 145 | Plugin | `@cgc/icons` | The map already assigns this: replaced by the Iconify-based library. | |
+| util/tags.ts | 544 | Plugin | `@chaoticgoodcomputing/tags-core` (resolution rule, hierarchy helpers) + cgc-tags (index building) | The map already assigns this. | |
+| util/tagTrie.ts | 146 | Plugin | `@chaoticgoodcomputing/tags-core` / cgc-tags | The tag trie used by TagExplorer. The map already assigns this. | |
+| util/iconService.ts | 145 | Plugin | `@chaoticgoodcomputing/icons` | The map already assigns this: replaced by the Iconify-based library. | |
 | util/iconConfig.ts, iconHelpers.ts, tagIcons.ts | 159 | Dead | — | The map marks these as vestigial. | |
-| util/blueskyService.ts | 466 | Plugin | widget library package (#36), shared with the SocialMediaBlueSky replacement if that is kept | Parses, fetches and renders ATProto posts. Consumers are `widgets/bluesky-post` and `components/scripts/socialMediaBlueSky.inline.ts`. | owner? (SocialMediaBlueSky) |
-| widgets/bluesky-post/** | 638 | Plugin | widget library package (#36), rewritten as an island | The map decides this. | |
-| widgets/pdf-viewer/** | 663 | Plugin | widget library package (#36), rewritten as an island | The map decides this. | |
+| util/blueskyService.ts | 466 | Plugin | `@chaoticgoodcomputing/widgets/bluesky` (#36), a non-widget export shared with the SocialMediaBlueSky replacement if that is kept | Parses, fetches and renders ATProto posts. Consumers are `widgets/bluesky-post` and `components/scripts/socialMediaBlueSky.inline.ts`. | owner? (SocialMediaBlueSky) |
+| widgets/bluesky-post/** | 638 | Plugin | `@chaoticgoodcomputing/widgets/bluesky-post` (#36), rewritten as an island | Fetches in the browser; MDI icons via `@chaoticgoodcomputing/icons`; v4 props kept. | |
+| widgets/pdf-viewer/** | 663 | Plugin | `@chaoticgoodcomputing/widgets/pdf-viewer` (#36), rewritten as an island | Bundles PDF.js (no CDN), its CSS in a rule-9 vendor sublayer; v4 props kept minus `dpi`. | |
 | widgets/global-initialization/** | 174 | Dead | — | The map retires it. It was a status demo for the widget system. | |
 | widgets/base/** (WidgetScript.ts, widget-script-helper.ts, widget-base.scss) | 290 | Dead | replaced by island runtime | A nav/load lifecycle and cleanup base class, a copy-paste helper, and an SCSS template. The island runtime and ADR-0003 BEM library CSS replace them. | |
 | widgets/registry.ts, types.ts | 107 | Dead | replaced by island runtime (real ES imports) | A string import-path → WidgetDefinition registry that `mdx.ts` and `widgetScripts.ts` look up. Real imports make it unnecessary. | |

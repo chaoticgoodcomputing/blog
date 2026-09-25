@@ -240,3 +240,22 @@ practice that means the darkmode plugin's `:root[saved-theme=…] { color-scheme
 - **Canvas and WebGL consumers never draw a colour value directly.** `getComputedStyle` returns a
   custom property as token text, so a native `light-dark()`, `color-mix()` or `var()` chain arrives
   unresolved. They resolve through a probe element's computed `color` and normalise from there.
+
+## Amendment: libraries that ship CSS
+
+_2026-09-25, from [Widget library: name, home and shape for `pdf-viewer` and `bluesky-post`](https://github.com/chaoticgoodcomputing/blog/issues/36)._
+
+**Rule 3 is a check, not a transform, for a library.** A library has no build and no output. Its
+`exports` point at source, and the consumer bundles it (for widgets, that's `cgc-mdx`'s esbuild,
+which compiles `.css` as written). So there is no build of ours for a prefixing pass to run in.
+
+- **The author writes the namespaced class names**, such as `.cgc-pdf-viewer__page`. The shipped CSS
+  is exactly the source, so a reader of the package sees the real selectors.
+- **The package's Nx `lint` target runs the check.** It is the same PostCSS pass run in check mode:
+  it fails on any selector outside the package's namespace and rewrites nothing. "Fail the build on
+  escape" becomes "fail CI on escape".
+- **Rules 1, 2 and 4–9 apply unchanged.** Rule 11 does not reach a library. A library has no
+  `externalResources()` of its own, so the layer its CSS lands in is the consuming plugin's
+  business. For widgets, that is [Which cascade layer does widget CSS land in?](https://github.com/chaoticgoodcomputing/blog/issues/45).
+- **Content-local widgets stay advisory.** `cgc-mdx` does not run the check on a vault's widget CSS
+  (`cgc-mdx` ADR-0002).

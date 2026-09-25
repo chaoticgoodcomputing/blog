@@ -152,3 +152,12 @@ page-level primary onto `fileData`, and emitting a pre-resolved flat map for cli
 keeps its own tag table and resolves it with the library, rather than the engine growing an
 opinion about schema.org. Icon rendering is a further consumer: the engine publishes
 `"mdi:robot"` and never a pixel.
+
+## Amendment: library scope
+
+_2026-09-25, from [Widget library: name, home and shape for `pdf-viewer` and `bluesky-post`](https://github.com/chaoticgoodcomputing/blog/issues/36)._
+
+Libraries are published under **`@chaoticgoodcomputing/`**, the npm scope we own, not `@cgc/`.
+The worked example's `@cgc/tags-core` is `@chaoticgoodcomputing/tags-core`. Each library lives
+at `quartz-v5/libs/<name>`, and its Nx project name is its npm name. Plugins keep unscoped
+`cgc-*` names, because for a local source the loader takes a plugin's identity from its directory.
