@@ -78,21 +78,36 @@ readers. If they disagree, `upstream.json` wins — it is what the tooling reads
 
 ## The invariant
 
-`quartz-v5/quartz/` is **byte-identical to the pinned commit across every tracked file.**
+`quartz-v5/quartz/` is **byte-identical to the pinned commit across every tracked file, except for
+vendored changes — and every vendored change is made in a commit that cites its ticket.**
+
+Vendored changes are never stored separately. Two targets generate everything there is to know
+about them from the tree and its history:
+
+```bash
+pnpm nx run site-v5:diff-upstream   # the complete unified diff against the pinned commit
+pnpm nx run site-v5:vendored-log    # the commits that made it, and the tickets each cites
+```
+
+`diff-upstream` answers _what_ differs. Its stdout is a patch that `git apply` accepts from the
+repo root, and the file count goes to stderr, so `> vendored.patch` captures it cleanly.
+`vendored-log` answers _why_. It lists every commit since the last sync (the last commit to touch
+`upstream.json`) that changed the vendored copy, with the `#<n>` tickets its message cites, flags any
+commit that cites none, and lists uncommitted edits, which have no commit to carry a ticket yet.
+The rule is that every file `diff-upstream` names traces to a flagged-clean commit in
+`vendored-log`. The ticket itself carries the `quartz:vendored` label and the upstream proposal.
+
+Current vendored changes:
+
+| Files | Why | Upstream proposal |
+| ----- | --- | ----------------- |
+| `quartz/plugins/types.ts`, `quartz/plugins/pageTypes/dispatcher.ts` | [#19](https://github.com/chaoticgoodcomputing/blog/issues/19): four default transformers are async, so a page type cannot run the pipeline from a synchronous `generate`. Makes `generate` awaitable. Needed by `cgc-mdx`. | [#25](https://github.com/chaoticgoodcomputing/blog/issues/25), filed after cutover |
 
 The only things permitted inside it are generated and gitignored, and they are an explicit
 allowlist rather than a judgement call — `EXCLUDES` in `quartz-v5/utils/upstream.mjs`:
 `node_modules/`, `.quartz/`, `.quartz-cache/`, `public/`, `tsconfig.tsbuildinfo`, and
 `quartz.config.yaml` (see above). **Nothing else, ever, and nothing of ours committed.** Adding to
 that list is a decision about the invariant itself, not a convenience.
-
-```bash
-pnpm nx run site-v5:diff-upstream
-```
-
-A clean run proves we carry no undocumented changes. It exits non-zero on drift, so it works as
-a CI guard. Anything it reports is either a change that needs a ticket and a `quartz:vendored`
-label, or a change that needs reverting.
 
 This matters because it is easy to violate by accident. `nx run site:format` runs
 `prettier . --write` from the repo root and _will_ rewrite upstream files unless
@@ -110,12 +125,30 @@ pnpm nx run site-v5:sync --args="--ref=<commit>"   # re-vendor at that ref
 pnpm nx run site-v5:install                        # refresh dependencies
 ```
 
-`sync` refuses to run while the copy has drifted, so local changes are never silently
-discarded. After syncing, update the Provenance table above.
+`sync` replaces the whole tree, so it refuses while the copy carries vendored changes, and they are
+never silently discarded. To upgrade anyway, save them, sync with `--force`, and re-apply whatever
+upstream has not taken in the meantime:
+
+```bash
+pnpm -s nx run site-v5:diff-upstream > vendored.patch
+node quartz-v5/utils/upstream.mjs sync <ref> --force
+git apply vendored.patch      # drop hunks upstream now has; commit what remains with its ticket
+```
+
+After syncing, update the Provenance table above, and remove any row from the vendored-changes table
+whose change upstream has taken.
 
 ## Dependencies
 
-Self-contained in `quartz/node_modules`. Upstream uses **npm** with its own `package-lock.json`,
+Self-contained in `quartz/node_modules`.
+
+**Local plugins resolve the host's dependencies through `plugins/node_modules`,** a gitignored
+symlink to `../quartz/node_modules` that the e2e harness creates. A git-installed plugin sits at
+`.quartz/plugins/<name>/` inside the Quartz root, so its bare `import "preact"` finds Quartz's copy,
+and that is what the loader's shared externals assume. A local plugin is only symlinked there, and
+Node resolves from the symlink's target under `plugins/`, which would otherwise walk up to the v4
+tree's `node_modules` at the repo root: a second, older Preact. A plugin's own install therefore
+omits peers (`npm ci --omit=peer`), so its local `node_modules` never shadows a host singleton. Upstream uses **npm** with its own `package-lock.json`,
 and its versions conflict with the v4 tree at the repo root (preact, unified, shiki). This
 directory is deliberately _not_ a pnpm workspace package, so the root `pnpm install` ignores it.
 
