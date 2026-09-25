@@ -153,6 +153,38 @@ plugins:
       enableSiteMap: true
       enableRSS: true
       rssLimit: 40
+  # What search engines see (#28): `noindex` on private pages, which stay listed on the site, and the
+  # canonical URL, `article:*` meta and JSON-LD of v4's Head fork. The sitemap and feed move here in #67.
+  - source: ../plugins/cgc-seo
+    enabled: true
+    options:
+      noindexTags:
+        - private
+      # v4 gave article metadata to `content/` pages only.
+      articleFolders:
+        - content
+      # v4's `structuredData`. The author's name is the page title's too (#44), shared as `*author`.
+      defaultAuthor:
+        type: Person
+        name: &author Spencer Elkington
+        url: https://blog.chaoticgood.computer/about
+      publisher:
+        type: Organization
+        name: Chaotic Good Computing
+        url: https://blog.chaoticgood.computer/about
+        # The site icon, which is 184px square (#70 copies it into the build).
+        logo:
+          width: 184
+          height: 184
+      articleTypes:
+        - { tag: writing/annotations, type: ScholarlyArticle, section: Annotations }
+        - { tag: writing/tutorials, type: HowTo, section: Tutorials }
+        - { tag: writing/articles, type: Article, section: Articles }
+        - { tag: engineering, type: TechArticle, section: Engineering }
+        - { tag: economics, type: Article, section: Economics }
+        - { tag: horticulture, type: BlogPosting, section: Digital Garden }
+        - { tag: projects, type: Report, section: Projects }
+      defaultArticleType: Article
   - source: "@quartz-community/favicon"
     enabled: true
   - source: "@quartz-community/og-image"

@@ -33,3 +33,10 @@ kept for when they return.
 The author a page names in its own `author` frontmatter, or the site's **default author** when it
 names none. It is what the page's head metadata credits.
 _Avoid_: site author (that is the name in the site header, which never changes per page)
+
+**Article**:
+A page whose head describes it as a written piece, with `article:*` metadata and a JSON-LD
+article. It is built from a note of its own: tag listings and the 404 page never are. On this site
+only the notes under `content/` are articles, as in v4, so the home page and top-level pages such as
+`/about` are not.
+_Avoid_: post, content page (that is stock Quartz's page type for any note)

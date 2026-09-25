@@ -1,0 +1,289 @@
+{
+  "capturedFrom": "ca55e87c5bd9c6869c5c82cb573d303dcd4602ed",
+  "heads": {
+    "/": {
+      "canonical": [
+        "https://blog.chaoticgood.computer/"
+      ],
+      "robots": [],
+      "article": [],
+      "jsonLd": []
+    },
+    "/about": {
+      "canonical": [
+        "https://blog.chaoticgood.computer/about"
+      ],
+      "robots": [],
+      "article": [],
+      "jsonLd": []
+    },
+    "/content/articles/parity-article": {
+      "canonical": [
+        "https://blog.chaoticgood.computer/content/articles/parity-article"
+      ],
+      "robots": [],
+      "article": [
+        [
+          "article:published_time",
+          "2024-03-05T12:00:00.000Z"
+        ],
+        [
+          "article:modified_time",
+          "2024-04-02T12:00:00.000Z"
+        ],
+        [
+          "article:author",
+          "https://blog.chaoticgood.computer/about"
+        ],
+        [
+          "article:section",
+          "engineering"
+        ],
+        [
+          "article:tag",
+          "quartz"
+        ],
+        [
+          "article:tag",
+          "tutorials"
+        ]
+      ],
+      "jsonLd": [
+        {
+          "@context": "https://schema.org",
+          "@type": "HowTo",
+          "headline": "Parity article",
+          "url": "https://blog.chaoticgood.computer/content/articles/parity-article",
+          "image": "https://blog.chaoticgood.computer/content/articles/parity-article-og-image.webp",
+          "inLanguage": "en-US",
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://blog.chaoticgood.computer/content/articles/parity-article"
+          },
+          "author": {
+            "@type": "Person",
+            "name": "Spencer Elkington",
+            "url": "https://blog.chaoticgood.computer/about"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Chaotic Good Computing",
+            "url": "https://blog.chaoticgood.computer/about",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://blog.chaoticgood.computer/static/icon.png",
+              "width": 184,
+              "height": 184
+            }
+          },
+          "description": "An explicit description, used as it is.",
+          "datePublished": "2024-03-05T12:00:00.000Z",
+          "dateModified": "2024-04-02T12:00:00.000Z",
+          "articleSection": "Tutorials",
+          "keywords": "engineering/quartz, writing/tutorials"
+        }
+      ]
+    },
+    "/content/notes/parity-note": {
+      "canonical": [
+        "https://blog.chaoticgood.computer/content/notes/parity-note"
+      ],
+      "robots": [],
+      "article": [
+        [
+          "article:published_time",
+          "2024-05-02T12:00:00.000Z"
+        ],
+        [
+          "article:modified_time",
+          "2024-05-20T12:00:00.000Z"
+        ],
+        [
+          "article:author",
+          "https://blog.chaoticgood.computer/about"
+        ],
+        [
+          "article:section",
+          "horticulture"
+        ],
+        [
+          "article:tag",
+          "horticulture"
+        ]
+      ],
+      "jsonLd": [
+        {
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          "headline": "Parity note",
+          "url": "https://blog.chaoticgood.computer/content/notes/parity-note",
+          "image": "https://blog.chaoticgood.computer/content/notes/parity-note-og-image.webp",
+          "inLanguage": "en-US",
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://blog.chaoticgood.computer/content/notes/parity-note"
+          },
+          "author": {
+            "@type": "Person",
+            "name": "Spencer Elkington",
+            "url": "https://blog.chaoticgood.computer/about"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Chaotic Good Computing",
+            "url": "https://blog.chaoticgood.computer/about",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://blog.chaoticgood.computer/static/icon.png",
+              "width": 184,
+              "height": 184
+            }
+          },
+          "description": "Salt & pepper, and a “quoted” word. A second sentence follows the first one.",
+          "datePublished": "2024-05-02T12:00:00.000Z",
+          "dateModified": "2024-05-20T12:00:00.000Z",
+          "articleSection": "Digital Garden",
+          "keywords": "horticulture"
+        }
+      ]
+    },
+    "/content/notes/parity-untagged": {
+      "canonical": [
+        "https://blog.chaoticgood.computer/content/notes/parity-untagged"
+      ],
+      "robots": [],
+      "article": [
+        [
+          "article:published_time",
+          "2024-06-02T12:00:00.000Z"
+        ],
+        [
+          "article:modified_time",
+          "2024-06-03T12:00:00.000Z"
+        ],
+        [
+          "article:author",
+          "https://blog.chaoticgood.computer/about"
+        ]
+      ],
+      "jsonLd": [
+        {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": "Parity untagged",
+          "url": "https://blog.chaoticgood.computer/content/notes/parity-untagged",
+          "image": "https://blog.chaoticgood.computer/static/parity.png",
+          "inLanguage": "en-US",
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://blog.chaoticgood.computer/content/notes/parity-untagged"
+          },
+          "author": {
+            "@type": "Person",
+            "name": "Spencer Elkington",
+            "url": "https://blog.chaoticgood.computer/about"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Chaotic Good Computing",
+            "url": "https://blog.chaoticgood.computer/about",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://blog.chaoticgood.computer/static/icon.png",
+              "width": 184,
+              "height": 184
+            }
+          },
+          "description": "A description for social cards.",
+          "datePublished": "2024-06-02T12:00:00.000Z",
+          "dateModified": "2024-06-03T12:00:00.000Z"
+        }
+      ]
+    },
+    "/content/notes/parity-private": {
+      "canonical": [
+        "https://blog.chaoticgood.computer/content/notes/parity-private"
+      ],
+      "robots": [
+        "noindex, nofollow"
+      ],
+      "article": [
+        [
+          "article:published_time",
+          "2024-07-02T12:00:00.000Z"
+        ],
+        [
+          "article:modified_time",
+          "2024-07-04T12:00:00.000Z"
+        ],
+        [
+          "article:author",
+          "https://blog.chaoticgood.computer/about"
+        ],
+        [
+          "article:section",
+          "private"
+        ],
+        [
+          "article:tag",
+          "private"
+        ],
+        [
+          "article:tag",
+          "economics"
+        ]
+      ],
+      "jsonLd": [
+        {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": "Parity private",
+          "url": "https://blog.chaoticgood.computer/content/notes/parity-private",
+          "image": "https://blog.chaoticgood.computer/content/notes/parity-private-og-image.webp",
+          "inLanguage": "en-US",
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://blog.chaoticgood.computer/content/notes/parity-private"
+          },
+          "author": {
+            "@type": "Person",
+            "name": "Spencer Elkington",
+            "url": "https://blog.chaoticgood.computer/about"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Chaotic Good Computing",
+            "url": "https://blog.chaoticgood.computer/about",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://blog.chaoticgood.computer/static/icon.png",
+              "width": 184,
+              "height": 184
+            }
+          },
+          "description": "A private stub.",
+          "datePublished": "2024-07-02T12:00:00.000Z",
+          "dateModified": "2024-07-04T12:00:00.000Z",
+          "articleSection": "Economics",
+          "keywords": "private, economics"
+        }
+      ]
+    },
+    "/tags/horticulture/": {
+      "canonical": [
+        "https://blog.chaoticgood.computer/tags/horticulture/"
+      ],
+      "robots": [],
+      "article": [],
+      "jsonLd": []
+    },
+    "/no-such-page": {
+      "canonical": [
+        "https://blog.chaoticgood.computer/"
+      ],
+      "robots": [],
+      "article": [],
+      "jsonLd": []
+    }
+  }
+}

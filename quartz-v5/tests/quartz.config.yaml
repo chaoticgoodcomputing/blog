@@ -121,6 +121,15 @@ plugins:
     options:
       enableSiteMap: true
       enableRSS: true
+  - source: ../../plugins/cgc-seo
+    enabled: true
+    options:
+      noindexTags:
+        - private
+      defaultAuthor:
+        type: Person
+        name: Fixture Author
+        url: https://localhost/about
   - source: "@quartz-community/favicon"
     enabled: true
   - source: "@quartz-community/og-image"
