@@ -1,0 +1,327 @@
+/*
+ * cgc-tag-explorer: the tag tree, and its drawer. v4's TagExplorer and MobileSidebarMenu styles, as
+ * library CSS (ADR-0003): one BEM block, every rule in this package's family layer, skin from the
+ * theme's colour properties. build.mjs refuses anything else.
+ *
+ * Each tag's mark carries its tag colour, set inline from the cgc-tags engine's `--cgc-tag-*`
+ * property: it paints the tag's icon, or a dot where the tag has none, and never text.
+ *
+ * The one media query, `(max-width: 800px)`, is the drawer's. The plugin writes the site's
+ * `drawerBreakpoint` in its place when it ships the sheet, so every rule for the drawer sits under
+ * that query and nowhere else.
+ */
+@layer cgc.tag-explorer {
+  /* In a sidebar the explorer takes what height is left, and its tree scrolls. */
+  .cgc-tag-explorer {
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+    min-height: 1.2rem;
+    overflow: hidden;
+  }
+
+  .cgc-tag-explorer__toggle,
+  .cgc-tag-explorer__backdrop,
+  .cgc-tag-explorer__bar {
+    display: none;
+  }
+
+  .cgc-tag-explorer__panel {
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+    min-height: 0;
+  }
+
+  .cgc-tag-explorer__tree,
+  .cgc-tag-explorer__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .cgc-tag-explorer__tree {
+    margin-top: 0.5rem;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .cgc-tag-explorer__tag,
+  .cgc-tag-explorer__page {
+    margin: 0;
+    line-height: 1.5rem;
+  }
+
+  /* A tag's subtags and pages, folded away until the tag opens. */
+  .cgc-tag-explorer__children {
+    display: grid;
+    grid-template-rows: 0fr;
+    visibility: collapse;
+  }
+
+  .cgc-tag-explorer__children--open {
+    grid-template-rows: 1fr;
+    visibility: visible;
+  }
+
+  .cgc-tag-explorer__list {
+    overflow: hidden;
+    margin-left: 6px;
+    padding-left: 0.8rem;
+    border-left: 1px solid var(--lightgray);
+  }
+
+  .cgc-tag-explorer__row {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    user-select: none;
+  }
+
+  .cgc-tag-explorer__fold {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 12px;
+    margin: 0 1px 0 0;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    color: var(--secondary);
+    cursor: pointer;
+  }
+
+  .cgc-tag-explorer__fold:hover {
+    color: var(--tertiary);
+  }
+
+  /* v4's chevron, drawn here rather than in every row: it points right at a closed tag, and turns
+     to point down at an open one. */
+  .cgc-tag-explorer__fold::before {
+    content: "";
+    box-sizing: border-box;
+    width: 7px;
+    height: 7px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: translateX(-1px) rotate(-45deg);
+  }
+
+  .cgc-tag-explorer__fold--open::before {
+    transform: translateY(-1px) rotate(45deg);
+  }
+
+  /* Only a reader's own clicks animate, never the state a page is restored to. */
+  .cgc-tag-explorer--ready .cgc-tag-explorer__children {
+    transition-property: grid-template-rows, visibility;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
+  }
+
+  .cgc-tag-explorer--ready .cgc-tag-explorer__fold::before {
+    transition: transform 0.3s ease;
+  }
+
+  .cgc-tag-explorer__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--secondary);
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.5rem;
+    text-decoration: none;
+  }
+
+  .cgc-tag-explorer__link:hover {
+    color: var(--tertiary);
+  }
+
+  /* The tag's mark, in its tag colour: its icon, or a dot. */
+  .cgc-tag-explorer__mark {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .cgc-tag-explorer__mark--dot {
+    padding: 0.28rem;
+    border-radius: 50%;
+    background-color: currentColor;
+    background-clip: content-box;
+  }
+
+  .cgc-tag-explorer__icon {
+    width: 1rem;
+    height: 1rem;
+    fill: currentColor;
+  }
+
+  .cgc-tag-explorer__name::before {
+    content: "#";
+  }
+
+  .cgc-tag-explorer__count {
+    color: var(--gray);
+    font-size: 0.85rem;
+  }
+
+  /* A page under a tag: a bullet, or a lock for a private page, then its title. */
+  .cgc-tag-explorer__page-link {
+    display: flex;
+    align-items: flex-start;
+    color: var(--dark);
+    font-weight: 400;
+    opacity: 0.75;
+    text-decoration: none;
+  }
+
+  .cgc-tag-explorer__page-link:hover {
+    opacity: 1;
+  }
+
+  .cgc-tag-explorer__page-link--active {
+    color: var(--tertiary);
+    opacity: 1;
+  }
+
+  .cgc-tag-explorer__bullet,
+  .cgc-tag-explorer__lock {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    min-width: 16px;
+    height: 1.5rem;
+    margin-right: 2px;
+  }
+
+  .cgc-tag-explorer__bullet::before {
+    content: "•";
+    color: var(--gray);
+    line-height: 1;
+  }
+
+  .cgc-tag-explorer__lock-icon {
+    width: 12px;
+    height: 12px;
+    fill: currentColor;
+  }
+
+  /*
+   * The drawer (v4's MobileSidebarMenu, now the explorer's own): v4's caret at the window's left
+   * edge, half way down, and the tree in a panel that comes in from the left over a backdrop. Every
+   * part of it is fixed to the window, so the explorer takes no room from the row the left sidebar
+   * becomes on a narrow screen, where the site's title, search and scheme toggle already fill a
+   * phone's width. The caret sits in the page's side margin, as v4's did, under the backdrop and the
+   * panel once they are open.
+   */
+  @media (max-width: 800px) {
+    .cgc-tag-explorer {
+      flex: 0 0 auto;
+      min-height: 0;
+      overflow: visible;
+    }
+
+    .cgc-tag-explorer__title {
+      display: none;
+    }
+
+    .cgc-tag-explorer__toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      top: 50%;
+      left: 0;
+      z-index: 998;
+      width: 2rem;
+      height: 3rem;
+      margin: 0;
+      padding: 0;
+      transform: translateY(-50%);
+      border: none;
+      background-color: transparent;
+      color: var(--darkgray);
+      opacity: 0.5;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .cgc-tag-explorer__toggle:hover,
+    .cgc-tag-explorer__toggle:focus-visible {
+      opacity: 0.9;
+    }
+
+    .cgc-tag-explorer__toggle-icon {
+      flex-shrink: 0;
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+
+    .cgc-tag-explorer__panel {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      box-sizing: border-box;
+      width: min(80vw, 320px);
+      height: 100dvh;
+      padding: 1rem 1rem 1rem 1.5rem;
+      border-right: 1px solid var(--lightgray);
+      background-color: var(--light);
+      transform: translateX(-100%);
+      visibility: hidden;
+    }
+
+    .cgc-tag-explorer--ready .cgc-tag-explorer__panel {
+      transition:
+        transform 0.3s ease,
+        visibility 0.3s ease;
+    }
+
+    .cgc-tag-explorer--open .cgc-tag-explorer__panel {
+      transform: none;
+      visibility: visible;
+    }
+
+    .cgc-tag-explorer__bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--dark);
+      font-weight: 600;
+    }
+
+    .cgc-tag-explorer__close {
+      display: flex;
+      margin: 0;
+      padding: 5px;
+      border: none;
+      background-color: transparent;
+      color: var(--darkgray);
+      cursor: pointer;
+    }
+
+    .cgc-tag-explorer__tree {
+      flex: 1 1 auto;
+    }
+
+    /* The page behind an open drawer, veiled in the page's own background. */
+    .cgc-tag-explorer--open .cgc-tag-explorer__backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background-color: var(--light);
+      opacity: 0.75;
+    }
+  }
+}

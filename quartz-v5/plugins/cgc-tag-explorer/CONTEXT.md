@@ -1,0 +1,92 @@
+# cgc-tag-explorer
+
+The Quartz 5 component that lets a reader browse the site by tag: a tree of the site's tags, each in
+its tag colour with its icon, and the pages under each. On a narrow screen it is a drawer of its own.
+It is v4's TagExplorer and MobileSidebarMenu, as a consumer of the `cgc-tags` engine (#42, #44, #76).
+Inherits the family vocabulary in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md), the tag vocabulary of
+[`cgc-tags`](../cgc-tags/CONTEXT.md) and [`tags-core`](../../libs/tags-core/CONTEXT.md), and the
+icon vocabulary of [`icons`](../../libs/icons/CONTEXT.md).
+
+## Language
+
+**Tree**:
+Every tag in the corpus, less the excluded ones, nested by the tag hierarchy. Each level is in the
+`tagSort` order, ties A→Z. The tree is rendered into every page when the site builds
+([ADR-0001](./docs/adr/0001-the-tree-renders-at-build-time-its-pages-load-from-an-index.md)).
+_Avoid_: tag index (v4's JSON file), trie, sidebar
+
+**Tag** (in the tree):
+One tag's item, `.cgc-tag-explorer__tag`, with its **fold**, its link to the tag's page (**mark**,
+name and **count**), and below them its subtags and then its **pages**.
+_Avoid_: folder, node (in prose), tag button
+
+**Fold**:
+The button before a tag that opens and closes it. A tag starts closed unless `defaultState` is
+`open`, or the reader opened it before.
+_Avoid_: chevron (that is its icon), caret and toggle (those are the drawer's)
+
+**Mark**:
+The tag colour's one place in a tag's row, `.cgc-tag-explorer__mark`: the tag's icon, drawn in
+`currentColor`, or a dot where the tag has none. It carries the tag colour as its own inline
+`color`, as cgc-tag-list's ring does (its ADR-0001). The tag colour never paints text.
+_Avoid_: icon (for the element), swatch, badge
+
+**Count**:
+How many pages are under a tag: those carrying it or any of its subtags, each once. The same count
+as cgc-tag-list's badges.
+_Avoid_: post count, total
+
+**Pages** (of a tag):
+The pages that carry the tag itself, listed under its subtags when it opens: public before private,
+then newest first, undated last, and pages with the same date A→Z. A page carrying a subtag is
+listed under the subtag only.
+_Avoid_: files, posts, children
+
+**Pages index**:
+`static/cgcTagExplorer.json`, which the plugin's emitter writes and its script reads to fill a tag's
+pages in: every listed page once, and each tag's pages in order. It belongs to this plugin, and it is
+not a published artifact.
+_Avoid_: content index (stock's, or cgc-graph's), tag index
+
+**Private page**:
+A page under one of the `privateTags`, or a subtag of one. It is listed after a tag's public pages,
+with a **lock** where a public page has a bullet.
+_Avoid_: locked page, hidden page (it is listed)
+
+**Excluded tag**:
+A tag in `excludeTags`, left out of the tree with its subtags. Its pages stay under their other tags.
+_Avoid_: hidden tag, filtered tag
+
+**Drawer**:
+The explorer at or below its `drawerBreakpoint`: a **toggle**, v4's caret fixed at the window's left
+edge half way down, opens its **panel** from the left over a backdrop. The panel's close button, the backdrop, Escape or following
+a link close it again. It replaces v4's MobileSidebarMenu, which slid out the whole left sidebar.
+_Avoid_: mobile menu, sidebar menu, off-canvas
+
+**Saved state**:
+Which tags the reader opened and closed. It is kept across navigations, and in localStorage under
+v4's `tagTree` key and in v4's shape (`[{ path, collapsed }]`), unless `useSavedState` is off. How
+far the tree is scrolled is kept for the tab, under v4's `tagExplorerScrollTop`.
+_Avoid_: collapse state, tree state
+
+## Constraints
+
+- **It reads only what the engine publishes:** the `ancestors` of every page's `fileData.cgcTags`
+  for the tree, and each page's own `tags` for its pages. It never reads the engine's options, and
+  it needs no `cgcTags.json` in the browser.
+- **It draws icons itself,** with `@chaoticgoodcomputing/icons`, from the ids the engine publishes and
+  the site's `iconCollections`. Every tag in the tree is drawn on the first page rendered, so an id
+  no collection has fails the build, whichever pages show the tag. The lock is `mdi:lock`.
+- **Colour and icon repaint on a scheme switch through CSS alone.** The mark's `color` is a `var()`
+  of the tag's property, so no script resolves a colour.
+- **Nothing a navigation brings in is animated.** Transitions are on only once a page's saved state
+  is in place (`--ready`). Quartz's router puts every class back to the new page's, which also closes
+  the drawer.
+- **The drawer takes no room in the sidebar's row.** Its toggle, panel and backdrop are fixed to the
+  window, because on a phone the row the left sidebar becomes is already full with the site's title,
+  search and scheme toggle.
+- **Links start from the site's root on the 404 page,** which is served at any depth; everywhere else
+  they are relative, as Quartz's own are.
+- **The drawer's breakpoint is the one media query in the stylesheet.** It is written at core's
+  800px, and the plugin rewrites it to `drawerBreakpoint` when it ships the sheet. build.mjs refuses
+  any other query, so the rewrite can't miss one.

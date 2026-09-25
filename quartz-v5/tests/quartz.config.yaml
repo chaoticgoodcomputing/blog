@@ -226,6 +226,23 @@ plugins:
     layout:
       position: left
       priority: 50
+  # v4's TagExplorer (#76): the tag hierarchy, each tag in its colour with its icon, and the pages
+  # under it; a drawer on a narrow screen, at the plugin's default width, core's. Beside stock
+  # explorer, which the fixture keeps. `secret` is a second private tag, so a private page can sit
+  # under a public tag (`explorer`) without changing what other specs count under `private`.
+  - source: ../../plugins/cgc-tag-explorer
+    enabled: true
+    options:
+      excludeTags:
+        - private
+        - secret
+      privateTags:
+        - private
+        - secret
+      iconCollections: *iconCollections
+    layout:
+      position: left
+      priority: 55
   # Replaced by cgc-graph, in the same slot.
   - source: "@quartz-community/graph"
     enabled: false

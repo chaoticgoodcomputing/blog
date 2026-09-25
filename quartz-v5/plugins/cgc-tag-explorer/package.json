@@ -1,0 +1,62 @@
+{
+  "name": "cgc-tag-explorer",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Quartz 5 component: browse a site by tag, in a tree of the cgc-tags engine's tags, each in its tag's colour with its icon, and a drawer of its own on a narrow screen. See README.md and CONTEXT.md.",
+  "exports": {
+    ".": "./dist/index.js",
+    "./components": "./dist/components/index.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "../node_modules/.bin/tsc -p ."
+  },
+  "//peerDependencies": "The host Quartz's own copies, never bundled or installed here: the component's vnodes must be the host's Preact's. The types are imported for types only.",
+  "peerDependencies": {
+    "@quartz-community/types": "*",
+    "@quartz-community/utils": "*",
+    "preact": "^10.29.0"
+  },
+  "//dependencies": "@chaoticgoodcomputing/icons draws each tag's icon while the site builds, with Iconify's packages, which can't all be inlined (svgo, under @iconify/tools, reads its data files at run time). So they stay out of dist/ and install here, at exactly the library's versions, which build.mjs checks (libs/icons/docs/adr/0001). MDI is one of them, pinned by this package's lockfile: nothing is fetched.",
+  "dependencies": {
+    "@iconify-json/mdi": "1.2.3",
+    "@iconify/tools": "5.0.14",
+    "@iconify/utils": "3.1.7"
+  },
+  "//devDependencies": "Build-time only: esbuild bundles dist/ and the browser script, inlining our libraries, and PostCSS checks the stylesheet against ADR-0003 before it ships (build.mjs). The libraries are `file:` specs on main, which a release commit rewrites to the release's published version (ADR-0005).",
+  "devDependencies": {
+    "@chaoticgoodcomputing/icons": "file:../../libs/icons",
+    "@chaoticgoodcomputing/tags-core": "file:../../libs/tags-core",
+    "esbuild": "^0.28.2",
+    "postcss": "^8.5.28",
+    "postcss-selector-parser": "^7.1.6"
+  },
+  "quartz": {
+    "name": "cgc-tag-explorer",
+    "displayName": "Tag explorer",
+    "description": "Browse the site by tag: a tree of the cgc-tags engine's tags, each in its tag's colour with its icon, the pages under each, and a drawer of its own on a narrow screen.",
+    "category": [
+      "emitter",
+      "component"
+    ],
+    "version": "0.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [
+      "cgc-styles",
+      "cgc-tags"
+    ],
+    "defaultOrder": 50,
+    "defaultEnabled": true,
+    "defaultOptions": {},
+    "components": {
+      "TagExplorer": {
+        "displayName": "Tag explorer",
+        "defaultPosition": "left",
+        "defaultPriority": 50
+      }
+    }
+  }
+}

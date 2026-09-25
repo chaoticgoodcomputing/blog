@@ -271,14 +271,15 @@ plugins:
     enabled: true
   # v4's PostHog (#42, #44, #61), in place of core `analytics`: nothing loads under Do Not Track, no
   # session recording, and a `navigation` event per followed link, labelled as v4 labelled it. v4's
-  # other two labels arrive with their places: the tag explorer's (#76) here, and the graph's, which
-  # cgc-graph sends itself (FORK-LEDGER graph rows).
+  # graph label arrives with its place: cgc-graph sends it itself (FORK-LEDGER graph rows).
   - source: ../plugins/cgc-posthog
     enabled: true
     options:
       apiKey: phc_BviHJVml66FIB1RFmgeAzZpKRWA0nntGdIOo47hTA3X
       apiHost: https://app.posthog.com
       navigationSources:
+        # v4 labelled a link anywhere in the tag explorer so, ahead of the tag badges (#76).
+        ".cgc-tag-explorer": tag-explorer
         # v4 labelled a link in the tag list, or any tag link, a tag badge: cgc-tag-list's badges
         # (#69), and the `.tag-link`s of page listings and inline #tags.
         ".cgc-tag-list": tag-badge
@@ -309,7 +310,8 @@ plugins:
     enabled: false
   - source: "@quartz-community/tag-page"
     enabled: true
-  # A file explorer is in no v4 layout (#42). The tag explorer, with its own drawer, is #76.
+  # A file explorer is in no v4 layout (#42). The tag explorer, with its own drawer, is
+  # cgc-tag-explorer, under the page title and toolbar (#76).
   - source: "@quartz-community/explorer"
     enabled: false
     layout:
@@ -487,6 +489,23 @@ plugins:
       position: left
       priority: 30
       group: toolbar
+  # v4's TagExplorer (#42, #44, #76), under the page title and toolbar as in v4: the tag hierarchy,
+  # each tag in its colour with its icon, most pages first, and the pages under each, public first.
+  # `private` stays out of the tree, as v4's `excludeTags` kept it, and its pages are listed under
+  # their other tags with a lock. Below the site's 1000px breakpoint it is a drawer of its own, v4's
+  # MobileSidebarMenu being gone (#42).
+  - source: ../plugins/cgc-tag-explorer
+    enabled: true
+    options:
+      excludeTags:
+        - private
+      privateTags:
+        - private
+      iconCollections: *iconCollections
+      drawerBreakpoint: 1000
+    layout:
+      position: left
+      priority: 50
   # In no v4 layout.
   - source: "@quartz-community/reader-mode"
     enabled: false

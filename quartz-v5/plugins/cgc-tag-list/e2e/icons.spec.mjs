@@ -10,6 +10,7 @@ import { test, expect, toggleScheme } from "../../../tests/harness/test.mjs"
 import {
   buildScratchSite,
   fixtureConfig,
+  pluginSources,
   testsRoot,
   withPlugins,
 } from "../../../tests/harness/site.mjs"
@@ -133,6 +134,13 @@ const TAG_LIST = {
   enabled: true,
   layout: { position: "beforeBody", priority: 30 },
 }
+// Every other plugin of ours is off in these builds. Another that draws icons (cgc-tag-explorer,
+// #76) would otherwise fail the build first, in its own words, and an entry that aliases the
+// fixture's `&iconCollections` anchor would lose it when the entry below replaces this one.
+const OTHERS = pluginSources(fixtureConfig())
+  .filter((source) => typeof source === "string" && source.startsWith("../../plugins/"))
+  .filter((source) => !["cgc-styles", "cgc-tags", "cgc-tag-list"].includes(path.basename(source)))
+  .map((source) => ({ source, enabled: false }))
 const FAILURES = [
   {
     name: "an icon its collection doesn't have",
@@ -166,6 +174,7 @@ for (const { name, icon, iconCollections, error } of FAILURES) {
       { source: "../../plugins/cgc-tags", enabled: true, options: { tags: { fixture: { icon } } } },
     ]
     if (iconCollections) entries.push({ ...TAG_LIST, options: { iconCollections } })
+    entries.push(...OTHERS)
     const { code, output } = await buildScratchSite("tag-list-icon", HOME, {
       config: withPlugins(fixtureConfig(), entries),
     })
