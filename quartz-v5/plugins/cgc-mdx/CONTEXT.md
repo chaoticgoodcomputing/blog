@@ -25,6 +25,11 @@ The one global script, shipped as the body's `afterDOMLoaded`, that hydrates isl
 `render` and unmounts them on `prenav`. Widgets never touch Quartz's navigation events themselves.
 _Avoid_: widget script, loader, hydrator
 
+**Widget layer**:
+`cgc.mdx.widgets`, the cascade layer every widget's CSS lands in, whatever the widget's source.
+A sublayer of this package's family layer, so it ranks above core and themes and below the site.
+_Avoid_: widget CSS layer, island layer
+
 **Directive**:
 The `client:load` (default) or `client:visible` attribute on a widget's element, saying when its
 island hydrates. Borrowed from Astro, and never passed to the widget as a prop.

@@ -83,5 +83,28 @@ lifecycle below survived unchanged. What the implementation fixed:
   which emitters may feed: [plugins/index.ts:11](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/index.ts#L11)). So the
   build-time markup is styled on first paint. A page reached by SPA navigation never gets a new
   head link, so there the runtime adds a persisted `<link>` and waits for it before hydrating.
-- **Open:** widget CSS is currently **unlayered**, so it outranks the site's layered application
-  CSS. Which layer it belongs in is ticketed separately rather than guessed here.
+- **Widget CSS lands in the widget layer.** _Closed by the amendment below;_ this bullet originally
+  recorded widget CSS as unlayered and open.
+
+## Amendment, 2026-09-25: the widget layer
+
+_From [Which cascade layer does widget CSS land in?](https://github.com/chaoticgoodcomputing/blog/issues/45)._
+
+Unlayered widget CSS outranked every layer on the page, the site's included, so a widget beat the
+site that embeds it. `cgc-mdx` now wraps each widget's CSS bundle in `@layer cgc.mdx.widgets {…}`
+as it emits it.
+
+- **All widget CSS is library CSS, whatever its source.** The widget library, a stranger's npm
+  package and a vault's own widgets are treated alike, and `cgc-mdx` never asks where an import
+  came from. So widget CSS ranks with the family: above core and themes, below the site. A site
+  that wants a vault widget to look different overrides it from its own layer.
+- **A sublayer of the package's layer, not the package's layer itself.** `cgc-mdx`'s own CSS, if
+  it ever has any, stays apart from CSS it only hosts, and a site can still rank the two
+  separately. No stack declaration needs an edit, because the `cgc` entry already ranks
+  everything under it.
+- **Nothing a widget ships escapes the wrapper.** A widget's own `@layer foo` nests to
+  `cgc.mdx.widgets.foo`. A remote `@import`, which esbuild leaves in place and which can't sit
+  inside a block, is hoisted ahead of the wrapper as `@import url(…) layer(cgc.mdx.widgets);`.
+- **Rule 9 of ADR-0003 does not reach widgets.** A `<link>` can never get inside `quartz-base`, so
+  a widget has no vendor-layer escape hatch. A widget namespaces any third-party CSS it ships.
+- **No `cgc-styles` dependency.** See [ADR-0003](./0003-no-opinionated-dependencies.md).

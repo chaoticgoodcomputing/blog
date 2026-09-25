@@ -170,7 +170,12 @@ since a repeated name is a no-op.
 - **Above themes.** A theme is skin. Placed above it, a theme can reskin our blocks through the
   variables we consume, but can't restructure them.
 - **A `cgc-styles` engine owns the position.** It emits `@layer cgc;` and nothing else, and every
-  styled `cgc-*` package lists it in `manifest.dependencies`. The loader then **refuses** to build
+  `cgc-*` package that emits CSS from `externalResources()` lists it in `manifest.dependencies`.
+  _Narrowed from "every styled package"_ on
+  [Which cascade layer does widget CSS land in?](https://github.com/chaoticgoodcomputing/blog/issues/45):
+  a package whose CSS arrives only through `additionalHead`, like `cgc-mdx`'s widget CSS, renders
+  after every `externalResources()` sheet, so it can't position `cgc` below a theme and needs no
+  engine (`cgc-mdx` ADR-0003). The loader then **refuses** to build
   if a consumer is ordered before the engine, or if the engine is missing
   ([config-loader.ts:142](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L142)).
   This is ADR-0002's engine shape with a cascade position as its published artifact, and it plays
@@ -260,9 +265,15 @@ which compiles `.css` as written). So there is no build of ours for a prefixing 
 - **The package's Nx `lint` target runs the check.** It is the same PostCSS pass run in check mode:
   it fails on any selector outside the package's namespace and rewrites nothing. "Fail the build on
   escape" becomes "fail CI on escape".
-- **Rules 1, 2 and 4–9 apply unchanged.** Rule 11 does not reach a library. A library has no
+- **Rules 1, 2 and 4–8 apply unchanged.** Rule 11 does not reach a library. A library has no
   `externalResources()` of its own, so the layer its CSS lands in is the consuming plugin's
-  business. For widgets, that is [Which cascade layer does widget CSS land in?](https://github.com/chaoticgoodcomputing/blog/issues/45).
+  business. For widgets, [Which cascade layer does widget CSS land in?](https://github.com/chaoticgoodcomputing/blog/issues/45)
+  settled it: `cgc-mdx` wraps every widget's CSS in `@layer cgc.mdx.widgets`, whatever the widget's
+  source, so widget CSS ranks with the family (`cgc-mdx` ADR-0002).
+- **Rule 9 does not reach a widget.** Its mechanism is nesting inside `quartz-base`, and a
+  stylesheet that arrives as a `<link>` can't get there. A widget's `@layer vendor` would nest to
+  `cgc.mdx.widgets.vendor`, still above core. So a library namespaces any third-party CSS it ships,
+  under its lint, the way `pdf-viewer` does for PDF.js's text layer.
 - **Content-local widgets stay advisory.** `cgc-mdx` does not run the check on a vault's widget CSS
   (`cgc-mdx` ADR-0002).
 
@@ -297,9 +308,9 @@ it *is* this site. It is a CSS-only transformer that emits, from `externalResour
   its own `e2e/` reads the layer order back from the CSSOM. It fails if the order differs from the
   declaration, if `site` is not last, or if any named layer appears that the declaration doesn't list.
 - **The declaration names only what the config loads.** Adding a theme means adding its layers, and
-  the spec says so. Widget CSS has no slot yet; that is
-  [Which cascade layer does widget CSS land in?](https://github.com/chaoticgoodcomputing/blog/issues/45)'s
-  call, and the answer is an edit to this one statement.
+  the spec says so. Widget CSS needs no slot: it lands in `cgc.mdx.widgets`, which the `cgc`
+  entry already ranks, as decided on
+  [Which cascade layer does widget CSS land in?](https://github.com/chaoticgoodcomputing/blog/issues/45).
 - **All five ITCSS tiers are kept under `site`**, even the ones the port leaves empty. Application CSS
   stays Sass, compiled in the plugin's own build, since breakpoint mixins are what CSS can't express.
 - **The fixtures stay stock by construction.** A fixture config that doesn't list `site-styles` gets
