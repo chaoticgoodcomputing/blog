@@ -6,16 +6,27 @@
 import { test, expect } from "../harness/test.mjs"
 
 const PAGES = ["/", "/plain-note", "/md-twin", "/mdx-article", "/nested/deep-note", "/tags/fixture"]
+// A page one of our plugins creates has no baseline of its own, so it is compared against the
+// stock page it stands in for: the .mdx article against its byte-identical .md twin. The explorer
+// marks the current page `.active`, which is then a different link on each side, so it is skipped.
+const BASELINE_OF = { "/mdx-article": "/md-twin" }
+const TWIN_SKIP = ".explorer .active"
 const PROPS = ["color", "background-color", "font-family", "font-size", "font-weight", "letter-spacing", "line-height", "margin-top", "margin-bottom", "padding-left", "display", "text-decoration-line"]
 
 // Runs in the page. Keys each unowned element by its path through unowned ancestors, so an
-// inserted plugin element does not shift the keys of its siblings.
-const snapshot = (props) => {
+// inserted plugin element does not shift the keys of its siblings. A list item is keyed by its
+// label rather than its position, because a plugin that adds pages (cgc-mdx) grows the explorer.
+const snapshot = ([props, skip]) => {
   const owned = (el) => el.closest('[class*="cgc-"]') !== null
   const key = (el) => {
     const parts = []
     for (let node = el; node && node !== document.body; node = node.parentElement) {
       if (owned(node)) continue
+      const label = node.tagName === "LI" ? node.querySelector("a, button, span")?.textContent.trim() : undefined
+      if (label !== undefined) {
+        parts.unshift(`li{${label}}`)
+        continue
+      }
       const index = [...node.parentElement.children].filter((c) => !owned(c) && c.tagName === node.tagName).indexOf(node)
       parts.unshift(`${node.tagName.toLowerCase()}[${index}]`)
     }
@@ -23,7 +34,7 @@ const snapshot = (props) => {
   }
   const out = {}
   for (const el of document.body.querySelectorAll("*")) {
-    if (owned(el) || el.closest("script,style,svg")) continue
+    if (owned(el) || el.closest("script,style,svg") || (skip && el.closest(skip))) continue
     const style = getComputedStyle(el)
     out[key(el)] = Object.fromEntries(props.map((p) => [p, style.getPropertyValue(p)]))
   }
@@ -33,8 +44,9 @@ const snapshot = (props) => {
 for (const url of PAGES) {
   test(`our plugins leave unowned elements alone on ${url}`, async ({ page, baselinePage }) => {
     await page.goto(url)
-    await baselinePage.goto(url)
-    const [withPlugins, baseline] = await Promise.all([page.evaluate(snapshot, PROPS), baselinePage.evaluate(snapshot, PROPS)])
+    await baselinePage.goto(BASELINE_OF[url] ?? url)
+    const skip = BASELINE_OF[url] ? TWIN_SKIP : null
+    const [withPlugins, baseline] = await Promise.all([page.evaluate(snapshot, [PROPS, skip]), baselinePage.evaluate(snapshot, [PROPS, skip])])
     const bled = Object.entries(withPlugins)
       .filter(([key]) => baseline[key])
       .flatMap(([key, props]) =>

@@ -1,0 +1,50 @@
+{
+  "name": "cgc-mdx",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Quartz 5 page type for .mdx pages, with widgets as islands. See CONTEXT.md and docs/adr/.",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "../node_modules/.bin/tsc -p ."
+  },
+  "//dependencies": "esbuild bundles widgets at site-build time, so it stays a runtime dependency; it is native and cannot be inlined.",
+  "dependencies": {
+    "esbuild": "^0.28.2"
+  },
+  "//peerDependencies": "The host Quartz's own copies, never bundled or installed here: two Preacts break hydration, and a page type's markup must be the host's vnodes.",
+  "peerDependencies": {
+    "@quartz-community/utils": "*",
+    "preact": "^10.29.0",
+    "preact-render-to-string": "^6.7.0"
+  },
+  "//devDependencies": "Inlined into dist by build.mjs. The unified stack is bundled rather than shared: nothing in it depends on instance identity, and an installed copy here would shadow the host's anyway.",
+  "devDependencies": {
+    "hast-util-to-html": "^9.0.5",
+    "remark-mdx": "^3.1.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.1.0",
+    "vfile": "^6.0.3"
+  },
+  "quartz": {
+    "name": "cgc-mdx",
+    "displayName": "MDX pages",
+    "category": [
+      "pageType",
+      "emitter"
+    ],
+    "version": "0.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 45,
+    "defaultEnabled": true,
+    "defaultOptions": {}
+  }
+}

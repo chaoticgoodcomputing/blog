@@ -1,0 +1,28 @@
+---
+title: Echo
+tags:
+  - fixture
+  - mdx
+---
+
+import Echo from '../toys/Echo'
+
+Props written the way live pages write them: unquoted keys, comments, trailing commas.
+
+<Echo
+  label="plain string"
+  count={-3}
+  ratio={0.5}
+  on={true}
+  off={false}
+  nothing={null}
+  bare
+  series={{
+    // the first series
+    name: 'dice',
+    "quoted key": `template`,
+    values: [1, 2, 3,],
+  }}
+/>
+
+Back to [[lab/life|Life]].

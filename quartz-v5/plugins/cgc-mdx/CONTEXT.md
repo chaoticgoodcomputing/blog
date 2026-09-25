@@ -14,3 +14,18 @@ _Avoid_: component, MDX component, embed, shortcode
 Reserved for Quartz's own layout plugin type (explorer, TOC, the MDX body itself). A widget is
 never a Component, even though both are Preact.
 _Avoid_: using it for anything an MDX page imports
+
+**Island**:
+One use of a widget on a page: its build-time HTML inside a `cgc-mdx-island` marker, which the
+island runtime hydrates in the browser.
+_Avoid_: widget instance, mount point, embed
+
+**Island runtime**:
+The one global script, shipped as the body's `afterDOMLoaded`, that hydrates islands on `nav` and
+`render` and unmounts them on `prenav`. Widgets never touch Quartz's navigation events themselves.
+_Avoid_: widget script, loader, hydrator
+
+**Directive**:
+The `client:load` (default) or `client:visible` attribute on a widget's element, saying when its
+island hydrates. Borrowed from Astro, and never passed to the widget as a prop.
+_Avoid_: hydration mode, strategy

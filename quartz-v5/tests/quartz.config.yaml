@@ -131,6 +131,8 @@ plugins:
     enabled: true
   - source: "@quartz-community/content-page"
     enabled: true
+  - source: ../../plugins/cgc-mdx
+    enabled: true
   - source: "@quartz-community/folder-page"
     enabled: true
   - source: "@quartz-community/tag-page"

@@ -61,3 +61,27 @@ rewrites. Changing it later would break widgets we cannot see, once other sites 
 - **The Preact runtime rides in a shared chunk**, bundled with the per-widget chunks described in
   [ADR-0001](./0001-widgets-are-real-imports-the-body-stays-quartzs.md), so a page with several
   islands loads it once.
+
+## Amendment, 2026-09-24: proven on game-of-life
+
+Proven with the `game-of-life` port on
+[Prove the widget contract with `game-of-life`](https://github.com/chaoticgoodcomputing/blog/issues/35).
+Specs cover hydration, unmounting on navigation (the widget's timer stops), rehydrating exactly
+once on the way back, `client:visible`, and islands inside a popover staying static. The
+lifecycle below survived unchanged. What the implementation fixed:
+
+- **The marker.** Each island is a `<div>` (a `<span>` when inline) with class
+  `cgc-mdx-island`, holding the build-time HTML. It carries `data-cgc-entry`, `data-cgc-css`,
+  `data-cgc-hydrate` (`load` or `visible`) and `data-cgc-props` (JSON). The runtime marks it
+  `data-cgc-hydrated` once mounted. The `cgc-` class makes everything inside an owned element
+  for the no-bleed spec.
+- **The entry re-exports Preact.** Each browser entry exports the widget as `default` next to
+  Preact's `h`, `hydrate` and `render`, so the runtime drives the same Preact the widget
+  imports, and it needs no static import of its own.
+- **Widget CSS is in the served head.** On a hard load it arrives as a persisted `<link>` through
+  the emitter's `additionalHead` ([Head.tsx:100-106](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/components/Head.tsx#L100-L106),
+  which emitters may feed: [plugins/index.ts:11](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/index.ts#L11)). So the
+  build-time markup is styled on first paint. A page reached by SPA navigation never gets a new
+  head link, so there the runtime adds a persisted `<link>` and waits for it before hydrating.
+- **Open:** widget CSS is currently **unlayered**, so it outranks the site's layered application
+  CSS. Which layer it belongs in is ticketed separately rather than guessed here.

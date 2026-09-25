@@ -1,0 +1,37 @@
+/* Library CSS under ADR-0003: BEM, flat specificity, skin only through custom properties. */
+.life {
+  --life-live: var(--dark);
+  --life-dead: var(--light);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  background-color: var(--lightgray);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.life__reset {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--gray);
+  border-radius: 4px;
+  background-color: var(--light);
+  color: var(--darkgray);
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.life__reset:hover {
+  opacity: 1;
+}
+
+.life__canvas {
+  display: block;
+  border: 1px solid var(--gray);
+  cursor: crosshair;
+}

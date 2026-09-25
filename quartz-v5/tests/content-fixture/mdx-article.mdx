@@ -7,8 +7,6 @@ tags:
 created: 2026-01-15
 ---
 
-import { Callout } from '@widgets/callout'
-
 # MDX Article
 
 This page is `.mdx`. If you are reading it as rendered HTML, a plugin put it
@@ -34,17 +32,12 @@ const answer: string = "rendered through the configured pipeline"
 **Latex** (katex): $e^{i\pi} + 1 = 0$
 
 > [!note] Obsidian callout
-> This is OFM callout syntax, not the widget below.
+> This is OFM callout syntax, not a widget.
 
 ## Widget check
 
-The widget below is a Preact component compiled into the plugin bundle and
-hydrated client-side:
-
-<Callout kind="success" label="Widget mounted">
-  If this box is styled and the counter increments, widget compilation under
-  tsup works.
-</Callout>
+Widgets live on their own pages under `lab/`. This one checks that a page with no
+imports renders like its `.md` twin and loads no widget code.
 
 ## Footnote check
 

@@ -83,3 +83,35 @@ finish. Full compilation remains the escape hatch if the limits below start to b
 - **Reusable widgets ship as libraries, not plugins.** This repo's `pdf-viewer` and
   `bluesky-post` become a plain package that MDX imports like any other dependency. If a widget
   cannot come from an npm package, the contract is wrong.
+
+## Amendment, 2026-09-24: proven on game-of-life
+
+The contract held when real code ran it
+([Prove the widget contract with `game-of-life`](https://github.com/chaoticgoodcomputing/blog/issues/35)).
+A fixture page imports the widget by an extensionless relative path laid out nothing like our
+vault, and the build resolves, bundles, renders and hydrates it with zero configuration. What the
+implementation added to this ADR:
+
+- **One package, two roles.** `cgc-mdx` is a page type _and_ an emitter. The loader files one
+  package under every category it declares
+  ([config-loader.ts:342-350](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L342-L350)), and one
+  object can satisfy both shapes
+  ([:536-539](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L536-L539)). The page type's
+  `generate` and the emitter's `emit` await the same compile, memoised per `buildId`, so the
+  corpus is parsed and bundled once. The emitter writes the chunks to `static/cgc-mdx/`.
+- **Preact is pinned to the host's copy.** A widget resolves Preact from wherever it sits, and in
+  this repo that is the v4 tree's `preact@10.28.2`, not Quartz 5's `10.29.8`. Two Preacts on
+  one page break hooks. So every `preact`/`preact-render-to-string` import in a widget build
+  resolves to the Preact the plugin itself sees, which is the host's, because Preact is a peer and a
+  loader singleton ([gitLoader.ts:806](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L806)). This is how
+  an islands framework owns its renderer, and it is the one resolution the plugin overrides.
+- **A widget's own `tsconfig.json` is not read.** JSX is always `preact`'s automatic runtime, so
+  a stray config above the vault cannot re-point it. Aliases were already ruled out.
+- **The MDX surface is narrower than MDX.** Only `import` is allowed: `export` and namespace
+  imports fail the build. A capitalised element that was never imported fails the build.
+  Lowercase JSX renders as plain HTML with its attributes evaluated as data. `{…}` in the body,
+  including `{/* comments */}`, is dropped, since there is no evaluation context.
+- **Widget source is published.** Quartz's asset emitter copies every non-page file under the
+  content directory, so a vault's widget `.tsx` and `.css` land in `public/`, as v4's
+  `widgets/` did. `cgc-mdx` reads widgets from the filesystem, never from `ctx.allFiles`, so a
+  site can exclude its widget directories with `ignorePatterns`. That is the site's call.

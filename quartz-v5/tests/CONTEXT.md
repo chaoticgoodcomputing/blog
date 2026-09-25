@@ -36,3 +36,9 @@ _Avoid_: leak, collision, style pollution
 **Harness**:
 The shared `test` and `expect`, with their fixtures, that every spec imports from `harness/test.mjs`.
 _Avoid_: test utils, helpers
+
+**Scratch site**:
+A one-off site a spec builds from content it supplies itself, for cases the content fixture must not
+carry, chiefly builds that are supposed to fail. Its content lives outside the repo, because Quartz's
+content glob honours `.gitignore`.
+_Avoid_: temp site, throwaway build
