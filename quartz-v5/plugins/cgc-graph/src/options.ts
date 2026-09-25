@@ -2,6 +2,7 @@
 // with every colour a colour value (ADR-0003's colour-value amendment). Shared by the emitter, which
 // checks them, the component, which hands each graph its settings, and the browser runtime, which
 // reads them. Types and plain data only: the runtime imports this file too.
+import type { IconCollections } from "@chaoticgoodcomputing/icons"
 
 /** How the pages are laid out. `pseudo-shell` pins chosen top-level tags to a ring. */
 export type GraphStyle = "freeform" | "pseudo-shell"
@@ -104,6 +105,12 @@ export interface GraphOptions {
   title?: string
   localGraph?: Partial<GraphConfig>
   globalGraph?: Partial<GraphConfig>
+  /**
+   * The site's own icon collections, each prefix and the directory of SVG files that holds it, for
+   * the icons its tags name: `{ custom: "../icons" }`. A relative directory resolves against the
+   * Quartz root. Installed Iconify sets (`mdi`) need no entry.
+   */
+  iconCollections?: IconCollections
 }
 
 /** What one graph's container carries to the browser, in `data-cfg`. */
@@ -223,12 +230,18 @@ export function colourOptions(options: GraphOptions = {}): [string, unknown][] {
   return found
 }
 
-/** The option keys the plugin reads. Any other is a mistake, and fails the build. */
-export const OPTIONS: (keyof GraphOptions)[] = ["privateTags", "title", "localGraph", "globalGraph"]
-
 // The keys of each map of settings, and the values of each setting that takes a word, for the build
 // to check. Written as records so the compiler keeps them in step with the types above.
 const keys = <T>(record: Record<keyof T, true>) => Object.keys(record) as (keyof T & string)[]
+
+/** The option keys the plugin reads. Any other is a mistake, and fails the build. */
+export const OPTIONS = keys<GraphOptions>({
+  privateTags: true,
+  title: true,
+  localGraph: true,
+  globalGraph: true,
+  iconCollections: true,
+})
 
 export const GRAPH_SETTINGS = keys<GraphConfig>({
   drag: true,

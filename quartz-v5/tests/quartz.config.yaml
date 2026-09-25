@@ -239,6 +239,12 @@ plugins:
     options:
       privateTags:
         - private
+      # The real site's node sizes in the local graph, big enough to show each node's colour round
+      # its icon (#77).
+      localGraph:
+        baseSize: { tags: 10, posts: 10 }
+      # The fixture's icon collection, for the icons its tags are drawn with (#77).
+      iconCollections: *iconCollections
     layout:
       position: right
       priority: 10

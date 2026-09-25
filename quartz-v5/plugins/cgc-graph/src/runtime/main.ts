@@ -7,7 +7,7 @@
 // A navigation stops and removes whatever it drew, before the page changes under it (`prenav`). A
 // scheme switch repaints whatever is drawn, with no new layout (`themechange`). The listeners sit on
 // the document, once, so they reach every page SPA navigation brings in.
-import { addVisited, loadPages, nodeIdOf } from "./pages"
+import { addVisited, loadSources, nodeIdOf } from "./pages"
 import { renderGraph, type DrawnGraph } from "./render-graph"
 
 let locals: DrawnGraph[] = []
@@ -28,16 +28,16 @@ function clearLocals() {
 async function drawLocals() {
   const mine = ++generation
   clearLocals()
-  let pages
+  let sources
   try {
-    pages = await loadPages()
+    sources = await loadSources()
   } catch (err) {
     console.error("cgc-graph: could not load the graph's index", err)
     return
   }
   if (mine !== generation) return
   for (const container of document.querySelectorAll<HTMLElement>(".cgc-graph__local")) {
-    locals.push(renderGraph(container, slug, pages))
+    locals.push(renderGraph(container, slug, sources))
   }
 }
 
@@ -45,16 +45,16 @@ async function openGlobal(dialog: HTMLDialogElement) {
   if (dialog.open) return
   dialog.showModal()
   const container = dialog.querySelector<HTMLElement>(".cgc-graph__global")
-  let pages
+  let sources
   try {
-    pages = await loadPages()
+    sources = await loadSources()
   } catch (err) {
     console.error("cgc-graph: could not load the graph's index", err)
     return
   }
   if (!dialog.open || !container) return
   global?.destroy()
-  global = renderGraph(container, slug, pages)
+  global = renderGraph(container, slug, sources)
 }
 
 document.addEventListener("nav", ((event: CustomEvent<{ url?: string }>) => {

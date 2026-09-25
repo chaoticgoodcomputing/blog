@@ -1,7 +1,10 @@
 // Builds the plugin to dist/, in quartz-community/plugin-template's shape: `dist/index.js` is the
 // emitter, which publishes the graph's index and ships the stylesheet, and `dist/components/index.js`
-// the component. The host's singletons (peerDependencies) stay external; our library,
-// @chaoticgoodcomputing/tags-core, ships as TypeScript source and is inlined (ADR-0005).
+// the component. The host's singletons (peerDependencies) stay external; our libraries,
+// @chaoticgoodcomputing/tags-core and @chaoticgoodcomputing/icons, ship as TypeScript source and are
+// inlined (ADR-0005). The icons library's own dependencies, Iconify's packages, stay external too:
+// they run while the site builds and can't all be inlined, so they are this plugin's `dependencies`,
+// at the library's versions (libs/icons/docs/adr/0001).
 //
 // Two bundles, in order:
 //
@@ -28,6 +31,21 @@ import selectorParser from "postcss-selector-parser"
 
 const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"))
 const peers = Object.keys(pkg.peerDependencies)
+const iconsLib = JSON.parse(
+  fs.readFileSync("node_modules/@chaoticgoodcomputing/icons/package.json", "utf8"),
+).dependencies
+const drift = Object.entries(iconsLib).filter(([name, spec]) => pkg.dependencies?.[name] !== spec)
+if (drift.length) {
+  console.error(
+    `package.json must carry @chaoticgoodcomputing/icons' dependencies, at its versions:\n${drift
+      .map(
+        ([name, spec]) => `  "${name}": "${spec}" (here: ${pkg.dependencies?.[name] ?? "missing"})`,
+      )
+      .join("\n")}`,
+  )
+  process.exit(1)
+}
+const external = [...peers, ...Object.keys(iconsLib)]
 const block = pkg.name
 const layer = `cgc.${block.replace(/^cgc-/, "")}`
 const stylesheet = "src/style.css"
@@ -91,7 +109,7 @@ await esbuild.build({
   target: "node22",
   jsx: "automatic",
   jsxImportSource: "preact",
-  external: [...peers, ...peers.map((p) => `${p}/*`)],
+  external: [...external, ...external.map((p) => `${p}/*`)],
   // The stylesheet ships as text, which the emitter hands to Quartz from externalResources(); the
   // runtime as text, which the component hands to Quartz as its script.
   loader: { ".css": "text" },

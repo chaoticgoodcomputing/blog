@@ -51,3 +51,31 @@ its shape is typed in the package as `GraphIndex`.
   orders one after another (#20).
 - **A `date` on `fileData` for the graph to read at render.** The component renders each page with
   every page's data, but embedding the whole corpus in every page's HTML costs more than one fetch.
+
+## Amendment: pages and icons
+
+_2026-09-25, from [`cgc-graph`: tag colours, icons and repaint on scheme change](https://github.com/chaoticgoodcomputing/blog/issues/77)._
+
+The graph draws each node's tag icon, and the ticket asked for no icon to be fetched while the page
+runs. The icons are drawn when the site builds, so they have to reach the page in something it
+already loads, and the index is the graph's own artifact, which it loads anyway (ADR-0004). A map
+keyed by slug has no room for them beside the pages: a page can have any slug, `icons` included.
+So the index becomes two maps.
+
+```json
+{
+  "pages": { "notes/a-note": { "title": "…", "links": [], "tags": ["engineering/ai"], "primary": "engineering/ai", "date": "…" } },
+  "icons": { "mdi:robot": "<svg …>…</svg>" }
+}
+```
+
+- **`pages`** is the whole index as it was, keyed and shaped the same, and each page gains
+  **`primary`**: its primary tag, as the `cgc-tags` engine resolves it on `fileData.cgcTags`, which
+  is the tag that paints its node. It is absent on a page with no tags.
+- **`icons`** holds every icon a tag in the site carries, drawn once each with
+  `@chaoticgoodcomputing/icons` in `currentColor`, keyed by icon id. It is not only the icons the
+  graph shows: it is every icon the engine names over the site's pages, which is what the engine's
+  tag index names too.
+
+A reader of the index, such as a tag explorer sorting by date, reads `pages` where it read the whole
+file. None did yet: the tag explorer keeps its own index (#76).

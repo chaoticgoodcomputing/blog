@@ -1,7 +1,7 @@
 # cgc-graph
 
 The Quartz 5 plugin that draws the graph view: v4's graph (FORK-LEDGER `components/Graph.tsx` and
-`components/scripts/graph/**`), as a consumer of the `cgc-tags` engine (#20, #74). Ours to ship,
+`components/scripts/graph/**`), as a consumer of the `cgc-tags` engine (#20, #74, #77). Ours to ship,
 because stock `@quartz-community/graph` reads only core's content index, which has no dates and none
 of our artifacts. Inherits the family vocabulary in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md), and
 the tag vocabulary of [`cgc-tags`](../cgc-tags/CONTEXT.md) and
@@ -11,9 +11,11 @@ the tag vocabulary of [`cgc-tags`](../cgc-tags/CONTEXT.md) and
 
 **Graph index**:
 `static/cgcGraph.json`, the plugin's own content index and its published artifact: every authored
-page, keyed by slug, with its title, links, tags and date (docs/adr/0001). What every graph is
-drawn from.
-_Avoid_: content index (that is core's `contentIndex.json`), graph data, tag index
+page, keyed by slug, with its title, links, tags, **primary tag** and date, and every icon a tag in
+the site carries, drawn (docs/adr/0001). What every graph is drawn from, with the engine's **tag
+index**.
+_Avoid_: content index (that is core's `contentIndex.json`), graph data, tag index (that is
+`cgc-tags`' `cgcTags.json`)
 
 **Authored page**:
 A page with a file behind it, Markdown or anything a page type renders from a file, such as
@@ -36,9 +38,17 @@ site's index) or `tags/<tag>`.
 _Avoid_: vertex, point
 
 **Tag node**:
-A tag, drawn as a ring, with an edge to each page carrying it and to each of its subtags. A tag's
-description page, at `tags/<tag>` or `tags/<tag>/index`, is its tag node, not a page node of its own.
+A tag, drawn as a node of its own, with an edge to each page carrying it and to each of its
+subtags. A tag's description page, at `tags/<tag>` or `tags/<tag>/index`, is its tag node, not a
+page node of its own.
 _Avoid_: tag page (that is the page it links to)
+
+**Node's tag**:
+The tag that paints a node: a page's **primary tag**, as `cgc-tags` resolves it, or a tag node's
+own tag. Its **tag colour** fills the node and its icon is cut out of it, in the page's background
+colour (docs/adr/0004). A page with no tags has none, and is drawn in the theme's colours, as v4
+drew every page.
+_Avoid_: node colour, node tag, category
 
 **Edge**:
 A line between two nodes, of one of three kinds, each with its own distance, strength, opacity
@@ -47,7 +57,8 @@ _Avoid_: link (in prose; the option names say it), connection
 
 **Private page**:
 A page carrying one of the `privateTags`, or a tag under one. Drawn like any page, in
-`nodeColors.private` when that is set, and hidden by the global graph's private filter.
+`nodeColors.private` when that is set, in place of its tag's colour, and hidden by the global
+graph's private filter.
 _Avoid_: private note (the filter's label says it), hidden page
 
 **Filters**:
@@ -68,8 +79,12 @@ _Avoid_: modal, overlay, portal
 
 - **It reads only what `cgc-tags` publishes:** each page's tags in the **graph index** are the keys
   of its `fileData.cgcTags.tags`. A tag's parent is its path's prefix (`tags-core`'s `parentOf`).
-- **Every colour it paints is resolved in script** through `tags-core`'s one resolver, the theme's
-  as well as the site's options, and resolved again on `themechange`, with no new layout.
+- **It reads tag colours and icons only as `cgc-tags` names them:** a tag's colour property from the
+  engine's tag index, `static/cgcTags.json`, and its icon id there too. It draws the icons itself,
+  when the site builds, with `@chaoticgoodcomputing/icons`.
+- **Every colour it paints is resolved in script** through `tags-core`'s one resolver, the theme's,
+  the site's options and each tag's, and resolved again on `themechange`, with no new layout. Icons
+  are cut out in a resolved colour too.
 - **The browser runtime is one self-contained script,** d3 and tween.js inlined by `build.mjs`: a page
-  fetches nothing for the graph but the **graph index**, once per load.
-- **Tag colours and icons are #77's.** Until then a tag node is ringed in the theme's `tertiary`.
+  fetches nothing for the graph but the **graph index** and the engine's tag index, once per load,
+  and never an icon.

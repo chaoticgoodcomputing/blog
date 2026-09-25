@@ -58,12 +58,12 @@ test("filters pages by date, from each page's date in the index", async ({ page,
   await expect
     .poll(async () => Object.keys(await drawnGraph(globalGraph(page))))
     .not.toContain("graph/old-note")
-  const index = JSON.parse(emitted.read("static/cgcGraph.json"))
+  const { pages } = JSON.parse(emitted.read("static/cgcGraph.json"))
   const yearAgo = new Date()
   yearAgo.setFullYear(yearAgo.getFullYear() - 1)
   for (const node of Object.keys(await drawnGraph(globalGraph(page)))) {
     const slug = node === "/" ? "index" : node
-    if (index[slug]) expect(new Date(index[slug].date) >= yearAgo, node).toBe(true)
+    if (pages[slug]) expect(new Date(pages[slug].date) >= yearAgo, node).toBe(true)
   }
   // Back to All.
   await page.keyboard.press("ArrowLeft")

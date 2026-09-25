@@ -92,6 +92,7 @@ export function nodesOf(neighbourhood: Set<NodeId>, pages: Pages, settings: Sett
       tags,
       tag,
       private: !tag && tags.some(isPrivate),
+      primary: tag ? id.slice("tags/".length) : (page?.primary ?? null),
       href: hrefOf(id),
     }
   })

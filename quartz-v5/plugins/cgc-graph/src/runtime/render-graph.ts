@@ -16,11 +16,11 @@ import {
 } from "./graph-data"
 import type { HoverState } from "./hover"
 import { nodeIdOf, visitedPages } from "./pages"
-import { nodeColourOf, paletteOf } from "./palette"
+import { paintOf, paletteOf } from "./palette"
 import { attachPointer } from "./pointer"
 import { settingsOf, type Settings } from "./settings"
 import { edgeKind, radiusOf, simulationOf } from "./simulation"
-import type { GraphData, LinkRender, NodeRender, Pages, Transform } from "./types"
+import type { GraphData, LinkRender, NodeRender, Pages, Sources, Transform } from "./types"
 
 export interface DrawnGraph {
   /** Resolves every colour again, for the scheme the page shows now. */
@@ -42,7 +42,8 @@ function initialFilters(settings: Settings, data: GraphData, pages: Pages): Filt
   return { timePeriod, includePrivate }
 }
 
-export function renderGraph(container: HTMLElement, slug: string, pages: Pages): DrawnGraph {
+export function renderGraph(container: HTMLElement, slug: string, sources: Sources): DrawnGraph {
+  const { pages, icons, tags } = sources
   const width = container.offsetWidth
   // Not laid out, as in a sidebar a narrow screen hides: nothing to draw into.
   if (width === 0) return NOTHING
@@ -51,8 +52,8 @@ export function renderGraph(container: HTMLElement, slug: string, pages: Pages):
   const current = nodeIdOf(slug)
   const visited = visitedPages()
 
-  const { links, tags } = edgesOf(pages, settings)
-  const neighbourhood = neighbourhoodOf(current, links, pages, tags, settings)
+  const { links, tags: tagNodes } = edgesOf(pages, settings)
+  const neighbourhood = neighbourhoodOf(current, links, pages, tagNodes, settings)
   const whole = graphDataOf(nodesOf(neighbourhood, pages, settings), links)
 
   let palette = paletteOf(settings)
@@ -80,7 +81,7 @@ export function renderGraph(container: HTMLElement, slug: string, pages: Pages):
       return {
         node,
         radius: radius(node),
-        colour: nodeColourOf(node, settings, current, visited),
+        ...paintOf(node, settings, current, visited, tags),
         alpha: 1,
         active: false,
         label: {
@@ -107,6 +108,7 @@ export function renderGraph(container: HTMLElement, slug: string, pages: Pages):
       transform,
       settings,
       palette: () => palette,
+      icons,
       current,
       shellRadius,
     }

@@ -46,7 +46,7 @@ test("the consumers receive the engine's artifacts at the fixture root", async (
   expect(received["plain-note"].primary.tag).toBe("fixture")
   // cgc-graph's index carries each page's tags as the engine published them.
   const graph = JSON.parse(emitted.read("static/cgcGraph.json"))
-  expect(graph["tag-engine/most-specific"].tags).toEqual(["fixture", "writing/essays"])
+  expect(graph.pages["tag-engine/most-specific"].tags).toEqual(["fixture", "writing/essays"])
 })
 
 // The real site's tag table, where `engineering` is `light-dark(#0070cc, #008CFF)`: v4's blue as
@@ -99,7 +99,7 @@ test("the consumers receive the engine's artifacts at the real site root", async
       icon: "mdi:robot",
     })
     const graph = JSON.parse(fs.readFileSync(path.join(site.public, "static/cgcGraph.json"), "utf8"))
-    expect(graph["content/notes/a-note"].tags).toEqual(["engineering/ai"])
+    expect(graph.pages["content/notes/a-note"].tags).toEqual(["engineering/ai"])
   } finally {
     fs.rmSync(site.root, { recursive: true, force: true })
   }

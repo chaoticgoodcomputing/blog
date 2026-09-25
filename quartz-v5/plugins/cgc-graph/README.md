@@ -5,18 +5,21 @@ tags:
   - engineering/frontend
 ---
 
-`cgc-graph` is a [Quartz 5](https://quartz.jzhao.xyz/) plugin that draws the graph view: the pages around the current one, and, behind a button, every page of the site, with a filter for how recently each changed. It draws from an index it publishes itself, which carries each page's date.
+`cgc-graph` is a [Quartz 5](https://quartz.jzhao.xyz/) plugin that draws the graph view: the pages around the current one, and, behind a button, every page of the site, with a filter for how recently each changed. Each node is painted with its tag's colour and icon. It draws from an index it publishes itself, which carries each page's date.
 
-It is the graph from this site's Quartz 4 days, carried over as a plugin. Quartz's own graph plugin reads only Quartz's content index, which has no dates, so the filter needs this one. Its tags come from [cgc-tags](https://blog.chaoticgood.computer/plugins/cgc-tags), the plugin that holds the site's tag dictionary.
+It is the graph from this site's Quartz 4 days, carried over as a plugin. Quartz's own graph plugin reads only Quartz's content index, which has no dates, so the filter needs this one. Its tags, with their colours and icons, come from [cgc-tags](https://blog.chaoticgood.computer/plugins/cgc-tags), the plugin that holds the site's tag dictionary.
 
 ## What it renders
 
-A heading, and a box holding the **local graph**: the current page, every page it links to or that links to it, and its tags, drawn on a canvas with the edges between them. A tag is a node of its own, drawn as a ring, and a page's tags hang from it, with each tag hanging from its parent. On a tag's page, the graph is drawn around the tag.
+A heading, and a box holding the **local graph**: the current page, every page it links to or that links to it, and its tags, drawn on a canvas with the edges between them. A tag is a node of its own, with each page carrying it hanging from it, and each tag hanging from its parent. On a tag's page, the graph is drawn around the tag.
 
 - **Hover** a node to see its label, light up its neighbours and fade the rest. Hovering a tag lights up its whole subtree of subtags.
 - **Click** a node to go to its page. Quartz's router follows it, as it follows a link, with no page reload.
 - **Drag** a node to pull the layout around, drag the background to pan, and scroll to zoom.
-- **The current page** is drawn in the theme's `secondary` colour, and swells and shrinks gently. Pages you've visited are drawn in `tertiary`, and the rest in `gray`.
+- **Each node is filled with its tag's colour**, as `cgc-tags` resolves it: a page with its primary tag's, a tag with its own. A tag with no colour of its own takes its nearest ancestor's.
+- **Each node carries its tag's icon**, its own or its nearest ancestor's, cut out of the node in the page's background colour. The icons are drawn when the site builds, so the page fetches none.
+- **A page with no tags** is drawn in the theme's colours: `secondary` for the current page, `tertiary` for pages you've visited, and `gray` for the rest.
+- **The current page** swells and shrinks gently.
 - **Private pages**, those carrying one of the `privateTags` or a tag under one, are drawn like any other page, in their own colour when `nodeColors.private` sets one.
 
 The **View Global Graph** button, or Ctrl+G (⌘+G on a Mac), opens the **global graph** in a dialog: every page and tag of the site, with two filters.
@@ -26,7 +29,7 @@ The **View Global Graph** button, or Ctrl+G (⌘+G on a Mac), opens the **global
 
 Escape, a click outside the graph, or Ctrl+G again closes it.
 
-The graph follows the colour scheme. Switching between light and dark repaints it where it stands.
+The graph follows the colour scheme. Switching between light and dark repaints it where it stands, tag colours and icons included.
 
 ### The text alternative
 
@@ -49,23 +52,32 @@ A private page's item ends with `(private)`.
 
 ## The index
 
-The plugin writes `static/cgcGraph.json`, every page of the site keyed by its slug:
+The plugin writes `static/cgcGraph.json`: every page of the site keyed by its slug, and every icon its tags are drawn with, keyed by icon id:
 
 ```json
 {
-  "notes/a-note": {
-    "title": "A note",
-    "links": ["notes/b-note"],
-    "tags": ["engineering/ai"],
-    "date": "2026-09-01T00:00:00.000Z"
+  "pages": {
+    "notes/a-note": {
+      "title": "A note",
+      "links": ["notes/b-note"],
+      "tags": ["engineering/ai"],
+      "primary": "engineering/ai",
+      "date": "2026-09-01T00:00:00.000Z"
+    }
+  },
+  "icons": {
+    "mdi:robot": "<svg xmlns=\"http://www.w3.org/2000/svg\" …>…</svg>"
   }
 }
 ```
 
 - **Pages** are every page with a file behind it, Markdown or anything a page type renders from a file, such as `.mdx`. The tag pages and folder pages Quartz generates aren't in it, and neither are unlisted pages.
 - **`links`** are the pages it links to, as Quartz resolves them. The site's index is `/`.
-- **`tags`** are its tags as `cgc-tags` publishes them.
+- **`tags`** are its tags as `cgc-tags` publishes them, and **`primary`** is the one that stands for it, which paints its node. A page with no tags has no `primary`.
 - **`date`** is the date Quartz shows for the page, by the site's `defaultDateType`, as an ISO 8601 string.
+- **`icons`** holds every icon a tag of the site carries, drawn when the site built, every mark in `currentColor`.
+
+The graph also reads `cgc-tags`' own index, `static/cgcTags.json`, for each tag's colour and icon.
 
 The graph draws a tag's description page, at `tags/<tag>` or `tags/<tag>/index`, as the tag's own node.
 
@@ -90,6 +102,7 @@ plugins:
     enabled: true
     options:
       privateTags: [private]
+      iconCollections: { custom: ../icons }
       localGraph:
         baseSize: { tags: 10, posts: 10 }
       globalGraph:
@@ -107,6 +120,7 @@ plugins:
 | `title` | `Graph View` | The heading above the local graph. |
 | `localGraph` | see below | The local graph's settings. |
 | `globalGraph` | see below | The global graph's settings. |
+| `iconCollections` | none | Your own icon collections, for the icons your tags name: each prefix and the folder of SVG files that holds it, such as `{ custom: ../icons }`. A relative folder is resolved from Quartz's root. MDI's icons, `mdi:…`, need no entry. |
 
 Each graph's settings are merged over its defaults a key at a time. A map by kind, such as `linkDistance`, is merged a kind at a time, so a kind it leaves out keeps its default. A number, or `edgeOpacity`'s single `{ min, max }` range, sets every kind at once.
 
@@ -139,7 +153,8 @@ The build fails on a mistake in the options:
 
 - a colour CSS can't read;
 - an option or a setting the plugin doesn't have, at any depth, such as `localGraph.labelAnchor`, which Quartz 4's graph took and never used;
-- a word a setting doesn't take, such as a `graphStyle` other than `freeform` or `pseudo-shell`.
+- a word a setting doesn't take, such as a `graphStyle` other than `freeform` or `pseudo-shell`;
+- an icon one of your tags names that no collection has, such as a misspelt `mdi:` name, or a `custom:` icon with no `iconCollections` entry for `custom`.
 
 ## Styling
 
@@ -150,7 +165,7 @@ The CSS is library CSS, following [ADR-0003](https://github.com/chaoticgoodcompu
 - **Size:** the box is square, as wide as the block. Where the layout caps the block's height, as Quartz does to each right-sidebar component below its desktop width, the box gives up height to fit, and the graph is drawn to the box's size.
 - **Colours and fonts:** all the theme's. The box's border is `--lightgray`, the dialog's background `--light`, and the button and filters use `--codeFont`. The private toggle takes `nodeColors.private`, through the block's `--cgc-graph-private` property, or `--secondary` without one.
 
-The canvas can't use CSS, so the plugin resolves each colour in script, the theme's and the options' alike, and resolves them again when the colour scheme changes.
+The canvas can't use CSS, so the plugin resolves each colour in script, the theme's, the options' and each tag's alike, and resolves them again when the colour scheme changes. A tag's colour is its `--cgc-tag-…` property from `cgc-tags`, so a site that restyles a tag's colour restyles its nodes too. Icons are cut out in the theme's `--light`.
 
 The build checks the stylesheet and fails if a selector reaches outside the block, or if it sets a colour literal or a font other than a theme's.
 
@@ -163,4 +178,4 @@ pnpm nx run cgc-graph:e2e
 pnpm nx run cgc-graph:typecheck
 ```
 
-The browser script, in [`src/runtime/`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/plugins/cgc-graph/src/runtime), is bundled with d3 and tween.js into one script when the plugin builds, so a page fetches nothing but the index.
+The browser script, in [`src/runtime/`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/plugins/cgc-graph/src/runtime), is bundled with d3 and tween.js into one script when the plugin builds, so a page fetches nothing but the two indexes.

@@ -326,13 +326,19 @@ plugins:
   # v4's pseudo-shell, its top-level tags pinned to a ring, filtered to the last month, or wider until
   # three pages show. Private pages are drawn in v4's red and hidden from the global graph as it
   # opens, and the `private` tag hub is left out. v4 put the graph in the body of the index and tag
-  # pages; a plugin takes one layout slot, so they have it in the right sidebar too. Tag colours and
-  # icons in the graph are #77.
+  # pages; a plugin takes one layout slot, so they have it in the right sidebar too. Each node is
+  # filled with its tag's colour and carries its tag's icon (#77).
   - source: ../plugins/cgc-graph
     enabled: true
     options:
       privateTags:
         - private
+      # The site's own icon collection (#29, #71): `custom:` is quartz-v5/icons/, v4's five SVGs, as
+      # the site wrote them. They're turned into currentColor icons when the site builds. Every
+      # plugin that draws `custom:` icons takes it, through the anchor, which the first of them in
+      # this file carries. Resolved against the vendored root.
+      iconCollections: &iconCollections
+        custom: ../icons
       localGraph:
         scale: 1
         repelForce: 3
@@ -438,12 +444,8 @@ plugins:
     options:
       showSubtags: true
       showParentTag: true
-      # The site's own icon collection (#29, #71): `custom:` is quartz-v5/icons/, v4's five SVGs, as
-      # the site wrote them. They're turned into currentColor icons when the site builds. Every
-      # plugin that draws `custom:` icons takes it, through the anchor. Resolved against the vendored
-      # root.
-      iconCollections: &iconCollections
-        custom: ../icons
+      # The site's own icon collection (#71), anchored on cgc-graph's entry above.
+      iconCollections: *iconCollections
     layout:
       position: beforeBody
       priority: 30

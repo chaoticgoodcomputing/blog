@@ -96,9 +96,18 @@ export const pluginSources = (config) => YAML.parse(config).plugins.map((entry) 
 
 // `config` (YAML text) with each of `entries` in its plugin list: an entry replaces the one with the
 // same `source`, or is appended. Appending puts a plugin last in YAML order, which decides nothing
-// its `order` doesn't: plugins run, and emit their CSS, sorted by `order`.
+// its `order` doesn't: plugins run, and emit their CSS, sorted by `order`. Every alias becomes a copy
+// of what it names first, so replacing the entry that holds an anchor, such as cgc-tag-list's
+// `&iconCollections`, leaves the entries that alias it their value.
 export function withPlugins(config, entries) {
   const doc = YAML.parseDocument(config)
+  YAML.visit(doc, {
+    Alias(_, alias) {
+      const copy = alias.resolve(doc).clone()
+      copy.anchor = undefined
+      return copy
+    },
+  })
   const plugins = doc.get("plugins")
   for (const entry of entries) {
     const at = plugins.items.findIndex((item) => item.get("source") === entry.source)

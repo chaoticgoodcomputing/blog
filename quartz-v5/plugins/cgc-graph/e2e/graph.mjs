@@ -62,3 +62,62 @@ export async function nodePosition(container, label) {
   }
   throw new Error(`no node labelled "${label}" settled in the graph`)
 }
+
+// The canvas's opaque pixels around a node's centre, in viewport pixels, at `radii` CSS pixels from
+// it: `rings` samples eight points round each radius, `disc` every device pixel within the radius.
+const pixelsNear = (container, at, shape) =>
+  container.locator(".cgc-graph__canvas").evaluate(
+    (canvas, { at, shape }) => {
+      const rect = canvas.getBoundingClientRect()
+      const k = canvas.width / rect.width
+      const [cx, cy] = [(at.x - rect.left) * k, (at.y - rect.top) * k]
+      const data = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height).data
+      const pixel = (x, y) => {
+        const i = (Math.round(y) * canvas.width + Math.round(x)) * 4
+        return data[i + 3] === 255 ? [data[i], data[i + 1], data[i + 2]] : null
+      }
+      const found = []
+      if (shape.rings) {
+        for (const radius of shape.rings) {
+          for (let i = 0; i < 8; i++) {
+            const angle = (i * Math.PI) / 4
+            found.push(pixel(cx + radius * k * Math.cos(angle), cy + radius * k * Math.sin(angle)))
+          }
+        }
+      } else {
+        const r = shape.disc * k
+        for (let y = cy - r; y <= cy + r; y++)
+          for (let x = cx - r; x <= cx + r; x++)
+            if (Math.hypot(x - cx, y - cy) <= r) found.push(pixel(x, y))
+      }
+      return found.filter(Boolean)
+    },
+    { at, shape },
+  )
+
+/**
+ * The colour the node labelled `label` is filled with, as `[r, g, b]`: the commonest colour round a
+ * ring inside its edge, clear of the icon at its centre. Nodes must be big enough for that: the
+ * fixture's local graph draws them at the real site's size (tests/quartz.config.yaml).
+ */
+export async function nodeFill(container, label) {
+  const at = await nodePosition(container, label)
+  const counts = new Map()
+  for (const rgb of await pixelsNear(container, at, { rings: [8, 9] })) {
+    const key = rgb.join(",")
+    counts.set(key, (counts.get(key) ?? 0) + 1)
+  }
+  const [commonest] = [...counts].sort((a, b) => b[1] - a[1])
+  return commonest ? commonest[0].split(",").map(Number) : null
+}
+
+/**
+ * How many of the canvas's pixels near the centre of the node labelled `label` are within a few
+ * levels of `rgb`: where its icon is drawn, the icon's marks.
+ */
+export async function marksNear(container, label, rgb) {
+  const at = await nodePosition(container, label)
+  const near = ([r, g, b]) =>
+    Math.max(Math.abs(r - rgb[0]), Math.abs(g - rgb[1]), Math.abs(b - rgb[2])) <= 24
+  return (await pixelsNear(container, at, { disc: 5 })).filter(near).length
+}

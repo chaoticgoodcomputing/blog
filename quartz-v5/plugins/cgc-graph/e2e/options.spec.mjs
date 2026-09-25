@@ -42,6 +42,34 @@ test("fails the build on an option it doesn't have", async () => {
   expect(output).toContain('unknown option "privateTag"')
 })
 
+test("fails the build on icon collections that aren't directories by prefix", async () => {
+  const { code, output } = await buildScratchSite("graph-bad-collections", CONTENT, {
+    config: withOptions({ iconCollections: ["../fixture-icons"] }),
+  })
+  expect(code).not.toBe(0)
+  expect(output).toContain("cgc-graph: iconCollections must map each prefix to a directory")
+})
+
+// An icon id the tag dictionary names and no collection has: the graph draws every icon a tag in the
+// site carries when it builds, and fails rather than draw a node without one (#29). The tag list,
+// which fails the same way, is off, so the failure is the graph's own.
+test("fails the build on an icon no collection has", async () => {
+  const config = YAML.parseDocument(withOptions({ privateTags: ["private"] }))
+  for (const item of config.get("plugins").items) {
+    const source = item.get("source")
+    if (source === "../../plugins/cgc-tags")
+      item.setIn(["options", "tags"], config.createNode({ private: { icon: "mdi:no-such-icon" } }))
+    if (source === "../../plugins/cgc-tag-list") item.set("enabled", false)
+  }
+  const { code, output } = await buildScratchSite("graph-unknown-icon", CONTENT, {
+    config: String(config),
+  })
+  expect(code).not.toBe(0)
+  expect(output).toContain(
+    'cgc-graph: tag "private": unknown icon "mdi:no-such-icon": the "mdi" collection has no icon "no-such-icon"',
+  )
+})
+
 // Inside each graph's settings too: v4's leftovers, which the plugin dropped, a layout it doesn't
 // have, and a mistyped ring setting all fail the build, naming the setting.
 const BAD_SETTINGS = {
@@ -84,7 +112,9 @@ test("fills a per-kind setting's missing kinds from the defaults", async ({ page
 })
 
 // A colour value in each form a site can write it: a theme's reference, which follows the theme, and
-// a `light-dark()` pair, which follows the scheme. Nothing else in the graph is drawn in either.
+// a `light-dark()` pair, which follows the scheme. Nothing else in the graph is drawn in either: the
+// `private` tag, whose default colour is the theme's `darkgray`, is left out, as the real site leaves
+// it out.
 const PRIVATE = {
   "var(--darkgray)": { light: [78, 78, 78], dark: [212, 212, 212] },
   "light-dark(#b83232, #e06060)": { light: [184, 50, 50], dark: [224, 96, 96] },
@@ -95,7 +125,7 @@ for (const [value, rgb] of Object.entries(PRIVATE)) {
     const site = await buildScratchSite("graph-private-colour", CONTENT, {
       config: withOptions({
         privateTags: ["private"],
-        localGraph: { nodeColors: { private: value } },
+        localGraph: { nodeColors: { private: value }, removeTags: ["private"] },
       }),
       keep: true,
     })

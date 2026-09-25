@@ -1,13 +1,17 @@
-// Drawing a graph on its canvas, every frame: the ring, edges, nodes and labels, and the fades a
-// hover starts (v4 ui/canvasSetup.ts, ui/rendering.ts, core/tweenManager.ts). Colours come from the
-// palette each frame, so a repaint is a new palette and nothing more. The layout moves in the same
+// Drawing a graph on its canvas, every frame: the ring, edges, nodes with their icons, and labels,
+// and the fades a hover starts (v4 ui/canvasSetup.ts, ui/rendering.ts, core/tweenManager.ts). Colours
+// come from the palette each frame, the icons' too, so a repaint is a new palette and nothing more. The layout moves in the same
 // loop: each frame ticks the simulation while it is warm (still-timer.ts).
 import { Group, Tween } from "@tweenjs/tween.js"
 import type { Simulation } from "d3-force"
 import { edgeKind } from "./simulation"
+import type { IconImages } from "./icons"
 import type { Palette } from "./palette"
 import type { Settings } from "./settings"
 import type { Label, LinkData, LinkRender, NodeData, NodeId, NodeRender, Transform } from "./types"
+
+/** An icon's size, as a multiple of its node's radius (v4 ui/nodeFactory.ts). */
+const ICON_SCALE = 1.4
 
 export interface Canvas {
   canvas: HTMLCanvasElement
@@ -112,6 +116,7 @@ export interface Scene {
   transform: Transform
   settings: Settings
   palette: () => Palette
+  icons: IconImages
   current: NodeId
   shellRadius: number | null
 }
@@ -180,18 +185,22 @@ export function animate(scene: Scene): () => void {
         const wave = Math.sin(((time % period) / period) * 2 * Math.PI)
         radius *= 1 + ((wave + 1) / 2) * (settings.expandSelectedSize - 1)
       }
-      const colour = palette[node.colour]
       ctx.save()
       ctx.globalAlpha = node.alpha
       ctx.beginPath()
       ctx.arc(x + cx, y + cy, radius, 0, 2 * Math.PI)
-      // A tag is filled grey and ringed in its colour.
-      ctx.fillStyle = node.node.tag ? palette.gray : colour
+      ctx.fillStyle = palette.node(node.colour)
       ctx.fill()
-      if (node.node.tag) {
-        ctx.strokeStyle = colour
+      if (node.ring !== null) {
+        ctx.strokeStyle = palette.node(node.ring)
         ctx.lineWidth = 2
         ctx.stroke()
+      }
+      // Its icon, centred, at v4's size, swelling with it.
+      const icon = node.icon === null ? null : scene.icons.image(node.icon, palette.icon)
+      if (icon) {
+        const size = radius * ICON_SCALE
+        ctx.drawImage(icon, x + cx - size / 2, y + cy - size / 2, size, size)
       }
       ctx.restore()
     }

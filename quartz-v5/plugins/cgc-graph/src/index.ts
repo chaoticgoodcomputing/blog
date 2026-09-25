@@ -5,17 +5,19 @@
 // has no dates and none of our artifacts (#20, #21).
 //
 // This is the plugin's emitter half. It publishes the graph's own content index,
-// `static/cgcGraph.json` (docs/adr/0001), and ships the stylesheet in the family layer,
-// `@layer cgc.graph` (ADR-0003 rule 11). The component is in ./components, and the script that draws
-// in ./runtime.
+// `static/cgcGraph.json` (docs/adr/0001), with the icons its tags are drawn with (docs/adr/0004), and
+// ships the stylesheet in the family layer, `@layer cgc.graph` (ADR-0003 rule 11). The component is
+// in ./components, and the script that draws in ./runtime.
 //
-// A consumer of the `cgc-tags` engine (ADR-0002): a page's tags in the index are the ones the engine
-// publishes on its `fileData`, normalised.
+// A consumer of the `cgc-tags` engine (ADR-0002): a page's tags and its primary tag in the index are
+// the ones the engine publishes on its `fileData`, normalised, and the icons are the ones it names
+// there, drawn here with @chaoticgoodcomputing/icons, since the engine draws nothing (#29).
 import fs from "node:fs/promises"
 import path from "node:path"
 import type { BuildCtx, FilePath, ProcessedContent } from "@quartz-community/types"
 import { getDate } from "@quartz-community/utils/sort"
 import { transform } from "lightningcss"
+import { createIcons } from "@chaoticgoodcomputing/icons"
 import type { TagsData } from "@chaoticgoodcomputing/tags-core"
 import { colourValueCheck } from "@chaoticgoodcomputing/tags-core/colour-value"
 import style from "./style.css"
@@ -145,6 +147,12 @@ function check(options: GraphOptions = {}) {
     throw new CgcGraphError(`privateTags must be a list of tags`)
   if (options.title !== undefined && typeof options.title !== "string")
     throw new CgcGraphError(`title must be a string`)
+  const collections = options.iconCollections
+  if (
+    collections !== undefined &&
+    !(isMap(collections) && Object.values(collections).every((dir) => typeof dir === "string"))
+  )
+    throw new CgcGraphError(`iconCollections must map each prefix to a directory`)
   for (const graph of ["localGraph", "globalGraph"] as const) checkGraph(graph, options[graph])
   for (const [where, value] of colourOptions(options)) {
     if (!isColourValue(value))
@@ -176,27 +184,64 @@ function isoDate(value: unknown): string | undefined {
 }
 
 /**
- * The index: every page with a file behind it, `.md` or anything a page type renders from a file,
- * such as `.mdx`. The listings Quartz generates, tag pages and folder pages, have none and are left
- * out: the graph draws a tag as a node of its own. So are unlisted pages, as stock content-index
- * leaves them out.
+ * The index's pages: every page with a file behind it, `.md` or anything a page type renders from a
+ * file, such as `.mdx`. The listings Quartz generates, tag pages and folder pages, have none and are
+ * left out: the graph draws a tag as a node of its own. So are unlisted pages, as stock
+ * content-index leaves them out.
  */
-export function graphIndexOf(content: ProcessedContent[]): GraphIndex {
-  const index: GraphIndex = {}
+function pagesOf(content: ProcessedContent[]): GraphIndex["pages"] {
+  const pages: GraphIndex["pages"] = {}
   for (const [, file] of content) {
     const data = file.data as Record<string, any>
     if (!data.filePath || data.unlisted === true || !data.slug) continue
     const tags = data.cgcTags as TagsData | undefined
+    const primary = tags?.primary?.tag
     const date = isoDate(getDate(data as never))
     const entry: GraphEntry = {
       title: data.frontmatter?.title ?? data.slug,
       links: data.links ?? [],
       tags: Object.keys(tags?.tags ?? {}),
+      ...(primary !== undefined && { primary }),
       ...(date !== undefined && { date }),
     }
-    index[data.slug] = entry
+    pages[data.slug] = entry
   }
-  return index
+  return pages
+}
+
+// The size, in pixels, an icon's `<svg>` says it is: what a browser that rasterises an image before
+// it scales it rasterises at.
+const ICON_SIZE = 64
+
+/**
+ * The index's icons: the icon of every tag some page is under, each drawn once. The engine names each
+ * tag's icon, its own or inherited, on every page under the tag, and the graph draws a tag node, or
+ * a page, with it. An id no collection has fails the build.
+ */
+function iconsOf(content: ProcessedContent[], options: GraphOptions): GraphIndex["icons"] {
+  const named = new Map<string, string>()
+  for (const [, file] of content) {
+    const ancestors = (file.data.cgcTags as TagsData | undefined)?.ancestors ?? {}
+    for (const [tag, { icon }] of Object.entries(ancestors)) {
+      if (icon !== null && !named.has(icon)) named.set(icon, tag)
+    }
+  }
+  const icons = createIcons({ iconCollections: options.iconCollections })
+  const drawn: GraphIndex["icons"] = {}
+  for (const [id, tag] of [...named].sort(([a], [b]) => a.localeCompare(b))) {
+    try {
+      // Drawn at a size a canvas can scale down from, rather than the library's `1em`.
+      drawn[id] = icons.svg(id, { width: String(ICON_SIZE), height: String(ICON_SIZE) })
+    } catch (err) {
+      throw new CgcGraphError(`tag "${tag}": ${(err as Error).message}`)
+    }
+  }
+  return drawn
+}
+
+/** The index: the pages every graph is drawn from, and the icons it draws them with. */
+export function graphIndexOf(content: ProcessedContent[], options: GraphOptions = {}): GraphIndex {
+  return { pages: pagesOf(content), icons: iconsOf(content, options) }
 }
 
 async function write(ctx: BuildCtx, file: string, content: string): Promise<FilePath> {
@@ -217,7 +262,7 @@ export default function CgcGraph(options?: GraphOptions) {
     },
     async emit(ctx: BuildCtx, content: ProcessedContent[]): Promise<FilePath[]> {
       checked()
-      return [await write(ctx, GRAPH_INDEX, JSON.stringify(graphIndexOf(content)))]
+      return [await write(ctx, GRAPH_INDEX, JSON.stringify(graphIndexOf(content, options)))]
     },
   }
 }

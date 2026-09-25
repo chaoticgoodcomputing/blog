@@ -5,7 +5,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, siteConfig, testsRoot } from "../../../tests/harness/site.mjs"
-import { drawnGraph, globalGraph, localGraph } from "./graph.mjs"
+import { drawnGraph, globalGraph, localGraph, marksNear, nodeFill } from "./graph.mjs"
 
 // The site is served at its own `baseUrl`, where Quartz points its absolute URLs.
 const ORIGIN = "https://blog.chaoticgood.computer"
@@ -121,6 +121,34 @@ test("draws private pages in v4's red", async ({ page }) => {
   await expect.poll(red).toBeGreaterThan(10)
 })
 
+// The site's tag table (#77): `engineering: { color: "light-dark(#0070cc, #008CFF)", icon: mdi:wrench }`,
+// with v4's blue as the dark half, and `engineering/ai: { icon: mdi:robot }`, which takes the colour.
+const ENGINEERING = { light: [0, 112, 204], dark: [0, 140, 255] }
+// The site palette's `light`, the page's background, which icons are cut out in.
+const LIGHT = { light: [250, 248, 248], dark: [22, 22, 24] }
+
+test("paints each node in its tag's colour, with its tag's icon", async ({ page, colorScheme }) => {
+  await page.setViewportSize({ width: 1400, height: 900 })
+  await routeSite(page, site.public, ORIGIN)
+  await page.goto(`${ORIGIN}/content/notes/a-note`)
+  const graph = localGraph(page)
+  for (const label of ["A note", "B note", "#ai"]) {
+    await expect.poll(() => nodeFill(graph, label), label).toEqual(ENGINEERING[colorScheme])
+    await expect.poll(() => marksNear(graph, label, LIGHT[colorScheme]), label).toBeGreaterThan(3)
+  }
+})
+
+test("draws the site's own icons, from its icon collection", () => {
+  const { icons } = JSON.parse(
+    fs.readFileSync(path.join(site.public, "static/cgcGraph.json"), "utf8"),
+  )
+  // The plugin note is tagged `projects/site: { icon: custom:quartz-filled }`, from quartz-v5/icons/.
+  expect(Object.keys(icons)).toEqual(
+    expect.arrayContaining(["custom:quartz-filled", "mdi:robot", "mdi:wrench", "mdi:pencil"]),
+  )
+  expect(icons["custom:quartz-filled"]).toContain("currentColor")
+})
+
 test("draws a tag page's graph around the tag: its parent and its pages", async ({ page }) => {
   await routeSite(page, site.public, ORIGIN)
   await page.goto(`${ORIGIN}/tags/engineering/ai`)
@@ -160,13 +188,15 @@ test("opens the global graph with v4's filters: the last month, and no private p
 })
 
 test("publishes the index, with each page's date", () => {
-  const index = JSON.parse(fs.readFileSync(path.join(site.public, "static/cgcGraph.json"), "utf8"))
-  expect(index["content/notes/a-note"]).toMatchObject({
+  const { pages } = JSON.parse(
+    fs.readFileSync(path.join(site.public, "static/cgcGraph.json"), "utf8"),
+  )
+  expect(pages["content/notes/a-note"]).toMatchObject({
     title: "A note",
     links: ["content/notes/b-note"],
     tags: ["engineering/ai"],
   })
-  for (const [slug, entry] of Object.entries(index))
+  for (const [slug, entry] of Object.entries(pages))
     expect(Date.parse(entry.date), slug).not.toBeNaN()
 })
 
