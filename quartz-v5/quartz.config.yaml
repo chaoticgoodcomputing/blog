@@ -282,7 +282,9 @@ plugins:
       apiKey: phc_BviHJVml66FIB1RFmgeAzZpKRWA0nntGdIOo47hTA3X
       apiHost: https://app.posthog.com
       navigationSources:
-        # The stock tag list's links, until cgc-tag-list (#69).
+        # v4 labelled a link in the tag list, or any tag link, a tag badge: cgc-tag-list's badges
+        # (#69), and the `.tag-link`s of page listings and inline #tags.
+        ".cgc-tag-list": tag-badge
         ".tag-link": tag-badge
         "a.internal": inline-link
   - source: "@quartz-community/canvas-page"
