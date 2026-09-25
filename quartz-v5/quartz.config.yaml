@@ -137,6 +137,10 @@ plugins:
     options:
       theme: tokyo-night
       mode: both
+  # The family layer, `cgc`, above core and themes (#30, #63): every cgc-* plugin that emits CSS
+  # declares it by name, `dependencies: ["cgc-styles"]`, and the loader holds them to its order.
+  - source: ../plugins/cgc-styles
+    enabled: true
   - source: "@quartz-community/remove-draft"
     enabled: true
   - source: "@quartz-community/explicit-publish"

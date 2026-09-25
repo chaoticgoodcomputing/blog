@@ -36,15 +36,22 @@ export function fileFor(root, pathname) {
   return hit ? { file: hit, status: 200 } : { file: path.join(root, "404.html"), status: 404 }
 }
 
+// Where a scratch root is made. `fixture`, the default, is beside the fixture roots, where the
+// fixture config's `../../plugins/<name>` sources resolve. `site` is beside the vendored copy, at the
+// real site root's depth, where the site config's `../plugins/<name>` sources resolve unchanged: for
+// a spec about the source strings themselves, such as a dependency declared by plugin name (#40).
+const SCRATCH_PARENT = { fixture: testsRoot, site: path.dirname(vendored) }
+
 // The real site's config, tracked at `quartz-v5/quartz.config.yaml`, for a scratch site that has to
 // be built the way the real site is. Its local `source:` paths resolve against the vendored root,
-// where the real site builds (VENDORED.md), so they are rebased onto the scratch roots' directory.
-// So is a plugin option that is a relative path (`./…` or `../…`), such as cgc-og-image's `icon`,
-// which a plugin resolves against the same root.
+// where the real site builds (VENDORED.md), so they are rebased onto the scratch roots made `at`
+// the given place. At `site`, that leaves a `../` path as it is. So is a plugin option that is a
+// relative path (`./…` or `../…`), such as cgc-og-image's `icon`, which a plugin resolves against
+// the same root.
 export const siteConfigFile = path.resolve(testsRoot, "../quartz.config.yaml")
-export function siteConfig() {
+export function siteConfig({ at = "fixture" } = {}) {
   const config = YAML.parseDocument(fs.readFileSync(siteConfigFile, "utf8"))
-  const scratchRoot = path.join(testsRoot, ".site-scratch")
+  const scratchRoot = path.join(SCRATCH_PARENT[at], ".site-scratch")
   const rebase = (local) => path.relative(scratchRoot, path.resolve(vendored, local))
   for (const entry of config.get("plugins").items) {
     const source = entry.get("source")
@@ -58,8 +65,30 @@ export function siteConfig() {
   return String(config)
 }
 
+// The fixture's own config as YAML text: what a scratch site is built from unless given another.
+export const fixtureConfig = () => fs.readFileSync(path.join(testsRoot, "quartz.config.yaml"), "utf8")
+
+// The `source` of every plugin entry in `config` (YAML text), in YAML order.
+export const pluginSources = (config) => YAML.parse(config).plugins.map((entry) => entry.source)
+
+// `config` (YAML text) with each of `entries` in its plugin list: an entry replaces the one with the
+// same `source`, or is appended. Appending puts a plugin last in YAML order, which decides nothing
+// its `order` doesn't: plugins run, and emit their CSS, sorted by `order`.
+export function withPlugins(config, entries) {
+  const doc = YAML.parseDocument(config)
+  const plugins = doc.get("plugins")
+  for (const entry of entries) {
+    const at = plugins.items.findIndex((item) => item.get("source") === entry.source)
+    if (at < 0) plugins.add(doc.createNode(entry))
+    else plugins.set(at, doc.createNode(entry))
+  }
+  return String(doc)
+}
+
 const LINKED = ["package.json", "quartz", "node_modules", "tsconfig.json", "quartz.ts", "globals.d.ts", "index.d.ts"]
-const isOurs = (source) => typeof source === "string" && source.startsWith("../../plugins/")
+// Ours: a package under `quartz-v5/plugins/`, or a fixture plugin standing in for one.
+const isOurs = (source) =>
+  typeof source === "string" && (source.startsWith("../../plugins/") || source.startsWith("../fixture-plugins/"))
 
 function writeFixtureRoot(variant) {
   const root = fixtureRoot(variant)
@@ -68,7 +97,7 @@ function writeFixtureRoot(variant) {
     const link = path.join(root, entry)
     if (!fs.existsSync(link)) fs.symlinkSync(path.join(vendored, entry), link)
   }
-  const config = YAML.parseDocument(fs.readFileSync(path.join(testsRoot, "quartz.config.yaml"), "utf8"))
+  const config = YAML.parseDocument(fixtureConfig())
   if (variant === "baseline") {
     for (const entry of config.get("plugins").items) {
       if (isOurs(entry.get("source"))) entry.set("enabled", false)
@@ -206,12 +235,13 @@ export async function buildSite(variant) {
 // config unless `options.config` supplies one (a YAML string), and assumes `buildPlugins` has
 // already run (global setup does it). Resolves with the exit code and combined output rather than
 // throwing. `options.args` are extra `quartz build` flags. `options.serve` builds it as
-// `quartz build --serve` does, stopping the server once it is up. The site is deleted afterwards
-// unless `options.keep` is set; the result then also carries `root` and `public` (the built site),
-// and the caller removes `root`.
+// `quartz build --serve` does, stopping the server once it is up. `options.at` is where the root is
+// made: `fixture` (the default) or `site`, see SCRATCH_PARENT. The site is deleted afterwards unless
+// `options.keep` is set; the result then also carries `root` and `public` (the built site), and
+// the caller removes `root`.
 export async function buildScratchSite(name, files, options = {}) {
   // Unique per call: the same spec runs once per colour scheme, possibly at the same time.
-  const root = fs.mkdtempSync(path.join(testsRoot, `.site-scratch-${name}-`))
+  const root = fs.mkdtempSync(path.join(SCRATCH_PARENT[options.at ?? "fixture"], `.site-scratch-${name}-`))
   // Outside the repo: Quartz's content glob honours .gitignore, which covers every fixture root.
   const content = fs.mkdtempSync(path.join(os.tmpdir(), `cgc-scratch-${name}-`))
   for (const [rel, text] of Object.entries(files)) {
@@ -223,7 +253,7 @@ export async function buildScratchSite(name, files, options = {}) {
     const link = path.join(root, entry)
     if (!fs.existsSync(link)) fs.symlinkSync(path.join(vendored, entry), link)
   }
-  const config = options.config ?? fs.readFileSync(path.join(testsRoot, "quartz.config.yaml"), "utf8")
+  const config = options.config ?? fixtureConfig()
   fs.writeFileSync(path.join(root, "quartz.config.yaml"), config)
   const kept = options.keep ? { root, public: path.join(root, "public") } : {}
   try {

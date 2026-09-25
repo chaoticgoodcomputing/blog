@@ -43,6 +43,49 @@ export async function routeSite(page, root, origin) {
   })
 }
 
+/**
+ * The page's cascade layers as the browser reads them: every layer name, dotted for a sublayer
+ * (`cgc.mdx`), at its first appearance in document order. Layers rank by that first appearance
+ * among their siblings, lowest first, so `order.filter((n) => !n.includes("."))` is the top-level
+ * ranking. Walks statements, blocks, `@import … layer()` and grouping rules such as `@media`.
+ */
+export const layerOrder = (page) =>
+  page.evaluate(() => {
+    const order = []
+    const add = (name) => {
+      const parts = name.split(".")
+      parts.forEach((_, i) => {
+        const full = parts.slice(0, i + 1).join(".")
+        if (!order.includes(full)) order.push(full)
+      })
+    }
+    const join = (parent, name) => (parent ? `${parent}.${name}` : name)
+    const walk = (rules, parent) => {
+      for (const rule of rules) {
+        if (rule instanceof CSSLayerStatementRule) rule.nameList.forEach((name) => add(join(parent, name)))
+        else if (rule instanceof CSSLayerBlockRule) {
+          // An anonymous block is a layer no one can name, so it holds no rank worth reading.
+          if (!rule.name) continue
+          add(join(parent, rule.name))
+          walk(rule.cssRules, join(parent, rule.name))
+        } else if (rule instanceof CSSImportRule) {
+          if (rule.layerName) add(join(parent, rule.layerName))
+          if (rule.styleSheet) walk(rule.styleSheet.cssRules, rule.layerName ? join(parent, rule.layerName) : parent)
+        } else if (rule instanceof CSSGroupingRule) walk(rule.cssRules, parent)
+      }
+    }
+    for (const sheet of document.styleSheets) {
+      let rules
+      try {
+        rules = sheet.cssRules
+      } catch {
+        continue // cross-origin, such as a font CDN's
+      }
+      walk(rules, "")
+    }
+    return order
+  })
+
 /** The colour scheme a loaded page is showing: the stock darkmode plugin's `saved-theme`. */
 export const schemeOf = (page) => page.evaluate(() => document.documentElement.getAttribute("saved-theme"))
 

@@ -110,6 +110,12 @@ plugins:
     options:
       theme: tokyo-night
       mode: both
+  # The family layer's position, above core and themes (#63).
+  - source: ../../plugins/cgc-styles
+    enabled: true
+  # A consumer of cgc-styles that declares it by plugin name (#63). Exists only in the fixture.
+  - source: ../fixture-plugins/fixture-consumer
+    enabled: true
   - source: "@quartz-community/remove-draft"
     enabled: true
   - source: "@quartz-community/explicit-publish"

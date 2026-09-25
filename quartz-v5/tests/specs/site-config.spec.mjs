@@ -3,7 +3,7 @@
 // in the standing suite. Building `content/public` is the `site-v5:build` target's job.
 import fs from "node:fs"
 import path from "node:path"
-import { test, expect, routeSite, schemeOf, toggleScheme } from "../harness/test.mjs"
+import { test, expect, layerOrder, routeSite, schemeOf, toggleScheme } from "../harness/test.mjs"
 import { buildScratchSite, siteConfig } from "../harness/site.mjs"
 
 const CONTENT = {
@@ -75,6 +75,15 @@ test("closes a note with v4's subscribe box and a link to its source", async ({ 
     await expect(page.locator(".cgc-page-source"), url).toHaveCount(0)
   }
   await expect(page.locator("article")).toContainText("What the topic tag is about")
+})
+
+// cgc-styles (#63): every cgc-* plugin's own CSS lands in the family layer, which has to outrank core.
+test("ranks the family layer above core's styles", async ({ page }) => {
+  await routeSite(page, site.public, ORIGIN)
+  await page.goto(`${ORIGIN}/`)
+  const top = (await layerOrder(page)).filter((name) => !name.includes("."))
+  expect(top).toContain("quartz-base")
+  expect(top.indexOf("cgc")).toBeGreaterThan(top.indexOf("quartz-base"))
 })
 
 test("keeps the left navigation on the 404 page, as v4 did", async ({ page }) => {

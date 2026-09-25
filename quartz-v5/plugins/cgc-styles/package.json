@@ -1,0 +1,33 @@
+{
+  "name": "cgc-styles",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Quartz 5 engine that fixes the cgc family layer's place in the cascade: emits `@layer cgc;` and nothing else. See README.md, CONTEXT.md and docs/adr/.",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "../node_modules/.bin/tsc -p ."
+  },
+  "//devDependencies": "Build-time only: esbuild compiles src/ to dist/, and the types are erased. Locally both resolve to the host Quartz's copies through quartz-v5/plugins/node_modules, so the package carries no lockfile and needs no install of its own.",
+  "devDependencies": {
+    "@quartz-community/types": "^1.0.0",
+    "esbuild": "^0.28.2"
+  },
+  "quartz": {
+    "name": "cgc-styles",
+    "displayName": "cgc styles",
+    "description": "Fixes the cgc family layer's place in the cascade: above core and themes. Every cgc-* plugin that emits CSS depends on it.",
+    "category": "transformer",
+    "version": "0.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 15,
+    "defaultEnabled": true,
+    "defaultOptions": {}
+  }
+}

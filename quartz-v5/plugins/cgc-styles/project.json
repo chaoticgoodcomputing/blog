@@ -1,0 +1,24 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "name": "cgc-styles",
+  "root": "quartz-v5/plugins/cgc-styles",
+  "sourceRoot": "quartz-v5/plugins/cgc-styles/src",
+  "projectType": "library",
+  "tags": ["cgc", "cgc:plugin"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": { "command": "npm run build", "cwd": "{projectRoot}" },
+      "outputs": ["{projectRoot}/dist"]
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": { "command": "npm run typecheck", "cwd": "{projectRoot}" }
+    },
+    "e2e": {
+      "//": "This package's specs, plus the shared suite's proof that consumers declare it by name, through the shared suite.",
+      "executor": "nx:run-commands",
+      "options": { "command": "npx playwright test ../plugins/cgc-styles specs/dependencies-by-name.spec.mjs", "cwd": "{workspaceRoot}/quartz-v5/tests" }
+    }
+  }
+}

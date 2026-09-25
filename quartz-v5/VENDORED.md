@@ -106,6 +106,7 @@ Current vendored changes:
 | Files | Why | Upstream proposal |
 | ----- | --- | ----------------- |
 | `quartz/plugins/types.ts`, `quartz/plugins/pageTypes/dispatcher.ts` | [#19](https://github.com/chaoticgoodcomputing/blog/issues/19): four default transformers are async, so a page type cannot run the pipeline from a synchronous `generate`. Makes `generate` awaitable. Needed by `cgc-mdx`. | [#25](https://github.com/chaoticgoodcomputing/blog/issues/25), filed after cutover |
+| `quartz/plugins/loader/config-loader.ts` | [#40](https://github.com/chaoticgoodcomputing/blog/issues/40): the loader matches `manifest.dependencies` only against exact `source:` strings, and a local source differs by site root, so no one dependency string holds at the real site, the e2e fixture and a downstream install. `validateDependencies` now resolves each dependency by exact source, then by plugin name, and its presence, order and cycle checks all use the resolved entry. Additive: a dependency that matches a source exactly behaves as before. Needed by every consumer of `cgc-styles`; landed with it on [#63](https://github.com/chaoticgoodcomputing/blog/issues/63), proven by `tests/specs/dependencies-by-name.spec.mjs`. | [#47](https://github.com/chaoticgoodcomputing/blog/issues/47), filed after cutover |
 
 The only things permitted inside it are generated and gitignored, and they are an explicit
 allowlist rather than a judgement call — `EXCLUDES` in `quartz-v5/utils/upstream.mjs`:

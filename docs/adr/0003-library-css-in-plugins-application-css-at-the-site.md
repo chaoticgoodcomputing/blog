@@ -180,9 +180,11 @@ since a repeated name is a no-op.
   ([config-loader.ts:142](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L142)).
   This is ADR-0002's engine shape with a cascade position as its published artifact, and it plays
   the part of ITCSS's settings tier for the family: one declaration, one knob. Its `order` must
-  exceed any theme's (`@quartz-themes/core` defaults to 10). _Open:_ the dependency string is matched exactly and is
-  relative to the site root, so one `package.json` can't yet satisfy both the site and the e2e
-  fixture. See [One manifest.dependencies string can't match both the site and the e2e fixture](https://github.com/chaoticgoodcomputing/blog/issues/40).
+  exceed any theme's (`@quartz-themes/core` defaults to 10). _Settled on_
+  [One manifest.dependencies string can't match both the site and the e2e fixture](https://github.com/chaoticgoodcomputing/blog/issues/40):
+  a consumer names the engine by plugin name, `["cgc-styles"]` (ADR-0002's plugin-name amendment),
+  which a vendored loader change matches. It landed with `cgc-styles` and is proposed upstream on
+  [#47](https://github.com/chaoticgoodcomputing/blog/issues/47).
 - **Rule 9 needs no family layer.** Core wraps each `Component.css` in `@layer quartz-base {…}`
   ([componentResources.ts:411](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/emitters/componentResources.ts#L411)),
   so a nested `@layer vendor {…}` inside it becomes `quartz-base.vendor`. That sublayer loses to
