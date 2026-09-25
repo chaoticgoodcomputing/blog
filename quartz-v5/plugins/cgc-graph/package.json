@@ -1,0 +1,65 @@
+{
+  "name": "cgc-graph",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Quartz 5 graph view: the pages around the current one, and the whole site behind a button, drawn on a canvas from an index this plugin publishes itself, with each page's date. See README.md and CONTEXT.md.",
+  "exports": {
+    ".": "./dist/index.js",
+    "./components": "./dist/components/index.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "../node_modules/.bin/tsc -p ."
+  },
+  "//peerDependencies": "The host Quartz's own copies, never bundled or installed here: the component's vnodes must be the host's Preact's, lightningcss is the parser Quartz reads CSS with, so a colour option passes exactly when Quartz would read it as a colour, and the utilities read a page's date exactly as Quartz does. The types are imported for types only.",
+  "peerDependencies": {
+    "@quartz-community/types": "*",
+    "@quartz-community/utils": "*",
+    "lightningcss": "^1.30.0",
+    "preact": "^10.29.0"
+  },
+  "//devDependencies": "Build-time only: esbuild bundles dist/, inlining our library and the browser runtime's d3 modules and tween.js, and PostCSS checks the stylesheet against ADR-0003 before it ships (build.mjs). The library is a `file:` spec on main, which a release commit rewrites to the release's published version (ADR-0005).",
+  "devDependencies": {
+    "@chaoticgoodcomputing/tags-core": "file:../../libs/tags-core",
+    "@tweenjs/tween.js": "^25.0.0",
+    "@types/d3-drag": "^3.0.7",
+    "@types/d3-force": "^3.0.10",
+    "@types/d3-selection": "^3.0.11",
+    "@types/d3-zoom": "^3.0.8",
+    "d3-drag": "^3.0.0",
+    "d3-force": "^3.0.0",
+    "d3-selection": "^3.0.0",
+    "d3-zoom": "^3.0.0",
+    "esbuild": "^0.28.2",
+    "postcss": "^8.5.28",
+    "postcss-selector-parser": "^7.1.6"
+  },
+  "quartz": {
+    "name": "cgc-graph",
+    "displayName": "Graph",
+    "description": "The graph view: the pages around the current one, and the whole site behind a button, drawn from an index with each page's date.",
+    "category": [
+      "emitter",
+      "component"
+    ],
+    "version": "0.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [
+      "cgc-styles",
+      "cgc-tags"
+    ],
+    "defaultOrder": 50,
+    "defaultEnabled": true,
+    "defaultOptions": {},
+    "components": {
+      "Graph": {
+        "displayName": "Graph",
+        "defaultPosition": "right",
+        "defaultPriority": 10
+      }
+    }
+  }
+}

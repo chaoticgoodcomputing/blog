@@ -1,0 +1,125 @@
+// cgc-graph's options are checked when the site builds, and a mistake fails the build (ADR-0003's
+// colour-value amendment): a colour option must be a CSS colour, whether a hex, a theme reference or
+// a `light-dark()` pair, and an option must be one the plugin has.
+import fs from "node:fs"
+import path from "node:path"
+import { createRequire } from "node:module"
+import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
+import { buildScratchSite, fixtureConfig, vendored } from "../../../tests/harness/site.mjs"
+import { drawnGraph, localGraph } from "./graph.mjs"
+
+const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
+
+const CONTENT = {
+  "index.md": "---\ntitle: Home\n---\nSee [[secret]].\n",
+  "secret.md": "---\ntitle: Secret\ntags: [private]\n---\nA private page.\n",
+}
+
+// The fixture's config, with cgc-graph's options replaced.
+function withOptions(options) {
+  const config = YAML.parseDocument(fixtureConfig())
+  const entry = config
+    .get("plugins")
+    .items.find((item) => item.get("source") === "../../plugins/cgc-graph")
+  entry.set("options", config.createNode(options))
+  return String(config)
+}
+
+test("fails the build on a colour CSS can't read", async () => {
+  const { code, output } = await buildScratchSite("graph-bad-colour", CONTENT, {
+    config: withOptions({ localGraph: { nodeColors: { private: "not-a-colour" } } }),
+  })
+  expect(code).not.toBe(0)
+  expect(output).toContain("cgc-graph")
+  expect(output).toContain("localGraph.nodeColors.private")
+})
+
+test("fails the build on an option it doesn't have", async () => {
+  const { code, output } = await buildScratchSite("graph-bad-option", CONTENT, {
+    config: withOptions({ privateTag: ["private"] }),
+  })
+  expect(code).not.toBe(0)
+  expect(output).toContain('unknown option "privateTag"')
+})
+
+// Inside each graph's settings too: v4's leftovers, which the plugin dropped, a layout it doesn't
+// have, and a mistyped ring setting all fail the build, naming the setting.
+const BAD_SETTINGS = {
+  "localGraph.labelAnchor": { localGraph: { labelAnchor: { baseY: 0.5 } } },
+  "globalGraph.graphStyle": { globalGraph: { graphStyle: "shell" } },
+  "globalGraph.pseudoShellConfig.shellStyle.colour": {
+    globalGraph: { pseudoShellConfig: { shellStyle: { colour: "red" } } },
+  },
+}
+
+for (const [where, options] of Object.entries(BAD_SETTINGS)) {
+  test(`fails the build on a graph setting it doesn't have: ${where}`, async () => {
+    const { code, output } = await buildScratchSite("graph-bad-setting", CONTENT, {
+      config: withOptions(options),
+    })
+    expect(code).not.toBe(0)
+    expect(output).toContain("cgc-graph")
+    expect(output).toContain(where)
+  })
+}
+
+// A per-kind map the site writes in part keeps the defaults for the kinds it leaves out.
+test("fills a per-kind setting's missing kinds from the defaults", async ({ page }) => {
+  const site = await buildScratchSite("graph-partial-map", CONTENT, {
+    config: withOptions({
+      localGraph: { linkDistance: { tagTag: 10 }, baseSize: { posts: 7 } },
+    }),
+    keep: true,
+  })
+  try {
+    expect(site.code, site.output).toBe(0)
+    await routeSite(page, site.public, "https://localhost")
+    await page.goto("https://localhost/")
+    const cfg = await localGraph(page).evaluate((el) => JSON.parse(el.dataset.cfg))
+    expect(cfg.linkDistance).toEqual({ tagTag: 10, tagPost: 30, postPost: 50 })
+    expect(cfg.baseSize).toEqual({ tags: 4, posts: 7 })
+  } finally {
+    fs.rmSync(site.root, { recursive: true, force: true })
+  }
+})
+
+// A colour value in each form a site can write it: a theme's reference, which follows the theme, and
+// a `light-dark()` pair, which follows the scheme. Nothing else in the graph is drawn in either.
+const PRIVATE = {
+  "var(--darkgray)": { light: [78, 78, 78], dark: [212, 212, 212] },
+  "light-dark(#b83232, #e06060)": { light: [184, 50, 50], dark: [224, 96, 96] },
+}
+
+for (const [value, rgb] of Object.entries(PRIVATE)) {
+  test(`draws private pages in ${value}`, async ({ page, colorScheme }) => {
+    const site = await buildScratchSite("graph-private-colour", CONTENT, {
+      config: withOptions({
+        privateTags: ["private"],
+        localGraph: { nodeColors: { private: value } },
+      }),
+      keep: true,
+    })
+    try {
+      expect(site.code, site.output).toBe(0)
+      await routeSite(page, site.public, "https://localhost")
+      await page.goto("https://localhost/")
+      expect((await drawnGraph(localGraph(page))).secret.private).toBe(true)
+      const count = () =>
+        localGraph(page)
+          .locator(".cgc-graph__canvas")
+          .evaluate((canvas, [r, g, b]) => {
+            const data = canvas
+              .getContext("2d")
+              .getImageData(0, 0, canvas.width, canvas.height).data
+            let n = 0
+            for (let i = 0; i < data.length; i += 4)
+              if (data[i] === r && data[i + 1] === g && data[i + 2] === b && data[i + 3] === 255)
+                n++
+            return n
+          }, rgb[colorScheme])
+      await expect.poll(count).toBeGreaterThan(10)
+    } finally {
+      fs.rmSync(site.root, { recursive: true, force: true })
+    }
+  })
+}

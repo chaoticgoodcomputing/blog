@@ -1,0 +1,268 @@
+/*
+ * cgc-graph: the graph view. v4's graph styles (components/styles/graph.scss), as library CSS
+ * (ADR-0003): one BEM block, every rule in this package's family layer, skin from the theme's
+ * colour and font properties. build.mjs refuses anything else.
+ *
+ * The private colour, v4's hard-coded #c54040, is the site's `nodeColors.private` option, which the
+ * component sets on the block as `--cgc-graph-private`; without one, the toggle takes the theme's
+ * `secondary`.
+ */
+@layer cgc.graph {
+  /*
+   * The block is a column, so the box can give up height when the layout caps the block: below the
+   * desktop breakpoint core and the site cap each right-sidebar component at 24rem, and a box as tall
+   * as the sidebar is wide would spill over the component under it.
+   */
+  .cgc-graph {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cgc-graph__title {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  /*
+   * The local graph's box: square, its height always its width, unless the block is capped, when it
+   * is as tall as the cap leaves room for. The graph draws into the box's measured size.
+   */
+  .cgc-graph__outer {
+    position: relative;
+    flex: 1 1 auto;
+    box-sizing: border-box;
+    aspect-ratio: 1 / 1;
+    min-height: 0;
+    margin: 0.5em 0;
+    overflow: hidden;
+    border: 1px solid var(--lightgray);
+    border-radius: 5px;
+  }
+
+  .cgc-graph__local {
+    position: absolute;
+    inset: 0;
+  }
+
+  .cgc-graph__canvas {
+    display: block;
+  }
+
+  /* v4's text button, in place of stock's icon. */
+  .cgc-graph__open {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0.3rem;
+    padding: 0.2rem 0.4rem;
+    border: none;
+    border-radius: 4px;
+    background-color: transparent;
+    color: var(--dark);
+    font-family: var(--codeFont);
+    font-size: 0.7rem;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    opacity: 0.5;
+    transition:
+      background-color 0.5s ease,
+      opacity 0.5s ease;
+  }
+
+  .cgc-graph__open:hover,
+  .cgc-graph__open:focus-visible {
+    background-color: var(--lightgray);
+    opacity: 1;
+  }
+
+  /*
+   * The global graph: a modal dialog, which the browser raises into the page's top layer, above every
+   * stacking context. v4 moved its modal to the end of <body> to get there (docs/adr/0003).
+   */
+  .cgc-graph__dialog {
+    box-sizing: border-box;
+    width: 80vw;
+    height: 80vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--lightgray);
+    border-radius: 5px;
+    background-color: var(--light);
+    color: var(--dark);
+  }
+
+  .cgc-graph__dialog::backdrop {
+    background-color: color-mix(in srgb, var(--light) 70%, transparent);
+    backdrop-filter: blur(4px);
+  }
+
+  .cgc-graph__global {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* The global graph's filters, over its top-left corner. */
+  .cgc-graph__filters {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    color: var(--darkgray);
+    font-family: var(--codeFont);
+    font-size: 0.7rem;
+    pointer-events: none;
+  }
+
+  .cgc-graph__time {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    pointer-events: auto;
+  }
+
+  .cgc-graph__time-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 150px;
+    margin-bottom: 0.125rem;
+    font-size: 0.65rem;
+  }
+
+  .cgc-graph__time-label {
+    flex: 1;
+    text-align: center;
+  }
+
+  .cgc-graph__time-label:first-child {
+    text-align: left;
+  }
+
+  .cgc-graph__time-label:last-child {
+    text-align: right;
+  }
+
+  /* A slider with a notch at each of its three stops. */
+  .cgc-graph__slider {
+    width: 150px;
+    height: 12px;
+    margin: 0;
+    background: transparent;
+    outline: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    --cgc-graph-notches: repeating-linear-gradient(
+      to right,
+      var(--gray) 0px,
+      var(--gray) 2px,
+      transparent 2px,
+      transparent calc(50% - 1px),
+      var(--gray) calc(50% - 1px),
+      var(--gray) calc(50% + 1px),
+      transparent calc(50% + 1px),
+      transparent calc(100% - 2px),
+      var(--gray) calc(100% - 2px),
+      var(--gray) 100%
+    );
+  }
+
+  .cgc-graph__slider:focus-visible {
+    outline: 2px solid var(--tertiary);
+    outline-offset: 2px;
+  }
+
+  .cgc-graph__slider::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 2px;
+    background-color: var(--lightgray);
+    background-image: var(--cgc-graph-notches);
+  }
+
+  .cgc-graph__slider::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background-color: var(--lightgray);
+    background-image: var(--cgc-graph-notches);
+  }
+
+  .cgc-graph__slider::-webkit-slider-thumb {
+    width: 12px;
+    height: 12px;
+    margin-top: -4px;
+    border-radius: 50%;
+    background: var(--secondary);
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .cgc-graph__slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border: none;
+    border-radius: 50%;
+    background: var(--secondary);
+    cursor: pointer;
+  }
+
+  .cgc-graph__slider:hover::-webkit-slider-thumb {
+    background: var(--tertiary);
+  }
+
+  .cgc-graph__slider:hover::-moz-range-thumb {
+    background: var(--tertiary);
+  }
+
+  .cgc-graph__visibility {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.375rem;
+    margin: 0;
+    font-size: 0.7rem;
+    font-weight: normal;
+    line-height: 1;
+    cursor: pointer;
+    pointer-events: auto;
+  }
+
+  .cgc-graph__private-toggle {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    accent-color: var(--cgc-graph-private, var(--secondary));
+    cursor: pointer;
+  }
+
+  /* A narrow screen: the dialog nearly fills it, and the filters sit at the top, centred. */
+  @media (max-width: 1299px) {
+    .cgc-graph__dialog {
+      width: 95vw;
+      height: 85vh;
+    }
+
+    .cgc-graph__filters {
+      top: 0.5rem;
+      right: auto;
+      left: 50%;
+      align-items: center;
+      transform: translateX(-50%);
+    }
+
+    .cgc-graph__time {
+      align-items: center;
+    }
+
+    .cgc-graph__visibility {
+      justify-content: center;
+    }
+  }
+}

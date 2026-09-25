@@ -1,0 +1,166 @@
+---
+title: cgc-graph
+tags:
+  - projects/site
+  - engineering/frontend
+---
+
+`cgc-graph` is a [Quartz 5](https://quartz.jzhao.xyz/) plugin that draws the graph view: the pages around the current one, and, behind a button, every page of the site, with a filter for how recently each changed. It draws from an index it publishes itself, which carries each page's date.
+
+It is the graph from this site's Quartz 4 days, carried over as a plugin. Quartz's own graph plugin reads only Quartz's content index, which has no dates, so the filter needs this one. Its tags come from [cgc-tags](https://blog.chaoticgood.computer/plugins/cgc-tags), the plugin that holds the site's tag dictionary.
+
+## What it renders
+
+A heading, and a box holding the **local graph**: the current page, every page it links to or that links to it, and its tags, drawn on a canvas with the edges between them. A tag is a node of its own, drawn as a ring, and a page's tags hang from it, with each tag hanging from its parent. On a tag's page, the graph is drawn around the tag.
+
+- **Hover** a node to see its label, light up its neighbours and fade the rest. Hovering a tag lights up its whole subtree of subtags.
+- **Click** a node to go to its page. Quartz's router follows it, as it follows a link, with no page reload.
+- **Drag** a node to pull the layout around, drag the background to pan, and scroll to zoom.
+- **The current page** is drawn in the theme's `secondary` colour, and swells and shrinks gently. Pages you've visited are drawn in `tertiary`, and the rest in `gray`.
+- **Private pages**, those carrying one of the `privateTags` or a tag under one, are drawn like any other page, in their own colour when `nodeColors.private` sets one.
+
+The **View Global Graph** button, or Ctrl+G (⌘+G on a Mac), opens the **global graph** in a dialog: every page and tag of the site, with two filters.
+
+- **The time slider** shows every page, those changed in the last year, or those changed in the last month.
+- **Include private notes** shows or hides the private pages.
+
+Escape, a click outside the graph, or Ctrl+G again closes it.
+
+The graph follows the colour scheme. Switching between light and dark repaints it where it stands.
+
+### The text alternative
+
+A canvas is a picture, so inside each one the plugin writes a list of what it draws: one item per node, linking to its page, with the nodes it has an edge to. The browser never shows it, and screen readers read it in the picture's place. The links are out of the tab order, since nothing shows where they are.
+
+```html
+<canvas class="cgc-graph__canvas" aria-label="Graph of the pages around A note">
+  <ul class="cgc-graph__nodes">
+    <li class="cgc-graph__node" data-node="notes/a-note">
+      <a class="cgc-graph__node-link" href="/notes/a-note" tabindex="-1" aria-current="page">A note</a>
+      <ul class="cgc-graph__edges" aria-label="A note links to">
+        <li class="cgc-graph__edge" data-node="tags/engineering/ai">#ai</li>
+      </ul>
+    </li>
+  </ul>
+</canvas>
+```
+
+A private page's item ends with `(private)`.
+
+## The index
+
+The plugin writes `static/cgcGraph.json`, every page of the site keyed by its slug:
+
+```json
+{
+  "notes/a-note": {
+    "title": "A note",
+    "links": ["notes/b-note"],
+    "tags": ["engineering/ai"],
+    "date": "2026-09-01T00:00:00.000Z"
+  }
+}
+```
+
+- **Pages** are every page with a file behind it, Markdown or anything a page type renders from a file, such as `.mdx`. The tag pages and folder pages Quartz generates aren't in it, and neither are unlisted pages.
+- **`links`** are the pages it links to, as Quartz resolves them. The site's index is `/`.
+- **`tags`** are its tags as `cgc-tags` publishes them.
+- **`date`** is the date Quartz shows for the page, by the site's `defaultDateType`, as an ISO 8601 string.
+
+The graph draws a tag's description page, at `tags/<tag>` or `tags/<tag>/index`, as the tag's own node.
+
+## Install
+
+Plugins in this family ship as source from [the blog's monorepo](https://github.com/chaoticgoodcomputing/blog), and a site pins a release tag. This plugin needs [cgc-tags](https://blog.chaoticgood.computer/plugins/cgc-tags) and [cgc-styles](https://blog.chaoticgood.computer/plugins/cgc-styles):
+
+```sh
+npx quartz plugin add git+https://github.com/chaoticgoodcomputing/blog.git#v<x.y.z> --subdir quartz-v5/plugins/cgc-graph --name cgc-graph
+```
+
+Keep `--name`: without it, a plugin installed from a subdirectory is named after the repository, and every plugin in the family would install over the last. Disable Quartz's own `@quartz-community/graph`, which this plugin replaces.
+
+> [!WARNING]
+> **Depending on `cgc-tags` and `cgc-styles` by name needs a change to Quartz.** Stock Quartz matches a dependency only against the exact `source:` string. Matching by plugin name is a small change to its loader, carried in this repository's copy of Quartz and proposed upstream on [chaoticgoodcomputing/blog#47](https://github.com/chaoticgoodcomputing/blog/issues/47). Until it lands, this plugin builds only against that copy.
+
+## Configure
+
+```yaml
+plugins:
+  - source: ... # as `quartz plugin add` wrote it
+    enabled: true
+    options:
+      privateTags: [private]
+      localGraph:
+        baseSize: { tags: 10, posts: 10 }
+      globalGraph:
+        graphStyle: pseudo-shell
+        pseudoShellConfig:
+          pinnedTags: [engineering, writing]
+    layout:
+      position: right
+      priority: 10
+```
+
+| Option | Default | |
+| --- | --- | --- |
+| `privateTags` | none | The tags that make a page private: a page carrying one, or a tag under one. `privateer` isn't under `private`. |
+| `title` | `Graph View` | The heading above the local graph. |
+| `localGraph` | see below | The local graph's settings. |
+| `globalGraph` | see below | The global graph's settings. |
+
+Each graph's settings are merged over its defaults a key at a time. A map by kind, such as `linkDistance`, is merged a kind at a time, so a kind it leaves out keeps its default. A number, or `edgeOpacity`'s single `{ min, max }` range, sets every kind at once.
+
+| Setting | Local | Global | |
+| --- | --- | --- | --- |
+| `depth` | `1` | `-1` | How many edges from the current page to draw. `-1` draws every page. |
+| `drag`, `zoom` | `true` | `true` | Whether nodes can be dragged, and the view panned and zoomed. |
+| `scale` | `1.1` | `0.9` | Labels are drawn at `1 / scale`. |
+| `repelForce`, `centerForce` | `0.5`, `0.3` | `0.5`, `0.2` | How hard nodes push apart, and how hard they're pulled to the middle. |
+| `linkDistance` | `{ tagTag: 20, tagPost: 30, postPost: 50 }` | same | The length of each kind of edge: tag to subtag, tag to page, page to page. A number sets all three. |
+| `linkStrength` | `{ tagTag: 2, tagPost: 1, postPost: 1 }` | same | How hard each kind of edge pulls. |
+| `edgeOpacity` | `{ tagTag: { min: 0.3, max: 1 }, … }` | same | Each kind of edge's opacity at twice its length (`min`) and at half of it (`max`). |
+| `baseSize`, `sizeScaling` | `{ tags: 4, posts: 2 }`, `{ tags: 2, posts: 1 }` | same | A node's radius: its base size, plus its scaling times the square root of its edges, or for a tag, of the pages under it. |
+| `fontSize`, `opacityScale` | `0.6`, `1` | same | The labels' size, and how visible they are before you hover. |
+| `showTags` | `true` | `true` | Whether to draw tags. |
+| `removeTags` | `[]` | `[]` | Tags to leave out, each with its subtags. |
+| `focusOnHover` | `false` | `true` | Whether hovering fades the nodes away from the hovered one. |
+| `enableRadial` | `false` | `true` | Whether a ring-shaped force holds the freeform layout together. |
+| `graphStyle` | `freeform` | `freeform` | `pseudo-shell` pins `pseudoShellConfig.pinnedTags` to a ring, and zooms to fit it. |
+| `pseudoShellConfig` | | | The ring's `radiusBase`, `radiusScale`, `pinnedTags`, `showShell`, `zoomMargin`, `circumferentialRepulsion` and `shellStyle` (`color`, `opacity`, `lineStyle`, `lineWidth`). |
+| `nodeColors` | none | none | `public` and `private`: a colour for every public page, or every private page, in place of the graph's own. |
+| `linkStyle` | `{ tagTag: solid, tagPost: solid, postPost: dotted }` | same | Each kind of edge, `solid` or `dotted`. |
+| `privatePostSizeMultiplier` | `1` | `1` | A private page's size, as a share of a public page's. |
+| `defaultFilterState` | | `{ timePeriod: all, includePrivate: true }` | The global graph's filters as it opens. `adaptiveTimePeriod: { minPosts: 3 }` starts on the narrowest period that holds at least that many pages. |
+| `expandSelectedSize`, `expandSelectedOscillationTime` | `1.3`, `2` | same | How far the current page's node swells, and how many seconds one swell takes. |
+
+A **colour** is anything CSS accepts as a colour: a hex, a named colour, a theme's `var(--secondary)` or a `light-dark()` pair.
+
+The build fails on a mistake in the options:
+
+- a colour CSS can't read;
+- an option or a setting the plugin doesn't have, at any depth, such as `localGraph.labelAnchor`, which Quartz 4's graph took and never used;
+- a word a setting doesn't take, such as a `graphStyle` other than `freeform` or `pseudo-shell`.
+
+## Styling
+
+The CSS is library CSS, following [ADR-0003](https://github.com/chaoticgoodcomputing/blog/blob/main/docs/adr/0003-library-css-in-plugins-application-css-at-the-site.md):
+
+- **Classes:** one BEM block, `.cgc-graph`, with the elements `__title`, `__outer`, `__local`, `__open`, `__dialog`, `__global`, `__canvas` and, in the global graph, `__filters`, `__time`, `__time-labels`, `__time-label`, `__slider`, `__visibility`, `__private-toggle` and `__private-label`. The text alternative's `__nodes`, `__node`, `__node-link`, `__node-private`, `__edges` and `__edge` are never shown.
+- **Cascade layer:** the rules sit in the `cgc.graph` layer, above Quartz's own styles and themes, and below any unlayered site CSS.
+- **Size:** the box is square, as wide as the block. Where the layout caps the block's height, as Quartz does to each right-sidebar component below its desktop width, the box gives up height to fit, and the graph is drawn to the box's size.
+- **Colours and fonts:** all the theme's. The box's border is `--lightgray`, the dialog's background `--light`, and the button and filters use `--codeFont`. The private toggle takes `nodeColors.private`, through the block's `--cgc-graph-private` property, or `--secondary` without one.
+
+The canvas can't use CSS, so the plugin resolves each colour in script, the theme's and the options' alike, and resolves them again when the colour scheme changes.
+
+The build checks the stylesheet and fails if a selector reaches outside the block, or if it sets a colour literal or a font other than a theme's.
+
+## Develop
+
+This package is the Nx project `cgc-graph`. Its specs live in [`e2e/`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/plugins/cgc-graph/e2e) and run against the shared fixture site ([ADR-0004](https://github.com/chaoticgoodcomputing/blog/blob/main/docs/adr/0004-playwright-e2e-as-the-plugin-tdd-loop.md)):
+
+```sh
+pnpm nx run cgc-graph:e2e
+pnpm nx run cgc-graph:typecheck
+```
+
+The browser script, in [`src/runtime/`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/plugins/cgc-graph/src/runtime), is bundled with d3 and tween.js into one script when the plugin builds, so a page fetches nothing but the index.

@@ -1,10 +1,11 @@
 // The tag engine's consumers receive its artifacts wherever a site runs (ADR-0002, #69). Each
 // consumer names the engine by plugin name, `dependencies: ["cgc-tags"]`, one string that holds at
 // the fixture root, where the engine's source is `../../plugins/cgc-tags`, and at the real site's,
-// where it is `../plugins/cgc-tags` (#40). Two consumers read the two kinds of artifact:
+// where it is `../plugins/cgc-tags` (#40). The consumers read the two kinds of artifact:
 //
 // - cgc-tag-list paints its badges with the engine's `--cgc-tag-*` properties, from its stylesheet;
-// - the fixture's `fixture-tag-reader` writes out the `fileData.cgcTags` each page received.
+// - the fixture's `fixture-tag-reader` writes out the `fileData.cgcTags` each page received;
+// - cgc-graph (#74) publishes each page's tags from its `fileData.cgcTags` in its own index.
 import fs from "node:fs"
 import path from "node:path"
 import { test, expect, routeSite } from "../harness/test.mjs"
@@ -20,6 +21,7 @@ import {
 const ENGINE = "cgc-tags"
 const CONSUMERS = [
   path.resolve(testsRoot, "../plugins/cgc-tag-list"),
+  path.resolve(testsRoot, "../plugins/cgc-graph"),
   path.join(testsRoot, "fixture-plugins/fixture-tag-reader"),
 ]
 const ring = (page, tag) =>
@@ -42,6 +44,9 @@ test("the consumers receive the engine's artifacts at the fixture root", async (
   await expect(ring(page, "fixture")).toHaveCSS("border-top-color", "rgb(10, 125, 50)")
   const received = JSON.parse(emitted.read("static/fixture-tag-reader.json"))
   expect(received["plain-note"].primary.tag).toBe("fixture")
+  // cgc-graph's index carries each page's tags as the engine published them.
+  const graph = JSON.parse(emitted.read("static/cgcGraph.json"))
+  expect(graph["tag-engine/most-specific"].tags).toEqual(["fixture", "writing/essays"])
 })
 
 // The real site's tag table, where `engineering` is `light-dark(#0070cc, #008CFF)`: v4's blue as
@@ -93,6 +98,8 @@ test("the consumers receive the engine's artifacts at the real site root", async
       color: "--cgc-tag-engineering--ai",
       icon: "mdi:robot",
     })
+    const graph = JSON.parse(fs.readFileSync(path.join(site.public, "static/cgcGraph.json"), "utf8"))
+    expect(graph["content/notes/a-note"].tags).toEqual(["engineering/ai"])
   } finally {
     fs.rmSync(site.root, { recursive: true, force: true })
   }

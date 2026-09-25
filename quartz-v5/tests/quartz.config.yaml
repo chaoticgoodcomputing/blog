@@ -222,8 +222,19 @@ plugins:
     layout:
       position: left
       priority: 50
+  # Replaced by cgc-graph, in the same slot.
   - source: "@quartz-community/graph"
+    enabled: false
+    layout:
+      position: right
+      priority: 10
+  # v4's graph (#74), drawn from its own index. Pages under `private` are private: drawn in the
+  # graph, and hidden by the global graph's private toggle.
+  - source: ../../plugins/cgc-graph
     enabled: true
+    options:
+      privateTags:
+        - private
     layout:
       position: right
       priority: 10

@@ -2,11 +2,12 @@
   "name": "@chaoticgoodcomputing/tags-core",
   "version": "0.0.0",
   "type": "module",
-  "description": "The tag system's shared logic for Quartz 5 plugins: the resolution rule, the shapes the cgc-tags engine publishes, their fileData types, and a colour resolver for canvases. See CONTEXT.md.",
-  "//exports": "Source only: no build and no dist. The consuming plugin's build inlines it (ADR-0005). `./colour` is browser-only.",
+  "description": "The tag system's shared logic for Quartz 5 plugins: the resolution rule, the shapes the cgc-tags engine publishes, their fileData types, a colour resolver for canvases, and a build-time check for colour values. See CONTEXT.md.",
+  "//exports": "Source only: no build and no dist. The consuming plugin's build inlines it (ADR-0005). `./colour` is browser-only; `./colour-value` is server-only, and takes the host's lightningcss from the plugin that calls it.",
   "exports": {
     ".": "./src/index.ts",
-    "./colour": "./src/colour.ts"
+    "./colour": "./src/colour.ts",
+    "./colour-value": "./src/colour-value.ts"
   },
   "files": [
     "src"

@@ -318,8 +318,73 @@ plugins:
     layout:
       position: left
       priority: 50
+  # Replaced by cgc-graph, in the same slot.
   - source: "@quartz-community/graph"
+    enabled: false
+    layout:
+      position: right
+      priority: 10
+  # v4's graph (#74), drawn from its own index, which carries each page's date (#21), with v4's
+  # settings (layouts/conf/graph.layout.ts): the local graph on every page, and the global graph in
+  # v4's pseudo-shell, its top-level tags pinned to a ring, filtered to the last month, or wider until
+  # three pages show. Private pages are drawn in v4's red and hidden from the global graph as it
+  # opens, and the `private` tag hub is left out. v4 put the graph in the body of the index and tag
+  # pages; a plugin takes one layout slot, so they have it in the right sidebar too. Tag colours and
+  # icons in the graph are #77.
+  - source: ../plugins/cgc-graph
     enabled: true
+    options:
+      privateTags:
+        - private
+      localGraph:
+        scale: 1
+        repelForce: 3
+        centerForce: 1.75
+        linkDistance: { tagTag: 50, tagPost: 50, postPost: 50 }
+        linkStrength: { tagTag: 0.3, tagPost: 0.3, postPost: 0.3 }
+        edgeOpacity:
+          tagTag: { min: 1, max: 1 }
+          tagPost: { min: 0.75, max: 1 }
+          postPost: { min: 0.5, max: 1 }
+        baseSize: { tags: 10, posts: 10 }
+        sizeScaling: &sizeScaling { tags: 1.2, posts: 1 }
+        nodeColors: &nodeColors { private: "#c54040" }
+        linkStyle: &linkStyle { tagTag: solid, tagPost: solid, postPost: dotted }
+        privatePostSizeMultiplier: 0.8
+        removeTags: &removeTags [private]
+        expandSelectedSize: 1.4
+        expandSelectedOscillationTime: 2
+      globalGraph:
+        scale: 1
+        repelForce: 3
+        centerForce: 1.75
+        linkDistance: { tagTag: 50, tagPost: 10, postPost: 10 }
+        linkStrength: { tagTag: 1, tagPost: 0.5, postPost: 0.05 }
+        edgeOpacity:
+          tagTag: { min: 0.8, max: 1 }
+          tagPost: { min: 0.2, max: 1 }
+          postPost: { min: 0.2, max: 1 }
+        baseSize: { tags: 15, posts: 10 }
+        sizeScaling: *sizeScaling
+        nodeColors: *nodeColors
+        linkStyle: *linkStyle
+        privatePostSizeMultiplier: 0.8
+        removeTags: *removeTags
+        defaultFilterState:
+          timePeriod: month
+          includePrivate: false
+          adaptiveTimePeriod: { minPosts: 3 }
+        expandSelectedSize: 1.4
+        expandSelectedOscillationTime: 2
+        graphStyle: pseudo-shell
+        pseudoShellConfig:
+          radiusBase: 90
+          radiusScale: 40
+          circumferentialRepulsion: 4
+          zoomMargin: 80
+          pinnedTags: [engineering, writing, horticulture, projects, economics]
+          showShell: true
+          shellStyle: { opacity: 0.5, lineStyle: dotted, lineWidth: 2 }
     layout:
       position: right
       priority: 10

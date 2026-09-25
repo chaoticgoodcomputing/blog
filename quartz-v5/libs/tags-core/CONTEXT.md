@@ -2,8 +2,9 @@
 
 The library at the bottom of the tag system (ADR-0002's worked example, #20, #31). It holds the
 resolution rule, the shapes the `cgc-tags` engine publishes, the `fileData` augmentation that
-types them, and the one colour resolver for code that paints on a canvas. The engine resolves with
-it, so the rule lives in one place; its consumers import the types, and a canvas the resolver. It
+types them, the one colour resolver for code that paints on a canvas, and the one check that an
+option is a colour value. The engine resolves with it, so the rule lives in one place; its consumers
+import the types, a canvas the resolver, and a plugin with colour options the check. It
 ships as TypeScript source, and a consuming plugin's build inlines it (ADR-0005). Inherits the
 family vocabulary in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md), where **Tag colour**, **Colour
 value** and **Icon id** are defined.
@@ -61,14 +62,26 @@ it in the current scheme, and a 1×1 canvas normalises it. Results are cached pe
 dropped on `themechange`.
 _Avoid_: colour getter, theme reader
 
+**Colour-value check**:
+`colourValueCheck()` in `./colour-value`: the server-only test of whether an option is a colour
+value, which every colour-valued option in the family is put to at build time (ADR-0003's
+colour-value amendment). It parses with the lightningcss the calling plugin hands it, the host's,
+so a value passes exactly when Quartz would read it as a colour.
+_Avoid_: colour validator, colour parser
+
 ## Constraints
 
 - **Plain data only.** Published values cross the parse workers' structured-clone boundary
   (ADR-0002), so nothing here publishes a function or a class instance.
 - **Tags arrive normalised.** Every function takes tags as Quartz publishes them, slugified and
   with `/` between levels. Normalising what a site writes is the engine's job.
-- **`./colour` touches the DOM.** A plugin's server-side code imports `.` only.
-- **Tested through its consumers.** The rule and the shapes through `cgc-tags`' specs; the colour
-  resolver, which no plugin uses until `cgc-graph` (#77), through a probe script its own spec runs
-  on a fixture page (`e2e/colour.spec.mjs`); `tagOfPage()` through what `cgc-post-listing` and
-  `cgc-tag-list` render on tag pages (`e2e/tag-pages.spec.mjs`).
+- **`./colour` touches the DOM.** A plugin's server-side code imports `.` and `./colour-value`
+  only, and a browser script `.` and `./colour`.
+- **No dependencies of its own at runtime.** The colour-value check takes lightningcss from its
+  caller rather than importing one, which could disagree with the host's.
+- **Tested through its consumers.** The rule and the shapes through `cgc-tags`' specs; the
+  colour-value check through `cgc-tags`' and `cgc-graph`'s option specs; the colour resolver
+  through `cgc-graph`'s scheme specs, which paint the theme's colours with it (#74), and a probe
+  script its own spec runs on a fixture page (`e2e/colour.spec.mjs`), until `cgc-graph` paints tag
+  colours with it (#77); `tagOfPage()` through what `cgc-post-listing` and `cgc-tag-list` render
+  on tag pages (`e2e/tag-pages.spec.mjs`).
