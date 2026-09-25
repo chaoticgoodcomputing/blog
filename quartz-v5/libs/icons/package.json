@@ -1,0 +1,32 @@
+{
+  "name": "@chaoticgoodcomputing/icons",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Icon ids drawn for Quartz 5 plugins: `prefix:name` to inline SVG in currentColor, at build time, from installed Iconify sets (MDI) and a site's own SVG files. See CONTEXT.md.",
+  "//exports": "Source only: no build and no dist. The consuming plugin's build inlines it (ADR-0005). Server-side: it reads the file system.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "//dependencies": "Iconify's packages, which run while the site builds. They can't all be inlined (svgo, under @iconify/tools, reads its data files at run time), so a consuming plugin keeps them external and carries each as its own dependency, at exactly these versions (docs/adr/0001). Pinned exactly for that reason. MDI is a package, pinned by the lockfile, never a fetch.",
+  "dependencies": {
+    "@iconify-json/mdi": "1.2.3",
+    "@iconify/tools": "5.0.14",
+    "@iconify/utils": "3.1.7"
+  },
+  "//devDependencies": "Types only: @iconify/types is erased at build.",
+  "devDependencies": {
+    "@iconify/types": "2.0.0",
+    "@types/node": "^24.10.1",
+    "typescript": "^5.9.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Quartz 5 component: a page's tags as badges, each ringed in its tag's colour from the cgc-tags engine. See README.md and CONTEXT.md.",
+  "description": "Quartz 5 component: a page's tags as badges, each ringed in its tag's colour and drawn with its icon, from the cgc-tags engine. See README.md and CONTEXT.md.",
   "exports": {
     ".": "./dist/index.js",
     "./components": "./dist/components/index.js",
@@ -20,8 +20,15 @@
     "@quartz-community/utils": "*",
     "preact": "^10.29.0"
   },
-  "//devDependencies": "Build-time only: esbuild bundles dist/, inlining our library, and PostCSS checks the stylesheet against ADR-0003 before it ships (build.mjs). The library is a `file:` spec on main, which a release commit rewrites to the release's published version (ADR-0005).",
+  "//dependencies": "@chaoticgoodcomputing/icons draws each tag's icon while the site builds, with Iconify's packages, which can't all be inlined (svgo, under @iconify/tools, reads its data files at run time). So they stay out of dist/ and install here, at exactly the library's versions, which build.mjs checks (libs/icons/docs/adr/0001). MDI is one of them, pinned by this package's lockfile: nothing is fetched.",
+  "dependencies": {
+    "@iconify-json/mdi": "1.2.3",
+    "@iconify/tools": "5.0.14",
+    "@iconify/utils": "3.1.7"
+  },
+  "//devDependencies": "Build-time only: esbuild bundles dist/, inlining our libraries, and PostCSS checks the stylesheet against ADR-0003 before it ships (build.mjs). The libraries are `file:` specs on main, which a release commit rewrites to the release's published version (ADR-0005).",
   "devDependencies": {
+    "@chaoticgoodcomputing/icons": "file:../../libs/icons",
     "@chaoticgoodcomputing/tags-core": "file:../../libs/tags-core",
     "esbuild": "^0.28.2",
     "postcss": "^8.5.28",
@@ -30,7 +37,7 @@
   "quartz": {
     "name": "cgc-tag-list",
     "displayName": "Tag list",
-    "description": "A page's tags as badges, each ringed in its tag's colour from the cgc-tags engine.",
+    "description": "A page's tags as badges, each ringed in its tag's colour and drawn with its icon, from the cgc-tags engine.",
     "category": [
       "transformer",
       "component"

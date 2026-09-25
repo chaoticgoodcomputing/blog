@@ -18,7 +18,7 @@ The ledger compares three trees:
 
 The comparison reproduces the ticket's figures exactly. 148 files are common to both trees. 95 of them are forked, 65 of those outside `i18n/`, with 4,102 changed lines. 20 upstream files are deleted, and 150 files are new.
 
-Where a file does several things, it is split into one row per concern. Rows after the first repeat the line count as `″` or `(split)`. Directories whose files all share one fate are grouped into a single row. There are 233 rows in all: **82 Native, 94 Plugin, 53 Dead, 4 Out of scope and 0 Upstream**, after the owner calls and package assignments below. (A recount on #44 found the post-#42 totals were really 82/100/51, not 83/100/50.)
+Where a file does several things, it is split into one row per concern. Rows after the first repeat the line count as `″` or `(split)`. Directories whose files all share one fate are grouped into a single row. There are 233 rows in all: **82 Native, 95 Plugin, 52 Dead, 4 Out of scope and 0 Upstream**, after the owner calls and package assignments below. (A recount on #44 found the post-#42 totals were really 82/100/51, not 83/100/50. #71 then moved `static/icons/quartz.svg` from Dead to Plugin, which the totals include.)
 
 ## The number the ticket asked for
 
@@ -353,7 +353,7 @@ Files with no upstream path. Renamed or split upstream code is classified by wha
 | static/BingSiteAuth.xml, ./static/a6e41ab6-6753-4d94-9b54-b4405d806883.txt | 4 | Plugin | site-owned root files, copied by a site-v5 post-build target (or a site static-root step) | These are the Bing Webmaster verification file and the IndexNow key file (`utils/indexnow/submit-urls.mjs:23`). They must be served at the root, and the Static emitter publishes only under `/static/`. | |
 | static/fonts/** (fonts.css, inter/*, ibm-plex-mono/*) | 138 | Native | v5 `theme.fontOrigin: googleFonts`, `cdnCaching: false`; typography via theme or `@quartz-community/quartz-fonts` | These are generated self-hosted Inter and IBM Plex Mono files, linked by our Head.tsx. v5 core downloads Google Fonts to `static/fonts/` at build time. | |
 | static/icons/d20.svg, roblox.svg, uofu.svg, quartz-filled.svg | 102 | Plugin | site-owned `quartz-v5/icons/` (served through @chaoticgoodcomputing/icons) | These are `custom:` tag icons referenced in `quartz.config.ts` tag icon config (L46, 65, 81, 102). | |
-| static/icons/quartz.svg | 128 | Dead | — | Nothing references it. The config uses only `quartz-filled`. | |
+| static/icons/quartz.svg | 128 | Plugin | site-owned `quartz-v5/icons/` (served through @chaoticgoodcomputing/icons) | Nothing references it. The config uses only `quartz-filled`. #29 moves all five SVGs into the site's collection regardless, so it was moved from Dead on #71. | |
 | styles/_settings.scss | 56 | Plugin | site application CSS | Breakpoints 1000/1300 and the grid maps. It mirrors v5 `styles/variables.scss`, which is 800/1200. See Notes. | |
 | styles/_tools.scss | 99 | Plugin | site application CSS (`respond-to`); `file-icon` mixin → library CSS of the Backlinks and TagExplorer consumer plugins | These are Sass mixins only and produce no CSS output. `file-icon` is used by `backlinks.scss` and `tagExplorer.scss`. | |
 | styles/_generic.scss, _elements.scss | 463 | Plugin | site application CSS (ITCSS `@layer generic/elements`) | These split upstream `base.scss` into ITCSS layers and add our typography, link and table tweaks. Only the differences from v5 `base.scss` should survive. | |

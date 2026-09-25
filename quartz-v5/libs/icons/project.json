@@ -1,0 +1,22 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "name": "@chaoticgoodcomputing/icons",
+  "root": "quartz-v5/libs/icons",
+  "sourceRoot": "quartz-v5/libs/icons/src",
+  "projectType": "library",
+  "tags": ["cgc", "cgc:lib"],
+  "targets": {
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run typecheck", "cwd": "{projectRoot}" }
+    },
+    "e2e": {
+      "//": "Tested through its first consumer, cgc-tag-list's icon specs, in the shared suite. No build target: plugins inline the source.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx playwright test ../plugins/cgc-tag-list/e2e/icons.spec.mjs ../plugins/cgc-tag-list/e2e/site.spec.mjs",
+        "cwd": "{workspaceRoot}/quartz-v5/tests"
+      }
+    }
+  }
+}

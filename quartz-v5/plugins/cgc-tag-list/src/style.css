@@ -4,8 +4,8 @@
  * refuses anything else.
  *
  * The ring's `color` is its tag's colour, set inline from the cgc-tags engine's `--cgc-tag-*`
- * property (docs/adr/0001). It paints the ring's border, and in time the icon inside it, and never
- * text: the ring holds none, and the link's text keeps the colour of the text around it.
+ * property (docs/adr/0001). It paints the ring's border and the icon inside it, and never text: the
+ * ring holds none, and the link's text keeps the colour of the text around it.
  */
 @layer cgc.tag-list {
   .cgc-tag-list {
@@ -55,6 +55,13 @@
     border-radius: 50%;
     font-size: 16px;
     line-height: 1;
+  }
+
+  /* The tag's icon: inline SVG whose every mark is `currentColor`, the ring's colour. v4's size. */
+  .cgc-tag-list__icon {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
   }
 
   .cgc-tag-list__name {

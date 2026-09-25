@@ -90,7 +90,7 @@ plugins:
 | `tags` | `{}` | The dictionary. Each key is a tag, written as in frontmatter, and each value has an optional `color` and an optional `icon`. |
 | `defaultColor` | `var(--darkgray)` | The colour of a tag that neither it nor any ancestor gives one. |
 
-A **colour** is anything CSS accepts as a colour: a hex, a named colour, `oklch()`, `color-mix()`, a theme's `var(--secondary)` or a `light-dark()` pair. A reference to a theme property follows the theme, and a `light-dark()` pair follows the colour scheme. An **icon** is an icon id, `prefix:name`, such as `mdi:robot`. The plugin only publishes it, and the plugin that draws icons resolves it.
+A **colour** is anything CSS accepts as a colour: a hex, a named colour, `oklch()`, `color-mix()`, a theme's `var(--secondary)` or a `light-dark()` pair. A reference to a theme property follows the theme, and a `light-dark()` pair follows the colour scheme. An **icon** is an icon id, `prefix:name`, such as `mdi:robot`. The plugin only publishes it, and the plugin that draws icons resolves it: [cgc-tag-list](https://blog.chaoticgood.computer/plugins/cgc-tag-list) fails the build on an id that no icon collection has.
 
 The build fails on any mistake in the dictionary: a colour CSS can't read, an icon id that isn't one, or a field a tag doesn't have. It can't check that a property a colour refers to exists, since the theme defines that when the page loads. A page's `primaryTag` that isn't one of its tags fails the build too.
 

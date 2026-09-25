@@ -51,7 +51,8 @@ const SCRATCH_PARENT = { fixture: testsRoot, site: path.dirname(vendored) }
 // where the real site builds (VENDORED.md), so they are rebased onto the scratch roots made `at`
 // the given place. At `site`, that leaves a `../` path as it is. So is a plugin option that is a
 // relative path (`./…` or `../…`), such as cgc-og-image's `icon`, which a plugin resolves against
-// the same root.
+// the same root, and one inside a map of options, such as an icon collection's directory in
+// `iconCollections`. A map shared through a YAML anchor is rebased once, where it is anchored.
 //
 // `offline` switches off the one fetch a build of it makes that fails the build when the network
 // does: core downloading the site's Google Fonts to self-host them (`fontOrigin: googleFonts` with
@@ -72,11 +73,19 @@ export function siteConfig({ at = "fixture", offline = false } = {}) {
       // (site-components, one entry per component).
       source.set("repo", rebase(source.get("repo")))
     }
-    for (const option of YAML.isMap(entry.get("options")) ? entry.get("options").items : []) {
-      if (YAML.isScalar(option.value) && /^\.\.?\//.test(option.value.value)) option.value.value = rebase(option.value.value)
-    }
+    rebaseOptions(entry.get("options"), rebase)
   }
   return String(config)
+}
+
+function rebaseOptions(map, rebase) {
+  for (const option of YAML.isMap(map) ? map.items : []) {
+    if (YAML.isScalar(option.value) && /^\.\.?\//.test(option.value.value)) {
+      option.value.value = rebase(option.value.value)
+    } else if (YAML.isMap(option.value)) {
+      rebaseOptions(option.value, rebase)
+    }
+  }
 }
 
 // The fixture's own config as YAML text: what a scratch site is built from unless given another.

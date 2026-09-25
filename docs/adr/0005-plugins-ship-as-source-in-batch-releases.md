@@ -100,6 +100,10 @@ every library is published to npm at that version.
   `dependencies` too, so npm installs them transitively under the plugin's devDependency. The pnpm
   workspace still lists only `libs/*`, and plugins keep installing with npm, the way the loader
   installs them downstream.
+- **Except a library whose dependencies can't be inlined.** Its consumers carry those packages as
+  their own `dependencies`, at the library's exact versions, and keep them external. The first is
+  `@chaoticgoodcomputing/icons`, whose Iconify packages load data files at run time:
+  [libs/icons ADR-0001](../../quartz-v5/libs/icons/docs/adr/0001-consumers-carry-iconify.md) (#71).
 
 **Why a rewrite at all.** No spec satisfies both installs before the first release. Locally, no
 published version exists. Downstream, nothing outside the plugin's folder exists: a `subdir`

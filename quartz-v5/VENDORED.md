@@ -23,6 +23,7 @@ quartz-v5/
 ├── quartz.config.yaml    our Quartz 5 configuration — tracked here, symlinked into quartz/
 ├── robots.txt            the site's own robots.txt — copied into the build by postbuild.mjs
 ├── icon.png              the site's own icon — put over stock's in the build by postbuild.mjs
+├── icons/                the site's own icon collection, `custom:` — SVG files, drawn by @chaoticgoodcomputing/icons
 ├── plugins/              our Quartz plugins (`cgc-*`)
 ├── site-plugins/         this site's own plugins, which fail the shareability test on purpose
 ├── libs/                 our non-plugin packages (`@chaoticgoodcomputing/*`)

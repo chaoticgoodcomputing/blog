@@ -164,7 +164,7 @@ plugins:
   # parent are listed; v4 inherited colours only, and matched icons exactly. Each colour is a
   # light-dark() pair: v4's hex is the dark half, and the light half is a deeper shade of it, at 3:1
   # or more against the light scheme's page and badge. Tags with neither get `var(--darkgray)`, where
-  # v4 had #888888. The engine publishes icon ids; cgc-tag-list draws them from #71.
+  # v4 had #888888. The engine publishes icon ids; cgc-tag-list draws them (#71).
   - source: ../plugins/cgc-tags
     enabled: true
     options:
@@ -354,13 +354,19 @@ plugins:
     layout:
       position: beforeBody
       priority: 30
-  # v4's TagList under a page's title (#69): badges ringed in their tag's colour, each with the count
-  # of pages under it. A tag page lists its parent and subtags instead, as v4's tags layout did.
+  # v4's TagList under a page's title (#69): badges ringed in their tag's colour and drawn with its
+  # icon (#71), each with the count of pages under it. A tag page lists its parent and subtags
+  # instead, as v4's tags layout did.
   - source: ../plugins/cgc-tag-list
     enabled: true
     options:
       showSubtags: true
       showParentTag: true
+      # The site's own icon collection (#29, #71): `custom:` is quartz-v5/icons/, v4's five SVGs, as
+      # the site wrote them. They're turned into currentColor icons when the site builds. Every
+      # plugin that draws icons takes it, through the anchor. Resolved against the vendored root.
+      iconCollections: &iconCollections
+        custom: ../icons
     layout:
       position: beforeBody
       priority: 30

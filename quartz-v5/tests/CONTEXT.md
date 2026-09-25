@@ -25,6 +25,12 @@ The directory a fixture site is built from — the vendored copy symlinked in, w
 config beside it. One per variant.
 _Avoid_: shadow root (collides with the DOM's), sandbox, workspace
 
+**Fixture icon collection**:
+The fixture's own icon collection, `custom:`, at `fixture-icons/`: SVG files painted in hard-coded
+colours, so a spec can see them turned into `currentColor`. The fixture config names it once, on
+`cgc-tag-list`, and every plugin that draws icons shares it through the `*iconCollections` anchor.
+_Avoid_: test icons, custom icons (the site's own set, in `quartz-v5/icons/`)
+
 **Fixture plugin**:
 A plugin that exists only for the suite, under `fixture-plugins/`: a stand-in for a third-party
 plugin the fixture must not run (`fixture-theme`, for `@quartz-themes/core`), or the smallest

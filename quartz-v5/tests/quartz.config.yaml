@@ -128,6 +128,8 @@ plugins:
         writing: { color: "var(--secondary)", icon: "mdi:pencil" }
         writing/essays: { icon: "mdi:feather" }
         markdown: { color: "light-dark(#b35f00, #de8200)" }
+        # An icon from the fixture's own collection (#71), on a tag with no colour of its own.
+        mdtwin: { icon: "custom:diamond" }
   # A reader of the engine's per-page artifact, which no real consumer shows yet (#69). Fixture only.
   - source: ../fixture-plugins/fixture-tag-reader
     enabled: true
@@ -138,6 +140,10 @@ plugins:
     options:
       showSubtags: true
       showParentTag: true
+      # The fixture's own icon collection (#71), `custom:`, resolved against the fixture root as a
+      # local `source:` is. Every plugin that draws icons takes it, through the anchor.
+      iconCollections: &iconCollections
+        custom: ../fixture-icons
     layout:
       position: beforeBody
       priority: 30

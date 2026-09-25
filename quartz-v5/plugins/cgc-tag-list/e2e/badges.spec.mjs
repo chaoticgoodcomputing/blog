@@ -69,7 +69,8 @@ test("names each tag by its last segment and links to its tag page", async ({
   await expect(item.locator(".cgc-tag-list__ring")).toHaveAttribute("title", "writing/essays")
   await item.locator(".cgc-tag-list__link").click()
   await expect(page).toHaveURL(/\/tags\/writing\/essays$/)
-  await expect(page.locator("h1.article-title")).toContainText("essays")
+  // The page's own title: the link's popover, appended to the body, can hold the tag page's too.
+  await expect(page.locator(".center h1.article-title")).toContainText("essays")
   // The tag page lists its parent, still ringed in `var(--secondary)`.
   await expect(ring(page, "writing")).toHaveCSS("border-top-color", SECONDARY[colorScheme])
 })

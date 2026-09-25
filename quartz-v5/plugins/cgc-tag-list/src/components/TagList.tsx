@@ -10,6 +10,7 @@ import {
   type TagProperties,
   type TagsData,
 } from "@chaoticgoodcomputing/tags-core"
+import { createIcons, type IconCollections, type Icons } from "@chaoticgoodcomputing/icons"
 import longPress from "./longpress.inline.js" with { type: "text" }
 
 export interface TagListOptions {
@@ -22,6 +23,12 @@ export interface TagListOptions {
   showParentTag?: boolean
   /** After each tag, the number of pages under it, its subtags' included. Default: true. */
   showCount?: boolean
+  /**
+   * The site's own icon collections, each prefix and its directory of SVG files, resolved against
+   * the Quartz root: `{ custom: "../icons" }` draws `custom:d20` from `../icons/d20.svg`. Installed
+   * Iconify sets, such as `mdi`, need no entry. Default: none.
+   */
+  iconCollections?: IconCollections
 }
 
 // Quartz merges no defaults into a component's options, so the component does. v4's defaults.
@@ -29,6 +36,7 @@ const DEFAULTS: Required<TagListOptions> = {
   showSubtags: false,
   showParentTag: false,
   showCount: true,
+  iconCollections: {},
 }
 
 type PageData = QuartzComponentProps["fileData"]
@@ -38,19 +46,32 @@ interface Corpus {
   properties: Map<string, TagProperties>
   /** How many pages each tag is over. */
   counts: Map<string, number>
+  /** Each tag's icon, drawn, for every tag in the corpus that has one. */
+  icons: Map<string, string>
 }
 
-// Built once per build: every page is rendered with the same `allFiles`.
-const corpora = new WeakMap<object, Corpus>()
-function corpusOf(allFiles: PageData[]): Corpus {
+// The icon in a ring: its glyph, painted in the ring's `color`, which is the tag colour.
+const ICON = { class: "cgc-tag-list__icon" }
+
+// Built once per build: every page is rendered with the same `allFiles`. Every tag's icon is drawn
+// here, so an icon id no collection has fails the build on the first page, whichever pages show it.
+function corpusOf(allFiles: PageData[], icons: Icons, corpora: WeakMap<object, Corpus>): Corpus {
   let corpus = corpora.get(allFiles)
   if (!corpus) {
-    corpus = { properties: new Map(), counts: new Map() }
+    corpus = { properties: new Map(), counts: new Map(), icons: new Map() }
     for (const file of allFiles) {
       const data = file.cgcTags as TagsData | undefined
       for (const [tag, properties] of Object.entries(data?.ancestors ?? {})) {
         corpus.properties.set(tag, properties)
         corpus.counts.set(tag, (corpus.counts.get(tag) ?? 0) + 1)
+      }
+    }
+    for (const [tag, { icon }] of corpus.properties) {
+      if (icon === null) continue
+      try {
+        corpus.icons.set(tag, icons.svg(icon, ICON))
+      } catch (err) {
+        throw new Error(`cgc-tag-list: tag "${tag}": ${(err as Error).message}`)
       }
     }
     corpora.set(allFiles, corpus)
@@ -68,10 +89,12 @@ function tagOfPage(slug: string | undefined): string | null {
 
 export default ((userOpts?: TagListOptions) => {
   const opts = { ...DEFAULTS, ...userOpts }
+  const icons = createIcons({ iconCollections: opts.iconCollections })
+  const corpora = new WeakMap<object, Corpus>()
 
   const TagList: QuartzComponent = ({ fileData, allFiles, displayClass }: QuartzComponentProps) => {
     const slug = fileData.slug as string
-    const corpus = corpusOf(allFiles)
+    const corpus = corpusOf(allFiles, icons, corpora)
     const own = (fileData.cgcTags as TagsData | undefined)?.tags ?? {}
 
     let tags: string[] = Object.keys(own)
@@ -90,6 +113,7 @@ export default ((userOpts?: TagListOptions) => {
         {tags.map((tag) => {
           // The engine's property for the tag, which inherits from its ancestors through the cascade.
           const color = own[tag]?.color ?? corpus.properties.get(tag)?.color ?? colorPropertyOf(tag)
+          const icon = corpus.icons.get(tag)
           return (
             <li class="cgc-tag-list__item" data-tag={tag}>
               {/* `internal`, so core gives the badge a popover like any link to a page of the site. */}
@@ -97,11 +121,12 @@ export default ((userOpts?: TagListOptions) => {
                 class="internal cgc-tag-list__link"
                 href={resolveRelative(slug as never, `tags/${tag}` as never)}
               >
-                {/* The tag colour paints the ring, and in time its icon: never text (docs/adr/0001). */}
+                {/* The tag colour paints the ring and its icon, never text (docs/adr/0001). */}
                 <span
                   class="cgc-tag-list__ring"
                   style={{ color: `var(${color})` }}
                   title={tag}
+                  dangerouslySetInnerHTML={icon === undefined ? undefined : { __html: icon }}
                 ></span>
                 <span class="cgc-tag-list__name">{tag.split("/").pop()}</span>
                 {opts.showCount && (
