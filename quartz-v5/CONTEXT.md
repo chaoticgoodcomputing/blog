@@ -53,6 +53,12 @@ application layer rather than something for others to install. The opposite of a
 which fails the test only by accident.
 _Avoid_: customization (that is the whole category), local plugin, private plugin
 
+**Plugin note**:
+A shareable plugin's README, published on this site as a content note at `/plugins/<name>`. The
+same file is the plugin's documentation on GitHub and its page on the site. Libraries and site
+plugins have none.
+_Avoid_: plugin page, docs page
+
 **Upstream proposal**:
 The pull request that retires a vendored change by getting it accepted upstream. Every vendored
 change is supposed to have one.
