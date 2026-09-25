@@ -10,10 +10,11 @@ import { h } from "preact"
 import { toHtml } from "hast-util-to-html"
 import { visit } from "unist-util-visit"
 import { pathToRoot, slugifyFilePath } from "@quartz-community/utils/path"
-import { renderMdx } from "./pipeline"
+import { createPipeline } from "@chaoticgoodcomputing/pipeline"
+import { islandAttributes, islandRuntime } from "@chaoticgoodcomputing/island-runtime"
+import remarkMdx from "remark-mdx"
 import { bundleWidgets, refKey, type Bundle } from "./bundle"
-import { MdxError, type IslandUse } from "./islands"
-import runtime from "./islands.inline.js"
+import { collectIslands, ISLAND_CLASS, MdxError, type IslandUse } from "./islands"
 
 const EXT = ".mdx"
 
@@ -31,12 +32,22 @@ function compile(ctx: any) {
 }
 
 async function compileCorpus(ctx: any) {
+  // The site's configured pipeline, as a `.md` page gets it (proven at parity on #19), plus MDX.
+  const pipeline = createPipeline(ctx, {
+    markdownPlugins: {
+      // Registered before the Latex transformer's remark-math, which then claims `$…$` first and
+      // keeps acorn from choking on `{…}` inside inline maths.
+      before: [remarkMdx],
+      // Turns what remark-mdx parsed into something remark-rehype understands, so it runs last.
+      after: [collectIslands],
+    },
+  })
   const rendered = []
   for (const relativePath of (ctx.allFiles ?? []).filter((fp: string) => fp.endsWith(EXT))) {
     const fullPath = path.join(ctx.argv.directory, relativePath)
     // Strip `.mdx` so the page lives at a clean URL: v5's slugifier only strips `.md`/`.html` (#23).
     const slug = slugifyFilePath((relativePath.slice(0, -EXT.length) + ".md") as any)
-    const { hast, file } = await renderMdx(ctx, fs.readFileSync(fullPath, "utf8"), fullPath, relativePath, slug)
+    const { hast, file } = await pipeline.run(fs.readFileSync(fullPath, "utf8"), { filePath: fullPath, relativePath, slug })
     rendered.push({ relativePath, fullPath, slug, hast, file, uses: (file.data.cgcMdxUses ?? []) as IslandUse[] })
   }
 
@@ -59,12 +70,7 @@ async function compileCorpus(ctx: any) {
       }
       if (widget.css) css.add(widget.css)
       delete el.properties.dataCgcUse
-      Object.assign(el.properties, {
-        dataCgcEntry: widget.entry,
-        dataCgcCss: widget.css,
-        dataCgcHydrate: use.directive,
-        dataCgcProps: JSON.stringify(use.props),
-      })
+      Object.assign(el.properties, islandAttributes({ entry: widget.entry, css: widget.css, directive: use.directive, props: use.props }))
       el.children = [{ type: "raw", value: html }]
     })
     const data = file.data as any
@@ -87,7 +93,8 @@ const Body = () => {
       { class: ["popover-hint", ...(fileData?.frontmatter?.cssclasses ?? [])].join(" ") },
       h("div", { class: "markdown-preview-view markdown-rendered", dangerouslySetInnerHTML: { __html: fileData?.cgcMdxHtml ?? "" } }),
     )
-  Component.afterDOMLoaded = runtime
+  // The island runtime, hydrating this plugin's markers only (ADR-0002).
+  Component.afterDOMLoaded = islandRuntime(`.${ISLAND_CLASS}`)
   return Component
 }
 

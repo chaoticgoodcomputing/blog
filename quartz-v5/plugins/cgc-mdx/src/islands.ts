@@ -4,7 +4,11 @@
 // remark-rehype has no handler for MDX nodes, so anything left behind would vanish silently.
 import { visit, SKIP, type VisitorResult } from "unist-util-visit"
 import type { VFile } from "vfile"
+import type { Directive } from "@chaoticgoodcomputing/island-runtime"
 import { evaluateAttributes, NotData } from "./props"
+
+/** The class that makes an element one of this plugin's island markers, and what its runtime selects. */
+export const ISLAND_CLASS = "cgc-mdx-island"
 
 /** One widget use on one page, before bundling. */
 export interface IslandUse {
@@ -12,7 +16,7 @@ export interface IslandUse {
   /** `default`, or the named export. */
   imported: string
   props: Record<string, unknown>
-  directive: string
+  directive: Directive
 }
 
 export class MdxError extends Error {}
@@ -78,7 +82,7 @@ export function collectIslands() {
         children: [],
         data: {
           hName: inline ? "span" : "div",
-          hProperties: { className: ["cgc-mdx-island"], dataCgcUse: uses.length - 1 },
+          hProperties: { className: [ISLAND_CLASS], dataCgcUse: uses.length - 1 },
         },
       }
       return SKIP

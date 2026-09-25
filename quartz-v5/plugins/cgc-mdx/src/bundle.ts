@@ -3,6 +3,7 @@
 // to HTML at build time (ADR-0002). Imports resolve the way a bundler resolves them, from the page's
 // own directory, with no alias and no registry.
 import esbuild, { type Plugin } from "esbuild"
+import { islandEntrySource } from "@chaoticgoodcomputing/island-runtime"
 import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
@@ -47,8 +48,9 @@ const hostPreact: Plugin = {
   },
 }
 
-// Each widget's entry is a virtual module that re-exports it as `default`. The browser entry also
-// re-exports Preact's `h`, `hydrate` and `render`, so the runtime drives the widget's own Preact.
+// Each widget's entry is a virtual module that re-exports it as `default`. The browser entry is the
+// island runtime's entry contract, which also re-exports Preact's `h`, `hydrate` and `render`, so
+// the runtime drives the widget's own Preact.
 function entries(widgets: { name: string; file: string; imported: string }[], target: "browser" | "ssr"): Plugin {
   const byName = new Map(widgets.map((w) => [w.name, w]))
   return {
@@ -60,7 +62,7 @@ function entries(widgets: { name: string; file: string; imported: string }[], ta
         const from = JSON.stringify(w.file)
         const contents =
           target === "browser"
-            ? `export { ${w.imported} as default } from ${from}\nexport { h, hydrate, render } from "preact"\n`
+            ? islandEntrySource(w.file, w.imported)
             : `import { h } from "preact"\nimport render from "preact-render-to-string"\nimport { ${w.imported} as Widget } from ${from}\nexport default (props) => render(h(Widget, props))\n`
         return { contents, resolveDir: path.dirname(w.file), loader: "js" }
       })

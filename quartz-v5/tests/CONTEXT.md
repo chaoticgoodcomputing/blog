@@ -43,3 +43,8 @@ carry, chiefly builds that are supposed to fail, or a site built from the **site
 the fixture's (the harness's `siteConfig()`, with `routeSite()` to browse it). Its content lives
 outside the repo, because Quartz's content glob honours `.gitignore`.
 _Avoid_: temp site, throwaway build
+
+**Probe plugin**:
+A throwaway plugin a library's spec compiles from source (`harness/probe.mjs`) and loads into a
+scratch site, standing in for the plugin that will one day use that capability of the library.
+_Avoid_: test plugin, mock plugin, fake

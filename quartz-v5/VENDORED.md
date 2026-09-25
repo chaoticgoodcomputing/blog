@@ -156,6 +156,13 @@ decided on [#39](https://github.com/chaoticgoodcomputing/blog/issues/39). `site-
 and its versions conflict with the v4 tree at the repo root (preact, unified, shiki). This
 directory is deliberately _not_ a pnpm workspace package, so the root `pnpm install` ignores it.
 
+**Our libraries are the one thing here that is a pnpm workspace package.** `pnpm-workspace.yaml`
+at the repo root lists `quartz-v5/libs/*` and nothing else, so the root `pnpm install` installs each
+library's own dependencies beside its source. A plugin names a library it inlines as a
+`file:../../libs/<name>` devDependency (ADR-0005), which npm only links: whatever the library
+imports resolves from the library's own install, never the plugin's. The e2e harness runs
+`pnpm install --frozen-lockfile` when a library has none.
+
 ## Relationship to `quartz/` at the repo root
 
 The root `quartz/` is the **Quartz 4 copy that builds the live site**, untouched by any of this.

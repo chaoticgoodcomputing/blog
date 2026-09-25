@@ -18,6 +18,7 @@ const here = path.dirname(fileURLToPath(import.meta.url))
 export const testsRoot = path.resolve(here, "..")
 export const vendored = path.resolve(testsRoot, "../quartz")
 const pluginsRoot = path.resolve(testsRoot, "../plugins")
+const libsRoot = path.resolve(testsRoot, "../libs")
 const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
 
 // "main" is the fixture site as configured. "baseline" is the same site with every one of our
@@ -74,20 +75,47 @@ function writeFixtureRoot(variant) {
 // get `npm run build` — so every package is built here first.
 export async function buildPlugins() {
   linkHostModules()
+  await installLibs()
   const packages = fs.existsSync(pluginsRoot)
     ? fs.readdirSync(pluginsRoot).filter((dir) => fs.existsSync(path.join(pluginsRoot, dir, "package.json")))
     : []
   await Promise.all(
     packages.map(async (dir) => {
       const cwd = path.join(pluginsRoot, dir)
-      // A package with build-time dependencies of its own carries a lockfile; install it once.
-      if (fs.existsSync(path.join(cwd, "package-lock.json")) && !fs.existsSync(path.join(cwd, "node_modules"))) {
+      // A package with build-time dependencies of its own carries a lockfile; install it once, and
+      // again whenever the lockfile moves on from what is installed.
+      if (fs.existsSync(path.join(cwd, "package-lock.json")) && installIsStale(cwd)) {
         await run("npm", ["ci", "--omit=peer", "--no-audit", "--no-fund"], { cwd })
       }
       await run("npm", ["run", "build", "--silent"], { cwd })
     }),
   )
   return packages
+}
+
+// True when a package's lockfile names a package, or a version, that npm's record of its last
+// install (`node_modules/.package-lock.json`) lacks: say, after a merge added a library. Peers are
+// never installed here, and optional packages only on their own platform.
+function installIsStale(cwd) {
+  const installed = path.join(cwd, "node_modules", ".package-lock.json")
+  if (!fs.existsSync(installed)) return true
+  const wanted = JSON.parse(fs.readFileSync(path.join(cwd, "package-lock.json"), "utf8")).packages
+  const have = JSON.parse(fs.readFileSync(installed, "utf8")).packages
+  const id = (entry) => entry?.version ?? entry?.resolved
+  return Object.entries(wanted).some(([key, entry]) => key && !entry.peer && !entry.optional && id(have[key]) !== id(entry))
+}
+
+// Our libraries' own dependencies install through the repo's pnpm workspace (ADR-0005), never
+// through the plugins that inline them: npm installs nothing behind a `file:` link. So a library
+// with dependencies and no install of its own gets the workspace's.
+async function installLibs() {
+  const missing = (fs.existsSync(libsRoot) ? fs.readdirSync(libsRoot) : []).some((dir) => {
+    const manifest = path.join(libsRoot, dir, "package.json")
+    if (!fs.existsSync(manifest)) return false
+    const { dependencies = {}, devDependencies = {} } = JSON.parse(fs.readFileSync(manifest, "utf8"))
+    return Object.keys({ ...dependencies, ...devDependencies }).length > 0 && !fs.existsSync(path.join(libsRoot, dir, "node_modules"))
+  })
+  if (missing) await run("pnpm", ["install", "--frozen-lockfile"], { cwd: path.resolve(testsRoot, "../..") })
 }
 
 // A git-installed plugin lives at `.quartz/plugins/<name>/` inside the Quartz root, so its bare

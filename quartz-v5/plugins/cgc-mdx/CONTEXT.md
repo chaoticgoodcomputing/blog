@@ -2,6 +2,10 @@
 
 The Quartz 5 page-type plugin that renders `.mdx` pages. It ships the widget contract and no
 widgets of its own. Inherits the family vocabulary in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md).
+A page's body runs through the site's configured pipeline, rebuilt by
+[`@chaoticgoodcomputing/pipeline`](../../libs/pipeline/CONTEXT.md), and its widgets are islands
+of [`@chaoticgoodcomputing/island-runtime`](../../libs/island-runtime/CONTEXT.md). Both libraries
+are inlined into this plugin's build.
 
 ## Language
 
@@ -17,12 +21,13 @@ _Avoid_: using it for anything an MDX page imports
 
 **Island**:
 One use of a widget on a page: its build-time HTML inside a `cgc-mdx-island` marker, which the
-island runtime hydrates in the browser.
+island runtime hydrates in the browser. An island in `island-runtime`'s sense.
 _Avoid_: widget instance, mount point, embed
 
 **Island runtime**:
-The one global script, shipped as the body's `afterDOMLoaded`, that hydrates islands on `nav` and
-`render` and unmounts them on `prenav`. Widgets never touch Quartz's navigation events themselves.
+This plugin's copy of `island-runtime`'s script, shipped as the body's `afterDOMLoaded`. It hydrates
+`cgc-mdx-island` markers on `nav` and `render`, unmounts them on `prenav`, and leaves every other
+plugin's markers alone. Widgets never touch Quartz's navigation events themselves.
 _Avoid_: widget script, loader, hydrator
 
 **Widget layer**:

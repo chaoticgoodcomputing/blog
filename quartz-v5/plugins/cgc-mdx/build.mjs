@@ -1,5 +1,6 @@
 // Bundles the plugin to dist/, following quartz-community/plugin-template's tsup config: inline
-// everything except the host's singletons (peerDependencies) and esbuild, which is native.
+// everything except the host's singletons (peerDependencies) and esbuild, which is native. That
+// includes our libraries, which ship as TypeScript source (ADR-0005).
 // esbuild is used directly because it is already a runtime dependency; tsup would only wrap it.
 import esbuild from "esbuild"
 import fs from "node:fs"
@@ -17,7 +18,5 @@ await esbuild.build({
   jsx: "automatic",
   jsxImportSource: "preact",
   external: [...peers, ...peers.map((p) => `${p}/*`), "esbuild"],
-  // The island runtime ships as text: Quartz injects it as the body's `afterDOMLoaded`.
-  loader: { ".inline.js": "text" },
   logLevel: "warning",
 })

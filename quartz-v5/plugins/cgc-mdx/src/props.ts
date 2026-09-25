@@ -2,6 +2,7 @@
 // never through `eval`, and not through JSON.parse, which live pages' unquoted keys and comments
 // would fail. Anything that is not a literal fails the build (ADR-0002).
 import type { Expression, Node, Property, SpreadElement } from "estree"
+import type { Directive } from "@chaoticgoodcomputing/island-runtime"
 
 export class NotData extends Error {}
 
@@ -39,7 +40,7 @@ export function evaluate(node: Node): Data {
 }
 
 /** The props of one JSX element, from mdast-util-mdx-jsx attributes. */
-export function evaluateAttributes(attributes: any[]): { props: Record<string, Data>; directive: string } {
+export function evaluateAttributes(attributes: any[]): { props: Record<string, Data>; directive: Directive } {
   const props: Record<string, Data> = {}
   let directive = "load"
   for (const attr of attributes) {

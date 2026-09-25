@@ -6,6 +6,8 @@ const DIRS = [
   { name: "suite", testDir: "./specs" },
   // Each plugin's own proof, living beside it.
   { name: "plugins", testDir: "../plugins", testMatch: "*/e2e/**/*.spec.mjs" },
+  // Each library's own proof, through a plugin that inlines it.
+  { name: "libs", testDir: "../libs", testMatch: "*/e2e/**/*.spec.mjs" },
   // Site plugins' proof: the site's own layer, which no fixture config loads.
   { name: "site-plugins", testDir: "../site-plugins", testMatch: "*/e2e/**/*.spec.mjs" },
 ]

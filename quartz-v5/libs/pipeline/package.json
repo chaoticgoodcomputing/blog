@@ -1,0 +1,33 @@
+{
+  "name": "@chaoticgoodcomputing/pipeline",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Rebuilds a Quartz 5 site's configured transformer pipeline, minus an optional denylist, for content Quartz does not parse itself. See CONTEXT.md.",
+  "//exports": "Source only: no build and no dist. The consuming plugin's build inlines it (ADR-0005).",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
+    "unified": "^11.0.5",
+    "vfile": "^6.0.3"
+  },
+  "//devDependencies": "Types, and what the probe plugin in e2e/ needs.",
+  "devDependencies": {
+    "@types/hast": "^3.0.4",
+    "@types/node": "^24.10.1",
+    "hast-util-to-html": "^9.0.5",
+    "typescript": "^5.9.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

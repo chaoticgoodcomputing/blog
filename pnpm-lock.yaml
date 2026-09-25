@@ -265,6 +265,40 @@ importers:
         specifier: ^0.6.2
         version: 0.6.2
 
+  quartz-v5/libs/island-runtime:
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  quartz-v5/libs/pipeline:
+    dependencies:
+      remark-parse:
+        specifier: ^11.0.0
+        version: 11.0.0
+      remark-rehype:
+        specifier: ^11.1.2
+        version: 11.1.2
+      unified:
+        specifier: ^11.0.5
+        version: 11.0.5
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
+    devDependencies:
+      '@types/hast':
+        specifier: ^3.0.4
+        version: 3.0.4
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.10.4
+      hast-util-to-html:
+        specifier: ^9.0.5
+        version: 9.0.5
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
 packages:
 
   '@bufbuild/protobuf@2.10.2':

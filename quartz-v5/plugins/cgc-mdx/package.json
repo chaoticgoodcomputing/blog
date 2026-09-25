@@ -23,13 +23,12 @@
     "preact": "^10.29.0",
     "preact-render-to-string": "^6.7.0"
   },
-  "//devDependencies": "Inlined into dist by build.mjs. The unified stack is bundled rather than shared: nothing in it depends on instance identity, and an installed copy here would shadow the host's anyway.",
+  "//devDependencies": "Inlined into dist by build.mjs. Our libraries are `file:` specs on main, which a release commit rewrites to the release's published version (ADR-0005). The unified stack is bundled rather than shared: nothing in it depends on instance identity, and an installed copy here would shadow the host's anyway.",
   "devDependencies": {
+    "@chaoticgoodcomputing/island-runtime": "file:../../libs/island-runtime",
+    "@chaoticgoodcomputing/pipeline": "file:../../libs/pipeline",
     "hast-util-to-html": "^9.0.5",
     "remark-mdx": "^3.1.1",
-    "remark-parse": "^11.0.0",
-    "remark-rehype": "^11.1.2",
-    "unified": "^11.0.5",
     "unist-util-visit": "^5.1.0",
     "vfile": "^6.0.3"
   },

@@ -10,6 +10,10 @@ Contexts are deliberately **not** listed here. Discover them with Nx so this map
 
 Read the `CONTEXT.md` of each context relevant to your task. If one is missing, proceed without it.
 
+Contexts nest. A context inside another inherits the enclosing one's glossary: every package under
+`quartz-v5/plugins/`, `quartz-v5/libs/` and `quartz-v5/tests/` uses the family vocabulary in
+`quartz-v5/CONTEXT.md` and defines only its own terms.
+
 ## ADRs
 
 - **System-wide decisions**: `docs/adr/` at the repo root.

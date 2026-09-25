@@ -1,0 +1,6 @@
+# Only our libraries (`@chaoticgoodcomputing/*`) resolve through this workspace, so each one's own
+# dependencies install beside its source. Plugins, the e2e suite and the vendored copy keep their
+# isolated npm installs, as a downstream site does. See ADR-0005's *libraries inlined by a plugin*
+# amendment and quartz-v5/VENDORED.md.
+packages:
+  - quartz-v5/libs/*
