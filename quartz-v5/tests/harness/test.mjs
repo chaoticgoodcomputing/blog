@@ -5,10 +5,16 @@ import fs from "node:fs"
 import path from "node:path"
 import { fileFor, outputFor } from "./site.mjs"
 import { BASELINE_PORT } from "./env.mjs"
+import { quietAnalytics } from "./analytics.mjs"
 
 export const BASELINE_URL = `http://localhost:${BASELINE_PORT}`
 
 export const test = base.extend({
+  // No spec reaches a real analytics service: every context answers PostHog itself (analytics.mjs).
+  context: async ({ context }, use) => {
+    await quietAnalytics(context)
+    await use(context)
+  },
   // The built fixture site on disk, for assertions on emitted files.
   emitted: async ({}, use) => {
     const root = outputFor("main")
@@ -23,6 +29,7 @@ export const test = base.extend({
   // same colour scheme as `page`.
   baselinePage: async ({ browser, colorScheme }, use) => {
     const context = await browser.newContext({ baseURL: BASELINE_URL, colorScheme })
+    await quietAnalytics(context)
     await use(await context.newPage())
     await context.close()
   },

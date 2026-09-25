@@ -1,0 +1,39 @@
+{
+  "name": "cgc-posthog",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Quartz 5 plugin: PostHog analytics that honours Do Not Track, with navigation events labelled by where the reader clicked. See README.md and CONTEXT.md.",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "../node_modules/.bin/tsc -p ."
+  },
+  "//peerDependencies": "The host Quartz's own copy, never bundled or installed here. Imported for types only.",
+  "peerDependencies": {
+    "@quartz-community/types": "*"
+  },
+  "//devDependencies": "Build-time only: esbuild bundles dist/ (build.mjs).",
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  },
+  "quartz": {
+    "name": "cgc-posthog",
+    "displayName": "PostHog",
+    "description": "PostHog analytics that honours Do Not Track, with navigation events labelled by where the reader clicked.",
+    "category": "transformer",
+    "version": "0.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 90,
+    "defaultEnabled": true,
+    "defaultOptions": {
+      "apiHost": "https://us.i.posthog.com",
+      "navigationSources": {}
+    }
+  }
+}

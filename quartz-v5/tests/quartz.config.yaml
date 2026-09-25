@@ -150,6 +150,17 @@ plugins:
       icon: ../../plugins/cgc-og-image/e2e/icon.png
   - source: "@quartz-community/cname"
     enabled: true
+  # PostHog at a reserved host that never resolves, which the harness answers (harness/analytics.mjs).
+  # A navigation is labelled by the first selector its link matches, in this order.
+  - source: ../../plugins/cgc-posthog
+    enabled: true
+    options:
+      apiKey: phc_fixture
+      apiHost: https://posthog.invalid
+      navigationSources:
+        ".left.sidebar": left-sidebar
+        ".callout": callout
+        "article p a.internal": inline-link
   - source: "@quartz-community/canvas-page"
     enabled: true
   - source: "@quartz-community/content-page"

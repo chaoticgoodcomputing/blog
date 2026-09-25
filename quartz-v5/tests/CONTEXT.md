@@ -67,3 +67,10 @@ A local web server a spec starts to stand in for a remote site that a build fetc
 the host of an annotation page's source document (`harness/source-host.mjs`). It listens on a port the
 OS picks, so a build never reaches the network.
 _Avoid_: mock server, fake remote, test server
+
+**Analytics stand-in**:
+What answers a page's requests to PostHog in the suite (`harness/analytics.mjs`). Every context the
+harness hands a spec answers PostHog's hosts with nothing, so no spec sends real analytics; a spec
+about analytics puts a stand-in for PostHog's library there instead, which records each `init` and
+`capture` the page makes.
+_Avoid_: mock PostHog, fake analytics

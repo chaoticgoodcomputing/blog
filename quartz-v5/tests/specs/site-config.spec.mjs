@@ -5,6 +5,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { test, expect, layerOrder, routeSite, schemeOf, toggleScheme } from "../harness/test.mjs"
 import { buildScratchSite, siteConfig } from "../harness/site.mjs"
+import { postHogStandIn } from "../harness/analytics.mjs"
 // layers.mjs reads the layers keyed by parent (site-styles' guard); test.mjs's `layerOrder` is the flat,
 // dotted ranking the family-layer check uses.
 import { layerOrder as layersByParent, stackDeclaration } from "../harness/layers.mjs"
@@ -163,6 +164,28 @@ test("points each page's og:image at its own card", async ({ page }) => {
   await page.goto(`${ORIGIN}/content/notes/a-note`)
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", `${ORIGIN}/content/notes/a-note-og-image.webp`)
   expect(fs.existsSync(path.join(site.public, "content/notes/a-note-og-image.webp"))).toBe(true)
+})
+
+// cgc-posthog in place of core analytics (#61): v4's PostHog project and host, v4's privacy options,
+// and v4's `navigation` labels, as far as the site has their places yet. PostHog is a stand-in.
+test("sends v4's analytics to PostHog, labelling navigations as v4 did", async ({ page }) => {
+  const posthog = await postHogStandIn(page, "https://app.posthog.com")
+  await routeSite(page, site.public, ORIGIN)
+  await page.goto(`${ORIGIN}/content/notes/a-note`)
+  await expect.poll(() => posthog.inits.length).toBe(1)
+  expect(posthog.inits[0].token).toBe("phc_BviHJVml66FIB1RFmgeAzZpKRWA0nntGdIOo47hTA3X")
+  expect(posthog.inits[0].config).toMatchObject({ api_host: "https://app.posthog.com", ip: false, disable_session_recording: true })
+  expect(posthog.requests).toEqual(["https://app.posthog.com/static/array.js"])
+  // A tag badge, then a page in the tag's listing.
+  await page.locator(".page-header").getByRole("link", { name: "topic" }).click()
+  await expect(page).toHaveURL(`${ORIGIN}/tags/topic`)
+  await page.locator(".center").getByRole("link", { name: "A note", exact: true }).click()
+  await expect(page).toHaveURL(`${ORIGIN}/content/notes/a-note`)
+  const navigations = () => posthog.captures.filter(({ event }) => event === "navigation").map(({ properties }) => properties)
+  await expect.poll(navigations).toEqual([
+    { source: "tag-badge", from_page: "/content/notes/a-note", to_page: "/tags/topic", url: `${ORIGIN}/tags/topic` },
+    { source: "inline-link", from_page: "/tags/topic", to_page: "/content/notes/a-note", url: `${ORIGIN}/content/notes/a-note` },
+  ])
 })
 
 // `alias-redirects` emits case redirects only when the output directory's filesystem is

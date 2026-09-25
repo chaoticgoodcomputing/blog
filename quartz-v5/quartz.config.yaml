@@ -222,6 +222,19 @@ plugins:
       icon: ../icon.png
   - source: "@quartz-community/cname"
     enabled: true
+  # v4's PostHog (#42, #44, #61), in place of core `analytics`: nothing loads under Do Not Track, no
+  # session recording, and a `navigation` event per followed link, labelled as v4 labelled it. v4's
+  # other two labels arrive with their places: the tag explorer's (#76) here, and the graph's, which
+  # cgc-graph sends itself (FORK-LEDGER graph rows).
+  - source: ../plugins/cgc-posthog
+    enabled: true
+    options:
+      apiKey: phc_BviHJVml66FIB1RFmgeAzZpKRWA0nntGdIOo47hTA3X
+      apiHost: https://app.posthog.com
+      navigationSources:
+        # The stock tag list's links, until cgc-tag-list (#69).
+        ".tag-link": tag-badge
+        "a.internal": inline-link
   - source: "@quartz-community/canvas-page"
     enabled: true
   - source: "@quartz-community/content-page"
