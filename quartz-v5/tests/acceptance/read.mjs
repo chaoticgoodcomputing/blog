@@ -162,6 +162,32 @@ function readFeed(root, file, pattern, origin) {
   return new Set([...xml.matchAll(pattern)].map(([, href]) => pathOn(origin, href)))
 }
 
+// An RSS element's text: CDATA as written (a `]]>` inside it is split across two sections), anything
+// else with its entities decoded.
+const textOf = (xml) =>
+  xml.includes("<![CDATA[") ? xml.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1").trim() : decodeEntities(xml).trim()
+
+/**
+ * The RSS feed's items in feed order, by URL path: each one's date (milliseconds, NaN when it has
+ * none) and description (undefined when it has none).
+ */
+function readItems(root, origin) {
+  const feed = path.join(root, "index.xml")
+  if (!fs.existsSync(feed)) return null
+  const items = new Map()
+  for (const [item] of fs.readFileSync(feed, "utf8").matchAll(/<item>[\s\S]*?<\/item>/g)) {
+    const field = (tag) => new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`).exec(item)?.[1]
+    const link = field("link")
+    if (link === undefined) continue
+    const description = field("description")
+    items.set(pathOn(origin, link), {
+      date: Date.parse(textOf(field("pubDate") ?? "")),
+      description: description === undefined ? undefined : textOf(description),
+    })
+  }
+  return items
+}
+
 // How long before its first page a build may have taken a date from its own clock: parsing, which
 // is when Quartz dates a page that has no date of its own, comes before any page is written.
 const PARSE_MARGIN_MS = 5 * 60 * 1000
@@ -183,7 +209,8 @@ function clockOf(written) {
 
 /**
  * A built site: every URL it serves with its kind, its sitemap and RSS membership (URL paths, or
- * `null` when the file is missing), and the head and stylesheets of each page. `origin` is the site's own
+ * `null` when the file is missing), the RSS items themselves in feed order (`rssItems`, see
+ * readItems), and the head and stylesheets of each page. `origin` is the site's own
  * (`https://<baseUrl>`), which absolute URLs in heads and feeds are read against. `builtDuring` is
  * the span in which the build ran: a page with no date of its own gets the build's clock, and that
  * is not a date to compare. Pass it when it was measured; otherwise it is read from when the pages
@@ -215,6 +242,7 @@ export function readSite(root, origin, { builtDuring } = {}) {
     builtDuring: builtDuring ?? clockOf(written),
     sitemap: readFeed(root, "sitemap.xml", /<loc>([^<]*)<\/loc>/g, origin),
     rss: readFeed(root, "index.xml", /<item>[\s\S]*?<link>([^<]*)<\/link>[\s\S]*?<\/item>/g, origin),
+    rssItems: readItems(root, origin),
   }
 }
 

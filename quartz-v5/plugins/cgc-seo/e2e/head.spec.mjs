@@ -1,5 +1,5 @@
 // What a crawler reads from the head of each fixture page: whether it may index the page, the page's
-// canonical URL, and who wrote it. The fixture config gives cgc-seo `noindexTags: [private]` and a
+// canonical URL, who wrote it, and where the site's feed is. The fixture config gives cgc-seo `noindexTags: [private]` and a
 // default author; its baseUrl is `localhost`. v4 parity itself is v4-parity.spec.mjs.
 import { test, expect } from "../../../tests/harness/test.mjs"
 
@@ -53,6 +53,16 @@ test("every page names one canonical URL, without a trailing index", async ({ pa
     await page.goto(url)
     await expect(canonical(page), url).toHaveCount(1)
     await expect(canonical(page), url).toHaveAttribute("href", href)
+  }
+})
+
+test("every page links the RSS feed, for feed readers to find", async ({ page }) => {
+  for (const url of ["/", "/plain-note", "/tags/fixture", "/seo/private-note"]) {
+    await page.goto(url)
+    const feeds = page.locator('head link[rel="alternate"][type="application/rss+xml"]')
+    await expect(feeds, url).toHaveCount(1)
+    await expect(feeds, url).toHaveAttribute("href", "https://localhost/index.xml")
+    await expect(feeds, url).toHaveAttribute("title", "RSS Feed")
   }
 })
 

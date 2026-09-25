@@ -1,9 +1,15 @@
 {
-  "capturedFrom": "ca55e87c5bd9c6869c5c82cb573d303dcd4602ed",
+  "capturedFrom": "addecc635cc81879611dd92e59161b0e971432e6",
   "heads": {
     "/": {
       "canonical": [
         "https://blog.chaoticgood.computer/"
+      ],
+      "feeds": [
+        [
+          "RSS Feed",
+          "https://blog.chaoticgood.computer/index.xml"
+        ]
       ],
       "robots": [],
       "article": [],
@@ -13,6 +19,12 @@
       "canonical": [
         "https://blog.chaoticgood.computer/about"
       ],
+      "feeds": [
+        [
+          "RSS Feed",
+          "https://blog.chaoticgood.computer/index.xml"
+        ]
+      ],
       "robots": [],
       "article": [],
       "jsonLd": []
@@ -20,6 +32,12 @@
     "/content/articles/parity-article": {
       "canonical": [
         "https://blog.chaoticgood.computer/content/articles/parity-article"
+      ],
+      "feeds": [
+        [
+          "RSS Feed",
+          "https://blog.chaoticgood.computer/index.xml"
+        ]
       ],
       "robots": [],
       "article": [
@@ -88,6 +106,12 @@
       "canonical": [
         "https://blog.chaoticgood.computer/content/notes/parity-note"
       ],
+      "feeds": [
+        [
+          "RSS Feed",
+          "https://blog.chaoticgood.computer/index.xml"
+        ]
+      ],
       "robots": [],
       "article": [
         [
@@ -151,6 +175,12 @@
       "canonical": [
         "https://blog.chaoticgood.computer/content/notes/parity-untagged"
       ],
+      "feeds": [
+        [
+          "RSS Feed",
+          "https://blog.chaoticgood.computer/index.xml"
+        ]
+      ],
       "robots": [],
       "article": [
         [
@@ -203,6 +233,12 @@
     "/content/notes/parity-private": {
       "canonical": [
         "https://blog.chaoticgood.computer/content/notes/parity-private"
+      ],
+      "feeds": [
+        [
+          "RSS Feed",
+          "https://blog.chaoticgood.computer/index.xml"
+        ]
       ],
       "robots": [
         "noindex, nofollow"
@@ -273,6 +309,12 @@
       "canonical": [
         "https://blog.chaoticgood.computer/tags/horticulture/"
       ],
+      "feeds": [
+        [
+          "RSS Feed",
+          "https://blog.chaoticgood.computer/index.xml"
+        ]
+      ],
       "robots": [],
       "article": [],
       "jsonLd": []
@@ -280,6 +322,12 @@
     "/no-such-page": {
       "canonical": [
         "https://blog.chaoticgood.computer/"
+      ],
+      "feeds": [
+        [
+          "RSS Feed",
+          "https://blog.chaoticgood.computer/index.xml"
+        ]
       ],
       "robots": [],
       "article": [],

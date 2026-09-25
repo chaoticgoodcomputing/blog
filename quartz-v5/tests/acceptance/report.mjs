@@ -143,6 +143,7 @@ function groupOf(d) {
     const redirect = d.redirect === "unverifiable" ? "redirects unverifiable here" : `redirect ${d.redirect}`
     return `${things} moved (${d.how.join(", ")}, ${redirect})`
   }
+  if (d.area === "rss" && d.change === "changed") return `RSS items whose ${d.field} v5 changed`
   if (d.area === "sitemap" || d.area === "rss") {
     const what = d.area === "sitemap" ? "sitemap entries" : "RSS items"
     return d.change === "removed" ? `${what} v5 drops` : `${what} only v5 lists`
@@ -156,7 +157,7 @@ function lineOf(d) {
     const declared = d.declared ? d.declared.join(", ") : "no stack declaration"
     return clip(`${d.url} (${plural(d.pages, "page")}): declared ${declared} · ranked ${d.ranked.join(", ") || "nothing"}`)
   }
-  if (d.area === "head") {
+  if (d.area === "head" || d.field) {
     const values = [...d.removed.map((v) => `−${JSON.stringify(v)}`), ...d.added.map((v) => `+${JSON.stringify(v)}`)].join(" ")
     return clip(`${d.url}${d.to && d.to !== d.url ? ` (v5 ${d.to})` : ""}  ${values}`)
   }

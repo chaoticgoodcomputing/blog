@@ -1,10 +1,10 @@
 // A page's head metadata, ported from the v4 `Head` fork at parity (FORK-LEDGER, `Head.tsx` rows):
 // the canonical URL, `article:*` OpenGraph meta and a JSON-LD article. The one deliberate change is
 // `noindex` without v4's `nofollow` on private pages (#28).
-import { isAbsoluteURL, joinSegments, simplifySlug, slugTag, stripSlashes } from "@quartz-community/utils/path"
+import { isAbsoluteURL, joinSegments, simplifySlug, slugTag } from "@quartz-community/utils/path"
 import { unescapeHTML } from "@quartz-community/utils/escape"
 import type { Options } from "./options"
-import { privatePages, type PageData } from "./page"
+import { articles, privatePages, type PageData } from "./page"
 
 interface Author {
   type: string
@@ -46,7 +46,7 @@ const scriptSafe = (value: unknown) => JSON.stringify(value).replaceAll("<", "\\
 /** The `additionalHead` entry: one page's head metadata, from its data. */
 export function headFor(site: Site, opts: Options) {
   const isPrivate = privatePages(opts.noindexTags ?? ["private"])
-  const folders = opts.articleFolders?.map((folder) => stripSlashes(folder))
+  const isArticle = articles(opts.articleFolders)
   const types = (opts.articleTypes ?? []).map((mapping) => ({ ...mapping, tag: slugTag(mapping.tag) }))
   const siteAuthor = authorsOf(opts.defaultAuthor, "Person")[0] ?? { type: "Organization", name: site.pageTitle ?? "" }
 
@@ -69,11 +69,6 @@ export function headFor(site: Site, opts: Options) {
       },
     }),
   }
-
-  const isArticle = (page: PageData) =>
-    page.slug !== "404" &&
-    page.filePath !== undefined &&
-    (!folders || folders.some((folder) => folder === "" || page.slug!.startsWith(`${folder}/`)))
 
   // As stock `og-image` names its cards, so the JSON-LD image is the page's own OG image.
   const imageOf = (page: PageData) => {

@@ -116,7 +116,14 @@ function compareFeed(area, v4, v5, differences) {
     expected.set(to, [...(expected.get(to) ?? []), url])
   }
   for (const [to, urls] of expected) {
-    if (!after.has(to)) differences.push({ area, change: "removed", url: urls[0], to: to === urls[0] ? undefined : to })
+    const moved = to === urls[0] ? undefined : to
+    if (!after.has(to)) differences.push({ area, change: "removed", url: urls[0], to: moved })
+    // What a feed reader shows of an item both feeds carry: its description, reading time included.
+    else if (area === "rss") {
+      const a = v4.rssItems?.get(urls[0])?.description
+      const b = v5.rssItems?.get(to)?.description
+      if (a !== b) differences.push({ area, change: "changed", url: urls[0], to: moved, field: "description", removed: a === undefined ? [] : [a], added: b === undefined ? [] : [b] })
+    }
   }
   for (const url of after) if (!expected.has(url)) differences.push({ area, change: "added", url })
 }
@@ -125,7 +132,8 @@ function compareFeed(area, v4, v5, differences) {
  * Every difference between the v4 and v5 builds:
  * - `url`: `removed` (a v4 URL with nothing at its v5 address), `moved` (served at another address;
  *   `redirect` says whether the old URL redirects there, where that can be checked) or `added`;
- * - `sitemap`, `rss`: `removed` or `added` members, after each v4 URL's move;
+ * - `sitemap`, `rss`: `removed` or `added` members, after each v4 URL's move; and, for an RSS item
+ *   both feeds carry, `changed` with the `description` v5 `removed` and `added`;
  * - `head`: per page and field, the values v5 `removed` and `added`;
  * - and `also`, what checks of the v5 site alone found (cascade.mjs's `layers`), labelled the same way.
  *

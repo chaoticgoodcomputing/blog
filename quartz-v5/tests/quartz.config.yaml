@@ -164,11 +164,13 @@ plugins:
     enabled: false
   - source: "@quartz-community/alias-redirects"
     enabled: true
+  # cgc-seo writes the sitemap and feed instead, leaving private pages out (#28, #67). This still
+  # writes contentIndex.json, which lists them for search and the graph.
   - source: "@quartz-community/content-index"
     enabled: true
     options:
-      enableSiteMap: true
-      enableRSS: true
+      enableSiteMap: false
+      enableRSS: false
   - source: ../../plugins/cgc-seo
     enabled: true
     options:
@@ -178,6 +180,8 @@ plugins:
         type: Person
         name: Fixture Author
         url: https://localhost/about
+      # Fewer than the fixture's articles, so the feed is cut to its newest (#67).
+      rssLimit: 5
   - source: "@quartz-community/favicon"
     enabled: true
   # cgc-og-image replaces stock og-image, which it wraps.

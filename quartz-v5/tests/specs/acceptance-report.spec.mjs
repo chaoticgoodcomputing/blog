@@ -55,9 +55,17 @@ const sitemap = (paths) =>
   `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${paths
     .map((p) => `<url><loc>${ORIGIN}${p}</loc><lastmod>2024-01-01T00:00:00.000Z</lastmod></url>`)
     .join("")}</urlset>`
-const rss = (paths) =>
-  `<?xml version="1.0" encoding="UTF-8" ?><rss version="2.0"><channel><title>Site</title><link>${ORIGIN}</link>${paths
-    .map((p) => `<item><title>${p}</title><link>${ORIGIN}${p}</link><guid>${ORIGIN}${p}</guid></item>`)
+// A feed of `items`, newest first: each a URL path, or `{ url, date, description }` for an item with
+// its date and description as cgc-seo and v4 write them.
+const rss = (items) =>
+  `<?xml version="1.0" encoding="UTF-8" ?><rss version="2.0"><channel><title>Site</title><link>${ORIGIN}</link>${items
+    .map((item) => (typeof item === "string" ? { url: item } : item))
+    .map(
+      ({ url, date, description }) =>
+        `<item><title>${url}</title><link>${ORIGIN}${url}</link><guid>${ORIGIN}${url}</guid>${
+          description === undefined ? "" : `<description><![CDATA[ ${description} ]]></description>`
+        }${date ? `<pubDate>${new Date(date).toUTCString()}</pubDate>` : ""}</item>`,
+    )
     .join("")}</channel></rss>`
 
 /** A built site on disk: `files` maps output paths to their text. */
@@ -303,14 +311,51 @@ test("never allows an .mdx page v5 leaves out, and says it waits on #79", async 
     "sitemap.xml": sitemap(["/", "/content/articles/an-article", "/content/notes/dice"]),
     "index.xml": rss(["/content/articles/an-article", "/content/notes/dice"]),
   })
-  const result = await report(v4, site("v5", BASE), { vault })
+  // The feed keeps its length, so an older article takes the missing one's place.
+  const v5 = site("v5", { ...BASE, "index.xml": rss(["/content/articles/an-article", "/content/notes/older"]) })
+  const result = await report(v4, v5, { vault })
   expect(result.code, result.stdout).toBe(1)
   expect(result.json.failing.map((d) => [d.area, d.change, d.url, d.pending]).sort()).toEqual([
+    ["rss", "added", "/content/notes/older", 79],
     ["rss", "removed", "/content/notes/dice", 79],
     ["sitemap", "removed", "/content/notes/dice", 79],
     ["url", "removed", "/content/notes/dice", 79],
   ])
   expect(result.stdout).toContain("pending #79")
+})
+
+test("says an RSS item waits on #79 only where it takes the place of an .mdx article v4's feed carried", async () => {
+  // The feed is the newest articles, so the one that takes a missing article's place comes last in
+  // v5's, dated no later than anything v4's carried. Any other addition is a page the feed has no
+  // business carrying (a private page, say), and no ticket covers it.
+  const vault = site("vault", { "content/notes/dice.mdx": "---\ntitle: Dice\n---\nRoll.\n" })
+  const item = (url, date) => ({ url, date })
+  const v4 = site("v4", {
+    ...BASE,
+    "content/notes/dice.html": page({ title: "Dice", canonical: `${ORIGIN}/content/notes/dice` }),
+    "sitemap.xml": sitemap(["/", "/content/articles/an-article", "/content/notes/dice"]),
+    "index.xml": rss([item("/content/articles/an-article", "2024-03-01"), item("/content/notes/dice", "2024-02-01")]),
+  })
+  const added = async (feed) => {
+    const result = await report(v4, site("v5", { ...BASE, "index.xml": rss(feed) }), { vault })
+    expect(result.code, result.stdout).toBe(1)
+    return result.json.failing.filter((d) => d.area === "rss" && d.change === "added").map((d) => [d.url, d.pending ?? null])
+  }
+  // A newer page heads the feed, and the older article that fills dice's place is last.
+  expect(
+    await added([
+      item("/content/notes/leaked", "2024-04-01"),
+      item("/content/articles/an-article", "2024-03-01"),
+      item("/content/notes/older", "2024-01-01"),
+    ]),
+  ).toEqual([
+    ["/content/notes/leaked", null],
+    ["/content/notes/older", 79],
+  ])
+  // Last, but newer than dice was: not the article that would have taken dice's place.
+  expect(await added([item("/content/articles/an-article", "2024-03-01"), item("/content/notes/late", "2024-02-15")])).toEqual([
+    ["/content/notes/late", null],
+  ])
 })
 
 test("reads relative site, vault and output paths from the repo root, as its defaults are", async () => {
@@ -414,6 +459,25 @@ test("says whether it could check case redirects on this filesystem, and never p
   }
 })
 
+test("fails on an RSS item whose description v5 changes, such as its reading time", async () => {
+  const item = (description) => ({ url: "/content/articles/an-article", date: "2024-01-01", description })
+  const v4 = site("v4", { ...BASE, "index.xml": rss([item("About things. (4 min read)")]) })
+  const v5 = site("v5", { ...BASE, "index.xml": rss([item("About things. (5 min read)")]) })
+  const result = await report(v4, v5)
+  expect(result.code, result.stdout).toBe(1)
+  expect(result.json.failing).toEqual([
+    expect.objectContaining({
+      area: "rss",
+      change: "changed",
+      url: "/content/articles/an-article",
+      field: "description",
+      removed: ["About things. (4 min read)"],
+      added: ["About things. (5 min read)"],
+    }),
+  ])
+  expect(result.stdout).toContain("RSS items whose description v5 changed")
+})
+
 // A few vault-shaped pages built by the real v4 (the repo root's `quartz/`) and by v5 from the site
 // config: proves the report reads what each version actually renders.
 test("reads the heads, feeds and URLs both Quartz versions really emit", async () => {
@@ -448,6 +512,11 @@ test("reads the heads, feeds and URLs both Quartz versions really emit", async (
   const head = (url) => [...json.failing, ...json.allowed].filter((d) => d.area === "head" && d.url === url)
   expect(head("/content/articles/an-article"), stdout).toEqual([])
   expect(head("/content/notes/a-stub")).toEqual([expect.objectContaining({ field: "robots", removed: ["nofollow"], ticket: 28 })])
+  // Both sitemaps and both feeds hold the same pages, the stub in none of them, and both feeds
+  // describe the article alike (#67).
+  expect([...json.failing, ...json.allowed].filter((d) => d.area === "sitemap" || d.area === "rss"), stdout).toEqual([])
+  expect(json.sites.v5.sitemap, stdout).toBeGreaterThan(0)
+  expect(json.sites.v5.rss, stdout).toBeGreaterThan(0)
   // The mixed-case page moved to its lowercase URL, and v4's folder pages are gone.
   expect(json.allowed).toEqual(
     expect.arrayContaining([

@@ -120,7 +120,8 @@ _Avoid_: diff, comparison
 
 **Difference**:
 One thing a reader or crawler would find changed between the two builds: a URL served or not, a
-sitemap or RSS member, or one head value (`noindex`, canonical, `article:*`, JSON-LD) on one page.
+sitemap or RSS member, the description of an RSS item both feeds carry, or one head value
+(`noindex`, canonical, `article:*`, JSON-LD) on one page.
 Also, from site-styles' guard on the v5 build, a set of stylesheets whose cascade layers don't rank
 as the site's stack declares (`layers`).
 _Avoid_: change, regression (it may be intended)

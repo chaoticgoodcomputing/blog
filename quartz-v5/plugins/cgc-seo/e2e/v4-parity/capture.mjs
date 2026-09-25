@@ -1,6 +1,7 @@
-// Captures `v4-head.json`: what the v4 site (the repo-root `quartz/`, with the root
-// `quartz.config.ts`) puts in the head of each page in `content.mjs`. The v4 copy is deleted at
-// cutover, and this script with it; the JSON it wrote stays as the record of v4's output.
+// Captures `v4-head.json` and `v4-feeds.json`: what the v4 site (the repo-root `quartz/`, with the
+// root `quartz.config.ts`) puts in the head of each page in `content.mjs`, and in its sitemap and RSS
+// feed. The v4 copy is deleted at cutover, and this script with it; the JSON it wrote stays as the
+// record of v4's output.
 //
 // Usage, from the repo root, with the root's pnpm install in place:
 //   node quartz-v5/plugins/cgc-seo/e2e/v4-parity/capture.mjs
@@ -11,6 +12,7 @@ import { execFileSync } from "node:child_process"
 import { createRequire } from "node:module"
 import { fileURLToPath } from "node:url"
 import { CONTENT, URLS, extractHead } from "./content.mjs"
+import { readFeed, readSitemap } from "../feeds.mjs"
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const repoRoot = path.resolve(here, "../../../../..")
@@ -37,6 +39,12 @@ await browser.close()
 
 const commit = execFileSync("git", ["rev-parse", "HEAD"], { cwd: repoRoot, encoding: "utf8" }).trim()
 fs.writeFileSync(path.join(here, "v4-head.json"), JSON.stringify({ capturedFrom: commit, heads }, null, 2) + "\n")
+const feeds = {
+  capturedFrom: commit,
+  sitemap: readSitemap(fs.readFileSync(path.join(output, "sitemap.xml"), "utf8")),
+  rss: readFeed(fs.readFileSync(path.join(output, "index.xml"), "utf8")),
+}
+fs.writeFileSync(path.join(here, "v4-feeds.json"), JSON.stringify(feeds, null, 2) + "\n")
 fs.rmSync(content, { recursive: true, force: true })
 fs.rmSync(output, { recursive: true, force: true })
-console.log(`captured ${URLS.length} heads from v4 at ${commit}`)
+console.log(`captured ${URLS.length} heads, the sitemap and the feed from v4 at ${commit}`)

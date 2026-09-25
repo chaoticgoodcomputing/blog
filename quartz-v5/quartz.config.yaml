@@ -219,14 +219,17 @@ plugins:
       # On permanently (#23): v4's mixed-case URLs (89 in the vault today) redirect to their
       # lowercase pages. Emitted only where the output filesystem is case-sensitive, as CI's is.
       enableCaseRedirects: true
+  # cgc-seo writes the sitemap and feed in its place, leaving private pages out (#28, #67). Stock
+  # `unlisted` would do that too, but also drop them from contentIndex.json, which search and the graph
+  # read, so this still writes that.
   - source: "@quartz-community/content-index"
     enabled: true
     options:
-      enableSiteMap: true
-      enableRSS: true
-      rssLimit: 40
-  # What search engines see (#28): `noindex` on private pages, which stay listed on the site, and the
-  # canonical URL, `article:*` meta and JSON-LD of v4's Head fork. The sitemap and feed move here in #67.
+      enableSiteMap: false
+      enableRSS: false
+  # What search engines and feed readers see (#28): `noindex` on private pages, which stay listed on
+  # the site; the canonical URL, `article:*` meta and JSON-LD of v4's Head fork; and v4's sitemap and
+  # RSS feed, without private pages, with every tag's page once at /tags/<t> (#43, #67).
   - source: ../plugins/cgc-seo
     enabled: true
     options:
@@ -257,6 +260,8 @@ plugins:
         - { tag: horticulture, type: BlogPosting, section: Digital Garden }
         - { tag: projects, type: Report, section: Projects }
       defaultArticleType: Article
+      # v4's feed: the 40 newest articles, which are the notes under `content/` (articleFolders).
+      rssLimit: 40
   - source: "@quartz-community/favicon"
     enabled: true
   # Replaced by cgc-og-image, which wraps it (#58).

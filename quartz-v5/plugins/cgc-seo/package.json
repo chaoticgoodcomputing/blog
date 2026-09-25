@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Quartz 5 plugin for what search engines see: noindex on private pages, canonical URLs, article metadata and JSON-LD. See README.md and CONTEXT.md.",
+  "description": "Quartz 5 plugin for what search engines and feed readers see: noindex on private pages, canonical URLs, article metadata and JSON-LD, the sitemap and the RSS feed. See README.md and CONTEXT.md.",
   "exports": {
     ".": "./dist/index.js",
     "./package.json": "./package.json"
@@ -18,9 +18,10 @@
     "@quartz-community/utils": "*",
     "preact": "^10.29.0"
   },
-  "//devDependencies": "Build-time only: the loader prunes them after `npm run build`.",
+  "//devDependencies": "Build-time only, and inlined into dist by build.mjs (reading-time, v4's reading-time counter): the loader prunes them after `npm run build`.",
   "devDependencies": {
-    "esbuild": "^0.28.2"
+    "esbuild": "^0.28.2",
+    "reading-time": "^1.5.0"
   },
   "quartz": {
     "name": "cgc-seo",
@@ -36,7 +37,12 @@
     "defaultOptions": {
       "noindexTags": [
         "private"
-      ]
+      ],
+      "enableSiteMap": true,
+      "enableRSS": true,
+      "rssLimit": 10,
+      "rssRecentNotesText": "Recent notes",
+      "rssLastFewNotesText": "Last {count} notes"
     }
   }
 }
