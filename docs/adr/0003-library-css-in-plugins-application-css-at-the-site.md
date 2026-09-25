@@ -326,3 +326,30 @@ It never touches `custom.scss`.
 - **An upstream proposal to let the config name a site stylesheet.** Not needed once a plugin can do
   it.
 
+
+## Amendment: the scheme changes under a loaded page
+
+_2026-09-25, from [Does the site ship a light scheme?](https://github.com/chaoticgoodcomputing/blog/issues/41)._
+
+The site ships both colour schemes and enables the stock `@quartz-community/darkmode` toggle. v4 went
+dark-only because styling didn't reach MDX and custom components consistently, and this ADR is what
+fixed that. Dark-only would now cost more than both schemes. Core writes `lightMode` on `:root` and
+`darkMode` only under `:root[saved-theme="dark"]`
+([theme.ts:197](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/util/theme.ts#L197)),
+and dual-theme code blocks key on the same attribute
+([syntax.scss:10](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/styles/syntax.scss#L10)).
+Only the darkmode plugin sets that attribute, so going without it would take three overrides that
+exist only to undo a stock feature. With the plugin enabled, it is also the `color-scheme` source that
+the colour-values amendment requires.
+
+**The scheme is no longer fixed for the life of a page.** A visitor can toggle it on a loaded page.
+The darkmode plugin then flips `saved-theme` and dispatches `themechange` on `document`, and there is
+no navigation. CSS follows by itself. Anything that resolved a colour in script does not.
+
+- **Every `cgc-*` plugin or widget that paints a resolved colour re-resolves it and redraws on
+  `themechange`.** That covers canvas, WebGL, and any inline style written from a computed value. It
+  extends the probe rule above: resolve through a probe when the page loads, and again whenever the
+  scheme changes.
+- **A harness spec toggles the scheme on a loaded page.** The fixture's two-scheme rendering (ADR-0004)
+  loads each scheme fresh, so it can't catch a colour that goes stale on toggle. Every package that
+  paints resolved colours gets a spec that loads the page, toggles, and checks the repaint.

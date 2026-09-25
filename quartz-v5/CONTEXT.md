@@ -116,6 +116,13 @@ theme or the site defines. Every colour-valued option on a family plugin takes o
 hex-only string. A reference is the form that follows the theme; a literal asserts its own colour.
 _Avoid_: hex, colour code, colour string
 
+**Colour scheme**:
+Light or dark: the one of a site's two palettes a visitor is seeing right now. A visitor can
+switch it on a loaded page, so anything that resolves a colour must re-resolve when it changes.
+Not a theme, which supplies both palettes. Quartz's own names (`saved-theme`, `themechange`) say
+"theme" for this.
+_Avoid_: theme, mode, darkmode (for the scheme itself)
+
 **Tag colour**:
 The colour value a tag carries, inherited from its nearest ancestor that has one, and published
 as one `--cgc-tag-<tag>` custom property per tag. It is decorative: it paints marks (the badge
