@@ -59,7 +59,7 @@ test("the site's robots.txt disallows the mirror path", async ({ page }) => {
       "content/annotations/paper.md": `---\ntitle: A paper\nannotation-target: ${host.url("/paper.pdf")}\n---\nNotes.\n`,
     }, { config: String(config), keep: true })
     expect(site.code, site.output).toBe(0)
-    postbuild(site.public)
+    await postbuild(site.public)
 
     // Wherever the site put the mirror, a crawler reading the site's robots.txt stays out of it.
     const mirror = fs

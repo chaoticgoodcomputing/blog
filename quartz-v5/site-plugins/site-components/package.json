@@ -1,0 +1,51 @@
+{
+  "name": "site-components",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "This site's own layout components: the page title, with the site's icon and author, and the footer, with its copyright line. A site plugin, never published. See CONTEXT.md.",
+  "exports": {
+    ".": "./dist/index.js",
+    "./components": "./dist/components/index.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "../node_modules/.bin/tsc -p ."
+  },
+  "//peerDependencies": "The host Quartz's own copies, never bundled or installed here: the components' vnodes must be the host's Preact's. The types are imported for types only.",
+  "peerDependencies": {
+    "@quartz-community/types": "*",
+    "preact": "^10.29.0"
+  },
+  "//devDependencies": "Build-time only: esbuild bundles dist/.",
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  },
+  "quartz": {
+    "name": "site-components",
+    "displayName": "Site components",
+    "description": "This site's page title and footer.",
+    "category": "component",
+    "version": "0.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 50,
+    "defaultEnabled": true,
+    "defaultOptions": {},
+    "//components": "The loader places one component per config entry, found by the entry's name in PascalCase, so the site config lists this plugin once per component, named `site-page-title` and `site-footer` (CONTEXT.md, Placement).",
+    "components": {
+      "SitePageTitle": {
+        "displayName": "Page title",
+        "defaultPosition": "left",
+        "defaultPriority": 10
+      },
+      "SiteFooter": {
+        "displayName": "Footer",
+        "defaultPosition": "footer",
+        "defaultPriority": 50
+      }
+    }
+  }
+}

@@ -44,6 +44,9 @@ _Avoid_: component title, widget header
   breakpoints, the page width, the sidebars' spacing, the measure, centred images, and the skin v4
   forked into stock components' stylesheets (FORK-LEDGER rows for `styles/*` and
   `components/styles/*`).
+- **The site's own components are styled here.** site-components' page title and footer (#70)
+  ship no CSS of their own. Their v4 rules are in the components tier, on v4's class names
+  (`.page-title…`, `.site-footer`).
 - **The grid is the default frame's.** The objects tier's grid selects
   `.page[data-frame="default"]`, so core's full-width and minimal frames, and any frame a plugin
   registers, keep their own layout. v4's `full-width` layout variant is a frame now (FORK-LEDGER

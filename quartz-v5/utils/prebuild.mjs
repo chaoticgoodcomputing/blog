@@ -36,9 +36,17 @@ function link(at, target) {
 link(path.join(vendored, "quartz.config.yaml"), path.relative(vendored, tracked))
 
 const { plugins } = YAML.parse(fs.readFileSync(tracked, "utf8"))
-const local = plugins
-  .filter(({ source, enabled }) => enabled !== false && typeof source === "string" && source.startsWith("."))
-  .map(({ source }) => path.resolve(vendored, source))
+// A source is a path, or an object whose `repo` is one: the site lists a local plugin that places
+// more than one component once per component, each entry named for it (site-components). Each
+// plugin is built once however often it is listed.
+const pathOf = (source) => (typeof source === "string" ? source : source?.repo)
+const local = [
+  ...new Set(
+    plugins
+      .filter(({ source, enabled }) => enabled !== false && String(pathOf(source)).startsWith("."))
+      .map(({ source }) => path.resolve(vendored, pathOf(source))),
+  ),
+]
 
 for (const dir of new Set(local.map((plugin) => path.dirname(plugin)))) {
   link(path.join(dir, "node_modules"), path.relative(dir, path.join(vendored, "node_modules")))

@@ -360,8 +360,19 @@ plugins:
     layout:
       position: beforeBody
       priority: 30
+  # Replaced by site-components' page title, below (#44, #70).
   - source: "@quartz-community/page-title"
+    enabled: false
+  # v4's page title: the site's icon, the title and "by <author>" (#44, #70). The loader places one
+  # component per entry, found by the entry's name in PascalCase, so site-components is listed once
+  # per component, each entry named for it (site-plugins/site-components/CONTEXT.md, "Placement").
+  - source:
+      repo: ../site-plugins/site-components
+      name: site-page-title
     enabled: true
+    options:
+      # Fixed for the site, and the one cgc-seo credits: one anchor, set once (#44).
+      author: *author
     layout:
       position: left
       priority: 10
@@ -418,7 +429,14 @@ plugins:
       position: afterBody
       priority: 30
       condition: not-index
+  # Replaced by site-components' footer, below: stock's takes links only (#44, #70).
   - source: "@quartz-community/footer"
+    enabled: false
+  # v4's footer: its links, the copyright line, then the Quartz credit (#44, #70). site-components'
+  # second entry, named for its component (see the page title's entry).
+  - source:
+      repo: ../site-plugins/site-components
+      name: site-footer
     enabled: true
     options:
       # v4's footer links.
@@ -428,6 +446,9 @@ plugins:
         LinkedIn: https://www.linkedin.com/in/spelkington
         Privacy Policy: https://chaoticgood.computer/privacy
         AI Policy: https://chaoticgood.computer/ai-policy
+      copyright:
+        Spencer Elkington: https://chaoticgood.computer/contact
+        Chaotic Good Computing: https://github.com/chaoticgoodcomputing
     layout:
       position: footer
       priority: 50

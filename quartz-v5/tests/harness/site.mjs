@@ -67,6 +67,10 @@ export function siteConfig({ at = "fixture", offline = false } = {}) {
     const source = entry.get("source")
     if (typeof source === "string" && source.startsWith(".")) {
       entry.set("source", rebase(source))
+    } else if (YAML.isMap(source) && String(source.get("repo")).startsWith(".")) {
+      // An object source, `{ repo, name }`: how the site lists one local plugin more than once
+      // (site-components, one entry per component).
+      source.set("repo", rebase(source.get("repo")))
     }
     for (const option of YAML.isMap(entry.get("options")) ? entry.get("options").items : []) {
       if (YAML.isScalar(option.value) && /^\.\.?\//.test(option.value.value)) option.value.value = rebase(option.value.value)

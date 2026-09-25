@@ -69,7 +69,7 @@
       }
     },
     "build": {
-      "//": "Build the real site: content/public, with the tracked config, into quartz-v5/quartz/public, then copy in the site's own root-level files (utils/postbuild.mjs). Extra flags go to `quartz build`, e.g. --concurrency=4.",
+      "//": "Build the real site: content/public, with the tracked config, into quartz-v5/quartz/public, then finish it with utils/postbuild.mjs: the site's own root-level files (robots.txt) and the site's icon over stock's (static/icon.png, favicon.ico). Extra flags go to `quartz build`, e.g. --concurrency=4.",
       "executor": "nx:run-commands",
       "options": {
         "commands": [

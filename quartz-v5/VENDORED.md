@@ -22,6 +22,7 @@ quartz-v5/
 ├── upstream.json         the pinned upstream ref — machine-readable source of truth
 ├── quartz.config.yaml    our Quartz 5 configuration — tracked here, symlinked into quartz/
 ├── robots.txt            the site's own robots.txt — copied into the build by postbuild.mjs
+├── icon.png              the site's own icon — put over stock's in the build by postbuild.mjs
 ├── plugins/              our Quartz plugins (`cgc-*`)
 ├── site-plugins/         this site's own plugins, which fail the shareability test on purpose
 ├── libs/                 our non-plugin packages (`@chaoticgoodcomputing/*`)
@@ -56,9 +57,12 @@ file at that path. Never leave an empty `quartz.config.yaml` there:
 prefers it over `quartz.config.default.yaml`, so an empty one silently disables every default
 plugin.
 
-`site-v5:build` builds the real vault, `content/public`, into `quartz/public`, then copies the site's
-own root-level files (`robots.txt`) in with `utils/postbuild.mjs`, since v5's Static emitter writes
-only under `/static/`. Extra flags go to `quartz build`, e.g.
+`site-v5:build` builds the real vault, `content/public`, into `quartz/public`, then finishes it with
+`utils/postbuild.mjs`: it copies in the site's own root-level files (`robots.txt`), since v5's Static
+emitter writes only under `/static/`, and puts the site's icon over stock's, `static/icon.png` and
+`favicon.ico` (#44, #70). Quartz reads the icon from `quartz/static/icon.png` in this copy, so there
+is no other way to swap it without drift, and a site emitter would race the Static emitter's copy.
+Extra flags go to `quartz build`, e.g.
 `pnpm nx run site-v5:build --concurrency=4`. The e2e suite proves the config itself on a scratch
 site built from it (`tests/specs/site-config.spec.mjs`, through the harness's `siteConfig()`).
 

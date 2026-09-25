@@ -1,0 +1,29 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "name": "site-components",
+  "root": "quartz-v5/site-plugins/site-components",
+  "sourceRoot": "quartz-v5/site-plugins/site-components/src",
+  "projectType": "library",
+  "tags": ["site"],
+  "targets": {
+    "install": {
+      "//": "Isolated npm install of the build-time dependency (esbuild). Peers are omitted on purpose: they resolve to the host Quartz's copies through quartz-v5/site-plugins/node_modules (see VENDORED.md).",
+      "executor": "nx:run-commands",
+      "options": { "command": "npm ci --omit=peer --no-audit --no-fund", "cwd": "{projectRoot}" }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": { "command": "npm run build", "cwd": "{projectRoot}" },
+      "outputs": ["{projectRoot}/dist"]
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": { "command": "npm run typecheck", "cwd": "{projectRoot}" }
+    },
+    "e2e": {
+      "//": "This package's specs only, through the shared suite.",
+      "executor": "nx:run-commands",
+      "options": { "command": "npx playwright test ../site-plugins/site-components", "cwd": "{workspaceRoot}/quartz-v5/tests" }
+    }
+  }
+}
