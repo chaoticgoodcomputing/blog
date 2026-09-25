@@ -37,7 +37,8 @@ test("lists .mdx pages and private pages like any other", async ({ emitted }) =>
   )
   expect(index["mdx-article"].tags).toEqual(["fixture", "mdx"])
   expect(index["seo/private-note"].tags).toEqual(["private"])
-  expect(index["seo/private-descendant"].tags).toEqual(["private/work"])
+  // Its second tag, `backstage`, is one only a private page carries (cgc-seo's sitemap, #67).
+  expect(index["seo/private-descendant"].tags).toEqual(["private/work", "backstage"])
 })
 
 test("lists authored pages only, not the listings Quartz generates", async ({ emitted }) => {
