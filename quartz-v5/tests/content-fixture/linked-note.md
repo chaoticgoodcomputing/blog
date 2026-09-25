@@ -1,0 +1,1 @@
+../../plugins/cgc-page-source/e2e/linked-note.md

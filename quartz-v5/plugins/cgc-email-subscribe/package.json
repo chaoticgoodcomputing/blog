@@ -1,0 +1,54 @@
+{
+  "name": "cgc-email-subscribe",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Quartz 5 component: a Buttondown newsletter subscribe box. See README.md and CONTEXT.md.",
+  "exports": {
+    ".": "./dist/index.js",
+    "./components": "./dist/components/index.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "../node_modules/.bin/tsc -p ."
+  },
+  "//peerDependencies": "The host Quartz's own copies, never bundled or installed here: the component's vnodes must be the host's Preact's. The types are imported for types only.",
+  "peerDependencies": {
+    "@quartz-community/types": "*",
+    "preact": "^10.29.0"
+  },
+  "//devDependencies": "Build-time only: esbuild bundles dist/, and PostCSS checks the stylesheet against ADR-0003 before it ships (build.mjs).",
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "postcss": "^8.5.28",
+    "postcss-selector-parser": "^7.1.6"
+  },
+  "quartz": {
+    "name": "cgc-email-subscribe",
+    "displayName": "Email subscribe",
+    "description": "A newsletter subscribe box that posts to Buttondown.",
+    "category": [
+      "transformer",
+      "component"
+    ],
+    "version": "0.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 70,
+    "defaultEnabled": true,
+    "defaultOptions": {
+      "buttondownUsername": "",
+      "title": "Newsletter",
+      "description": "Weekly updates about any new notes!"
+    },
+    "components": {
+      "EmailSubscribe": {
+        "displayName": "Email subscribe",
+        "defaultPosition": "afterBody",
+        "defaultPriority": 20
+      }
+    }
+  }
+}

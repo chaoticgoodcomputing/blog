@@ -1,0 +1,35 @@
+/*
+ * cgc-page-source: the link to a page's source file. v4's showPageSource.scss, as library CSS
+ * (ADR-0003): one BEM block, every rule in this package's family layer, skin from the theme's
+ * colour properties. build.mjs refuses anything else.
+ */
+@layer cgc.page-source {
+  .cgc-page-source {
+    display: block;
+    margin: 1rem 0;
+  }
+
+  .cgc-page-source__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 5px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    color: var(--darkgray);
+    background: var(--light);
+  }
+
+  .cgc-page-source__link:hover {
+    background: var(--lightgray);
+    border-color: var(--secondary);
+    color: var(--dark);
+  }
+
+  .cgc-page-source__icon {
+    flex-shrink: 0;
+  }
+}

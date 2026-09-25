@@ -12,6 +12,8 @@ const CONTENT = {
   "content/notes/a-note.md": "---\ntitle: A note\ntags: [topic]\n---\nA note in a folder with no index.\n",
   // v4 kept capitals in URLs; v5 lowercases them (#23). 89 vault pages are like this.
   "Mixed Case.md": "---\ntitle: Mixed case\n---\nA page whose file name has capitals and a space.\n",
+  // A tag's description file, in the shape the vault's files take at cutover (#43).
+  "tags/topic.md": "---\ntitle: Topic\n---\nWhat the topic tag is about.\n",
 }
 
 // The site is served at its own `baseUrl`, where Quartz points its absolute URLs.
@@ -51,12 +53,38 @@ test("lays pages out with v4's components, as far as stock plugins go", async ({
   await expect(page.locator(".content-meta")).toHaveCount(0)
 })
 
+// v4's EmailSubscribe and ShowPageSource (#42, #44), from cgc-email-subscribe and cgc-page-source.
+test("closes a note with v4's subscribe box and a link to its source", async ({ page }) => {
+  await routeSite(page, site.public, ORIGIN)
+  await page.goto(`${ORIGIN}/content/notes/a-note`)
+  const footer = page.locator(".page-footer")
+  const box = footer.locator(".cgc-email-subscribe")
+  await expect(box.locator(".cgc-email-subscribe__title")).toHaveText("Subscribe for more!")
+  await expect(box.locator(".cgc-email-subscribe__description")).toHaveText("Be notified weekly about any fresh notes or articles!")
+  await expect(box.locator("form")).toHaveAttribute("action", "https://buttondown.com/api/emails/embed-subscribe/chaoticgoodcomputing")
+  const source = "https://github.com/chaoticgoodcomputing/blog/blob/main/content/public"
+  await expect(footer.locator(".cgc-page-source__link")).toHaveAttribute("href", `${source}/content/notes/a-note.md`)
+  // In v4's order: the box, then the link.
+  await expect(footer.locator(".cgc-email-subscribe + .cgc-page-source")).toHaveCount(1)
+  await page.goto(`${ORIGIN}/mixed-case`)
+  await expect(page.locator(".cgc-page-source__link")).toHaveAttribute("href", `${source}/Mixed%20Case.md`)
+  // The index and tag pages keep the box but have no source link, as in v4.
+  for (const url of ["/", "/tags/topic"]) {
+    await page.goto(`${ORIGIN}${url}`)
+    await expect(page.locator(".cgc-email-subscribe"), url).toHaveCount(1)
+    await expect(page.locator(".cgc-page-source"), url).toHaveCount(0)
+  }
+  await expect(page.locator("article")).toContainText("What the topic tag is about")
+})
+
 test("keeps the left navigation on the 404 page, as v4 did", async ({ page }) => {
   await routeSite(page, site.public, ORIGIN)
   const response = await page.goto(`${ORIGIN}/no-such-page`)
   expect(response.status()).toBe(404)
   await expect(page.locator(".left.sidebar .page-title")).toBeVisible()
   await expect(page.locator(".left.sidebar .darkmode")).toBeVisible()
+  // v4's 404 had no subscribe box or source link.
+  await expect(page.locator(".cgc-email-subscribe, .cgc-page-source")).toHaveCount(0)
 })
 
 test("follows the OS colour scheme on first load, and renders in it", async ({ page, colorScheme }) => {

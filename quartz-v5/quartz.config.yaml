@@ -289,6 +289,29 @@ plugins:
     layout:
       position: afterBody
       priority: 10
+  # v4's subscribe box under a note (#42, #44), with v4's note-page wording. v4 also had it in the
+  # right sidebar of the index and tag pages, as "Newsletter": a plugin takes one layout slot, so
+  # those pages have it here, after the body, too.
+  - source: ../plugins/cgc-email-subscribe
+    enabled: true
+    options:
+      buttondownUsername: chaoticgoodcomputing
+      title: Subscribe for more!
+      description: Be notified weekly about any fresh notes or articles!
+    layout:
+      position: afterBody
+      priority: 20
+  # v4's "View source on GitHub", under the subscribe box on notes; not on the index (#42, #44). v4
+  # linked the repo's old name, which no longer resolves.
+  - source: ../plugins/cgc-page-source
+    enabled: true
+    options:
+      repoUrl: https://github.com/chaoticgoodcomputing/blog/blob/main
+      contentPath: content/public
+    layout:
+      position: afterBody
+      priority: 30
+      condition: not-index
   - source: "@quartz-community/footer"
     enabled: true
     options:
@@ -363,10 +386,16 @@ layout:
     # nothing on the right. Stock gives it the bare `minimal` frame.
     "404":
       template: default
+      # Nor a subscribe box, which v4's 404 did not have.
+      exclude:
+        - cgc-email-subscribe
       positions:
         beforeBody: []
         right: []
     content: {}
-    tag: {}
+    # v4's tag pages had no source link. A tag page drawn from a description file would get one.
+    tag:
+      exclude:
+        - cgc-page-source
     canvas: {}
     bases: {}

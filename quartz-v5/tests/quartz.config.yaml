@@ -221,6 +221,22 @@ plugins:
     layout:
       position: afterBody
       priority: 10
+  - source: ../../plugins/cgc-email-subscribe
+    enabled: true
+    options:
+      buttondownUsername: cgc-fixture
+    layout:
+      position: afterBody
+      priority: 20
+  # Points at the fixture's own files in this repo, so a spec can check the link reaches a real file.
+  - source: ../../plugins/cgc-page-source
+    enabled: true
+    options:
+      repoUrl: https://github.com/chaoticgoodcomputing/blog/blob/main
+      contentPath: quartz-v5/tests/content-fixture
+    layout:
+      position: afterBody
+      priority: 30
   - source: "@quartz-community/footer"
     enabled: true
     options:
