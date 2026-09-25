@@ -219,7 +219,10 @@ plugins:
       cacheDir: .cache/cgc-annotator
   - source: "@quartz-community/folder-page"
     enabled: true
+  # cgc-tag-page replaces stock tag-page, which it wraps (#72). The baseline turns stock back on.
   - source: "@quartz-community/tag-page"
+    enabled: false
+  - source: ../../plugins/cgc-tag-page
     enabled: true
   - source: "@quartz-community/explorer"
     enabled: true

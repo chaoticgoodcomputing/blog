@@ -18,6 +18,8 @@ _Avoid_: test site, fixture build
 
 **Baseline**:
 The same fixture site with every one of our plugins disabled. What the no-bleed check compares against.
+Where one of ours replaces a stock plugin whose pages the baseline would otherwise lose, the stock
+one is on in its place (`STANDS_IN_FOR` in `harness/site.mjs`): stock tag-page, for `cgc-tag-page`.
 _Avoid_: control, vanilla site, stock site
 
 **Fixture root**:

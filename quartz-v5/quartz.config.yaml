@@ -308,8 +308,17 @@ plugins:
   # files (`tags/<t>/index.md`) would render as folder pages.
   - source: "@quartz-community/folder-page"
     enabled: false
+  # Replaced by cgc-tag-page, which wraps it (#72).
   - source: "@quartz-community/tag-page"
+    enabled: false
+  # Stock's tag pages, with the tag's description article as their only body (#20, #43, #72). Stock
+  # uses a tag's description file only at `tags/<t>.md`. The vault's are still at `tags/<t>/index.md`
+  # until cutover renames them (#43), so each described tag has a second page there until then.
+  - source: ../plugins/cgc-tag-page
     enabled: true
+    options:
+      # v4 titled a tag with no description file "Tag: <tag>".
+      prefixTags: true
   # A file explorer is in no v4 layout (#42). The tag explorer, with its own drawer, is
   # cgc-tag-explorer, under the page title and toolbar (#76).
   - source: "@quartz-community/explorer"

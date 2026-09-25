@@ -121,6 +121,11 @@ const LINKED = ["package.json", "quartz", "node_modules", "tsconfig.json", "quar
 // Ours: a package under `quartz-v5/plugins/`, or a fixture plugin standing in for one.
 const isOurs = (source) =>
   typeof source === "string" && (source.startsWith("../../plugins/") || source.startsWith("../fixture-plugins/"))
+// A stock plugin one of ours replaces, which the baseline turns back on in its place, where the
+// baseline would otherwise lose pages: without stock tag-page it has no tag pages, and no-bleed
+// would compare ours with the 404 page. So the pages ours makes are compared with the stock pages
+// they stand in for, as an .mdx page is with its .md twin.
+const STANDS_IN_FOR = { "../../plugins/cgc-tag-page": "@quartz-community/tag-page" }
 
 // Fixture pins: what a fixture build would otherwise fetch from the network, pinned by hand. The
 // directory mirrors a fixture root's `.cache/` (cgc-annotator's source documents, by mirror name,
@@ -137,8 +142,15 @@ function writeFixtureRoot(variant) {
   if (fs.existsSync(fixtureCache)) fs.cpSync(fixtureCache, path.join(root, ".cache"), { recursive: true })
   const config = YAML.parseDocument(fixtureConfig())
   if (variant === "baseline") {
+    const standIns = new Set()
     for (const entry of config.get("plugins").items) {
-      if (isOurs(entry.get("source"))) entry.set("enabled", false)
+      const source = entry.get("source")
+      if (!isOurs(source)) continue
+      if (entry.get("enabled") && STANDS_IN_FOR[source]) standIns.add(STANDS_IN_FOR[source])
+      entry.set("enabled", false)
+    }
+    for (const entry of config.get("plugins").items) {
+      if (standIns.has(entry.get("source"))) entry.set("enabled", true)
     }
   }
   fs.writeFileSync(path.join(root, "quartz.config.yaml"), String(config))

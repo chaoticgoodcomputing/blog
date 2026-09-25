@@ -17,7 +17,7 @@ const CONTENT = {
   // v4 kept capitals in URLs; v5 lowercases them (#23). 89 vault pages are like this.
   "Mixed Case.md": "---\ntitle: Mixed case\n---\nA page whose file name has capitals and a space.\n",
   // A tag's description file, in the shape the vault's files take at cutover (#43).
-  "tags/topic.md": "---\ntitle: Topic\n---\nWhat the topic tag is about.\n",
+  "tags/topic.md": "---\ntitle: Topic\n---\nWhat the topic tag is about, as [[content/notes/a-note|a note on it]] shows.\n",
 }
 
 // The site is served at its own `baseUrl`, where Quartz points its absolute URLs.
@@ -176,11 +176,10 @@ test("sends v4's analytics to PostHog, labelling navigations as v4 did", async (
   expect(posthog.inits[0].token).toBe("phc_BviHJVml66FIB1RFmgeAzZpKRWA0nntGdIOo47hTA3X")
   expect(posthog.inits[0].config).toMatchObject({ api_host: "https://app.posthog.com", ip: false, disable_session_recording: true })
   expect(posthog.requests).toEqual(["https://app.posthog.com/static/array.js"])
-  // A tag badge, then a page in the tag's listing.
+  // A tag badge, then a link in the tag's description (cgc-tag-page, #72).
   await page.locator(".page-header").getByRole("link", { name: "topic" }).click()
   await expect(page).toHaveURL(`${ORIGIN}/tags/topic`)
-  // Stock tag-page's own listing: cgc-post-listing's links to the same page are its spec's (#73).
-  await page.locator(".center .page-listing").getByRole("link", { name: "A note", exact: true }).click()
+  await page.locator(".cgc-tag-page").getByRole("link", { name: "a note on it" }).click()
   await expect(page).toHaveURL(`${ORIGIN}/content/notes/a-note`)
   const navigations = () => posthog.captures.filter(({ event }) => event === "navigation").map(({ properties }) => properties)
   await expect.poll(navigations).toEqual([
