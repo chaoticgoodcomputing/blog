@@ -104,6 +104,11 @@ const LINKED = ["package.json", "quartz", "node_modules", "tsconfig.json", "quar
 const isOurs = (source) =>
   typeof source === "string" && (source.startsWith("../../plugins/") || source.startsWith("../fixture-plugins/"))
 
+// Fixture pins: what a fixture build would otherwise fetch from the network, pinned by hand. The
+// directory mirrors a fixture root's `.cache/` (cgc-annotator's source documents, by mirror name,
+// under `cgc-annotator/`) and is copied in before every build, so the fixture needs no network.
+const fixtureCache = path.join(testsRoot, "fixture-cache")
+
 function writeFixtureRoot(variant) {
   const root = fixtureRoot(variant)
   fs.mkdirSync(root, { recursive: true })
@@ -111,6 +116,7 @@ function writeFixtureRoot(variant) {
     const link = path.join(root, entry)
     if (!fs.existsSync(link)) fs.symlinkSync(path.join(vendored, entry), link)
   }
+  if (fs.existsSync(fixtureCache)) fs.cpSync(fixtureCache, path.join(root, ".cache"), { recursive: true })
   const config = YAML.parseDocument(fixtureConfig())
   if (variant === "baseline") {
     for (const entry of config.get("plugins").items) {

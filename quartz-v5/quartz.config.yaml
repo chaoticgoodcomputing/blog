@@ -291,8 +291,12 @@ plugins:
     enabled: true
   - source: "@quartz-community/content-page"
     enabled: true
-  # Mirrors every annotation page's source document into the site, pinned in the default cache,
-  # `node_modules/.cache/cgc-annotator/` (#37). The site's `robots.txt` keeps them out of search.
+  # Annotation pages (#37): a note with an `annotation-target` gets the full-width frame, and the
+  # Viewer beside its annotations (#68). Each annotation page's source document is mirrored into the
+  # site, pinned in the default cache, `node_modules/.cache/cgc-annotator/` (#59). The site's
+  # `robots.txt` keeps the mirrors out of search. Notes are rendered with the default denylist: #37
+  # swapped v4's hand-picked list, which left out maths, for the site's whole pipeline. Its default
+  # order, 75, puts it after crawl-links and description, whose `links` and `text` it adds to.
   - source: ../plugins/cgc-annotator
     enabled: true
     options:
@@ -520,6 +524,11 @@ layout:
         beforeBody: []
         right: []
     content: {}
+    # v4's annotation pages had no source link, which would show Annotator's JSON (#68). Their
+    # full-width frame has no sidebars, so the graph and backlinks (right) are not on them.
+    annotation:
+      exclude:
+        - cgc-page-source
     # v4's tag pages had no source link. A tag page drawn from a description file would get one.
     tag:
       exclude:

@@ -1,0 +1,75 @@
+/* PDF.js's text layer: transparent text laid over each drawn page, so that its text can be selected
+   and found, and passages highlighted. Copied from pdfjs-dist 5.4.530's web/pdf_viewer.css (the
+   `.textLayer` block, from PDF.js's web/text_layer_builder.css), which must match the TextLayer
+   that writes the markup: pdfjs-dist is pinned exactly.
+
+   build.mjs prefixes it into the Viewer's block (ADR-0003): `.textLayer` becomes
+   `.cgc-annotator-viewer__text-layer`, the custom properties PDF.js's script writes on the elements
+   (`--min-font-size`, `--font-height`, `--scale-x`, `--rotate`) are read with their declared value
+   as the fallback instead of declared, and the others become `--cgc-annotator-viewer-…`.
+
+   Changed from PDF.js's, by hand:
+   - Kept only the rules for the markup TextLayer writes. Left out: `.highlighting`, `.highlight`
+     and its variants (the find bar's), `.endOfContent` and `.selecting` (the full viewer's).
+   - Left out `caret-color: CanvasText`, a colour, and replaced the selection colours with the
+     theme's text highlight, keeping the selected text transparent over the drawing. */
+
+.textLayer{
+  position:absolute;
+  text-align:initial;
+  inset:0;
+  overflow:clip;
+  opacity:1;
+  line-height:1;
+  -webkit-text-size-adjust:none;
+     -moz-text-size-adjust:none;
+          text-size-adjust:none;
+  forced-color-adjust:none;
+  transform-origin:0 0;
+  z-index:0;
+}
+
+.textLayer :is(span,br){
+    color:transparent;
+    position:absolute;
+    white-space:pre;
+    cursor:text;
+    transform-origin:0% 0%;
+  }
+
+.textLayer{
+  --min-font-size:1;
+  --text-scale-factor:calc(var(--total-scale-factor) * var(--min-font-size));
+  --min-font-size-inv:calc(1 / var(--min-font-size));
+}
+
+.textLayer  > :not(.markedContent),.textLayer .markedContent span:not(.markedContent){
+    z-index:1;
+
+    --font-height:0;
+    font-size:calc(var(--text-scale-factor) * var(--font-height));
+
+    --scale-x:1;
+    --rotate:0deg;
+    transform:rotate(var(--rotate)) scaleX(var(--scale-x)) scale(var(--min-font-size-inv));
+  }
+
+.textLayer .markedContent{
+    display:contents;
+  }
+
+.textLayer span[role="img"]{
+    -webkit-user-select:none;
+       -moz-user-select:none;
+            user-select:none;
+    cursor:default;
+  }
+
+.textLayer ::selection{
+    background:var(--textHighlight);
+    color:transparent;
+  }
+
+.textLayer br::selection{
+    background:transparent;
+  }

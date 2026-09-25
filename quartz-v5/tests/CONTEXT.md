@@ -70,6 +70,13 @@ the host of an annotation page's source document (`harness/source-host.mjs`). It
 OS picks, so a build never reaches the network.
 _Avoid_: mock server, fake remote, test server
 
+**Fixture cache**:
+What a fixture build would otherwise fetch from the network, pinned by hand in `fixture-cache/` and
+copied into each fixture root's `.cache/` before it builds: the source document of the fixture's
+annotation page, by mirror name under `cgc-annotator/`. So that page's Viewer has a document to show
+though its `annotation-target` never resolves.
+_Avoid_: fixture downloads, test cache
+
 **Analytics stand-in**:
 What answers a page's requests to PostHog in the suite (`harness/analytics.mjs`). Every context the
 harness hands a spec answers PostHog's hosts with nothing, so no spec sends real analytics; a spec

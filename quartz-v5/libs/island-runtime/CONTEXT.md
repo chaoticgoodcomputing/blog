@@ -2,7 +2,7 @@
 
 A library for shipping Preact islands from a Quartz 5 plugin. A component renders to HTML at build
 time and hydrates in the browser, and it survives Quartz's SPA navigation. `cgc-mdx` uses it for
-widgets, and `cgc-annotator` will use it for its Viewer. It ships as TypeScript source, and a
+widgets, and `cgc-annotator` for its Viewer. It ships as TypeScript source, and a
 consuming plugin's build inlines it (ADR-0005). Inherits the family vocabulary in
 [`quartz-v5/CONTEXT.md`](../../CONTEXT.md). The lifecycle was decided in `cgc-mdx`'s
 [ADR-0002](../../plugins/cgc-mdx/docs/adr/0002-widgets-are-islands.md), before this library was

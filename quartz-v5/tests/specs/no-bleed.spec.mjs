@@ -5,7 +5,7 @@
 // must compute identically. An element is owned if it, or an ancestor, carries a `cgc-` class.
 import { test, expect } from "../harness/test.mjs"
 
-const PAGES = ["/", "/plain-note", "/md-twin", "/mdx-article", "/lab/cascade", "/lab/pdf", "/links/from-md", "/links/from-mdx", "/nested/deep-note", "/tags/fixture", "/tags/writing", "/tag-engine/most-specific", "/tag-engine/primary-override", "/seo/private-note", "/seo/private-descendant", "/seo/authored", "/og/tag-nested", "/linked-note", "/posthog/navigation"]
+const PAGES = ["/", "/plain-note", "/md-twin", "/mdx-article", "/lab/cascade", "/lab/pdf", "/links/from-md", "/links/from-mdx", "/nested/deep-note", "/tags/fixture", "/tags/writing", "/tag-engine/most-specific", "/tag-engine/primary-override", "/seo/private-note", "/seo/private-descendant", "/seo/authored", "/og/tag-nested", "/linked-note", "/posthog/navigation", "/annotations/fixture-paper", "/annotations/withdrawn"]
 // A page one of our plugins creates has no baseline of its own, so it is compared against the
 // stock page it stands in for: the .mdx article against its byte-identical .md twin. The explorer
 // marks the current page `.active`, which is then a different link on each side, so it is skipped.
@@ -25,6 +25,12 @@ const snapshot = ([props, skip]) => {
       const label = node.tagName === "LI" ? node.querySelector("a, button, span")?.textContent.trim() : undefined
       if (label !== undefined) {
         parts.unshift(`li{${label}}`)
+        continue
+      }
+      // A frame's slots (sidebars, center) are keyed by name, so a page a plugin puts in another
+      // frame (cgc-annotator's, full-width) lines up with its baseline wherever the frames agree.
+      if (node.parentElement.id === "quartz-body" && node.classList.length) {
+        parts.unshift(`${node.tagName.toLowerCase()}.${node.classList[0]}`)
         continue
       }
       const index = [...node.parentElement.children].filter((c) => !owned(c) && c.tagName === node.tagName).indexOf(node)

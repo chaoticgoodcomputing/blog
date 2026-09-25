@@ -1,0 +1,234 @@
+/* cgc-annotator: library CSS (ADR-0003). Two BEM blocks: `cgc-annotator`, an annotation page's
+   body, and `cgc-annotator-viewer`, the Viewer inside it. Every selector starts at an element this
+   plugin renders, and build.mjs fails the build on one that doesn't. Skin is Quartz's documented
+   colour properties, and nothing is coloured in script, so it follows the scheme by itself.
+   build.mjs puts it all in `@layer cgc.annotator`. */
+
+/* An annotation page's body: where the source document comes from, then the Viewer beside the
+   annotations. */
+.cgc-annotator {
+  /* The document's share of the width, out of 100, which the divider changes. */
+  --cgc-annotator-viewer-share: 65;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cgc-annotator__source {
+  margin: 0;
+  color: var(--darkgray);
+  font-size: 0.9rem;
+}
+
+.cgc-annotator__source-link {
+  color: var(--secondary);
+  font-weight: 500;
+}
+
+.cgc-annotator__split {
+  display: flex;
+  height: calc(100vh - 4rem);
+  min-height: 24rem;
+}
+
+.cgc-annotator__viewer {
+  flex: var(--cgc-annotator-viewer-share) 1 0;
+  min-width: 0;
+}
+
+.cgc-annotator__annotations {
+  flex: calc(100 - var(--cgc-annotator-viewer-share)) 1 0;
+  min-width: 16rem;
+  overflow-y: auto;
+  padding: 1rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 0.5rem;
+  background: var(--light);
+}
+
+.cgc-annotator__heading {
+  margin: 0 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--lightgray);
+  color: var(--darkgray);
+  font-size: 1.25rem;
+}
+
+.cgc-annotator__annotation {
+  margin: 0 0 1rem;
+  padding: 1rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.cgc-annotator__annotation--active {
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 1px var(--secondary);
+}
+
+/* The passage, as the annotation quotes it. */
+.cgc-annotator__quote {
+  margin: 0;
+  padding: 0.125rem 0 0.125rem 0.75rem;
+  border-left: 3px solid var(--tertiary);
+  color: var(--darkgray);
+  font-style: italic;
+}
+
+.cgc-annotator__comment {
+  margin-top: 0.75rem;
+  color: var(--dark);
+  line-height: 1.6;
+}
+
+.cgc-annotator__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+}
+
+.cgc-annotator__tag {
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  background: var(--lightgray);
+  color: var(--secondary);
+  font-size: 0.85rem;
+}
+
+.cgc-annotator__date {
+  display: block;
+  margin-top: 0.75rem;
+  color: var(--gray);
+  font-size: 0.85rem;
+}
+
+/* With no document to show, the Viewer's notice goes above the annotations, which take the width. */
+.cgc-annotator__split:has(.cgc-annotator-viewer__notice) {
+  display: block;
+  height: auto;
+  min-height: 0;
+}
+
+.cgc-annotator__split:has(.cgc-annotator-viewer__notice) .cgc-annotator__annotations {
+  margin-top: 0.75rem;
+}
+
+/* The Viewer: the document, scrolling on its own, and the divider on its right. */
+.cgc-annotator-viewer {
+  display: flex;
+  overflow: hidden;
+  border: 1px solid var(--lightgray);
+  border-radius: 0.5rem;
+  background: var(--light);
+}
+
+.cgc-annotator-viewer__document {
+  flex: 1;
+  min-width: 0;
+  padding: 1rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* Reserved from the start, so the scrollbar the pages bring doesn't narrow them into a redraw. */
+  scrollbar-gutter: stable;
+}
+
+.cgc-annotator-viewer__status,
+.cgc-annotator-viewer__notice {
+  margin: 0;
+  padding: 2rem;
+  color: var(--gray);
+  text-align: center;
+}
+
+.cgc-annotator-viewer__notice {
+  padding: 1rem;
+  color: var(--darkgray);
+}
+
+.cgc-annotator-viewer__source {
+  color: var(--secondary);
+  overflow-wrap: anywhere;
+}
+
+.cgc-annotator-viewer__pages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* One drawn page, sized in pixels by the script to fit the document's width. */
+.cgc-annotator-viewer__page {
+  position: relative;
+  flex-shrink: 0;
+  outline: 1px solid var(--lightgray);
+}
+
+.cgc-annotator-viewer__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Over the text layer: each box covers one line of a passage. */
+.cgc-annotator-viewer__highlights {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.cgc-annotator-viewer__highlight {
+  position: absolute;
+  border-radius: 2px;
+  background: var(--textHighlight);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.cgc-annotator-viewer__highlight--active {
+  outline: 2px solid var(--secondary);
+}
+
+.cgc-annotator-viewer__handle {
+  flex: 0 0 6px;
+  background: var(--lightgray);
+  cursor: col-resize;
+  touch-action: none;
+  transition: background-color 0.2s ease;
+}
+
+.cgc-annotator-viewer__handle:hover,
+.cgc-annotator-viewer__handle--dragging {
+  background: var(--secondary);
+}
+
+/* A narrow screen gets the annotations alone, as in v4: the Viewer is hidden, so it never hydrates
+   and PDF.js is never fetched. v4's mobile breakpoint. */
+@media (max-width: 1000px) {
+  .cgc-annotator__split {
+    display: block;
+    height: auto;
+    min-height: 0;
+  }
+
+  .cgc-annotator__viewer {
+    display: none;
+  }
+
+  .cgc-annotator__annotations {
+    padding: 0;
+    overflow: visible;
+    border: none;
+  }
+
+  /* With no Viewer to scroll, choosing one does nothing. */
+  .cgc-annotator__annotation {
+    cursor: auto;
+  }
+}
