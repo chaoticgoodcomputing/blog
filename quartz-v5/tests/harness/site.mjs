@@ -75,18 +75,51 @@ function linkHostModules() {
   if (!fs.existsSync(link)) fs.symlinkSync(path.join("..", "quartz", "node_modules"), link)
 }
 
+// Every fixture root symlinks the vendored `quartz/` source directory, and the Quartz CLI
+// transpiles itself to `quartz/.quartz-cache/transpiled-build.mjs` before importing it. So all
+// builds share that one file, and two at once can import it half-written ("buildQuartz is not a
+// function"). One build at a time, across every worker process: a directory lock, since mkdir is
+// atomic. A lock older than any build is taken to be stale.
+const LOCK = path.join(testsRoot, ".site-build-lock")
+const STALE_MS = 5 * 60 * 1000
+async function withBuildLock(fn) {
+  for (;;) {
+    try {
+      fs.mkdirSync(LOCK)
+      break
+    } catch (err) {
+      if (err.code !== "EEXIST") throw err
+      try {
+        if (Date.now() - fs.statSync(LOCK).mtimeMs > STALE_MS) fs.rmSync(LOCK, { recursive: true, force: true })
+      } catch {}
+      await new Promise((done) => setTimeout(done, 50))
+    }
+  }
+  try {
+    return await fn()
+  } finally {
+    fs.rmSync(LOCK, { recursive: true, force: true })
+  }
+}
+
+const quartzBuild = (root, args) =>
+  withBuildLock(() => run("node", [path.join(root, "quartz/bootstrap-cli.mjs"), "build", ...args], { cwd: root }))
+
 export async function buildSite(variant) {
   writeFixtureRoot(variant)
-  const root = fixtureRoot(variant)
-  await run("node", [path.join(root, "quartz/bootstrap-cli.mjs"), "build", "-d", "../content-fixture", "-o", outputFor(variant)], { cwd: root })
+  await quartzBuild(fixtureRoot(variant), ["-d", "../content-fixture", "-o", outputFor(variant)])
 }
 
 // A one-off site for a spec that needs content the shared fixture must not carry — chiefly a build
 // that is supposed to fail. `files` maps content paths to their text. Uses the main variant's
-// config, and assumes `buildPlugins` has already run (global setup does it). Resolves with the
-// exit code and combined output rather than throwing.
-export async function buildScratchSite(name, files) {
-  const root = path.join(testsRoot, `.site-scratch-${name}`)
+// config unless `options.config` supplies one (a YAML string), and assumes `buildPlugins` has
+// already run (global setup does it). Resolves with the exit code and combined output rather than
+// throwing. `options.args` are extra `quartz build` flags. The site is deleted afterwards unless
+// `options.keep` is set; the result then also carries `root` and `public` (the built site), and
+// the caller removes `root`.
+export async function buildScratchSite(name, files, options = {}) {
+  // Unique per call: the same spec runs once per colour scheme, possibly at the same time.
+  const root = fs.mkdtempSync(path.join(testsRoot, `.site-scratch-${name}-`))
   // Outside the repo: Quartz's content glob honours .gitignore, which covers every fixture root.
   const content = fs.mkdtempSync(path.join(os.tmpdir(), `cgc-scratch-${name}-`))
   for (const [rel, text] of Object.entries(files)) {
@@ -98,14 +131,17 @@ export async function buildScratchSite(name, files) {
     const link = path.join(root, entry)
     if (!fs.existsSync(link)) fs.symlinkSync(path.join(vendored, entry), link)
   }
-  fs.copyFileSync(path.join(testsRoot, "quartz.config.yaml"), path.join(root, "quartz.config.yaml"))
+  const config = options.config ?? fs.readFileSync(path.join(testsRoot, "quartz.config.yaml"), "utf8")
+  fs.writeFileSync(path.join(root, "quartz.config.yaml"), config)
+  const kept = options.keep ? { root, public: path.join(root, "public") } : {}
   try {
-    const { stdout, stderr } = await run("node", [path.join(root, "quartz/bootstrap-cli.mjs"), "build", "-d", content, "-o", "public"], { cwd: root })
-    return { code: 0, output: stdout + stderr }
+    const { stdout, stderr } = await quartzBuild(root, ["-d", content, "-o", "public", ...(options.args ?? [])])
+    return { code: 0, output: stdout + stderr, ...kept }
   } catch (err) {
-    return { code: err.code ?? 1, output: `${err.stdout ?? ""}${err.stderr ?? ""}` }
+    return { code: err.code ?? 1, output: `${err.stdout ?? ""}${err.stderr ?? ""}`, ...kept }
   } finally {
     fs.rmSync(content, { recursive: true, force: true })
+    if (!options.keep) fs.rmSync(root, { recursive: true, force: true })
   }
 }
 
