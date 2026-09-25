@@ -250,8 +250,18 @@ plugins:
       group: toolbar
       groupOptions:
         grow: true
+  # Replaced by cgc-backlinks, in the same slot.
   - source: "@quartz-community/backlinks"
+    enabled: false
+    layout:
+      position: right
+      priority: 50
+  # Backlinks with private pages marked (#78), with the site's private tag, as cgc-seo takes it.
+  - source: ../../plugins/cgc-backlinks
     enabled: true
+    options:
+      privateTags:
+        - private
     layout:
       position: right
       priority: 50

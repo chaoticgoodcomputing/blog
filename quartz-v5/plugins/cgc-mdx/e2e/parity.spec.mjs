@@ -19,5 +19,5 @@ test("the configured transformers ran on the body", async ({ page }) => {
 
 test("the page takes part in the site like a markdown page", async ({ page }) => {
   await page.goto("/plain-note")
-  await expect(page.locator(".backlinks a", { hasText: "MDX Article" })).toBeVisible()
+  await expect(page.locator(".cgc-backlinks a", { hasText: "MDX Article" })).toBeVisible()
 })

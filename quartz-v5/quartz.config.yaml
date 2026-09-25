@@ -233,7 +233,8 @@ plugins:
   - source: ../plugins/cgc-seo
     enabled: true
     options:
-      noindexTags:
+      # The site's private tags. cgc-backlinks marks the same pages, through the anchor.
+      noindexTags: &privateTags
         - private
       # v4 gave article metadata to `content/` pages only.
       articleFolders:
@@ -401,8 +402,20 @@ plugins:
       group: toolbar
       groupOptions:
         grow: true
+  # Replaced by cgc-backlinks, below.
   - source: "@quartz-community/backlinks"
+    enabled: false
+    layout:
+      position: right
+      priority: 50
+      condition: not-index
+  # v4's Backlinks (#44, #78): public pages first, then newest first, and each private page marked
+  # with MDI's lock, drawn when the site builds. The private tags are the ones cgc-seo's
+  # `noindexTags` names, descendants included.
+  - source: ../plugins/cgc-backlinks
     enabled: true
+    options:
+      privateTags: *privateTags
     layout:
       position: right
       priority: 50
@@ -436,7 +449,8 @@ plugins:
       showParentTag: true
       # The site's own icon collection (#29, #71): `custom:` is quartz-v5/icons/, v4's five SVGs, as
       # the site wrote them. They're turned into currentColor icons when the site builds. Every
-      # plugin that draws icons takes it, through the anchor. Resolved against the vendored root.
+      # plugin that draws `custom:` icons takes it, through the anchor. Resolved against the vendored
+      # root.
       iconCollections: &iconCollections
         custom: ../icons
     layout:

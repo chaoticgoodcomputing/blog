@@ -1,0 +1,61 @@
+/*
+ * cgc-backlinks: the pages that link to a page. v4's Backlinks styles (its `file-link`, `file-icon`
+ * and `file-title`, with the `file-icon` mixin), as library CSS (ADR-0003): one BEM block, every rule
+ * in this package's family layer, skin from the theme's colour properties. build.mjs refuses
+ * anything else.
+ *
+ * The link keeps the colour Quartz gives links. A private page's lock is drawn in `currentColor`, so
+ * it takes that colour, and repaints with it when the reader switches scheme.
+ */
+@layer cgc.backlinks {
+  .cgc-backlinks__heading {
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  /* Core scrolls the list in its own box (`overflow`); this leaves room below it for the heading. */
+  .cgc-backlinks__list {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+    max-height: calc(100% - 2rem);
+    overscroll-behavior: contain;
+  }
+
+  .cgc-backlinks__link {
+    display: flex;
+    align-items: flex-start;
+    text-indent: 0;
+    text-decoration: none;
+  }
+
+  /* Before each title, a box the height of its first line, holding a private page's lock. */
+  .cgc-backlinks__mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    min-width: 16px;
+    height: 1.6rem;
+    margin-right: 8px;
+  }
+
+  /* A public page's mark is empty, and shows a bullet. */
+  .cgc-backlinks__mark:empty::before {
+    content: "•";
+    color: var(--gray);
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  /* The lock: inline SVG whose every mark is `currentColor`, the link's colour. v4's size. */
+  .cgc-backlinks__icon {
+    display: block;
+    width: 12px;
+    height: 12px;
+  }
+
+  .cgc-backlinks__name {
+    flex: 1;
+  }
+}

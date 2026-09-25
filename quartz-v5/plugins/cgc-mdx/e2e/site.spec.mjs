@@ -69,9 +69,9 @@ test("links in the vault's forms reach .mdx pages at their clean URLs", async ({
 test("an .mdx page's backlinks list the pages that link to it", async ({ page }) => {
   await routeSite(page, site.public, ORIGIN)
   await page.goto(`${ORIGIN}/cv`)
-  for (const title of ["Links", "Dice"]) await expect(page.locator(".backlinks").getByRole("link", { name: title })).toBeVisible()
+  for (const title of ["Links", "Dice"]) await expect(page.locator(".cgc-backlinks").getByRole("link", { name: title })).toBeVisible()
   await page.goto(`${ORIGIN}/content/notes/dice`)
-  await expect(page.locator(".backlinks").getByRole("link", { name: "Links" })).toBeVisible()
+  await expect(page.locator(".cgc-backlinks").getByRole("link", { name: "Links" })).toBeVisible()
 })
 
 test("the plugin note renders at /plugins/cgc-mdx, with absolute links only", async ({ page }) => {

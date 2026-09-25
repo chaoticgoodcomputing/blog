@@ -1,0 +1,108 @@
+---
+title: cgc-backlinks
+tags:
+  - projects/site
+  - engineering/frontend
+---
+
+`cgc-backlinks` is a [Quartz 5](https://quartz.jzhao.xyz/) plugin that lists the pages linking to a page, as Quartz's own backlinks do, with two differences: public pages come first, and each private page carries a lock.
+
+It is the `Backlinks` component from this site's Quartz 4 days, carried over as a plugin. The lock is now drawn when the site builds, where v4 added it with a script after the page loaded, fetching the icon from a CDN.
+
+## What it renders
+
+A heading, then one link per page that links here:
+
+```html
+<div class="cgc-backlinks">
+  <h3 class="cgc-backlinks__heading">Backlinks</h3>
+  <ul class="cgc-backlinks__list overflow">
+    <li class="cgc-backlinks__item">
+      <a class="cgc-backlinks__link" href="../notes/a-walk">
+        <span class="cgc-backlinks__mark"></span>
+        <span class="cgc-backlinks__name">A walk</span>
+      </a>
+    </li>
+    <li class="cgc-backlinks__item">
+      <a class="cgc-backlinks__link cgc-backlinks__link--private" href="../notes/a-daily-note">
+        <span class="cgc-backlinks__mark"
+          ><svg class="cgc-backlinks__icon" viewBox="0 0 24 24" aria-hidden="true" …><path fill="currentColor" d="…" /></svg
+        ></span>
+        <span class="cgc-backlinks__name">A daily note</span>
+      </a>
+    </li>
+    <li class="cgc-backlinks__end overflow-end"></li>
+  </ul>
+</div>
+```
+
+- **Every page that links here** is listed, `.mdx` pages and pages whose links come from other plugins included. A page marked `unlisted: true` is left out, as Quartz's own backlinks leave it out.
+- **The order** puts public pages first, then private ones. Within each group, the most recently modified page comes first, falling back to its published date. Pages changed on the same day are in reverse alphabetical order of title, as they were in Quartz 4.
+- **A private page** is one that carries one of the `privateTags`, or a descendant of one: with the default, `private` and `private/work` are private, but `privateer` isn't. Its link gets the `--private` modifier and a lock before its title. The lock is [Material Design Icons](https://pictogrammers.com/library/mdi/)' `mdi:lock`, drawn inline as SVG when the site builds, so the page makes no request for it. It is painted in the link's colour.
+- **A public page** gets a bullet before its title instead.
+- **The links get no page preview on hover.** They aren't marked as Quartz's `internal` links, as they weren't in Quartz 4, so Quartz's popovers pass them by. Following one still navigates within the site.
+- **A long list** scrolls in its own box, with its bottom faded out until the reader scrolls to the end, as Quartz's own backlinks do.
+- **A page no page links to** gets no section at all, unless `hideWhenEmpty` is off. Then the list says there are no backlinks.
+
+The heading and the empty-list text come in every locale Quartz's own backlinks have.
+
+The plugin doesn't need a tag engine. It reads each page's tags from its frontmatter, and takes the private tags as its own option, as [cgc-seo](https://blog.chaoticgood.computer/plugins/cgc-seo) does. A private page is still an ordinary link here: marking it only tells the reader that the page behind it is a stub.
+
+## Install
+
+Plugins in this family ship as source from [the blog's monorepo](https://github.com/chaoticgoodcomputing/blog), and a site pins a release tag. This plugin needs [cgc-styles](https://blog.chaoticgood.computer/plugins/cgc-styles):
+
+```sh
+npx quartz plugin add git+https://github.com/chaoticgoodcomputing/blog.git#v<x.y.z> --subdir quartz-v5/plugins/cgc-backlinks --name cgc-backlinks
+```
+
+Keep `--name`: without it, a plugin installed from a subdirectory is named after the repository, and every plugin in the family would install over the last. Disable Quartz's own `@quartz-community/backlinks`, which this plugin replaces.
+
+The install also installs [Iconify](https://iconify.design/)'s packages, which draw the lock while the site builds, MDI's icons among them.
+
+> [!WARNING]
+> **Depending on `cgc-styles` by name needs a change to Quartz.** Stock Quartz matches a dependency only against the exact `source:` string. Matching by plugin name is a small change to its loader, carried in this repository's copy of Quartz and proposed upstream on [chaoticgoodcomputing/blog#47](https://github.com/chaoticgoodcomputing/blog/issues/47). Until it lands, this plugin builds only against that copy.
+
+## Configure
+
+```yaml
+plugins:
+  - source: ... # as `quartz plugin add` wrote it
+    enabled: true
+    options:
+      privateTags:
+        - private
+    layout:
+      position: right
+      priority: 50
+      condition: not-index
+```
+
+| Option | Default | |
+| --- | --- | --- |
+| `privateTags` | `[private]` | Tags that make a page private, together with their descendants. |
+| `privateIcon` | `mdi:lock` | The icon a private page's link is marked with. An icon id that doesn't exist fails the build. |
+| `iconCollections` | none | Your own icons, for `privateIcon`: a prefix for each set, and the directory of SVG files that holds it. With `custom: ./icons`, the icon `custom:padlock` is `./icons/padlock.svg`. A relative directory resolves against your Quartz folder, as a local plugin's `source:` does. `mdi:` needs no entry. |
+| `hideWhenEmpty` | `true` | Leave the section out of a page no page links to. |
+
+If you also run [cgc-seo](https://blog.chaoticgood.computer/plugins/cgc-seo), give both plugins the same private tags, so the pages search engines are asked to leave out are the ones marked here. Other plugins in this family that draw icons take the same `iconCollections` option, so a YAML anchor can share one set of collections between them.
+
+## Styling
+
+The CSS is library CSS, following [ADR-0003](https://github.com/chaoticgoodcomputing/blog/blob/main/docs/adr/0003-library-css-in-plugins-application-css-at-the-site.md):
+
+- **Classes:** one BEM block, `.cgc-backlinks`, with the elements `__heading`, `__list`, `__item`, `__link`, `__mark`, `__icon`, `__name`, `__empty` and `__end`, and the modifier `__link--private`. Selectors are single classes, apart from the bullet, which is the `::before` of an empty mark.
+- **Core's overflow list:** the list and its last item also carry Quartz's `overflow` and `overflow-end` classes, and a script adds Quartz's `gradient-active` while there is more below. Quartz styles those. The plugin's own stylesheet selects none of them.
+- **Cascade layer:** the rules sit in the `cgc.backlinks` layer, above Quartz's own styles and themes, and below any unlayered site CSS.
+- **Colours:** links keep the colour your theme gives links, and the lock, 12px square, is drawn in `currentColor`, so it takes the same colour and follows the reader's colour scheme. The bullet is the theme's `--gray`.
+
+The build checks the stylesheet and fails if a selector reaches outside the block, or if it sets a colour literal or a `font-family`.
+
+## Develop
+
+This package is the Nx project `cgc-backlinks`. Its specs live in [`e2e/`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/plugins/cgc-backlinks/e2e) and run against the shared fixture site ([ADR-0004](https://github.com/chaoticgoodcomputing/blog/blob/main/docs/adr/0004-playwright-e2e-as-the-plugin-tdd-loop.md)):
+
+```sh
+pnpm nx run cgc-backlinks:e2e
+pnpm nx run cgc-backlinks:typecheck
+```

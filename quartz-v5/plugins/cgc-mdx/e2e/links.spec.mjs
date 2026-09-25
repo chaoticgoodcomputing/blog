@@ -36,7 +36,7 @@ test("an .mdx page's backlinks list the pages that link to it", async ({ page })
   for (const { path } of LINKS) {
     await page.goto(path)
     for (const title of Object.values(SOURCES)) {
-      await expect(page.locator(".backlinks").getByRole("link", { name: title }), `${title} on ${path}`).toBeVisible()
+      await expect(page.locator(".cgc-backlinks").getByRole("link", { name: title }), `${title} on ${path}`).toBeVisible()
     }
   }
 })

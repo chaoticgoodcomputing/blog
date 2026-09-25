@@ -312,5 +312,5 @@ test("annotation text feeds backlinks, the graph and search, and the Annotator m
   expect(entry.content).toContain("draws highlights over quoted passages")
   for (const markup of ["show annotation", "PREFIX", "annotation-json"]) expect(entry.content).not.toContain(markup)
   await page.goto("/plain-note")
-  await expect(page.locator(".backlinks").getByRole("link", { name: "Fixture paper" })).toBeVisible()
+  await expect(page.locator(".cgc-backlinks").getByRole("link", { name: "Fixture paper" })).toBeVisible()
 })
