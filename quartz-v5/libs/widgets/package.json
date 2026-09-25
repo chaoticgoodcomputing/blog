@@ -1,0 +1,39 @@
+{
+  "name": "@chaoticgoodcomputing/widgets",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Preact widgets for cgc-mdx pages, one subpath export each: `/pdf-viewer`. See CONTEXT.md.",
+  "//exports": "Source only: no build and no dist; the page's bundler (cgc-mdx) compiles it (ADR-0005). One subpath per widget and no root export, so one import never pulls in another widget (#36).",
+  "exports": {
+    "./pdf-viewer": "./src/pdf-viewer/index.tsx"
+  },
+  "files": [
+    "src"
+  ],
+  "//sideEffects": "A widget imports its own stylesheet for its side effect, which a bundler that honours this field (webpack) would drop under `false`. esbuild keeps CSS either way.",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "lint": "node lint-css.mjs",
+    "typecheck": "tsc -p ."
+  },
+  "//dependencies": "PDF.js is bundled into the widget's chunk, never fetched from a CDN. Pinned exactly: pdf-viewer.css carries PDF.js's text-layer rules, prefixed by hand, which must match the TextLayer that writes the markup.",
+  "dependencies": {
+    "pdfjs-dist": "5.4.530"
+  },
+  "//peerDependencies": "The host's Preact: cgc-mdx pins every widget's preact imports to the host Quartz's copy, so one Preact per page.",
+  "peerDependencies": {
+    "preact": "^10.0.0"
+  },
+  "//devDependencies": "Types, and the CSS check the lint target runs.",
+  "devDependencies": {
+    "postcss": "^8.5.6",
+    "postcss-selector-parser": "^7.1.0",
+    "preact": "^10.29.0",
+    "typescript": "^5.9.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

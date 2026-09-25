@@ -166,6 +166,9 @@ library's own dependencies beside its source. A plugin names a library it inline
 `file:../../libs/<name>` devDependency (ADR-0005), which npm only links: whatever the library
 imports resolves from the library's own install, never the plugin's. The e2e harness runs
 `pnpm install --frozen-lockfile` when a library has none.
+Content reaches a library the same way: the root `package.json` depends on
+`@chaoticgoodcomputing/widgets` by `workspace:*`, so an `.mdx` page in the vault or the e2e fixture
+resolves `@chaoticgoodcomputing/widgets/<widget>` by Node's upward walk to the root `node_modules` (#36).
 
 ## Relationship to `quartz/` at the repo root
 
