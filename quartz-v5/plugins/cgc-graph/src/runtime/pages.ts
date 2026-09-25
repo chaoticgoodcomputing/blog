@@ -1,5 +1,6 @@
 // The graph's pages: its own index, fetched once per page load (docs/adr/0001), node ids, and the
 // pages this reader has visited (v4 core/contentIndex.ts, core/tagIndex.ts, adapters/visited.ts).
+import { tagOfPage } from "@chaoticgoodcomputing/tags-core"
 import { GRAPH_INDEX, type GraphIndex } from "../graph-index"
 import type { NodeId, Pages } from "./types"
 
@@ -14,12 +15,15 @@ export const isTagId = (id: NodeId) => id.length > "tags/".length && id.startsWi
 
 /**
  * The node id of a slug, full or simple: its simple slug, where a tag's page, generated or a
- * description file, is the tag's node. `tags/` alone, the index of every tag, is no tag.
+ * description file, is the tag's node (tags-core's `tagOfPage`). `tags/` alone, the index of every
+ * tag, is no tag.
  */
 export function nodeIdOf(slug: string): NodeId {
-  const simple = slug.replace(/^\/+/, "").replace(/(^|\/)index$/, "$1")
-  const tag = /^tags\/(.+?)\/?$/.exec(simple)
-  if (tag) return tagNodeId(tag[1])
+  const bare = slug.replace(/^\/+/, "")
+  // A simple slug keeps the trailing slash of a folder's index, `tags/<t>/`; a full one ends `index`.
+  const tag = tagOfPage(bare.replace(/\/$/, ""))
+  if (tag) return tagNodeId(tag)
+  const simple = bare.replace(/(^|\/)index$/, "$1")
   return simple === "" ? "/" : simple
 }
 

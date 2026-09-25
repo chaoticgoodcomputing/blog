@@ -84,4 +84,4 @@ _Avoid_: colour validator, colour parser
   through `cgc-graph`'s scheme specs, which paint the theme's colours with it (#74), and a probe
   script its own spec runs on a fixture page (`e2e/colour.spec.mjs`), until `cgc-graph` paints tag
   colours with it (#77); `tagOfPage()` through what `cgc-post-listing` and `cgc-tag-list` render
-  on tag pages (`e2e/tag-pages.spec.mjs`).
+  on tag pages (`e2e/tag-pages.spec.mjs`), and through `cgc-graph`'s tag nodes.
