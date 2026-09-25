@@ -11,10 +11,7 @@ tags:
   - engineering/frontend
   - writing/articles
 ---
-import { GlobalInitialization } from '@widgets/global-initialization'
-import { Initialization } from '@content/widgets/initialization'
-import { PageAssets } from "@content/widgets/page-assets"
-import { GameOfLife } from "@content/widgets/game-of-life"
+import { GameOfLife } from "../../widgets/game-of-life/widget"
 
 
 There is nothing in this world better than a good graph. Seeing a diagram that makes a point, without noise, clutter? A good *color palette*? *Ooooohohoho*, there's nothing better. We really are in a golden age of diagrams, and I want this site to be the premier place to contribute as best I can to the era.
@@ -26,10 +23,6 @@ Interactivity is an absolute boon. Really great visualizations — things that y
 The stopper is that these interactive diagrams are just plain harder to pop into a webpage. It's easy enough to `CTRL-C`, `CTRL-V` an image of a graph into a webpage — it's far harder to render the code in a way that isn't a nightmare. Trying to get this working is the most common cause of death for the blog sites I've put together. The first Gatsby site, then the [[/content/notes/digital-gardening-with-quartz|original Quartz run]], followed by knock-on Gatsby 2, Astro, Gatsby 3, and — now — this site, here. It requires a lot of under-the-hood fuckery with the way the content is rendered. It requires strong [[/tags/horticulture/seasons/systems/index|systems]] that the rest of the site can be built around.
 
 But now? I think I've finally got a pattern down! Without further ado: **Quartz Widgets!**
-
-<GlobalInitialization />
-
-<Initialization />
 
 ## Quartz Widgets & MDX
 
@@ -68,9 +61,7 @@ In context: when the website is built, all of the JavaScript code — the code t
 
 The rough part? This doesn't give us a lot of wiggle room for per-page code. MDX's whole thing is that you can include some code in one post to make it interactive. Following Quartz's [guide for writing your own components](https://quartz.jzhao.xyz/advanced/creating-components), all of the inline JavaScript for a component is gonna get tossed into that `postscript.js` and loaded when users visit your site for the first time — even if the user never actually visits the page your MDX component is on.
 
-<PageAssets />
-
-Above is an MDX widget that will calculate the data your browser had to download to visit this page. There's a few different categories of files, but the ones we're talking about here are the **`postscript.js`** and Widget Scripts entries. That's a live total (which will either be about the same, or much worse, than it is now). As of writing, though, I've got:
+When I first published this post, an MDX widget sat here that calculated the data your browser had to download to visit this page. There's a few different categories of files, but the ones we're talking about here are the **`postscript.js`** and Widget Scripts entries. As of writing, I had:
 
 ![[/assets/Pasted image 20260115164005.png]]
 
@@ -138,3 +129,7 @@ I'm super excited to have a solid platform that helps get things looking, and fe
 > [!UPDATE]
 > 
 > Jan 19th, 2026 — I used this system to create the post for [[/content/notes/roll-advantage.mdx|visualizing probability distribution convolutions]] on dice rolls.
+
+> [!UPDATE]
+> 
+> Sep 25th, 2026 — This post describes the widget system as I first built it, on Quartz 4. Its Quartz 5 successor, `cgc-mdx`, keeps the idea and drops the plumbing: a widget is an ordinary `import` (a file next to the post, or a package), it's drawn into the page when the site builds, and it comes alive in the browser as an *island*. There's no registry, and each page still loads only the widgets it uses. The status widgets and the page-size meter that used to sit in this post are retired, and the [[/widgets/README|widget guide]] has the rest.

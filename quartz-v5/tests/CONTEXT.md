@@ -57,7 +57,9 @@ A one-off site a spec builds from content it supplies itself, for cases the cont
 carry, chiefly builds that are supposed to fail, or a site built from the **site config** rather than
 the fixture's (the harness's `siteConfig()`, with `routeSite()` to browse it), or a **serve run**
 (`serve: true`) for what a plugin does under `quartz build --serve`. Its content lives outside the
-repo, because Quartz's content glob honours `.gitignore`.
+repo, because Quartz's content glob honours `.gitignore`. Content that imports packages, as the
+vault's `.mdx` articles do, gets a `node_modules` link among its files, which the site's
+`ignorePatterns` keep out of the site.
 _Avoid_: temp site, throwaway build
 
 **Serve run**:

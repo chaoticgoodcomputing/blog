@@ -1,0 +1,317 @@
+// The vault's live .mdx articles and their widgets (#79), proven on a scratch site built from the
+// site config. The articles are the vault's own files, unchanged. Beside them are the vault's
+// widgets without v4's files, as cutover will leave them, so nothing here can reach v4's widget
+// directory, and a `node_modules` link, so the articles' package imports resolve as the vault's do,
+// from the repo root's. Building all of `content/public` is the `site-v5:build` target's job.
+import fs from "node:fs"
+import path from "node:path"
+import { createRequire } from "node:module"
+import { test, expect, routeSite, toggleScheme } from "../harness/test.mjs"
+import { buildScratchSite, siteConfig, testsRoot, vendored } from "../harness/site.mjs"
+import { BLUESKY_API, XRPC } from "../harness/bluesky.mjs"
+
+const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
+// The site is served at its own `baseUrl`, where Quartz points its absolute URLs.
+const ORIGIN = "https://blog.chaoticgood.computer"
+const REPO = path.resolve(testsRoot, "../..")
+const VAULT = path.join(REPO, "content/public")
+
+// Every .mdx article in the vault, by the clean URL it lives at, and the widgets its imports reach.
+const ARTICLES = {
+  resume: ["PDFViewer"],
+  "content/notes/ai-beat-us": ["BlueSkyPost"],
+  "content/notes/ants-in-the-neighborhood": ["RandomWalk"],
+  "content/notes/mdx-widgets-test": ["GameOfLife"],
+  "content/notes/roll-advantage": ["ProbabilityConvolutions"],
+  "content/notes/scratch/dice-widget": ["ProbabilityConvolutions"],
+}
+
+// v4's widget files, which only v4 reads and cutover deletes: each widget's component, script,
+// style and definition, the registry, and the symlink to v4's widget guide.
+const V4_FILES = new Set(["component.tsx", "index.ts", "script.inline.ts", "style.inline.scss", "registry.ts", "README.md"])
+
+const vaultFiles = (dir, keep) =>
+  fs
+    .readdirSync(path.join(VAULT, dir), { recursive: true })
+    .map((rel) => path.join(dir, rel))
+    .filter((rel) => fs.statSync(path.join(VAULT, rel)).isFile() && keep(rel))
+
+const mdxFiles = () => vaultFiles(".", (rel) => rel.endsWith(".mdx") && !rel.startsWith("private"))
+
+function content() {
+  const files = {
+    "index.md": "---\ntitle: Home\n---\nWelcome.\n",
+    // Where the vault's own imports of packages resolve from: the repo root's install.
+    node_modules: { symlink: path.join(REPO, "node_modules") },
+  }
+  for (const rel of [...mdxFiles(), ...vaultFiles("widgets", (rel) => !V4_FILES.has(path.basename(rel)))]) {
+    files[rel] = fs.readFileSync(path.join(VAULT, rel))
+  }
+  return files
+}
+
+// The site config as it is, plus the `node_modules` link kept out of the content.
+function config() {
+  const doc = YAML.parseDocument(siteConfig({ offline: true }))
+  doc.get("configuration").get("ignorePatterns").add("node_modules")
+  return String(doc)
+}
+
+// One build per colour-scheme project, shared by that project's tests.
+test.describe.configure({ mode: "serial" })
+
+let site
+test.beforeAll(async () => {
+  test.setTimeout(300_000)
+  site = await buildScratchSite("site-widgets", content(), { config: config(), keep: true })
+  expect(site.code, site.output).toBe(0)
+})
+test.afterAll(() => site && fs.rmSync(site.root, { recursive: true, force: true }))
+
+// Every page browses the scratch site. A test's own routes, added later, take precedence.
+test.beforeEach(({ page }) => routeSite(page, site.public, ORIGIN))
+
+// A page of the scratch site, with every island on it hydrated.
+async function open(page, slug) {
+  await page.goto(`${ORIGIN}/${slug}`)
+  const islands = page.locator(".cgc-mdx-island")
+  await expect(islands.first()).toBeAttached()
+  for (const island of await islands.all()) await expect(island).toHaveAttribute("data-cgc-hydrated", "")
+  return islands
+}
+
+// What `color: <value>` resolves to on the page right now, as `rgb(…)`.
+const resolved = (page, value) =>
+  page.evaluate((value) => {
+    const probe = document.body.appendChild(document.createElement("span"))
+    probe.style.color = value
+    const color = getComputedStyle(probe).color
+    probe.remove()
+    return color
+  }, value)
+
+// One pixel of a canvas, as `rgb(…)`.
+const pixel = (canvas, x, y) =>
+  canvas.evaluate((c, [x, y]) => {
+    const [r, g, b] = c.getContext("2d").getImageData(x, y, 1, 1).data
+    return `rgb(${r}, ${g}, ${b})`
+  }, [x, y])
+
+test("every .mdx article in the vault builds, at its clean URL", () => {
+  expect(mdxFiles().map((rel) => rel.replace(/\.mdx$/, "")).sort()).toEqual(Object.keys(ARTICLES).sort())
+  for (const slug of Object.keys(ARTICLES)) {
+    expect(fs.existsSync(path.join(site.public, `${slug}.html`)), slug).toBe(true)
+  }
+})
+
+test("no article imports through a registry, alias or configured directory", () => {
+  // Each import resolves the way Node resolves it from the article's own folder: a relative path to
+  // a file beside it, or a package from `node_modules`. Nothing configures either.
+  const unresolved = []
+  for (const rel of mdxFiles()) {
+    const file = path.join(VAULT, rel)
+    const source = fs.readFileSync(file, "utf8")
+    for (const [, specifier] of source.matchAll(/^import\s[^\n]*?\sfrom\s+["']([^"']+)["']/gm)) {
+      const found = specifier.startsWith(".")
+        ? ["", ".tsx", ".ts", ".jsx", ".js"].some((ext) => fs.existsSync(path.resolve(path.dirname(file), specifier + ext)))
+        : (() => {
+            try {
+              return Boolean(createRequire(file).resolve(specifier))
+            } catch {
+              return false
+            }
+          })()
+      if (!found) unresolved.push(`${rel}: ${specifier}`)
+    }
+  }
+  expect(unresolved).toEqual([])
+})
+
+test("each article loads only the widget chunks its imports reach", async ({ page }) => {
+  // The heavy dependencies, by a name only their own code carries.
+  const chunks = fs.readdirSync(path.join(site.public, "static/cgc-mdx")).filter((f) => f.endsWith(".js"))
+  const holding = (marker) => chunks.filter((f) => fs.readFileSync(path.join(site.public, "static/cgc-mdx", f), "utf8").includes(marker))
+  const plotly = holding("plotly_afterplot")
+  const pdfjs = holding("GlobalWorkerOptions")
+  expect(plotly).toHaveLength(1)
+  expect(pdfjs).toHaveLength(1)
+
+  for (const [slug, widgets] of Object.entries(ARTICLES)) {
+    const loaded = new Set()
+    const listener = (req) => {
+      const { pathname } = new URL(req.url())
+      if (pathname.startsWith("/static/cgc-mdx/")) loaded.add(path.basename(pathname))
+    }
+    page.on("request", listener)
+    // A fresh document each time, so nothing a previous article loaded is cached in it.
+    await open(page, slug)
+    await page.waitForLoadState("networkidle")
+    page.off("request", listener)
+
+    const entries = [...loaded].filter((f) => f.endsWith(".js") && !f.startsWith("chunk-")).map((f) => f.replace(/-[A-Z0-9]+\.js$/, ""))
+    expect(entries.sort(), slug).toEqual(widgets)
+    expect([...loaded].some((f) => plotly.includes(f)), `${slug} loads plotly`).toBe(widgets.includes("ProbabilityConvolutions"))
+    expect([...loaded].some((f) => pdfjs.includes(f)), `${slug} loads PDF.js`).toBe(widgets.includes("PDFViewer"))
+  }
+})
+
+test("widgets unmount and come back across SPA navigation, with no errors", async ({ page }) => {
+  const errors = []
+  page.on("pageerror", (err) => errors.push(err.message))
+  const spa = async (slug) => {
+    await page.evaluate((url) => window.spaNavigate(new URL(url)), `${ORIGIN}/${slug}`)
+    await expect(page).toHaveURL(`${ORIGIN}/${slug}`)
+    for (const island of await page.locator(".cgc-mdx-island").all()) await expect(island).toHaveAttribute("data-cgc-hydrated", "")
+  }
+  await open(page, "content/notes/roll-advantage")
+  await expect(page.locator(".probability-convolutions .main-svg").first()).toBeVisible()
+  await spa("content/notes/ants-in-the-neighborhood")
+  await page.locator(".random-walk").first().getByRole("button", { name: "Auto-play" }).click()
+  await spa("content/notes/mdx-widgets-test")
+  await spa("content/notes/roll-advantage")
+  await expect(page.locator(".probability-convolutions .main-svg").first()).toBeVisible()
+  expect(errors).toEqual([])
+})
+
+test.describe("resume", () => {
+  test("the PDF viewer renders at build time and draws the resume", async ({ page }) => {
+    const html = fs.readFileSync(path.join(site.public, "resume.html"), "utf8")
+    expect(html).toMatch(/class="cgc-mdx-island"[^>]*>\s*<div class="cgc-pdf-viewer"/)
+    // Where the asset is served is #26's decision (v5 lowercases asset URLs); the widget fetches the
+    // URL the article gives it.
+    await page.route(`${ORIGIN}/assets/Elkington_Resume.pdf`, (route) =>
+      route.fulfill({ contentType: "application/pdf", path: path.join(VAULT, "assets/Elkington_Resume.pdf") }),
+    )
+    await open(page, "resume")
+    await expect(page.locator(".cgc-pdf-viewer__title")).toHaveText("Spencer Elkington - Resume")
+    await expect(page.locator(".cgc-pdf-viewer__page").first()).toBeVisible()
+  })
+})
+
+test.describe("ai-beat-us", () => {
+  test("the Bluesky post renders at build time and loads in the browser", async ({ page }) => {
+    const html = fs.readFileSync(path.join(site.public, "content/notes/ai-beat-us.html"), "utf8")
+    expect(html).toContain('class="cgc-bluesky-post"')
+    // The suite never reaches the real Bluesky: the article's post is answered with a fixture post.
+    const thread = XRPC["app.bsky.feed.getPostThread"]["at://fixture.bsky.social/app.bsky.feed.post/3lcgcfixtureb"]
+    await page.route(BLUESKY_API, (route) =>
+      new URL(route.request().url()).searchParams.get("uri") === "at://pfrazee.com/app.bsky.feed.post/3meogr22vtc2d"
+        ? route.fulfill({ status: 200, contentType: "application/json", headers: { "access-control-allow-origin": "*" }, body: JSON.stringify(thread) })
+        : route.fallback(),
+    )
+    await open(page, "content/notes/ai-beat-us")
+    await expect(page.locator(".cgc-bluesky-post article.cgc-bluesky")).toBeVisible()
+  })
+})
+
+test.describe("mdx-widgets-test", () => {
+  test("documents the current contract, with no retired widget left in it", async ({ page }) => {
+    const html = fs.readFileSync(path.join(site.public, "content/notes/mdx-widgets-test.html"), "utf8")
+    // v4's status demos and its page-assets meter.
+    for (const retired of ["widget-global-initialization", "widget-content-initialization", "widget-page-assets", "Initializing"]) {
+      expect(html, retired).not.toContain(retired)
+    }
+    const islands = await open(page, "content/notes/mdx-widgets-test")
+    await expect(islands).toHaveCount(1)
+    // It says what replaced v4's widget system, and links the widget guide, which on v5 is the
+    // plugin note's alias.
+    await expect(page.locator("article")).toContainText("cgc-mdx")
+    const hrefs = await page.locator("article a.internal").evaluateAll((links) => links.map((a) => new URL(a.href).pathname))
+    expect(hrefs).toContain("/widgets/readme")
+  })
+
+  test("the game of life renders at build time, runs, and repaints on a scheme switch", async ({ page }) => {
+    const html = fs.readFileSync(path.join(site.public, "content/notes/mdx-widgets-test.html"), "utf8")
+    expect(html).toMatch(/<canvas class="game-of-life__canvas"/)
+    await open(page, "content/notes/mdx-widgets-test")
+    const canvas = page.locator(".game-of-life__canvas")
+    const before = await canvas.evaluate((c) => c.toDataURL())
+    await expect.poll(() => canvas.evaluate((c) => c.toDataURL())).not.toBe(before)
+
+    // The top-left cell is in the blank rows above the pattern, so it shows the paper.
+    expect(await pixel(canvas, 5, 5)).toBe(await resolved(page, "var(--light)"))
+    await toggleScheme(page)
+    await expect.poll(async () => pixel(canvas, 5, 5)).toBe(await resolved(page, "var(--light)"))
+  })
+})
+
+test.describe("roll-advantage and dice-widget", () => {
+  test("each chart's statistics render at build time", async () => {
+    const html = fs.readFileSync(path.join(site.public, "content/notes/roll-advantage.html"), "utf8")
+    // The first chart is one d6 with its threshold at the median, 3: two faces of six below it.
+    expect(html).toMatch(/probability-convolutions__mean">3\.50</)
+    expect(html).toMatch(/Less than[^]*?3[^]*?33\.3%[^]*?3[^]*?or more[^]*?66\.7%/)
+    // The d20 chart set at 6 (the article: "75% vs 16%").
+    expect(html).toContain("75.0%")
+  })
+
+  test("the charts draw, follow their expression, and repaint on a scheme switch", async ({ page }) => {
+    const islands = await open(page, "content/notes/roll-advantage")
+    await expect(islands).toHaveCount(9)
+    const first = page.locator(".probability-convolutions").first()
+    await expect(first.locator(".main-svg").first()).toBeVisible()
+
+    await first.locator("input").fill("2d6")
+    await expect(first.locator(".probability-convolutions__mean")).toHaveText("7.00")
+    await first.locator("input").fill("2d")
+    await expect(first.locator(".probability-convolutions__error")).toBeVisible()
+
+    const paper = () => first.locator(".main-svg").first().evaluate((svg) => getComputedStyle(svg).backgroundColor)
+    await expect.poll(paper).toBe(await resolved(page, "var(--light)"))
+    await toggleScheme(page)
+    await expect.poll(paper).toBe(await resolved(page, "var(--light)"))
+  })
+
+  test("dragging the threshold reads off the odds either side of it, snapped between bars", async ({ page }) => {
+    await open(page, "content/notes/roll-advantage")
+    // One d6, with its threshold between 2 and 3.
+    const first = page.locator(".probability-convolutions").first()
+    // Plotly lays a wider, invisible path over the line to drag it by.
+    const line = first.locator(".shapelayer [drag-helper] path")
+    await line.scrollIntoViewIfNeeded()
+    const value = first.locator(".probability-convolutions__threshold--below .probability-convolutions__threshold-value")
+    await expect(value).toHaveText("3")
+
+    // Two bars' width to the right, dropped off-centre.
+    const [bar1, bar2] = await first.locator(".barlayer .point path").evaluateAll((bars) => bars.slice(0, 2).map((b) => b.getBoundingClientRect().x))
+    const box = await line.boundingBox()
+    const x = box.x + box.width / 2
+    const y = box.y + box.height / 2
+    await page.mouse.move(x, y)
+    await page.mouse.down()
+    await page.mouse.move(x + 2.3 * (bar2 - bar1), y, { steps: 10 })
+    await page.mouse.up()
+
+    await expect(value).toHaveText("5")
+    // The line sits between the fourth and fifth bars, upright, wherever it was let go.
+    const shape = () => first.locator(".js-plotly-plot").evaluate((plot) => (({ x0, x1, y0, y1 }) => ({ x0, x1, y0, y1 }))(plot.layout.shapes[0]))
+    await expect.poll(shape).toEqual({ x0: 4.5, x1: 4.5, y0: 0, y1: 1 })
+    await expect(first.locator(".probability-convolutions__threshold--below .probability-convolutions__threshold-odds")).toHaveText("66.7%")
+    await expect(first.locator(".probability-convolutions__threshold--above .probability-convolutions__threshold-odds")).toHaveText("33.3%")
+  })
+
+  test("the scratch note's chart draws too", async ({ page }) => {
+    await open(page, "content/notes/scratch/dice-widget")
+    await expect(page.locator(".probability-convolutions .main-svg").first()).toBeVisible()
+  })
+})
+
+test.describe("ants-in-the-neighborhood", () => {
+  test("the random walks render at build time, step, and repaint on a scheme switch", async ({ page }) => {
+    const html = fs.readFileSync(path.join(site.public, "content/notes/ants-in-the-neighborhood.html"), "utf8")
+    expect(html).toContain("Steps: 0")
+    expect(html).toContain("Current: A")
+
+    const islands = await open(page, "content/notes/ants-in-the-neighborhood")
+    await expect(islands).toHaveCount(3)
+    const walk = page.locator(".random-walk").first()
+    await walk.getByRole("button", { name: "Take one step" }).click()
+    await expect(walk.locator(".random-walk__steps")).toHaveText("Steps: 1")
+    await expect(walk.locator(".random-walk__current")).toHaveText(/Current: [BC]/)
+
+    const canvas = walk.locator("canvas")
+    expect(await pixel(canvas, 2, 2)).toBe(await resolved(page, "var(--light)"))
+    await toggleScheme(page)
+    await expect.poll(async () => pixel(canvas, 2, 2)).toBe(await resolved(page, "var(--light)"))
+  })
+})

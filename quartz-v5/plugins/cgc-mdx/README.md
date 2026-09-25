@@ -30,6 +30,53 @@ Releases are `v<semver>` tags on [the monorepo](https://github.com/chaoticgoodco
 
 The plugin has no options. It is a page type, an emitter and a transformer in one package. The transformer has to run before `crawl-links`, which its default order (45, to `crawl-links`' 60) takes care of, so leave its `order` below that.
 
+## A first widget
+
+The smallest widget there is says one thing when the site builds and another once the browser has hydrated it. It takes three files in the content folder: a page, the widget, and the widget's CSS.
+
+```mdx title="hello.mdx"
+---
+title: Hello, widgets
+---
+
+import { Initialization } from "./widgets/initialization"
+
+<Initialization />
+```
+
+```tsx title="widgets/initialization.tsx"
+import { useEffect, useState } from "preact/hooks"
+import "./initialization.css"
+
+export function Initialization() {
+  const [ready, setReady] = useState(false)
+  // Effects run only in the browser, once the widget has hydrated.
+  useEffect(() => setReady(true), [])
+  return (
+    <p class={ready ? "initialization initialization--ready" : "initialization"}>
+      {ready ? "Widgets initialized" : "Initializing widgets…"}
+    </p>
+  )
+}
+```
+
+```css title="widgets/initialization.css"
+.initialization {
+  padding: 1rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  color: var(--gray);
+  font-family: var(--codeFont);
+  text-align: center;
+}
+
+.initialization--ready {
+  color: var(--secondary);
+}
+```
+
+`/hello` arrives reading "Initializing widgets…", which the build wrote into the page, and switches to "Widgets initialized" as soon as its widget hydrates. Everything else in this README builds on that handoff.
+
 ## Writing a page
 
 An `.mdx` page has the frontmatter and Markdown of any other note, plus `import` statements and widget elements:
@@ -51,6 +98,7 @@ A [[wikilink]], a > [!note] callout and $x^2$ all work as they do in `.md` pages
 ```
 
 - **Imports** resolve from the page's own folder (`./widgets/dice-chart`) or from `node_modules` (`some-plot-package`). Default and named imports both work. Nothing else does: `export`, namespace imports and other JavaScript fail the build.
+- **Widgets from a package** are imported by the package's name. This site's own reusable widgets, a PDF viewer and a Bluesky post, are the [`@chaoticgoodcomputing/widgets`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/libs/widgets) package: `import { PDFViewer } from "@chaoticgoodcomputing/widgets/pdf-viewer"`, then `<PDFViewer src="/assets/document.pdf" title="My Document" height="800px" />`.
 - **Props are data**, written as JavaScript literals: strings, numbers, booleans, `null`, and arrays and objects of those. Unquoted keys, trailing commas and `//` comments are fine. Functions, variables and expressions are not, because props are written into the page for the browser to pick up.
 - **Children are flattened to text.** `<Callout>Some **bold** text</Callout>` passes the widget `children: "Some bold text"`.
 - **Lowercase elements are plain HTML.** `<details open>` renders as it would in Markdown, with its attributes evaluated as data.
@@ -102,6 +150,14 @@ All widget CSS lands in the `cgc.mdx.widgets` cascade layer, whatever its source
 ## Under `quartz build --serve`
 
 Editing an `.mdx` page, or adding one, rebuilds it like any other note, and so does editing a widget kept in the content folder. Quartz then restarts the whole build once more, because it copies the widget's source into the output and takes the copy for its own source. As with `.md` pages, a page you delete stays in the output until the next full build.
+
+## Coming from this site's Quartz 4 widgets
+
+This site ran its widgets on its own fork of Quartz 4 before `cgc-mdx`, and old links to that system's guide land here.
+
+- **One component instead of four files and a registry.** A widget was a build-time `component.tsx`, a `script.inline.ts` that found the component's element by a selector and read its settings from `data-config`, a `style.inline.scss` and an `index.ts`, all registered in a `registry.ts` and imported through `@widgets/…` or `@content/widgets/…`. Now it's one Preact component and a plain `.css` file, imported by its path or its package's name. The component's props arrive in the browser as they were at build time, and what the script did goes in `useEffect`.
+- **Namespaced classes instead of `contain`.** A widget kept its styles to itself with a `.widget-<name>` root and `contain: layout style`. Now it names its classes after itself, as above, and its CSS sits in the widget layer, below the site's own.
+- **The widgets themselves.** `pdf-viewer` and `bluesky-post` are `@chaoticgoodcomputing/widgets/pdf-viewer` and `@chaoticgoodcomputing/widgets/bluesky-post`, with the same props, except the PDF viewer's `dpi`, which is gone. The two status widgets, `initialization` and `global-initialization`, and the page-size meter, `page-assets`, are retired; `initialization` lives on as the first widget above.
 
 ## Notes
 

@@ -264,7 +264,9 @@ export async function buildSite(variant) {
 }
 
 // A one-off site for a spec that needs content the shared fixture must not carry — chiefly a build
-// that is supposed to fail. `files` maps content paths to their text. Uses the main variant's
+// that is supposed to fail. `files` maps content paths to their text (or bytes), or to
+// `{ symlink: target }` for a link to somewhere else, such as a `node_modules` the content's own
+// imports resolve from, the way the vault's resolve from the repo root's. Uses the main variant's
 // config unless `options.config` supplies one (a YAML string), and assumes `buildPlugins` has
 // already run (global setup does it). Resolves with the exit code and combined output rather than
 // throwing. `options.args` are extra `quartz build` flags. `options.serve` builds it as
@@ -279,7 +281,8 @@ export async function buildScratchSite(name, files, options = {}) {
   const content = fs.mkdtempSync(path.join(os.tmpdir(), `cgc-scratch-${name}-`))
   for (const [rel, text] of Object.entries(files)) {
     fs.mkdirSync(path.dirname(path.join(content, rel)), { recursive: true })
-    fs.writeFileSync(path.join(content, rel), text)
+    if (text?.symlink) fs.symlinkSync(text.symlink, path.join(content, rel))
+    else fs.writeFileSync(path.join(content, rel), text)
   }
   fs.mkdirSync(root, { recursive: true })
   for (const entry of LINKED) {

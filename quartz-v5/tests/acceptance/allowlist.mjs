@@ -26,27 +26,6 @@ function isDescribedTag(url, vault) {
   return slash ? folderNote : folderNote || fs.existsSync(path.join(vault, "tags", `${tag}.md`))
 }
 
-// Whether a page URL is an .mdx file's in the vault: v4 served content/notes/dice.mdx at
-// /content/notes/dice, as cgc-mdx does (#65).
-function isMdxSource(url, vault) {
-  if (typeof url !== "string" || !/^\/[^?#]*[^/]$/.test(url)) return false
-  return fs.existsSync(path.join(vault, `${url.slice(1)}.mdx`))
-}
-
-// Whether an item only v5's RSS feed carries takes the place of an .mdx article v4's carried and v5
-// leaves out (#79). The feed keeps its length (rssLimit) and is the newest articles, so each such
-// place goes to the next-newest article: one of the last items of v5's feed, as many as are missing,
-// and dated no later than anything v4's feed carried. Any other addition is not a refill, and no
-// ticket covers it.
-function isRefill(url, v4, v5, vault) {
-  const missing = [...(v4.rss ?? [])].filter((item) => isMdxSource(item, vault) && !v5.rss?.has(item)).length
-  const feed = [...(v5.rss ?? [])]
-  if (!missing || feed.indexOf(url) < feed.length - missing) return false
-  const oldest = Math.min(...[...(v4.rssItems?.values() ?? [])].map(({ date }) => date).filter(Number.isFinite))
-  // A feed without dates can only be judged by position.
-  return !Number.isFinite(oldest) || v5.rssItems?.get(url)?.date <= oldest
-}
-
 // Whether a URL is a plugin note's, /plugins/<pkg>, with the plugin's README linked into the vault
 // at plugins/<pkg>.md (#48).
 function isPluginNote(url, vault) {
@@ -125,14 +104,6 @@ export const ALLOWLIST = [
 // Not allowances. Each labels differences an open ticket is expected to close, so the report can say
 // what it is waiting on. A pending difference still fails the report.
 export const PENDING = [
-  {
-    ticket: 79,
-    summary:
-      "the live .mdx articles sit in v5's ignorePatterns until their widget imports stop using v4's aliases; the RSS slots they leave go to the next-newest articles",
-    matches: (d, { v4, v5, vault }) =>
-      (d.change === "removed" && (d.area !== "url" || d.kind === "page") && [d.url, d.to].some((url) => isMdxSource(url, vault))) ||
-      (d.area === "rss" && d.change === "added" && isRefill(d.url, v4, v5, vault)),
-  },
   {
     ticket: 26,
     summary: "asset URLs are lowercased with no redirect; open decision",

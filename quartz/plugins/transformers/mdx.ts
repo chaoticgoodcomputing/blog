@@ -4,6 +4,7 @@ import { visit } from "unist-util-visit"
 import { getWidget } from "../../widgets/registry"
 import { getContentWidget } from "../../../content/public/widgets/registry"
 import { renderToString } from "preact-render-to-string"
+import path from "path"
 import type { WidgetDefinition } from "../../widgets/types"
 
 /**
@@ -40,6 +41,25 @@ function getWidgetFromAnyRegistry(importPath: string): WidgetDefinition | undefi
   return undefined
 }
 
+/**
+ * The registry path an import names, until cutover (#79). The vault's .mdx articles import their
+ * widgets as Quartz 5's cgc-mdx reads them, with real ES imports: a vault widget by a relative path
+ * into `widgets/<name>/`, a global one from `@chaoticgoodcomputing/widgets/<name>`. This maps each
+ * back onto the registries above, so this site keeps rendering the same articles with its own
+ * widgets. It goes with the rest of this copy at cutover.
+ */
+function registryPath(source: string, filePath: string): string | undefined {
+  if (source.startsWith("@widgets/") || source.startsWith("@content/widgets/")) return source
+  const global = /^@chaoticgoodcomputing\/widgets\/([^/]+)$/.exec(source)
+  if (global) return getWidget(`@widgets/${global[1]}`) ? `@widgets/${global[1]}` : undefined
+  if (source.startsWith(".")) {
+    const target = path.resolve(path.dirname(filePath), source).split(path.sep).join("/")
+    const local = /\/widgets\/([^/]+)\/[^/]+$/.exec(target)
+    if (local && getContentWidget(`@content/widgets/${local[1]}`)) return `@content/widgets/${local[1]}`
+  }
+  return undefined
+}
+
 export const MDX: QuartzTransformerPlugin = () => {
   return {
     name: "MDX",
@@ -67,9 +87,11 @@ export const MDX: QuartzTransformerPlugin = () => {
               if (node.data?.estree?.body) {
                 for (const statement of node.data.estree.body) {
                   if (statement.type === "ImportDeclaration") {
-                    const source = statement.source.value
-                    if (typeof source === "string" && 
-                        (source.startsWith("@widgets/") || source.startsWith("@content/widgets/"))) {
+                    const source =
+                      typeof statement.source.value === "string"
+                        ? registryPath(statement.source.value, filePath)
+                        : undefined
+                    if (source) {
                       usedWidgets.add(source)
                       
                       // Map imported component names to their widget paths

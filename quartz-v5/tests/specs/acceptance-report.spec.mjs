@@ -302,8 +302,8 @@ test("allows what #48 decided: cgc-mdx's plugin note at /plugins/cgc-mdx, and it
   expect(stray.json.failing).toEqual([expect.objectContaining({ area: "url", change: "added", url: "/plugins/cgc-stray" })])
 })
 
-test("never allows an .mdx page v5 leaves out, and says it waits on #79", async () => {
-  // v5 ignores the live .mdx articles until #79 moves their widget imports off v4's aliases.
+test("never allows an .mdx page v5 leaves out, nor the article that takes its place in the feed", async () => {
+  // v5 serves every .mdx article at the URL v4 did (#65), and builds all of them since #79.
   const vault = site("vault", { "content/notes/dice.mdx": "---\ntitle: Dice\n---\nRoll.\n" })
   const v4 = site("v4", {
     ...BASE,
@@ -315,47 +315,14 @@ test("never allows an .mdx page v5 leaves out, and says it waits on #79", async 
   const v5 = site("v5", { ...BASE, "index.xml": rss(["/content/articles/an-article", "/content/notes/older"]) })
   const result = await report(v4, v5, { vault })
   expect(result.code, result.stdout).toBe(1)
-  expect(result.json.failing.map((d) => [d.area, d.change, d.url, d.pending]).sort()).toEqual([
-    ["rss", "added", "/content/notes/older", 79],
-    ["rss", "removed", "/content/notes/dice", 79],
-    ["sitemap", "removed", "/content/notes/dice", 79],
-    ["url", "removed", "/content/notes/dice", 79],
+  // Nothing waits on #79 any more, and no other ticket covers these.
+  expect(result.json.failing.map((d) => [d.area, d.change, d.url, d.pending ?? null]).sort()).toEqual([
+    ["rss", "added", "/content/notes/older", null],
+    ["rss", "removed", "/content/notes/dice", null],
+    ["sitemap", "removed", "/content/notes/dice", null],
+    ["url", "removed", "/content/notes/dice", null],
   ])
-  expect(result.stdout).toContain("pending #79")
-})
-
-test("says an RSS item waits on #79 only where it takes the place of an .mdx article v4's feed carried", async () => {
-  // The feed is the newest articles, so the one that takes a missing article's place comes last in
-  // v5's, dated no later than anything v4's carried. Any other addition is a page the feed has no
-  // business carrying (a private page, say), and no ticket covers it.
-  const vault = site("vault", { "content/notes/dice.mdx": "---\ntitle: Dice\n---\nRoll.\n" })
-  const item = (url, date) => ({ url, date })
-  const v4 = site("v4", {
-    ...BASE,
-    "content/notes/dice.html": page({ title: "Dice", canonical: `${ORIGIN}/content/notes/dice` }),
-    "sitemap.xml": sitemap(["/", "/content/articles/an-article", "/content/notes/dice"]),
-    "index.xml": rss([item("/content/articles/an-article", "2024-03-01"), item("/content/notes/dice", "2024-02-01")]),
-  })
-  const added = async (feed) => {
-    const result = await report(v4, site("v5", { ...BASE, "index.xml": rss(feed) }), { vault })
-    expect(result.code, result.stdout).toBe(1)
-    return result.json.failing.filter((d) => d.area === "rss" && d.change === "added").map((d) => [d.url, d.pending ?? null])
-  }
-  // A newer page heads the feed, and the older article that fills dice's place is last.
-  expect(
-    await added([
-      item("/content/notes/leaked", "2024-04-01"),
-      item("/content/articles/an-article", "2024-03-01"),
-      item("/content/notes/older", "2024-01-01"),
-    ]),
-  ).toEqual([
-    ["/content/notes/leaked", null],
-    ["/content/notes/older", 79],
-  ])
-  // Last, but newer than dice was: not the article that would have taken dice's place.
-  expect(await added([item("/content/articles/an-article", "2024-03-01"), item("/content/notes/late", "2024-02-15")])).toEqual([
-    ["/content/notes/late", null],
-  ])
+  expect(result.stdout).not.toContain("pending #79")
 })
 
 test("reads relative site, vault and output paths from the repo root, as its defaults are", async () => {
