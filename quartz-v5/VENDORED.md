@@ -64,7 +64,8 @@ One consequence to remember: `source:` entries inside that config are resolved w
 `path.resolve()` against cwd ([`gitLoader.ts:99`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L99)), which is the
 vendored root —
 **not** the directory the tracked file lives in. Local plugins are therefore `../plugins/cgc-tags`,
-not `./plugins/cgc-tags`.
+not `./plugins/cgc-tags`. A plugin option that names a file resolves the same way, so the site's
+icon is `icon: ../icon.png` on `cgc-og-image`.
 
 ## Provenance
 

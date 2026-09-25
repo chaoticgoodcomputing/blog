@@ -132,8 +132,14 @@ plugins:
         url: https://localhost/about
   - source: "@quartz-community/favicon"
     enabled: true
+  # cgc-og-image replaces stock og-image, which it wraps.
   - source: "@quartz-community/og-image"
+    enabled: false
+  - source: ../../plugins/cgc-og-image
     enabled: true
+    options:
+      # Resolved against the fixture root, as `source:` is.
+      icon: ../../plugins/cgc-og-image/e2e/icon.png
   - source: "@quartz-community/cname"
     enabled: true
   - source: "@quartz-community/canvas-page"

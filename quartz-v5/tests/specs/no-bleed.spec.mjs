@@ -5,7 +5,7 @@
 // must compute identically. An element is owned if it, or an ancestor, carries a `cgc-` class.
 import { test, expect } from "../harness/test.mjs"
 
-const PAGES = ["/", "/plain-note", "/md-twin", "/mdx-article", "/lab/cascade", "/nested/deep-note", "/tags/fixture", "/seo/private-note", "/seo/private-descendant", "/seo/authored"]
+const PAGES = ["/", "/plain-note", "/md-twin", "/mdx-article", "/lab/cascade", "/nested/deep-note", "/tags/fixture", "/seo/private-note", "/seo/private-descendant", "/seo/authored", "/og/tag-nested"]
 // A page one of our plugins creates has no baseline of its own, so it is compared against the
 // stock page it stands in for: the .mdx article against its byte-identical .md twin. The explorer
 // marks the current page `.active`, which is then a different link on each side, so it is skipped.

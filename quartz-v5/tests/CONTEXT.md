@@ -40,9 +40,14 @@ _Avoid_: test utils, helpers
 **Scratch site**:
 A one-off site a spec builds from content it supplies itself, for cases the content fixture must not
 carry, chiefly builds that are supposed to fail, or a site built from the **site config** rather than
-the fixture's (the harness's `siteConfig()`, with `routeSite()` to browse it). Its content lives
-outside the repo, because Quartz's content glob honours `.gitignore`.
+the fixture's (the harness's `siteConfig()`, with `routeSite()` to browse it), or a **serve run**
+(`serve: true`) for what a plugin does under `quartz build --serve`. Its content lives outside the
+repo, because Quartz's content glob honours `.gitignore`.
 _Avoid_: temp site, throwaway build
+
+**Serve run**:
+A **scratch site** built as `quartz build --serve` and stopped once its server is up, on ports the
+OS picks. Only for what a plugin does differently under serve (ADR-0004).
 
 **Probe plugin**:
 A throwaway plugin a library's spec compiles from source (`harness/probe.mjs`) and loads into a

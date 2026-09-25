@@ -1,0 +1,65 @@
+{
+  "name": "cgc-og-image",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Quartz 5 social cards: stock og-image with last-segment tag chips, a configurable icon, and no generation under serve. See README.md and CONTEXT.md.",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "../node_modules/.bin/tsc -p ."
+  },
+  "//peerDependencies": "The host Quartz's own copies, never bundled or installed here. Stock og-image is the plugin this one wraps; every stock Quartz carries it, and @quartz-community/* is a shared scope the loader expects to find beside a plugin, never inside it.",
+  "peerDependencies": {
+    "@quartz-community/og-image": "^1.0.0",
+    "@quartz-community/utils": "*",
+    "preact": "^10.29.0"
+  },
+  "//devDependencies": "Inlined into dist by build.mjs, or the build tool itself: stock og-image bundles reading-time rather than exporting it, and the card counts minutes the same way. esbuild is here so the build never borrows the host's toolchain (ADR-0005).",
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "reading-time": "^1.5.0"
+  },
+  "quartz": {
+    "name": "cgc-og-image",
+    "displayName": "OG image cards",
+    "category": "emitter",
+    "version": "0.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 50,
+    "defaultEnabled": true,
+    "defaultOptions": {},
+    "optionSchema": {
+      "icon": {
+        "type": "string"
+      },
+      "colorScheme": {
+        "type": "enum",
+        "values": [
+          "lightMode",
+          "darkMode"
+        ]
+      },
+      "width": {
+        "type": "number"
+      },
+      "height": {
+        "type": "number"
+      },
+      "excludeRoot": {
+        "type": "boolean"
+      },
+      "defaultTitle": {
+        "type": "string"
+      },
+      "defaultDescription": {
+        "type": "string"
+      }
+    }
+  }
+}

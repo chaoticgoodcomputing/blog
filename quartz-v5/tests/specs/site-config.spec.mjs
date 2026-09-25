@@ -105,6 +105,15 @@ test("self-hosts its fonts, requesting nothing from Google Fonts", async ({ page
   expect(requests.some((url) => url.origin === ORIGIN && url.pathname.startsWith("/static/fonts/"))).toBe(true)
 })
 
+// cgc-og-image in place of stock og-image (#58): one card per page, with the site's icon, which a
+// scratch root reaches through `siteConfig()`'s rebased `icon`. What the card shows is its own spec's.
+test("points each page's og:image at its own card", async ({ page }) => {
+  await routeSite(page, site.public, ORIGIN)
+  await page.goto(`${ORIGIN}/content/notes/a-note`)
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", `${ORIGIN}/content/notes/a-note-og-image.webp`)
+  expect(fs.existsSync(path.join(site.public, "content/notes/a-note-og-image.webp"))).toBe(true)
+})
+
 // `alias-redirects` emits case redirects only when the output directory's filesystem is
 // case-sensitive, as CI's is. On a case-insensitive one (macOS by default) `/Mixed-Case` would reach
 // `mixed-case.html` directly, and this would pass without a redirect existing.

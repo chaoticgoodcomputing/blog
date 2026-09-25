@@ -187,11 +187,17 @@ plugins:
       defaultArticleType: Article
   - source: "@quartz-community/favicon"
     enabled: true
+  # Replaced by cgc-og-image, which wraps it (#58).
   - source: "@quartz-community/og-image"
+    enabled: false
+  # v4's cards: last-segment tag chips, the site's icon, and none drawn under `serve` (#42, #44).
+  - source: ../plugins/cgc-og-image
     enabled: true
     options:
       # v4's OG images are dark (FORK-LEDGER ogImage.tsx).
       colorScheme: darkMode
+      # The site's own icon, `quartz-v5/icon.png`, resolved against the vendored root.
+      icon: ../icon.png
   - source: "@quartz-community/cname"
     enabled: true
   - source: "@quartz-community/canvas-page"

@@ -8,7 +8,7 @@
 import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
-import { execFile } from "node:child_process"
+import { execFile, spawn } from "node:child_process"
 import { createRequire } from "node:module"
 import { promisify } from "node:util"
 import { fileURLToPath } from "node:url"
@@ -39,14 +39,20 @@ export function fileFor(root, pathname) {
 // The real site's config, tracked at `quartz-v5/quartz.config.yaml`, for a scratch site that has to
 // be built the way the real site is. Its local `source:` paths resolve against the vendored root,
 // where the real site builds (VENDORED.md), so they are rebased onto the scratch roots' directory.
+// So is a plugin option that is a relative path (`./…` or `../…`), such as cgc-og-image's `icon`,
+// which a plugin resolves against the same root.
 export const siteConfigFile = path.resolve(testsRoot, "../quartz.config.yaml")
 export function siteConfig() {
   const config = YAML.parseDocument(fs.readFileSync(siteConfigFile, "utf8"))
   const scratchRoot = path.join(testsRoot, ".site-scratch")
+  const rebase = (local) => path.relative(scratchRoot, path.resolve(vendored, local))
   for (const entry of config.get("plugins").items) {
     const source = entry.get("source")
     if (typeof source === "string" && source.startsWith(".")) {
-      entry.set("source", path.relative(scratchRoot, path.resolve(vendored, source)))
+      entry.set("source", rebase(source))
+    }
+    for (const option of YAML.isMap(entry.get("options")) ? entry.get("options").items : []) {
+      if (YAML.isScalar(option.value) && /^\.\.?\//.test(option.value.value)) option.value.value = rebase(option.value.value)
     }
   }
   return String(config)
@@ -158,6 +164,38 @@ async function withBuildLock(fn) {
 const quartzBuild = (root, args) =>
   withBuildLock(() => run("node", [path.join(root, "quartz/bootstrap-cli.mjs"), "build", ...args], { cwd: root }))
 
+// `quartz build --serve`, for the one thing a spec may need it for: what a plugin does differently
+// under serve (ADR-0004 keeps it out of everything else). Stopped as soon as its server is up, which
+// is after the first build has been emitted. Its ports are the OS's pick, so it never collides with
+// the suite's own servers or another copy of the suite. Rejects like `quartzBuild` when the build
+// fails, and gives up after `SERVE_TIMEOUT_MS`.
+const SERVE_TIMEOUT_MS = 2 * 60 * 1000
+const quartzServe = (root, args) =>
+  withBuildLock(
+    () =>
+      new Promise((resolve, reject) => {
+        const cli = path.join(root, "quartz/bootstrap-cli.mjs")
+        const child = spawn("node", [cli, "build", "--serve", "--port", "0", "--wsPort", "0", ...args], { cwd: root })
+        let output = ""
+        let started = false
+        const timer = setTimeout(() => child.kill(), SERVE_TIMEOUT_MS)
+        const collect = (chunk) => {
+          output += chunk
+          if (!started && output.includes("Started a Quartz server")) {
+            started = true
+            child.kill()
+          }
+        }
+        child.stdout.on("data", collect)
+        child.stderr.on("data", collect)
+        child.on("close", (code) => {
+          clearTimeout(timer)
+          if (started) resolve({ stdout: output, stderr: "" })
+          else reject(Object.assign(new Error("quartz build --serve exited before serving"), { code: code ?? 1, stdout: output }))
+        })
+      }),
+  )
+
 export async function buildSite(variant) {
   writeFixtureRoot(variant)
   await quartzBuild(fixtureRoot(variant), ["-d", "../content-fixture", "-o", outputFor(variant)])
@@ -167,9 +205,10 @@ export async function buildSite(variant) {
 // that is supposed to fail. `files` maps content paths to their text. Uses the main variant's
 // config unless `options.config` supplies one (a YAML string), and assumes `buildPlugins` has
 // already run (global setup does it). Resolves with the exit code and combined output rather than
-// throwing. `options.args` are extra `quartz build` flags. The site is deleted afterwards unless
-// `options.keep` is set; the result then also carries `root` and `public` (the built site), and
-// the caller removes `root`.
+// throwing. `options.args` are extra `quartz build` flags. `options.serve` builds it as
+// `quartz build --serve` does, stopping the server once it is up. The site is deleted afterwards
+// unless `options.keep` is set; the result then also carries `root` and `public` (the built site),
+// and the caller removes `root`.
 export async function buildScratchSite(name, files, options = {}) {
   // Unique per call: the same spec runs once per colour scheme, possibly at the same time.
   const root = fs.mkdtempSync(path.join(testsRoot, `.site-scratch-${name}-`))
@@ -188,7 +227,8 @@ export async function buildScratchSite(name, files, options = {}) {
   fs.writeFileSync(path.join(root, "quartz.config.yaml"), config)
   const kept = options.keep ? { root, public: path.join(root, "public") } : {}
   try {
-    const { stdout, stderr } = await quartzBuild(root, ["-d", content, "-o", "public", ...(options.args ?? [])])
+    const build = options.serve ? quartzServe : quartzBuild
+    const { stdout, stderr } = await build(root, ["-d", content, "-o", "public", ...(options.args ?? [])])
     return { code: 0, output: stdout + stderr, ...kept }
   } catch (err) {
     return { code: err.code ?? 1, output: `${err.stdout ?? ""}${err.stderr ?? ""}`, ...kept }

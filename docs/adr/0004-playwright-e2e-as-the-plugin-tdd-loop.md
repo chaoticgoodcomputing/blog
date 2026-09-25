@@ -128,3 +128,16 @@ scheme, and the shareability test covers it: a plugin that only looks right in d
 pass. Whether our own site brings its light scheme back is decided separately. The guarantee can't
 depend on it, so the harness provides it: every fixture spec renders under both `saved-theme`
 values, and a plugin that assumes dark fails the suite.
+
+## Amendment: a serve run, for what a plugin does under serve
+
+_2026-09-25, from [`cgc-og-image`: tag chips, site icon, skipped under serve](https://github.com/chaoticgoodcomputing/blog/issues/58)._
+
+A plugin can behave differently under `quartz build --serve`: `cgc-og-image` draws no cards there.
+Only a serve run can show that, so a scratch site can be built as one:
+`buildScratchSite(name, files, { serve: true })`. The harness starts `quartz build --serve`, waits
+for its server to come up, which happens after the first build has been emitted, and stops it. So
+each serve run is as cold as any other build, and the objection above, a long-lived server that never
+reloads a rebuilt plugin, doesn't arise. Its ports are the OS's pick (`--port 0 --wsPort 0`), so it
+can't collide with the suite's servers or another copy of the suite. Everything else is still
+asserted on cold builds.
