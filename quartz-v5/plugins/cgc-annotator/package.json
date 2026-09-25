@@ -1,0 +1,33 @@
+{
+  "name": "cgc-annotator",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Quartz 5 plugin that shows annotations written with Obsidian's Annotator plugin, and mirrors their source documents. See CONTEXT.md and docs/adr/.",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "../node_modules/.bin/tsc -p ."
+  },
+  "//devDependencies": "Build-time only: the plugin is bundled to dist/ by build.mjs.",
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  },
+  "quartz": {
+    "name": "cgc-annotator",
+    "displayName": "Annotations",
+    "category": [
+      "emitter"
+    ],
+    "version": "0.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 50,
+    "defaultEnabled": true,
+    "defaultOptions": {}
+  }
+}

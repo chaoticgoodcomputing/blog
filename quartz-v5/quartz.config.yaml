@@ -208,6 +208,12 @@ plugins:
     enabled: true
   - source: "@quartz-community/content-page"
     enabled: true
+  # Mirrors every annotation page's source document into the site, pinned in the default cache,
+  # `node_modules/.cache/cgc-annotator/` (#37). The site's `robots.txt` keeps them out of search.
+  - source: ../plugins/cgc-annotator
+    enabled: true
+    options:
+      mirrorDir: assets/annotated-documents
   # Folder pages are dropped (#42, #43): never in the sitemap or linked, and the tag description
   # files (`tags/<t>/index.md`) would render as folder pages.
   - source: "@quartz-community/folder-page"

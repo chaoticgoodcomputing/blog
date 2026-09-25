@@ -21,11 +21,12 @@ quartz-v5/
 ├── VENDORED.md           this file
 ├── upstream.json         the pinned upstream ref — machine-readable source of truth
 ├── quartz.config.yaml    our Quartz 5 configuration — tracked here, symlinked into quartz/
+├── robots.txt            the site's own robots.txt — copied into the build by postbuild.mjs
 ├── plugins/              our Quartz plugins (`cgc-*`)
 ├── site-plugins/         this site's own plugins, which fail the shareability test on purpose
 ├── libs/                 our non-plugin packages (`@chaoticgoodcomputing/*`)
 ├── tests/                Playwright suite and `content-fixture/`
-├── utils/                tooling for this context — `upstream.mjs`, `prebuild.mjs`
+├── utils/                tooling for this context — `upstream.mjs`, `prebuild.mjs`, `postbuild.mjs`
 └── quartz/               the vendored copy: upstream's repo root, verbatim
 ```
 
@@ -55,10 +56,11 @@ file at that path. Never leave an empty `quartz.config.yaml` there:
 prefers it over `quartz.config.default.yaml`, so an empty one silently disables every default
 plugin.
 
-`site-v5:build` builds the real vault, `content/public`, into `quartz/public`. Extra flags go to
-`quartz build`, e.g. `pnpm nx run site-v5:build --concurrency=4`. The e2e suite proves the config
-itself on a scratch site built from it (`tests/specs/site-config.spec.mjs`, through the harness's
-`siteConfig()`).
+`site-v5:build` builds the real vault, `content/public`, into `quartz/public`, then copies the site's
+own root-level files (`robots.txt`) in with `utils/postbuild.mjs`, since v5's Static emitter writes
+only under `/static/`. Extra flags go to `quartz build`, e.g.
+`pnpm nx run site-v5:build --concurrency=4`. The e2e suite proves the config itself on a scratch
+site built from it (`tests/specs/site-config.spec.mjs`, through the harness's `siteConfig()`).
 
 One consequence to remember: `source:` entries inside that config are resolved with
 `path.resolve()` against cwd ([`gitLoader.ts:99`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L99)), which is the

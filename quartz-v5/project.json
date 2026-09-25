@@ -69,11 +69,15 @@
       }
     },
     "build": {
-      "//": "Build the real site: content/public, with the tracked config, into quartz-v5/quartz/public. Extra flags go to `quartz build`, e.g. --concurrency=4.",
+      "//": "Build the real site: content/public, with the tracked config, into quartz-v5/quartz/public, then copy in the site's own root-level files (utils/postbuild.mjs). Extra flags go to `quartz build`, e.g. --concurrency=4.",
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx quartz build -d ../../content/public --output public",
-        "cwd": "{workspaceRoot}/quartz-v5/quartz"
+        "commands": [
+          { "command": "npx quartz build -d ../../content/public --output public", "forwardAllArgs": true },
+          { "command": "node ../utils/postbuild.mjs public", "forwardAllArgs": false }
+        ],
+        "cwd": "{workspaceRoot}/quartz-v5/quartz",
+        "parallel": false
       },
       "dependsOn": ["prebuild"],
       "outputs": [

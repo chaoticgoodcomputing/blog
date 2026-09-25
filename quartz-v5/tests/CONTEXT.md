@@ -60,3 +60,9 @@ OS picks. Only for what a plugin does differently under serve (ADR-0004).
 A throwaway plugin a library's spec compiles from source (`harness/probe.mjs`) and loads into a
 scratch site, standing in for the plugin that will one day use that capability of the library.
 _Avoid_: test plugin, mock plugin, fake
+
+**Source host**:
+A local web server a spec starts to stand in for a remote site that a build fetches from, such as
+the host of an annotation page's source document (`harness/source-host.mjs`). It listens on a port the
+OS picks, so a build never reaches the network.
+_Avoid_: mock server, fake remote, test server

@@ -98,7 +98,7 @@ Optional core PRs, none of which we need:
 - **Fonts delete.** `fontOrigin: googleFonts` with `cdnCaching: false` makes v5 core download and self-host Inter and IBM Plex Mono (`componentResources.ts:285`). The default config has `cdnCaching: true`, so the site must flip it. `utils/fonts/`, `_prepare-fonts` and the committed woff2 files go.
 - **Root-level files.** v5's `Static` emitter writes only under `/static/`, which is why `_postbuild` exists:
   - CNAME comes from the stock `cname` plugin.
-  - `robots.txt` comes from `cgc-seo`.
+  - `robots.txt` is hand-written by the site, as `quartz-v5/robots.txt`, and copied in by the site-v5 post-build step (#37, #59). It carries the `Disallow` for `cgc-annotator`'s mirrors.
   - The Bing verification and IndexNow key files need a site post-build copy.
 
   This is deployment work, sequenced last.
@@ -344,12 +344,12 @@ Files with no upstream path. Renamed or split upstream code is classified by wha
 | project.json: `_subset-fonts` | — | Dead | — | Glyph subsetting is manual and wired into no target's `dependsOn`. v5 subsets only the title font (`googleFontSubsetHref`). | #42: drop |
 | project.json: `_prebuild` | — | Dead | — | Its only dependencies are `_prepare-fonts` (Native) and `vault:download-annotation-pdfs`, which the map deletes at cutover because the cgc-annotator emitter fetches mirrors. | |
 | project.json: `_inbuild`, `build`, `serve` | — | Plugin | site-v5 `build` / `serve` (they exist and need repointing to `-d content/public`) | These are the core build orchestration. CI `deploy.yaml:201` calls `site:build`, so the target name or CI must be updated at cutover. | |
-| project.json: `_postbuild` | — | Plugin | see the static rows: CNAME → Native `cname`; robots → cgc-seo; Bing and IndexNow key → site-v5 post-build copy | This target copies four root files out of `static/`, because the v4/v5 Static emitter publishes under `/static/` and not at the site root. | |
+| project.json: `_postbuild` | — | Plugin | see the static rows: CNAME → Native `cname`; robots, Bing and IndexNow key → site-v5 post-build copy (`utils/postbuild.mjs`) | This target copies four root files out of `static/`, because the v4/v5 Static emitter publishes under `/static/` and not at the site root. | |
 | project.json: `check`, `format`, `test` | — | Plugin | site-v5 / plugin projects (tsc + prettier over `quartz-v5/plugins`; e2e from ADR-0004) | Type-checking the v4 tree has no v5 equivalent. Equivalent targets belong in each plugin project. | |
 | project.json: `eval`, `_serve-static`, `eval:live`, `eval:multi` | — | Plugin | site-v5 `quartz-v5/project.json` (Lighthouse tooling in `utils/lighthouse`) | Lighthouse audits are site tooling that is independent of the build engine. | #42: keep |
 | project.json: `indexnow` | — | Plugin | site-v5 `quartz-v5/project.json` | CI `deploy.yaml:353-400` job `notify-indexnow` calls `site:indexnow`, so the target is still needed. It reads cgc-seo's sitemap. | |
 | static/CNAME | 0 (25 bytes, no newline) | Native | `@quartz-community/cname` | The stock plugin writes CNAME from `baseUrl`. | |
-| static/robots.txt | 4 | Plugin | cgc-seo (emit `robots.txt` with a `Sitemap:` line built from `baseUrl`) | Its only content is Allow-all plus the sitemap URL. cgc-seo owns the sitemap and which pages are indexable, so it should also own robots.txt. | |
+| static/robots.txt | 4 | Plugin | site-owned `quartz-v5/robots.txt`, copied to the site root by the site-v5 post-build step (`utils/postbuild.mjs`) | Its only content was Allow-all plus the sitemap URL. It now also disallows `cgc-annotator`'s mirrors, and robots.txt belongs to the site, not a plugin (#37). | #59: hand-written, not cgc-seo |
 | static/BingSiteAuth.xml, ./static/a6e41ab6-6753-4d94-9b54-b4405d806883.txt | 4 | Plugin | site-owned root files, copied by a site-v5 post-build target (or a site static-root step) | These are the Bing Webmaster verification file and the IndexNow key file (`utils/indexnow/submit-urls.mjs:23`). They must be served at the root, and the Static emitter publishes only under `/static/`. | |
 | static/fonts/** (fonts.css, inter/*, ibm-plex-mono/*) | 138 | Native | v5 `theme.fontOrigin: googleFonts`, `cdnCaching: false`; typography via theme or `@quartz-community/quartz-fonts` | These are generated self-hosted Inter and IBM Plex Mono files, linked by our Head.tsx. v5 core downloads Google Fonts to `static/fonts/` at build time. | |
 | static/icons/d20.svg, roblox.svg, uofu.svg, quartz-filled.svg | 102 | Plugin | site-owned `quartz-v5/icons/` (served through @chaoticgoodcomputing/icons) | These are `custom:` tag icons referenced in `quartz.config.ts` tag icon config (L46, 65, 81, 102). | |

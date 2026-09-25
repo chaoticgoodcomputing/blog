@@ -1,0 +1,9 @@
+# The site's robots.txt, hand-written, copied to the site root by quartz-v5/utils/postbuild.mjs.
+
+User-agent: *
+Allow: /
+# cgc-annotator's mirrors: third-party documents we serve only for the annotation Viewer (#37).
+# Keep in step with the plugin's `mirrorDir` in quartz.config.yaml.
+Disallow: /assets/annotated-documents/
+
+Sitemap: https://blog.chaoticgood.computer/sitemap.xml
