@@ -26,6 +26,31 @@ export const VARIANTS = ["main", "baseline"]
 export const fixtureRoot = (variant) => path.join(testsRoot, variant === "main" ? ".site" : `.site-${variant}`)
 export const outputFor = (variant) => path.join(fixtureRoot(variant), "public")
 
+// The file a request path reaches in a built site, with Quartz's extensionless URLs: `/a` is `a`,
+// `a.html` or `a/index.html`. Anything else gets the site's 404 page.
+export function fileFor(root, pathname) {
+  const hit = [pathname, `${pathname}.html`, path.join(pathname, "index.html")]
+    .map((candidate) => path.join(root, candidate))
+    .find((file) => fs.existsSync(file) && fs.statSync(file).isFile())
+  return hit ? { file: hit, status: 200 } : { file: path.join(root, "404.html"), status: 404 }
+}
+
+// The real site's config, tracked at `quartz-v5/quartz.config.yaml`, for a scratch site that has to
+// be built the way the real site is. Its local `source:` paths resolve against the vendored root,
+// where the real site builds (VENDORED.md), so they are rebased onto the scratch roots' directory.
+export const siteConfigFile = path.resolve(testsRoot, "../quartz.config.yaml")
+export function siteConfig() {
+  const config = YAML.parseDocument(fs.readFileSync(siteConfigFile, "utf8"))
+  const scratchRoot = path.join(testsRoot, ".site-scratch")
+  for (const entry of config.get("plugins").items) {
+    const source = entry.get("source")
+    if (typeof source === "string" && source.startsWith(".")) {
+      entry.set("source", path.relative(scratchRoot, path.resolve(vendored, source)))
+    }
+  }
+  return String(config)
+}
+
 const LINKED = ["package.json", "quartz", "node_modules", "tsconfig.json", "quartz.ts", "globals.d.ts", "index.d.ts"]
 const isOurs = (source) => typeof source === "string" && source.startsWith("../../plugins/")
 

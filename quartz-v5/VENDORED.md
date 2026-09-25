@@ -25,7 +25,7 @@ quartz-v5/
 ├── site-plugins/         this site's own plugins, which fail the shareability test on purpose
 ├── libs/                 our non-plugin packages (`@chaoticgoodcomputing/*`)
 ├── tests/                Playwright suite and `content-fixture/`
-├── utils/                tooling for this context — `upstream.mjs`
+├── utils/                tooling for this context — `upstream.mjs`, `prebuild.mjs`
 └── quartz/               the vendored copy: upstream's repo root, verbatim
 ```
 
@@ -47,16 +47,18 @@ point at upstream at [`97a2d05`](https://github.com/jackyzha0/quartz/tree/97a2d0
 - There is no `--config` flag ([`args.js`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/cli/args.js)) and no environment override.
 
 So the tracked file is `quartz-v5/quartz.config.yaml`, and `quartz-v5/quartz/quartz.config.yaml`
-is a symlink to it, created by a `site-v5` prebuild step. The symlink is gitignored and excluded
-from the drift check; `sync` destroys it along with the rest of the tree, and prebuild recreates it.
+is a symlink to it, created by the `site-v5:prebuild` target (`utils/prebuild.mjs`), which `build`
+and `serve` depend on. The symlink is gitignored and excluded from the drift check; `sync` destroys
+it along with the rest of the tree, and prebuild recreates it. Prebuild refuses to replace a real
+file at that path. Never leave an empty `quartz.config.yaml` there:
+[`resolveConfigPath`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/install-plugins.ts#L14-L17)
+prefers it over `quartz.config.default.yaml`, so an empty one silently disables every default
+plugin.
 
-> **Not yet wired.** Neither the tracked config nor the prebuild step exists yet — this records the
-> arrangement decided on [#22](https://github.com/chaoticgoodcomputing/blog/issues/22), so that the
-> guard rails (`.gitignore`, `EXCLUDES`) are in place before the first plugin needs them. Do not
-> create an empty `quartz.config.yaml` as a placeholder:
-> [`resolveConfigPath`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/install-plugins.ts#L14-L17)
-> prefers it over `quartz.config.default.yaml`, so an empty one silently disables every default
-> plugin.
+`site-v5:build` builds the real vault, `content/public`, into `quartz/public`. Extra flags go to
+`quartz build`, e.g. `pnpm nx run site-v5:build --concurrency=4`. The e2e suite proves the config
+itself on a scratch site built from it (`tests/specs/site-config.spec.mjs`, through the harness's
+`siteConfig()`).
 
 One consequence to remember: `source:` entries inside that config are resolved with
 `path.resolve()` against cwd ([`gitLoader.ts:99`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L99)), which is the
@@ -144,13 +146,13 @@ whose change upstream has taken.
 Self-contained in `quartz/node_modules`.
 
 **Local plugins resolve the host's dependencies through `plugins/node_modules`,** a gitignored
-symlink to `../quartz/node_modules` that the e2e harness creates. A git-installed plugin sits at
+symlink to `../quartz/node_modules` that the e2e harness and `site-v5:prebuild` create. A git-installed plugin sits at
 `.quartz/plugins/<name>/` inside the Quartz root, so its bare `import "preact"` finds Quartz's copy,
 and that is what the loader's shared externals assume. A local plugin is only symlinked there, and
 Node resolves from the symlink's target under `plugins/`, which would otherwise walk up to the v4
 tree's `node_modules` at the repo root: a second, older Preact. A plugin's own install therefore
 omits peers (`npm ci --omit=peer`), so its local `node_modules` never shadows a host singleton. `site-plugins/` needs the same link, `site-plugins/node_modules`, for the same reason. It's
-decided on [#39](https://github.com/chaoticgoodcomputing/blog/issues/39) but not wired yet. Upstream uses **npm** with its own `package-lock.json`,
+decided on [#39](https://github.com/chaoticgoodcomputing/blog/issues/39). `site-v5:prebuild` makes it for the real site once the config enables a site plugin, but the e2e harness doesn't yet. Upstream uses **npm** with its own `package-lock.json`,
 and its versions conflict with the v4 tree at the repo root (preact, unified, shiki). This
 directory is deliberately _not_ a pnpm workspace package, so the root `pnpm install` ignores it.
 

@@ -60,30 +60,34 @@
         "parallel": false
       }
     },
-    "build": {
-      "//": "Build the vendored Quartz. Defaults to its own docs/ as content until the migration points it at content/public.",
+    "prebuild": {
+      "//": "Prepare the vendored copy to build the real site: symlink the tracked quartz-v5/quartz.config.yaml into it, link host node_modules beside local plugins, and build every local plugin the config enables. See VENDORED.md.",
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "npx quartz build -d docs --output public"
-        ],
-        "cwd": "{workspaceRoot}/quartz-v5/quartz",
-        "parallel": false
+        "command": "node quartz-v5/utils/prebuild.mjs",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "build": {
+      "//": "Build the real site: content/public, with the tracked config, into quartz-v5/quartz/public. Extra flags go to `quartz build`, e.g. --concurrency=4.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx quartz build -d ../../content/public --output public",
+        "cwd": "{workspaceRoot}/quartz-v5/quartz"
       },
+      "dependsOn": ["prebuild"],
       "outputs": [
         "{workspaceRoot}/quartz-v5/quartz/public"
       ]
     },
     "serve": {
-      "//": "Dev server for the vendored Quartz.",
+      "//": "Build the real site and serve it with Quartz's dev server, rebuilding on content changes. Mixed-case redirects are only emitted on a case-sensitive filesystem, so a macOS serve shows none.",
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "npx quartz build --serve -d docs --output public"
-        ],
-        "cwd": "{workspaceRoot}/quartz-v5/quartz",
-        "parallel": false
+        "command": "npx quartz build --serve -d ../../content/public --output public",
+        "cwd": "{workspaceRoot}/quartz-v5/quartz"
       },
+      "dependsOn": ["prebuild"],
       "continuous": true
     },
     "clean": {

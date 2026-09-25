@@ -1,0 +1,334 @@
+# The real site's Quartz 5 config (#54): upstream's default, set to the site's own configuration.
+#
+# Tracked here and reached through the gitignored symlink `quartz/quartz.config.yaml`, which the
+# `site-v5` targets create (see VENDORED.md). Local `source:` paths resolve against the vendored
+# root, `quartz-v5/quartz/`, so our plugins are `../plugins/<name>` and site plugins
+# `../site-plugins/<name>`. Proven by `tests/specs/site-config.spec.mjs`.
+#
+# Kept in upstream's plugin order, so it diffs cleanly against `quartz/quartz.config.default.yaml`.
+# Where a setting departs from stock, the comment says why, citing the decision (map: #18). Plugins
+# that replace a stock one (tags, graph, post listing, SEO...) arrive with their own tickets.
+#
+# Breakpoints (1000/1300, #22) are not here: core compiles them into Sass, so the site re-declares
+# its grid in its own CSS, in the `site-styles` site plugin (#64).
+
+# yaml-language-server: $schema=./quartz/quartz/plugins/quartz-plugins.schema.json
+configuration:
+  pageTitle: Chaotic Good Computing
+  # v4's " | Spencer Elkington", stock and unconditional: v4's 70-character guard needs core (#42).
+  pageTitleSuffix: " | Spencer Elkington"
+  enableSPA: true
+  enablePopovers: true
+  # None in core: PostHog, with v4's privacy options, comes from the cgc-posthog plugin (#61).
+  analytics: null
+  locale: en-US
+  baseUrl: blog.chaoticgood.computer
+  ignorePatterns:
+    - private
+    - templates
+    - .obsidian
+  theme:
+    # Self-hosted: core downloads the Google Fonts at build time into `static/fonts/` when CDN
+    # caching is off (FORK-LEDGER, "Fonts delete"). v4's typography.
+    fontOrigin: googleFonts
+    cdnCaching: false
+    typography:
+      header: &headerFont Inter
+      body: &bodyFont Inter
+      code: &codeFont IBM Plex Mono
+    # Both schemes, stock palettes (#41). v4's palette is the stock darkMode one.
+    colors:
+      lightMode:
+        light: "#faf8f8"
+        lightgray: "#e5e5e5"
+        gray: "#b8b8b8"
+        darkgray: "#4e4e4e"
+        dark: "#2b2b2b"
+        secondary: "#284b63"
+        tertiary: "#84a59d"
+        highlight: rgba(143, 159, 169, 0.15)
+        textHighlight: "#fff23688"
+      darkMode:
+        light: "#161618"
+        lightgray: "#393639"
+        gray: "#646464"
+        darkgray: "#d4d4d4"
+        dark: "#ebebec"
+        secondary: "#7b97aa"
+        tertiary: "#84a59d"
+        highlight: rgba(143, 159, 169, 0.15)
+        textHighlight: "#b3aa0288"
+plugins:
+  - source: "@quartz-community/created-modified-date"
+    enabled: true
+    options:
+      defaultDateType: modified
+      priority:
+        - frontmatter
+        - git
+        - filesystem
+    order: 10
+  - source: "@quartz-community/syntax-highlighting"
+    enabled: true
+    options:
+      theme:
+        light: github-light
+        dark: github-dark
+      keepBackground: false
+    order: 20
+  - source: "@quartz-community/obsidian-flavored-markdown"
+    enabled: true
+    options:
+      enableInHtmlEmbed: false
+      enableCheckbox: true
+      # v4: an inline `#word` is text, not a tag.
+      parseTags: false
+    order: 30
+  - source: "@quartz-community/github-flavored-markdown"
+    enabled: true
+    order: 40
+  - source: "@quartz-community/table-of-contents"
+    enabled: true
+    order: 50
+    layout:
+      position: right
+      priority: 30
+      # v4: desktop only, and not on the index.
+      display: desktop-only
+      condition: not-index
+  - source: "@quartz-community/crawl-links"
+    enabled: true
+    options:
+      # v4's absolute link resolution (FORK-LEDGER util/path.ts), and external links in a new tab.
+      markdownLinkResolution: absolute
+      openLinksInNewTab: true
+    order: 60
+  - source: "@quartz-community/description"
+    enabled: true
+    order: 70
+  - source: "@quartz-community/latex"
+    enabled: true
+    options:
+      renderEngine: katex
+    order: 80
+  - source: "@quartz-community/citations"
+    enabled: false
+    order: 85
+  - source: "@quartz-community/hard-line-breaks"
+    enabled: false
+    order: 90
+  - source: "@quartz-community/ox-hugo"
+    enabled: false
+    order: 91
+  - source: "@quartz-community/roam"
+    enabled: false
+    order: 92
+  - source: "@quartz-community/quartz-fonts"
+    enabled: true
+    options:
+      # Core self-hosts the fonts (above). This plugin's own default links Google Fonts from every
+      # page, and falls back to upstream's typography, so it gets the site's and loads nothing.
+      fontOrigin: local
+      header: *headerFont
+      body: *bodyFont
+      code: *codeFont
+  - source: "@quartz-themes/core"
+    enabled: false
+    options:
+      theme: tokyo-night
+      mode: both
+  - source: "@quartz-community/remove-draft"
+    enabled: true
+  - source: "@quartz-community/explicit-publish"
+    enabled: false
+  - source: "@quartz-community/alias-redirects"
+    enabled: true
+    options:
+      # On permanently (#23): v4's mixed-case URLs (89 in the vault today) redirect to their
+      # lowercase pages. Emitted only where the output filesystem is case-sensitive, as CI's is.
+      enableCaseRedirects: true
+  - source: "@quartz-community/content-index"
+    enabled: true
+    options:
+      enableSiteMap: true
+      enableRSS: true
+      rssLimit: 40
+  - source: "@quartz-community/favicon"
+    enabled: true
+  - source: "@quartz-community/og-image"
+    enabled: true
+    options:
+      # v4's OG images are dark (FORK-LEDGER ogImage.tsx).
+      colorScheme: darkMode
+  - source: "@quartz-community/cname"
+    enabled: true
+  - source: "@quartz-community/canvas-page"
+    enabled: true
+  - source: "@quartz-community/content-page"
+    enabled: true
+  # Folder pages are dropped (#42, #43): never in the sitemap or linked, and the tag description
+  # files (`tags/<t>/index.md`) would render as folder pages.
+  - source: "@quartz-community/folder-page"
+    enabled: false
+  - source: "@quartz-community/tag-page"
+    enabled: true
+  # A file explorer is in no v4 layout (#42). The tag explorer, with its own drawer, is #76.
+  - source: "@quartz-community/explorer"
+    enabled: false
+    layout:
+      position: left
+      priority: 50
+  - source: "@quartz-community/graph"
+    enabled: true
+    layout:
+      position: right
+      priority: 10
+  - source: "@quartz-community/search"
+    enabled: true
+    layout:
+      position: left
+      priority: 20
+      group: toolbar
+      groupOptions:
+        grow: true
+  - source: "@quartz-community/backlinks"
+    enabled: true
+    layout:
+      position: right
+      priority: 50
+      # v4's index has no backlinks.
+      condition: not-index
+  - source: "@quartz-community/article-title"
+    enabled: true
+    layout:
+      position: beforeBody
+      priority: 10
+  - source: "@quartz-community/content-meta"
+    enabled: true
+    layout:
+      position: beforeBody
+      priority: 20
+      # v4's index shows no date or reading time.
+      condition: not-index
+  # v4 lists a page's tags under its title.
+  - source: "@quartz-community/tag-list"
+    enabled: true
+    layout:
+      position: beforeBody
+      priority: 30
+  - source: "@quartz-community/page-title"
+    enabled: true
+    layout:
+      position: left
+      priority: 10
+  # Both schemes (#41): the stock toggle in its stock slot. Its script follows the OS scheme on first
+  # load and falls back to dark when the browser reports none.
+  - source: "@quartz-community/darkmode"
+    enabled: true
+    layout:
+      position: left
+      priority: 30
+      group: toolbar
+  # In no v4 layout.
+  - source: "@quartz-community/reader-mode"
+    enabled: false
+    layout:
+      position: left
+      priority: 35
+      group: toolbar
+  # In no v4 layout.
+  - source: "@quartz-community/breadcrumbs"
+    enabled: false
+    layout:
+      position: beforeBody
+      priority: 5
+      condition: not-index
+  - source: "@quartz-community/comments"
+    enabled: false
+    options:
+      provider: giscus
+      options: {}
+    layout:
+      position: afterBody
+      priority: 10
+  - source: "@quartz-community/footer"
+    enabled: true
+    options:
+      # v4's footer links.
+      links:
+        Contact: https://blog.chaoticgood.computer/contact
+        GitHub: https://github.com/spelkington
+        LinkedIn: https://www.linkedin.com/in/spelkington
+        Privacy Policy: https://chaoticgood.computer/privacy
+        AI Policy: https://chaoticgood.computer/ai-policy
+    layout:
+      position: footer
+      priority: 50
+  - source: "@quartz-community/recent-notes"
+    enabled: false
+  - source: "@quartz-community/spacer"
+    enabled: true
+    options: {}
+    order: 25
+    layout:
+      position: left
+      priority: 25
+      display: mobile-only
+  - source: "@quartz-community/bases-page"
+    enabled: true
+    options: {}
+    order: 50
+  # Parses every page's frontmatter, so it stays on. v4 shows no properties table.
+  - source: "@quartz-community/note-properties"
+    enabled: true
+    options:
+      includeAll: false
+      includedProperties:
+        - description
+        - tags
+        - aliases
+      excludedProperties: []
+      hidePropertiesView: true
+      delimiters: ---
+      language: yaml
+    order: 5
+    layout:
+      position: beforeBody
+      priority: 15
+      display: all
+  - source: "@quartz-community/unlisted-pages"
+    enabled: true
+    options: {}
+    order: 45
+  - source: "@quartz-community/encrypted-pages"
+    enabled: true
+    options:
+      iterations: 600000
+      passwordField: password
+      unlistWhenEncrypted: false
+      outputPath: static/encryptedContentIndex.json
+    order: 900
+  - source: "@quartz-community/stacked-pages"
+    enabled: false
+    layout:
+      position: afterBody
+      priority: 50
+      display: all
+layout:
+  groups:
+    toolbar:
+      priority: 35
+      direction: row
+      gap: 0.5rem
+  byPageType:
+    # v4's 404 is in the site's shell, keeping the left navigation, with nothing before the body and
+    # nothing on the right. Stock gives it the bare `minimal` frame.
+    "404":
+      template: default
+      positions:
+        beforeBody: []
+        right: []
+    content: {}
+    tag: {}
+    canvas: {}
+    bases: {}

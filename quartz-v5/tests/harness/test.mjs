@@ -3,7 +3,7 @@
 import { test as base, expect } from "@playwright/test"
 import fs from "node:fs"
 import path from "node:path"
-import { outputFor } from "./site.mjs"
+import { fileFor, outputFor } from "./site.mjs"
 import { BASELINE_PORT } from "./env.mjs"
 
 export const BASELINE_URL = `http://localhost:${BASELINE_PORT}`
@@ -28,6 +28,20 @@ export const test = base.extend({
   },
 })
 export { expect }
+
+/**
+ * Serve a built site from disk to `page` at `origin` (e.g. `https://example.com`), by intercepting
+ * requests rather than listening on a port, so a scratch site can be browsed too. The site may be
+ * given its own `baseUrl` as origin, which is where Quartz points its absolute URLs (self-hosted
+ * fonts, OG images). Nothing sent to `origin` reaches the network: a path with no file gets the
+ * site's 404 page. Requests to any other origin are left alone.
+ */
+export async function routeSite(page, root, origin) {
+  await page.route(`${origin}/**`, (route) => {
+    const { file, status } = fileFor(root, decodeURIComponent(new URL(route.request().url()).pathname))
+    return route.fulfill({ status, path: file })
+  })
+}
 
 /** The colour scheme a loaded page is showing: the stock darkmode plugin's `saved-theme`. */
 export const schemeOf = (page) => page.evaluate(() => document.documentElement.getAttribute("saved-theme"))

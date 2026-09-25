@@ -53,6 +53,13 @@ application layer rather than something for others to install. The opposite of a
 which fails the test only by accident.
 _Avoid_: customization (that is the whole category), local plugin, private plugin
 
+**Site config**:
+The real site's Quartz configuration, `quartz-v5/quartz.config.yaml`: which plugins the site runs
+and with what options, its layout, theme and fonts. Tracked outside the vendored copy and reached
+through a gitignored symlink inside it. A plugin is _on the real site_ once the site config enables
+it. The e2e fixture has a config of its own, which is not this.
+_Avoid_: real config, production config, the config (while the fixture's exists too)
+
 **Plugin note**:
 A shareable plugin's README, published on this site as a content note at `/plugins/<name>`. The
 same file is the plugin's documentation on GitHub and its page on the site. Libraries and site
