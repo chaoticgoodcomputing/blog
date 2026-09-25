@@ -34,7 +34,59 @@ A site with a Content Security Policy must allow `blob:` in `worker-src`, since 
 starts from a `blob:` URL. The reasons are in
 [ADR-0001](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz-v5/libs/widgets/docs/adr/0001-pdf-js-rides-in-the-widget-chunk.md).
 
+## `/bluesky-post`
+
+One [Bluesky](https://bsky.app) post, fetched from Bluesky's public API in the reader's browser
+once the island hydrates. Before then, and when the post can't be fetched, readers get a message
+and a link to the post. The build never touches the network, and a URL that isn't a Bluesky post's
+fails the build.
+
+```mdx
+import { BlueSkyPost } from "@chaoticgoodcomputing/widgets/bluesky-post"
+
+<BlueSkyPost url="https://bsky.app/profile/pfrazee.com/post/3meogr22vtc2d" showMetrics />
+```
+
+| Prop          | Default   | What it is                                                                     |
+| ------------- | --------- | ------------------------------------------------------------------------------ |
+| `url`         | required  | The post, as bsky.app shows it: `https://bsky.app/profile/<handle>/post/<id>`. |
+| `showMetrics` | `false`   | Show the reply, repost and like counts.                                        |
+| `maxWidth`    | `"600px"` | A CSS max-width.                                                               |
+
+The post shows its author, its text, and its images, link card or quoted post. Its icons are MDI's,
+drawn by [`@chaoticgoodcomputing/icons`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/libs/icons)
+and carried in the widget, so nothing is fetched for them. Its skin is Quartz's colour properties
+(`--light`, `--lightgray`, `--gray`, `--darkgray`, `--dark`, `--secondary`, `--tertiary`,
+`--highlight`) and its details use `--codeFont`. A site with a Content Security Policy must allow
+`https://public.api.bsky.app` in `connect-src` and `https://cdn.bsky.app` in `img-src`.
+
+## `/bluesky`
+
+Not a widget: the client and renderer `/bluesky-post` is built on, for anything else that shows
+Bluesky posts, such as a sidebar feed. It has no Preact in it. It reads Bluesky's public API
+without signing in, and draws a post as an HTML string.
+
+```ts
+import { resolveHandle, getAuthorFeed, renderPost } from "@chaoticgoodcomputing/widgets/bluesky"
+
+const feed = await getAuthorFeed(await resolveHandle("pfrazee.com"), { limit: 5 })
+list.innerHTML = feed.map((item) => renderPost(item)).join("")
+```
+
+- `parseBlueskyUrl(url)`: a `bsky.app` post URL's handle, post id and `at://` URI, or `null`.
+- `getPost(atUri)`, `getPostThread(atUri, { depth, parentHeight })`, `resolveHandle(handle)` and
+  `getAuthorFeed(actor, { limit })` each take an optional `signal`. They reject with a
+  `BlueskyError` whose `reason` is `not-found`, `blocked` or `unavailable`.
+- `renderPost(item, { showMetrics, showContext })` draws a post, or an item of a feed, both options
+  defaulting to `true`: its counts, and in a feed, who reposted it or that it replies. Everything
+  the post carries is escaped, and only `http(s)` URLs become links or images.
+- `escapeHtml`, `relativeTime` and `postUrl` are the renderer's helpers.
+
+The renderer's markup is one BEM block, `cgc-bluesky`, and it imports its stylesheet, so a bundler
+that takes the renderer takes its CSS too.
+
 ## CSS
 
-Every widget's CSS is one BEM block, `cgc-<widget>`, and never selects anything outside it. The
-package's `lint` script checks this (`npm run lint`).
+Every subpath's CSS is one BEM block, `cgc-<name>`, and never selects anything outside it. The
+package's `lint` script checks this (`npm run lint`), along with the icons a widget carries, which
+must be exactly what the icons library draws (`npm run icons` redraws them).

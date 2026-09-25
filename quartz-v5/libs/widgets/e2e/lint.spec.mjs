@@ -93,3 +93,74 @@ test("CSS imported from outside the package fails, since the check can't see it"
   expect(code).not.toBe(0)
   expect(output).toContain("pdfjs-dist/web/pdf_viewer.css")
 })
+
+test("the post card's block and the Bluesky widget's are two blocks", async () => {
+  const { code, output } = await lintPlanted((dir) =>
+    fs.appendFileSync(
+      path.join(dir, "bluesky-post", "bluesky-post.css"),
+      "\n.cgc-bluesky__text { margin: 0; }\n",
+    ),
+  )
+  expect(code).not.toBe(0)
+  expect(output).toMatch(/bluesky-post[\\/]bluesky-post\.css:\d+:\d+/)
+  expect(output).toContain(".cgc-bluesky__text")
+})
+
+// draw-icons.mjs imports the icons library's TypeScript source, as package.json's scripts run it.
+const STRIP_TYPES = ["--experimental-strip-types", "--disable-warning=ExperimentalWarning"]
+
+// The icons a widget shows in the browser are drawn ahead by @chaoticgoodcomputing/icons, into the
+// widget's committed icons.ts (docs/adr/0002). The lint target checks they are still what the
+// library draws from the widget's icons.json.
+async function drawIcons(root) {
+  try {
+    const { stdout, stderr } = await run(
+      "node",
+      [...STRIP_TYPES, "draw-icons.mjs", "--check", ...(root ? [root] : [])],
+      { cwd: pkg },
+    )
+    return { code: 0, output: stdout + stderr }
+  } catch (err) {
+    return { code: err.code ?? 1, output: `${err.stdout ?? ""}${err.stderr ?? ""}` }
+  }
+}
+
+async function drawPlanted(plant) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "cgc-widgets-icons-"))
+  try {
+    fs.cpSync(path.join(pkg, "src"), dir, { recursive: true })
+    plant(dir)
+    return await drawIcons(dir)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+}
+
+test("the committed icons are what the icons library draws", async () => {
+  const { code, output } = await drawIcons()
+  expect(output).not.toMatch(/not what/)
+  expect(code).toBe(0)
+})
+
+test("a hand-edited icon fails the check, named with its file", async () => {
+  const { code, output } = await drawPlanted((dir) => {
+    const file = path.join(dir, "bluesky", "icons.ts")
+    const text = fs.readFileSync(file, "utf8")
+    expect(text).toContain('fill="currentColor"')
+    fs.writeFileSync(file, text.replace('fill="currentColor"', 'fill="#ff0000"'))
+  })
+  expect(code).not.toBe(0)
+  expect(output).toMatch(/bluesky[\\/]icons\.ts/)
+})
+
+test("an icon id the library doesn't know fails the check", async () => {
+  const { code, output } = await drawPlanted((dir) => {
+    const file = path.join(dir, "bluesky", "icons.json")
+    fs.writeFileSync(
+      file,
+      JSON.stringify({ ...JSON.parse(fs.readFileSync(file, "utf8")), likes: "mdi:no-such-icon" }),
+    )
+  })
+  expect(code).not.toBe(0)
+  expect(output).toContain("mdi:no-such-icon")
+})

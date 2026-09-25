@@ -1,0 +1,332 @@
+/* /bluesky's renderer: library CSS (ADR-0003). One BEM block, `cgc-bluesky`, the post card that
+   renderPost() writes: every selector starts at an element of it, and the package's `lint` target
+   fails on one that doesn't. Skin comes only from Quartz's documented colour properties. Whoever
+   bundles the renderer places this in its cascade: cgc-mdx wraps it in `@layer cgc.mdx.widgets`
+   with the widget that uses it. */
+
+.cgc-bluesky {
+  display: block;
+  position: relative;
+  box-sizing: border-box;
+  padding: 1rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  background: var(--light);
+  transition: border-color 0.2s ease;
+}
+
+.cgc-bluesky:hover {
+  border-color: var(--secondary);
+}
+
+/* Why a feed item is there: a repost, or a reply. */
+.cgc-bluesky__context {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--gray);
+  font-size: 0.8125rem;
+}
+
+.cgc-bluesky__context-text {
+  font-weight: 500;
+}
+
+.cgc-bluesky__author {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.cgc-bluesky__avatar {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  margin: 0;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.cgc-bluesky__names {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cgc-bluesky__name,
+.cgc-bluesky__handle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cgc-bluesky__name {
+  color: var(--dark);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.cgc-bluesky__handle {
+  color: var(--gray);
+  font-size: 0.8125rem;
+}
+
+.cgc-bluesky__content {
+  margin-bottom: 1rem;
+}
+
+/* A post's text is plain text: its line breaks are drawn as written. */
+.cgc-bluesky__text {
+  margin: 0;
+  color: var(--darkgray);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.cgc-bluesky__images {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.cgc-bluesky__image {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+}
+
+/* A link card. */
+.cgc-bluesky__card {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  background: var(--highlight);
+  color: inherit;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.cgc-bluesky__card:hover {
+  border-color: var(--secondary);
+  background: var(--light);
+}
+
+.cgc-bluesky__card-thumb {
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  margin: 0;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.cgc-bluesky__card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.cgc-bluesky__card-title,
+.cgc-bluesky__card-description {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+}
+
+.cgc-bluesky__card-title {
+  color: var(--dark);
+  font-size: inherit;
+  font-weight: 600;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.cgc-bluesky__card-description {
+  color: var(--gray);
+  font-size: 0.8125rem;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.cgc-bluesky__card--compact {
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  background: var(--light);
+  font-size: 0.8125rem;
+}
+
+.cgc-bluesky__card--compact:hover {
+  background: var(--highlight);
+}
+
+.cgc-bluesky__card-thumb--compact {
+  width: 70px;
+  height: 70px;
+  border-radius: 4px;
+}
+
+/* A quoted post. */
+.cgc-bluesky__quote {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--lightgray);
+  border-left: 4px solid var(--secondary);
+  border-radius: 8px;
+  background: var(--highlight);
+}
+
+.cgc-bluesky__quote-author {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-width: 0;
+  margin-bottom: 0.75rem;
+}
+
+.cgc-bluesky__quote-avatar {
+  flex-shrink: 0;
+  align-self: center;
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.cgc-bluesky__quote-name,
+.cgc-bluesky__quote-handle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cgc-bluesky__quote-name {
+  color: var(--dark);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.cgc-bluesky__quote-handle {
+  color: var(--gray);
+  font-size: 0.8125rem;
+}
+
+.cgc-bluesky__quote-text {
+  margin: 0;
+  color: var(--darkgray);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.cgc-bluesky__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.8125rem;
+}
+
+.cgc-bluesky__time {
+  color: var(--gray);
+}
+
+.cgc-bluesky__metrics {
+  display: flex;
+  gap: 1rem;
+}
+
+.cgc-bluesky__metric {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: var(--gray);
+}
+
+/* What a count counts, for a reader who can't see its icon. */
+.cgc-bluesky__metric-name {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Every icon is drawn in currentColor (@chaoticgoodcomputing/icons), so it takes its line's colour. */
+.cgc-bluesky__icon {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+}
+
+.cgc-bluesky__link {
+  display: inline-flex;
+  align-items: center;
+  color: var(--secondary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.cgc-bluesky__link:hover,
+.cgc-bluesky__link:focus-visible {
+  color: var(--tertiary);
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .cgc-bluesky {
+    padding: 0.875rem;
+  }
+
+  .cgc-bluesky__avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .cgc-bluesky__footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cgc-bluesky__card {
+    flex-direction: column;
+  }
+
+  .cgc-bluesky__card-thumb {
+    width: 100%;
+    height: 200px;
+  }
+
+  /* A quoted post's link card stays a row. */
+  .cgc-bluesky__card--compact {
+    flex-direction: row;
+  }
+
+  .cgc-bluesky__card-thumb--compact {
+    width: 70px;
+    height: 70px;
+  }
+}

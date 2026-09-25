@@ -6,13 +6,16 @@ import path from "node:path"
 import { fileFor, outputFor } from "./site.mjs"
 import { BASELINE_PORT } from "./env.mjs"
 import { quietAnalytics } from "./analytics.mjs"
+import { blueskyStandIn } from "./bluesky.mjs"
 
 export const BASELINE_URL = `http://localhost:${BASELINE_PORT}`
 
 export const test = base.extend({
   // No spec reaches a real analytics service: every context answers PostHog itself (analytics.mjs).
+  // Nor Bluesky: every context answers it from the fixture's posts (bluesky.mjs).
   context: async ({ context }, use) => {
     await quietAnalytics(context)
+    await blueskyStandIn(context)
     await use(context)
   },
   // The built fixture site on disk, for assertions on emitted files.
@@ -30,6 +33,7 @@ export const test = base.extend({
   baselinePage: async ({ browser, colorScheme }, use) => {
     const context = await browser.newContext({ baseURL: BASELINE_URL, colorScheme })
     await quietAnalytics(context)
+    await blueskyStandIn(context)
     await use(await context.newPage())
     await context.close()
   },

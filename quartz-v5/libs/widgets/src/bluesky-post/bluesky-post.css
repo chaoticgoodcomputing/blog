@@ -1,0 +1,82 @@
+/* bluesky-post: library CSS (ADR-0003). One BEM block, `cgc-bluesky-post`: the widget's frame and
+   its loading and failure states. The post itself is /bluesky's `cgc-bluesky` block, styled by its
+   own stylesheet. Skin comes only from Quartz's documented colour properties. cgc-mdx wraps this
+   file in `@layer cgc.mdx.widgets` when it emits it. */
+
+.cgc-bluesky-post {
+  position: relative;
+  margin: 1rem auto;
+  contain: layout style;
+}
+
+.cgc-bluesky-post__status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 3rem 2rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  background: var(--light);
+  text-align: center;
+}
+
+.cgc-bluesky-post__status--failed {
+  gap: 0.5rem;
+  padding: 2rem;
+}
+
+.cgc-bluesky-post__spinner {
+  display: block;
+  box-sizing: border-box;
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--lightgray);
+  border-top-color: var(--secondary);
+  border-radius: 50%;
+  animation: cgc-bluesky-post-spin 0.8s linear infinite;
+}
+
+.cgc-bluesky-post__message {
+  margin: 0;
+  color: var(--gray);
+  font-size: 0.875rem;
+}
+
+.cgc-bluesky-post__message--failed {
+  color: var(--darkgray);
+  font-size: 0.9375rem;
+}
+
+.cgc-bluesky-post__details {
+  margin: 0;
+  color: var(--gray);
+  font-family: var(--codeFont);
+  font-size: 0.8125rem;
+}
+
+.cgc-bluesky-post__link {
+  color: var(--secondary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.cgc-bluesky-post__link:hover,
+.cgc-bluesky-post__link:focus-visible {
+  color: var(--tertiary);
+  text-decoration: underline;
+}
+
+@keyframes cgc-bluesky-post-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cgc-bluesky-post__spinner {
+    animation-duration: 3s;
+  }
+}

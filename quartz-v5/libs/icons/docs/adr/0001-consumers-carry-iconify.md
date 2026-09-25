@@ -66,3 +66,15 @@ An installed set resolves from wherever the library's code runs, which is the co
 - **List the library in `dependencies`, not `devDependencies`, so the prune keeps its tree.** Locally
   npm only links a `file:` dependency and installs nothing behind it, so the plugin would still find
   no Iconify packages in its own `node_modules`.
+
+## Amendment: the Bluesky widget draws ahead
+
+_2026-09-25, from [`@chaoticgoodcomputing/widgets`: `bluesky-post` and the `/bluesky` client](https://github.com/chaoticgoodcomputing/blog/issues/75)._
+
+The Bluesky widget turned out not to be a consumer in this ADR's sense. It lives in a library,
+draws its icons in the browser, and has no build of its own, so it can't carry Iconify's packages
+the way a plugin does. It draws its icons ahead of time with this library, a dev-time dependency,
+into a committed module that its `lint` target checks against what this library draws
+([`widgets`' ADR-0002](../../../widgets/docs/adr/0002-browser-icons-are-drawn-ahead.md)). The first
+consequence above no longer names it: the plugins that inline this library still repeat its
+dependencies, and a widget carries none of them.

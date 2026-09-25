@@ -1,0 +1,8 @@
+{
+  "//": "The icons renderPost() draws, by name. `npm run icons` draws them into icons.ts. Metrics took v4's emoji (💬 🔁 ❤️); context took v4's MDI ids.",
+  "replies": "mdi:comment-outline",
+  "reposts": "mdi:repeat-variant",
+  "likes": "mdi:heart-outline",
+  "reposted": "mdi:repeat-variant",
+  "replied": "mdi:reply"
+}

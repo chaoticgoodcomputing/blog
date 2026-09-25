@@ -1,0 +1,217 @@
+{
+  "//": "What the Bluesky stand-in (harness/bluesky.mjs) answers: for each XRPC method, the response to each value of the parameter that names what is asked for (uri, handle or actor). Shaped as public.api.bsky.app answers, trimmed to what our code reads. Made up: no real account or post.",
+  "app.bsky.feed.getPostThread": {
+    "at://fixture.bsky.social/app.bsky.feed.post/3lcgcfixturea": {
+      "thread": {
+        "$type": "app.bsky.feed.defs#threadViewPost",
+        "post": {
+          "uri": "at://did:plc:cgcfixtureauthor2345abcd/app.bsky.feed.post/3lcgcfixturea",
+          "cid": "bafyreicgcfixtureaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "author": {
+            "did": "did:plc:cgcfixtureauthor2345abcd",
+            "handle": "fixture.bsky.social",
+            "displayName": "Fixture Author",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:cgcfixtureauthor2345abcd/bafkreiavatar@jpeg"
+          },
+          "record": {
+            "$type": "app.bsky.feed.post",
+            "text": "A post from the fixture.\nIts second line, and <b>markup</b> that stays text.",
+            "createdAt": "2025-01-15T12:00:00.000Z",
+            "langs": ["en"]
+          },
+          "embed": {
+            "$type": "app.bsky.embed.recordWithMedia#view",
+            "media": {
+              "$type": "app.bsky.embed.images#view",
+              "images": [
+                {
+                  "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:cgcfixtureauthor2345abcd/bafkreiimageone@jpeg",
+                  "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:cgcfixtureauthor2345abcd/bafkreiimageone@jpeg",
+                  "alt": "The fixture's first image"
+                },
+                {
+                  "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:cgcfixtureauthor2345abcd/bafkreiimagetwo@jpeg",
+                  "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:cgcfixtureauthor2345abcd/bafkreiimagetwo@jpeg",
+                  "alt": ""
+                }
+              ]
+            },
+            "record": {
+              "record": {
+                "$type": "app.bsky.embed.record#viewRecord",
+                "uri": "at://did:plc:cgcfixturequoted2345abcd/app.bsky.feed.post/3lcgcfixturec",
+                "cid": "bafyreicgcfixturecccccccccccccccccccccccccccccccccccccccccc",
+                "author": {
+                  "did": "did:plc:cgcfixturequoted2345abcd",
+                  "handle": "quoted.bsky.social",
+                  "displayName": "Quoted Author",
+                  "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:cgcfixturequoted2345abcd/bafkreiavatar@jpeg"
+                },
+                "value": {
+                  "$type": "app.bsky.feed.post",
+                  "text": "The post being quoted.",
+                  "createdAt": "2025-01-14T09:30:00.000Z"
+                },
+                "embeds": [
+                  {
+                    "$type": "app.bsky.embed.external#view",
+                    "external": {
+                      "uri": "https://example.com/quoted-article",
+                      "title": "The quoted post's link",
+                      "description": "A link card inside a quoted post.",
+                      "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:cgcfixturequoted2345abcd/bafkreilinkthumb@jpeg"
+                    }
+                  }
+                ],
+                "indexedAt": "2025-01-14T09:30:01.000Z"
+              }
+            }
+          },
+          "replyCount": 12,
+          "repostCount": 3,
+          "likeCount": 45,
+          "quoteCount": 1,
+          "indexedAt": "2025-01-15T12:00:01.000Z",
+          "labels": []
+        },
+        "replies": []
+      }
+    },
+    "at://fixture.bsky.social/app.bsky.feed.post/3lcgcfixtureb": {
+      "thread": {
+        "$type": "app.bsky.feed.defs#threadViewPost",
+        "post": {
+          "uri": "at://did:plc:cgcfixtureauthor2345abcd/app.bsky.feed.post/3lcgcfixtureb",
+          "cid": "bafyreicgcfixturebbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "author": {
+            "did": "did:plc:cgcfixtureauthor2345abcd",
+            "handle": "fixture.bsky.social",
+            "displayName": "Fixture Author",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:cgcfixtureauthor2345abcd/bafkreiavatar@jpeg"
+          },
+          "record": {
+            "$type": "app.bsky.feed.post",
+            "text": "A post with a link card.",
+            "createdAt": "2025-01-16T08:00:00.000Z",
+            "langs": ["en"]
+          },
+          "embed": {
+            "$type": "app.bsky.embed.external#view",
+            "external": {
+              "uri": "https://example.com/article",
+              "title": "An article",
+              "description": "The link card's description.",
+              "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:cgcfixtureauthor2345abcd/bafkreilinkthumb@jpeg"
+            }
+          },
+          "replyCount": 0,
+          "repostCount": 0,
+          "likeCount": 2,
+          "quoteCount": 0,
+          "indexedAt": "2025-01-16T08:00:01.000Z",
+          "labels": []
+        },
+        "replies": []
+      }
+    }
+  },
+  "com.atproto.identity.resolveHandle": {
+    "fixture.bsky.social": { "did": "did:plc:cgcfixtureauthor2345abcd" }
+  },
+  "app.bsky.feed.getAuthorFeed": {
+    "did:plc:cgcfixtureauthor2345abcd": {
+      "feed": [
+        {
+          "post": {
+            "uri": "at://did:plc:cgcfixturequoted2345abcd/app.bsky.feed.post/3lcgcfixturec",
+            "cid": "bafyreicgcfixturecccccccccccccccccccccccccccccccccccccccccc",
+            "author": {
+              "did": "did:plc:cgcfixturequoted2345abcd",
+              "handle": "quoted.bsky.social",
+              "displayName": "Quoted Author",
+              "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:cgcfixturequoted2345abcd/bafkreiavatar@jpeg"
+            },
+            "record": {
+              "$type": "app.bsky.feed.post",
+              "text": "The post being quoted.",
+              "createdAt": "2025-01-14T09:30:00.000Z"
+            },
+            "replyCount": 1,
+            "repostCount": 1,
+            "likeCount": 7,
+            "indexedAt": "2025-01-14T09:30:01.000Z"
+          },
+          "reason": {
+            "$type": "app.bsky.feed.defs#reasonRepost",
+            "by": {
+              "did": "did:plc:cgcfixtureauthor2345abcd",
+              "handle": "fixture.bsky.social",
+              "displayName": "Fixture Author"
+            },
+            "indexedAt": "2025-01-16T10:00:00.000Z"
+          }
+        },
+        {
+          "post": {
+            "uri": "at://did:plc:cgcfixtureauthor2345abcd/app.bsky.feed.post/3lcgcfixtured",
+            "cid": "bafyreicgcfixturedddddddddddddddddddddddddddddddddddddddddd",
+            "author": {
+              "did": "did:plc:cgcfixtureauthor2345abcd",
+              "handle": "fixture.bsky.social",
+              "displayName": "Fixture Author",
+              "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:cgcfixtureauthor2345abcd/bafkreiavatar@jpeg"
+            },
+            "record": {
+              "$type": "app.bsky.feed.post",
+              "text": "A reply from the fixture.",
+              "createdAt": "2025-01-15T18:00:00.000Z",
+              "reply": {
+                "root": {
+                  "uri": "at://did:plc:cgcfixturequoted2345abcd/app.bsky.feed.post/3lcgcfixturec",
+                  "cid": "bafyreicgcfixturecccccccccccccccccccccccccccccccccccccccccc"
+                },
+                "parent": {
+                  "uri": "at://did:plc:cgcfixturequoted2345abcd/app.bsky.feed.post/3lcgcfixturec",
+                  "cid": "bafyreicgcfixturecccccccccccccccccccccccccccccccccccccccccc"
+                }
+              }
+            },
+            "replyCount": 0,
+            "repostCount": 0,
+            "likeCount": 1,
+            "indexedAt": "2025-01-15T18:00:01.000Z"
+          }
+        },
+        {
+          "post": {
+            "uri": "at://did:plc:cgcfixtureauthor2345abcd/app.bsky.feed.post/3lcgcfixtureb",
+            "cid": "bafyreicgcfixturebbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "author": {
+              "did": "did:plc:cgcfixtureauthor2345abcd",
+              "handle": "fixture.bsky.social",
+              "displayName": "Fixture Author",
+              "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:cgcfixtureauthor2345abcd/bafkreiavatar@jpeg"
+            },
+            "record": {
+              "$type": "app.bsky.feed.post",
+              "text": "A post with a link card.",
+              "createdAt": "2025-01-16T08:00:00.000Z"
+            },
+            "embed": {
+              "$type": "app.bsky.embed.external#view",
+              "external": {
+                "uri": "https://example.com/article",
+                "title": "An article",
+                "description": "The link card's description."
+              }
+            },
+            "replyCount": 0,
+            "repostCount": 0,
+            "likeCount": 2,
+            "indexedAt": "2025-01-16T08:00:01.000Z"
+          }
+        }
+      ]
+    }
+  }
+}

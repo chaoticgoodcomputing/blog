@@ -4,7 +4,8 @@ The library every plugin that draws an icon uses to draw it (#29). It turns an *
 inline SVG when the site builds, from an installed Iconify set or from an **icon collection** the
 site supplies as SVG files, and it knows nothing about tags or any other caller. Engines publish icon
 ids and never drawn icons (ADR-0002 rule 7), so each consumer draws its own: `cgc-tag-list` first,
-then the tag explorer, backlinks, the graph and the Bluesky widget. It ships as TypeScript source,
+then the tag explorer, backlinks and the graph. The Bluesky widget draws with it ahead of time, into
+its own source (`widgets`' ADR-0002). It ships as TypeScript source,
 and a consuming plugin's build inlines it (ADR-0005). Inherits the family vocabulary in
 [`quartz-v5/CONTEXT.md`](../../CONTEXT.md), where **Icon id** and **Icon collection** are defined.
 
@@ -41,6 +42,8 @@ _Avoid_: converting, compiling, sanitising
   warned in the reader's console.
 - **Server-side only.** It reads the file system and resolves installed sets from wherever it runs.
   A script that needs icons in the browser gets them drawn into its plugin's own published artifact.
+  A widget, which has no build of its own, gets them drawn into a committed `icons.ts` beside it
+  ([`widgets`' ADR-0002](../widgets/docs/adr/0002-browser-icons-are-drawn-ahead.md)).
 - **A consumer carries Iconify's packages itself.** They run while the site builds and can't all be
   inlined, so a consuming plugin keeps the library's dependencies external and lists each as its own
   dependency, at the library's exact versions ([ADR-0001](./docs/adr/0001-consumers-carry-iconify.md)).

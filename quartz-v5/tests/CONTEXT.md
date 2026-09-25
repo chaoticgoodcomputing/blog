@@ -90,6 +90,14 @@ about analytics puts a stand-in for PostHog's library there instead, which recor
 `capture` the page makes.
 _Avoid_: mock PostHog, fake analytics
 
+**Bluesky stand-in**:
+What answers a page's requests to Bluesky in the suite (`harness/bluesky.mjs`). Every context the
+harness hands a spec answers Bluesky's hosts itself: the public API from made-up accounts and posts
+in `fixture-bluesky/xrpc.json`, keyed by method and by the post, handle or actor asked for, and the
+image CDN with one small picture. A post it doesn't hold is not found, as the real API says. A spec
+about a failure routes the API on its page, which takes precedence.
+_Avoid_: mock Bluesky, fake API
+
 ### The two seams
 
 **Fixture seam**:
