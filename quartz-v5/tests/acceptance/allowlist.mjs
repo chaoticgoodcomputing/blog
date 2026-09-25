@@ -1,0 +1,139 @@
+// The differences between the v4 and v5 builds of the real site that a decision expects.
+//
+// Every entry cites the ticket that decided it (`ticket`), and says what it accepts (`summary`) in
+// words a reader of the report can check against that ticket. The report refuses to run with an
+// entry that cites none. A difference no entry allows fails the report: to accept one, get it
+// decided on a ticket first, then add the entry here citing it.
+//
+// `allows(difference, { v4, v5, caseSensitive, vault })` sees one difference (compare.mjs documents
+// their shapes), both sites as read.mjs reads them, and the vault directory they were built from.
+// The first entry that allows a difference is the one the report cites, so a narrow entry goes
+// before a broad one it overlaps. An entry that accepts a moved page only because its old URL
+// redirects says so with `needsRedirect`: where the filesystem can hold no such redirect, the report
+// can't pass on it unseen.
+import fs from "node:fs"
+import path from "node:path"
+
+const sameSet = (values, expected) => values.length === expected.length && expected.every((value) => values.includes(value))
+
+// Whether a tag page's URL is served from that tag's description file in the vault (#43):
+// tags/<t>/index.md serves /tags/<t>/ until the cutover rename, and tags/<t>.md serves /tags/<t>
+// after it, where the tag's own page shows its description (#72).
+function isDescribedTag(url, vault) {
+  const [, tag, slash] = /^\/tags\/(.+?)(\/?)$/.exec(url) ?? []
+  if (!tag) return false
+  const folderNote = fs.existsSync(path.join(vault, "tags", tag, "index.md"))
+  return slash ? folderNote : folderNote || fs.existsSync(path.join(vault, "tags", `${tag}.md`))
+}
+
+// Whether a page URL is an .mdx file's in the vault: v4 served content/notes/dice.mdx at
+// /content/notes/dice, as cgc-mdx does (#65).
+function isMdxSource(url, vault) {
+  if (typeof url !== "string" || !/^\/[^?#]*[^/]$/.test(url)) return false
+  return fs.existsSync(path.join(vault, `${url.slice(1)}.mdx`))
+}
+
+// Whether a URL is a plugin note's, /plugins/<pkg>, with the plugin's README linked into the vault
+// at plugins/<pkg>.md (#48).
+function isPluginNote(url, vault) {
+  const [, pkg] = /^\/plugins\/([^/]+)$/.exec(url) ?? []
+  return Boolean(pkg) && fs.existsSync(path.join(vault, "plugins", `${pkg}.md`))
+}
+
+export const ALLOWLIST = [
+  {
+    ticket: 48,
+    summary:
+      "/widgets/README is retired, with no redirect: its reference moves into cgc-mdx's plugin note, whose widgets/README alias v5 lowercases, so only /widgets/readme redirects there. The old URL 404s after cutover, and leaves the sitemap and RSS.",
+    allows: (d, { v5 }) =>
+      d.url === "/widgets/README" &&
+      ((d.area === "url" && (d.change === "removed" || d.change === "moved")) ||
+        ((d.area === "sitemap" || d.area === "rss") && d.change === "removed") ||
+        (d.area === "head" && d.field === "refresh" && d.removed.length === 0 && sameSet(d.added, [`${v5.origin}/plugins/cgc-mdx`]))),
+  },
+  {
+    ticket: 48,
+    summary:
+      "A shareable plugin's README is published as its plugin note at /plugins/<pkg>, listed in the sitemap like v4's other notes. v4 leaves out cgc-mdx's until cutover, since its alias would race v4's own /widgets/README. Only a note the vault links at plugins/<pkg>.md.",
+    allows: (d, { vault }) =>
+      ((d.area === "url" && d.kind === "page") || d.area === "sitemap") && d.change === "added" && isPluginNote(d.url, vault),
+  },
+  {
+    ticket: 23,
+    summary:
+      "v5 lowercases page URLs, and stock alias-redirects (enableCaseRedirects, on permanently) serves a redirect at each mixed-case v4 URL. The ticket counted ten outside scratch/; the vault now has more, mostly private.",
+    needsRedirect: true,
+    allows: (d) =>
+      d.area === "url" && d.change === "moved" && d.kind === "page" && sameSet(d.how, ["lowercase"]) && d.redirect !== "missing",
+  },
+  {
+    ticket: 42,
+    summary: "Folder pages are dropped and folder-page is disabled: they were never in the sitemap, and nothing links to them.",
+    allows: (d, { v4 }) =>
+      d.area === "url" && d.change === "removed" && d.kind === "page" && d.url.endsWith("/") && /^Folder: /.test(v4.pages.get(d.url)?.title ?? ""),
+  },
+  {
+    ticket: 43,
+    summary: "A tag's canonical URL is /tags/<t>. v4's /tags/<t>/ moves there, and the old URL gets no redirect.",
+    allows: (d) => d.area === "url" && d.change === "moved" && d.kind === "page" && sameSet(d.how, ["tag-slash"]),
+  },
+  {
+    ticket: 43,
+    summary:
+      "A tag description file is its tag's page, even for a tag no page uses. It stays at /tags/<t>/ until the cutover rename to tags/<t>.md, then serves /tags/<t>. Only a tag with a description file in the vault.",
+    allows: (d, { vault }) => d.area === "url" && d.change === "added" && d.kind === "page" && isDescribedTag(d.url, vault),
+  },
+  {
+    ticket: 37,
+    summary:
+      "Annotation PDFs are served as mirrors, named by a hash of their source URL with no extension, under /assets/annotated-documents/. The old PDF URLs are given up.",
+    allows: (d) =>
+      d.area === "url" &&
+      d.url.startsWith("/assets/annotated-documents/") &&
+      (((d.change === "removed" || d.change === "moved") && /\.pdf$/i.test(d.url)) ||
+        (d.change === "added" && /^\/assets\/annotated-documents\/[^/.]+$/.test(d.url))),
+  },
+  {
+    ticket: 28,
+    summary: "Private pages are noindex without v4's nofollow, so the stubs' links pass value to public pages.",
+    allows: (d) => d.area === "head" && d.field === "robots" && sameSet(d.removed, ["nofollow"]) && d.added.length === 0,
+  },
+  {
+    ticket: 28,
+    summary: "The private tag's own page, a list of private stubs, is treated as a private page: noindex, and out of the sitemap.",
+    allows: (d) =>
+      /^\/tags\/private\/?$/.test(d.url) &&
+      ((d.area === "head" && d.field === "robots" && sameSet(d.added, ["noindex"]) && d.removed.length === 0) ||
+        (d.area === "sitemap" && d.change === "removed")),
+  },
+]
+
+// Not allowances. Each labels differences an open ticket is expected to close, so the report can say
+// what it is waiting on. A pending difference still fails the report.
+export const PENDING = [
+  {
+    ticket: 79,
+    summary: "the live .mdx articles sit in v5's ignorePatterns until their widget imports stop using v4's aliases",
+    matches: (d, { vault }) =>
+      d.change === "removed" && (d.area !== "url" || d.kind === "page") && [d.url, d.to].some((url) => isMdxSource(url, vault)),
+  },
+  {
+    ticket: 67,
+    summary: "stock content-index still emits the sitemap and RSS feed; cgc-seo takes them over",
+    matches: (d) => d.area === "sitemap" || d.area === "rss",
+  },
+  {
+    ticket: 26,
+    summary: "asset URLs are lowercased with no redirect; open decision",
+    matches: (d) => d.area === "url" && d.change === "moved" && d.kind === "file" && d.how.includes("lowercase"),
+  },
+]
+
+/** Throws unless every entry cites a ticket and says what it accepts. */
+export function checkAllowlist(entries = ALLOWLIST) {
+  entries.forEach((entry, i) => {
+    if (!Number.isInteger(entry.ticket) || entry.ticket <= 0) throw new Error(`allowlist entry ${i + 1} cites no ticket`)
+    if (typeof entry.summary !== "string" || !entry.summary.trim()) throw new Error(`allowlist entry ${i + 1} (#${entry.ticket}) has no summary`)
+    if (typeof entry.allows !== "function") throw new Error(`allowlist entry ${i + 1} (#${entry.ticket}) has no allows()`)
+  })
+}

@@ -1,7 +1,8 @@
 # Plugin e2e suite
 
 The end-to-end suite every `cgc-*` plugin is developed against: a small fixture vault, built into a
-real Quartz site and driven by a browser. Inherits the family glossary in
+real Quartz site and driven by a browser. It also holds the migration's second seam, which compares
+the real vault built under v4 and v5. Inherits the family glossary in
 [`quartz-v5/CONTEXT.md`](../CONTEXT.md); the decision is [ADR-0004](../../docs/adr/0004-playwright-e2e-as-the-plugin-tdd-loop.md).
 
 ## Language
@@ -75,3 +76,59 @@ harness hands a spec answers PostHog's hosts with nothing, so no spec sends real
 about analytics puts a stand-in for PostHog's library there instead, which records each `init` and
 `capture` the page makes.
 _Avoid_: mock PostHog, fake analytics
+
+### The two seams
+
+**Fixture seam**:
+Where a plugin's behaviour is proven: specs against the fixture site, the baseline and scratch sites,
+built cold from content the suite supplies. Everything above belongs to it.
+_Avoid_: unit tests, plugin tests
+
+**Acceptance seam**:
+Where the migration is proven: the real vault built under v4 and under v5, and every difference
+between what the two serve. Run by `nx run site-v5-e2e:acceptance` (code in `acceptance/`). It gates
+cutover.
+_Avoid_: parity check, regression test, smoke test
+
+**Acceptance report**:
+What the acceptance seam prints: every difference, each either allowed, with the ticket that decided
+it, or not. It passes only when every difference is allowed and every case redirect an allowance
+relies on was seen. On a filesystem that can hold no case redirect (macOS by default) it is
+_unverified_ instead (exit 3), unless a local run passes `--allow-unverified-redirects`.
+_Avoid_: diff, comparison
+
+**Difference**:
+One thing a reader or crawler would find changed between the two builds: a URL served or not, a
+sitemap or RSS member, or one head value (`noindex`, canonical, `article:*`, JSON-LD) on one page.
+Also, from site-styles' guard on the v5 build, a set of stylesheets whose cascade layers don't rank
+as the site's stack declares (`layers`).
+_Avoid_: change, regression (it may be intended)
+
+**Move**:
+A v4 URL whose page or file v5 serves at another URL: lowercased, a tag page without its trailing
+slash, or a folder note collapsed to its folder. A redirect is what may still serve the old URL
+after a move.
+_Avoid_: rename, redirect
+
+**Build clock**:
+The span in which a build ran. Quartz dates a page with no date of its own from it, so a date inside
+each build's own clock compares equal. Timed when the report runs the builds, and otherwise read from
+when each build wrote its pages and feeds, never from a copied file's date.
+_Avoid_: build time, timestamp
+
+**Generated file**:
+A file Quartz makes for its own use (everything under `/static/`, the root CSS and JS bundles, OG
+images), reached only through a page's head. The acceptance report counts them and never compares
+them.
+_Avoid_: static file, asset (assets are the vault's)
+
+**Allowlist**:
+The differences a decision expects, each entry citing the ticket that decided it. Anything else that
+differs fails the acceptance report. A difference is cited by the first entry that allows it, and an
+entry that accepts a move only because the old URL redirects is marked as needing that redirect.
+_Avoid_: exceptions, ignore list, expected failures
+
+**Pending gap**:
+A difference no allowlist entry allows, which an open ticket is expected to close. It still fails the
+report. The acceptance report's first run recorded the migration's known pending gaps.
+_Avoid_: baseline (the fixture site with our plugins off), known failure
