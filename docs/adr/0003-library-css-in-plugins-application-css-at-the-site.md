@@ -94,7 +94,9 @@ moved together; now they do not.
 10. **At the site, ITCSS via `@layer` stays.** `custom.scss` is ours; its existing layer
     order ([custom.scss:42](https://github.com/chaoticgoodcomputing/blog/blob/9e48f89b256f511a94f07d473d46395d91730c53/quartz/styles/custom.scss#L42)) is application CSS. _Corrected by the amendment below:_ it does **not**
     keep working unchanged. Only unlayered rules in `custom.scss` win outright. Its named layers rank
-    below every plugin layer unless the site declares the whole stack.
+    below every plugin layer unless the site declares the whole stack. _Relocated by the site-plugin
+    amendment below:_ the site's CSS, stack declaration included, ships from a **site plugin**, not
+    from `custom.scss`.
 11. **A package's own CSS goes in the family layer**, `@layer cgc.<package>`, emitted from
     `externalResources()`. `Component.css` carries only rule 9's vendor sublayer. _Added by the
     amendment below._
@@ -117,7 +119,8 @@ moved together; now they do not.
 ## Consequences
 
 - **Two vocabularies, split at the package boundary.** Deliberate, and the split is legible: if it
-  ships in a package it is library CSS, if it ships in `custom.scss` it is application CSS.
+  ships in a `cgc-*` package it is library CSS, if it ships in a site plugin it is application CSS
+  (_amended below_; this originally said `custom.scss`).
 - **No utilities inside plugins.** Repetition inside a package is the price of not needing position.
 - **A PostCSS step in every plugin build.** Small, but it is a dependency each package carries.
 - **Tag colours are currently raw hex** in configuration — skin baked into data, so they adapt to
@@ -195,6 +198,9 @@ since a repeated name is a no-op.
   Naming layers the site doesn't own is application CSS owning its cascade. Rule 2 binds libraries,
   not the site. It also makes the engine's `order` a default that a site can overrule.
 
+  _The statement stands, but `custom.scss` is no longer where it lives:_ see the site-plugin
+  amendment below.
+
 **Traps, measured:**
 
 - **lightningcss 1.33.0 silently inverts sublayer order** when one file names a sublayer both dotted
@@ -259,3 +265,64 @@ which compiles `.css` as written). So there is no build of ours for a prefixing 
   business. For widgets, that is [Which cascade layer does widget CSS land in?](https://github.com/chaoticgoodcomputing/blog/issues/45).
 - **Content-local widgets stay advisory.** `cgc-mdx` does not run the check on a vault's widget CSS
   (`cgc-mdx` ADR-0002).
+
+## Amendment: the site's CSS ships from a site plugin
+
+_2026-09-25, from [Where does the site's application CSS live in v5?](https://github.com/chaoticgoodcomputing/blog/issues/39)._
+
+Everything above that says "at the site, `custom.scss`" had the right *kind* of CSS and the wrong
+*place*. In v5, `custom.scss` sits inside the vendored copy
+([componentResources.ts:10](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/emitters/componentResources.ts#L10)),
+so writing to it is drift, even though upstream intends it as the user's file
+([layout.md:245](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/docs/layout.md?plain=1#L245)).
+
+**Decided:** the site's application CSS ships from a **site plugin**, `site-styles`, at
+`quartz-v5/site-plugins/site-styles/`. A site plugin fails the shareability test on purpose, because
+it *is* this site. It is a CSS-only transformer that emits, from `externalResources()`:
+
+```css
+@layer quartz-base, quartz-fonts, cgc, site;
+@layer site { @layer generic, elements, objects, components, utilities; }
+/* …the site's rules, in its sublayers… */
+```
+
+- **Position comes from `order`, and a spec guards it.** `Head` renders one CSS list in order:
+  `index.css`, then component CSS (all inside `quartz-base`), then each plugin's `externalResources()`
+  in plugin order, whether inline or linked
+  ([Head.tsx:96](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/components/Head.tsx#L96),
+  [renderPage.tsx:78-84](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/components/renderPage.tsx#L78-L84)).
+  `order` has no lower bound
+  ([config-loader.ts:120](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L120)),
+  so `site-styles` sets `defaultOrder: -1000` and emits the first named layers after core. A spec in
+  its own `e2e/` reads the layer order back from the CSSOM. It fails if the order differs from the
+  declaration, if `site` is not last, or if any named layer appears that the declaration doesn't list.
+- **The declaration names only what the config loads.** Adding a theme means adding its layers, and
+  the spec says so. Widget CSS has no slot yet; that is
+  [Which cascade layer does widget CSS land in?](https://github.com/chaoticgoodcomputing/blog/issues/45)'s
+  call, and the answer is an edit to this one statement.
+- **All five ITCSS tiers are kept under `site`**, even the ones the port leaves empty. Application CSS
+  stays Sass, compiled in the plugin's own build, since breakpoint mixins are what CSS can't express.
+- **The fixtures stay stock by construction.** A fixture config that doesn't list `site-styles` gets
+  none of the site's CSS. That is what rules the alternative out.
+- **The cost: no hot reload for site CSS.** `serve` watches the Quartz root's `*.scss`, but it never
+  reloads a rebuilt local plugin (ADR-0004).
+
+**Precedent.** `@quartz-themes/core`, the ecosystem's way of shipping a whole look, does the same
+thing. Its 2.0.0 transformer has a no-op `textTransform` and emits inline stylesheets from
+`externalResources()`, opening with its own `@layer quartz-base, obsidian-theme, …` declaration.
+It never touches `custom.scss`.
+
+**Rejected:**
+
+- **Symlinking `custom.scss` to a tracked site file**, like `quartz.config.yaml`. esbuild resolves
+  `componentResources.ts` to its real path, so the `custom.scss` import always hits the vendored
+  location, and every e2e fixture root symlinks that same source directory. Plugin specs and the
+  no-bleed baseline would then run against a *styled* site, and a plugin that looks right only
+  because site CSS covers for it would pass. Keeping fixtures stock would mean copying the Quartz
+  source into each fixture root. The symlink would also hide an upstream-owned file from the drift
+  check.
+- **A one-line vendored stack declaration in `custom.scss`**, with the body in a plugin. It carries
+  the costs of both approaches plus an upstream proposal nobody wants.
+- **An upstream proposal to let the config name a site stylesheet.** Not needed once a plugin can do
+  it.
+

@@ -22,6 +22,7 @@ quartz-v5/
 ├── upstream.json         the pinned upstream ref — machine-readable source of truth
 ├── quartz.config.yaml    our Quartz 5 configuration — tracked here, symlinked into quartz/
 ├── plugins/              our Quartz plugins (`cgc-*`)
+├── site-plugins/         this site's own plugins, which fail the shareability test on purpose
 ├── libs/                 our non-plugin packages (`@chaoticgoodcomputing/*`)
 ├── tests/                Playwright suite and `content-fixture/`
 ├── utils/                tooling for this context — `upstream.mjs`
@@ -148,7 +149,8 @@ symlink to `../quartz/node_modules` that the e2e harness creates. A git-installe
 and that is what the loader's shared externals assume. A local plugin is only symlinked there, and
 Node resolves from the symlink's target under `plugins/`, which would otherwise walk up to the v4
 tree's `node_modules` at the repo root: a second, older Preact. A plugin's own install therefore
-omits peers (`npm ci --omit=peer`), so its local `node_modules` never shadows a host singleton. Upstream uses **npm** with its own `package-lock.json`,
+omits peers (`npm ci --omit=peer`), so its local `node_modules` never shadows a host singleton. `site-plugins/` needs the same link, `site-plugins/node_modules`, for the same reason. It's
+decided on [#39](https://github.com/chaoticgoodcomputing/blog/issues/39) but not wired yet. Upstream uses **npm** with its own `package-lock.json`,
 and its versions conflict with the v4 tree at the repo root (preact, unified, shiki). This
 directory is deliberately _not_ a pnpm workspace package, so the root `pnpm install` ignores it.
 

@@ -47,6 +47,12 @@ depends on a vendored change and cannot be published, however well it works here
 Of a plugin: runs against unmodified upstream Quartz, so anyone can install it.
 _Avoid_: portable, standalone
 
+**Site plugin**:
+A plugin that fails the shareability test on purpose, because it carries this site's own
+application layer rather than something for others to install. The opposite of a `cgc-*` plugin,
+which fails the test only by accident.
+_Avoid_: customization (that is the whole category), local plugin, private plugin
+
 **Upstream proposal**:
 The pull request that retires a vendored change by getting it accepted upstream. Every vendored
 change is supposed to have one.
@@ -93,8 +99,8 @@ third-party CSS loses to core by construction.
 _Avoid_: third-party layer, reset layer
 
 **Stack declaration**:
-The site's single `@layer` statement naming every layer on the page in order. Whatever it names
-takes precedence over the order plugins load in.
+The site's single `@layer` statement naming every layer on the page in order, emitted first by a
+site plugin. Whatever it names takes precedence over the order plugins load in.
 _Avoid_: layer order, cascade config
 
 ### Colour
