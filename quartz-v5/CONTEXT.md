@@ -57,6 +57,12 @@ _Avoid_: customization (that is the whole category), local plugin, private plugi
 The pull request that retires a vendored change by getting it accepted upstream. Every vendored
 change is supposed to have one.
 
+**Release**:
+One version shared by every package in `plugins/` and `libs/`, cut together whenever any of them
+changes, and named by a `v<semver>` tag. A downstream site pins a release, never a package's own
+version or a branch. Recorded in [ADR-0005](../docs/adr/0005-plugins-ship-as-source-in-batch-releases.md).
+_Avoid_: package version, plugin version
+
 ### Plugin composition
 
 How a family of related plugins holds together. Recorded in
