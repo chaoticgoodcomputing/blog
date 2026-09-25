@@ -2,17 +2,38 @@
    renderPost() writes: every selector starts at an element of it, and the package's `lint` target
    fails on one that doesn't. Skin comes only from Quartz's documented colour properties. Whoever
    bundles the renderer places this in its cascade: cgc-mdx wraps it in `@layer cgc.mdx.widgets`
-   with the widget that uses it. */
+   with the widget that uses it, and cgc-social its own layer. */
 
+/* The card's scale: its spacing, corners, pictures and type, which the compact card turns down. */
 .cgc-bluesky {
+  --cgc-bluesky-space: 1rem;
+  --cgc-bluesky-gap: 0.75rem;
+  --cgc-bluesky-radius: 8px;
+  --cgc-bluesky-avatar-size: 48px;
+  --cgc-bluesky-quote-avatar-size: 32px;
+  --cgc-bluesky-thumb-size: 100px;
+  --cgc-bluesky-font-size: 0.9375rem;
+  --cgc-bluesky-small-font-size: 0.8125rem;
   display: block;
   position: relative;
   box-sizing: border-box;
-  padding: 1rem;
+  padding: var(--cgc-bluesky-space);
   border: 1px solid var(--lightgray);
-  border-radius: 8px;
+  border-radius: var(--cgc-bluesky-radius);
   background: var(--light);
   transition: border-color 0.2s ease;
+}
+
+/* A compact card, for a sidebar: v4's sidebar feed drew its posts at this scale (#80). */
+.cgc-bluesky--compact {
+  --cgc-bluesky-space: 0.75rem;
+  --cgc-bluesky-gap: 0.5rem;
+  --cgc-bluesky-radius: 4px;
+  --cgc-bluesky-avatar-size: 40px;
+  --cgc-bluesky-quote-avatar-size: 24px;
+  --cgc-bluesky-thumb-size: 80px;
+  --cgc-bluesky-font-size: 0.875rem;
+  --cgc-bluesky-small-font-size: 0.75rem;
 }
 
 .cgc-bluesky:hover {
@@ -24,9 +45,9 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--cgc-bluesky-gap);
   color: var(--gray);
-  font-size: 0.8125rem;
+  font-size: var(--cgc-bluesky-small-font-size);
 }
 
 .cgc-bluesky__context-text {
@@ -36,14 +57,14 @@
 .cgc-bluesky__author {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
+  gap: var(--cgc-bluesky-gap);
+  margin-bottom: var(--cgc-bluesky-gap);
 }
 
 .cgc-bluesky__avatar {
   flex-shrink: 0;
-  width: 48px;
-  height: 48px;
+  width: var(--cgc-bluesky-avatar-size);
+  height: var(--cgc-bluesky-avatar-size);
   margin: 0;
   border-radius: 50%;
   object-fit: cover;
@@ -65,24 +86,24 @@
 
 .cgc-bluesky__name {
   color: var(--dark);
-  font-size: 0.9375rem;
+  font-size: var(--cgc-bluesky-font-size);
   font-weight: 600;
 }
 
 .cgc-bluesky__handle {
   color: var(--gray);
-  font-size: 0.8125rem;
+  font-size: var(--cgc-bluesky-small-font-size);
 }
 
 .cgc-bluesky__content {
-  margin-bottom: 1rem;
+  margin-bottom: var(--cgc-bluesky-space);
 }
 
 /* A post's text is plain text: its line breaks are drawn as written. */
 .cgc-bluesky__text {
   margin: 0;
   color: var(--darkgray);
-  font-size: 0.9375rem;
+  font-size: var(--cgc-bluesky-font-size);
   line-height: 1.6;
   white-space: pre-wrap;
   overflow-wrap: break-word;
@@ -92,7 +113,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 0.5rem;
-  margin-top: 1rem;
+  margin-top: var(--cgc-bluesky-space);
 }
 
 .cgc-bluesky__image {
@@ -100,20 +121,20 @@
   height: auto;
   margin: 0;
   border: 1px solid var(--lightgray);
-  border-radius: 8px;
+  border-radius: var(--cgc-bluesky-radius);
 }
 
 /* A link card. */
 .cgc-bluesky__card {
   display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-  padding: 1rem;
+  gap: var(--cgc-bluesky-space);
+  margin-top: var(--cgc-bluesky-space);
+  padding: var(--cgc-bluesky-space);
   border: 1px solid var(--lightgray);
-  border-radius: 8px;
+  border-radius: var(--cgc-bluesky-radius);
   background: var(--highlight);
   color: inherit;
-  font-size: 0.9375rem;
+  font-size: var(--cgc-bluesky-font-size);
   text-decoration: none;
   transition:
     background-color 0.2s ease,
@@ -127,8 +148,8 @@
 
 .cgc-bluesky__card-thumb {
   flex-shrink: 0;
-  width: 100px;
-  height: 100px;
+  width: var(--cgc-bluesky-thumb-size);
+  height: var(--cgc-bluesky-thumb-size);
   margin: 0;
   border-radius: 6px;
   object-fit: cover;
@@ -159,7 +180,7 @@
 
 .cgc-bluesky__card-description {
   color: var(--gray);
-  font-size: 0.8125rem;
+  font-size: var(--cgc-bluesky-small-font-size);
   -webkit-line-clamp: 3;
   line-clamp: 3;
 }
@@ -185,11 +206,11 @@
 
 /* A quoted post. */
 .cgc-bluesky__quote {
-  margin-top: 1rem;
-  padding: 1rem;
+  margin-top: var(--cgc-bluesky-space);
+  padding: var(--cgc-bluesky-space);
   border: 1px solid var(--lightgray);
   border-left: 4px solid var(--secondary);
-  border-radius: 8px;
+  border-radius: var(--cgc-bluesky-radius);
   background: var(--highlight);
 }
 
@@ -204,8 +225,8 @@
 .cgc-bluesky__quote-avatar {
   flex-shrink: 0;
   align-self: center;
-  width: 32px;
-  height: 32px;
+  width: var(--cgc-bluesky-quote-avatar-size);
+  height: var(--cgc-bluesky-quote-avatar-size);
   margin: 0;
   border-radius: 50%;
   object-fit: cover;
@@ -243,8 +264,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-bottom: 0.75rem;
-  font-size: 0.8125rem;
+  margin-bottom: var(--cgc-bluesky-gap);
+  font-size: var(--cgc-bluesky-small-font-size);
 }
 
 .cgc-bluesky__time {
@@ -284,7 +305,7 @@
   display: inline-flex;
   align-items: center;
   color: var(--secondary);
-  font-size: 0.8125rem;
+  font-size: var(--cgc-bluesky-small-font-size);
   font-weight: 500;
   text-decoration: none;
   transition: color 0.2s ease;
@@ -297,13 +318,15 @@
 }
 
 @media (max-width: 768px) {
+  /* Only the card's own padding and its avatar shrink: the spacing inside keeps the scale. */
   .cgc-bluesky {
+    --cgc-bluesky-avatar-size: 40px;
     padding: 0.875rem;
   }
 
-  .cgc-bluesky__avatar {
-    width: 40px;
-    height: 40px;
+  /* The compact card is already smaller than this, and keeps its own scale. */
+  .cgc-bluesky--compact {
+    padding: var(--cgc-bluesky-space);
   }
 
   .cgc-bluesky__footer {

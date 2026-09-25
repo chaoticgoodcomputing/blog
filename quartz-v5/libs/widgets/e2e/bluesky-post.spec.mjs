@@ -109,6 +109,23 @@ test("it hydrates, fetches the post in the browser and draws it", async ({ page 
   await expect(first.getByRole("link", { name: "View on Bluesky" })).toHaveCount(1)
 })
 
+test("on a narrow screen only the card's own padding and avatar shrink, as in Quartz 4", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 600, height: 900 })
+  await page.goto(PAGE)
+  const [first] = await shown(page)
+  const post = first.locator(".cgc-bluesky")
+  const style = (locator, property) =>
+    locator.evaluate((el, property) => getComputedStyle(el)[property], property)
+  expect(await style(post, "paddingTop")).toBe("14px")
+  expect(await style(post.locator(".cgc-bluesky__avatar"), "width")).toBe("40px")
+  // Everything inside the card keeps its full-size spacing.
+  expect(await style(post.locator(".cgc-bluesky__content"), "marginBottom")).toBe("16px")
+  expect(await style(post.locator(".cgc-bluesky__quote"), "paddingTop")).toBe("16px")
+  expect(await style(post.locator(".cgc-bluesky__quote"), "marginTop")).toBe("16px")
+})
+
 test("a link card opens its page in a new tab", async ({ page }) => {
   await page.goto(PAGE)
   const [, second] = await shown(page)

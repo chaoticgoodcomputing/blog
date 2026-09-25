@@ -551,6 +551,33 @@ plugins:
       position: afterBody
       priority: 30
       condition: not-index
+  # v4's social cards in the home page's right sidebar, on desktop only (#42, #44, #80): GitHub
+  # activity above the Bluesky feed, fetched in the reader's browser. Quartz 5 has no `is-index`
+  # condition a plugin can add (#70), so the cards keep to the home page by themselves (`showOn`,
+  # whose default is `[index]`).
+  - source: ../plugins/cgc-social
+    enabled: true
+    options:
+      github:
+        username: spelkington
+        title: GitHub Activity
+        # v4's `theme: default`, GitHub's greens, as the dark half; GitHub's own light greens as the
+        # light half.
+        levelColors:
+          - "light-dark(#ebedf0, #161b22)"
+          - "light-dark(#9be9a8, #0e4429)"
+          - "light-dark(#40c463, #006d32)"
+          - "light-dark(#30a14e, #26a641)"
+          - "light-dark(#216e39, #39d353)"
+      bluesky:
+        handle: speen.us
+        postLimit: 5
+        title: ATProto Feed
+        showMetrics: false
+    layout:
+      position: right
+      priority: 40
+      display: desktop-only
   # Replaced by site-components' footer, below: stock's takes links only (#44, #70).
   - source: "@quartz-community/footer"
     enabled: false

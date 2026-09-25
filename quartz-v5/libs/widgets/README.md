@@ -77,13 +77,16 @@ list.innerHTML = feed.map((item) => renderPost(item)).join("")
 - `getPost(atUri)`, `getPostThread(atUri, { depth, parentHeight })`, `resolveHandle(handle)` and
   `getAuthorFeed(actor, { limit })` each take an optional `signal`. They reject with a
   `BlueskyError` whose `reason` is `not-found`, `blocked` or `unavailable`.
-- `renderPost(item, { showMetrics, showContext })` draws a post, or an item of a feed, both options
-  defaulting to `true`: its counts, and in a feed, who reposted it or that it replies. Everything
-  the post carries is escaped, and only `http(s)` URLs become links or images.
+- `renderPost(item, { showMetrics, showContext, compact })` draws a post, or an item of a feed. The
+  first two default to `true`: its counts, and in a feed, who reposted it or that it replies.
+  `compact`, `false` by default, draws it smaller, for a sidebar, as `cgc-social`'s feed does.
+  Everything the post carries is escaped, and only `http(s)` URLs become links or images.
 - `escapeHtml`, `relativeTime` and `postUrl` are the renderer's helpers.
 
 The renderer's markup is one BEM block, `cgc-bluesky`, and it imports its stylesheet, so a bundler
-that takes the renderer takes its CSS too.
+that takes the renderer takes its CSS too. Its size is a scale of custom properties on the block,
+`--cgc-bluesky-space`, `-gap`, `-radius`, `-avatar-size`, `-quote-avatar-size`, `-thumb-size`,
+`-font-size` and `-small-font-size`, which the compact card's `cgc-bluesky--compact` turns down.
 
 ## CSS
 

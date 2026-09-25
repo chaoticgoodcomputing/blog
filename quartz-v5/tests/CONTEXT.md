@@ -100,6 +100,14 @@ image CDN with one small picture. A post it doesn't hold is not found, as the re
 about a failure routes the API on its page, which takes precedence.
 _Avoid_: mock Bluesky, fake API
 
+**GitHub stand-in**:
+What answers a page's requests to GitHub in the suite (`harness/github.mjs`), as the **Bluesky
+stand-in** answers Bluesky's: every context the harness hands a spec answers GitHub's REST API from
+the made-up users in `fixture-github/users.json`, the contributions API with a made-up year for each
+(a Thursday to a Wednesday, so both end weeks are partial), and the avatar host with one small
+picture. A user it doesn't hold is not found. A spec about a failure routes the host on its page.
+_Avoid_: mock GitHub, fake API
+
 ### The two seams
 
 **Fixture seam**:

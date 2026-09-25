@@ -46,8 +46,10 @@ _Avoid_: selection layer, textLayer (PDF.js's class, which this package never sh
 **Post card**:
 One Bluesky post as `/bluesky`'s renderer draws it: the `cgc-bluesky` block, with its author, text,
 embeds (images, a link card, a quoted post), date, optional counts and, in a feed, why the post is
-there. The `bluesky-post` widget wraps one in its own block, `cgc-bluesky-post`, which holds the
-loading and failure states.
+there. A **compact** one (`compact: true`, the `cgc-bluesky--compact` modifier) is drawn smaller, as
+v4's sidebar feed drew its posts: the modifier only turns down the block's `--cgc-bluesky-*` scale
+(spacing, corners, pictures, type), so every selector stays one class. The `bluesky-post` widget
+wraps one in its own block, `cgc-bluesky-post`, which holds the loading and failure states.
 _Avoid_: embed (a post's own images, link card or quote), tweet, post widget
 
 ## Consumers
@@ -58,7 +60,8 @@ _Avoid_: embed (a post's own images, link card or quote), tweet, post widget
   downstream site installs it from npm. The widget's own dependencies (`pdfjs-dist`) install
   beside it.
 - **A plugin that inlines part of it**, such as `cgc-social` with `/bluesky`, lists it as a
-  `file:../../libs/widgets` devDependency, like any library (ADR-0005). No plugin does yet.
+  `file:../../libs/widgets` devDependency, like any library (ADR-0005). `cgc-social` bundles
+  `/bluesky` into its sidebar script and draws its feed as compact **post cards**.
   `/bluesky` brings its stylesheet with it, so the plugin's bundle has a CSS output to place in its
   own layer.
 

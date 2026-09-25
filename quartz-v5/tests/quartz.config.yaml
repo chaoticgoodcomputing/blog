@@ -350,6 +350,21 @@ plugins:
     layout:
       position: afterBody
       priority: 30
+  # v4's social cards (#80), in the home page's right sidebar, with their default options: a GitHub
+  # user's contributions and a Bluesky account's posts, from the suite's stand-ins
+  # (harness/github.mjs, harness/bluesky.mjs), which hold these two accounts. Not `desktop-only`, as
+  # on the real site: stock's wrapper for it is a `div` on every page, which renders nothing where
+  # the cards don't, but shifts no-bleed's keys for the sidebar. The site spec proves it instead.
+  - source: ../../plugins/cgc-social
+    enabled: true
+    options:
+      github:
+        username: fixture-octo
+      bluesky:
+        handle: fixture.bsky.social
+    layout:
+      position: right
+      priority: 40
   - source: "@quartz-community/footer"
     enabled: true
     options:

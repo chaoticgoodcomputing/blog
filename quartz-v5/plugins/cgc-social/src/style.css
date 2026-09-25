@@ -1,0 +1,243 @@
+/* cgc-social's cards: library CSS (ADR-0003), checked by build.mjs. One BEM block, `cgc-social`,
+   with v4's SocialMediaGitHub and SocialMediaBlueSky styles (#80). Skin comes only from the theme's
+   colour properties, and the calendar's colours from `--cgc-social-level-*`, which the site's
+   `levelColors` option replaces. The Bluesky posts are the widget library's post cards,
+   `cgc-bluesky`, whose own stylesheet build.mjs puts in this layer before this one. */
+
+@layer cgc.social {
+  /* The two cards, one after the other, spaced as v4's sidebar spaced its components. */
+  .cgc-social {
+    --cgc-social-level-0: var(--lightgray);
+    --cgc-social-level-1: color-mix(in srgb, var(--secondary) 25%, var(--lightgray));
+    --cgc-social-level-2: color-mix(in srgb, var(--secondary) 50%, var(--lightgray));
+    --cgc-social-level-3: color-mix(in srgb, var(--secondary) 75%, var(--lightgray));
+    --cgc-social-level-4: var(--secondary);
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .cgc-social__card--bluesky {
+    margin-bottom: 2rem;
+  }
+
+  .cgc-social__title {
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  /* v4 held the GitHub card's height while it loaded. */
+  .cgc-social__body--github {
+    min-height: 120px;
+  }
+
+  /* Loading, failed and empty: v4's states. */
+  .cgc-social__status {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 2rem;
+  }
+
+  .cgc-social__status--failed,
+  .cgc-social__status--empty {
+    display: block;
+    padding: 1.5rem;
+    text-align: center;
+  }
+
+  .cgc-social__status--failed {
+    border: 1px solid var(--lightgray);
+    border-radius: 4px;
+    background: var(--light);
+  }
+
+  .cgc-social__spinner {
+    width: 24px;
+    height: 24px;
+    box-sizing: border-box;
+    border: 2px solid var(--gray);
+    border-top-color: var(--secondary);
+    border-radius: 50%;
+    animation: cgc-social-spin 0.8s linear infinite;
+  }
+
+  .cgc-social__message,
+  .cgc-social__details {
+    margin: 0;
+    color: var(--gray);
+    font-size: 0.875rem;
+  }
+
+  .cgc-social__message--failed {
+    font-weight: 600;
+  }
+
+  .cgc-social__details {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    opacity: 0.7;
+  }
+
+  /* The GitHub card: the profile, the year's total and the calendar, in one panel. */
+  .cgc-social__panel {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 4px;
+    background: var(--light);
+  }
+
+  .cgc-social__profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .cgc-social__avatar {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    margin: 0;
+    border-radius: 50%;
+  }
+
+  .cgc-social__profile-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .cgc-social__name {
+    display: block;
+    color: var(--dark);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .cgc-social__name:hover {
+    color: var(--secondary);
+  }
+
+  .cgc-social__username,
+  .cgc-social__bio {
+    margin: 0;
+    color: var(--gray);
+    font-size: 0.75rem;
+    font-weight: normal;
+  }
+
+  .cgc-social__bio {
+    display: -webkit-box;
+    overflow: hidden;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .cgc-social__total {
+    margin: 0 0 0.5rem 0;
+    color: var(--gray);
+    font-size: 0.75rem;
+  }
+
+  .cgc-social__graph {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .cgc-social__calendar {
+    width: auto;
+    margin: 0;
+    border-collapse: separate;
+    border-spacing: 2px;
+    font-size: 0.625rem;
+    line-height: 1;
+  }
+
+  .cgc-social__weekday,
+  .cgc-social__day,
+  .cgc-social__blank {
+    height: 10px;
+    padding: 0;
+    border: none;
+    vertical-align: middle;
+  }
+
+  .cgc-social__weekday {
+    width: 30px;
+    padding-right: 6px;
+    overflow: hidden;
+    color: var(--gray);
+    font-size: 0.625rem;
+    line-height: 10px;
+    text-align: right;
+  }
+
+  .cgc-social__day,
+  .cgc-social__blank {
+    width: 10px;
+    min-width: 10px;
+    max-width: 10px;
+    max-height: 10px;
+  }
+
+  .cgc-social__day {
+    border-radius: 2px;
+    cursor: pointer;
+  }
+
+  .cgc-social__day:hover {
+    outline: 1px solid var(--secondary);
+    outline-offset: 1px;
+  }
+
+  .cgc-social__day--level-0 {
+    background-color: var(--cgc-social-level-0);
+  }
+
+  .cgc-social__day--level-1 {
+    background-color: var(--cgc-social-level-1);
+  }
+
+  .cgc-social__day--level-2 {
+    background-color: var(--cgc-social-level-2);
+  }
+
+  .cgc-social__day--level-3 {
+    background-color: var(--cgc-social-level-3);
+  }
+
+  .cgc-social__day--level-4 {
+    background-color: var(--cgc-social-level-4);
+  }
+
+  /* The Bluesky card: its posts, one under another. */
+  .cgc-social__posts {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  @keyframes cgc-social-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cgc-social__spinner {
+      animation-duration: 2.4s;
+    }
+  }
+}

@@ -23,6 +23,9 @@ export interface RenderOptions {
   /** Say why a feed item is there: who reposted it, or that it replies to another post. Defaults
    * to true. */
   showContext?: boolean
+  /** Draw the post smaller, as v4's sidebar feed did: the `cgc-bluesky--compact` card, with less
+   * padding, smaller pictures and smaller type. Defaults to false. */
+  compact?: boolean
 }
 
 /** Text as HTML: safe in an element's content and in a quoted attribute value. */
@@ -167,11 +170,11 @@ export function renderPost(
   item: FeedViewPost | { post: PostView },
   options: RenderOptions = {},
 ): string {
-  const { showMetrics = true, showContext = true } = options
+  const { showMetrics = true, showContext = true, compact = false } = options
   const { post } = item
   const text = post.record.text ?? ""
   return (
-    `<article class="cgc-bluesky">` +
+    `<article class="cgc-bluesky${compact ? " cgc-bluesky--compact" : ""}">` +
     (showContext ? context(item) : "") +
     `<div class="cgc-bluesky__author">${image(post.author.avatar, "cgc-bluesky__avatar")}` +
     `<span class="cgc-bluesky__names"><span class="cgc-bluesky__name">${name(post.author)}</span>` +

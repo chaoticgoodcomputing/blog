@@ -80,9 +80,9 @@ _Avoid_: colour validator, colour parser
 - **No dependencies of its own at runtime.** The colour-value check takes lightningcss from its
   caller rather than importing one, which could disagree with the host's.
 - **Tested through its consumers.** The rule and the shapes through `cgc-tags`' specs; the
-  colour-value check through `cgc-tags`' and `cgc-graph`'s option specs; the colour resolver
-  through `cgc-graph`'s colour and scheme specs, which paint the theme's colours and every tag's
-  with it (#74, #77), and a probe script its own spec runs on a fixture page
+  colour-value check through `cgc-tags`', `cgc-graph`'s and `cgc-social`'s option specs; the
+  colour resolver through `cgc-graph`'s colour and scheme specs, which paint the theme's colours
+  and every tag's with it (#74, #77), and a probe script its own spec runs on a fixture page
   (`e2e/colour.spec.mjs`) for a colour syntax no consumer paints yet; `tagOfPage()` through what
   `cgc-post-listing` and `cgc-tag-list` render on tag pages (`e2e/tag-pages.spec.mjs`), and
   through `cgc-graph`'s tag nodes.
