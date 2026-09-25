@@ -111,6 +111,12 @@ function validateDependencies(
     nameToSource.set(extractPluginName(entry.source), sourceKey(entry.source))
   }
 
+  // A dependency is a plugin's source, or its name. A local source is relative to the site, so
+  // only the name holds at every site that loads the plugin. Match the exact source first, then the
+  // name, and key every check below on the entry that matched.
+  const resolveDependency = (dep: string): string =>
+    sourceToEntry.has(dep) ? dep : (nameToSource.get(dep) ?? dep)
+
   for (const entry of entries) {
     if (!entry.enabled) continue
     const manifest = manifests.get(sourceKey(entry.source))
@@ -120,7 +126,8 @@ function validateDependencies(
     const pluginOrder = entry.order ?? manifest.defaultOrder ?? 50
 
     for (const dep of manifest.dependencies) {
-      const depEntry = sourceToEntry.get(dep)
+      const depKey = resolveDependency(dep)
+      const depEntry = sourceToEntry.get(depKey)
       const depName = extractPluginName(dep)
 
       if (!depEntry) {
@@ -136,7 +143,7 @@ function validateDependencies(
         )
       }
 
-      const depManifest = manifests.get(dep)
+      const depManifest = manifests.get(depKey)
       const depOrder = depEntry.order ?? depManifest?.defaultOrder ?? 50
 
       if (pluginOrder < depOrder) {
@@ -153,7 +160,7 @@ function validateDependencies(
   for (const entry of entries) {
     const manifest = manifests.get(sourceKey(entry.source))
     if (manifest?.dependencies?.length) {
-      graph.set(sourceKey(entry.source), manifest.dependencies)
+      graph.set(sourceKey(entry.source), manifest.dependencies.map(resolveDependency))
     }
   }
 
