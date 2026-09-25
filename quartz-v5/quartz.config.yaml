@@ -27,6 +27,18 @@ configuration:
     - private
     - templates
     - .obsidian
+    # The live .mdx articles import their widgets through v4's registry aliases (`@widgets/…`,
+    # `@content/widgets/…`), which cgc-mdx fails the build on, so they sit out until #79 moves
+    # them to real imports and deletes these lines.
+    - resume.mdx
+    - content/notes/ai-beat-us.mdx
+    - content/notes/ants-in-the-neighborhood.mdx
+    - content/notes/mdx-widgets-test.mdx
+    - content/notes/roll-advantage.mdx
+    - content/notes/scratch/dice-widget.mdx
+    # v4's widget guide, a symlink into the v4 copy until cutover (#48). cgc-mdx's plugin note
+    # absorbs it and takes its URL, `/widgets/readme`, as an alias.
+    - widgets/README.md
   theme:
     # Self-hosted: core downloads the Google Fonts at build time into `static/fonts/` when CDN
     # caching is off (FORK-LEDGER, "Fonts delete"). v4's typography.
@@ -220,6 +232,9 @@ plugins:
     enabled: true
     options:
       mirrorDir: assets/annotated-documents
+  # `.mdx` pages, at their extensionless URLs, with widgets as islands (#19, #24, #65).
+  - source: ../plugins/cgc-mdx
+    enabled: true
   # Folder pages are dropped (#42, #43): never in the sitemap or linked, and the tag description
   # files (`tags/<t>/index.md`) would render as folder pages.
   - source: "@quartz-community/folder-page"

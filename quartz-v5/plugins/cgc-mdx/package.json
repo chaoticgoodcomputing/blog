@@ -36,6 +36,7 @@
     "name": "cgc-mdx",
     "displayName": "MDX pages",
     "category": [
+      "transformer",
       "pageType",
       "emitter"
     ],

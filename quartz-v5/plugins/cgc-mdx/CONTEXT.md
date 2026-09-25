@@ -1,13 +1,19 @@
 # cgc-mdx
 
-The Quartz 5 page-type plugin that renders `.mdx` pages. It ships the widget contract and no
-widgets of its own. Inherits the family vocabulary in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md).
-A page's body runs through the site's configured pipeline, rebuilt by
+The Quartz 5 page-type plugin that renders `.mdx` pages, with the transformer that puts them at
+their clean URLs for the rest of the site. It ships the widget contract and no widgets of its own.
+Inherits the family vocabulary in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md). A page's body runs
+through the site's configured pipeline, rebuilt by
 [`@chaoticgoodcomputing/pipeline`](../../libs/pipeline/CONTEXT.md), and its widgets are islands
 of [`@chaoticgoodcomputing/island-runtime`](../../libs/island-runtime/CONTEXT.md). Both libraries
 are inlined into this plugin's build.
 
 ## Language
+
+**Clean URL**:
+Where an `.mdx` page lives: its path without the extension, `lab/life` for `lab/life.mdx`. Links,
+backlinks and the graph all reach the page there, however a link is written (ADR-0004).
+_Avoid_: slug (for an `.mdx` file, Quartz's slug keeps the extension)
 
 **Widget**:
 A module an MDX page imports and renders inline, supplied by the vault or an npm package rather

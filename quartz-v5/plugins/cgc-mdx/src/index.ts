@@ -1,6 +1,8 @@
 // cgc-mdx: a page type that serves `.mdx` pages through Quartz's configured pipeline, and an
 // emitter that writes the widget chunks those pages load. Both halves share one compile per build.
-// Contract: docs/adr/0001 (widgets are real imports, the body stays Quartz's) and 0002 (islands).
+// A transformer puts the pages at their clean URLs for the rest of the site.
+// Contract: docs/adr/0001 (widgets are real imports, the body stays Quartz's), 0002 (islands) and
+// 0004 (`.mdx` pages at their clean URLs).
 //
 // `generate` is async, which needs a vendored change to Quartz: see the vendored-changes table in
 // quartz-v5/VENDORED.md (upstream proposal: #25).
@@ -9,14 +11,13 @@ import path from "node:path"
 import { h } from "preact"
 import { toHtml } from "hast-util-to-html"
 import { visit } from "unist-util-visit"
-import { pathToRoot, slugifyFilePath } from "@quartz-community/utils/path"
+import { pathToRoot } from "@quartz-community/utils/path"
 import { createPipeline } from "@chaoticgoodcomputing/pipeline"
 import { islandAttributes, islandRuntime } from "@chaoticgoodcomputing/island-runtime"
 import remarkMdx from "remark-mdx"
 import { bundleWidgets, refKey, type Bundle } from "./bundle"
 import { collectIslands, ISLAND_CLASS, MdxError, type IslandUse } from "./islands"
-
-const EXT = ".mdx"
+import { EXT, listMdxSlugs, mdxLinks, mdxSlug } from "./links"
 
 interface Page {
   slug: string
@@ -32,6 +33,7 @@ function compile(ctx: any) {
 }
 
 async function compileCorpus(ctx: any) {
+  listMdxSlugs(ctx)
   // The site's configured pipeline, as a `.md` page gets it (proven at parity on #19), plus MDX.
   const pipeline = createPipeline(ctx, {
     markdownPlugins: {
@@ -45,8 +47,8 @@ async function compileCorpus(ctx: any) {
   const rendered = []
   for (const relativePath of (ctx.allFiles ?? []).filter((fp: string) => fp.endsWith(EXT))) {
     const fullPath = path.join(ctx.argv.directory, relativePath)
-    // Strip `.mdx` so the page lives at a clean URL: v5's slugifier only strips `.md`/`.html` (#23).
-    const slug = slugifyFilePath((relativePath.slice(0, -EXT.length) + ".md") as any)
+    // A clean URL: v5's slugifier only strips `.md`/`.html` (#23).
+    const slug = mdxSlug(relativePath)
     const { hast, file } = await pipeline.run(fs.readFileSync(fullPath, "utf8"), { filePath: fullPath, relativePath, slug })
     rendered.push({ relativePath, fullPath, slug, hast, file, uses: (file.data.cgcMdxUses ?? []) as IslandUse[] })
   }
@@ -98,7 +100,13 @@ const Body = () => {
   return Component
 }
 
-export default function CgcMdx() {
+// Two factories, one per shape, as stock plugins with more than one role export them: the loader
+// picks the one whose instance fits each category the manifest declares. One object for every role
+// would have Quartz collect this plugin's `externalResources` twice, as a transformer and as an
+// emitter.
+
+/** The page type and the emitter: one object fits both shapes. */
+export function CgcMdx() {
   return {
     name: "cgc-mdx",
     // Page type.
@@ -114,14 +122,19 @@ export default function CgcMdx() {
     // Emitter.
     // A page's widget CSS goes in its served <head>, so the build-time markup is styled on first
     // paint. Persisted, so SPA navigation never strips it; the runtime adds what a navigation lacks.
-    externalResources: () => ({
-      additionalHead: [
-        (fileData: any) =>
-          (fileData.cgcMdxCss ?? []).map((href: string) =>
-            h("link", { rel: "stylesheet", href: `${pathToRoot(fileData.slug)}/${href}`, "data-persist": "" }),
-          ),
-      ],
-    }),
+    externalResources: (ctx: any) => {
+      // The first hook of the emit phase, in the main thread: list the slugs before any page type
+      // or emitter reads them. A parse worker's copy of the context is not this one.
+      listMdxSlugs(ctx)
+      return {
+        additionalHead: [
+          (fileData: any) =>
+            (fileData.cgcMdxCss ?? []).map((href: string) =>
+              h("link", { rel: "stylesheet", href: `${pathToRoot(fileData.slug)}/${href}`, "data-persist": "" }),
+            ),
+        ],
+      }
+    },
     async emit(ctx: any) {
       const { bundle } = await compile(ctx)
       const written: string[] = []
@@ -132,6 +145,27 @@ export default function CgcMdx() {
         written.push(dest)
       }
       return written
+    },
+  }
+}
+
+/**
+ * The transformer: `.mdx` pages at their clean URLs for every page Quartz parses, and for the
+ * `.mdx` pages themselves, whose pipeline is rebuilt from the configured transformers, this one
+ * included. It lists them in `ctx.allSlugs` under the slug they live at, and points links written
+ * with the extension at that slug, before crawl-links resolves either. Both hooks list the slugs,
+ * because a parse worker builds each phase's processor from its own copy of the context.
+ */
+export function CgcMdxLinks() {
+  return {
+    name: "cgc-mdx-links",
+    markdownPlugins(ctx: any) {
+      listMdxSlugs(ctx)
+      return []
+    },
+    htmlPlugins(ctx: any) {
+      listMdxSlugs(ctx)
+      return [mdxLinks]
     },
   }
 }

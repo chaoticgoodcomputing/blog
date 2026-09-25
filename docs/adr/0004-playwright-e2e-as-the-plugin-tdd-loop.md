@@ -141,3 +141,19 @@ each serve run is as cold as any other build, and the objection above, a long-li
 reloads a rebuilt plugin, doesn't arise. Its ports are the OS's pick (`--port 0 --wsPort 0`), so it
 can't collide with the suite's servers or another copy of the suite. Everything else is still
 asserted on cold builds.
+
+## Amendment: a serve run left up, for what a rebuild does
+
+_2026-09-25, from [`cgc-mdx` on the real site: `.mdx` slugs, links and watch](https://github.com/chaoticgoodcomputing/blog/issues/65)._
+
+Whether a plugin's pages rebuild when content changes under `quartz build --serve` can only be seen
+on a server that stays up while the content changes. `serveScratchSite(name, files)` starts one on
+a scratch site, as the serve run above does, and leaves it up. The spec edits the content through
+it, which waits for the rebuild, and stops it at the end. The objection above still doesn't arise,
+because the server loads the plugins built for this run and nothing rebuilds a plugin under it.
+Only the content changes. The first build holds the build lock, and the rebuilds don't need it,
+because they re-run what the process has already imported. That holds only while Quartz doesn't
+re-transpile itself, so the output goes outside the Quartz root: serve's source watcher watches
+every `.ts` and `.tsx` under that root, and would take a widget's source, which Quartz copies into
+the output, for its own.
+

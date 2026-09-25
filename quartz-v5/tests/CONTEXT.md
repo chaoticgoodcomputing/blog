@@ -54,7 +54,8 @@ _Avoid_: temp site, throwaway build
 
 **Serve run**:
 A **scratch site** built as `quartz build --serve` and stopped once its server is up, on ports the
-OS picks. Only for what a plugin does differently under serve (ADR-0004).
+OS picks. Only for what a plugin does differently under serve (ADR-0004). Left up instead
+(`serveScratchSite`), it shows what a rebuild does when the spec changes the content under it.
 
 **Probe plugin**:
 A throwaway plugin a library's spec compiles from source (`harness/probe.mjs`) and loads into a

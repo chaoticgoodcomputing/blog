@@ -26,7 +26,14 @@ const config: QuartzConfig = {
     locale: "en-US",
     baseUrl: "blog.chaoticgood.computer",
     repoUrl: "https://github.com/chaoticgoodcomputing/chaoticgoodcomputing.github.io/blob/main",
-    ignorePatterns: ["private", "templates", ".obsidian"],
+    ignorePatterns: [
+      "private",
+      "templates",
+      ".obsidian",
+      // cgc-mdx's plugin note is Quartz 5's (#65). Its `widgets/README` alias would race this
+      // site's own /widgets/README page for the same file, so v4 leaves it out until cutover.
+      "plugins/cgc-mdx.md",
+    ],
     defaultDateType: "modified",
     tags: {
       colors: [

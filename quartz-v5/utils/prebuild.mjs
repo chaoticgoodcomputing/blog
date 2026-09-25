@@ -6,8 +6,10 @@
 //    `node_modules` link to the vendored install, beside it in `plugins/` or `site-plugins/`
 //    (VENDORED.md, "Dependencies"). The e2e harness makes the same link for its fixture sites.
 // 3. Quartz only symlinks a local plugin into `.quartz/plugins/`, never builds it (ADR-0004), so
-//    every local plugin the config enables is built here, after a one-off install of its own
-//    build-time dependencies.
+//    every local plugin the config enables is built here, after an install of its own build-time
+//    dependencies whenever its lockfile has moved on from what is installed, and of our libraries'
+//    dependencies, which a plugin inlines (VENDORED.md). The e2e harness does the same for the
+//    fixture (`tests/harness/site.mjs`).
 import fs from "node:fs"
 import path from "node:path"
 import { execFileSync } from "node:child_process"
@@ -16,6 +18,7 @@ import { fileURLToPath } from "node:url"
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 const vendored = path.join(root, "quartz")
+const libs = path.join(root, "libs")
 const tracked = path.join(root, "quartz.config.yaml")
 const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
 
@@ -41,9 +44,31 @@ for (const dir of new Set(local.map((plugin) => path.dirname(plugin)))) {
   link(path.join(dir, "node_modules"), path.relative(dir, path.join(vendored, "node_modules")))
 }
 
+// True when a plugin's lockfile names a package, or a version, that npm's record of its last install
+// lacks: say, after a merge added a library. Peers are never installed, and optional packages only
+// on their own platform.
+function installIsStale(dir) {
+  const installed = path.join(dir, "node_modules", ".package-lock.json")
+  if (!fs.existsSync(installed)) return true
+  const wanted = JSON.parse(fs.readFileSync(path.join(dir, "package-lock.json"), "utf8")).packages
+  const have = JSON.parse(fs.readFileSync(installed, "utf8")).packages
+  const id = (entry) => entry?.version ?? entry?.resolved
+  return Object.entries(wanted).some(([key, entry]) => key && !entry.peer && !entry.optional && id(have[key]) !== id(entry))
+}
+
+// A library's imports resolve from its own install, from the repo's pnpm workspace, never from the
+// plugin that inlines it. Without one they would silently resolve from the v4 tree's.
+const uninstalledLib = fs.existsSync(libs) && fs.readdirSync(libs).some((dir) => {
+  const manifest = path.join(libs, dir, "package.json")
+  if (!fs.existsSync(manifest)) return false
+  const { dependencies = {}, devDependencies = {} } = JSON.parse(fs.readFileSync(manifest, "utf8"))
+  return Object.keys({ ...dependencies, ...devDependencies }).length > 0 && !fs.existsSync(path.join(libs, dir, "node_modules"))
+})
+if (uninstalledLib) execFileSync("pnpm", ["install", "--frozen-lockfile"], { cwd: path.dirname(root), stdio: "inherit" })
+
 for (const plugin of local) {
   const npm = (...args) => execFileSync("npm", args, { cwd: plugin, stdio: "inherit" })
-  if (fs.existsSync(path.join(plugin, "package-lock.json")) && !fs.existsSync(path.join(plugin, "node_modules"))) {
+  if (fs.existsSync(path.join(plugin, "package-lock.json")) && installIsStale(plugin)) {
     npm("ci", "--omit=peer", "--no-audit", "--no-fund")
   }
   npm("run", "build", "--silent")

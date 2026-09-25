@@ -1,0 +1,110 @@
+---
+title: cgc-mdx
+tags:
+  - projects/site
+  - engineering/languages/typescript
+  - engineering/frontend
+aliases:
+  - widgets/README
+---
+
+`cgc-mdx` lets a [Quartz 5](https://quartz.jzhao.xyz/) site publish `.mdx` pages: Markdown that imports interactive Preact **widgets** and places them in the text. Each widget is drawn into the page when the site builds, then comes alive in the browser, and a page loads only the widget code it uses.
+
+It started as the MDX half of this site's Quartz 4 fork, and it runs on a stock copy of Quartz 5. It ships no widgets of its own.
+
+## What it does
+
+- **An `.mdx` page is a page like any other.** Its body goes through the same transformers your `.md` pages do, so wikilinks, callouts, tables, code highlighting, LaTeX, the table of contents, search, backlinks and popovers all work on it.
+- **It lives at a clean URL.** `notes/dice.mdx` is published at `/notes/dice`, and a link to it reaches that URL however it's written: `[[dice]]`, `[[notes/dice.mdx]]` or `[dice](notes/dice.mdx)`. Backlinks and the graph count those links too.
+- **Widgets are ordinary imports.** A widget comes from a file beside the page or from an npm package, the way any bundler resolves an `import`. There's no registry and no alias to configure.
+- **Widgets are islands.** Each one renders to HTML at build time, so the page reads correctly before any script runs, and then hydrates in the browser. Widgets keep working across Quartz's page navigation.
+- **Broken widgets fail the build.** An import that doesn't resolve, a widget that throws while rendering, or a prop that isn't plain data stops the build and names the page, so a broken article never deploys.
+
+## Install
+
+```shell
+npx quartz plugin add git+https://github.com/chaoticgoodcomputing/blog.git#v<version> --subdir quartz-v5/plugins/cgc-mdx --name cgc-mdx
+```
+
+Releases are `v<semver>` tags on [the monorepo](https://github.com/chaoticgoodcomputing/blog). Every package there shares one version.
+
+The plugin has no options. It is a page type, an emitter and a transformer in one package. The transformer has to run before `crawl-links`, which its default order (45, to `crawl-links`' 60) takes care of, so leave its `order` below that.
+
+## Writing a page
+
+An `.mdx` page has the frontmatter and Markdown of any other note, plus `import` statements and widget elements:
+
+```mdx
+---
+title: Rolling with advantage
+tags: [games]
+---
+
+import { DiceChart } from './widgets/dice-chart'
+import Plot from 'some-plot-package'
+
+Rolling two dice and keeping the higher one skews the result upwards:
+
+<DiceChart sides={20} rolls={[1, 2]} height={240} />
+
+A [[wikilink]], a > [!note] callout and $x^2$ all work as they do in `.md` pages.
+```
+
+- **Imports** resolve from the page's own folder (`./widgets/dice-chart`) or from `node_modules` (`some-plot-package`). Default and named imports both work. Nothing else does: `export`, namespace imports and other JavaScript fail the build.
+- **Props are data**, written as JavaScript literals: strings, numbers, booleans, `null`, and arrays and objects of those. Unquoted keys, trailing commas and `//` comments are fine. Functions, variables and expressions are not, because props are written into the page for the browser to pick up.
+- **Children are flattened to text.** `<Callout>Some **bold** text</Callout>` passes the widget `children: "Some bold text"`.
+- **Lowercase elements are plain HTML.** `<details open>` renders as it would in Markdown, with its attributes evaluated as data.
+- **`{…}` in the text is dropped,** `{/* comments */}` included. There's nothing to evaluate it against.
+
+### When a widget hydrates
+
+A widget hydrates as soon as the page loads. Add `client:visible` to wait until it scrolls into view, which suits a heavy widget far down a page:
+
+```mdx
+<DiceChart client:visible sides={20} rolls={[1, 2]} />
+```
+
+`client:load` is the default and can be written out. The directive is never passed to the widget.
+
+## Writing a widget
+
+A widget is a Preact component, exported by name or as the module's default:
+
+```tsx
+import { useEffect, useRef } from "preact/hooks"
+import "./dice-chart.css"
+
+export function DiceChart({ sides, rolls, height = 200 }: { sides: number; rolls: number[]; height?: number }) {
+  const canvas = useRef<HTMLCanvasElement>(null)
+  useEffect(() => {
+    const timer = setInterval(() => draw(canvas.current!, sides, rolls), 1000)
+    return () => clearInterval(timer)
+  }, [])
+  return <canvas ref={canvas} class="dice-chart" height={height} />
+}
+```
+
+- **It renders twice:** once to HTML at build time, where there's no `window` or `document`, and again in the browser. Put browser-only work in `useEffect`.
+- **Clean up in `useEffect`'s return.** When a reader navigates away, the widget is unmounted, and its effects' cleanups run. Widgets never listen to Quartz's navigation events themselves.
+- **Preact is the site's.** Every `preact` import resolves to the copy your Quartz uses, wherever the widget sits, so hooks work and a page carries one Preact.
+- **Keep module-level code free of per-page work.** A widget's module runs once, when a page first loads it, not once per page.
+
+### Styling a widget
+
+Import plain `.css` from the widget. It's bundled with the widget and loaded only on pages that use it. SCSS isn't compiled.
+
+All widget CSS lands in the `cgc.mdx.widgets` cascade layer, whatever its source. That ranks it above Quartz's own styles and themes, and below any CSS of the site's own, so a site can always restyle a widget. To keep a widget well behaved on any site:
+
+- **Namespace every class** after the widget (`.dice-chart`, `.dice-chart__legend`), and select only elements the widget renders.
+- **Take colours and fonts from the theme's custom properties,** such as `var(--dark)`, `var(--secondary)` and `var(--bodyFont)`, never literal values. The widget then follows the site's theme and both colour schemes.
+- **Redraw on `themechange`** if the widget reads colours in script, for a canvas say. A reader can switch the colour scheme while the widget is on screen.
+
+## Under `quartz build --serve`
+
+Editing an `.mdx` page, or adding one, rebuilds it like any other note, and so does editing a widget kept in the content folder. Quartz then restarts the whole build once more, because it copies the widget's source into the output and takes the copy for its own source. As with `.md` pages, a page you delete stays in the output until the next full build.
+
+## Notes
+
+- Quartz copies every file in the content folder that isn't a page into the site, so a vault's widget sources are published too. Add their folders to `ignorePatterns` to keep them out. `cgc-mdx` reads widgets from disk, so they still build, but `serve` no longer watches them.
+- Widget scripts and styles are written to `static/cgc-mdx/`, with shared code in chunks every page reuses.
+- The rationale for each part of the design is in the plugin's [decision records](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/plugins/cgc-mdx/docs/adr), and its terms (widget, island, directive, widget layer) are defined in [CONTEXT.md](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz-v5/plugins/cgc-mdx/CONTEXT.md).

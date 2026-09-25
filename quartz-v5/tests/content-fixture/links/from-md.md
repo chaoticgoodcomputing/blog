@@ -1,0 +1,13 @@
+---
+title: Links from Markdown
+tags:
+  - fixture
+---
+
+Links to `.mdx` pages, in each form a vault writes them. Every one should reach the page at its
+clean URL, and count as a link for backlinks and the graph.
+
+- By name alone: [[life]]
+- By path, with the extension: [[lab/echo.mdx|Echo, by its file name]]
+- To a heading, with the extension: [[mdx-article.mdx#Footnote check|the MDX footnotes]]
+- A markdown link to the file: [Life, again](lab/life-again.mdx)

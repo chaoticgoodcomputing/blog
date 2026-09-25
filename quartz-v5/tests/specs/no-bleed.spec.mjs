@@ -5,11 +5,11 @@
 // must compute identically. An element is owned if it, or an ancestor, carries a `cgc-` class.
 import { test, expect } from "../harness/test.mjs"
 
-const PAGES = ["/", "/plain-note", "/md-twin", "/mdx-article", "/lab/cascade", "/lab/pdf", "/nested/deep-note", "/tags/fixture", "/seo/private-note", "/seo/private-descendant", "/seo/authored", "/og/tag-nested", "/linked-note"]
+const PAGES = ["/", "/plain-note", "/md-twin", "/mdx-article", "/lab/cascade", "/lab/pdf", "/links/from-md", "/links/from-mdx", "/nested/deep-note", "/tags/fixture", "/seo/private-note", "/seo/private-descendant", "/seo/authored", "/og/tag-nested", "/linked-note"]
 // A page one of our plugins creates has no baseline of its own, so it is compared against the
 // stock page it stands in for: the .mdx article against its byte-identical .md twin. The explorer
 // marks the current page `.active`, which is then a different link on each side, so it is skipped.
-const BASELINE_OF = { "/mdx-article": "/md-twin", "/lab/cascade": "/lab/cascade-twin", "/lab/pdf": "/lab/pdf-twin" }
+const BASELINE_OF = { "/mdx-article": "/md-twin", "/lab/cascade": "/lab/cascade-twin", "/lab/pdf": "/lab/pdf-twin", "/links/from-mdx": "/links/from-md" }
 const TWIN_SKIP = ".explorer .active"
 const PROPS = ["color", "background-color", "font-family", "font-size", "font-weight", "letter-spacing", "line-height", "margin-top", "margin-bottom", "padding-left", "display", "text-decoration-line"]
 

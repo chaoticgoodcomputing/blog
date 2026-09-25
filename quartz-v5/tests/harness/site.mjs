@@ -282,6 +282,72 @@ export async function buildScratchSite(name, files, options = {}) {
   }
 }
 
+// A serve run left up, for what Quartz does when content changes under `quartz build --serve`: a
+// spec edits the content and reads the rebuilt site. It loads the plugins built for this run, so
+// ADR-0004's objection to serve, a long-lived process that never reloads a rebuilt plugin, doesn't
+// arise. Only the first build holds the build lock: a rebuild re-runs what the process has already
+// imported. The output is outside the Quartz root, because serve's source watcher watches every
+// `.ts` and `.tsx` under it, and would take a copied widget's source for Quartz's own and
+// re-transpile Quartz, which is what the lock guards. Takes `files`, `options.config` and
+// `options.at` as `buildScratchSite` does, and resolves once the server is up with the site's `root`, `public` and
+// `content` directories, its `output` so far, `write(rel, text)`, which changes a content file and
+// resolves once the rebuild that follows is done, and `stop()`, which the caller must call: it
+// stops the server and deletes the site.
+export async function serveScratchSite(name, files, options = {}) {
+  const root = fs.mkdtempSync(path.join(SCRATCH_PARENT[options.at ?? "fixture"], `.site-scratch-${name}-`))
+  const content = fs.mkdtempSync(path.join(os.tmpdir(), `cgc-scratch-${name}-`))
+  const site = fs.mkdtempSync(path.join(os.tmpdir(), `cgc-scratch-${name}-public-`))
+  const put = (rel, text) => {
+    fs.mkdirSync(path.dirname(path.join(content, rel)), { recursive: true })
+    fs.writeFileSync(path.join(content, rel), text)
+  }
+  for (const [rel, text] of Object.entries(files)) put(rel, text)
+  for (const entry of LINKED) fs.symlinkSync(path.join(vendored, entry), path.join(root, entry))
+  fs.writeFileSync(path.join(root, "quartz.config.yaml"), options.config ?? fixtureConfig())
+
+  let output = ""
+  let child
+  let closed
+  const until = async (done, timeout, what) => {
+    for (const start = Date.now(); !done(); await new Promise((tick) => setTimeout(tick, 50))) {
+      if (child.exitCode !== null || Date.now() - start > timeout) throw new Error(`quartz build --serve: ${what}\n${output}`)
+    }
+  }
+  const stop = async () => {
+    child?.kill()
+    await closed
+    for (const dir of [content, site, root]) fs.rmSync(dir, { recursive: true, force: true })
+  }
+  try {
+    await withBuildLock(() => {
+      const cli = path.join(root, "quartz/bootstrap-cli.mjs")
+      child = spawn("node", [cli, "build", "--serve", "--port", "0", "--wsPort", "0", "-d", content, "-o", site], { cwd: root })
+      closed = new Promise((done) => child.on("close", done))
+      child.stdout.on("data", (chunk) => (output += chunk))
+      child.stderr.on("data", (chunk) => (output += chunk))
+      return until(() => output.includes("Started a Quartz server"), SERVE_TIMEOUT_MS, "never served")
+    })
+  } catch (err) {
+    await stop()
+    throw err
+  }
+
+  const count = (text) => output.split(text).length - 1
+  return {
+    root,
+    content,
+    public: site,
+    output: () => output,
+    async write(rel, text) {
+      const [done, failed] = [count("Done rebuilding"), count("Rebuild failed")]
+      put(rel, text)
+      await until(() => count("Done rebuilding") > done || count("Rebuild failed") > failed, 30_000, `no rebuild after writing ${rel}`)
+      if (count("Rebuild failed") > failed) throw new Error(`quartz build --serve: the rebuild after writing ${rel} failed\n${output}`)
+    },
+    stop,
+  }
+}
+
 export async function buildAll() {
   await buildPlugins()
   await Promise.all(VARIANTS.map(buildSite))

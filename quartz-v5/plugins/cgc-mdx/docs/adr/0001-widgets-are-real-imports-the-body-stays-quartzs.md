@@ -99,6 +99,8 @@ implementation added to this ADR:
   ([:536-539](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L536-L539)). The page type's
   `generate` and the emitter's `emit` await the same compile, memoised per `buildId`, so the
   corpus is parsed and bundled once. The emitter writes the chunks to `static/cgc-mdx/`.
+  _[ADR-0004](./0004-mdx-pages-at-their-clean-urls.md) adds a third role, a transformer, and
+  exports the two shapes from two factories._
 - **Preact is pinned to the host's copy.** A widget resolves Preact from wherever it sits, and in
   this repo that is the v4 tree's `preact@10.28.2`, not Quartz 5's `10.29.8`. Two Preacts on
   one page break hooks. So every `preact`/`preact-render-to-string` import in a widget build
