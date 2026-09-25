@@ -121,8 +121,11 @@ test("dragging the divider resizes the document, which is drawn again to fit", a
   await page.goto(PAPER)
   const viewer = await shown(page)
   const before = await viewer.locator(".cgc-annotator-viewer__page").first().boundingBox()
-  const handle = await page.locator(".cgc-annotator-viewer__handle").boundingBox()
-  await page.mouse.move(handle.x + handle.width / 2, handle.y + handle.height / 2)
+  // Grabbed by its middle, scrolled into view first: however tall the page's header grows, the
+  // middle of a divider as tall as the document can fall below the fold.
+  const grip = page.locator(".cgc-annotator-viewer__handle")
+  await grip.hover()
+  const handle = await grip.boundingBox()
   await page.mouse.down()
   await page.mouse.move(handle.x - 200, handle.y + handle.height / 2, { steps: 8 })
   await page.mouse.up()
