@@ -62,6 +62,11 @@ change is supposed to have one.
 How a family of related plugins holds together. Recorded in
 [ADR-0002](../docs/adr/0002-plugin-composition-through-published-artifacts.md).
 
+**Plugin name**:
+A plugin's identity within a site — the name it installs under, and the name a consumer uses to
+declare it as a dependency. The same at every site that loads the plugin, unlike its source.
+_Avoid_: plugin id, source (that is where a plugin comes from, and differs by site)
+
 **Engine**:
 A non-visual plugin that owns one domain's configuration and publishes it for other plugins to
 read. Holds no rendering and no knowledge of its consumers.

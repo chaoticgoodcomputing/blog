@@ -161,3 +161,39 @@ Libraries are published under **`@chaoticgoodcomputing/`**, the npm scope we own
 The worked example's `@cgc/tags-core` is `@chaoticgoodcomputing/tags-core`. Each library lives
 at `quartz-v5/libs/<name>`, and its Nx project name is its npm name. Plugins keep unscoped
 `cgc-*` names, because for a local source the loader takes a plugin's identity from its directory.
+
+## Amendment: consumers declare an engine by its plugin name
+
+_2026-09-25, from [One manifest.dependencies string can't match both the site and the e2e fixture](https://github.com/chaoticgoodcomputing/blog/issues/40)._
+
+Rule 3 is refined. A consumer names its engine by **plugin name**:
+`manifest.dependencies: ["cgc-styles"]`. It never uses a `source:` path.
+
+**Why.** The loader matches dependency strings against the site's `source:` strings
+[verbatim](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L122-L130),
+and local sources are relative to wherever the site runs. The same consumer is loaded at three
+sites: the real site (`../plugins/cgc-styles`), the e2e fixture (`../../plugins/cgc-styles`) and a
+downstream stock site. The downstream site installs from this monorepo with an object source
+carrying `subdir`, and the loader keys object sources by `JSON.stringify`, so no dependency string
+can match it. One `package.json` can't satisfy all three. The plugin name is the one identity a
+plugin has at every site: every plugin installs to
+[`.quartz/plugins/<name>`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L433),
+so names are already unique within a site.
+
+**This needs a vendored change.** Stock `validateDependencies` never matches by name, although it
+builds a name map it never reads. The change resolves each dependency by exact source first, then
+by name. The presence, order and cycle checks all use the resolved entry, so the order check can't
+silently fall back to `defaultOrder` 50. It is tracked with its upstream proposal on
+[Upstream proposal: match `manifest.dependencies` by plugin name](https://github.com/chaoticgoodcomputing/blog/issues/47),
+and until that proposal lands, **every consumer fails the shareability test**. That is the same
+trade `cgc-mdx` makes for awaitable `generate`, and it costs nothing before cutover, since no
+`cgc-*` package is published before then.
+
+**A downstream site sets `name:` on the source.** A `subdir` install is named after the repo unless
+the site overrides it, which would make every `cgc-*` plugin `blog`, all installing over each
+other. Each package's README shows the source with `name:` set.
+
+**Rejected:** putting the fixture roots at the vendored root's depth, or symlinking
+`tests/plugins → ../plugins`, which reconcile our two sites and leave every consumer unshareable;
+and dropping `manifest.dependencies` for a runtime check on the engine's artifact, which loses
+the loader's order check, the guarantee the family layer's position rests on.
