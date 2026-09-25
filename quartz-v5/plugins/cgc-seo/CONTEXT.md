@@ -26,3 +26,10 @@ _Avoid_: private page
 A stub standing in for a page on another site, so that cross-graph links resolve. Its URL is not
 ours, so it is never an indexable page.
 _Avoid_: remote page, cross-graph stub
+_Dormant_: external pages are out of scope for the v5 migration, so none exist yet. The term is
+kept for when they return.
+
+**Page author**:
+The author a page names in its own `author` frontmatter, or the site's **default author** when it
+names none. It is what the page's head metadata credits.
+_Avoid_: site author (that is the name in the site header, which never changes per page)
