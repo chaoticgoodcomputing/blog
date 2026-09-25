@@ -1,0 +1,29 @@
+/* A widget stylesheet that tries every way out of the widget layer (cgc-mdx ADR-0002). All of it
+   must land in cgc.mdx.widgets. */
+
+/* The order of this widget's own layers, ahead of the import that fills one of them. */
+@layer cascade-remote, cascade;
+
+/* Remote imports, which esbuild leaves in place. The host never resolves (`.invalid`, RFC 2606);
+   specs that need the sheets serve them. */
+@import url("https://widgets.cgc-fixture.invalid/remote.css");
+@import url("https://widgets.cgc-fixture.invalid/layered.css") layer(cascade-remote);
+
+.cascade {
+  margin: 1rem 0;
+  padding: 0.5rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+}
+
+/* Core's `.page article p > strong` is more specific; only the layer order lets this win. */
+.cascade__strong {
+  color: var(--secondary);
+}
+
+/* The widget's own layer, which nests inside the widget layer. */
+@layer cascade {
+  .cascade__nested {
+    border-radius: 8px;
+  }
+}

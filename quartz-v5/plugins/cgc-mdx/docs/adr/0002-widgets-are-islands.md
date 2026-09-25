@@ -105,6 +105,11 @@ as it emits it.
 - **Nothing a widget ships escapes the wrapper.** A widget's own `@layer foo` nests to
   `cgc.mdx.widgets.foo`. A remote `@import`, which esbuild leaves in place and which can't sit
   inside a block, is hoisted ahead of the wrapper as `@import url(…) layer(cgc.mdx.widgets);`.
+  The rest of what has to stay ahead of a block goes under the wrapper the same way: an import
+  that names its own layer `foo` lands in `cgc.mdx.widgets.foo`, and a `@layer foo, bar;`
+  statement ordering those imports stays in front of them as `cgc.mdx.widgets.foo,
+  cgc.mdx.widgets.bar`, so the widget's own order holds. `src/layer.ts` does the rewrite, and the
+  `/lab/cascade` fixture tries each escape.
 - **Rule 9 of ADR-0003 does not reach widgets.** A `<link>` can never get inside `quartz-base`, so
   a widget has no vendor-layer escape hatch. A widget namespaces any third-party CSS it ships.
 - **No `cgc-styles` dependency.** See [ADR-0003](./0003-no-opinionated-dependencies.md).

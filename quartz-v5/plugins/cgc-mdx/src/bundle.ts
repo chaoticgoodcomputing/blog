@@ -8,6 +8,7 @@ import os from "node:os"
 import path from "node:path"
 import { fileURLToPath, pathToFileURL } from "node:url"
 import { MdxError } from "./islands"
+import { layerWidgetCss } from "./layer"
 
 /** A widget as a page refers to it. */
 export interface WidgetRef {
@@ -187,7 +188,11 @@ export async function bundleWidgets(refs: WidgetRef[]): Promise<Bundle> {
     }
     return {
       widgets,
-      files: browser.outputFiles!.map((f) => ({ path: siteRel(f.path), contents: f.contents })),
+      // All widget CSS lands in the widget layer, whatever the widget's source (ADR-0002).
+      files: browser.outputFiles!.map((f) => ({
+        path: siteRel(f.path),
+        contents: f.path.endsWith(".css") ? new TextEncoder().encode(layerWidgetCss(f.text)) : f.contents,
+      })),
     }
   } catch (err) {
     if (err instanceof MdxError) throw err
