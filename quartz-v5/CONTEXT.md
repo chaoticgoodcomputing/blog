@@ -69,6 +69,12 @@ changes, and named by a `v<semver>` tag. A downstream site pins a release, never
 version or a branch. Recorded in [ADR-0005](../docs/adr/0005-plugins-ship-as-source-in-batch-releases.md).
 _Avoid_: package version, plugin version
 
+**Release commit**:
+The commit a release's tag points at: a child of `main` that changes package metadata only, setting
+every package's version and pointing each plugin at the release's published libraries. It is never
+merged into `main`. Recorded in [ADR-0005](../docs/adr/0005-plugins-ship-as-source-in-batch-releases.md).
+_Avoid_: release branch, version bump
+
 ### Plugin composition
 
 How a family of related plugins holds together. Recorded in

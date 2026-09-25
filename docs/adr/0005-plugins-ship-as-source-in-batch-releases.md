@@ -70,9 +70,63 @@ together" by construction.
   The path loses `quartz-v5/` at cutover.
 - **A plugin's dependencies must install from a registry.** An install-time build can't see this
   repo's workspace, so a plugin that inlines one of our libraries can't name it by `workspace:*`.
-  That's open, not settled.
+  Settled by the *libraries inlined by a plugin* amendment below.
 - **No release is cut before cutover,** per the no-publishing rule. The release tooling waits
   until then.
 - **Two upstream proposals, both deferred until after cutover:** honour the locked commit for
   `subdir` sources, and install plugin dependencies without peers so the peer link can happen. With
   both landed, the `.npmrc` and the tag-only pinning become belt-and-braces rather than load-bearing.
+
+## Amendment: libraries inlined by a plugin
+
+_2026-09-25, from [How does a plugin that inlines one of our libraries build on a downstream install?](https://github.com/chaoticgoodcomputing/blog/issues/52)._
+
+A plugin that inlines one of our libraries lists it as a **`devDependency`**. On `main` the spec is
+`file:../../libs/<name>`. At a release, the tag carries the exact release version instead, and
+every library is published to npm at that version.
+
+- **Libraries are published to npm on every release** as `@chaoticgoodcomputing/<name>@x.y.z`,
+  source only: `exports` still points at `./src/index.ts`, and the consuming plugin's build inlines
+  it, just as it does locally.
+- **The tag points at a release commit off `main`.** It is a child of `main`'s head that changes
+  package metadata only. Every package's `version` becomes `x.y.z`, and every plugin's
+  `file:../../libs/*` spec becomes `x.y.z`. `main` never contains it, and `main`'s versions stay
+  `0.0.0`. The **Release commit** in `quartz-v5/CONTEXT.md`.
+- **`devDependencies`, not `dependencies`.** The loader installs, builds, then prunes dev
+  dependencies. An inlined library is needed only for the build. `dependencies` stays for what the
+  plugin needs while the site builds, like `cgc-mdx`'s `esbuild`.
+- **Libraries depend on each other by `workspace:*`**, in `dependencies`, and `pnpm publish`
+  rewrites that to the exact version itself. A library's third-party dependencies are
+  `dependencies` too, so npm installs them transitively under the plugin's devDependency. The pnpm
+  workspace still lists only `libs/*`, and plugins keep installing with npm, the way the loader
+  installs them downstream.
+
+**Why a rewrite at all.** No spec satisfies both installs before the first release. Locally, no
+published version exists. Downstream, nothing outside the plugin's folder exists: a `subdir`
+install shallow-clones the repo, moves the subdirectory out and
+[deletes the rest](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L525-L541)
+before `npm install` runs, so a `file:` path finds nothing. The release commit is where the
+spec changes from one to the other.
+
+**Alternatives ruled out.**
+
+- **A git dependency with a subdirectory.** npm has no syntax for one (pnpm's and Yarn's
+  `#path:` forms don't exist in npm), and the loader runs npm.
+- **`workspace:*` in plugins,** with `plugins/*` joining the pnpm workspace. npm rejects the
+  `workspace:` protocol outright, so it still needs the rewrite, and plugins would install with
+  pnpm locally but npm downstream.
+- **Committing `dist/` for plugins that inline a library.** This is the case ruled out above: the
+  loader would skip `npm install`, and runtime dependencies would never install.
+- **GitHub release tarballs, or copying libraries into each plugin at release.** Both work without
+  a registry. But the libraries are useful outside our plugins, and we hold the npm scope.
+
+**Consequences.**
+
+- **Releasing never writes to `main`.** Because the release commit sits off `main`, cutting a
+  release can't loop back into the pipeline. A release is cut only when something under `plugins/`
+  or `libs/` changes. Vault content, the site and `site-plugins/` never trigger one. The release
+  automation still waits for cutover.
+- **The first plugin to inline a library proves the shape.** It extends the `proto-install` run to
+  `pnpm pack` the libraries, rewrite the plugin's specs to those tarballs and install it into a
+  stock site. That tests the rewrite and inlining TypeScript from `node_modules`, with nothing
+  published.
