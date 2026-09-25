@@ -118,6 +118,29 @@ plugins:
   # A consumer of cgc-styles that declares it by plugin name (#63). Exists only in the fixture.
   - source: ../fixture-plugins/fixture-consumer
     enabled: true
+  # The tag engine (#69): one dictionary of tag colours and icon ids. Its colours are in each form a
+  # site can write, a hex, a theme variable and a light-dark() pair, and every other tag inherits.
+  - source: ../../plugins/cgc-tags
+    enabled: true
+    options:
+      tags:
+        fixture: { color: "#0a7d32" }
+        writing: { color: "var(--secondary)", icon: "mdi:pencil" }
+        writing/essays: { icon: "mdi:feather" }
+        markdown: { color: "light-dark(#b35f00, #de8200)" }
+  # A reader of the engine's per-page artifact, which no real consumer shows yet (#69). Fixture only.
+  - source: ../fixture-plugins/fixture-tag-reader
+    enabled: true
+  # The page's tag badges, painted from the engine's colours (#69), in stock tag-list's slot, with
+  # the real site's options.
+  - source: ../../plugins/cgc-tag-list
+    enabled: true
+    options:
+      showSubtags: true
+      showParentTag: true
+    layout:
+      position: beforeBody
+      priority: 30
   - source: "@quartz-community/remove-draft"
     enabled: true
   - source: "@quartz-community/explicit-publish"

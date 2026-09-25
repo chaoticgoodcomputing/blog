@@ -1,0 +1,22 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "name": "@chaoticgoodcomputing/tags-core",
+  "root": "quartz-v5/libs/tags-core",
+  "sourceRoot": "quartz-v5/libs/tags-core/src",
+  "projectType": "library",
+  "tags": ["cgc", "cgc:lib"],
+  "targets": {
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run typecheck", "cwd": "{projectRoot}" }
+    },
+    "e2e": {
+      "//": "This library's specs only, through the shared suite. No build target: plugins inline the source.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx playwright test ../libs/tags-core",
+        "cwd": "{workspaceRoot}/quartz-v5/tests"
+      }
+    }
+  }
+}

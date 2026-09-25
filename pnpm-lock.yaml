@@ -302,6 +302,15 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  quartz-v5/libs/tags-core:
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
+
   quartz-v5/libs/widgets:
     dependencies:
       pdfjs-dist:

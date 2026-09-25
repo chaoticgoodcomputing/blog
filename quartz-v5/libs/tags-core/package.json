@@ -1,0 +1,26 @@
+{
+  "name": "@chaoticgoodcomputing/tags-core",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "The tag system's shared logic for Quartz 5 plugins: the resolution rule, the shapes the cgc-tags engine publishes, their fileData types, and a colour resolver for canvases. See CONTEXT.md.",
+  "//exports": "Source only: no build and no dist. The consuming plugin's build inlines it (ADR-0005). `./colour` is browser-only.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./colour": "./src/colour.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "//devDependencies": "Types only. `vfile` is the module the fileData augmentation extends; a consuming plugin resolves its own copy, the host Quartz's.",
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vfile": "^6.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,104 @@
+/*
+ * cgc-tag-list: a page's tag badges. v4's TagList styles, as library CSS (ADR-0003): one BEM block,
+ * every rule in this package's family layer, skin from the theme's colour properties. build.mjs
+ * refuses anything else.
+ *
+ * The ring's `color` is its tag's colour, set inline from the cgc-tags engine's `--cgc-tag-*`
+ * property (docs/adr/0001). It paints the ring's border, and in time the icon inside it, and never
+ * text: the ring holds none, and the link's text keeps the colour of the text around it.
+ */
+@layer cgc.tag-list {
+  .cgc-tag-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    padding-left: 0;
+  }
+
+  .cgc-tag-list__item {
+    display: inline-block;
+    margin: 0;
+    white-space: nowrap;
+    overflow-wrap: normal;
+  }
+
+  .cgc-tag-list__link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0.3rem 0.6rem 0.3rem 0.3rem;
+    border-radius: 18px 8px 8px 18px;
+    background-color: var(--lightgray);
+    color: inherit;
+    text-decoration: none;
+    transition:
+      background-color 0.2s ease,
+      border-radius 0.2s ease,
+      padding 0.2s ease;
+  }
+
+  .cgc-tag-list__link:hover {
+    background-color: var(--gray);
+  }
+
+  .cgc-tag-list__ring {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border: 2.5px solid currentColor;
+    border-radius: 50%;
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  .cgc-tag-list__name {
+    display: flex;
+    align-items: center;
+    font-size: 0.95em;
+    font-weight: 500;
+  }
+
+  .cgc-tag-list__name::before {
+    content: "#";
+    margin-right: 0.2em;
+    opacity: 0.7;
+  }
+
+  .cgc-tag-list__count {
+    margin-left: 0.2rem;
+    color: var(--gray);
+    font-size: 0.85em;
+  }
+
+  /* A narrow screen shows only each badge's ring, until a long press expands it (the script). */
+  @media (max-width: 800px) {
+    .cgc-tag-list {
+      justify-content: center;
+    }
+
+    .cgc-tag-list__link {
+      gap: 0;
+      padding: 0.3rem;
+      border-radius: 50%;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    .cgc-tag-list__link:not(.cgc-tag-list__link--expanded) .cgc-tag-list__name,
+    .cgc-tag-list__link:not(.cgc-tag-list__link--expanded) .cgc-tag-list__count {
+      display: none;
+    }
+
+    .cgc-tag-list__link--expanded {
+      gap: 0.5rem;
+      padding: 0.3rem 0.6rem 0.3rem 0.3rem;
+      border-radius: 18px 8px 8px 18px;
+    }
+  }
+}

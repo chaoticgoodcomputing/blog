@@ -27,8 +27,9 @@ _Avoid_: shadow root (collides with the DOM's), sandbox, workspace
 **Fixture plugin**:
 A plugin that exists only for the suite, under `fixture-plugins/`: a stand-in for a third-party
 plugin the fixture must not run (`fixture-theme`, for `@quartz-themes/core`), or the smallest
-consumer of one of our engines (`fixture-consumer`). Plain ESM with no build step. One the fixture
-config enables counts as one of our plugins, so the baseline disables it.
+consumer of one of our engines (`fixture-consumer` for cgc-styles; `fixture-tag-reader`, which
+writes out the tag data cgc-tags publishes on each page). Plain ESM with no build step. One the
+fixture config enables counts as one of our plugins, so the baseline disables it.
 _Avoid_: test plugin, mock plugin, stub (in prose)
 
 **Owned element**:

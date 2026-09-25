@@ -1,0 +1,20 @@
+{
+  "name": "fixture-tag-reader",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "//": "The fixture's reader of cgc-tags' per-page artifact (#69): the smallest consumer of the engine's fileData, declaring it by plugin name. It writes what each page received to one file, so a spec can read the contract as a consumer does. Plain ESM, so there is nothing to build.",
+  "exports": { ".": "./index.js", "./package.json": "./package.json" },
+  "main": "./index.js",
+  "quartz": {
+    "name": "fixture-tag-reader",
+    "displayName": "cgc-tags reader (fixture)",
+    "category": "emitter",
+    "version": "0.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": ["cgc-tags"],
+    "defaultOrder": 50,
+    "defaultEnabled": true,
+    "defaultOptions": {}
+  }
+}

@@ -1,0 +1,41 @@
+---
+status: accepted
+date: 2026-09-25
+---
+
+# The ring carries the tag colour as its own `color`
+
+Each badge's ring is painted in its tag's colour, which the `cgc-tags` engine publishes as a
+colour property, such as `--cgc-tag-engineering--ai` (#31). The component has to get that property
+onto the ring, and from #71 onto the icon inside it, while the tag colour never paints text.
+Decided on [`tags-core`, `cgc-tags` and `cgc-tag-list`](https://github.com/chaoticgoodcomputing/blog/issues/69).
+
+## Decision
+
+The ring gets the tag colour as its `color`, inline: `style="color: var(--cgc-tag-…)"`. The
+stylesheet draws the ring's border in `currentColor`, and an icon drawn in `currentColor`, as #71's
+icons library draws them, takes the same colour with no further wiring. The ring holds no text, and
+the rest of the badge keeps the colour of the text around it.
+
+## Why not a custom property of the package's own
+
+The obvious route is a package property, set inline and read by the stylesheet. ADR-0003 has a
+package prefix its properties `--cgc-`, and this package's block is `cgc-tag-list`, so it would be
+`--cgc-tag-list-…`. That is inside the engine's namespace: `--cgc-tag-list-color` is the colour
+property of a tag called `list-color`, and a site that had one would find it overwritten. Any name
+starting `--cgc-tag-` has that problem, and one outside it would break the family's naming just to
+avoid the engine's.
+
+## Consequences
+
+- **The ring must never hold text.** Anything written inside it would take the tag colour.
+- **To recolour a badge, a site overrides the tag's property**, which also recolours that tag
+  everywhere else. The inline `color` outranks a stylesheet's, so a rule on the ring can't do it
+  alone, and that's the intended single knob.
+
+## Considered alternatives
+
+- **An inline `border-color`.** It paints the ring, but #71's icon would need the colour set a
+  second time.
+- **A property named outside `--cgc-tag-`,** such as `--cgc-taglist-color`. It avoids the collision
+  by breaking the naming every other package follows.

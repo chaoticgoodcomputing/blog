@@ -159,6 +159,56 @@ plugins:
   # declares it by name, `dependencies: ["cgc-styles"]`, and the loader holds them to its order.
   - source: ../plugins/cgc-styles
     enabled: true
+  # The tag engine (#20, #31, #69): the site's one tag dictionary, v4's `tags:` block. Colour and icon
+  # are both inherited from the nearest ancestor that has one, so only tags that differ from their
+  # parent are listed; v4 inherited colours only, and matched icons exactly. Each colour is a
+  # light-dark() pair: v4's hex is the dark half, and the light half is a deeper shade of it, at 3:1
+  # or more against the light scheme's page and badge. Tags with neither get `var(--darkgray)`, where
+  # v4 had #888888. The engine publishes icon ids; cgc-tag-list draws them from #71.
+  - source: ../plugins/cgc-tags
+    enabled: true
+    options:
+      tags:
+        economics: { color: "light-dark(#b35f00, #de8200)", icon: mdi:earth }
+        economics/finance: { icon: mdi:currency-usd }
+        economics/markets: { icon: mdi:handshake }
+        economics/policy: { icon: mdi:script }
+        economics/strategy: { icon: mdi:arrow-decision }
+        engineering: { color: "light-dark(#0070cc, #008CFF)", icon: mdi:wrench }
+        engineering/ai: { icon: mdi:robot }
+        engineering/bio: { icon: mdi:dna }
+        engineering/data: { icon: mdi:pulse }
+        engineering/devops: { icon: mdi:cloud }
+        engineering/frontend: { icon: mdi:palette }
+        engineering/languages: { icon: mdi:code-braces }
+        engineering/languages/csharp: { icon: mdi:language-csharp }
+        engineering/languages/lua: { icon: mdi:language-lua }
+        engineering/languages/python: { icon: mdi:language-python }
+        engineering/languages/scratch: { icon: mdi:cat }
+        engineering/languages/typescript: { icon: mdi:language-typescript }
+        horticulture: { color: "light-dark(#1a8a1a, #00FF00)", icon: mdi:flower }
+        horticulture/seasons: { icon: mdi:weather-sunny }
+        horticulture/seasons/rhythm: { icon: mdi:music-note }
+        horticulture/seasons/systems: { icon: mdi:connection }
+        private: { color: &red "light-dark(#cc0000, #FF0000)", icon: mdi:lock }
+        projects: { color: *red, icon: mdi:source-branch }
+        projects/dayjob: { icon: mdi:vote }
+        projects/flowthru: { icon: mdi:graph-outline }
+        projects/games: { icon: custom:d20 }
+        projects/games/magic-atlas: { icon: mdi:cards-outline }
+        projects/games/roblox: { icon: custom:roblox }
+        projects/games/the-neighborhood: { icon: mdi:city }
+        projects/homelab: { icon: mdi:home-sound-out }
+        projects/site: { icon: custom:quartz-filled }
+        projects/teaching: { icon: mdi:school }
+        projects/undergrad: { icon: custom:uofu }
+        writing: { color: "light-dark(#9a7400, #FFD637)", icon: mdi:pencil }
+        writing/annotations: { icon: mdi:chat-plus }
+        writing/annotations/a-pattern-language: { icon: mdi:home-city }
+        writing/annotations/meetings: { icon: mdi:account-group }
+        writing/articles: { icon: mdi:file-edit }
+        writing/highlights: { icon: mdi:star }
+        writing/tutorials: { icon: mdi:map }
   - source: "@quartz-community/remove-draft"
     enabled: true
   - source: "@quartz-community/explicit-publish"
@@ -292,9 +342,19 @@ plugins:
       priority: 20
       # v4's index shows no date or reading time.
       condition: not-index
-  # v4 lists a page's tags under its title.
+  # Replaced by cgc-tag-list, in the same slot.
   - source: "@quartz-community/tag-list"
+    enabled: false
+    layout:
+      position: beforeBody
+      priority: 30
+  # v4's TagList under a page's title (#69): badges ringed in their tag's colour, each with the count
+  # of pages under it. A tag page lists its parent and subtags instead, as v4's tags layout did.
+  - source: ../plugins/cgc-tag-list
     enabled: true
+    options:
+      showSubtags: true
+      showParentTag: true
     layout:
       position: beforeBody
       priority: 30
