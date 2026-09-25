@@ -1,0 +1,361 @@
+# Fork ledger: the v4 `quartz/` fork, classified for v5
+
+This resolves [Fork ledger: classify all 4,102 forked lines](https://github.com/chaoticgoodcomputing/blog/issues/21) on the [v4 → v5 map](https://github.com/chaoticgoodcomputing/blog/issues/18). It classifies every file where our v4 `quartz/` differs from upstream, putting each one in the bucket it falls into under [ADR-0001](../docs/adr/0001-customization-through-plugins.md).
+
+- **Native**: v5 core or a stock `@quartz-community/*` plugin already does this, so the customization is deleted.
+- **Plugin**: moves into one of our packages, or into site-owned config or CSS. The Destination column names where.
+- **Upstream**: needs a v5 core change.
+- **Dead**: no longer wanted, vestigial, or superseded by a decision on the map.
+
+## How this was produced
+
+The ledger compares three trees:
+
+- **Ours:** the v4 tree at `origin/main` [`9e48f89`](https://github.com/chaoticgoodcomputing/blog/tree/9e48f89b256f511a94f07d473d46395d91730c53/quartz), which is identical to local `main`.
+- **Upstream v4:** [`v4.5.2`](https://github.com/jackyzha0/quartz/tree/4923affa7722dfc751f1074348e6dad214fe0c08/quartz), commit `4923aff`.
+- **v5:** the vendored [`97a2d05`](https://github.com/jackyzha0/quartz/tree/97a2d05f80c4c50534959b1d0d41cc4b3895625e), with the stock plugins installed under `quartz-v5/quartz/node_modules/@quartz-community/`.
+
+The comparison reproduces the ticket's figures exactly. 148 files are common to both trees. 95 of them are forked, 65 of those outside `i18n/`, with 4,102 changed lines. 20 upstream files are deleted, and 150 files are new.
+
+Where a file does several things, it is split into one row per concern. Rows after the first repeat the line count as `″` or `(split)`. Directories whose files all share one fate are grouped into a single row. There are 233 rows in all: **82 Native, 104 Plugin, 47 Dead and 0 Upstream**.
+
+## The number the ticket asked for
+
+Of the **4,102 forked lines**, about 40% delete themselves:
+
+| Share | Lines | Fate |
+|---|---|---|
+| 40% | 1,651 | In files whose every concern is Native or Dead. They delete outright. |
+| 34% | 1,404 | In files that move wholesale into a plugin or the site. |
+| 26% | 1,047 | In files that split. `cfg.ts`, `Head.tsx`, `renderPage.tsx` and `componentResources.ts` are the large ones. |
+
+This is the "third to half" the ticket guessed, at the high end.
+
+That figure also overstates our own churn. The fork's `init` commit was a v4 snapshot *newer* than v4.5.2, so part of the diff is upstream drift that v5 already contains. That covers `he-IL`, `kk-KZ`, the `it-IT` and `vi-VN` fixes, and `search.test.ts`.
+
+The **~18.3k added lines** divide as follows: about 13.3k Plugin, 3.0k Native and 1.9k Dead. Most of the Plugin share is packages the map already names:
+
+- `cgc-graph`: ~2.9k lines of graph runtime.
+- `cgc-annotator`: ~1.7k.
+- `cgc-tags` and `@cgc/tags-core`: ~0.7k of tag utilities, plus the TagExplorer, TagList and PostListing consumers.
+- The widget library: `pdf-viewer`, `bluesky-post` and `blueskyService`.
+- The site's ITCSS partials.
+
+## Upstream: empty
+
+**No row needs a v5 core change.** The one known vendored change is still the only one, [Upstream proposal: make page-type `generate` awaitable](https://github.com/chaoticgoodcomputing/blog/issues/25), and it comes from `cgc-mdx` rather than the fork.
+
+Everything that looked like it needed core has a plugin route:
+
+- **Custom frames:** frames are plugin-registrable (`plugins/loader/frameLoader.ts`, manifest `frames`).
+- **The `is-index` condition:** `registerCondition` is exported (`plugins/loader/conditions.ts:23`).
+- **Head additions:** they go through `additionalHead`.
+
+Optional core PRs, none of which we need:
+
+- **Configurable site icon.** `favicon`, core `Head.tsx:28` and `og-image` all read `quartz/static/icon.png` inside the vendored copy. Without the PR, the site's icon needs a post-build copy plus an `og-image` wrapper in `cgc-seo`. This is on the unassigned-pieces ticket below.
+- **PostHog privacy options in core analytics:** Do Not Track, `ip: false` and no session recording. The plugin route is a small analytics plugin.
+- **`og:url` uses the raw `…/index` slug** in core `Head.tsx`, so it can disagree with `cgc-seo`'s canonical, and a plugin can't remove core's tag.
+- **`og:image:type` renders `image/.png`** in core `Head.tsx`. This is moot while `og-image` is on.
+- **Configurable breakpoints.** Core `base.scss` compiles its grid from the 800/1200 values in `variables.scss`, so keeping 1000/1300 means the site re-declares the grid rather than overriding a variable. This becomes a proposal only if that proves unworkable.
+
+## Owner calls
+
+37 rows carry `owner?`. They are the rows where the bucket depends on whether we still *want* the thing, not on what v5 can do. They are collected on [Which v4 extras survive the port?](https://github.com/chaoticgoodcomputing/blog/issues/42), and each row still carries a best-guess bucket until that is resolved.
+
+## Findings for later tickets
+
+- **Tag description files clash with stock v5.** The 41 `content/public/tags/<t>/index.md` files have slug `tags/<t>/index`, but stock `tag-page` checks for `tags/<t>`, so it emits a duplicate, description-less virtual page per tag. Stock `folder-page` also builds folder pages under `tags/`. See [Tag description files and folder pages under stock tag-page and folder-page](https://github.com/chaoticgoodcomputing/blog/issues/43).
+- **Many rows are "Plugin (unassigned)".** These are:
+  - the mobile drawer and one-sided (`no-left`/`no-right`) frames, plus a page header spanning all three columns, which v5 `DefaultFrame` puts inside `.center`;
+  - the `is-index` condition for the homepage layout;
+  - the footer, page title, ShowPageSource and EmailSubscribe components;
+  - the Backlinks replacement and the PostListing component;
+  - the PostHog analytics plugin;
+  - the external-stubs pre-build step;
+  - the site icon (`static/icon.png`).
+
+  See [Where do the ledger's unassigned pieces live?](https://github.com/chaoticgoodcomputing/blog/issues/44).
+- **Stock `content-index` drops `date` and has no `external` field.** The graph date filter and TagExplorer read both, which argues for `cgc-graph` publishing its own index artifact under ADR-0002.
+- **Tag badges are coloured client-side three times over,** in the `TagList`, `PostListing` and `TagExplorer` scripts, plus again in the graph. Under the tag-colour decision, colour and icon render at build time. Only the graph and TagExplorer need `cgcTags.json` in the browser. The popover's `setupTagList` hook then goes away.
+- **`cgc-mdx` under v5.** Three things to check:
+  - `@quartz-community/utils` `slugifyFilePath` strips only `.md`/`.html`, so `ctx.allSlugs` holds `resume.mdx`, and `crawl-links` resolves wikilinks against it. Check that links to `.mdx` pages resolve to the slug `cgc-mdx` emits.
+  - v5 `build.ts` re-parses only `.md` on watch, so `.mdx` edits under `serve` need checking.
+  - The island runtime must re-hydrate on SPA `nav` itself, because v5's `spa` script doesn't wait for script loads.
+- **Dark-only is a site recipe, not a setting.** Disable `@quartz-community/darkmode` (enabled by default), put the dark palette in *both* colour slots, set `syntax-highlighting` and `comments` to dark themes, and declare `color-scheme: dark` if any colour uses `light-dark()`. This feeds [Does the site ship a light scheme?](https://github.com/chaoticgoodcomputing/blog/issues/41).
+- **Stock plugins keep 800/1200 in their own CSS.** Expect an 800–1000px band where site layout and stock component CSS disagree. This is cosmetic, and was accepted with the breakpoint decision.
+- **Fonts delete.** `fontOrigin: googleFonts` with `cdnCaching: false` makes v5 core download and self-host Inter and IBM Plex Mono (`componentResources.ts:285`). The default config has `cdnCaching: true`, so the site must flip it. `utils/fonts/`, `_prepare-fonts` and the committed woff2 files go.
+- **Root-level files.** v5's `Static` emitter writes only under `/static/`, which is why `_postbuild` exists:
+  - CNAME comes from the stock `cname` plugin.
+  - `robots.txt` comes from `cgc-seo`.
+  - The Bing verification and IndexNow key files need a site post-build copy.
+
+  This is deployment work, sequenced last.
+- **CI coupling.** `deploy.yaml` calls `site:build` and `site:indexnow`. This rides with [Per-package Nx projects break the deploy gate's affected check](https://github.com/chaoticgoodcomputing/blog/issues/33).
+- **Unused in any v4 layout:** FileExplorer, FullGraph, IndexTitle, NotFoundTitle, Comments, ReaderMode, RecentNotes and Breadcrumbs. Their forks are free to drop.
+
+## Forked core files
+
+Build, config, CLI, emitters, transformers, processors and util.
+
+| File | Lines | Bucket | Destination | Justification | Flag |
+|---|---|---|---|---|---|
+| build.ts (external content) | 23 | Plugin | external stubs pre-build step (unassigned) | Calls `loadExternalContent` to inject synthetic VFiles and their slugs into `ctx.allSlugs` before parse. Per the map, it becomes pre-build stub `.md` files with no core hook | |
+| build.ts (.mdx glob + watch) | ″ | Dead | — (cgc-mdx `fileExtensions: [".mdx"]`) | Adds `.mdx` to `markdownPaths` and to the incremental-rebuild filters. v5 `ctx.allFiles` is already the full glob, and page types declare `fileExtensions` (v5 `plugins/types.ts` `QuartzPageTypePluginInstance.fileExtensions`) | |
+| cfg.ts (rybbit) | 100 | Native | v5 core `cfg.ts` `provider: "rybbit"` | The v5 Analytics union and `componentResources.ts` both already ship rybbit | |
+| cfg.ts (tags) | ″ | Plugin | cgc-tags options | `TagConfiguration` (colors/icons/defaults) on GlobalConfiguration becomes the engine's tag table options (ADR-0002) | |
+| cfg.ts (structuredData) | ″ | Plugin | cgc-seo options | JSON-LD type/section mappings and author/publisher are read only by the forked Head (JSON-LD), which moves to cgc-seo | |
+| cfg.ts (repoUrl) | ″ | Plugin | options of whatever replaces `ShowPageSource` (unassigned) | Its only reader is `components/ShowPageSource.tsx`. GlobalConfiguration cannot be extended without a core change, so the value becomes a plugin option | owner? |
+| cfg.ts (layout types) | ″ | Native | v5 `layout.byPageType` + `afterBody` position + frames | Adds `body[]` and `pageHeader[]` to PageLayout and drops `pageBody`/`afterBody`. In v5, `Content` is the page type's body, extra body components go in the `afterBody` position, and per-page-type overrides go in `byPageType` (`plugins/loader/config-loader.ts` L637-720). `pageHeader` is `[]` in every layout, so it is vestigial | |
+| cli/args.js (output default) | 7 | Plugin | site Nx target (`--output dist/public`) | Changes the default `-o` from `public` to `dist/public`. The flag already exists, so the site target passes it | |
+| cli/args.js + cli/handlers.js (watchDebounce) | ″ / 22 | Dead | — | A 250 ms debounce on the source-code watcher (`--watchDebounce`), a dev-loop convenience. v5 handlers.js L599-603 has no debounce, and only a vendored change could add one, which this does not justify | owner? |
+| cli/handlers.js (formatting) | ″ | Dead | — | Whitespace-only changes (`() => { }` and indentation) | |
+| plugins/emitters/404.tsx | 38 | Native | v5 built-in `404` page type + `layout.byPageType.404` | The fork renders the 404 with the full shell (Header, MobileSidebarMenu, left nav, Graph/PostListing body) and passes `allFiles`. The v5 `pageTypes/404.ts` has `layout: "404"` and a frame that YAML can override (`byPageType.404.template`), and the dispatcher passes `allFiles` (dispatcher.ts L76-101). The components themselves come from their own plugins | |
+| plugins/emitters/aliases.ts | 4 | Native | `@quartz-community/alias-redirects` | Changes the redirect URL from `resolveRelative` to `resolveAbsolute`, which is covered by the absolute-link-resolution decision. The stock relative redirect is already correct | |
+| plugins/emitters/assets.ts | 6 | Native | v5 core `emitters/assets.ts` `getPageTypeExtensions` | The fork excludes `**/*.mdx` from the asset copy. v5 excludes every extension a page type declares, so cgc-mdx declaring `.mdx` is enough | |
+| plugins/emitters/componentResources.ts (script renames) | 46 | Dead | — | Import paths follow the `Spa.inline` and `popover/main.inline` renames only | |
+| plugins/emitters/componentResources.ts (PostHog privacy) | ″ | Plugin | PostHog analytics plugin (unassigned), injecting the snippet via `externalResources`; core `analytics` left unset | The site uses PostHog (quartz.config.ts L21). The fork adds a Do Not Track opt-out plus `persistence: localStorage`, `disable_session_recording` and `ip: false`. The v5 core PostHog snippet is hard-coded without these (componentResources.ts L164-176) | owner? |
+| plugins/emitters/componentResources.ts (rybbit) | ″ | Native | v5 core componentResources.ts L249-257 | Same code as v5 | |
+| plugins/emitters/componentResources.ts (CSS order) | ″ | Native | site (custom.scss appended unlayered) | `custom.scss` first to establish `@layer` order. Already on the map as Native at the site | |
+| plugins/emitters/contentIndex.tsx (sitemap) | 115 | Plugin | cgc-seo | Leaves `private` and external entries out of the sitemap and adds virtual tag pages. Stock `content-index` lists everything that is not `unlisted` and has no tag pages (its emitter.ts L67-77) | |
+| plugins/emitters/contentIndex.tsx (RSS) | ″ | Plugin | cgc-seo | The RSS feed is limited to `content/`, leaves out private and external entries, appends reading time, adds `<category>` per tag, and uses only an explicit description. Stock has none of this | |
+| plugins/emitters/contentIndex.tsx (contentIndex.json fields) | ″ | Plugin | cgc-graph (own index artifact); TagExplorer consumer | Keeps `date` (as ISO) and `external` in `static/contentIndex.json`, which the graph date filter (`graph/ui/filterLogic.ts`) and TagExplorer (sort by date, `details.external` hrefs) read. Stock `content-index` deletes `date` and has no `external` field | |
+| plugins/emitters/contentPage.tsx (index vs notes layout) | 97 | Native | v5 `layout` positions + `condition` (+ an `is-index` condition registered by a cgc plugin) | Picks `indexLayout` or `notesLayout` by slug, then renders through `pageHelpers`. In v5 there is one content page type and per-component `condition`. Built-in conditions only include `not-index` (`loader/conditions.ts`), so index-only components need `registerCondition("is-index")` from one of our plugins | |
+| plugins/emitters/contentPage.tsx (annotation layout) | ″ | Plugin | cgc-annotator (page type) | Selects `annotationsLayout` when `annotation-target` is set in frontmatter. Per the map, this becomes cgc-annotator's page type and frame | |
+| plugins/emitters/contentPage.tsx (skip external) | ″ | Plugin | external stubs pre-build step (unassigned) | `if (file.data.external) continue`. The stub design has to settle how stub pages render (for example a redirect body or a matching page type) | |
+| plugins/emitters/folderPage.tsx (layout plumbing) | 79 | Native | `@quartz-community/folder-page` | Swaps `defaultListPageLayout` for `tagsLayout` via `pageHelpers`. In v5, page type plus `byPageType.folder` does this | |
+| plugins/emitters/folderPage.tsx (exclude `tags*` / external) | ″ | Plugin | site content migration (`tags/<t>/index.md` → `tags/<t>.md`) + external stubs step | Skips every folder under `tags/` and every external file. Stock folder-page skips only the exact `"tags"` folder (pageType.ts L54), so `tags/engineering/` sub-folders would get folder pages. Whether folder pages are wanted at all is open | owner? |
+| plugins/emitters/index.ts | 2 | Dead | — (barrel) | Exports `TagIndex` (→ cgc-tags) and `WidgetScripts` (→ cgc-mdx island runtime). Those files are classified in their own slices | |
+| plugins/emitters/ogImage.tsx (colorScheme removed) | 36 | Native | `@quartz-community/og-image` `colorScheme: darkMode` | The fork dropped the light/dark theme split. The stock option picks the scheme | |
+| plugins/emitters/ogImage.tsx (no title suffix) | ″ | Native | site config `pageTitleSuffix: ""` | Drops `pageTitleSuffix` from the OG title, but the site sets it to `""`, so stock output is identical | |
+| plugins/emitters/ogImage.tsx (generateOnServe) | ″ | Dead | — | Skips OG generation under `--serve` (dev speed only). Stock og-image has no such option, and there is no per-environment config in v5 (config-loader.ts L35-45) | owner? |
+| plugins/emitters/ogImage.tsx (excludeTags private) | ″ | Dead | — | Already decided on the map: `excludeTags:["private"]` is dropped | |
+| plugins/emitters/ogImage.tsx (skip external) | ″ | Dead | — | Skipping external entries only saves a handful of `.webp` files for stub pages, and stock generates them harmlessly | |
+| plugins/emitters/ogImage.tsx (MIME fix) | ″ | Native | `@quartz-community/og-image` | The fork's `.slice(1)` fixes `image/.webp`. In stock, `getFileExtension` already returns the extension without the dot (emitter.tsx L72-74) | |
+| plugins/emitters/tagPage.tsx (layout plumbing) | 64 | Native | `@quartz-community/tag-page` (+ tag body replacement via `tag` slot) | Renders through `pageHelpers`/`tagsLayout`. Stock tag-page gives hierarchy and pagination, and our body replacement is on the map | |
+| plugins/emitters/tagPage.tsx (`/index` suffix) | ″ | Plugin | site content migration (`tags/<t>/index.md` → `tags/<t>.md`) | Normalises `tags/foo/index` to `foo` so description files attach to their tag. Stock `generate` compares `tags/foo` against `existingTagSlugs`, so a `tags/foo/index.md` gets a second, description-less virtual page at `tags/foo` (pageType.ts L41-51). Renaming the files avoids that | |
+| plugins/emitters/tagPage.tsx (debug logs) | ″ | Dead | — | Leftover `console.log` calls | |
+| plugins/transformers/description.ts | 10 | Plugin | cgc-annotator (transformer) | Appends `file.data.annotationText` to `file.data.text` (search and reading time). cgc-annotator's transformer can append after stock `description` runs | |
+| plugins/transformers/frontmatter.ts | 3 | Native | `@quartz-community/note-properties` | Moves `modified ||= created` after the modified aliases. Stock already has this order (dist L11079-11080) | |
+| plugins/transformers/index.ts | 4 | Dead | — (barrel) | Adds `ExternalCrossGraph`/`Annotations`/`MDX` exports (classified with their plugins) and drops the OxHugo export (stock `ox-hugo` is off by default) | |
+| plugins/transformers/latex.ts | 21 | Native | `@quartz-community/latex` | MathJax macros go under `tex.macros` and are typed `string \| Args[]`. Stock is identical (transformer.ts L52-64), and the site uses KaTeX anyway | |
+| plugins/transformers/links.ts (httpOnly) | 14 | Native | `@quartz-community/crawl-links` | `isAbsoluteUrl(dest, { httpOnly: false })`, the same as stock (transformer.ts L71, L118, L165) | |
+| plugins/transformers/links.ts (annotationLinks) | ″ | Plugin | cgc-annotator (transformer) | Merges `file.data.annotationLinks` into `file.data.links` for backlinks and the graph. cgc-annotator appends to `links` after crawl-links runs | |
+| plugins/transformers/ofm.ts (script renames) | 23 | Dead | — | Import paths follow the PascalCase `Callout/Checkbox/Mermaid.inline` renames only | |
+| plugins/transformers/ofm.ts (rehype-raw passThrough) | ″ | Plugin | cgc-mdx (pipeline reconstruction) | `rehypeRaw` passes MDX node types through. Stock OFM uses bare `rehypeRaw` (transformer.ts L580), so cgc-mdx's reconstructed pipeline configures this for `.mdx` only | |
+| plugins/vfile.ts | 22 | Dead | — (replaced by island runtime) | Augments `DataMap.pageResources` for per-page resources | |
+| processors/parse.ts (remarkRehype passThrough) | 68 | Plugin | cgc-mdx (pipeline reconstruction) | `remarkRehype` passes MDX node types through. Core parse.ts L41 does not, so cgc-mdx sets it in its own pipeline | |
+| processors/parse.ts (worker esbuild loaders) | ″ | Dead | — (superseded by cgc-mdx island bundling) | Adds sass-plugin and a real inline-script bundler to the worker transpile so widget TS/SCSS can be imported at parse time. cgc-mdx bundles widgets as islands (cgc-mdx ADR-0002) | |
+| processors/parse.ts (externalUrlMap) | ″ | Dead | — | Serialises `ctx.externalUrlMap` to workers. There is no `externalUrlMap` in v5 (map decision) | |
+| static/icon.png | 0 (binary) | Plugin | site-owned static asset (`quartz-v5/` site dir) + post-build copy; OG icon via cgc-seo's og-image wrapper | Replaces the site icon. In v5 the favicon plugin, Head (Head.tsx L28) and og-image (emitter.tsx L589) all read `quartz/static/icon.png` in the vendored copy, so the site cannot swap it without drift. Post-build copy covers `static/icon.png` and `favicon.ico`, but the OG images need our own `imageStructure` | |
+| util/ctx.ts | 1 | Dead | — | Adds `externalUrlMap` to BuildCtx (map decision) | |
+| util/glob.ts | 2 | Dead | — (superseded by cgc-annotator mirrors) | `gitignore: false` exists so gitignored `content/public/assets/annotated-documents/*` PDFs get copied (commit 442972d). The cgc-annotator emitter fetches and pins mirrors itself | |
+| util/og.tsx (colorScheme removed) | 63 | Native | `@quartz-community/og-image` `colorScheme: darkMode` | Follows the single-scheme theme. The stock option covers it | |
+| util/og.tsx (last-segment tag chips) | ″ | Plugin | cgc-seo (wrap `CustomOgImages` with our own `imageStructure`) | OG tag chips show `#articles` rather than `#writing/articles`. Stock `imageStructure` cannot be set from YAML (`UserOpts = Omit<…,"imageStructure">`), so this needs a TS wrapper | owner? |
+| util/path.ts (.mdx slug) | 23 | Plugin | cgc-mdx | `slugifyFilePath` strips `.mdx`. v5 `@quartz-community/utils` strips only `.md`/`.html`, so `ctx.allSlugs` holds `resume.mdx` (see Notes) | |
+| util/path.ts (resolveAbsolute / absolute links) | ″ | Native | `@quartz-community/crawl-links` `markdownLinkResolution` | Adds `resolveAbsolute` and makes `transformLink` emit root-absolute URLs. Already on the map as Native | |
+| util/resources.tsx (data-persist) | 24 | Native | v5 core `util/resources.tsx` L32-58 | `spa-preserve` becomes `data-persist`, which v5 already uses | |
+| util/resources.tsx (PageResources) | ″ | Dead | — (replaced by island runtime) | The per-page resources type, plus whitespace changes | |
+| util/theme.ts (single colour scheme) | 49 | Native | site config: `lightMode` = `darkMode` palette; `@quartz-community/darkmode` disabled | Collapses `colors` to one scheme and drops `:root[saved-theme="dark"]`. v5 still requires both schemes, and supplying the same palette twice with the toggle off gives the same result | |
+| util/theme.ts (`color-scheme: dark`) | ″ | Plugin | site application CSS | One `:root { color-scheme: dark }` declaration | |
+
+## Forked components
+
+The `.ts`/`.tsx` files under `components/`.
+
+| File | Lines | Bucket | Destination | Justification | Flag |
+|---|---|---|---|---|---|
+| components/ArticleTitle.tsx | 6 | Plugin | site application CSS | Adds only `@media (max-width:800px){.article-title{text-align:center}}`. Stock `@quartz-community/article-title` has no options, so this is a site CSS rule. | |
+| components/Backlinks.tsx (absolute hrefs) | 56 (split) | Native | — | `resolveRelative`→`resolveAbsolute`. Absolute link resolution is the v5 default. | |
+| components/Backlinks.tsx (public-first sort, date/reverse-alpha, lock icon for private) | 56 (split) | Plugin | cgc backlinks replacement (unassigned, a `cgc-tags`/`@cgc/icons` consumer) | Sorts backlinks with public pages first, then by date descending, then reverse-alphabetical. Adds a `.file-link.private` class and a `Backlinks.inline` script that injects the `mdi:lock` icon through IconService. Stock `@quartz-community/backlinks` only has `hideWhenEmpty`, so we need our own component. | |
+| components/Body.tsx | 2 | Native | — | Only renames the import (`Clipboard.inline`). v5 core `components/Body.tsx` is the same component. | |
+| components/Breadcrumbs.tsx | 4 | Native | — | `resolveRelative`→`resolveAbsolute` only. `@quartz-community/breadcrumbs` combined with v5 absolute link resolution covers it. | |
+| components/Comments.tsx | 2 | Native | — | Only renames the import (`Comments.inline`). Replaced by stock `@quartz-community/comments` (giscus). | |
+| components/Footer.tsx | 14 | Plugin | site-owned footer component (small cgc package, unassigned), with stock `@quartz-community/footer` disabled | Adds the `site-footer` class, a "Copyright Spencer Elkington & Chaotic Good Computing" line, links placed above the credits, and drops the Quartz version. Stock footer only accepts `links`, so the copyright text needs our own component. | |
+| components/Graph.tsx (options surface: per-edge-kind distance/strength/opacity/style, pseudo-shell layout, tag colour gradient, node sizes, private node colour/size, default filter state, selected-node pulse) | 186 (split) | Plugin | `cgc-graph` | Extends `D3Config` with about 15 option groups consumed by the split `scripts/graph/*` runtime and the tag index. Stock `@quartz-community/graph` can't read our artifacts (map decision). | |
+| components/Graph.tsx ("View Global Graph" text button replaces SVG icon) | 186 (split) | Plugin | `cgc-graph` | Changes markup and label only. Ships with the graph component that replaces it. | |
+| components/Head.tsx (conditional " \| Spencer Elkington" title suffix, only when ≤70 chars) | 182 (split) | Native | stock `pageTitleSuffix` in site config | v5 core `Head.tsx` appends `cfg.pageTitleSuffix` unconditionally. A plugin can't rewrite `<title>`. Using the static suffix loses the 70-char guard; keeping the guard would need a core change, which isn't worth it. | owner? |
+| components/Head.tsx (160-char meta description cut) | 182 (split) | Native | stock `@quartz-community/description` option | Already decided on the map. | |
+| components/Head.tsx (`<link rel=canonical>` using `simplifySlug`, so no trailing `/index`) | 182 (split) | Plugin | `cgc-seo` | v5 core Head emits no canonical link. cgc-seo adds it through `additionalHead`. | |
+| components/Head.tsx (`noindex, nofollow` robots meta on `private`-tagged pages) | 182 (split) | Plugin | `cgc-seo` | In v5 this becomes `noindex` without `nofollow`, per the cgc-seo decision. Matches the "private page" rule in cgc-seo CONTEXT.md, which also covers the `private` tag's own listing page. | |
+| components/Head.tsx (`article:published_time/modified_time/author/section/tag` OG meta for `content/` pages) | 182 (split) | Plugin | `cgc-seo` | Not present in v5 core Head. Emitted through `additionalHead`. | |
+| components/Head.tsx (JSON-LD Article from `cfg.structuredData`, tag→schema type/section mappings) | 182 (split) | Plugin | `cgc-seo` (the `structuredData` block moves from `GlobalConfiguration` into cgc-seo options) | v5 `cfg` has no `structuredData`. The whole feature, including `getStructuredDataForFile`, becomes plugin options plus `additionalHead`. | |
+| components/Head.tsx (`<base href="/">` on 404) | 182 (split) | Native | — | Only there so relative links resolve on deep 404 URLs. Absolute link resolution in v5 makes it moot, and v5 `pages/404.tsx` handles `data-basepath` itself. | |
+| components/Head.tsx (`fontOrigin:"local"` → `/static/fonts/fonts.css` link) | 182 (split) | Native | site config `theme.fontOrigin: googleFonts`, `cdnCaching: false` | v5 core downloads and self-hosts Google Fonts when CDN caching is off (`componentResources.ts:285`). Inter and IBM Plex Mono are both Google Fonts, so the committed woff2 files and `fonts.css` go. | |
+| components/Head.tsx (`og:image:type` `.slice(1)` fix) | 182 (split) | Dead | — | Fixes `image/.png`. The bug still exists in v5 core `Head.tsx` (`getFileExtension` returns ".png"), but that branch only renders when `CustomOgImages` is off, and we run `@quartz-community/og-image`. It's moot for us. | |
+| components/Head.tsx (beforeDOMReady scripts no longer `spaPreserve`) | 182 (split) | Dead | — | Drops the `true` preserve flag so page-varying head scripts re-run. This served per-page resources, which are replaced by the island runtime. v5 keeps preserve=true. | |
+| components/index.ts (component barrel: new exports FullGraph, TagExplorer, FileExplorer, MobileSidebarMenu, PostListing, AnnotationViewer, Social*, EmailSubscribe, IndexTitle, NotFoundTitle, ShowPageSource) | 28 (split) | Dead | — | v5 has no barrel. Components come from plugins through the registry (`components/registry.ts`). Each added component is classified in the added-files ledger. | |
+| components/index.ts (Darkmode export removed) | 28 (split) | Native | disable `@quartz-community/darkmode` in site config | Removing the toggle is a config choice in v5. | |
+| components/PageList.tsx (absolute hrefs) | 14 (split) | Native | — | Absolute link resolution is the v5 default. | |
+| components/PageList.tsx (reverse-alphabetical title tiebreak in `byDateAndAlphabetical*`) | 14 (split) | Plugin | the PostListing replacement's default sort (and the `sort` option on stock folder-page/tag-page/recent-notes if any are kept) | Its only live consumer is PostListing (`opts.sort ?? byDateAndAlphabetical`). Stock page types already take a `sort: SortFn`. The comment says "reverse alphabetically", but it's unclear whether that was intended or accidental. | owner? |
+| components/pages/FolderContent.tsx | 107 | Plugin | folder-page body replacement rendering PostListing (same consumer plugin as the tag body, unassigned) | Removes the stock listing (trie, synthetic subfolder entries, count) and keeps only the article, because the layout's PostListing lists posts instead. v5 `@quartz-community/folder-page` renders its own listing (`showFolderCount/showSubfolders/sort`), so it needs a body swap like tags. | owner? |
+| components/pages/TagContent.tsx | 121 | Plugin | cgc-tags consumer: tag-page **body** through the reserved `tag` layout slot | Removes the stock tag listing (the `/tags` index of all tags and per-tag PageList) and keeps only the article, with PostListing from the layout listing posts. Map decision: stock `tag-page` keeps hierarchy and pagination, and we replace only the body. | |
+| components/PageTitle.tsx | 47 | Plugin | site header / page-title component (small cgc package, unassigned) with stock `@quartz-community/page-title` disabled | Adds a 4rem `/static/icon.png` logo and a "by {structuredData.author.name}" subtitle, and switches to an absolute `/` href. Stock page-title has no options. The author name should come from plugin options or be hard-coded, since v5 cfg has no `structuredData`. | |
+| components/ReaderMode.tsx | 2 | Native | — | Only renames the import. Stock `@quartz-community/reader-mode`. | |
+| components/RecentNotes.tsx | 8 | Native | — | `resolveAbsolute` only, and no layout uses RecentNotes. Stock `@quartz-community/recent-notes` covers it. | |
+| components/Search.tsx | 2 | Native | — | Only renames the import. Stock `@quartz-community/search`. | |
+| components/TableOfContents.tsx | 2 | Native | — | Only renames the import. Stock `@quartz-community/table-of-contents`. | |
+| components/TagList.tsx | 195 | Plugin | cgc-tags consumer (TagList replacement), using `@cgc/tags-core` and `@cgc/icons` | Rewrites TagList as a client-hydrated list: icon badge in `--tag-color`, name and count, `showSubtags` on tag pages, `showParentTag`, `showCount`, mobile icon-only mode with long-press expand, and data from `tagIndex.json`. Stock `@quartz-community/tag-list` has none of this. | |
+| components/renderPage.tsx (mobile sidebar wrapper: `MobileSidebarMenu` around left sidebar) | 139 (split) | Plugin | custom `PageFrame` shipped in a cgc package's manifest `frames` (package unassigned) | v5 frames are plugin-loadable (`plugins/loader/frameLoader.ts`, `frameRegistry`). `DefaultFrame` renders a plain `.left.sidebar` with no drawer, so a cgc frame can wrap `left` with no core change. | |
+| components/renderPage.tsx (full-width body class when both sidebars are empty) | 139 (split) | Native | `frame: full-width` per page type | v5 `frames/FullWidthFrame.tsx`, selected through the page-type/layout `frame`. | |
+| components/renderPage.tsx (`no-left` / `no-right` body classes) | 139 (split) | Plugin | same custom cgc `PageFrame` as the mobile wrapper | v5 ships only default/full-width/minimal. `DefaultFrame` always emits both sidebar divs, so a one-sided frame is ours. Frames are plugin-registrable. | |
+| components/renderPage.tsx (`body[]` slot replacing `pageBody`+`afterBody`) | 139 (split) | Native | layout `positions` (afterBody) plus the page type's `body` | Our layouts put Graph, Backlinks and PostListing in `body[]`. In v5 these map to stock page-type bodies plus `afterBody` placement. | |
+| components/renderPage.tsx (`pageHeader[]` slot / `.page-level-header`) | 139 (split) | Dead | — | Every layout that sets `pageHeader` sets it to `[]` (index, 404), so it's vestigial. | |
+| components/renderPage.tsx (per-page resources: `pageResources(…, fileData)`, `fileData.pageResources` css/js) | 139 (split) | Dead | — | Replaced by the island runtime (map decision). | |
+| components/renderPage.tsx (afterDOMReady scripts moved inside `<body>` "for micromorph") | 139 (split) | Dead | — | Only needed so per-page JS was diffed by SPA nav. Per-page resources are Dead, and v5 keeps these scripts after `</body>` with preserve=true. | |
+| components/renderPage.tsx (global `fetchTagData` = `fetch("/static/tagIndex.json")` beforeDOMReady) | 139 (split) | Plugin | `cgc-tags` (publishes `static/cgcTags.json`; the engine or `@cgc/tags-core` exposes the client fetch) | A global prefetch of our tag artifact, consumed by the TagList, TagExplorer, PostListing and graph scripts. Can ship as the cgc-tags plugin's own beforeDOMReady resource, so no core change is needed. | |
+| components/renderPage.tsx (root-absolute `/index.css`, `/prescript.js`, `/postscript.js`, `/static/contentIndex.json`) | 139 (split) | Native | — | Absolute resolution is the v5 default. v5 `renderPage.tsx` also handles `baseDir`/`data-basepath`. | |
+| components/renderPage.tsx (circular transclusion guard with `visited` set) | 139 (split) | Native | — | v5 `components/renderPage.tsx` L118–L293 has the same `visited` guard and warning text, and also allows sibling embeds of the same target. | |
+
+## Forked styles, deleted upstream files, i18n
+
+A deleted upstream file is classified by the customization its deletion stands for. The `Lines` column is `—` for those.
+
+| File | Lines | Bucket | Destination | Justification | Flag |
+|---|---|---|---|---|---|
+| components/styles/backlinks.scss | 48 | Plugin | Backlinks replacement plugin's library CSS (unassigned; tags/icons consumer) | Adds `a.file-link` / `.file-icon` (via `file-icon` mixin) / `.file-title` for the per-link icon and lock marks in our forked Backlinks. Stock `@quartz-community/backlinks` renders no icons. The rest is an `@layer components` wrap plus removing the h3 rule (moved to the section header hierarchy). | |
+| components/styles/breadcrumbs.scss | 39 | Native | `@quartz-community/breadcrumbs` | Only change is the `@layer components` wrap and re-indentation. v5 wraps every component's CSS in `@layer quartz-base` (componentResources.ts:411). | |
+| components/styles/clipboard.scss | 60 | Native | `@quartz-community/syntax-highlighting` (ships `.clipboard-button`) | Only change is the `@layer components` wrap. The rules are byte-identical otherwise. | |
+| components/styles/contentMeta.scss | 27 | Plugin | site application CSS | Layer wrap plus `@media ($mobile) { .content-meta { text-align:center } }`. That is site skin on a stock `@quartz-community/content-meta` block, so it lives in the site's custom.scss. | |
+| components/styles/footer.scss | 35 | Plugin | site application CSS | Scopes `footer` to `footer.site-footer`, centres the text and links, adds `margin-top:2rem`. Site skin over `@quartz-community/footer` (or over whichever footer replaces our forked Footer.tsx). | |
+| components/styles/graph.scss | 316 | Plugin | `cgc-graph` library CSS | Square `aspect-ratio` graph box, text-label global-graph button, global graph modal portaled to body (z-index 10000, flex-centred), `.graph-filters` time slider and private/public `.visibility-toggle` (hardcoded `#c54040`, which must become a custom property under ADR-0003 rule 5). All of it belongs to our graph. | |
+| components/styles/legacyToc.scss | 40 | Native | `@quartz-community/table-of-contents` | Only change is the `@layer components` wrap. | |
+| components/styles/listPage.scss | 114 | Plugin | tag-page body consumer (cgc-tags consumer in the reserved `tag` slot) library CSS | Adds `.subtag-section` (a collapsible `<details>` per subtag with a count), which our tag page body renders. Also changes `.section` grid col 3 from `1fr` to `0fr`, which collapses the tags column in the folder and tag lists. That part is site skin and goes to site application CSS if it's still wanted. | |
+| components/styles/mermaid.inline.scss | 219 | Native | `@quartz-community/obsidian-flavored-markdown` | Layer wrap plus removing `padding: 2rem` from `.mermaid-content`. The v5 OFM stylesheet already has no padding on `#mermaid-space > .mermaid-content`. | |
+| components/styles/popover.scss | 147 | Native | v5 core `quartz/components/styles/popover.scss` | Only changes are the `@layer components` wrap and formatting. | |
+| components/styles/readermode.scss | 55 | Native | `@quartz-community/reader-mode` | Only change is the `@layer components` wrap. | |
+| components/styles/recentNotes.scss | 37 | Native | `@quartz-community/recent-notes` | Only change is the `@layer components` wrap. | |
+| components/styles/search.scss | 395 | Native | `@quartz-community/search` | Flattens nesting and renames classes to match our Search.inline.ts (`search-results-container`, `search-result-card`, `search-preview-container`). With the stock search component those renames have nothing left to match. Also raises modal z-index to 10000/10001 over the sidebars. If a stacking bug with the mobile sidebar reproduces in v5, that one fix goes to site application CSS. | |
+| components/styles/toc.scss | 109 | Native | `@quartz-community/table-of-contents` | Only changes are the `@layer components` wrap and blank lines. | |
+| styles/callouts.scss | 304 | Native | v5 core `quartz/styles/callouts.scss` | Collapsed callouts now hide *all* children (`& > *` with zero height, margin and padding) instead of only `:first-child`. v5 core callouts.scss:126-135 already has exactly this rule. | |
+| styles/custom.scss | 63 | Plugin | site application CSS | The ITCSS entry point: `@use` of the generic/elements/objects/utilities partials, the `@layer generic, elements, objects, components, utilities` order, and a global `img` max-height/centring rule. This becomes the site's stack declaration (ADR-0003 amendment) and the `site.*` sublayers. | |
+| styles/syntax.scss | 11 | Native | `@quartz-community/syntax-highlighting` `theme` option | Forces the shiki dark variables unconditionally (dark-only site). In v5, set `theme: { light: <dark theme>, dark: <dark theme> }` instead of forking the stylesheet. | |
+| components/Darkmode.tsx | — | Native | leave `@quartz-community/darkmode` out of config | Dark mode was removed (commit 80545ac, dark-only site). v5 ships the toggle as an optional plugin, and it's enabled in the default config, so set `enabled: false` or drop it and put the dark palette in the base colour slot. | |
+| components/styles/darkmode.scss | — | Native | leave `@quartz-community/darkmode` out of config | Same deletion as Darkmode.tsx. The CSS ships with the plugin we won't enable. | |
+| components/scripts/darkmode.inline.ts | — | Native | leave `@quartz-community/darkmode` out of config | Same deletion as Darkmode.tsx. | |
+| components/Explorer.tsx | — | Dead | none (renamed `FileExplorer.tsx`, not used in any layout) | Renamed to FileExplorer.tsx with no behavioural change. `FileExplorer` is exported from components/index.ts but no layout references it; TagExplorer is the navigation. If a file explorer is ever wanted, stock `@quartz-community/explorer` covers it. | owner? |
+| components/scripts/explorer.inline.ts | — | Dead | none (→ `FileExplorer.inline.ts`, unused) | Refactored into `_`-prefixed helpers and switched to `resolveAbsolute` links (absolute links are Native in v5). Its only consumer is the unused FileExplorer. | owner? |
+| components/styles/explorer.scss | — | Dead | none (→ `fileExplorer.scss`, unused) | Drops upstream's mobile `#quartz-body` slide and sticky carve-outs (the mobile sidebar moved to MobileSidebarMenu) and layer-wraps the rest. Its component is unused. | owner? |
+| components/scripts/callout.inline.ts | — | Native | `@quartz-community/obsidian-flavored-markdown` | → `Callout.inline.ts`: rename, doc comments and `_`-prefixed helpers only. No behavioural change. | |
+| components/scripts/checkbox.inline.ts | — | Native | `@quartz-community/obsidian-flavored-markdown` | → `Checkbox.inline.ts`: pure refactor. | |
+| components/scripts/clipboard.inline.ts | — | Native | `@quartz-community/syntax-highlighting` (clipboard button) | → `Clipboard.inline.ts`: pure refactor. | |
+| components/scripts/comments.inline.ts | — | Native | `@quartz-community/comments` `lightTheme`/`darkTheme` options | → `Comments.inline.ts`: removes the `themechange` listener and hardcodes the giscus theme to "dark". The stock plugin with `lightTheme: dark` does the same. | |
+| components/scripts/graph.inline.ts | — | Plugin | `cgc-graph` | → `graph/` directory split (core/adapters/ui, main.inline.ts): tag-coloured nodes, private node colour, time and visibility filters, PostHog graph-nav events, tween manager. The map already has this as ours to ship. | |
+| components/scripts/mermaid.inline.ts | — | Native | `@quartz-community/obsidian-flavored-markdown` | → `Mermaid.inline.ts`: adds touch pan and a centred `resetTransform` (both already in v5 OFM dist), changes `return` to `continue` in the per-block loop, and hardcodes `theme:"dark"`. v5 picks `base` unless `saved-theme="dark"`, and `base` reads the site's palette variables. | |
+| components/scripts/popover.inline.ts | — | Native | v5 core `quartz/components/scripts/popover.inline.ts` | → `popover/` split (controller/adapters/ui). The same fetch, dedupe and position behaviour is in v5 core. The one addition is re-running `window.setupTagList` inside new popovers, which moves to the TagList consumer plugin (a MutationObserver on `.popover` insertion). No core hook is needed. | |
+| components/scripts/readermode.inline.ts | — | Native | `@quartz-community/reader-mode` | → `ReaderMode.inline.ts`: pure refactor. | |
+| components/scripts/search.inline.ts | — | Native | `@quartz-community/search` | → `Search.inline.ts`: refactor, renamed classes, and lazy loading of FlexSearch and contentIndex on first open. v5 search reads the global `fetchData` that core already loads, so the lazy load buys little there. | owner? |
+| components/scripts/spa.inline.ts (per-page resources) | — | Dead | none (replaced by island runtime) | → `Spa.inline.ts`: `_updateHead` / `_executeNewScripts` re-execute `data-persist="false"` scripts and wait for stylesheet and script loads, which exists to serve per-page resources. Dead per the map. | |
+| components/scripts/spa.inline.ts (PostHog nav source) | — | Plugin | PostHog analytics plugin (unassigned) | → `Spa.inline.ts` `_handleClick` sends `posthog.capture("navigation", {source: graph/tag-explorer/tag-badge/inline-link})`. PostHog injection itself is Native (v5 componentResources.ts:164). The source tagging can be a capture-phase document click listener, with no SPA fork. | owner? |
+| components/scripts/toc.inline.ts | — | Native | `@quartz-community/table-of-contents` | → `TableOfContents.inline.ts`: pure refactor. | |
+| plugins/transformers/oxhugofm.ts | — | Dead | none | Deleted outright with no replacement. We don't use ox-hugo, and v5 has it as an opt-in `@quartz-community/ox-hugo` if ever needed. | |
+| styles/base.scss | — | Plugin | site application CSS | Replaced by the ITCSS partials `_generic`, `_elements`, `_objects`, `_utilities` (in `@layer`s): section-based header hierarchy, 40em (~70ch) content column, page-header row, sidebar layouts. The full-width, no-left and no-right variants map to v5 frames (FullWidthFrame, etc.); see the notes. | |
+| styles/variables.scss | — | Plugin | site application CSS (`_settings.scss`, `_tools.scss`) | Breakpoints 800/1200 → 1000/1300 (site decision), `$topSpacing` 6rem → 2.5rem, new `$centerPanelWidth: 40em`, grids with a full-width `grid-page-header` row, plus the `respond-to` and `file-icon` mixins. The mixins are Sass, so each plugin carries its own copy (ADR-0003 rule 8). | |
+| i18n/locales/{ar-SA,ca-ES,cs-CZ,de-DE,es-ES,fa-IR,fi-FI,fr-FR,hu-HU,id-ID,ja-JP,ko-KR,lt-LT,nb-NO,nl-NL,pl-PL,pt-BR,ro-RO,ru-RU,th-TH,tr-TR,uk-UA,zh-CN,zh-TW}.ts (24 files) | 4 each | Dead | none | The only change is removing the `themeToggle` block (commit 80545ac, dark mode removed). v5 core keeps the keys for the darkmode plugin, and they're harmless unused. | |
+| i18n/locales/it-IT.ts, ./i18n/locales/vi-VN.ts | 24 / 76 | Native | v5 core `quartz/i18n/locales/` | Beyond the `themeToggle` removal, the changes are upstream translation fixes present in our `init` commit (the fork base was post-4.5.2 v4). v5 core it-IT and vi-VN are identical to ours apart from `themeToggle`. | |
+| i18n/index.ts | 4 | Native | v5 core `quartz/i18n/index.ts` | Registers `kk-KZ` and `he-IL`, which is upstream drift from the fork base. v5 core ships both locales. | |
+| i18n/locales/definition.ts | 11 | Plugin | owning consumer plugins' bundled i18n (PostListing / TagExplorer / ShowPageSource replacements) | Adds `postListing.title`, `tagExplorer.title`, `pageSource.linkText` (and removes `themeToggle`). v5 community plugins bundle their own locale tables (e.g. recent-notes/dist ships i18n/locales/*), so each consumer carries its own string. | |
+| i18n/locales/en-US.ts (component keys) | 13 | Plugin | owning consumer plugins' bundled i18n | Values for the three new keys ("Recent Posts", "Tag Explorer", "View source on GitHub"). Same route as definition.ts. | |
+| i18n/locales/en-US.ts + en-GB.ts (404 text) | 13 / 6 | Dead | none | `pages.error.notFound` changed from "Either this page is private or doesn't exist." to "This page does not exist!" (commit 7c552c9). A core string used by v5 core 404.tsx; the only route is a vendored change, which isn't worth it for cosmetic copy. | owner? |
+
+## Added components and scripts
+
+Files with no upstream path. Renamed or split upstream code is classified by what it does.
+
+| File | Lines | Bucket | Destination | Justification | Flag |
+|---|---|---|---|---|---|
+| components/AnnotationViewer.tsx | 263 | Plugin | cgc-annotator (Viewer body of the annotation page type) | Split-view PDF + annotations sidebar body; map already says cgc-annotator replaces AnnotationViewer | |
+| components/scripts/annotationViewer/** (10 files) | 1145 | Plugin | cgc-annotator (client script, PDF.js bundled) | Highlighting, text extraction, scroll-sync, PDF render, resize handle for the annotation viewer; all move with the Viewer | |
+| components/styles/annotationViewer.scss | 329 | Plugin | cgc-annotator library CSS (BEM, custom properties) | Styles only the annotation viewer | |
+| components/scripts/graph/** (24 files, excl. core/legacy.ts) | 2943 | Plugin | cgc-graph | Split/refactor of upstream graph.inline.ts plus tag nodes read from TagIndex (`fetchTagData`), tag colours, private-notes filter toggle, full-graph rendering, PostHog nav events; upstream graph can't read our artifacts, so the map says cgc-graph ships it | |
+| components/scripts/graph/core/legacy.ts | 36 | Dead | — | Compatibility barrel with underscore aliases; nothing imports it (only ui/legacy.ts is imported, by adapters/lifecycle.ts) | |
+| components/FullGraph.tsx | 88 | Dead | — | Full-page graph component; not used in any layout (index.layout.ts only mentions it in a comment). If wanted later, it goes into cgc-graph | owner? |
+| components/scripts/popover/** (8 files) | 234 | Native | v5 core `components/scripts/popover.inline.ts` | Split/refactor of upstream popover.inline.ts. The only behaviour change is calling `window.setupTagList` inside new popovers so badges get coloured client-side. That hook is Dead once cgc-tags renders tag colour/icon at build time (`--cgc-tag-*` + fileData) | |
+| components/scripts/Spa.inline.ts | 449 | Native | v5 core `components/scripts/spa.inline.ts` | v5 already uses `data-persist` in place of `spa-preserve`. Re-running `data-persist="false"` scripts and waiting for head script/link loads serves per-page resources, which is Dead (replaced by the island runtime). The one remaining custom behaviour is a PostHog `navigation` event with a click-source label (graph/tag-explorer/tag-badge/inline-link); it could move to a site analytics script (Plugin, unassigned) | owner? |
+| components/scripts/Search.inline.ts | 938 | Native | `@quartz-community/search` | Refactor of search.inline.ts. The CJK encoder is already in the stock plugin (codepoint ranges present in dist). `resolveAbsolute` is v5 default. Lazy import of flexsearch is only a perf nicety. Closing the mobile sidebar on open only matters if MobileSidebarMenu survives | |
+| components/scripts/search.test.ts | 163 | Native | v5 core `components/scripts/search.test.ts` | Byte-identical to the v5 core file (backported encoder test) | |
+| components/scripts/Mermaid.inline.ts | 356 | Native | `@quartz-community/obsidian-flavored-markdown` | Customizations are touch pan and a centred `resetTransform`; both are already in the stock plugin's dist (`onTouchStart`, `clientWidth-n)/2`) | |
+| components/scripts/Callout.inline.ts | 35 | Native | `@quartz-community/obsidian-flavored-markdown` | Rename/refactor of callout.inline.ts with no behaviour change | |
+| components/scripts/Checkbox.inline.ts | 40 | Native | `@quartz-community/obsidian-flavored-markdown` | Rename/refactor of checkbox.inline.ts with no behaviour change | |
+| components/scripts/Clipboard.inline.ts | 70 | Native | `@quartz-community/syntax-highlighting` | Rename/refactor of clipboard.inline.ts with no behaviour change | |
+| components/scripts/TableOfContents.inline.ts | 68 | Native | `@quartz-community/table-of-contents` | Rename/refactor of toc.inline.ts with no behaviour change | |
+| components/scripts/ReaderMode.inline.ts | 44 | Native | `@quartz-community/reader-mode` | Rename/refactor of readermode.inline.ts with no behaviour change; ReaderMode isn't used in any layout | |
+| components/scripts/Comments.inline.ts | 85 | Native | `@quartz-community/comments` (`lightTheme`/`darkTheme` options) | Refactor that pins Giscus to the dark theme and drops themechange sync (dark-only site). Setting both theme options gives the same result. Comments isn't used in any layout | |
+| components/FileExplorer.tsx | 165 | Dead | — | Renamed upstream Explorer with no logic change; not used in any layout (TagExplorer replaces it). Stock `@quartz-community/explorer` covers it if ever wanted | |
+| components/scripts/FileExplorer.inline.ts | 385 | Dead | — | Refactor of explorer.inline.ts for the unused FileExplorer | |
+| components/styles/fileExplorer.scss | 192 | Dead | — | ITCSS/`@layer` port of explorer.scss for the unused FileExplorer | |
+| components/TagExplorer.tsx | 126 | Plugin | cgc-tags consumer: TagExplorer plugin | Tag-hierarchy sidebar navigator (tag/file sort, excludeTags, file counts); a consumer of cgc-tags / @cgc/tags-core | |
+| components/scripts/TagExplorer.inline.ts | 620 | Plugin | cgc-tags consumer: TagExplorer plugin | Client-side tag tree built from `fetchTagData`, collapse state, lock icons, public-first sort. Tag data comes from `static/cgcTags.json`; icons come from @cgc/icons | |
+| components/styles/tagExplorer.scss | 198 | Plugin | TagExplorer plugin library CSS | Component styles for TagExplorer | |
+| components/scripts/TagList.inline.ts | 289 | Plugin | cgc-tags consumer: TagList plugin | Fills tag badges with colour/icon/count from TagIndex on the client, plus mobile long-press expansion. Colour/icon should move to build time via cgc-tags fileData + `--cgc-tag-*`; the long-press script stays | |
+| components/scripts/Backlinks.inline.ts | 34 | Plugin | Backlinks replacement plugin (cgc-tags consumer, unassigned) | Adds a lock icon to private backlinks on the client via IconService. Private treatment belongs to whichever plugin replaces Backlinks; render at build time with @cgc/icons | |
+| components/PostListing.tsx | 272 | Plugin | cgc-tags consumer: tag page body (reserved `tag` slot) + a post-listing component | Tag-filtered listing (filterToCurrentTag, includeSubtags, excludeTags private, collapsed details, descriptions, reading time). Stock `recent-notes` has no collapse, descriptions or tag-scoped filter | owner? |
+| components/scripts/PostListing.inline.ts | 216 | Plugin | Same as PostListing | Client-side tag badge colouring/icons (should move to build time via cgc-tags) plus long-press expansion | owner? |
+| components/styles/postListing.scss | 150 | Plugin | Post-listing plugin library CSS | Component styles | owner? |
+| components/MobileSidebarMenu.tsx | 42 | Plugin | Custom page frame (unassigned, e.g. a cgc frame registered via `frameRegistry`) | renderPage wraps the left sidebar in a caret/backdrop drawer. v5 `DefaultFrame` has no mobile drawer, so it needs a custom frame, not a core change | owner? |
+| components/scripts/MobileSidebarMenu.inline.ts | 94 | Plugin | Same custom frame | Drawer open/close behaviour | owner? |
+| components/styles/mobileSidebarMenu.scss | 154 | Plugin | Same custom frame library CSS | Drawer styles (breakpoints 1000/1300) | owner? |
+| components/EmailSubscribe.tsx | 44 | Plugin | Small site component plugin (unassigned) | Buttondown subscribe form used on index, notes, tags and annotations layouts | owner? |
+| components/styles/emailSubscribe.scss | 87 | Plugin | Same, library CSS | Component styles | owner? |
+| components/SocialMediaGitHub.tsx | 62 | Plugin | Widget/component library package (ticket #36, name TBD) | GitHub contributions sidebar widget on index (DesktopOnly) | owner? |
+| components/scripts/socialMediaGitHub.inline.ts | 172 | Plugin | Same | Fetches api.github.com + github-contributions-api on the client | owner? |
+| components/styles/socialMediaGitHub.scss | 215 | Plugin | Same, library CSS | Component styles | owner? |
+| components/SocialMediaBlueSky.tsx | 50 | Plugin | Widget/component library package (ticket #36) | Bluesky feed sidebar widget on index (DesktopOnly) | owner? |
+| components/scripts/socialMediaBlueSky.inline.ts | 109 | Plugin | Same | Fetches the Bluesky feed on the client | owner? |
+| components/styles/socialMediaBlueSky.scss | 401 | Plugin | Same, library CSS | Component styles | owner? |
+| components/SOCIAL_MEDIA_WIDGETS.md | 99 | Plugin | README of the #36 package | Usage docs for the two social widgets | owner? |
+| components/ShowPageSource.tsx | 57 | Plugin | Small site component plugin (unassigned) | "View source on GitHub" link built from `repoUrl` + filePath, used on notes. No stock plugin does this | |
+| components/styles/showPageSource.scss | 39 | Plugin | Same, library CSS | Component styles | |
+| components/IndexTitle.tsx | 32 | Dead | — | Not used in any layout; stock `page-title` / `article-title` cover it | |
+| components/NotFoundTitle.tsx | 30 | Dead | — | Not used in any layout; the 404 page uses `NotFound` | |
+| components/scripts/README.md | 28 | Dead | — | Convention doc for splitting v4 `.inline.ts` into feature dirs; superseded by v5 plugin packages (the pattern can be carried into cgc-graph CONTEXT.md if wanted) | |
+
+## Added files outside components
+
+| File | Lines | Bucket | Destination | Justification | Flag |
+|---|---|---|---|---|---|
+| i18n/locales/he-IL.ts, ./i18n/locales/kk-KZ.ts | 167 | Native | v5 core `i18n/locales/he-IL.ts`, `kk-KZ.ts` | These are newer upstream locales, not ours. `diff -w` against v5 shows only that our copies lack the `themeToggle` block, which commit 80545ac "dark mode removed" stripped out. | |
+| LICENSE.txt | 21 | Native | `quartz-v5/quartz/LICENSE.txt` | Byte-identical to the upstream MIT licence that v5 already vendors. | |
+| layouts/shared.layout.ts | 20 | Native | site `quartz.config.yaml`: stock `footer` `links` option; head → cgc-seo | Sets the shared Head and the Footer links. The stock footer plugin takes a `links` option, and Head is already the cgc-seo fork. | |
+| layouts/404.layout.ts, notes.layout.ts, tags.layout.ts | 135 | Plugin | site `quartz.config.yaml` `layout.byPageType` (`404`, `content`, `tag`) + per-plugin `layout.position` | Per-page-type component placement becomes YAML in v5 (`layout.byPageType` in `quartz.config.default.yaml`). The tag body goes through the reserved `tag` slot. | |
+| layouts/index.layout.ts | 68 | Plugin | site `quartz.config.yaml` layout + a custom `is-index` condition registered through `registerCondition` (plugins/loader/conditions.ts). Alternatively a homepage page type. | The homepage differs from other pages: Graph and PostListing in the body, social widgets on the right. v5 only has a built-in `not-index` condition, and plugins can register their own. | owner? (social widgets, PostListing) |
+| layouts/annotations.layout.ts | 34 | Plugin | cgc-annotator (page type + full-width frame) | The map already says the cgc-annotator page type replaces the annotations layout. | |
+| layouts/conf/graph.layout.ts | 116 | Plugin | cgc-graph options in site `quartz.config.yaml` | D3 tuning, the pseudo-shell config, pinned tags and private-node colour all become options of the cgc-graph plugin that we ship. | |
+| plugins/emitters/pageHelpers.ts | 89 | Native | v5 page-type dispatcher (`plugins/pageTypes/dispatcher.ts`) + `components/frames/*` + `renderPage.tsx` | These are layout-merge, render and write helpers for our custom page emitters. v5 page types and frames (Default/FullWidth/Minimal) handle this. MobileSidebarMenu goes with the frame/sidebar owner. | |
+| plugins/emitters/tagIndex.tsx | 131 | Plugin | cgc-tags (emitter publishing `static/cgcTags.json`) | Emits the tag hierarchy, colour, icon and count index. The map already assigns this job to cgc-tags. | |
+| plugins/emitters/widgetScripts.ts | 59 | Dead | replaced by island runtime (`@cgc/island-runtime` lib, bundled by cgc-mdx) | Minifies and emits every registered widget to `/static/widgets/*.js` so pages can inject them. Islands are real ES imports bundled per page, so this emitter has no purpose. | |
+| plugins/external/loader.ts, inject.ts, types.ts | 226 | Plugin | external stubs pre-build step (unassigned) | Loads off-site markdown into synthetic ProcessedContent and fills `ctx.externalUrlMap`. The map replaces this with pre-build stub `.md` files that carry the URL in frontmatter. | |
+| plugins/transformers/external.ts | 106 | Plugin | external stubs pre-build step (unassigned); the link rewrite and off-site icon need a small transformer that reads stub frontmatter | Rewrites links to stub slugs so they point at the external URL and adds the off-site SVG. It currently depends on `ctx.externalUrlMap`, which is Dead, so it has to read the URL from frontmatter instead. | |
+| plugins/transformers/mdx.ts | 203 | Plugin | cgc-mdx | Runs remark-mdx, detects widget imports, renders placeholders and injects scripts per page. cgc-mdx replaces all of it with islands. | |
+| plugins/transformers/annotations.ts | 295 | Plugin | cgc-annotator (transformer) | The map already replaces the annotations transformer with cgc-annotator's. | |
+| project.json: `clean` | 208 (whole file) | Plugin | site-v5 `quartz-v5/project.json` (already has `clean`) | Clearing the cache and output is still wanted, with v5 paths. | |
+| project.json: `_prepare-fonts` | — | Native | v5 `theme.fontOrigin: googleFonts` + `cdnCaching: false` (componentResources.ts ~L283-322 downloads the fonts to `static/fonts/`) | `utils/fonts/download-fonts.mjs` self-hosts Google Fonts. v5 core already does the same at build time. | |
+| project.json: `_subset-fonts` | — | Dead | — | Glyph subsetting is manual and wired into no target's `dependsOn`. v5 subsets only the title font (`googleFontSubsetHref`). | owner? |
+| project.json: `_prebuild` | — | Dead | — | Its only dependencies are `_prepare-fonts` (Native) and `vault:download-annotation-pdfs`, which the map deletes at cutover because the cgc-annotator emitter fetches mirrors. | |
+| project.json: `_inbuild`, `build`, `serve` | — | Plugin | site-v5 `build` / `serve` (they exist and need repointing to `-d content/public`) | These are the core build orchestration. CI `deploy.yaml:201` calls `site:build`, so the target name or CI must be updated at cutover. | |
+| project.json: `_postbuild` | — | Plugin | see the static rows: CNAME → Native `cname`; robots → cgc-seo; Bing and IndexNow key → site-v5 post-build copy | This target copies four root files out of `static/`, because the v4/v5 Static emitter publishes under `/static/` and not at the site root. | |
+| project.json: `check`, `format`, `test` | — | Plugin | site-v5 / plugin projects (tsc + prettier over `quartz-v5/plugins`; e2e from ADR-0004) | Type-checking the v4 tree has no v5 equivalent. Equivalent targets belong in each plugin project. | |
+| project.json: `eval`, `_serve-static`, `eval:live`, `eval:multi` | — | Plugin | site-v5 `quartz-v5/project.json` (Lighthouse tooling in `utils/lighthouse`) | Lighthouse audits are site tooling that is independent of the build engine. | owner? (still used?) |
+| project.json: `indexnow` | — | Plugin | site-v5 `quartz-v5/project.json` | CI `deploy.yaml:353-400` job `notify-indexnow` calls `site:indexnow`, so the target is still needed. It reads cgc-seo's sitemap. | |
+| static/CNAME | 0 (25 bytes, no newline) | Native | `@quartz-community/cname` | The stock plugin writes CNAME from `baseUrl`. | |
+| static/robots.txt | 4 | Plugin | cgc-seo (emit `robots.txt` with a `Sitemap:` line built from `baseUrl`) | Its only content is Allow-all plus the sitemap URL. cgc-seo owns the sitemap and which pages are indexable, so it should also own robots.txt. | |
+| static/BingSiteAuth.xml, ./static/a6e41ab6-6753-4d94-9b54-b4405d806883.txt | 4 | Plugin | site-owned root files, copied by a site-v5 post-build target (or a site static-root step) | These are the Bing Webmaster verification file and the IndexNow key file (`utils/indexnow/submit-urls.mjs:23`). They must be served at the root, and the Static emitter publishes only under `/static/`. | |
+| static/fonts/** (fonts.css, inter/*, ibm-plex-mono/*) | 138 | Native | v5 `theme.fontOrigin: googleFonts`, `cdnCaching: false`; typography via theme or `@quartz-community/quartz-fonts` | These are generated self-hosted Inter and IBM Plex Mono files, linked by our Head.tsx. v5 core downloads Google Fonts to `static/fonts/` at build time. | |
+| static/icons/d20.svg, roblox.svg, uofu.svg, quartz-filled.svg | 102 | Plugin | site-owned `quartz-v5/icons/` (served through @cgc/icons) | These are `custom:` tag icons referenced in `quartz.config.ts` tag icon config (L46, 65, 81, 102). | |
+| static/icons/quartz.svg | 128 | Dead | — | Nothing references it. The config uses only `quartz-filled`. | |
+| styles/_settings.scss | 56 | Plugin | site application CSS | Breakpoints 1000/1300 and the grid maps. It mirrors v5 `styles/variables.scss`, which is 800/1200. See Notes. | |
+| styles/_tools.scss | 99 | Plugin | site application CSS (`respond-to`); `file-icon` mixin → library CSS of the Backlinks and TagExplorer consumer plugins | These are Sass mixins only and produce no CSS output. `file-icon` is used by `backlinks.scss` and `tagExplorer.scss`. | |
+| styles/_generic.scss, _elements.scss | 463 | Plugin | site application CSS (ITCSS `@layer generic/elements`) | These split upstream `base.scss` into ITCSS layers and add our typography, link and table tweaks. Only the differences from v5 `base.scss` should survive. | |
+| styles/_objects.scss | 431 | Plugin | site application CSS; full-width, no-left and no-right variants → Native v5 frames (`FullWidthFrame`, `MinimalFrame`, base.scss L316+) | This is the page grid, sidebars, the page-header area, the mobile off-canvas sidebar and layout variations. v5 base.scss already has the grid and the full-width frame. What is left is site width and breakpoint overrides. | |
+| styles/_utilities.scss | 113 | Native | v5 `styles/base.scss` (`.desktop-only` L136, `.mobile-only` L149, `.navigation-progress` L675; spacer and flex exist too) | These are upstream base.scss rules moved into `@layer utilities`. Any cosmetic difference goes to site application CSS. | |
+| util/tags.ts | 544 | Plugin | `@cgc/tags-core` (resolution rule, hierarchy helpers) + cgc-tags (index building) | The map already assigns this. | |
+| util/tagTrie.ts | 146 | Plugin | `@cgc/tags-core` / cgc-tags | The tag trie used by TagExplorer. The map already assigns this. | |
+| util/iconService.ts | 145 | Plugin | `@cgc/icons` | The map already assigns this: replaced by the Iconify-based library. | |
+| util/iconConfig.ts, iconHelpers.ts, tagIcons.ts | 159 | Dead | — | The map marks these as vestigial. | |
+| util/blueskyService.ts | 466 | Plugin | widget library package (#36), shared with the SocialMediaBlueSky replacement if that is kept | Parses, fetches and renders ATProto posts. Consumers are `widgets/bluesky-post` and `components/scripts/socialMediaBlueSky.inline.ts`. | owner? (SocialMediaBlueSky) |
+| widgets/bluesky-post/** | 638 | Plugin | widget library package (#36), rewritten as an island | The map decides this. | |
+| widgets/pdf-viewer/** | 663 | Plugin | widget library package (#36), rewritten as an island | The map decides this. | |
+| widgets/global-initialization/** | 174 | Dead | — | The map retires it. It was a status demo for the widget system. | |
+| widgets/base/** (WidgetScript.ts, widget-script-helper.ts, widget-base.scss) | 290 | Dead | replaced by island runtime | A nav/load lifecycle and cleanup base class, a copy-paste helper, and an SCSS template. The island runtime and ADR-0003 BEM library CSS replace them. | |
+| widgets/registry.ts, types.ts | 107 | Dead | replaced by island runtime (real ES imports) | A string import-path → WidgetDefinition registry that `mdx.ts` and `widgetScripts.ts` look up. Real imports make it unnecessary. | |
+| widgets/README.md | 76 | Dead | useful parts → cgc-mdx docs/README | The v4 widget-authoring reference: registry steps and `@widgets/*` aliases. It does not apply to islands. | owner? (it has note frontmatter and links to vault notes) |
