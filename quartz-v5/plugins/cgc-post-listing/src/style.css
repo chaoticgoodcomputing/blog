@@ -1,0 +1,147 @@
+/*
+ * cgc-post-listing: the site's posts, each with its tag badges. v4's postListing.scss, as library
+ * CSS (ADR-0003): one BEM block, every rule in this package's family layer, skin from the theme's
+ * colour properties. build.mjs refuses anything else. Sizes are v4's, as the live site computed them.
+ *
+ * A badge's ring gets its tag's colour as its own `color`, set inline from the cgc-tags engine's
+ * `--cgc-tag-*` property, as cgc-tag-list's rings do. It paints the ring's border, and in time the
+ * icon inside it, and never text: the ring holds none, and the badge's text keeps the listing's.
+ */
+@layer cgc.post-listing {
+  .cgc-post-listing__title {
+    margin: 1.5rem 0 0.25rem 0;
+    font-size: 1.5rem;
+  }
+
+  .cgc-post-listing__list {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .cgc-post-listing__post {
+    margin-bottom: 2rem;
+  }
+
+  .cgc-post-listing__heading {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+
+  .cgc-post-listing__description {
+    margin: 0.75rem 0 0 0;
+    color: var(--gray);
+    font-size: 0.95em;
+    line-height: 1.5;
+  }
+
+  .cgc-post-listing__tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    padding-left: 0;
+  }
+
+  .cgc-post-listing__tag {
+    margin: 0;
+    white-space: nowrap;
+    overflow-wrap: normal;
+  }
+
+  .cgc-post-listing__tag-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0.3rem 0.6rem 0.3rem 0.3rem;
+    border-radius: 18px 8px 8px 18px;
+    background-color: var(--lightgray);
+    color: inherit;
+    text-decoration: none;
+    transition:
+      background-color 0.2s ease,
+      border-radius 0.2s ease,
+      padding 0.2s ease;
+  }
+
+  .cgc-post-listing__tag-link:hover {
+    background-color: var(--gray);
+  }
+
+  .cgc-post-listing__ring {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border: 2.5px solid currentColor;
+    border-radius: 50%;
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  .cgc-post-listing__tag-name {
+    display: flex;
+    align-items: center;
+    font-size: 0.95em;
+    font-weight: 500;
+  }
+
+  .cgc-post-listing__tag-name::before {
+    content: "#";
+    margin-right: 0.2em;
+    opacity: 0.7;
+  }
+
+  .cgc-post-listing__tag-count {
+    margin-left: 0.2rem;
+    color: var(--gray);
+    font-size: 0.85em;
+  }
+
+  .cgc-post-listing__empty {
+    color: var(--gray);
+    font-style: italic;
+  }
+
+  .cgc-post-listing__more {
+    margin-top: 1rem;
+  }
+
+  .cgc-post-listing__more-toggle {
+    padding: 0.5rem 0;
+    color: var(--secondary);
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .cgc-post-listing__more-toggle:hover {
+    color: var(--tertiary);
+  }
+
+  /* A narrow screen shows only each badge's ring, until a long press expands it (the script). */
+  @media (max-width: 1000px) {
+    .cgc-post-listing__tag-link {
+      gap: 0;
+      padding: 0.3rem;
+      border-radius: 50%;
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    .cgc-post-listing__tag-link:not(.cgc-post-listing__tag-link--expanded)
+      .cgc-post-listing__tag-name,
+    .cgc-post-listing__tag-link:not(.cgc-post-listing__tag-link--expanded)
+      .cgc-post-listing__tag-count {
+      display: none;
+    }
+
+    .cgc-post-listing__tag-link--expanded {
+      gap: 0.5rem;
+      padding: 0.3rem 0.6rem 0.3rem 0.3rem;
+      border-radius: 18px 8px 8px 18px;
+    }
+  }
+}

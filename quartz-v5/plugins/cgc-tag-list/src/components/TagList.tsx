@@ -7,6 +7,7 @@ import { resolveRelative } from "@quartz-community/utils/path"
 import {
   colorPropertyOf,
   parentOf,
+  tagOfPage,
   type TagProperties,
   type TagsData,
 } from "@chaoticgoodcomputing/tags-core"
@@ -77,14 +78,6 @@ function corpusOf(allFiles: PageData[], icons: Icons, corpora: WeakMap<object, C
     corpora.set(allFiles, corpus)
   }
   return corpus
-}
-
-// The tag a tag page is for: `tags/<t>`, or `tags/<t>/index` for a description file in v4's layout.
-// The index of every tag, `tags/index`, is for none.
-function tagOfPage(slug: string | undefined): string | null {
-  if (!slug?.startsWith("tags/")) return null
-  const tag = slug.slice("tags/".length).replace(/\/?index$/, "")
-  return tag || null
 }
 
 export default ((userOpts?: TagListOptions) => {

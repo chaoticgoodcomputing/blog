@@ -147,6 +147,17 @@ plugins:
     layout:
       position: beforeBody
       priority: 30
+  # The site's posts, newest first, each ringed in its tags' colours (#73): on the index, and on tag
+  # pages filtered to the tag, the first five shown, as on the real site. The fixture's 404 page has
+  # stock's bare frame, with no slot after the body, so the real site's `showOn: [index, "404"]` is
+  # proven on a scratch site built from the site config instead.
+  - source: ../../plugins/cgc-post-listing
+    enabled: true
+    options:
+      collapsedItemCount: 5
+    layout:
+      position: afterBody
+      priority: 10
   - source: "@quartz-community/remove-draft"
     enabled: true
   - source: "@quartz-community/explicit-publish"

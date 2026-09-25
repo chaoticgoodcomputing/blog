@@ -285,6 +285,8 @@ plugins:
         # v4 labelled a link in the tag list, or any tag link, a tag badge: cgc-tag-list's badges
         # (#69), and the `.tag-link`s of page listings and inline #tags.
         ".cgc-tag-list": tag-badge
+        # The post listing's badges (#73). A post's title in the listing is `other`, as in v4.
+        ".cgc-post-listing__tags": tag-badge
         ".tag-link": tag-badge
         "a.internal": inline-link
   - source: "@quartz-community/canvas-page"
@@ -370,6 +372,20 @@ plugins:
     layout:
       position: beforeBody
       priority: 30
+  # v4's PostListing (#42, #44, #73): every post, newest first with same-date posts A→Z, each ringed in
+  # its tags' colours, the first five shown. v4 put it after the body of the index, the 404 page and
+  # the tags layout, where it lists the tag's posts. Quartz 5 has no `is-index` condition a plugin can
+  # add (#70), so the listing keeps to the pages `showOn` names, and to tag pages, by itself.
+  - source: ../plugins/cgc-post-listing
+    enabled: true
+    options:
+      showOn:
+        - index
+        - "404"
+      collapsedItemCount: 5
+    layout:
+      position: afterBody
+      priority: 10
   # Replaced by site-components' page title, below (#44, #70).
   - source: "@quartz-community/page-title"
     enabled: false

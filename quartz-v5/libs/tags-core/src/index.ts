@@ -1,7 +1,8 @@
 // The tag system's shared logic (ADR-0002's worked example, #20, #31): the resolution rule, the
 // shapes the `cgc-tags` engine publishes, and the `fileData` augmentation that types them. The
-// engine resolves with it, so the rule lives in one place; consumers import its types and, for a
-// canvas, its colour resolver (`./colour`). See CONTEXT.md.
+// engine resolves with it, so the rule lives in one place; consumers import its types, which tag a
+// tag page is for (`tagOfPage()`) and, for a canvas, its colour resolver (`./colour`). See
+// CONTEXT.md.
 //
 // Every function here takes tags as Quartz publishes them in `frontmatter.tags`: slugified, with `/`
 // between levels and no trailing slash. Normalising what a site writes is the engine's job.
@@ -79,6 +80,18 @@ export function lineageOf(tag: string): string[] {
   const lineage = [tag]
   for (let parent = parentOf(tag); parent !== null; parent = parentOf(parent)) lineage.push(parent)
   return lineage
+}
+
+/**
+ * The tag a tag page is for, from the page's slug: `tags/<t>`, or `tags/<t>/index` for a tag's
+ * description file in v4's layout. Only a whole `index` segment is dropped, so `tags/reindex` is
+ * the page for `reindex`. The index of every tag, `tags` or `tags/index`, is for none, and neither
+ * is any other page: `null`.
+ */
+export function tagOfPage(slug: string | undefined): string | null {
+  if (!slug?.startsWith("tags/")) return null
+  const tag = slug.slice("tags/".length).replace(/(^|\/)index$/, "")
+  return tag || null
 }
 
 /** How deep a tag sits: 0 for a top-level tag, one more for each `/`. */

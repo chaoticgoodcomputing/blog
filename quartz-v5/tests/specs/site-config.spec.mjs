@@ -179,7 +179,8 @@ test("sends v4's analytics to PostHog, labelling navigations as v4 did", async (
   // A tag badge, then a page in the tag's listing.
   await page.locator(".page-header").getByRole("link", { name: "topic" }).click()
   await expect(page).toHaveURL(`${ORIGIN}/tags/topic`)
-  await page.locator(".center").getByRole("link", { name: "A note", exact: true }).click()
+  // Stock tag-page's own listing: cgc-post-listing's links to the same page are its spec's (#73).
+  await page.locator(".center .page-listing").getByRole("link", { name: "A note", exact: true }).click()
   await expect(page).toHaveURL(`${ORIGIN}/content/notes/a-note`)
   const navigations = () => posthog.captures.filter(({ event }) => event === "navigation").map(({ properties }) => properties)
   await expect.poll(navigations).toEqual([

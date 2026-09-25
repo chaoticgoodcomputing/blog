@@ -47,6 +47,13 @@ properties. "Is this page under `engineering`?" is `"engineering" in ancestors`.
 page, it is every tag in the corpus.
 _Avoid_: tag closure, all tags, lineage (that is one tag's chain up to the top)
 
+**Tag page**:
+The page for one tag, which `tagOfPage()` reads from a slug: `tags/<t>`, or `tags/<t>/index`, a
+tag's description file in v4's layout. Only a whole `index` segment is dropped, so `tags/reindex`
+is the page for `reindex`. The index of every tag, `tags`, is for none. One function, so every
+consumer that treats a tag page differently agrees on which pages those are.
+_Avoid_: tag listing, tag index (that is the page of every tag)
+
 **Colour resolver**:
 `resolveColour()` and `resolveTagColour()` in `./colour`: the browser-only way to turn a colour
 value, or a colour property, into the `rgba()` the page is showing now. A probe element resolves
@@ -63,4 +70,5 @@ _Avoid_: colour getter, theme reader
 - **`./colour` touches the DOM.** A plugin's server-side code imports `.` only.
 - **Tested through its consumers.** The rule and the shapes through `cgc-tags`' specs; the colour
   resolver, which no plugin uses until `cgc-graph` (#77), through a probe script its own spec runs
-  on a fixture page (`e2e/colour.spec.mjs`).
+  on a fixture page (`e2e/colour.spec.mjs`); `tagOfPage()` through what `cgc-post-listing` and
+  `cgc-tag-list` render on tag pages (`e2e/tag-pages.spec.mjs`).

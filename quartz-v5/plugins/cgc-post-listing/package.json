@@ -1,0 +1,56 @@
+{
+  "name": "cgc-post-listing",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Quartz 5 component: the site's posts, newest first, filtered to the tag on a tag page, each with its tags ringed in their colours from the cgc-tags engine. See README.md and CONTEXT.md.",
+  "exports": {
+    ".": "./dist/index.js",
+    "./components": "./dist/components/index.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "../node_modules/.bin/tsc -p ."
+  },
+  "//peerDependencies": "The host Quartz's own copies, never bundled or installed here: the component's vnodes must be the host's Preact's. The types are imported for types only.",
+  "peerDependencies": {
+    "@quartz-community/types": "*",
+    "@quartz-community/utils": "*",
+    "preact": "^10.29.0"
+  },
+  "//devDependencies": "Build-time only: esbuild bundles dist/, inlining our library and reading-time, and PostCSS checks the stylesheet against ADR-0003 before it ships (build.mjs). The library is a `file:` spec on main, which a release commit rewrites to the release's published version (ADR-0005).",
+  "devDependencies": {
+    "@chaoticgoodcomputing/tags-core": "file:../../libs/tags-core",
+    "esbuild": "^0.28.2",
+    "postcss": "^8.5.28",
+    "postcss-selector-parser": "^7.1.6",
+    "reading-time": "^1.5.0"
+  },
+  "quartz": {
+    "name": "cgc-post-listing",
+    "displayName": "Post listing",
+    "description": "The site's posts, newest first, filtered to the tag on a tag page, each with its tags ringed in their colours from the cgc-tags engine.",
+    "category": [
+      "transformer",
+      "component"
+    ],
+    "version": "0.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [
+      "cgc-styles",
+      "cgc-tags"
+    ],
+    "defaultOrder": 50,
+    "defaultEnabled": true,
+    "defaultOptions": {},
+    "components": {
+      "PostListing": {
+        "displayName": "Post listing",
+        "defaultPosition": "afterBody",
+        "defaultPriority": 10
+      }
+    }
+  }
+}
