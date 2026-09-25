@@ -1,0 +1,21 @@
+@use "tools" as *;
+
+// Utilities: v4's helpers are core's (`base.scss`, FORK-LEDGER `styles/_utilities.scss`), so only
+// the breakpoint moves. Layout's `display: mobile-only` and `desktop-only` switch at the site's
+// 1000px rather than core's 800px, keeping core's display values.
+@layer utilities {
+  @include respond-to(mobile) {
+    .desktop-only,
+    .desktop-only.flex-component {
+      display: none;
+    }
+
+    .mobile-only {
+      display: contents;
+    }
+
+    .mobile-only.flex-component {
+      display: flex;
+    }
+  }
+}

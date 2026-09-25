@@ -2,6 +2,8 @@
 # A plugin under test is a local source resolved against the fixture root, e.g.
 #   - source: ../../plugins/cgc-tags
 # See quartz-v5/tests/harness/site.mjs and docs/adr/0004.
+# Site plugins (`site-plugins/`) are never listed: the fixture stays stock (#39), and their specs
+# build scratch sites that load them.
 
 # yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
 configuration:

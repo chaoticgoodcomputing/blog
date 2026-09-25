@@ -137,6 +137,12 @@ plugins:
     options:
       theme: tokyo-night
       mode: both
+  # The site's own CSS (#64, ADR-0003's site-plugin amendment): the stack declaration, then v4's
+  # five ITCSS tiers under `site`, with the 1000/1300 breakpoints. It runs first (`defaultOrder:
+  # -1000`), and its stack names only the layers this config loads: enabling a theme means adding
+  # the theme's layers to it (site-plugins/site-styles/src/styles/site.scss).
+  - source: ../site-plugins/site-styles
+    enabled: true
   # The family layer, `cgc`, above core and themes (#30, #63): every cgc-* plugin that emits CSS
   # declares it by name, `dependencies: ["cgc-styles"]`, and the loader holds them to its order.
   - source: ../plugins/cgc-styles

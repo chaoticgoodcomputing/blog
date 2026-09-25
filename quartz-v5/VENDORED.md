@@ -156,7 +156,7 @@ and that is what the loader's shared externals assume. A local plugin is only sy
 Node resolves from the symlink's target under `plugins/`, which would otherwise walk up to the v4
 tree's `node_modules` at the repo root: a second, older Preact. A plugin's own install therefore
 omits peers (`npm ci --omit=peer`), so its local `node_modules` never shadows a host singleton. `site-plugins/` needs the same link, `site-plugins/node_modules`, for the same reason. It's
-decided on [#39](https://github.com/chaoticgoodcomputing/blog/issues/39). `site-v5:prebuild` makes it for the real site once the config enables a site plugin, but the e2e harness doesn't yet. Upstream uses **npm** with its own `package-lock.json`,
+decided on [#39](https://github.com/chaoticgoodcomputing/blog/issues/39) and wired on [#64](https://github.com/chaoticgoodcomputing/blog/issues/64): `site-v5:prebuild` makes it for the real site once the config enables a site plugin, and the e2e harness makes it beside `plugins/node_modules`, building every site plugin too, because scratch sites built from the site config load them. No fixture config lists a site plugin. Upstream uses **npm** with its own `package-lock.json`,
 and its versions conflict with the v4 tree at the repo root (preact, unified, shiki). This
 directory is deliberately _not_ a pnpm workspace package, so the root `pnpm install` ignores it.
 

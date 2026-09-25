@@ -1,0 +1,41 @@
+@use "sass:map";
+@use "settings" as *;
+
+// Tools: mixins only, no CSS output (v4 `styles/_tools.scss`). v4's `file-icon` mixin went to the
+// plugins that draw file icons, each with its own copy (ADR-0003 rule 8).
+
+// The site's breakpoints as media queries: mobile, tablet, desktop, not-mobile or not-desktop.
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == mobile {
+    @media all and ($mobile) {
+      @content;
+    }
+  } @else if $breakpoint == tablet {
+    @media all and ($tablet) {
+      @content;
+    }
+  } @else if $breakpoint == desktop {
+    @media all and ($desktop) {
+      @content;
+    }
+  } @else if $breakpoint == not-mobile {
+    @media all and not ($mobile) {
+      @content;
+    }
+  } @else if $breakpoint == not-desktop {
+    @media all and not ($desktop) {
+      @content;
+    }
+  } @else {
+    @error "Unknown breakpoint: #{$breakpoint}. Use mobile, tablet, desktop, not-mobile or not-desktop.";
+  }
+}
+
+// A grid map from settings, as the grid properties.
+@mixin grid($grid) {
+  grid-template-columns: #{map.get($grid, templateColumns)};
+  grid-template-rows: #{map.get($grid, templateRows)};
+  column-gap: #{map.get($grid, columnGap)};
+  row-gap: #{map.get($grid, rowGap)};
+  grid-template-areas: #{map.get($grid, templateAreas)};
+}

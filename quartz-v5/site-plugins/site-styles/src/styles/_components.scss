@@ -1,0 +1,33 @@
+@use "settings" as *;
+@use "tools" as *;
+
+// Components: the site's skin on stock components' blocks, which v4 carried as forks of their
+// stylesheets (FORK-LEDGER rows `components/ArticleTitle.tsx`, `components/styles/contentMeta.scss`,
+// and `components/styles/footer.scss`). `listPage.scss`'s collapsed tags column is not carried:
+// v4's tag pages listed posts through its own components, which `cgc-tag-page` and
+// `cgc-post-listing` bring back (#72, #73), and on stock's page list it only crowds the tags.
+@layer components {
+  // Narrow screens centre the title, date and reading time. The title's 800px is v4's own literal,
+  // not a site breakpoint.
+  .content-meta {
+    @include respond-to(mobile) {
+      text-align: center;
+    }
+  }
+
+  @media all and (max-width: 800px) {
+    .article-title {
+      text-align: center;
+    }
+  }
+
+  // The page footer: centred under the article.
+  .page > #quartz-body > footer {
+    text-align: center;
+    margin-top: 2rem;
+
+    & ul {
+      justify-content: center;
+    }
+  }
+}

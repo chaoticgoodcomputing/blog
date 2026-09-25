@@ -1,0 +1,134 @@
+@use "sass:map";
+@use "settings" as *;
+@use "tools" as *;
+
+// Objects: the page's layout (v4 `styles/_objects.scss`). Only where the site departs from core's
+// `base.scss`: the page width, the grid at the site's breakpoints, the sidebars' spacing, and the
+// 40em measure. The grid is the default frame's. Core's other frames (full-width, minimal) and
+// plugins' own frames keep core's layout, as v4's full-width variant maps to a frame (FORK-LEDGER
+// `styles/_objects.scss`).
+@layer objects {
+  .page {
+    max-width: calc(#{map.get($breakpoints, desktop)} + 300px);
+  }
+
+  // Grid
+
+  .page[data-frame="default"] > #quartz-body {
+    justify-content: center;
+    @include grid($desktopGrid);
+
+    @include respond-to(tablet) {
+      @include grid($tabletGrid);
+    }
+
+    @include respond-to(mobile) {
+      @include grid($mobileGrid);
+    }
+
+    @include respond-to(not-desktop) {
+      padding: 0 2rem;
+    }
+
+    & > .center {
+      grid-area: grid-center;
+    }
+  }
+
+  // A page with nothing on the right, like the 404 page, centres two columns (v4's `no-right`).
+  // The empty sidebar goes too: its grid area, missing from these columns, would add a column.
+  .page[data-frame="default"] > #quartz-body:has(> .sidebar.right:empty) {
+    @include respond-to(desktop) {
+      grid-template-columns: #{$sidePanelWidth} #{$centerPanelWidth};
+      grid-template-areas:
+        "grid-sidebar-left grid-center"
+        ". grid-footer";
+    }
+
+    & > .sidebar.right {
+      display: none;
+    }
+  }
+
+  // Sidebars
+
+  // As tall as the page's row, up to a screenful, and scrolling past that. Core makes them a full
+  // viewport tall, which pushes a short page's footer a screen down.
+  .page > #quartz-body .sidebar {
+    padding: $topSpacing 1.5rem 2rem 1.5rem;
+    height: auto;
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+
+  // Below the site's mobile breakpoint the left sidebar is a row above the article. Core does the
+  // same below its own, 800px.
+  .page > #quartz-body .sidebar.left {
+    @include respond-to(mobile) {
+      gap: 0;
+      align-items: center;
+      position: initial;
+      height: unset;
+      flex-direction: row;
+      padding: 0;
+      padding-top: 2rem;
+    }
+  }
+
+  // Below the desktop breakpoint the right sidebar stacks under the article, in its measure.
+  .page > #quartz-body .sidebar.right {
+    @include respond-to(not-desktop) {
+      position: initial;
+      height: unset;
+      width: 100%;
+      flex-direction: column;
+      padding: 0;
+      max-width: $centerPanelWidth;
+      margin-left: auto;
+      margin-right: auto;
+
+      & > * {
+        flex: 0 1 auto;
+        max-height: 24rem;
+      }
+
+      // No table of contents, even one the layout marks desktop-only, which wraps it.
+      & .toc {
+        display: none;
+      }
+    }
+  }
+
+  // Section headings: every component's own heading in a sidebar or the page header takes one size
+  // and spacing, set by the section it sits in rather than by the component. A component that
+  // styles its own heading below its root (the table of contents' toggle, search results) keeps it.
+  .page > #quartz-body .sidebar > * > h3,
+  .page > #quartz-body .page-header .popover-hint > * > h3 {
+    font-size: 1rem;
+    margin: 0.75rem 0 0.25rem 0;
+  }
+
+  // The page header: the article title's own top margin sets the gap, not core's 6rem.
+  .page > #quartz-body .page-header {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+
+    @include respond-to(mobile) {
+      margin-top: 0;
+      padding: 0;
+    }
+  }
+
+  // The measure: every block of the centre column, and the footer, keep to about 70 characters.
+  .page[data-frame="default"] > #quartz-body .center > * {
+    max-width: $centerPanelWidth;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .page[data-frame="default"] > #quartz-body > footer {
+    max-width: $centerPanelWidth;
+  }
+}

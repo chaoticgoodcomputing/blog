@@ -1,0 +1,6 @@
+// Generic: resets and global behaviour (v4 `styles/_generic.scss`). Empty, and kept so the tier
+// holds its place in the stack: v4's rules here are core's `base.scss` ones moved into a layer. Nor
+// does v4's `:root { color-scheme: dark }` (a fork of `util/theme.ts`) come back: it served a
+// dark-only site, and with both schemes the darkmode plugin sets `color-scheme` (#41).
+@layer generic {
+}

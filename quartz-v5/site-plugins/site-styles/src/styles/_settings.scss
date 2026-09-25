@@ -1,0 +1,53 @@
+@use "sass:map";
+
+// Settings: Sass values only, no CSS output (v4 `styles/_settings.scss`).
+//
+// The site's breakpoints (#22) are 1000px and 1300px, where core compiles 800px and 1200px into
+// its own grid (core `styles/variables.scss`), so the site re-declares its grid in the objects tier
+// rather than overriding a variable (FORK-LEDGER, "Configurable breakpoints"). Stock plugins keep
+// 800/1200 in their own CSS, an accepted cosmetic band.
+$breakpoints: (
+  mobile: 1000px,
+  desktop: 1300px,
+);
+
+$mobile: "(max-width: #{map.get($breakpoints, mobile)})";
+$tablet: "(min-width: #{map.get($breakpoints, mobile)}) and (max-width: #{map.get($breakpoints, desktop)})";
+$desktop: "(min-width: #{map.get($breakpoints, desktop)})";
+
+$sidePanelWidth: 320px;
+// The measure: 40em is about 70 characters a line.
+$centerPanelWidth: 40em;
+// Core has 6rem.
+$topSpacing: 2.5rem;
+
+// Core's grids have a `grid-header` row that nothing occupies (the page header sits inside the
+// centre column), and v4's had a `grid-page-header` row for a page-level header no layout used.
+// Neither is kept.
+$desktopGrid: (
+  templateRows: "auto auto",
+  templateColumns: "#{$sidePanelWidth} #{$centerPanelWidth} #{$sidePanelWidth}",
+  rowGap: "5px",
+  columnGap: "0rem",
+  templateAreas: '"grid-sidebar-left grid-center grid-sidebar-right"\
+      ". grid-footer ."',
+);
+$tabletGrid: (
+  templateRows: "auto auto auto",
+  templateColumns: "#{$sidePanelWidth} #{$centerPanelWidth}",
+  rowGap: "5px",
+  columnGap: "1rem",
+  templateAreas: '"grid-sidebar-left grid-center"\
+      "grid-sidebar-left grid-sidebar-right"\
+      "grid-sidebar-left grid-footer"',
+);
+$mobileGrid: (
+  templateRows: "auto auto auto auto",
+  templateColumns: "auto",
+  rowGap: "5px",
+  columnGap: "5px",
+  templateAreas: '"grid-sidebar-left"\
+      "grid-center"\
+      "grid-sidebar-right"\
+      "grid-footer"',
+);

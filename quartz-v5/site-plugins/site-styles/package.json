@@ -1,0 +1,33 @@
+{
+  "name": "site-styles",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "This site's application CSS: the stack declaration, then v4's five ITCSS tiers under the site layer. A site plugin, never published. See CONTEXT.md.",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "../node_modules/.bin/tsc -p ."
+  },
+  "//devDependencies": "Build-time only. Sass compiles the tiers and esbuild inlines the result into dist/index.js, which imports nothing at run time.",
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "sass": "^1.104.1"
+  },
+  "quartz": {
+    "name": "site-styles",
+    "displayName": "Site styles",
+    "category": "transformer",
+    "version": "0.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "//defaultOrder": "Below every other plugin, so the stack declaration is the first named-layer statement after core's index.css (ADR-0003, site-plugin amendment).",
+    "defaultOrder": -1000,
+    "defaultEnabled": true,
+    "defaultOptions": {}
+  }
+}

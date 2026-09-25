@@ -5,6 +5,9 @@ import fs from "node:fs"
 import path from "node:path"
 import { test, expect, layerOrder, routeSite, schemeOf, toggleScheme } from "../harness/test.mjs"
 import { buildScratchSite, siteConfig } from "../harness/site.mjs"
+// layers.mjs reads the layers keyed by parent (site-styles' guard); test.mjs's `layerOrder` is the flat,
+// dotted ranking the family-layer check uses.
+import { layerOrder as layersByParent, stackDeclaration } from "../harness/layers.mjs"
 
 const CONTENT = {
   "index.md": "---\ntitle: Home\n---\nWelcome, with `code`.\n",
@@ -123,6 +126,17 @@ test("falls back to the dark scheme when the browser reports no preference", asy
   await page.goto(`${ORIGIN}/`)
   expect(await schemeOf(page)).toBe("dark")
   await expect(page.locator("body")).toHaveCSS("background-color", BACKGROUND.dark)
+})
+
+// site-styles' guard (#39, #64), against the plugins the site config actually loads: its stack
+// declaration names every layer on the page, in rank order, with the site last. A theme or plugin
+// that brings a layer the stack doesn't list fails here until the stack names it.
+test("ranks every cascade layer as the site's stack declares, with the site last", async ({ page }) => {
+  await routeSite(page, site.public, ORIGIN)
+  await page.goto(`${ORIGIN}/content/notes/a-note`)
+  const declared = await stackDeclaration(page)
+  expect(declared?.at(-1)).toBe("site")
+  expect((await layersByParent(page))[""]).toEqual(declared)
 })
 
 test("self-hosts its fonts, requesting nothing from Google Fonts", async ({ page }) => {

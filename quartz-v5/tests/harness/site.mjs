@@ -18,6 +18,10 @@ const here = path.dirname(fileURLToPath(import.meta.url))
 export const testsRoot = path.resolve(here, "..")
 export const vendored = path.resolve(testsRoot, "../quartz")
 const pluginsRoot = path.resolve(testsRoot, "../plugins")
+// Site plugins (VENDORED.md layout): no fixture config lists one, but scratch sites built from the
+// site config do, so they are built and linked alongside our plugins.
+const sitePluginsRoot = path.resolve(testsRoot, "../site-plugins")
+const PLUGIN_ROOTS = [pluginsRoot, sitePluginsRoot]
 const libsRoot = path.resolve(testsRoot, "../libs")
 const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
 
@@ -48,9 +52,15 @@ const SCRATCH_PARENT = { fixture: testsRoot, site: path.dirname(vendored) }
 // the given place. At `site`, that leaves a `../` path as it is. So is a plugin option that is a
 // relative path (`./…` or `../…`), such as cgc-og-image's `icon`, which a plugin resolves against
 // the same root.
+//
+// `offline` switches off the one fetch a build of it makes that fails the build when the network
+// does: core downloading the site's Google Fonts to self-host them (`fontOrigin: googleFonts` with
+// `cdnCaching: false`). The pages then fall back to system fonts, so only a spec that doesn't look at
+// type should ask for it.
 export const siteConfigFile = path.resolve(testsRoot, "../quartz.config.yaml")
-export function siteConfig({ at = "fixture" } = {}) {
+export function siteConfig({ at = "fixture", offline = false } = {}) {
   const config = YAML.parseDocument(fs.readFileSync(siteConfigFile, "utf8"))
+  if (offline) config.setIn(["configuration", "theme", "fontOrigin"], "local")
   const scratchRoot = path.join(SCRATCH_PARENT[at], ".site-scratch")
   const rebase = (local) => path.relative(scratchRoot, path.resolve(vendored, local))
   for (const entry of config.get("plugins").items) {
@@ -111,12 +121,13 @@ function writeFixtureRoot(variant) {
 export async function buildPlugins() {
   linkHostModules()
   await installLibs()
-  const packages = fs.existsSync(pluginsRoot)
-    ? fs.readdirSync(pluginsRoot).filter((dir) => fs.existsSync(path.join(pluginsRoot, dir, "package.json")))
-    : []
+  const packages = PLUGIN_ROOTS.flatMap((root) =>
+    fs.existsSync(root)
+      ? fs.readdirSync(root).filter((dir) => fs.existsSync(path.join(root, dir, "package.json"))).map((dir) => path.join(root, dir))
+      : [],
+  )
   await Promise.all(
-    packages.map(async (dir) => {
-      const cwd = path.join(pluginsRoot, dir)
+    packages.map(async (cwd) => {
       // A package with build-time dependencies of its own carries a lockfile; install it once, and
       // again whenever the lockfile moves on from what is installed.
       if (fs.existsSync(path.join(cwd, "package-lock.json")) && installIsStale(cwd)) {
@@ -157,10 +168,13 @@ async function installLibs() {
 // imports of Quartz's own dependencies (preact, unified, vfile — the loader's shared externals)
 // resolve to the host's copies. A local plugin is only symlinked there, and Node resolves from the
 // symlink's target under `quartz-v5/plugins/`, which would walk up to the v4 tree's `node_modules`
-// at the repo root instead: a second Preact. This gitignored link restores the git-install lookup.
+// at the repo root instead: a second Preact. This gitignored link restores the git-install lookup,
+// in `site-plugins/` as in `plugins/`.
 function linkHostModules() {
-  const link = path.join(pluginsRoot, "node_modules")
-  if (!fs.existsSync(link)) fs.symlinkSync(path.join("..", "quartz", "node_modules"), link)
+  for (const root of PLUGIN_ROOTS) {
+    const link = path.join(root, "node_modules")
+    if (fs.existsSync(root) && !fs.existsSync(link)) fs.symlinkSync(path.join("..", "quartz", "node_modules"), link)
+  }
 }
 
 // Every fixture root symlinks the vendored `quartz/` source directory, and the Quartz CLI

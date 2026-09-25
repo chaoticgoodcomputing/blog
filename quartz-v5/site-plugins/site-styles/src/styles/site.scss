@@ -1,0 +1,20 @@
+// The site's application CSS (ADR-0003's site-plugin amendment, #39), compiled into one stylesheet
+// that site-styles emits ahead of every other plugin's.
+@use "sass:meta";
+
+// The stack declaration: every named layer on the page, lowest first. It names only what the site
+// config loads: core, the fonts plugin, the family and the site. A theme enabled in the config adds
+// its own layers here, before `quartz-fonts`; `site` stays last. `e2e/stack.spec.mjs` fails on any
+// layer this doesn't list.
+@layer quartz-base, quartz-fonts, cgc, site;
+
+// v4's five ITCSS tiers, lowest first, every one kept even when empty. Written nested, never as
+// `site.<tier>`: lightningcss inverts sublayer order in a file that spells a layer both ways.
+@layer site {
+  @layer generic, elements, objects, components, utilities;
+  @include meta.load-css("generic");
+  @include meta.load-css("elements");
+  @include meta.load-css("objects");
+  @include meta.load-css("components");
+  @include meta.load-css("utilities");
+}

@@ -1,0 +1,17 @@
+// Elements: bare elements (v4 `styles/_elements.scss`, and the `img` rule in v4 `custom.scss`).
+// v4's typography, link, code and table rules are core's `base.scss` rules moved into a layer, so
+// only what differs from core is here.
+@layer elements {
+  // Images sit centred on a line of their own, capped in height. Core gives them `margin: 1rem 0`
+  // and no cap. This reaches every image on the page, a family plugin's included, since the site
+  // outranks the family.
+  img {
+    display: block;
+    max-height: 500px;
+    margin: 0 auto;
+
+    @media all and (max-width: 800px) {
+      max-height: 400px;
+    }
+  }
+}
