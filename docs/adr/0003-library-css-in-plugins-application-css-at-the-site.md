@@ -368,3 +368,57 @@ no navigation. CSS follows by itself. Anything that resolved a colour in script 
 - **A harness spec toggles the scheme on a loaded page.** The fixture's two-scheme rendering (ADR-0004)
   loads each scheme fresh, so it can't catch a colour that goes stale on toggle. Every package that
   paints resolved colours gets a spec that loads the page, toggles, and checks the repaint.
+
+## Amendment: the tag bubble, and what the tag colour paints
+
+_2026-09-26, from the owner's review notes of that day, on
+[The tag glossary, one bubble style, and aligned badges](https://github.com/chaoticgoodcomputing/blog/issues/82).
+The notes come after spec #53 and win where they differ from an earlier ticket or ADR._
+
+The owner named the parts of a tag as the site draws one (the family glossary's **Tag slug**, **Tag
+name**, **Tag icon**, **Tag bubble** and **Tag badge**) and asked for one bubble style everywhere,
+"shared across both the list/badges as well as on graph nodes", coloured as:
+
+1. a coloured outer rim,
+2. a light or dark gray circle,
+3. a black or white icon.
+
+**Decided:** the tag colour paints **only the bubble's rim**. The circle is the theme's
+`var(--lightgray)`, light in the light scheme and dark in the dark. The icon is the theme's
+`var(--dark)`, black in light and white in dark. Both are documented theme colours (rule 6), so a theme
+that reskins them reskins every bubble, and neither is a property of ours: a `--cgc-tag-…` name for
+either would sit in the tag engine's namespace, which is why cgc-tag-list's ADR-0001 kept the tag
+colour off a package property in the first place.
+
+This **replaces** two earlier rules:
+
+- the family glossary's **Tag colour**, from this ADR's colour-value amendment and #31, which had the
+  tag colour paint "marks (the badge ring, the icon glyph, the graph node)". It now paints a bubble's
+  rim and nothing else of the bubble, and still never text;
+- #71's icon in the tag colour, which cgc-tag-list's
+  [ADR-0001](../../quartz-v5/plugins/cgc-tag-list/docs/adr/0001-the-ring-carries-the-tag-colour.md)
+  had follow from the ring's inline `color`. The rim now takes the tag colour as an inline
+  `border-color`, and the icon's `currentColor` is the bubble's `--dark`.
+
+**The one exception: the tag explorer.** Its icons are bare glyphs in a tag's row, neither bubbles nor
+badges, so they stay painted whole in the tag colour. In the owner's words: "the Tag Explorer icons
+being colored should be the exception, since those aren't the bubble/badge style."
+
+**One bubble, in a library.** The bubble is built once, in `@chaoticgoodcomputing/tags-core`
+(`./bubble` and `./bubble.css`), not in each plugin that draws one. Its stylesheet is library CSS under
+the libraries amendment above: one block, `cgc-tag-bubble`, checked by the library's lint and by each
+consuming plugin's build, and shipped by each consumer inside its own family sublayer, since a library
+has no `externalResources()`. `./bubble` also publishes the palette as property names (`rim`, the tag's
+colour property; `circle`, `--lightgray`; `icon`, `--dark`), which the lint holds the stylesheet to.
+So a canvas, which CSS can't reach, paints a bubble from the same three through the colour resolver,
+and re-resolves them on `themechange` as the scheme amendment above requires. The graph's tag nodes
+become bubbles that way, in their own change.
+
+**Rejected:**
+
+- **The icon in the tag colour, on a gray circle.** Tag colours are chosen to read against the page,
+  not against `--lightgray`, and several are close to it in one scheme or the other. A dark icon on a
+  light circle, or a light one on a dark circle, reads in every scheme and every tag.
+- **A bubble per plugin**, each package's own classes and rules, as the ring was: two copies of the
+  same markup and CSS, in cgc-tag-list and cgc-post-listing, which every change had to make twice. One
+  block gives the family one look to change, and the graph one palette to read.

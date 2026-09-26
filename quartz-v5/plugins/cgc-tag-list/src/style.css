@@ -3,9 +3,15 @@
  * every rule in this package's family layer, skin from the theme's colour properties. build.mjs
  * refuses anything else.
  *
- * The ring's `color` is its tag's colour, set inline from the cgc-tags engine's `--cgc-tag-*`
- * property (docs/adr/0001). It paints the ring's border and the icon inside it, and never text: the
- * ring holds none, and the link's text keeps the colour of the text around it.
+ * Each badge holds tags-core's tag bubble, whose own stylesheet ships ahead of this one in the same
+ * layer (src/index.ts): the tag colour paints its rim, set inline from the cgc-tags engine's
+ * `--cgc-tag-*` property (docs/adr/0001), and never text. The link's text keeps the colour of the
+ * text around it.
+ *
+ * The bubble, the name and the count sit centred on one line (#82). The link centres its children,
+ * and each line of text is trimmed to its capital height, from its baseline up (`text-box`), so what
+ * is centred is the text as drawn, whatever font the theme gives it, not a line box whose glyphs sit
+ * high or low in it. A browser without `text-box` centres the line boxes, as before.
  */
 @layer cgc.tag-list {
   .cgc-tag-list {
@@ -44,46 +50,21 @@
     background-color: var(--gray);
   }
 
-  .cgc-tag-list__ring {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    min-width: 28px;
-    border: 2.5px solid currentColor;
-    border-radius: 50%;
-    font-size: 16px;
-    line-height: 1;
-  }
-
-  /* The tag's icon: inline SVG whose every mark is `currentColor`, the ring's colour. v4's size. */
-  .cgc-tag-list__icon {
-    width: 18px;
-    height: 18px;
-    fill: currentColor;
-  }
-
+  /* "#name", one string (#82). */
   .cgc-tag-list__name {
-    display: flex;
-    align-items: center;
     font-size: 0.95em;
     font-weight: 500;
-  }
-
-  .cgc-tag-list__name::before {
-    content: "#";
-    margin-right: 0.2em;
-    opacity: 0.7;
+    text-box: trim-both cap alphabetic;
   }
 
   .cgc-tag-list__count {
     margin-left: 0.2rem;
     color: var(--gray);
     font-size: 0.85em;
+    text-box: trim-both cap alphabetic;
   }
 
-  /* A narrow screen shows only each badge's ring, until a long press expands it (the script). */
+  /* A narrow screen shows only each badge's bubble, until a long press expands it (the script). */
   @media (max-width: 800px) {
     .cgc-tag-list {
       justify-content: center;

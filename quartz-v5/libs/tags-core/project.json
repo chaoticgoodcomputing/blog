@@ -6,6 +6,11 @@
   "projectType": "library",
   "tags": ["cgc", "cgc:lib"],
   "targets": {
+    "lint": {
+      "//": "The library-CSS check on the bubble's stylesheet, and that it paints with the palette ./bubble publishes. See lint-css.mjs.",
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run lint", "cwd": "{projectRoot}" }
+    },
     "typecheck": {
       "executor": "nx:run-commands",
       "options": { "command": "pnpm run typecheck", "cwd": "{projectRoot}" }

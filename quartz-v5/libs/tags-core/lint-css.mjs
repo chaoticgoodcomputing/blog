@@ -1,0 +1,57 @@
+// The library-CSS check (ADR-0003's libraries-that-ship-CSS amendment) on the tag bubble's
+// stylesheet: the check every styled package runs, @chaoticgoodcomputing/css-check, run here as a
+// lint, since a library has no build. It rewrites nothing, so the shipped CSS is exactly the source.
+// Every selector starts at, and stays within, the bubble's block, `cgc-tag-bubble`; the stylesheet
+// takes skin only from the theme and declares no layer, since the plugin that ships it places it.
+//
+// It also holds the stylesheet to the palette `./bubble` publishes (BUBBLE_PALETTE), which a canvas
+// paints bubbles from: the block's own rule paints its circle and its icon with exactly those
+// properties, so the DOM's bubble and a canvas's can't drift apart.
+//
+// Usage: node --experimental-strip-types lint-css.mjs [src-dir]. Exits 1 and lists every problem.
+import fs from "node:fs"
+import path from "node:path"
+import { pathToFileURL } from "node:url"
+import { checkStylesheet } from "@chaoticgoodcomputing/css-check"
+
+const root = path.resolve(process.argv[2] ?? "src")
+const shown = (file) =>
+  path.relative(process.cwd(), file).startsWith("..") ? file : path.relative(process.cwd(), file)
+const { TAG_BUBBLE, BUBBLE_PALETTE } = await import(
+  pathToFileURL(path.join(root, "bubble.ts")).href
+)
+
+const file = path.join(root, "bubble.css")
+const css = fs.readFileSync(file, "utf8")
+const problems = checkStylesheet(css, { from: shown(file), block: TAG_BUBBLE.block })
+
+// The declarations of the block's own rule, `.cgc-tag-bubble { … }`, comments aside.
+const own = new RegExp(`(?:^|})\\s*\\.${TAG_BUBBLE.block}\\s*\\{([^}]*)\\}`).exec(
+  css.replace(/\/\*[\s\S]*?\*\//g, ""),
+)
+const declarations = new Map(
+  (own?.[1] ?? "")
+    .split(";")
+    .map((declaration) => declaration.split(":").map((part) => part.trim()))
+    .filter(([property, value]) => property && value)
+    .map(([property, value]) => [property, value]),
+)
+for (const [property, name] of [
+  ["background-color", BUBBLE_PALETTE.circle],
+  ["color", BUBBLE_PALETTE.icon],
+]) {
+  const want = `var(${name})`
+  if (declarations.get(property) !== want) {
+    problems.push(
+      `${shown(file)}  .${TAG_BUBBLE.block} must paint with the palette ./bubble publishes: ${property}: ${want} (here: ${declarations.get(property) ?? "none"})`,
+    )
+  }
+}
+
+if (problems.length) {
+  console.error(
+    `${problems.join("\n")}\n\n${problems.length} error${problems.length === 1 ? "" : "s"}: the bubble's stylesheet breaks ADR-0003 or its palette.`,
+  )
+  process.exit(1)
+}
+console.log(`${shown(file)} checked: inside its block, and painted with the bubble's palette.`)

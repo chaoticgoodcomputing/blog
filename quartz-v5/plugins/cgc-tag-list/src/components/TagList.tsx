@@ -6,11 +6,13 @@ import type {
 import { resolveRelative } from "@quartz-community/utils/path"
 import {
   colorPropertyOf,
+  nameOf,
   parentOf,
   tagOfPage,
   type TagProperties,
   type TagsData,
 } from "@chaoticgoodcomputing/tags-core"
+import { TAG_BUBBLE, tagBubble } from "@chaoticgoodcomputing/tags-core/bubble"
 import { createIcons, type IconCollections, type Icons } from "@chaoticgoodcomputing/icons"
 import longPress from "./longpress.inline.js" with { type: "text" }
 
@@ -51,8 +53,8 @@ interface Corpus {
   icons: Map<string, string>
 }
 
-// The icon in a ring: its glyph, painted in the ring's `color`, which is the tag colour.
-const ICON = { class: "cgc-tag-list__icon" }
+// The icon in a bubble, drawn for tags-core's bubble, which paints it.
+const ICON = { class: TAG_BUBBLE.icon }
 
 // Built once per build: every page is rendered with the same `allFiles`. Every tag's icon is drawn
 // here, so an icon id no collection has fails the build on the first page, whichever pages show it.
@@ -114,14 +116,10 @@ export default ((userOpts?: TagListOptions) => {
                 class="internal cgc-tag-list__link"
                 href={resolveRelative(slug as never, `tags/${tag}` as never)}
               >
-                {/* The tag colour paints the ring and its icon, never text (docs/adr/0001). */}
-                <span
-                  class="cgc-tag-list__ring"
-                  style={{ color: `var(${color})` }}
-                  title={tag}
-                  dangerouslySetInnerHTML={icon === undefined ? undefined : { __html: icon }}
-                ></span>
-                <span class="cgc-tag-list__name">{tag.split("/").pop()}</span>
+                {/* tags-core's bubble: the tag colour paints its rim, never text (docs/adr/0001). */}
+                <span {...tagBubble({ tag, color, icon })}></span>
+                {/* "#" and the name as one string, so they sit as one word (#82). */}
+                <span class="cgc-tag-list__name">{`#${nameOf(tag)}`}</span>
                 {opts.showCount && (
                   <span class="cgc-tag-list__count">({corpus.counts.get(tag) ?? 0})</span>
                 )}

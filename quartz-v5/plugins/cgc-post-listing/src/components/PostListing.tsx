@@ -6,7 +6,8 @@ import type {
 import { resolveRelative, slugTag } from "@quartz-community/utils/path"
 import { formatDate } from "@quartz-community/utils/date"
 import { getDate } from "@quartz-community/utils/sort"
-import { normaliseTag, tagOfPage, type TagsData } from "@chaoticgoodcomputing/tags-core"
+import { nameOf, normaliseTag, tagOfPage, type TagsData } from "@chaoticgoodcomputing/tags-core"
+import { TAG_BUBBLE, tagBubble } from "@chaoticgoodcomputing/tags-core/bubble"
 import { createIcons, type IconCollections, type Icons } from "@chaoticgoodcomputing/icons"
 import readingTime from "reading-time/lib/reading-time.js"
 import { i18n } from "../i18n"
@@ -90,8 +91,8 @@ function countsOf(allFiles: PageData[]): Map<string, number> {
   return counts
 }
 
-// The icon in a ring: its glyph, painted in the ring's `color`, which is the tag colour.
-const ICON = { class: "cgc-post-listing__icon" }
+// The icon in a bubble, drawn for tags-core's bubble, which paints it, as cgc-tag-list draws it.
+const ICON = { class: TAG_BUBBLE.icon }
 
 // Each tag's icon, drawn, for every tag in the corpus that has one, built once per build. Every tag's
 // is drawn on the first page rendered, whether that page shows the listing or not, so an icon id no
@@ -197,16 +198,12 @@ export default ((userOpts?: PostListingOptions) => {
                 <li class="cgc-post-listing__tag" data-tag={tag}>
                   {/* `internal`, so core gives the badge a popover like any link to a page of the site. */}
                   <a class="internal cgc-post-listing__tag-link" href={href(`tags/${tag}`)}>
-                    {/* The tag colour paints the ring and its icon, and never text (cgc-tag-list's ADR-0001). */}
+                    {/* tags-core's bubble: the tag colour paints its rim, never text (cgc-tag-list's ADR-0001). */}
                     <span
-                      class="cgc-post-listing__ring"
-                      style={{ color: `var(${properties.color})` }}
-                      title={tag}
-                      dangerouslySetInnerHTML={
-                        iconOf.has(tag) ? { __html: iconOf.get(tag)! } : undefined
-                      }
+                      {...tagBubble({ tag, color: properties.color, icon: iconOf.get(tag) })}
                     ></span>
-                    <span class="cgc-post-listing__tag-name">{tag.split("/").pop()}</span>
+                    {/* "#" and the name as one string, so they sit as one word (#82). */}
+                    <span class="cgc-post-listing__tag-name">{`#${nameOf(tag)}`}</span>
                     {counts && (
                       <span class="cgc-post-listing__tag-count">({counts.get(tag) ?? 0})</span>
                     )}

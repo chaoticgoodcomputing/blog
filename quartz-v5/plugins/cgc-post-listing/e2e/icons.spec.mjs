@@ -1,11 +1,13 @@
-// cgc-post-listing draws each badge's tag icon in its ring, as v4's PostListing did (#53 story 8,
-// #73): the icon id the cgc-tags engine publishes, drawn when the site builds by
-// @chaoticgoodcomputing/icons, as inline SVG painted in the tag's colour. v4 drew them with a script
+// cgc-post-listing draws each badge's tag icon in its bubble, as v4's PostListing did (#53 story 8,
+// #73, #82): the icon id the cgc-tags engine publishes, drawn when the site builds by
+// @chaoticgoodcomputing/icons, as inline SVG in tags-core's tag bubble, painted in the theme's
+// `--dark`. v4 drew them with a script
 // after the page loaded. The fixture's tag dictionary and icon collection are in
 // tests/quartz.config.yaml, and cgc-tag-list's e2e/icons.spec.mjs proves the drawing itself.
 import fs from "node:fs"
 import path from "node:path"
 import { test, expect, toggleScheme } from "../../../tests/harness/test.mjs"
+import { FIXTURE_PALETTE } from "../../../tests/harness/palette.mjs"
 import {
   buildPluginCopy,
   buildScratchSite,
@@ -15,7 +17,7 @@ import {
   withPlugins,
 } from "../../../tests/harness/site.mjs"
 
-// MDI's own drawing of an icon, read from the installed set: the source of truth for what a ring shows.
+// MDI's own drawing of an icon, read from the installed set: the source of truth for what a bubble shows.
 const MDI = JSON.parse(
   fs.readFileSync(
     path.resolve(testsRoot, "../libs/icons/node_modules/@iconify-json/mdi/icons.json"),
@@ -24,22 +26,20 @@ const MDI = JSON.parse(
 )
 const mdiPath = (name) => MDI.icons[name].body.match(/ d="([^"]+)"/)[1]
 
-// The first listed badge for `tag`'s ring. Three fixture pages share the title "OG card", so badges
+// The first listed badge for `tag`'s bubble. Three fixture pages share the title "OG card", so badges
 // are found by their tag.
-const ring = (page, tag) =>
-  page
-    .locator(`.cgc-post-listing .cgc-post-listing__tag[data-tag="${tag}"] .cgc-post-listing__ring`)
-    .first()
+const bubble = (page, tag) =>
+  page.locator(`.cgc-post-listing .cgc-post-listing__tag[data-tag="${tag}"] .cgc-tag-bubble`).first()
 
-// The ring's glyph as the reader sees it: each painted shape's geometry and computed fill.
+// The bubble's glyph as the reader sees it: each painted shape's geometry and computed fill.
 const glyphOf = (locator) =>
-  locator.evaluate((ring) =>
-    [...ring.querySelectorAll("svg path, svg circle, svg rect, svg polygon, svg ellipse")].map(
+  locator.evaluate((bubble) =>
+    [...bubble.querySelectorAll("svg path, svg circle, svg rect, svg polygon, svg ellipse")].map(
       (shape) => ({ d: shape.getAttribute("d"), fill: getComputedStyle(shape).fill }),
     ),
   )
 
-test("draws a tag's icon in its badge's ring, in the page the site built, with no request", async ({
+test("draws a tag's icon in its badge's bubble, in the page the site built, with no request", async ({
   page,
   emitted,
 }) => {
@@ -47,47 +47,49 @@ test("draws a tag's icon in its badge's ring, in the page the site built, with n
   page.on("request", (request) => requests.push(request.url()))
   // `writing/essays: { icon: "mdi:feather" }`, on og/tag-sibling
   await page.goto("/tags/writing")
-  const glyph = await glyphOf(ring(page, "writing/essays"))
+  const glyph = await glyphOf(bubble(page, "writing/essays"))
   expect(glyph.map(({ d }) => d)).toEqual([mdiPath("feather")])
   // In the HTML as built, not added by a script.
   const html = emitted.read("tags/writing.html")
-  expect(html).toMatch(/class="cgc-post-listing__ring"[^>]*><svg [^>]*class="cgc-post-listing__icon"/)
+  expect(html).toMatch(/class="cgc-tag-bubble"[^>]*><svg [^>]*class="cgc-tag-bubble__icon"/)
   expect(html).toContain(mdiPath("feather"))
   // v4 fetched each icon from jsDelivr (`@mdi/svg`), or `/static/icons/` for its own.
   expect(requests.filter((url) => /\.svg\b|@mdi\/|iconify|\/icons\//i.test(url))).toEqual([])
 })
 
-// The fixture palette's `secondary`, in each scheme (tests/quartz.config.yaml).
-const SECONDARY = { light: "rgb(40, 75, 99)", dark: "rgb(123, 151, 170)" }
+// The fixture palette's `secondary`, and its `dark`, which paints every bubble's icon (#82).
+const { secondary: SECONDARY, dark: DARK } = FIXTURE_PALETTE
 
-test("draws a child tag with no icon of its own with its parent's, in the tag's colour", async ({
+test("draws a child tag with no icon of its own with its parent's, dark in its tag-coloured rim", async ({
   page,
   colorScheme,
 }) => {
   // `writing: { color: "var(--secondary)", icon: "mdi:pencil" }`, and nothing for `writing/articles`
   await page.goto("/tags/writing")
-  const articles = ring(page, "writing/articles")
+  const articles = bubble(page, "writing/articles")
   const glyph = async () => glyphOf(articles)
   expect((await glyph()).map(({ d }) => d)).toEqual([mdiPath("pencil")])
   await expect(articles).toHaveCSS("border-top-color", SECONDARY[colorScheme])
-  expect((await glyph()).map(({ fill }) => fill)).toEqual([SECONDARY[colorScheme]])
-  // The glyph is `currentColor`, so a scheme switch repaints it through CSS alone.
+  expect((await glyph()).map(({ fill }) => fill)).toEqual([DARK[colorScheme]])
+  // The glyph is `currentColor`, the bubble's `--dark`, so a scheme switch repaints it through CSS alone.
   const other = await toggleScheme(page)
   await expect(articles).toHaveCSS("border-top-color", SECONDARY[other])
-  expect((await glyph()).map(({ fill }) => fill)).toEqual([SECONDARY[other]])
+  expect((await glyph()).map(({ fill }) => fill)).toEqual([DARK[other]])
 })
 
-test("draws a custom: icon from the site's own SVG files, in currentColor, at the ring's size", async ({
+test("draws a custom: icon from the site's own SVG files, in currentColor, at the bubble's size", async ({
   page,
+  colorScheme,
 }) => {
   // `mdtwin: { icon: "custom:diamond" }`, from tests/fixture-icons/, drawn in magenta and cyan
   await page.goto("/tags/mdtwin")
-  const svg = ring(page, "mdtwin").locator("svg.cgc-post-listing__icon")
+  const svg = bubble(page, "mdtwin").locator("svg.cgc-tag-bubble__icon")
   await expect(svg).toHaveCount(1)
   // v4's 18px icon, as cgc-tag-list draws it.
   await expect(svg).toHaveCSS("width", "18px")
   await expect(svg).toHaveCSS("height", "18px")
-  const colour = await ring(page, "mdtwin").evaluate((ring) => getComputedStyle(ring).color)
+  const colour = await bubble(page, "mdtwin").evaluate((bubble) => getComputedStyle(bubble).color)
+  expect(colour).toBe(DARK[colorScheme])
   const paints = await svg.evaluate((svg) =>
     [...svg.querySelectorAll("*")].flatMap((mark) => {
       const style = getComputedStyle(mark)
@@ -98,10 +100,10 @@ test("draws a custom: icon from the site's own SVG files, in currentColor, at th
   expect(new Set(paints)).toEqual(new Set([colour]))
 })
 
-test("leaves the ring empty for a tag with no icon in its lineage", async ({ page }) => {
+test("leaves the bubble empty for a tag with no icon in its lineage", async ({ page }) => {
   // `markdown: { color: "light-dark(#b35f00, #de8200)" }`
   await page.goto("/tags/listing")
-  const markdown = ring(page, "markdown")
+  const markdown = bubble(page, "markdown")
   await expect(markdown).toBeVisible()
   await expect(markdown.locator("*")).toHaveCount(0)
 })

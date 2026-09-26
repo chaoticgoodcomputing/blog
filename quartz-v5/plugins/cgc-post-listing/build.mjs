@@ -37,14 +37,18 @@ const block = pkg.name
 const layer = `cgc.${block.replace(/^cgc-/, "")}`
 const stylesheet = "src/style.css"
 
-const problems = checkStylesheet(fs.readFileSync(stylesheet, "utf8"), {
-  from: stylesheet,
-  block,
-  layer,
-})
+// tags-core's tag bubble ships in this plugin's CSS too, inside this package's family layer
+// (src/index.ts), so it is checked here as well as by the library's lint: within its own block,
+// `cgc-tag-bubble`, and with no layer of its own.
+const bubble = "node_modules/@chaoticgoodcomputing/tags-core/src/bubble.css"
+
+const problems = [
+  ...checkStylesheet(fs.readFileSync(stylesheet, "utf8"), { from: stylesheet, block, layer }),
+  ...checkStylesheet(fs.readFileSync(bubble, "utf8"), { from: bubble, block: "cgc-tag-bubble" }),
+]
 if (problems.length) {
   console.error(
-    `${stylesheet} breaks ADR-0003's library-CSS rules:\n${problems.map((p) => `  ${p}`).join("\n")}`,
+    `The CSS this plugin ships breaks ADR-0003's library-CSS rules:\n${problems.map((p) => `  ${p}`).join("\n")}`,
   )
   process.exit(1)
 }

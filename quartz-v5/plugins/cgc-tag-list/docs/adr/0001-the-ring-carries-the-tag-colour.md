@@ -39,3 +39,21 @@ avoid the engine's.
   second time.
 - **A property named outside `--cgc-tag-`,** such as `--cgc-taglist-color`. It avoids the collision
   by breaking the naming every other package follows.
+
+## Amendment: the bubble's rim carries the tag colour, and the icon is dark
+
+_2026-09-26, from the owner's review notes of that day, on
+[The tag glossary, one bubble style, and aligned badges](https://github.com/chaoticgoodcomputing/blog/issues/82),
+recorded family-wide as ADR-0003's tag bubble amendment._
+
+The ring is now the family's **tag bubble**, drawn by `@chaoticgoodcomputing/tags-core` for this
+plugin and for `cgc-post-listing` alike. The owner set its colours: the tag colour paints only the
+rim, the circle is the theme's `--lightgray`, and the icon the theme's `--dark`. So the decision above
+changes in one respect: the tag colour is set inline as the bubble's **`border-color`**, not its
+`color`, and the icon's `currentColor` is the bubble's `--dark`, which its stylesheet sets.
+
+What stays: the colour is still set inline, from the engine's `--cgc-tag-…` property, and never as a
+package property of ours, for the namespace reason above; the bubble still holds no text; and a site
+still recolours a tag by overriding its property, which recolours the rim everywhere that tag is
+drawn. The first considered alternative, an inline `border-color`, is now the decision, since the icon
+no longer needs the tag colour at all.

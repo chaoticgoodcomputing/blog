@@ -342,6 +342,9 @@ importers:
 
   quartz-v5/libs/tags-core:
     devDependencies:
+      '@chaoticgoodcomputing/css-check':
+        specifier: workspace:*
+        version: link:../css-check
       typescript:
         specifier: ^5.9.3
         version: 5.9.3

@@ -77,6 +77,9 @@ export function parentOf(tag: string): string | null {
   return cut < 0 ? null : tag.slice(0, cut)
 }
 
+/** A tag's name, its last level: `python` for `engineering/languages/python`. */
+export const nameOf = (tag: string): string => tag.slice(tag.lastIndexOf("/") + 1)
+
 /** The tag followed by each of its ancestors, nearest first. */
 export function lineageOf(tag: string): string[] {
   const lineage = [tag]

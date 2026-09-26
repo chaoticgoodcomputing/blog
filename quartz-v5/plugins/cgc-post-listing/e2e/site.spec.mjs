@@ -82,17 +82,17 @@ test("keeps to the index, the 404 page and tag pages", async ({ page }) => {
   await expect(page.locator("h1.article-title")).toHaveText("Alder")
 })
 
-test("rings each post's tags in the site's tag colours, around their icons", async ({
+test("paints each post's tags' rims in the site's tag colours, around their icons", async ({
   page,
   colorScheme,
 }) => {
   await routeSite(page, site.public, ORIGIN)
   await page.goto(`${ORIGIN}/tags/topic`)
-  const ring = listing(page).locator(
-    '.cgc-post-listing__tag[data-tag="engineering"] .cgc-post-listing__ring',
+  const bubble = listing(page).locator(
+    '.cgc-post-listing__tag[data-tag="engineering"] .cgc-tag-bubble',
   )
-  await expect(ring).toHaveCSS("border-top-color", ENGINEERING[colorScheme])
-  await expect(ring.locator("svg.cgc-post-listing__icon")).toHaveCount(1)
+  await expect(bubble).toHaveCSS("border-top-color", ENGINEERING[colorScheme])
+  await expect(bubble.locator("svg.cgc-tag-bubble__icon")).toHaveCount(1)
 })
 
 // v4 labelled a click on a listing's tag badge `tag-badge`, and one on a post's title `other`.

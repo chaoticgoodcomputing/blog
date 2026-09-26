@@ -1,5 +1,5 @@
-// cgc-tag-list's one script, v4's TagList long press. On a narrow screen a badge shows only its ring,
-// and later its icon. Pressing and holding one expands it to show the tag's name and count, and the
+// cgc-tag-list's one script, v4's TagList long press. On a narrow screen a badge shows only its
+// bubble, with its icon. Pressing and holding one expands it to show the tag's name and count, and the
 // press doesn't follow the link; a tap still does. Tapping anywhere else, leaving the badge or
 // navigating collapses it again.
 //

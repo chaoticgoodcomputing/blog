@@ -3,9 +3,14 @@
  * CSS (ADR-0003): one BEM block, every rule in this package's family layer, skin from the theme's
  * colour properties. build.mjs refuses anything else. Sizes are v4's, as the live site computed them.
  *
- * A badge's ring gets its tag's colour as its own `color`, set inline from the cgc-tags engine's
- * `--cgc-tag-*` property, as cgc-tag-list's rings do. It paints the ring's border and the icon
- * inside it, and never text: the ring holds none, and the badge's text keeps the listing's.
+ * Each badge holds tags-core's tag bubble, as cgc-tag-list's do, whose own stylesheet ships ahead of
+ * this one in the same layer (src/index.ts): the tag colour paints its rim, set inline from the
+ * cgc-tags engine's `--cgc-tag-*` property, and never text. The badge's text keeps the listing's.
+ *
+ * The bubble, the name and the count sit centred on one line (#82), as in cgc-tag-list: the link
+ * centres its children, and each line of text is trimmed to its capital height, from its baseline
+ * up (`text-box`), so the text as drawn is centred, in any font. A browser without `text-box`
+ * centres the line boxes, as before.
  */
 @layer cgc.post-listing {
   .cgc-post-listing__title {
@@ -69,43 +74,18 @@
     background-color: var(--gray);
   }
 
-  .cgc-post-listing__ring {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    min-width: 28px;
-    border: 2.5px solid currentColor;
-    border-radius: 50%;
-    font-size: 16px;
-    line-height: 1;
-  }
-
-  /* The tag's icon: inline SVG whose every mark is `currentColor`, the ring's colour. v4's size. */
-  .cgc-post-listing__icon {
-    width: 18px;
-    height: 18px;
-    fill: currentColor;
-  }
-
+  /* "#name", one string (#82). */
   .cgc-post-listing__tag-name {
-    display: flex;
-    align-items: center;
     font-size: 0.95em;
     font-weight: 500;
-  }
-
-  .cgc-post-listing__tag-name::before {
-    content: "#";
-    margin-right: 0.2em;
-    opacity: 0.7;
+    text-box: trim-both cap alphabetic;
   }
 
   .cgc-post-listing__tag-count {
     margin-left: 0.2rem;
     color: var(--gray);
     font-size: 0.85em;
+    text-box: trim-both cap alphabetic;
   }
 
   .cgc-post-listing__empty {
@@ -128,7 +108,7 @@
     color: var(--tertiary);
   }
 
-  /* A narrow screen shows only each badge's ring, until a long press expands it (the script). */
+  /* A narrow screen shows only each badge's bubble, until a long press expands it (the script). */
   @media (max-width: 1000px) {
     .cgc-post-listing__tag-link {
       gap: 0;

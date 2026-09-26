@@ -2,11 +2,12 @@
 
 The Quartz 5 component that lists a site's posts, newest first, under the home page and on every
 tag page, where it lists that tag's posts: v4's PostListing, as a consumer of the `cgc-tags` engine
-(#42, #44, #73). Inherits the family vocabulary in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md), and the
-tag vocabulary of [`cgc-tags`](../cgc-tags/CONTEXT.md) and
+(#42, #44, #73, #82). Inherits the family vocabulary in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md),
+and the tag vocabulary of [`cgc-tags`](../cgc-tags/CONTEXT.md) and
 [`tags-core`](../../libs/tags-core/CONTEXT.md), and the icon vocabulary of
-[`icons`](../../libs/icons/CONTEXT.md). Its badges are [`cgc-tag-list`](../cgc-tag-list/CONTEXT.md)'s: a
-**badge** with a **ring** around the tag's **icon**, a name and a **count**.
+[`icons`](../../libs/icons/CONTEXT.md). Each of a post's tags is a **tag badge**, as in
+[`cgc-tag-list`](../cgc-tag-list/CONTEXT.md): tags-core's **tag bubble** around the **tag icon**,
+`#` and the **tag name**, and, with `showTagCounts`, cgc-tag-list's **count**.
 
 ## Language
 
@@ -63,10 +64,10 @@ _Avoid_: collapse, show more
 
 ## Constraints
 
-- **The tag colour paints the ring and its icon, and never text**, as in `cgc-tag-list` (its
-  ADR-0001).
+- **The tag colour paints the bubble's rim, and never text**, as in `cgc-tag-list` (its ADR-0001
+  and its amendment). The bubble is tags-core's, the same as cgc-tag-list's.
 - **It draws icons itself,** with `@chaoticgoodcomputing/icons`, from the ids the engine publishes and
-  the site's `iconCollections`, as `svg.cgc-post-listing__icon`. Every tag in the corpus is drawn on
+  the site's `iconCollections`, and hands each to the bubble, as cgc-tag-list does. Every tag in the corpus is drawn on
   the first page rendered, listing page or not, so an id no collection has fails every build.
 - **It reads only what the engine publishes:** each page's `fileData.cgcTags`, for its tags, the
   **tag filter** and the **excluded tags**. Never `frontmatter.tags`.

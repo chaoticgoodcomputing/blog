@@ -1,29 +1,31 @@
 // cgc-tag-list: v4's TagList, as a consumer of the cgc-tags engine (#20, #31, #69). Each of a page's
-// tags is a badge whose ring is painted in the tag's colour, read from the engine's `--cgc-tag-*`
-// custom properties. The fixture's tag dictionary is in tests/quartz.config.yaml.
+// tags is a badge whose bubble's rim is painted in the tag's colour, read from the engine's
+// `--cgc-tag-*` custom properties (#82). tags-core's e2e/bubble.spec.mjs proves the rest of the
+// bubble, and the badge's one-string name and alignment. The fixture's tag dictionary is in
+// tests/quartz.config.yaml.
 import { test, expect, toggleScheme } from "../../../tests/harness/test.mjs"
 import { FIXTURE_PALETTE } from "../../../tests/harness/palette.mjs"
-import { ring } from "./ring.mjs"
+import { bubble } from "./bubble.mjs"
 
-test("paints a badge's ring in its tag's colour", async ({ page }) => {
+test("paints a badge's rim in its tag's colour", async ({ page }) => {
   await page.goto("/plain-note")
   // `fixture: { color: "#0a7d32" }`
-  await expect(ring(page, "fixture")).toHaveCSS("border-top-color", "rgb(10, 125, 50)")
+  await expect(bubble(page, "fixture")).toHaveCSS("border-top-color", "rgb(10, 125, 50)")
 })
 
 // The fixture palette's `secondary`, in each scheme.
 const SECONDARY = FIXTURE_PALETTE.secondary
 
-test("rings a child tag with no colour of its own in its parent's", async ({
+test("paints the rim of a child tag with no colour of its own in its parent's", async ({
   page,
   colorScheme,
 }) => {
   // `writing: { color: "var(--secondary)" }`, and nothing for `writing/essays`.
   await page.goto("/og/tag-sibling")
-  await expect(ring(page, "writing/essays")).toHaveCSS("border-top-color", SECONDARY[colorScheme])
+  await expect(bubble(page, "writing/essays")).toHaveCSS("border-top-color", SECONDARY[colorScheme])
 })
 
-// A colour follows the scheme through CSS alone, so a switch on a loaded page repaints every ring,
+// A colour follows the scheme through CSS alone, so a switch on a loaded page repaints every rim,
 // with no script of this plugin's involved (ADR-0003's *the scheme changes under a loaded page*).
 const SCHEMED = [
   // `markdown: { color: "light-dark(#b35f00, #de8200)" }`
@@ -37,19 +39,19 @@ const SCHEMED = [
 ]
 
 for (const { url, tag, colour } of SCHEMED) {
-  test(`repaints ${tag}'s ring when the reader switches scheme`, async ({ page, colorScheme }) => {
+  test(`repaints ${tag}'s rim when the reader switches scheme`, async ({ page, colorScheme }) => {
     await page.goto(url)
-    await expect(ring(page, tag)).toHaveCSS("border-top-color", colour[colorScheme])
+    await expect(bubble(page, tag)).toHaveCSS("border-top-color", colour[colorScheme])
     const other = await toggleScheme(page)
-    await expect(ring(page, tag)).toHaveCSS("border-top-color", colour[other])
+    await expect(bubble(page, tag)).toHaveCSS("border-top-color", colour[other])
   })
 }
 
 test("never paints text in a tag's colour", async ({ page }) => {
   await page.goto("/plain-note")
   const item = page.locator('.cgc-tag-list__item[data-tag="fixture"]')
-  // The ring holds no text, and the link's text keeps the colour of the text around the list.
-  await expect(item.locator(".cgc-tag-list__ring")).toHaveText("")
+  // The bubble holds no text, and the link's text keeps the colour of the text around the list.
+  await expect(item.locator(".cgc-tag-bubble")).toHaveText("")
   const text = await page
     .locator(".cgc-tag-list")
     .evaluate((list) => getComputedStyle(list.parentElement).color)
@@ -64,14 +66,14 @@ test("names each tag by its last segment and links to its tag page", async ({
 }) => {
   await page.goto("/og/tag-sibling")
   const item = page.locator('.cgc-tag-list__item[data-tag="writing/essays"]')
-  await expect(item.locator(".cgc-tag-list__name")).toHaveText("essays")
-  await expect(item.locator(".cgc-tag-list__ring")).toHaveAttribute("title", "writing/essays")
+  await expect(item.locator(".cgc-tag-list__name")).toHaveText("#essays")
+  await expect(item.locator(".cgc-tag-bubble")).toHaveAttribute("title", "writing/essays")
   await item.locator(".cgc-tag-list__link").click()
   await expect(page).toHaveURL(/\/tags\/writing\/essays$/)
   // The page's own title: the link's popover, appended to the body, can hold the tag page's too.
   await expect(page.locator(".center h1.article-title")).toContainText("essays")
-  // The tag page lists its parent, still ringed in `var(--secondary)`.
-  await expect(ring(page, "writing")).toHaveCSS("border-top-color", SECONDARY[colorScheme])
+  // The tag page lists its parent, its rim still `var(--secondary)`.
+  await expect(bubble(page, "writing")).toHaveCSS("border-top-color", SECONDARY[colorScheme])
 })
 
 // v4's counts are cumulative: a tag counts the pages under any of its subtags too.
@@ -98,17 +100,17 @@ test("lists a tag page's parent and subtags", async ({ page }) => {
   await expect(list.locator(".cgc-tag-list__count")).toHaveText("(4)")
 })
 
-// v4's narrow screens: only each badge's ring, until a long press expands it to its name and count.
+// v4's narrow screens: only each badge's bubble, until a long press expands it to its name and count.
 test.describe("on a narrow screen", () => {
   test.use({ viewport: { width: 400, height: 800 } })
 
-  test("shows only each ring, and a long press expands a badge without following its link", async ({
+  test("shows only each bubble, and a long press expands a badge without following its link", async ({
     page,
   }) => {
     await page.goto("/plain-note")
     const link = page.locator('.cgc-tag-list__item[data-tag="fixture"] .cgc-tag-list__link')
     await expect(link.locator(".cgc-tag-list__name")).toBeHidden()
-    await expect(link.locator(".cgc-tag-list__ring")).toBeVisible()
+    await expect(link.locator(".cgc-tag-bubble")).toBeVisible()
 
     const box = await link.boundingBox()
     await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2)

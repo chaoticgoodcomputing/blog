@@ -94,7 +94,7 @@ A **colour** is anything CSS accepts as a colour: a hex, a named colour, `oklch(
 
 The build fails on any mistake in the dictionary: a colour CSS can't read, an icon id that isn't one, or a field a tag doesn't have. It can't check that a property a colour refers to exists, since the theme defines that when the page loads. A page's `primaryTag` that isn't one of its tags fails the build too.
 
-A tag colour is decorative. It paints marks, such as a badge's ring, an icon or a graph node, and never text, so no contrast check applies.
+A tag colour is decorative. It paints the rim of a tag's bubble, the circle that holds its icon wherever the site draws one, and never the bubble's circle or icon, which are the theme's `--lightgray` and `--dark`, and never text, so no contrast check applies. The tag explorer's icons, which are not bubbles, are the one mark it paints whole.
 
 ### What a site needs for `light-dark()`
 

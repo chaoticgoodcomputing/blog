@@ -165,16 +165,51 @@ _Avoid_: theme, mode, darkmode (for the scheme itself)
 
 **Tag colour**:
 The colour value a tag carries, inherited from its nearest ancestor that has one, and published
-as one `--cgc-tag-<tag>` custom property per tag. It is decorative: it paints marks (the badge
-ring, the icon glyph, the graph node) and never text, and never sits under text. Not the same
-thing as a theme's `--tag-color`, which is the text colour of a stock tag pill.
+as one `--cgc-tag-<tag>` custom property per tag. It is decorative: it paints a **tag bubble**'s
+rim and nothing else of the bubble, and never text, and never sits under text. The tag explorer's
+icons, which are not bubbles, are the one mark it paints whole
+([ADR-0003](../docs/adr/0003-library-css-in-plugins-application-css-at-the-site.md)'s tag bubble
+amendment). Not the same thing as a theme's `--tag-color`, which is the text colour of a stock tag
+pill.
 _Avoid_: tag background, category colour, `--tag-color` (for ours)
+
+### Tags
+
+The parts of a tag as the site shows one, named in the owner's review notes of 2026-09-26 (#82).
+
+**Tag slug**:
+A tag's full path, every level from the top with `/` between them:
+`engineering/languages/typescript`. How every plugin and rule names a tag. Not a page's slug.
+_Avoid_: tag path, full tag, tag (where the name is meant)
+
+**Tag name**:
+The last level of a tag slug: `typescript` in `engineering/languages/typescript`. What a reader
+reads a tag by.
+_Avoid_: label, leaf, short name, segment
+
+**Tag icon**:
+The icon a tag is drawn with, as the reader sees it: its own **icon id**, or its nearest
+ancestor's, drawn. A tag with none in its lineage has no icon.
+_Avoid_: glyph (except for what the reader sees), emoji, symbol
+
+**Tag bubble**:
+The circle that holds a tag's icon, drawn the same wherever the site shows one: a rim in the tag
+colour, a circle in the theme's light or dark gray, and the icon in its black or white. It holds
+no text.
+_Avoid_: ring (its old name), dot, icon badge, node (for the bubble itself)
+
+**Tag badge**:
+A tag bubble followed by `#` and the tag name, as one string, and, where a plugin shows it, the
+count of pages under the tag, all centred on one line. How a tag appears among text: under a
+page's title, and in the post listing.
+_Avoid_: pill, chip, tag link, tag button
 
 ### Icons
 
 **Icon id**:
 A `prefix:name` string naming one icon, such as `mdi:robot` or `custom:d20`. Engines publish
-icon ids, never drawn icons; the plugin that draws one resolves the id itself.
+icon ids, never drawn icons; the plugin that draws one resolves the id itself. A **tag icon** is
+a tag's icon id, drawn.
 _Avoid_: icon (for the string), icon name, icon key
 
 **Icon collection**:

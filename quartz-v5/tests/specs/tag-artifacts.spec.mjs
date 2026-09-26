@@ -24,8 +24,8 @@ const CONSUMERS = [
   path.resolve(testsRoot, "../plugins/cgc-graph"),
   path.join(testsRoot, "fixture-plugins/fixture-tag-reader"),
 ]
-const ring = (page, tag) =>
-  page.locator(`.cgc-tag-list__item[data-tag="${tag}"] .cgc-tag-list__ring`)
+const bubble = (page, tag) =>
+  page.locator(`.cgc-tag-list__item[data-tag="${tag}"] .cgc-tag-bubble`)
 
 test("each consumer names the engine by plugin name", () => {
   for (const dir of CONSUMERS) {
@@ -41,7 +41,7 @@ test("the consumers receive the engine's artifacts at the fixture root", async (
   expect(pluginSources(fixtureConfig())).toContain(`../../plugins/${ENGINE}`)
   await page.goto("/plain-note")
   // `fixture: { color: "#0a7d32" }`
-  await expect(ring(page, "fixture")).toHaveCSS("border-top-color", "rgb(10, 125, 50)")
+  await expect(bubble(page, "fixture")).toHaveCSS("border-top-color", "rgb(10, 125, 50)")
   const received = JSON.parse(emitted.read("static/fixture-tag-reader.json"))
   expect(received["plain-note"].primary.tag).toBe("fixture")
   // cgc-graph's index carries each page's tags as the engine published them.
@@ -81,7 +81,7 @@ test("the consumers receive the engine's artifacts at the real site root", async
     const origin = "https://blog.chaoticgood.computer"
     await routeSite(page, site.public, origin)
     await page.goto(`${origin}/content/notes/a-note`)
-    await expect(ring(page, "engineering/ai")).toHaveCSS(
+    await expect(bubble(page, "engineering/ai")).toHaveCSS(
       "border-top-color",
       ENGINEERING[colorScheme],
     )

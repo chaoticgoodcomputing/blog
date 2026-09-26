@@ -155,6 +155,8 @@ plugins:
     enabled: true
     options:
       collapsedItemCount: 5
+      # The real site shows none. On here, so the badges' counts are proven in both plugins (#82).
+      showTagCounts: true
       iconCollections: *iconCollections
     layout:
       position: afterBody

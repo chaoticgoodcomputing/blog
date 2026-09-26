@@ -1,6 +1,6 @@
-// cgc-tag-list draws each tag's icon in its ring (#29, #71): the icon id the cgc-tags engine
+// cgc-tag-list draws each tag's icon in its bubble (#29, #71, #82): the icon id the cgc-tags engine
 // publishes, drawn when the site builds by @chaoticgoodcomputing/icons, as inline SVG painted in the
-// tag's colour. The fixture's tag dictionary and icon collection are in tests/quartz.config.yaml.
+// theme's `--dark`, as tags-core's bubble paints every icon. The fixture's tag dictionary and icon collection are in tests/quartz.config.yaml.
 import fs from "node:fs"
 import path from "node:path"
 import { test, expect, toggleScheme } from "../../../tests/harness/test.mjs"
@@ -13,12 +13,12 @@ import {
   testsRoot,
   withPlugins,
 } from "../../../tests/harness/site.mjs"
-import { ICON_REQUEST, ring } from "./ring.mjs"
+import { ICON_REQUEST, bubble } from "./bubble.mjs"
 
-// The fixture palette's `secondary`, and its `darkgray`: the colour of a tag with none in its lineage.
-const { secondary: SECONDARY, darkgray: DARKGRAY } = FIXTURE_PALETTE
+// The fixture palette's `secondary`, and its `dark`, which paints every bubble's icon (#82).
+const { secondary: SECONDARY, dark: DARK } = FIXTURE_PALETTE
 
-// MDI's own drawing of an icon, read from the installed set: the source of truth for what a ring shows.
+// MDI's own drawing of an icon, read from the installed set: the source of truth for what a bubble shows.
 const MDI = JSON.parse(
   fs.readFileSync(
     path.resolve(testsRoot, "../libs/icons/node_modules/@iconify-json/mdi/icons.json"),
@@ -27,10 +27,10 @@ const MDI = JSON.parse(
 )
 const mdiPath = (name) => MDI.icons[name].body.match(/ d="([^"]+)"/)[1]
 
-// The ring's glyph as the reader sees it: each painted shape's geometry and computed fill.
+// The bubble's glyph as the reader sees it: each painted shape's geometry and computed fill.
 const glyphOf = (locator) =>
-  locator.evaluate((ring) =>
-    [...ring.querySelectorAll("svg path, svg circle, svg rect, svg polygon, svg ellipse")].map(
+  locator.evaluate((bubble) =>
+    [...bubble.querySelectorAll("svg path, svg circle, svg rect, svg polygon, svg ellipse")].map(
       (shape) => ({ d: shape.getAttribute("d"), fill: getComputedStyle(shape).fill }),
     ),
   )
@@ -43,7 +43,7 @@ test("draws an mdi: icon inline, from the page the site built, with no request",
   page.on("request", (request) => requests.push(request.url()))
   // `writing/essays: { icon: "mdi:feather" }`
   await page.goto("/og/tag-sibling")
-  const glyph = await glyphOf(ring(page, "writing/essays"))
+  const glyph = await glyphOf(bubble(page, "writing/essays"))
   expect(glyph.map(({ d }) => d)).toEqual([mdiPath("feather")])
   // In the HTML as built, not added by a script.
   expect(emitted.read("og/tag-sibling.html")).toContain(mdiPath("feather"))
@@ -60,18 +60,18 @@ test("draws a custom: icon from the site's own SVG files, in currentColor", asyn
 }) => {
   const requests = []
   page.on("request", (request) => requests.push(request.url()))
-  // `mdtwin: { icon: "custom:diamond" }`, in the default tag colour
+  // `mdtwin: { icon: "custom:diamond" }`
   await page.goto("/md-twin")
-  const svg = ring(page, "mdtwin").locator("svg")
+  const svg = bubble(page, "mdtwin").locator("svg")
   await expect(svg).toHaveCount(1)
   const box = await svg.evaluate((svg) => {
     const { x, y, width, height } = svg.getBBox()
     return { x, y, width, height }
   })
   expect(box).toEqual({ x: 2, y: 2, width: 20, height: 20 })
-  // Every mark takes the ring's colour, the tag's: none keeps the colour its file gave it.
-  const colour = await ring(page, "mdtwin").evaluate((ring) => getComputedStyle(ring).color)
-  expect(colour).toBe(DARKGRAY[colorScheme])
+  // Every mark takes the bubble's colour, the theme's `--dark`: none keeps the colour its file gave it.
+  const colour = await bubble(page, "mdtwin").evaluate((bubble) => getComputedStyle(bubble).color)
+  expect(colour).toBe(DARK[colorScheme])
   const paints = await svg.evaluate((svg) =>
     [...svg.querySelectorAll("*")].flatMap((mark) => {
       const style = getComputedStyle(mark)
@@ -92,39 +92,44 @@ test("draws a custom: icon from the site's own SVG files, in currentColor", asyn
 test("draws a child tag with no icon of its own with its parent's", async ({ page }) => {
   // `writing: { icon: "mdi:pencil" }`, and nothing for `writing/articles`
   await page.goto("/og/tag-nested")
-  const glyph = await glyphOf(ring(page, "writing/articles"))
+  const glyph = await glyphOf(bubble(page, "writing/articles"))
   expect(glyph.map(({ d }) => d)).toEqual([mdiPath("pencil")])
   // A tag page lists its subtags, each with the icon it resolves to: its own, or its parent's.
   await page.goto("/tags/writing")
-  expect((await glyphOf(ring(page, "writing/annotations"))).map(({ d }) => d)).toEqual([
+  expect((await glyphOf(bubble(page, "writing/annotations"))).map(({ d }) => d)).toEqual([
     mdiPath("pencil"),
   ])
-  expect((await glyphOf(ring(page, "writing/essays"))).map(({ d }) => d)).toEqual([
+  expect((await glyphOf(bubble(page, "writing/essays"))).map(({ d }) => d)).toEqual([
     mdiPath("feather"),
   ])
 })
 
-test("leaves the ring empty for a tag with no icon in its lineage", async ({ page }) => {
+test("leaves the bubble empty for a tag with no icon in its lineage", async ({ page }) => {
   // `markdown: { color: "light-dark(#b35f00, #de8200)" }`
   await page.goto("/plain-note")
-  await expect(ring(page, "markdown")).toBeVisible()
-  await expect(ring(page, "markdown").locator("*")).toHaveCount(0)
+  await expect(bubble(page, "markdown")).toBeVisible()
+  await expect(bubble(page, "markdown").locator("*")).toHaveCount(0)
 })
 
-// The glyph is `currentColor`, the ring's colour, so the tag colour paints it through CSS alone, and a
-// scheme switch on a loaded page repaints it with no script of this plugin's involved.
-test("paints the glyph in the tag's colour, and repaints it when the reader switches scheme", async ({
+// The glyph is `currentColor`, the bubble's colour, which is the theme's `--dark` and never the tag's
+// (#82): the tag colour paints only the rim. A scheme switch on a loaded page repaints both through CSS
+// alone, with no script of this plugin's involved.
+test("paints the glyph dark and the rim in the tag's colour, and repaints both when the reader switches scheme", async ({
   page,
   colorScheme,
 }) => {
   // `writing: { color: "var(--secondary)", icon: "mdi:pencil" }`, both inherited
   await page.goto("/og/tag-nested")
-  const paint = async () => (await glyphOf(ring(page, "writing/articles"))).map(({ fill }) => fill)
-  await expect(ring(page, "writing/articles")).toHaveCSS("border-top-color", SECONDARY[colorScheme])
-  expect(await paint()).toEqual([SECONDARY[colorScheme]])
+  const paint = async () =>
+    (await glyphOf(bubble(page, "writing/articles"))).map(({ fill }) => fill)
+  await expect(bubble(page, "writing/articles")).toHaveCSS(
+    "border-top-color",
+    SECONDARY[colorScheme],
+  )
+  expect(await paint()).toEqual([DARK[colorScheme]])
   const other = await toggleScheme(page)
-  await expect(ring(page, "writing/articles")).toHaveCSS("border-top-color", SECONDARY[other])
-  expect(await paint()).toEqual([SECONDARY[other]])
+  await expect(bubble(page, "writing/articles")).toHaveCSS("border-top-color", SECONDARY[other])
+  expect(await paint()).toEqual([DARK[other]])
 })
 
 // A misspelt icon id fails the build, where v4 logged a warning in the reader's console (#29, #53

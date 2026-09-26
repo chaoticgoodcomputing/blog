@@ -1,0 +1,31 @@
+/*
+ * tags-core: the tag bubble (#82), library CSS (ADR-0003). One BEM block, skin only from the theme,
+ * and no layer: the plugin that draws bubbles ships this in its own sublayer of the family layer.
+ * The library's lint checks it, and so does each consuming plugin's build.
+ *
+ * The owner's palette (review notes of 2026-09-26; ADR-0003's bubble amendment), the same three
+ * properties `./bubble` publishes for a canvas: the rim is the tag colour, set inline on each bubble;
+ * the circle is `--lightgray` and the icon `--dark`, which the lint holds to that palette.
+ */
+.cgc-tag-bubble {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-width: 2.5px;
+  border-style: solid;
+  border-radius: 50%;
+  background-color: var(--lightgray);
+  color: var(--dark);
+  line-height: 1;
+}
+
+/* The tag's icon: inline SVG whose every mark is `currentColor`, the bubble's `--dark`. v4's size. */
+.cgc-tag-bubble__icon {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}

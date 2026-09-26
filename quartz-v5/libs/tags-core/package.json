@@ -2,22 +2,27 @@
   "name": "@chaoticgoodcomputing/tags-core",
   "version": "0.0.0",
   "type": "module",
-  "description": "The tag system's shared logic for Quartz 5 plugins: the resolution rule, the shapes the cgc-tags engine publishes, their fileData types, the tag hierarchy's rules and which pages are private, a colour resolver for canvases, and a build-time check for colour values. See CONTEXT.md.",
-  "//exports": "Source only: no build and no dist. The consuming plugin's build inlines it (ADR-0005). `./colour` is browser-only; `./colour-value` is server-only, and takes the host's lightningcss from the plugin that calls it.",
+  "description": "The tag system's shared logic for Quartz 5 plugins: the resolution rule, the shapes the cgc-tags engine publishes, their fileData types, the tag hierarchy's rules and which pages are private, the tag bubble every badge draws, a colour resolver for canvases, and a build-time check for colour values. See CONTEXT.md.",
+  "//exports": "Source only: no build and no dist. The consuming plugin's build inlines it (ADR-0005). `./colour` is browser-only; `./colour-value` is server-only, and takes the host's lightningcss from the plugin that calls it. `./bubble` runs anywhere, and `./bubble.css` is the bubble's library CSS, which the consuming plugin ships in its own family layer.",
   "exports": {
     ".": "./src/index.ts",
     "./colour": "./src/colour.ts",
-    "./colour-value": "./src/colour-value.ts"
+    "./colour-value": "./src/colour-value.ts",
+    "./bubble": "./src/bubble.ts",
+    "./bubble.css": "./src/bubble.css"
   },
   "files": [
     "src"
   ],
   "sideEffects": false,
+  "//scripts": "lint-css.mjs imports src/bubble.ts for the palette it checks the stylesheet against, so Node strips its types (unflagged only from Node 22.18; the repo's .nvmrc is 22.16).",
   "scripts": {
+    "lint": "node --experimental-strip-types --disable-warning=ExperimentalWarning lint-css.mjs",
     "typecheck": "tsc -p ."
   },
-  "//devDependencies": "Types only. `vfile` is the module the fileData augmentation extends; a consuming plugin resolves its own copy, the host Quartz's.",
+  "//devDependencies": "Types, and the library-CSS check the lint target runs on the bubble's stylesheet (@chaoticgoodcomputing/css-check). `vfile` is the module the fileData augmentation extends; a consuming plugin resolves its own copy, the host Quartz's. Libraries depend on each other by `workspace:*` (ADR-0005).",
   "devDependencies": {
+    "@chaoticgoodcomputing/css-check": "workspace:*",
     "typescript": "^5.9.3",
     "vfile": "^6.0.3"
   },

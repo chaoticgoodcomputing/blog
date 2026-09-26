@@ -29,7 +29,8 @@ _Avoid_: chevron (that is its icon), caret and toggle (those are the drawer's)
 **Mark**:
 The tag colour's one place in a tag's row, `.cgc-tag-explorer__mark`: the tag's icon, drawn in
 `currentColor`, or a dot where the tag has none. It carries the tag colour as its own inline
-`color`, as cgc-tag-list's ring does (its ADR-0001). The tag colour never paints text.
+`color`. Not a **tag bubble**: the family's one mark the tag colour paints whole (ADR-0003's tag
+bubble amendment). The tag colour never paints text.
 _Avoid_: icon (for the element), swatch, badge
 
 **Count**:

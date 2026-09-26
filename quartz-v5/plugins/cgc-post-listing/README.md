@@ -5,7 +5,7 @@ tags:
   - engineering/frontend
 ---
 
-`cgc-post-listing` is a [Quartz 5](https://quartz.jzhao.xyz/) plugin that lists a site's posts, newest first, under the home page and on every tag page. On a tag page it lists only that tag's posts. Each post shows its title, date, description and reading time, and its tags as badges, each a ring in the tag's colour around the tag's icon. The colours and icons come from [cgc-tags](https://blog.chaoticgood.computer/plugins/cgc-tags), the plugin that holds the site's tag dictionary.
+`cgc-post-listing` is a [Quartz 5](https://quartz.jzhao.xyz/) plugin that lists a site's posts, newest first, under the home page and on every tag page. On a tag page it lists only that tag's posts. Each post shows its title, date, description and reading time, and its tags as badges, each with the tag's icon in a bubble, rimmed in the tag's colour. The colours and icons come from [cgc-tags](https://blog.chaoticgood.computer/plugins/cgc-tags), the plugin that holds the site's tag dictionary.
 
 It is the `PostListing` component from this site's Quartz 4 days, carried over as a plugin. The tag colours and icons are now drawn when the site builds, where v4 drew them with a script after the page loaded, fetching every icon from a CDN.
 
@@ -26,10 +26,10 @@ It is the `PostListing` component from this site's Quartz 4 days, carried over a
       <ul class="cgc-post-listing__tags">
         <li class="cgc-post-listing__tag" data-tag="engineering/ai">
           <a class="internal cgc-post-listing__tag-link" href="./tags/engineering/ai">
-            <span class="cgc-post-listing__ring" style="color: var(--cgc-tag-engineering--ai)" title="engineering/ai"
-              ><svg class="cgc-post-listing__icon" viewBox="0 0 24 24" aria-hidden="true" …><path fill="currentColor" d="…" /></svg
+            <span class="cgc-tag-bubble" style="border-color: var(--cgc-tag-engineering--ai)" title="engineering/ai"
+              ><svg class="cgc-tag-bubble__icon" viewBox="0 0 24 24" aria-hidden="true" …><path fill="currentColor" d="…" /></svg
             ></span>
-            <span class="cgc-post-listing__tag-name">ai</span>
+            <span class="cgc-post-listing__tag-name">#ai</span>
           </a>
         </li>
       </ul>
@@ -46,9 +46,9 @@ It is the `PostListing` component from this site's Quartz 4 days, carried over a
 - **Which posts:** every page with a source file of its own, `.mdx` pages included, but tag pages and the page of every tag, pages marked unlisted, and pages under an excluded tag (`private`, by default, and its subtags). The pages Quartz makes up, which no file backs, are never posts: a folder page, a tag page, the 404 page.
 - **On a tag page:** only the posts under the tag, those under its subtags included. `/tags/engineering` lists `engineering/ai`'s posts too. A tag with nothing to list says "No posts found." A tag page is `tags/<tag>`, or `tags/<tag>/index`, a tag's description file in Quartz 4's layout; `tags` itself, the index of every tag, is none.
 - **The description line** holds the date, the page's `description` from its frontmatter, and the reading time. A post with no `description` in its frontmatter shows none of the three, as in Quartz 4.
-- **Badges:** each of the post's tags, in its frontmatter order, named by its last segment. The ring is drawn in the tag's colour, through the property `cgc-tags` publishes for it, around the tag's icon, drawn inline as SVG in the same colour; the colour never paints text. Icons work as in [cgc-tag-list](https://blog.chaoticgood.computer/plugins/cgc-tag-list): a tag with no icon of its own gets its parent's, a tag with none in its lineage has an empty ring, and an icon id that doesn't exist fails the build. The badge links to the tag's page, and it is an internal link, so it gets Quartz's page preview on hover. The post's own title link gets none.
+- **Badges:** each of the post's tags, in its frontmatter order, named by its last segment after a `#`, as one string: `#ai`. Each badge holds the same bubble as [cgc-tag-list](https://blog.chaoticgood.computer/plugins/cgc-tag-list)'s, from the `@chaoticgoodcomputing/tags-core` library: the tag's icon, drawn inline as SVG in the theme's `--dark`, on a circle of the theme's `--lightgray`, in a rim of the tag's colour, through the property `cgc-tags` publishes for it. The tag's colour paints only the rim, never text. Icons work as in cgc-tag-list: a tag with no icon of its own gets its parent's, a tag with none in its lineage has an empty bubble, and an icon id that doesn't exist fails the build. With `showTagCounts`, the number of pages under the tag follows the name. The bubble, the name and the count are centred on one line, as in cgc-tag-list. The badge links to the tag's page, and it is an internal link, so it gets Quartz's page preview on hover. The post's own title link gets none.
 - **The toggle:** with `collapsedItemCount` set, the first posts show and the rest sit behind "Show N more posts".
-- **On a narrow screen**, 1000px or less, each badge shows only its ring. Pressing and holding one expands it to show the tag's name, without following the link. A tap follows the link.
+- **On a narrow screen**, 1000px or less, each badge shows only its bubble. Pressing and holding one expands it to show the tag's name, without following the link. A tap follows the link.
 
 ### Where it renders
 
@@ -116,11 +116,11 @@ The dates are the ones Quartz's `created-modified-date` plugin gives each page. 
 
 The CSS is library CSS, following [ADR-0003](https://github.com/chaoticgoodcomputing/blog/blob/main/docs/adr/0003-library-css-in-plugins-application-css-at-the-site.md):
 
-- **Classes:** one BEM block, `.cgc-post-listing`, with the elements `__title`, `__list`, `__post`, `__heading`, `__link`, `__description`, `__date`, `__tags`, `__tag`, `__tag-link`, `__ring`, `__icon`, `__tag-name`, `__tag-count`, `__more`, `__more-toggle` and `__empty`, and the modifier `__tag-link--expanded` for a badge a long press has opened. Selectors are single classes, apart from the narrow-screen rules that hide a badge's name and count.
-- **Cascade layer:** the rules sit in the `cgc.post-listing` layer, above Quartz's own styles and themes, and below any unlayered site CSS.
-- **Colours:** the description line and the count are the theme's `--gray`, the badge's background is `--lightgray` (`--gray` on hover), and the toggle is `--secondary` (`--tertiary` on hover). Each ring's colour is its tag's, and its icon, 18px square, is drawn in `currentColor`, so it takes the same colour.
+- **Classes:** one BEM block, `.cgc-post-listing`, with the elements `__title`, `__list`, `__post`, `__heading`, `__link`, `__description`, `__date`, `__tags`, `__tag`, `__tag-link`, `__tag-name`, `__tag-count`, `__more`, `__more-toggle` and `__empty`, and the modifier `__tag-link--expanded` for a badge a long press has opened. Selectors are single classes, apart from the narrow-screen rules that hide a badge's name and count. The bubble is its own block, `.cgc-tag-bubble`, with the element `__icon`, from `@chaoticgoodcomputing/tags-core`; this plugin ships its stylesheet and never restyles it.
+- **Cascade layer:** the rules, the bubble's included, sit in the `cgc.post-listing` layer, above Quartz's own styles and themes, and below any unlayered site CSS.
+- **Colours:** the description line and the count are the theme's `--gray`, the badge's background is `--lightgray` (`--gray` on hover), and the toggle is `--secondary` (`--tertiary` on hover). Each bubble's rim is its tag's colour, its circle `--lightgray` and its icon, 18px square, `--dark`.
 
-To change a tag's colour, change it in `cgc-tags`' dictionary, or override the tag's property, `--cgc-tag-…`, in your own CSS. The ring takes its colour from its own `color`, as [cgc-tag-list](https://blog.chaoticgood.computer/plugins/cgc-tag-list)'s rings do.
+To change a tag's colour, change it in `cgc-tags`' dictionary, or override the tag's property, `--cgc-tag-…`, in your own CSS. The bubble takes it as its own inline `border-color`, as [cgc-tag-list](https://blog.chaoticgood.computer/plugins/cgc-tag-list)'s bubbles do.
 
 The build checks the stylesheet with `@chaoticgoodcomputing/css-check` and fails if a selector reaches outside the block, if it defines a custom property or other name outside the block, or if it sets a colour literal or a font family other than one of the theme's four, such as `var(--bodyFont)`.
 

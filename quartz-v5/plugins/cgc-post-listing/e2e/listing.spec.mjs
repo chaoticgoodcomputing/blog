@@ -23,7 +23,7 @@ const post = (page, title) =>
     })
 const badge = (page, title, tag) =>
   post(page, title).locator(`.cgc-post-listing__tag[data-tag="${tag}"]`)
-const ring = (page, title, tag) => badge(page, title, tag).locator(".cgc-post-listing__ring")
+const bubble = (page, title, tag) => badge(page, title, tag).locator(".cgc-tag-bubble")
 
 test("lists the index's posts newest first", async ({ page }) => {
   await page.goto("/")
@@ -158,56 +158,59 @@ const DEFAULT = { light: "rgb(78, 78, 78)", dark: "rgb(212, 212, 212)" }
 // `markdown: { color: "light-dark(#b35f00, #de8200)" }`
 const MARKDOWN = { light: "rgb(179, 95, 0)", dark: "rgb(222, 130, 0)" }
 
-test("rings each post's tags in their colours from the tag engine", async ({
+test("paints each post's tags' rims in their colours from the tag engine", async ({
   page,
   colorScheme,
 }) => {
   await page.goto("/tags/listing")
-  await expect(ring(page, "Newest", "markdown")).toHaveCSS(
+  await expect(bubble(page, "Newest", "markdown")).toHaveCSS(
     "border-top-color",
     MARKDOWN[colorScheme],
   )
-  await expect(ring(page, "Newest", "listing")).toHaveCSS("border-top-color", DEFAULT[colorScheme])
-  // Tags in frontmatter order, each named by its last segment, the whole tag in the ring's tooltip.
+  await expect(bubble(page, "Newest", "listing")).toHaveCSS(
+    "border-top-color",
+    DEFAULT[colorScheme],
+  )
+  // Tags in frontmatter order, each named by its last segment, the whole tag in the bubble's tooltip.
   const tags = await post(page, "Newest")
     .locator(".cgc-post-listing__tag")
     .evaluateAll((items) => items.map((item) => item.dataset.tag))
   expect(tags).toEqual(["listing", "markdown"])
   await expect(
     badge(page, "Aster", "listing/sub").locator(".cgc-post-listing__tag-name"),
-  ).toHaveText("sub")
-  await expect(ring(page, "Aster", "listing/sub")).toHaveAttribute("title", "listing/sub")
+  ).toHaveText("#sub")
+  await expect(bubble(page, "Aster", "listing/sub")).toHaveAttribute("title", "listing/sub")
 })
 
-test("repaints the rings when the reader switches scheme", async ({ page, colorScheme }) => {
+test("repaints the rims when the reader switches scheme", async ({ page, colorScheme }) => {
   await page.goto("/tags/listing")
-  await expect(ring(page, "Newest", "markdown")).toHaveCSS(
+  await expect(bubble(page, "Newest", "markdown")).toHaveCSS(
     "border-top-color",
     MARKDOWN[colorScheme],
   )
   const other = await toggleScheme(page)
-  await expect(ring(page, "Newest", "markdown")).toHaveCSS("border-top-color", MARKDOWN[other])
+  await expect(bubble(page, "Newest", "markdown")).toHaveCSS("border-top-color", MARKDOWN[other])
 })
 
 test("never paints text in a tag's colour", async ({ page }) => {
   await page.goto("/tags/listing")
   const item = badge(page, "Newest", "markdown")
-  await expect(item.locator(".cgc-post-listing__ring")).toHaveText("")
+  await expect(item.locator(".cgc-tag-bubble")).toHaveText("")
   const text = await listing(page).evaluate((list) => getComputedStyle(list).color)
   await expect(item.locator(".cgc-post-listing__tag-name")).toHaveCSS("color", text)
 })
 
-// v4's narrow screens: only each badge's ring, until a long press expands it to its name.
+// v4's narrow screens: only each badge's bubble, until a long press expands it to its name.
 test.describe("on a narrow screen", () => {
   test.use({ viewport: { width: 400, height: 800 } })
 
-  test("shows only each ring, and a long press expands a badge without following its link", async ({
+  test("shows only each bubble, and a long press expands a badge without following its link", async ({
     page,
   }) => {
     await page.goto("/tags/listing")
     const link = badge(page, "Newest", "markdown").locator(".cgc-post-listing__tag-link")
     await expect(link.locator(".cgc-post-listing__tag-name")).toBeHidden()
-    await expect(link.locator(".cgc-post-listing__ring")).toBeVisible()
+    await expect(link.locator(".cgc-tag-bubble")).toBeVisible()
 
     await link.scrollIntoViewIfNeeded()
     const box = await link.boundingBox()
