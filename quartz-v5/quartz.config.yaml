@@ -455,8 +455,8 @@ plugins:
     layout:
       position: beforeBody
       priority: 30
-  # v4's TagList under a page's title (#69): badges ringed in their tag's colour and drawn with its
-  # icon (#71), each with the count of pages under it. A tag page lists its parent and subtags
+  # v4's TagList under a page's title (#69): badges, each holding its tag's bubble, the icon rimmed in
+  # the tag's colour (#71, #82), and the count of pages under it. A tag page lists its parent and subtags
   # instead, as v4's tags layout did.
   - source: ../plugins/cgc-tag-list
     enabled: true
@@ -468,8 +468,8 @@ plugins:
     layout:
       position: beforeBody
       priority: 30
-  # v4's PostListing (#42, #44, #73): every post, newest first with same-date posts A→Z, each ringed in
-  # its tags' colours, the first five shown. v4 put it after the body of the index, the 404 page and
+  # v4's PostListing (#42, #44, #73): every post, newest first with same-date posts A→Z, each with its
+  # tags' badges (#82), the first five shown. v4 put it after the body of the index, the 404 page and
   # the tags layout, where it lists the tag's posts. Quartz 5 has no `is-index` condition a plugin can
   # add (#70), so the listing keeps to the pages `showOn` names, and to tag pages, by itself.
   - source: ../plugins/cgc-post-listing

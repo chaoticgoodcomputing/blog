@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Quartz 5 component: a page's tags as badges, each ringed in its tag's colour and drawn with its icon, from the cgc-tags engine. See README.md and CONTEXT.md.",
+  "description": "Quartz 5 component: a page's tags as badges, each holding its tag's bubble: the tag's icon, rimmed in its colour, from the cgc-tags engine. See README.md and CONTEXT.md.",
   "exports": {
     ".": "./dist/index.js",
     "./components": "./dist/components/index.js",
@@ -36,7 +36,7 @@
   "quartz": {
     "name": "cgc-tag-list",
     "displayName": "Tag list",
-    "description": "A page's tags as badges, each ringed in its tag's colour and drawn with its icon, from the cgc-tags engine.",
+    "description": "A page's tags as badges, each holding its tag's bubble: the tag's icon, rimmed in its colour, from the cgc-tags engine.",
     "category": [
       "transformer",
       "component"

@@ -89,7 +89,8 @@ says it takes it with `takesPageHeader`. A frame that finds that flag on the pag
 
 ```tsx
 render({ componentData, beforeBody, pageBody, ...rest }) {
-  const handedOver = pageBody.takesPageHeader === true
+  // QuartzComponent declares no `takesPageHeader`, so a typed frame reads it through a cast.
+  const handedOver = (pageBody as { takesPageHeader?: unknown }).takesPageHeader === true
   const header = beforeBody.map((C) => <C {...componentData} />)
   return (
     <>

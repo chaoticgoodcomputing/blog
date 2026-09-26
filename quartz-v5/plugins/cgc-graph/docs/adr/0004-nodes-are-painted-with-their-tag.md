@@ -7,7 +7,7 @@ date: 2026-09-25
 
 v4 painted a graph node with its tag in two ways. A tag node was a grey disc ringed in the tag's
 colour, and a page was drawn in the theme's `secondary`, `tertiary` or `gray`, whatever its tags
-([nodeFactory.ts:87-97](https://github.com/chaoticgoodcomputing/blog/blob/9e48f89b256f511a94f07d473d46395d91730c53/quartz/components/scripts/graph/ui/nodeFactory.ts#L87-L97),
+([nodeFactory.ts:87-98](https://github.com/chaoticgoodcomputing/blog/blob/9e48f89b256f511a94f07d473d46395d91730c53/quartz/components/scripts/graph/ui/nodeFactory.ts#L87-L98),
 [styles.ts:31-45](https://github.com/chaoticgoodcomputing/blog/blob/9e48f89b256f511a94f07d473d46395d91730c53/quartz/components/scripts/graph/ui/styles.ts#L31-L45)).
 Each node also carried an icon, its first frontmatter tag's
 ([nodeFactory.ts:100-125](https://github.com/chaoticgoodcomputing/blog/blob/9e48f89b256f511a94f07d473d46395d91730c53/quartz/components/scripts/graph/ui/nodeFactory.ts#L100-L125)).
@@ -130,7 +130,7 @@ bubble.
   toggle, which took `nodeColors.private`, falls back to the theme's `--secondary` on the real site.
 
 v4 already drew a tag node this way, a grey disc ringed in its tag's colour
-([nodeFactory.ts:87-97](https://github.com/chaoticgoodcomputing/blog/blob/9e48f89b256f511a94f07d473d46395d91730c53/quartz/components/scripts/graph/ui/nodeFactory.ts#L87-L97)),
+([nodeFactory.ts:87-98](https://github.com/chaoticgoodcomputing/blog/blob/9e48f89b256f511a94f07d473d46395d91730c53/quartz/components/scripts/graph/ui/nodeFactory.ts#L87-L98)),
 so the bubble is v4's tag node, with the theme's gray in place of v4's grey, and a page with a tag now
 looks like one.
 

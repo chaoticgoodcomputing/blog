@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Quartz 5 component: the site's posts, newest first, filtered to the tag on a tag page, each with its tags ringed in their colours, around their icons, from the cgc-tags engine. See README.md and CONTEXT.md.",
+  "description": "Quartz 5 component: the site's posts, newest first, filtered to the tag on a tag page, each with its tags as badges, each holding its tag's bubble: the icon, rimmed in the tag's colour, from the cgc-tags engine. See README.md and CONTEXT.md.",
   "exports": {
     ".": "./dist/index.js",
     "./components": "./dist/components/index.js",
@@ -37,7 +37,7 @@
   "quartz": {
     "name": "cgc-post-listing",
     "displayName": "Post listing",
-    "description": "The site's posts, newest first, filtered to the tag on a tag page, each with its tags ringed in their colours, around their icons, from the cgc-tags engine.",
+    "description": "The site's posts, newest first, filtered to the tag on a tag page, each with its tags as badges, each holding its tag's bubble: the icon, rimmed in the tag's colour, from the cgc-tags engine.",
     "category": [
       "transformer",
       "component"

@@ -43,7 +43,9 @@ test("strokes the edges on the canvas, not only in the text alternative", async 
   await page.goto("/links/from-md")
   const graph = localGraph(page)
   await drawnGraph(graph)
-  await expect.poll(() => pixelsLike(graph, LIGHTGRAY[colorScheme], { translucent: true })).toBeGreaterThan(100)
+  await expect
+    .poll(() => pixelsLike(graph, LIGHTGRAY[colorScheme], { translucent: true }))
+    .toBeGreaterThan(100)
 })
 
 test("marks the node under the pointer in the text alternative, with no browser tooltip", async ({

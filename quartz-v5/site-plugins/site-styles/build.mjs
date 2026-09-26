@@ -23,8 +23,12 @@ const FONTS_CSS =
 const FAMILIES = ["IBM Plex Mono", "Inter"]
 // Google Fonts answers with the formats the asking browser takes: woff2 for any current one.
 const USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
-// Each fetch is kept, by the URL it answers, so a rebuild needs no network. Delete it to refetch.
-const CACHE = path.join("node_modules", ".cache", "site-styles-fonts", crypto.createHash("sha256").update(FONTS_CSS).digest("hex").slice(0, 16))
+// Each fetch is kept, so a rebuild needs no network. Delete it to refetch. It is keyed on everything
+// that shapes what it holds: the URL, the browser it asks as (which picks the format), the families
+// it must hold, and the code that names and checks its files (parseFaces, hoisted). So a change to
+// any of them fetches afresh, instead of silently serving files the new code never made.
+const CACHE_KEY = [FONTS_CSS, USER_AGENT, FAMILIES.join(","), parseFaces.toString()].join("\n")
+const CACHE = path.join("node_modules", ".cache", "site-styles-fonts", crypto.createHash("sha256").update(CACHE_KEY).digest("hex").slice(0, 16))
 const FONTS_OUT = "dist/fonts"
 
 async function get(url, as) {
