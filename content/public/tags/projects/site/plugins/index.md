@@ -82,6 +82,7 @@ flowchart LR
   plugin_cgc_tag_list -.-> library_icons
   plugin_cgc_tag_list -.-> library_tags_core
   plugin_cgc_tags -.-> library_tags_core
+  library_tags_core -.-> library_css_check
   library_widgets -.-> library_css_check
   library_widgets -.-> library_icons
   click plugin_cgc_annotator "/plugins/cgc-annotator"
