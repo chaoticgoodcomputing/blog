@@ -401,6 +401,15 @@ This **replaces** two earlier rules:
   had follow from the ring's inline `color`. The rim now takes the tag colour as an inline
   `border-color`, and the icon's `currentColor` is the bubble's `--dark`.
 
+**In a badge, the circle is the page's `--light`.** A badge's own background is also
+`--lightgray`, so a bubble in a badge showed only its rim, the circle lost against the badge, until
+hover turned the badge `--gray`. On seeing that, the owner decided (2026-09-26) that a bubble in a
+badge sets its circle apart: it takes the page's `var(--light)`, which differs from the badge's
+`--lightgray` at rest and from its `--gray` on hover, in both schemes. The rim and the icon are
+unchanged, and so is every bubble that isn't in a badge, the graph's nodes among them. The badge's
+circle is the bubble's `cgc-tag-bubble--badge` modifier, which `./bubble` publishes as
+`BADGE_PALETTE` and the lint holds to it.
+
 **The one exception: the tag explorer.** Its icons are bare glyphs in a tag's row, neither bubbles nor
 badges, so they stay painted whole in the tag colour. In the owner's words: "the Tag Explorer icons
 being colored should be the exception, since those aren't the bubble/badge style."
@@ -410,7 +419,8 @@ being colored should be the exception, since those aren't the bubble/badge style
 the libraries amendment above: one block, `cgc-tag-bubble`, checked by the library's lint and by each
 consuming plugin's build, and shipped by each consumer inside its own family sublayer, since a library
 has no `externalResources()`. `./bubble` also publishes the palette as property names (`rim`, the tag's
-colour property; `circle`, `--lightgray`; `icon`, `--dark`), which the lint holds the stylesheet to.
+colour property; `circle`, `--lightgray`; `icon`, `--dark`; and a badge's `circle`, `--light`), which the
+lint holds the stylesheet to.
 So a canvas, which CSS can't reach, paints a bubble from the same three through the colour resolver,
 and re-resolves them on `themechange` as the scheme amendment above requires. The graph's nodes
 become bubbles that way, in their own change

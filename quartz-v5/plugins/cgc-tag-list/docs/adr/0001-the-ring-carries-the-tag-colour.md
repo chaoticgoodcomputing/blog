@@ -48,7 +48,8 @@ recorded family-wide as ADR-0003's tag bubble amendment._
 
 The ring is now the family's **tag bubble**, drawn by `@chaoticgoodcomputing/tags-core` for this
 plugin and for `cgc-post-listing` alike. The owner set its colours: the tag colour paints only the
-rim, the circle is the theme's `--lightgray`, and the icon the theme's `--dark`. So the decision above
+rim, the circle is the theme's `--lightgray` (`--light` in a badge, such as this plugin's, by the owner's
+later decision the same day), and the icon the theme's `--dark`. So the decision above
 changes in one respect: the tag colour is set inline as the bubble's **`border-color`**, not its
 `color`, and the icon's `currentColor` is the bubble's `--dark`, which its stylesheet sets.
 

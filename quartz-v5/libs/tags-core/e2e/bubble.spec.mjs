@@ -1,7 +1,9 @@
 // The tag bubble (#82): the circle that holds a tag's icon, drawn once, by tags-core's `./bubble`,
 // for every badge in the family. As the owner's review notes of 2026-09-26 set it, and ADR-0003's
 // bubble amendment records, the tag colour paints only its rim, the circle is the theme's
-// `--lightgray` and the icon its `--dark`. A badge is the bubble and `#name`, with a count where the
+// `--lightgray` and the icon its `--dark`. In a badge, whose own background is `--lightgray`, the
+// circle is `--light` instead, so it stands out from the badge (the owner's decision of the same
+// day, recorded in the same amendment). A badge is the bubble and `#name`, with a count where the
 // plugin shows one, all centred on one line. Proven through the two plugins that draw badges,
 // cgc-tag-list and cgc-post-listing, on a tag page that shows both: `/tags/writing` lists the tag's
 // subtags, `writing/articles` among them, and its posts, og/tag-nested among them, tagged
@@ -27,7 +29,7 @@ const LIBRARY = path.resolve(import.meta.dirname, "..")
 // The colours the bubble should show now, in the scheme the page is showing.
 const expected = async (page) => ({
   rim: await resolvedColour(page, "var(--secondary)"),
-  circle: await resolvedColour(page, "var(--lightgray)"),
+  circle: await resolvedColour(page, "var(--light)"),
   icon: await resolvedColour(page, "var(--dark)"),
 })
 
@@ -50,7 +52,7 @@ const paintOf = (bubble) =>
 
 for (const [plugin, { badge, name }] of Object.entries(BADGES)) {
   test.describe(plugin, () => {
-    test("paints the bubble's rim in the tag colour, its circle gray and its icon dark, in either scheme", async ({
+    test("paints the bubble's rim in the tag colour, its circle the page's light and its icon dark, in either scheme", async ({
       page,
     }) => {
       await page.goto(PAGE)
@@ -68,6 +70,31 @@ for (const [plugin, { badge, name }] of Object.entries(BADGES)) {
       // The scheme changes under the page: CSS alone repaints the bubble.
       await toggleScheme(page)
       await check()
+    })
+
+    test("sets the bubble's circle apart from the badge behind it, at rest and on hover, in either scheme", async ({
+      page,
+    }) => {
+      await page.goto(PAGE)
+      const bubble = bubbleOf(badge(page, TAG))
+      // The circle, and the nearest background behind it that isn't transparent: the badge's.
+      const circleAndBadge = () =>
+        bubble.evaluate((bubble) => {
+          let under = bubble.parentElement
+          while (under && getComputedStyle(under).backgroundColor === "rgba(0, 0, 0, 0)") under = under.parentElement
+          return { circle: getComputedStyle(bubble).backgroundColor, badge: getComputedStyle(under).backgroundColor }
+        })
+      const apart = async () => {
+        // The badge's background eases on hover, so wait for it to settle.
+        await expect.poll(async () => { const { circle, badge } = await circleAndBadge(); return circle !== badge }).toBe(true)
+      }
+      for (const scheme of ["first", "second"]) {
+        await page.mouse.move(0, 0)
+        await apart()
+        await bubble.hover()
+        await apart()
+        if (scheme === "first") await toggleScheme(page)
+      }
     })
 
     test("writes the badge's name as one string, # and the tag's name", async ({ page }) => {
@@ -152,6 +179,12 @@ const PLANTED = [
     name: "a circle that isn't the palette's",
     replace: ["var(--lightgray)", "var(--gray)"],
     says: "background-color: var(--lightgray)",
+  },
+  {
+    // The badge's circle back on the badge's own background, where only the rim would show.
+    name: "a badge's circle that isn't the badge palette's",
+    replace: ["background-color: var(--light);", "background-color: var(--lightgray);"],
+    says: ".cgc-tag-bubble--badge must paint with the palette ./bubble publishes: background-color: var(--light)",
   },
 ]
 for (const { name, css, replace, says } of PLANTED) {

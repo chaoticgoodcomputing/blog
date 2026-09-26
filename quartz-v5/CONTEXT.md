@@ -195,7 +195,8 @@ _Avoid_: glyph (except for what the reader sees), emoji, symbol
 **Tag bubble**:
 The circle that holds a tag's icon, drawn the same wherever the site shows one, in a badge or as a
 graph node: a rim in the tag colour, a circle in the theme's light or dark gray, and the icon in its
-black or white. It holds no text.
+black or white. It holds no text. In a **tag badge**, whose own background is that gray, the circle
+is the page's background colour instead, so it stands out from the badge.
 _Avoid_: ring (its old name), dot, icon badge, node (for the bubble itself)
 
 **Tag badge**:

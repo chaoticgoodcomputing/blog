@@ -51,7 +51,7 @@ test("draws a tag's icon in its badge's bubble, in the page the site built, with
   expect(glyph.map(({ d }) => d)).toEqual([mdiPath("feather")])
   // In the HTML as built, not added by a script.
   const html = emitted.read("tags/writing.html")
-  expect(html).toMatch(/class="cgc-tag-bubble"[^>]*><svg [^>]*class="cgc-tag-bubble__icon"/)
+  expect(html).toMatch(/class="cgc-tag-bubble cgc-tag-bubble--badge"[^>]*><svg [^>]*class="cgc-tag-bubble__icon"/)
   expect(html).toContain(mdiPath("feather"))
   // v4 fetched each icon from jsDelivr (`@mdi/svg`), or `/static/icons/` for its own.
   expect(requests.filter((url) => /\.svg\b|@mdi\/|iconify|\/icons\//i.test(url))).toEqual([])

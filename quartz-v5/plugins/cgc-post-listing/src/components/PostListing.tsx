@@ -200,7 +200,7 @@ export default ((userOpts?: PostListingOptions) => {
                   <a class="internal cgc-post-listing__tag-link" href={href(`tags/${tag}`)}>
                     {/* tags-core's bubble: the tag colour paints its rim, never text (cgc-tag-list's ADR-0001). */}
                     <span
-                      {...tagBubble({ tag, color: properties.color, icon: iconOf.get(tag) })}
+                      {...tagBubble({ tag, color: properties.color, icon: iconOf.get(tag), badge: true })}
                     ></span>
                     {/* "#" and the name as one string, so they sit as one word (#82). */}
                     <span class="cgc-post-listing__tag-name">{`#${nameOf(tag)}`}</span>

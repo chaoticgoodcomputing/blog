@@ -88,7 +88,8 @@ _Avoid_: hidden page, unlisted page (stock Quartz's stronger state), draft
 
 **Bubble palette**:
 The three properties that paint a **tag bubble**, by the part each paints: the rim, the tag's
-**colour property**; the circle, the theme's `--lightgray`; the icon, the theme's `--dark`. `./bubble`
+**colour property**; the circle, the theme's `--lightgray` (in a **tag badge**, the page's `--light`,
+which stands out from the badge's own `--lightgray`); the icon, the theme's `--dark`. `./bubble`
 publishes it as names, so a canvas paints a bubble as the stylesheet does, through the colour
 resolver.
 _Avoid_: bubble colours, bubble theme

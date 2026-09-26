@@ -7,6 +7,8 @@
 // The palette is the owner's (review notes of 2026-09-26; ADR-0003's bubble amendment): the tag
 // colour paints only the rim, the circle is the theme's `--lightgray` and the icon its `--dark`, so a
 // bubble is light with a black icon in the light scheme, and dark with a white one in the dark.
+// In a badge, whose own background is `--lightgray`, the circle is the page's `--light` instead, so
+// it stands out from the badge (the owner's decision of the same day, in the same amendment).
 //
 // Runs anywhere: no DOM, no Preact, no imports, so a server-side component, a browser script and the
 // library's lint (which strips its types) can all read it.
@@ -15,12 +17,19 @@
 export const TAG_BUBBLE = {
   block: "cgc-tag-bubble",
   icon: "cgc-tag-bubble__icon",
+  /** A bubble in a badge, whose circle stands out from the badge's `--lightgray` background. */
+  badge: "cgc-tag-bubble--badge",
 } as const
 
 /** The theme's properties that paint every bubble alike: its circle, and its icon. */
 export const BUBBLE_PALETTE = {
   circle: "--lightgray",
   icon: "--dark",
+} as const
+
+/** What a bubble in a badge paints differently: its circle, the page's `--light`. */
+export const BADGE_PALETTE = {
+  circle: "--light",
 } as const
 
 /**
@@ -52,6 +61,8 @@ export interface TagBubbleOf {
    * bubble is empty.
    */
   icon?: string
+  /** Whether the bubble sits in a badge, which paints its circle `BADGE_PALETTE.circle`. */
+  badge?: boolean
 }
 
 /** The attributes of one bubble's element, a `<span>`, for a consumer to render. */
@@ -67,8 +78,8 @@ export interface TagBubbleAttributes {
  * a Preact component. The rim takes the tag colour inline, as the one property that differs from
  * tag to tag; the stylesheet paints the rest. The bubble holds no text, only the icon.
  */
-export const tagBubble = ({ tag, color, icon }: TagBubbleOf): TagBubbleAttributes => ({
-  class: TAG_BUBBLE.block,
+export const tagBubble = ({ tag, color, icon, badge }: TagBubbleOf): TagBubbleAttributes => ({
+  class: badge ? `${TAG_BUBBLE.block} ${TAG_BUBBLE.badge}` : TAG_BUBBLE.block,
   style: `border-color: var(${color})`,
   title: tag,
   ...(icon === undefined ? {} : { dangerouslySetInnerHTML: { __html: icon } }),

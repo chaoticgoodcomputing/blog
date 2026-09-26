@@ -117,7 +117,7 @@ export default ((userOpts?: TagListOptions) => {
                 href={resolveRelative(slug as never, `tags/${tag}` as never)}
               >
                 {/* tags-core's bubble: the tag colour paints its rim, never text (docs/adr/0001). */}
-                <span {...tagBubble({ tag, color, icon })}></span>
+                <span {...tagBubble({ tag, color, icon, badge: true })}></span>
                 {/* "#" and the name as one string, so they sit as one word (#82). */}
                 <span class="cgc-tag-list__name">{`#${nameOf(tag)}`}</span>
                 {opts.showCount && (

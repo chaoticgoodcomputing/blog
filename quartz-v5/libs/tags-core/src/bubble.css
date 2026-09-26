@@ -23,6 +23,15 @@
   line-height: 1;
 }
 
+/*
+ * A bubble in a badge. The badge's own background is `--lightgray`, the bubble's circle, which would
+ * leave only the rim showing, so here the circle is the page's `--light` (the owner's decision of
+ * 2026-09-26). BADGE_PALETTE in `./bubble` publishes it, and the lint holds this rule to it.
+ */
+.cgc-tag-bubble--badge {
+  background-color: var(--light);
+}
+
 /* The tag's icon: inline SVG whose every mark is `currentColor`, the bubble's `--dark`. v4's size. */
 .cgc-tag-bubble__icon {
   width: 18px;
