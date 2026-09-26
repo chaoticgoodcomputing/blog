@@ -40,7 +40,8 @@ its shape is typed in the package as `GraphIndex`.
 - **A page's date comes from the site's date plugin.** Without one, `date` is absent.
 - **Two indexes load on a page with search:** core's for search, and this one, fetched once per page
   load the first time a graph draws.
-- **Another plugin can read it,** such as a tag explorer sorting by date (FORK-LEDGER), by
+- **Another plugin can read it,** such as a tag explorer sorting by date
+  ([Fork ledger](https://github.com/chaoticgoodcomputing/blog/issues/21)), by
   depending on `cgc-graph`. Its shape is then a contract, as `cgcTags.json`'s is.
 
 ## Considered alternatives

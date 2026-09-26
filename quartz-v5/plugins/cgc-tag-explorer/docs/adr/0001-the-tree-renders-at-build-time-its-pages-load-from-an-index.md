@@ -7,14 +7,16 @@ date: 2026-09-25
 
 v4's TagExplorer built everything in the browser, on every navigation. It fetched the tag index and
 the content index
-([TagExplorer.inline.ts:576-580](https://github.com/chaoticgoodcomputing/blog/blob/c9f3016508c60a341d668e193552de3188a2d873/quartz/components/scripts/TagExplorer.inline.ts#L576-L580)),
+([TagExplorer.inline.ts:576-580](https://github.com/chaoticgoodcomputing/blog/blob/9e48f89b256f511a94f07d473d46395d91730c53/quartz/components/scripts/TagExplorer.inline.ts#L576-L580)),
 built the tree of tags, and put each tag's pages under it, sorted by date
-([:286-345](https://github.com/chaoticgoodcomputing/blog/blob/c9f3016508c60a341d668e193552de3188a2d873/quartz/components/scripts/TagExplorer.inline.ts#L286-L345)).
+([:286-345](https://github.com/chaoticgoodcomputing/blog/blob/9e48f89b256f511a94f07d473d46395d91730c53/quartz/components/scripts/TagExplorer.inline.ts#L286-L345)).
 Under v5 three things change. The `cgc-tags` engine publishes each page's tags, colours and icon ids
 at build time (ADR-0002). Icons are drawn only at build time, because the icons library reads the
 file system (#71). And stock `content-index` no longer carries `date`. The map's answer to that last
 point was that the explorer would read `date` from `cgc-graph`'s own index (#44). Decided while
 porting the explorer on [#76](https://github.com/chaoticgoodcomputing/blog/issues/76).
+
+> v4 links point at this repo at `9e48f89`.
 
 The real vault has about 630 pages under 37 tags. Its pages sit under their tags about 1,400 times,
 since most pages carry several tags and each is listed under every one.

@@ -13,14 +13,18 @@ a transformer, with an `order` above any theme's.
 
 > Source links point at upstream Quartz at
 > [`97a2d05`](https://github.com/jackyzha0/quartz/tree/97a2d05f80c4c50534959b1d0d41cc4b3895625e)
-> (v5.0.0), the ref `quartz-v5/upstream.json` pins, and at the stock plugins it installs.
+> (v5.0.0), the ref `quartz-v5/upstream.json` pins. The stock plugins named are the versions the
+> vendored copy installs: `@quartz-themes/core` 2.0.0, `@quartz-community/quartz-fonts`,
+> `crawl-links` and `note-properties` 1.0.0, and `syntax-highlighting` and `created-modified-date`
+> 1.0.1.
 
 **The order does two jobs.** Plugins emit their `externalResources()` CSS transformers first, then
 emitters, each group sorted by `order`
-([plugins/index.ts:11](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/index.ts#L11)),
+([plugins/index.ts:11](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/index.ts#L11),
+[config-loader.ts:416-429](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L416-L429)),
 so this plugin's `order` is the family's position. And the loader refuses a consumer ordered below
 its engine
-([config-loader.ts:142](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L142)),
+([config-loader.ts:142-148](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L142-L148)),
 while a transformer's `order` is also its place in the markdown pipeline. So the engine's `order` is
 a floor under every consumer transformer's pipeline position too. The number should be as low as the
 first job allows.

@@ -13,7 +13,7 @@ had moved out of place would be morphed away or duplicated. Stock v5's graph ins
 sidebar's `z-index`, an inline style on an element it doesn't own (ADR-0003 rule 2), and clears it
 again when the graph closes
 ([graph.inline.ts:677-680](https://github.com/quartz-community/graph/blob/e647019c05ab2a3279c9cddd7bc2f18acb9858b8/src/components/scripts/graph.inline.ts#L677-L680)
-and [655-658](https://github.com/quartz-community/graph/blob/e647019c05ab2a3279c9cddd7bc2f18acb9858b8/src/components/scripts/graph.inline.ts#L655-L658),
+and [:655-658](https://github.com/quartz-community/graph/blob/e647019c05ab2a3279c9cddd7bc2f18acb9858b8/src/components/scripts/graph.inline.ts#L655-L658),
 at v1.0.0, the version the vendored copy installs). Decided on
 [`cgc-graph`: the graph, with its own content index](https://github.com/chaoticgoodcomputing/blog/issues/74).
 

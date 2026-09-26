@@ -6,14 +6,15 @@ date: 2026-09-25
 # One component draws both cards
 
 v4 had two sidebar components, `SocialMediaGitHub` and `SocialMediaBlueSky`, placed one after the
-other in the right sidebar of the home page, each wrapped in `DesktopOnly` (FORK-LEDGER
-`layouts/index.layout.ts`). [Where do the ledger's unassigned pieces live?](https://github.com/chaoticgoodcomputing/blog/issues/44)
+other in the right sidebar of the home page, each wrapped in `DesktopOnly`
+([index.layout.ts:49-66](https://github.com/chaoticgoodcomputing/blog/blob/9e48f89b256f511a94f07d473d46395d91730c53/quartz/layouts/index.layout.ts#L49-L66)).
+[Where do the ledger's unassigned pieces live?](https://github.com/chaoticgoodcomputing/blog/issues/44)
 put both in one plugin, `cgc-social`. But Quartz 5 lays out one component per config entry. Decided
 on [cgc-social: social sidebar components](https://github.com/chaoticgoodcomputing/blog/issues/80).
 
 > Source links point at upstream Quartz at
 > [`97a2d05`](https://github.com/jackyzha0/quartz/tree/97a2d05f80c4c50534959b1d0d41cc4b3895625e)
-> (v5.0.0), the ref `quartz-v5/upstream.json` pins.
+> (v5.0.0), the ref `quartz-v5/upstream.json` pins. v4 links point at this repo at `9e48f89`.
 
 ## Decision
 

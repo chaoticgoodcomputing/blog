@@ -177,7 +177,8 @@ since a repeated name is a no-op.
   after every `externalResources()` sheet, so it can't position `cgc` below a theme and needs no
   engine (`cgc-mdx` ADR-0003). The loader then **refuses** to build
   if a consumer is ordered before the engine, or if the engine is missing
-  ([config-loader.ts:142](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L142)).
+  ([config-loader.ts:142-148](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L142-L148),
+  [:126-131](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L126-L131)).
   This is ADR-0002's engine shape with a cascade position as its published artifact, and it plays
   the part of ITCSS's settings tier for the family: one declaration, one knob. Its `order` must
   exceed any theme's (`@quartz-themes/core` defaults to 10). _Settled on_
@@ -217,7 +218,8 @@ since a repeated name is a no-op.
   any heading font a `cgc-*` component sets on its own headings.
 - **A CSS-only transformer needs a no-op hook** (`htmlPlugins: () => []`). Otherwise the loader skips it
   with only a warning
-  ([config-loader.ts:542](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L542)).
+  ([config-loader.ts:474-481](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L474-L481),
+  [:542-545](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L542-L545)).
 - **`order` does two jobs.** For a transformer it sets pipeline position as well as CSS position, so
   the engine's `order` puts a floor under every consumer's pipeline position.
 

@@ -23,7 +23,7 @@ and this records how, decided on
 #20 expected to swap the body through the `tag` layout, the one stock tag-page names, and to fall
 back to a page type of our own if that didn't work. It doesn't. A page's body comes from its page
 type alone
-([dispatcher.ts:31](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/pageTypes/dispatcher.ts#L19-L38)),
+([dispatcher.ts:19-38](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/pageTypes/dispatcher.ts#L19-L38)),
 and a `layout.byPageType` entry can only exclude plugins, clear positions and pick a frame
 ([loader/types.ts:174-179](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/types.ts#L174-L179),
 [config-loader.ts:659-693](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L659-L693)).
@@ -45,7 +45,7 @@ throws: a hook's throw fails the build, where a factory's is logged and skipped.
 tag that only `.mdx` pages carry, which cgc-mdx makes up, got no page, and its badges linked
 nowhere. v4 counted them. Quartz empties its list of generated pages before each pass and generates
 in priority order
-([emit.ts:69](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/processors/emit.ts#L65-L70),
+([emit.ts:65-70](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/processors/emit.ts#L65-L70),
 [dispatcher.ts:163-202](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/pageTypes/dispatcher.ts#L163-L202)),
 so the plugin hands stock's `generate` those pages as well. It sees the page types generated
 before it: those that outrank stock's priority, 10, as cgc-mdx's 25 does, and those at 10 that come

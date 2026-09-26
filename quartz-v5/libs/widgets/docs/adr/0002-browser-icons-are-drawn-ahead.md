@@ -13,7 +13,8 @@ library into `src/<widget>/icons.ts`, one exported SVG string per name. That mod
 and the package's `lint` target fails when it differs from what the library draws. Decided while
 building [`bluesky-post`](https://github.com/chaoticgoodcomputing/blog/issues/75).
 
-> v4 links point at this repo at `9e48f89`, and links into this repo's v5 packages at `c9f3016`.
+> v4 links point at this repo at `9e48f89`. This repo's v5 packages are named, not linked: no public
+> commit holds them until cutover (root ADR-0004), so a permalink into them would 404.
 
 ## Why
 
@@ -27,16 +28,14 @@ Its counts were emoji
 which each platform draws in its own colours, whatever the scheme.
 
 **The icons library can't reach the browser.** It reads the file system and resolves installed
-sets through `createRequire`
-([index.ts:9-11](https://github.com/chaoticgoodcomputing/blog/blob/c9f3016508c60a341d668e193552de3188a2d873/quartz-v5/libs/icons/src/index.ts#L9-L11)),
-so `cgc-mdx`'s browser build of a widget
-([bundle.ts:145](https://github.com/chaoticgoodcomputing/blog/blob/c9f3016508c60a341d668e193552de3188a2d873/quartz-v5/plugins/cgc-mdx/src/bundle.ts#L145))
-can't bundle it. Its own constraint says as much: a script that needs icons in the browser gets them
-drawn into an artifact of its own.
+sets through `createRequire`: its `src/index.ts` imports `node:fs`, `node:path` and `node:module`.
+So `cgc-mdx`'s browser build of a widget, the esbuild build with `platform: "browser"` in its
+`src/bundle.ts`, can't bundle it. Its own constraint says as much: a script that needs icons in the
+browser gets them drawn into an artifact of its own.
 
 **Nor can it run in the widget's build-time render.** `cgc-mdx` renders a widget from a Node bundle
-it writes to a temporary directory
-([bundle.ts:156-163](https://github.com/chaoticgoodcomputing/blog/blob/c9f3016508c60a341d668e193552de3188a2d873/quartz-v5/plugins/cgc-mdx/src/bundle.ts#L156-L163)).
+it writes to a temporary directory: the same `src/bundle.ts` builds it with `platform: "node"` into a
+directory from `mkdtemp`.
 The library would be inlined there with `@iconify/tools`, which fails on load once bundled (the
 icons library's ADR-0001), and its installed sets would resolve from the temporary directory, where
 there are none. Even if it could draw there, the icons would still have to reach the browser.

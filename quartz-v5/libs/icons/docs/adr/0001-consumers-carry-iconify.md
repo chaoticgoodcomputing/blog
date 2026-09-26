@@ -17,8 +17,8 @@ Decided while building the library into its first consumer, `cgc-tag-list`, on
 
 **`@iconify/tools` can't be bundled for Node.** Its `cleanupSVG`, which every import runs, converts
 styles to attributes with SVGO
-([cleanup.ts:7](https://github.com/iconify/tools/blob/bd16da78f29c7df335508fac47fb36d327530914/@iconify/tools/src/svg/cleanup.ts#L7),
-[svgo-style.ts:8](https://github.com/iconify/tools/blob/bd16da78f29c7df335508fac47fb36d327530914/@iconify/tools/src/svg/cleanup/svgo-style.ts#L8)).
+([cleanup.ts:17-22](https://github.com/iconify/tools/blob/bd16da78f29c7df335508fac47fb36d327530914/@iconify/tools/src/svg/cleanup.ts#L17-L22),
+[svgo-style.ts:43-46](https://github.com/iconify/tools/blob/bd16da78f29c7df335508fac47fb36d327530914/@iconify/tools/src/svg/cleanup/svgo-style.ts#L43-L46)).
 SVGO parses CSS with css-tree, which loads its data files at run time through a `require` of its own
 ([data-patch.js:1-4](https://github.com/csstree/csstree/blob/8a6caba481be4cae4b0e8690af643ff8e59271f2/lib/data-patch.js#L1-L4)).
 esbuild leaves that call alone, so a bundle for Node fails on load looking for `../data/patch.json`

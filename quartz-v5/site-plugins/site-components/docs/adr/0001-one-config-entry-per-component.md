@@ -25,9 +25,9 @@ places, and gives each entry a name of its own, through an object source:
 
 **An entry's layout places one component, which the loader finds by the entry's name.** It
 takes the plugin name from the source
-([config-loader.ts:756](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L756)).
+([config-loader.ts:749](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L749)).
 Then it looks for a component registered under that name, and after that under its PascalCase
-([:758-780](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L758-L780)).
+([:751-773](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L751-L773)).
 A plugin's components are registered under their export names. The plugin's own name is registered
 only when the manifest declares exactly one component
 ([componentLoader.ts:52-65](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/componentLoader.ts#L52-L65)).

@@ -21,7 +21,8 @@ nothing else, before any emitter runs
 and on a watch rebuild before the changed files are even parsed
 ([build.ts:227](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/build.ts#L227)).
 The transformer sees each page's tags, but above 191 files it runs in parse workers
-([parse.ts:154-155](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/processors/parse.ts#L154-L155)),
+([parse.ts:145-146](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/processors/parse.ts#L145-L146),
+[:154-173](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/processors/parse.ts#L154-L173)),
 whose writes never reach the main thread (ADR-0002). Only an emitter sees every page, those page
 types generate among them
 ([emit.ts:76-84](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/processors/emit.ts#L76-L84)).

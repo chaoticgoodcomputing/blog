@@ -19,6 +19,7 @@ which resolved the map's `cgc-mdx` fog.
 > [`97a2d05`](https://github.com/jackyzha0/quartz/tree/97a2d05f80c4c50534959b1d0d41cc4b3895625e)
 > (v5.0.0), the ref `quartz-v5/upstream.json` pins. The stock plugins named are the versions the
 > vendored copy installs: `@quartz-community/utils` 1.0.1, `crawl-links` and `note-properties` 1.0.0.
+> v4 links point at this repo at `9e48f89`.
 
 ## Why
 
@@ -34,7 +35,8 @@ which drops only a `.md` or `.html` extension. So the list holds `lab/life.mdx`,
 that isn't Markdown. The vault has seven such wikilinks, and eight Markdown links like
 `[resume](/resume.mdx)`. `transformInternalLink` slugifies the target with the same function, so the
 link came out as `…/dice.mdx` under every resolution strategy, the site's `absolute` included. v4
-never had either problem, because its fork of `slugifyFilePath` dropped `.mdx` too. The fork
+never had either problem, because its fork of `slugifyFilePath` dropped `.mdx` too
+([path.ts:76-78](https://github.com/chaoticgoodcomputing/blog/blob/9e48f89b256f511a94f07d473d46395d91730c53/quartz/util/path.ts#L76-L78)). The fork
 ledger's `util/path.ts (.mdx slug)` row makes that this plugin's job.
 
 **A transformer is the one plugin hook early enough.** `.md` pages are parsed, and their links

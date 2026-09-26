@@ -5,14 +5,21 @@ date: 2026-09-25
 
 # The listing keeps to its own pages
 
-v4 put its PostListing after the body of three layouts: the index, the tags layout and the 404 page
-(FORK-LEDGER `components/PostListing.tsx`). Quartz 5 has one layout, and a component's config entry
+v4 put its PostListing after the body of three layouts: the index
+([index.layout.ts:41-45](https://github.com/chaoticgoodcomputing/blog/blob/9e48f89b256f511a94f07d473d46395d91730c53/quartz/layouts/index.layout.ts#L41-L45)),
+the tags layout
+([tags.layout.ts:40-46](https://github.com/chaoticgoodcomputing/blog/blob/9e48f89b256f511a94f07d473d46395d91730c53/quartz/layouts/tags.layout.ts#L40-L46))
+and the 404 page
+([404.layout.ts:22-26](https://github.com/chaoticgoodcomputing/blog/blob/9e48f89b256f511a94f07d473d46395d91730c53/quartz/layouts/404.layout.ts#L22-L26)).
+Quartz 5 has one layout, and a component's config entry
 places it on every page. A `condition` narrows that, but Quartz 5 ships only `not-index`, and #44's
 plan, `site-components` registering an `is-index` condition, can't work: the loader's condition
 registry is bundled into Quartz's own build, where no plugin can reach it (#70,
 `site-plugins/site-components/CONTEXT.md`). `byPageType` can only remove a component from a page type,
 and the index is a content page like any note. Decided on
 [`cgc-post-listing`](https://github.com/chaoticgoodcomputing/blog/issues/73).
+
+> v4 links point at this repo at `9e48f89`.
 
 ## Decision
 
