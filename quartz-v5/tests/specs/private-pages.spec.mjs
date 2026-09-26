@@ -8,7 +8,6 @@
 // Proven on a scratch site built from the site config with the anchored list rewritten to name a
 // second private tag the way a site might write it, `Secret Stash/`: if any plugin read the list
 // from anywhere but the anchor, or read it differently, it would disagree about the pages under it.
-import fs from "node:fs"
 import path from "node:path"
 import { createRequire } from "node:module"
 import { test, expect, routeSite } from "../harness/test.mjs"
@@ -76,7 +75,7 @@ test.beforeAll(async () => {
   })
   expect(site.code, site.output).toBe(0)
 })
-test.afterAll(() => site && fs.rmSync(site.root, { recursive: true, force: true }))
+test.afterAll(() => site?.remove())
 
 test("cgc-seo asks search engines not to index the private pages, nor the private tags' pages", async ({
   page,

@@ -77,7 +77,7 @@ for (const [label, configOf] of Object.entries(CONFIGS)) {
         `sublayers of cgc opened with ${off.join(", ")} off: each package they name must list "${ENGINE}" in manifest.dependencies`,
       ).toEqual([])
     } finally {
-      fs.rmSync(site.root, { recursive: true, force: true })
+      site.remove()
     }
   })
 }
