@@ -106,6 +106,81 @@ test("the post card's block and the Bluesky widget's are two blocks", async () =
   expect(output).toContain(".cgc-bluesky__text")
 })
 
+// A block's names are its own: /bluesky's `cgc-bluesky` is a prefix of the post card's
+// `cgc-bluesky-post`, but a name in the longer block's namespace is still that block's.
+test("the Bluesky widget's names don't reach into the post card's", async () => {
+  for (const css of [
+    ".cgc-bluesky { --cgc-bluesky-post-gap: 1rem; }",
+    "@keyframes cgc-bluesky-post-spin { to { opacity: 0; } }",
+  ]) {
+    const { code, output } = await lintPlanted((dir) =>
+      fs.appendFileSync(path.join(dir, "bluesky", "bluesky.css"), `\n${css}\n`),
+    )
+    expect(code, css).not.toBe(0)
+    expect(output, css).toMatch(/bluesky[\\/]bluesky\.css:\d+:\d+/)
+    expect(output, css).toContain("cgc-bluesky-post")
+  }
+})
+
+test("a selector can't reach beside or above the block, nested or not", async () => {
+  for (const [css, named] of [
+    [".cgc-bluesky ~ p { margin: 0; }", ".cgc-bluesky ~ p"],
+    [".cgc-pdf-viewer ~ p { color: var(--dark); }", ".cgc-pdf-viewer ~ p"],
+    [".cgc-pdf-viewer__page + .sidebar { display: none; }", "+ .sidebar"],
+    [".cgc-pdf-viewer { & ~ p { margin: 0; } }", "& ~ p"],
+    [".cgc-pdf-viewer { .sidebar & { margin: 0; } }", ".sidebar &"],
+    [".cgc-pdf-viewer:has(~ .sidebar) { margin: 0; }", ":has(~ .sidebar)"],
+    [".cgc-pdf-viewer__page:nth-child(1 of :root *) { margin: 0; }", ":root *"],
+  ]) {
+    const { code, output } = await lintPlanted(appendCss(css))
+    expect(code, css).not.toBe(0)
+    expect(output, css).toContain(named)
+  }
+})
+
+test("global names a widget can't namespace fail: @property and @font-face", async () => {
+  for (const [css, named] of [
+    [
+      "@property --cgc-pdf-viewer-angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }",
+      "@property",
+    ],
+    ["@font-face { font-family: Inter; src: local(Inter); }", "@font-face"],
+    [".cgc-pdf-viewer { view-transition-name: page; }", "page"],
+  ]) {
+    const { code, output } = await lintPlanted(appendCss(css))
+    expect(code, css).not.toBe(0)
+    expect(output, css).toContain(named)
+  }
+})
+
+test("widget CSS takes its skin from the theme", async () => {
+  for (const [css, named] of [
+    [".cgc-pdf-viewer { color: white; }", "white"],
+    [".cgc-pdf-viewer { background: #fff; }", "#fff"],
+    [".cgc-pdf-viewer { font: 12px Georgia; }", "Georgia"],
+    [
+      ".cgc-pdf-viewer { --cgc-pdf-viewer-font: Georgia; font-family: var(--cgc-pdf-viewer-font); }",
+      "var(--cgc-pdf-viewer-font)",
+    ],
+    [".cgc-pdf-viewer { color: WindowText; }", "WindowText"],
+  ]) {
+    const { code, output } = await lintPlanted(appendCss(css))
+    expect(code, css).not.toBe(0)
+    expect(output, css).toContain(named)
+  }
+})
+
+test("a relative import that leaves the package fails, since the check can't see it", async () => {
+  const specifier = "../../node_modules/pdfjs-dist/web/pdf_viewer.css"
+  const { code, output } = await lintPlanted((dir) => {
+    const file = path.join(dir, "pdf-viewer", "index.tsx")
+    fs.writeFileSync(file, `import "${specifier}"\n${fs.readFileSync(file, "utf8")}`)
+  })
+  expect(code).not.toBe(0)
+  expect(output).toMatch(/pdf-viewer[\\/]index\.tsx:1:\d+/)
+  expect(output).toContain(specifier)
+})
+
 // draw-icons.mjs imports the icons library's TypeScript source, as package.json's scripts run it.
 const STRIP_TYPES = ["--experimental-strip-types", "--disable-warning=ExperimentalWarning"]
 

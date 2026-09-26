@@ -167,7 +167,7 @@ The CSS is library CSS, following [ADR-0003](https://github.com/chaoticgoodcompu
 
 The canvas can't use CSS, so the plugin resolves each colour in script, the theme's, the options' and each tag's alike, and resolves them again when the colour scheme changes. A tag's colour is its `--cgc-tag-…` property from `cgc-tags`, so a site that restyles a tag's colour restyles its nodes too. Icons are cut out in the theme's `--light`.
 
-The build checks the stylesheet and fails if a selector reaches outside the block, or if it sets a colour literal or a font other than a theme's.
+The build checks the stylesheet with `@chaoticgoodcomputing/css-check` and fails if a selector reaches outside the block, if it defines a custom property or other name outside the block, or if it sets a colour literal or a font family other than one of the theme's four, such as `var(--bodyFont)`.
 
 ## Develop
 

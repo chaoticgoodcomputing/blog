@@ -20,12 +20,11 @@
     "@quartz-community/utils": "*",
     "preact": "^10.29.0"
   },
-  "//devDependencies": "Build-time only: esbuild bundles dist/, inlining our library and reading-time, and PostCSS checks the stylesheet against ADR-0003 before it ships (build.mjs). The library is a `file:` spec on main, which a release commit rewrites to the release's published version (ADR-0005).",
+  "//devDependencies": "Build-time only: esbuild bundles dist/, inlining our library and reading-time, and @chaoticgoodcomputing/css-check checks the stylesheet against ADR-0003 before it ships (build.mjs). The libraries are `file:` specs on main, which a release commit rewrites to the release's published version (ADR-0005).",
   "devDependencies": {
+    "@chaoticgoodcomputing/css-check": "file:../../libs/css-check",
     "@chaoticgoodcomputing/tags-core": "file:../../libs/tags-core",
     "esbuild": "^0.28.2",
-    "postcss": "^8.5.28",
-    "postcss-selector-parser": "^7.1.6",
     "reading-time": "^1.5.0"
   },
   "quartz": {

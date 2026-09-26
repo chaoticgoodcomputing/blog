@@ -137,7 +137,7 @@ The CSS is library CSS, following [ADR-0003](https://github.com/chaoticgoodcompu
 - **Colours:** all from the theme's properties: `--light`, `--lightgray`, `--gray`, `--dark` and `--secondary`. So the cards follow the colour scheme and any theme.
 - **The calendar's colours** are five custom properties, `--cgc-social-level-0` to `--cgc-social-level-4`. By default they run from `--lightgray` to `--secondary`, through mixes of the two. `levelColors` sets them, and so can your own CSS. Each value is a colour value: a colour, a `var()` reference, or `light-dark()` for a different colour in each scheme. The build fails on a value that isn't one. A site that uses `light-dark()` needs a `color-scheme` for it to follow, which Quartz's dark mode toggle gives it.
 
-The build checks the stylesheet and fails if a selector reaches outside the block, or if it sets a colour literal or a `font-family`.
+The build checks the stylesheet with `@chaoticgoodcomputing/css-check` and fails if a selector reaches outside the block, if it defines a custom property or other name outside the block, or if it sets a colour literal or a font family other than one of the theme's four, such as `var(--bodyFont)`.
 
 ## Develop
 

@@ -90,6 +90,8 @@ that takes the renderer takes its CSS too. Its size is a scale of custom propert
 
 ## CSS
 
-Every subpath's CSS is one BEM block, `cgc-<name>`, and never selects anything outside it. The
-package's `lint` script checks this (`npm run lint`), along with the icons a widget carries, which
-must be exactly what the icons library draws (`npm run icons` redraws them).
+Every subpath's CSS is one BEM block, `cgc-<name>`, and never selects anything outside it. Its
+colours and fonts come from the theme's properties. The package's `lint` script checks this
+(`npm run lint`) with `@chaoticgoodcomputing/css-check`, the check the family's plugins run in their
+builds, along with the icons a widget carries, which must be exactly what the icons library draws
+(`npm run icons` redraws them).

@@ -167,9 +167,10 @@ directory is deliberately _not_ a pnpm workspace package, so the root `pnpm inst
 
 **Our libraries are the one thing here that is a pnpm workspace package.** `pnpm-workspace.yaml`
 at the repo root lists `quartz-v5/libs/*` and nothing else, so the root `pnpm install` installs each
-library's own dependencies beside its source. A plugin names a library it inlines as a
-`file:../../libs/<name>` devDependency (ADR-0005), which npm only links: whatever the library
-imports resolves from the library's own install, never the plugin's. The e2e harness and
+library's own dependencies beside its source. A plugin names a library it inlines, or one its
+build runs (`@chaoticgoodcomputing/css-check`), as a `file:../../libs/<name>` devDependency
+(ADR-0005), which npm only links: whatever the library imports resolves from the library's own
+install, never the plugin's. The e2e harness and
 `site-v5:prebuild` run `pnpm install --frozen-lockfile` when a library has none.
 Content reaches a library the same way: the root `package.json` depends on
 `@chaoticgoodcomputing/widgets` by `workspace:*`, so an `.mdx` page in the vault or the e2e fixture

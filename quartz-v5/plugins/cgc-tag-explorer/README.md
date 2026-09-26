@@ -115,7 +115,7 @@ The CSS is library CSS, following [ADR-0003](https://github.com/chaoticgoodcompu
 
 To change a tag's colour, change it in `cgc-tags`' dictionary, or override the tag's property, `--cgc-tag-…`, in your own CSS. The mark takes its colour from its own inline `color`, so a rule on the mark alone can't change it.
 
-The build checks the stylesheet. It fails if a selector reaches outside the block, if the sheet sets a colour literal or a `font-family`, or if it has any media query other than the drawer's.
+The build checks the stylesheet with `@chaoticgoodcomputing/css-check`. It fails if a selector reaches outside the block, if the sheet defines a custom property or other name outside the block, if it sets a colour literal or a font family other than one of the theme's four, such as `var(--bodyFont)`, or if it has any media query other than the drawer's.
 
 ## Develop
 

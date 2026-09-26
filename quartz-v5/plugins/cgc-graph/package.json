@@ -27,8 +27,9 @@
     "@iconify/tools": "5.0.14",
     "@iconify/utils": "3.1.7"
   },
-  "//devDependencies": "Build-time only: esbuild bundles dist/, inlining our libraries and the browser runtime's d3 modules and tween.js, and PostCSS checks the stylesheet against ADR-0003 before it ships (build.mjs). The libraries are `file:` specs on main, which a release commit rewrites to the release's published version (ADR-0005).",
+  "//devDependencies": "Build-time only: esbuild bundles dist/, inlining our libraries and the browser runtime's d3 modules and tween.js, and @chaoticgoodcomputing/css-check checks the stylesheet against ADR-0003 before it ships (build.mjs). The libraries are `file:` specs on main, which a release commit rewrites to the release's published version (ADR-0005).",
   "devDependencies": {
+    "@chaoticgoodcomputing/css-check": "file:../../libs/css-check",
     "@chaoticgoodcomputing/icons": "file:../../libs/icons",
     "@chaoticgoodcomputing/tags-core": "file:../../libs/tags-core",
     "@tweenjs/tween.js": "^25.0.0",
@@ -40,9 +41,7 @@
     "d3-force": "^3.0.0",
     "d3-selection": "^3.0.0",
     "d3-zoom": "^3.0.0",
-    "esbuild": "^0.28.2",
-    "postcss": "^8.5.28",
-    "postcss-selector-parser": "^7.1.6"
+    "esbuild": "^0.28.2"
   },
   "quartz": {
     "name": "cgc-graph",

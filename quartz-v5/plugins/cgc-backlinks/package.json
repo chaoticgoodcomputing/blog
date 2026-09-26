@@ -26,13 +26,12 @@
     "@iconify/tools": "5.0.14",
     "@iconify/utils": "3.1.7"
   },
-  "//devDependencies": "Build-time only: esbuild bundles dist/, inlining our libraries, and PostCSS checks the stylesheet against ADR-0003 before it ships (build.mjs). The libraries are `file:` specs on main, which a release commit rewrites to the release's published version (ADR-0005). tags-core is a library, not the cgc-tags engine, so inlining it adds no plugin dependency.",
+  "//devDependencies": "Build-time only: esbuild bundles dist/, inlining our libraries, and @chaoticgoodcomputing/css-check checks the stylesheet against ADR-0003 before it ships (build.mjs). The libraries are `file:` specs on main, which a release commit rewrites to the release's published version (ADR-0005). tags-core is a library, not the cgc-tags engine, so inlining it adds no plugin dependency.",
   "devDependencies": {
+    "@chaoticgoodcomputing/css-check": "file:../../libs/css-check",
     "@chaoticgoodcomputing/icons": "file:../../libs/icons",
     "@chaoticgoodcomputing/tags-core": "file:../../libs/tags-core",
-    "esbuild": "^0.28.2",
-    "postcss": "^8.5.28",
-    "postcss-selector-parser": "^7.1.6"
+    "esbuild": "^0.28.2"
   },
   "quartz": {
     "name": "cgc-backlinks",

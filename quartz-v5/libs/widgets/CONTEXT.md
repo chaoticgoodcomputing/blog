@@ -24,11 +24,14 @@ and keyframes. One block never selects another's.
 _Avoid_: namespace (for one widget's), prefix, scope
 
 **Library-CSS check**:
-The package's `lint` target, `lint-css.mjs`: ADR-0003 rule 3's PostCSS pass run in check mode,
-since a library has no build to transform in. It fails on any selector whose leftmost compound
-doesn't carry a class of its directory's block, any custom property or keyframes name outside it,
-and any CSS it can't see: an `@import`, or a stylesheet imported from another package. It rewrites
-nothing, so the shipped CSS is exactly the source.
+The check every styled package runs, [`@chaoticgoodcomputing/css-check`](../css-check/CONTEXT.md),
+run here by the package's `lint` target, `lint-css.mjs`, since a library has no build. Each
+widget's stylesheet is checked against its directory's block, with the other widgets' blocks as
+its neighbours, at `"inside"` reach: a selector starts at an element of the block and may reach
+anything inside it (PDF.js writes the text layer), never beside or above it. It also fails a name
+outside the block, a colour or font literal, a layer, and any CSS it can't see: an `@import`, or a
+stylesheet imported from another package or from outside `src/`. It rewrites nothing, so the
+shipped CSS is exactly the source.
 _Avoid_: stylelint, prefixing pass (that one transforms)
 
 **Icon module**:

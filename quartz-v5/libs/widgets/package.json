@@ -30,11 +30,10 @@
   "peerDependencies": {
     "preact": "^10.0.0"
   },
-  "//devDependencies": "Types, the CSS check the lint target runs, and the icons library, which draws the icons a widget shows in the browser into its committed icons.ts (docs/adr/0002).",
+  "//devDependencies": "Types; the library-CSS check the lint target runs (@chaoticgoodcomputing/css-check); and the icons library, which draws the icons a widget shows in the browser into its committed icons.ts (docs/adr/0002). Libraries depend on each other by `workspace:*` (ADR-0005).",
   "devDependencies": {
+    "@chaoticgoodcomputing/css-check": "workspace:*",
     "@chaoticgoodcomputing/icons": "workspace:*",
-    "postcss": "^8.5.6",
-    "postcss-selector-parser": "^7.1.0",
     "preact": "^10.29.0",
     "typescript": "^5.9.3"
   },

@@ -1,0 +1,22 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "name": "@chaoticgoodcomputing/css-check",
+  "root": "quartz-v5/libs/css-check",
+  "sourceRoot": "quartz-v5/libs/css-check/src",
+  "projectType": "library",
+  "tags": ["cgc", "cgc:lib"],
+  "targets": {
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run typecheck", "cwd": "{projectRoot}" }
+    },
+    "e2e": {
+      "//": "Tested through its consumers, in the shared suite: escapes planted in copies of the styled plugins fail their builds, and in widget CSS fail the widgets library's lint. No build target: build.mjs imports the source.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx playwright test ../libs/css-check ../libs/widgets/e2e/lint.spec.mjs",
+        "cwd": "{workspaceRoot}/quartz-v5/tests"
+      }
+    }
+  }
+}

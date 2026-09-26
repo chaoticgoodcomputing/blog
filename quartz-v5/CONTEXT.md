@@ -133,6 +133,12 @@ The site's single `@layer` statement naming every layer on the page in order, em
 site plugin. Whatever it names takes precedence over the order plugins load in.
 _Avoid_: layer order, cascade config
 
+**Library-CSS check**:
+ADR-0003's rules for library CSS, checked by machine in one library,
+[`@chaoticgoodcomputing/css-check`](./libs/css-check/CONTEXT.md). Every styled plugin's build runs
+it before bundling, and the widgets library's lint. It reads CSS and rewrites nothing.
+_Avoid_: lint (the widgets target that runs it), stylelint, prefixing pass (a transform)
+
 ### Colour
 
 **Colour value**:

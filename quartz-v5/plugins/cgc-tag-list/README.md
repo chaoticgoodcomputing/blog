@@ -89,7 +89,7 @@ The CSS is library CSS, following [ADR-0003](https://github.com/chaoticgoodcompu
 
 To change a tag's colour, change it in `cgc-tags`' dictionary, or override the tag's property, `--cgc-tag-…`, in your own CSS. The ring takes its colour from its own `color`, so a rule on the ring alone can't change it. The reasoning is in the package's [ADR-0001](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz-v5/plugins/cgc-tag-list/docs/adr/0001-the-ring-carries-the-tag-colour.md).
 
-The build checks the stylesheet and fails if a selector reaches outside the block, or if it sets a colour literal or a `font-family`.
+The build checks the stylesheet with `@chaoticgoodcomputing/css-check` and fails if a selector reaches outside the block, if it defines a custom property or other name outside the block, or if it sets a colour literal or a font family other than one of the theme's four, such as `var(--bodyFont)`.
 
 ## Develop
 

@@ -3,7 +3,8 @@
 // includes our libraries, which ship as TypeScript source (ADR-0005). Three things are built:
 //
 //   1. The stylesheet, from src/styles/: PDF.js's text-layer CSS is prefixed into the Viewer's block,
-//      everything is checked against ADR-0003's library-CSS rules, and it goes in the family layer.
+//      everything is checked against ADR-0003's library-CSS rules (@chaoticgoodcomputing/css-check),
+//      and it goes in the family layer.
 //   2. The Viewer's browser files, into dist/client/, which the emitter copies to the site: its island
 //      entry and chunks (PDF.js among them, fetched only when a Viewer hydrates), and PDF.js's worker
 //      and wasm, copied out of pdfjs-dist (#37).
@@ -14,6 +15,7 @@ import path from "node:path"
 import { createRequire } from "node:module"
 import postcss from "postcss"
 import selectorParser from "postcss-selector-parser"
+import { checkStylesheet } from "@chaoticgoodcomputing/css-check"
 
 const require = createRequire(import.meta.url)
 const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"))
@@ -61,48 +63,18 @@ function prefixTextLayer(css, from) {
   return root.toString()
 }
 
-// Rules 1, 2, 4, 5 and 7, checked on the CSS as it will ship.
-function checkStylesheet(css, from) {
-  const errors = []
-  const ours = (name) => name === "cgc-annotator" || name.startsWith("cgc-annotator__") || name.startsWith("cgc-annotator--") || name.startsWith("cgc-annotator-viewer")
-  const root = postcss.parse(css, { from })
-  const at = (node) => `${from}:${node.source?.start?.line}`
-  root.walkAtRules((rule) => {
-    if (!["media", "supports", "container"].includes(rule.name)) errors.push(`${at(rule)}: @${rule.name} — build.mjs adds the only layer, and nothing else is allowed`)
-  })
-  root.walkRules((rule) => {
-    selectorParser((selectors) => {
-      selectors.each((selector) => {
-        // The element a rule starts at must be ours; what it reaches inside an element of ours is ours too.
-        let anchored = false
-        for (const node of selector.nodes) {
-          if (node.type === "combinator") break
-          if (node.type === "class" && ours(node.value)) anchored = true
-        }
-        if (!anchored) errors.push(`${at(rule)}: "${String(selector).trim()}" doesn't start at an element of this plugin's (.cgc-annotator…)`)
-        selector.walkCombinators((node) => {
-          if (node.value.trim() === "+" || node.value.trim() === "~") errors.push(`${at(rule)}: "${String(selector).trim()}" reaches a sibling this plugin may not own`)
-        })
-      })
-    }).processSync(rule.selector)
-  })
-  root.walkDecls((decl) => {
-    if (decl.prop.toLowerCase() === "font-family") errors.push(`${at(decl)}: font-family — fonts come from the theme`)
-    if (/#[0-9a-f]{3,8}\b|\b(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color|color-mix)\(/i.test(decl.value)) {
-      errors.push(`${at(decl)}: ${decl.prop}: ${decl.value} — a colour literal; use the theme's properties`)
-    }
-    if (decl.prop.startsWith("--") && !decl.prop.startsWith("--cgc-annotator")) errors.push(`${at(decl)}: ${decl.prop} — this plugin's custom properties are --cgc-annotator…`)
-  })
-  return errors
-}
-
 const sheets = [
   ["src/styles/pdfjs-text-layer.css", (css, from) => prefixTextLayer(css, from)],
   ["src/styles/annotator.css", (css) => css],
 ].map(([file, transform]) => [file, transform(fs.readFileSync(file, "utf8"), file)])
-const errors = sheets.flatMap(([file, css]) => checkStylesheet(css, file))
-if (errors.length) {
-  console.error(`cgc-annotator's stylesheet breaks ADR-0003's library-CSS rules:\n${errors.map((e) => `  ${e}`).join("\n")}`)
+// ADR-0003's library-CSS rules, checked on the CSS as it will ship, with no layer yet: this build adds
+// it. Both blocks are this plugin's, and a selector may reach anything inside an element of one,
+// since PDF.js writes the text layer's markup.
+const problems = sheets.flatMap(([file, css]) =>
+  checkStylesheet(css, { from: file, block: ["cgc-annotator", "cgc-annotator-viewer"], reach: "inside" }),
+)
+if (problems.length) {
+  console.error(`cgc-annotator's stylesheet breaks ADR-0003's library-CSS rules:\n${problems.map((p) => `  ${p}`).join("\n")}`)
   process.exit(1)
 }
 // One spelling of the layer per file: lightningcss inverts sublayer order when a file mixes them.

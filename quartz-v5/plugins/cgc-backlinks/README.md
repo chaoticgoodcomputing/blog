@@ -96,7 +96,7 @@ The CSS is library CSS, following [ADR-0003](https://github.com/chaoticgoodcompu
 - **Cascade layer:** the rules sit in the `cgc.backlinks` layer, above Quartz's own styles and themes, and below any unlayered site CSS.
 - **Colours:** links keep the colour your theme gives links, and the lock, 12px square, is drawn in `currentColor`, so it takes the same colour and follows the reader's colour scheme. The bullet is the theme's `--gray`.
 
-The build checks the stylesheet and fails if a selector reaches outside the block, or if it sets a colour literal or a `font-family`.
+The build checks the stylesheet with `@chaoticgoodcomputing/css-check` and fails if a selector reaches outside the block, if it defines a custom property or other name outside the block, or if it sets a colour literal or a font family other than one of the theme's four, such as `var(--bodyFont)`.
 
 ## Develop
 

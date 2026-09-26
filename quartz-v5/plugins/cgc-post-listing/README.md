@@ -116,7 +116,7 @@ The CSS is library CSS, following [ADR-0003](https://github.com/chaoticgoodcompu
 
 To change a tag's colour, change it in `cgc-tags`' dictionary, or override the tag's property, `--cgc-tag-…`, in your own CSS. The ring takes its colour from its own `color`, as [cgc-tag-list](https://blog.chaoticgood.computer/plugins/cgc-tag-list)'s rings do.
 
-The build checks the stylesheet and fails if a selector reaches outside the block, or if it sets a colour literal or a `font-family`.
+The build checks the stylesheet with `@chaoticgoodcomputing/css-check` and fails if a selector reaches outside the block, if it defines a custom property or other name outside the block, or if it sets a colour literal or a font family other than one of the theme's four, such as `var(--bodyFont)`.
 
 ## Develop
 

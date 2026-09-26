@@ -19,11 +19,10 @@
     "@quartz-community/types": "*",
     "preact": "^10.29.0"
   },
-  "//devDependencies": "Build-time only: esbuild bundles dist/, and PostCSS checks the stylesheet against ADR-0003 before it ships (build.mjs).",
+  "//devDependencies": "Build-time only: esbuild bundles dist/, and @chaoticgoodcomputing/css-check checks the stylesheet against ADR-0003 before it ships (build.mjs). The library is a `file:` spec on main, which a release commit rewrites to the release's published version (ADR-0005).",
   "devDependencies": {
-    "esbuild": "^0.28.2",
-    "postcss": "^8.5.28",
-    "postcss-selector-parser": "^7.1.6"
+    "@chaoticgoodcomputing/css-check": "file:../../libs/css-check",
+    "esbuild": "^0.28.2"
   },
   "quartz": {
     "name": "cgc-page-source",

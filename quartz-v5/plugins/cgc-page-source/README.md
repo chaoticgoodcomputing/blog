@@ -69,7 +69,7 @@ The CSS is library CSS, following [ADR-0003](https://github.com/chaoticgoodcompu
 - **Cascade layer:** the rules sit in the `cgc.page-source` layer. That is above Quartz's own styles and themes, and below any unlayered site CSS.
 - **Colours:** all from the theme's properties: `--light`, `--lightgray`, `--darkgray`, `--dark` and `--secondary`. So it follows the colour scheme and any theme.
 
-The build checks the stylesheet and fails if a selector reaches outside the block, or if it sets a colour literal or a `font-family`.
+The build checks the stylesheet with `@chaoticgoodcomputing/css-check` and fails if a selector reaches outside the block, if it defines a custom property or other name outside the block, or if it sets a colour literal or a font family other than one of the theme's four, such as `var(--bodyFont)`.
 
 ## Develop
 

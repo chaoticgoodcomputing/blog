@@ -268,6 +268,22 @@ importers:
         specifier: ^0.6.2
         version: 0.6.2
 
+  quartz-v5/libs/css-check:
+    dependencies:
+      postcss:
+        specifier: ^8.5.28
+        version: 8.5.28
+      postcss-selector-parser:
+        specifier: ^7.1.6
+        version: 7.1.6
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.10.4
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   quartz-v5/libs/icons:
     dependencies:
       '@iconify-json/mdi':
@@ -339,15 +355,12 @@ importers:
         specifier: 5.4.530
         version: 5.4.530
     devDependencies:
+      '@chaoticgoodcomputing/css-check':
+        specifier: workspace:*
+        version: link:../css-check
       '@chaoticgoodcomputing/icons':
         specifier: workspace:*
         version: link:../icons
-      postcss:
-        specifier: ^8.5.6
-        version: 8.5.28
-      postcss-selector-parser:
-        specifier: ^7.1.0
-        version: 7.1.6
       preact:
         specifier: ^10.29.0
         version: 10.29.8(preact-render-to-string@6.6.4)
