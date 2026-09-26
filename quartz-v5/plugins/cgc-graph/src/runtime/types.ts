@@ -1,5 +1,6 @@
 // The graph's data, as the runtime draws it (v4 core/types.ts, core/renderTypes.ts).
 import type { TagProperties } from "@chaoticgoodcomputing/tags-core"
+import type { PerEdge } from "../options"
 import type { SimulationLinkDatum, SimulationNodeDatum } from "d3-force"
 import type { IconImages } from "./icons"
 
@@ -33,8 +34,8 @@ export interface Sources {
   tags: Tags
 }
 
-/** tag → subtag, tag → page, page → page. */
-export type LinkType = "tag-tag" | "tag-post" | "post-post"
+/** An edge's kind, as the per-kind settings name it: tag → subtag, tag → page, page → page. */
+export type LinkType = keyof PerEdge<unknown>
 
 export interface NodeData extends SimulationNodeDatum {
   id: NodeId
@@ -43,14 +44,14 @@ export interface NodeData extends SimulationNodeDatum {
   /** A page's tags; none for a tag. */
   tags: string[]
   /** Whether the node is a tag. */
-  tag: boolean
+  isTag: boolean
   /** Whether the node is a private page (the `privateTags` option). */
   private: boolean
   /**
-   * The tag that stands for the node, whose colour fills it: a page's primary tag, or a tag node's
-   * own tag. Null for a page with no tags.
+   * The node's tag, whose colour fills it: a page's primary tag, or a tag node's own tag. Null for
+   * a page with no tags.
    */
-  primary: string | null
+  tag: string | null
   /** Where following it leads. */
   href: string
 }

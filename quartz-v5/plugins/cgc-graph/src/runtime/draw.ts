@@ -4,7 +4,6 @@
 // loop: each frame ticks the simulation while it is warm (still-timer.ts).
 import { Group, Tween } from "@tweenjs/tween.js"
 import type { Simulation } from "d3-force"
-import { edgeKind } from "./simulation"
 import type { IconImages } from "./icons"
 import type { Palette } from "./palette"
 import type { Settings } from "./settings"
@@ -154,10 +153,9 @@ export function animate(scene: Scene): () => void {
     }
 
     for (const edge of links) {
-      const { source, target, type } = edge.link
+      const { source, target, type: kind } = edge.link
       if (source.x == null || source.y == null || target.x == null || target.y == null) continue
       const [sx, sy, tx, ty] = [source.x + cx, source.y + cy, target.x + cx, target.y + cy]
-      const kind = edgeKind(type)
       const { min, max } = settings.edgeOpacity[kind]
       const alpha =
         edge.active && edge.alpha === 1

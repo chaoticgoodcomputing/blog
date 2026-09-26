@@ -19,7 +19,7 @@ import { nodeIdOf, visitedPages } from "./pages"
 import { paintOf, paletteOf } from "./palette"
 import { attachPointer } from "./pointer"
 import { settingsOf, type Settings } from "./settings"
-import { edgeKind, radiusOf, simulationOf } from "./simulation"
+import { radiusOf, simulationOf } from "./simulation"
 import type { GraphData, LinkRender, NodeRender, Pages, Sources, Transform } from "./types"
 
 export interface DrawnGraph {
@@ -77,7 +77,7 @@ export function renderGraph(container: HTMLElement, slug: string, sources: Sourc
     // as in v4.
     const resting = Math.max((settings.scale * settings.opacityScale - 1) / 3.75, 0)
     const nodes: NodeRender[] = data.nodes.map((node) => {
-      const initialAlpha = node.tag || node.id === current ? 1 : resting
+      const initialAlpha = node.isTag || node.id === current ? 1 : resting
       return {
         node,
         radius: radius(node),
@@ -97,7 +97,7 @@ export function renderGraph(container: HTMLElement, slug: string, sources: Sourc
       link,
       alpha: 1,
       active: false,
-      lineStyle: settings.linkStyle[edgeKind(link.type)],
+      lineStyle: settings.linkStyle[link.type],
     }))
     const scene: Scene = {
       canvas: view,

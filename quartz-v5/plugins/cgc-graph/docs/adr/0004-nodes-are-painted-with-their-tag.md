@@ -49,8 +49,10 @@ at v4's size of 1.4 times the radius.
 
 ## Consequences
 
-- **A page's node no longer shows the reader's history.** A tagged page is its tag's colour whether
-  or not the reader has visited it. The current page still swells.
+- **A page's node shows the reader's history in its ring,** not its fill: a tagged page is its
+  tag's colour whether or not the reader has visited it, ringed in `secondary` when it is the
+  current page and `tertiary` when the reader has visited it (see the amendment below). The current
+  page still swells.
 - **A page fetches two indexes for the graph**, its own and the engine's, side by side and once per
   load. If the engine's fails, the graph still draws, in v4's colours and without icons.
 - **The index grows by the icons.** On the real vault that is about 40 icons at a few hundred bytes
@@ -74,3 +76,14 @@ at v4's size of 1.4 times the radius.
   transforms. An image draws whatever the SVG holds.
 - **v4's first frontmatter tag for a page's icon.** The engine's primary tag already stands for a
   page, and #20 dropped v4's icon priority, so the icon follows the same tag as the colour.
+
+## Amendment: the reader's own page and history, as a ring
+
+_2026-09-26, from the review of [`cgc-graph`: tag colours, icons and repaint on scheme change](https://github.com/chaoticgoodcomputing/blog/issues/77)._
+
+The first decision filled a tagged page with its tag's colour and nothing else, so on any tagged
+page the reader's own node was marked only by its swelling, and the pages they had visited looked
+like the rest. v4 marked both, filling the current page `secondary` and visited ones `tertiary`.
+The tag's fill stays, as the ticket asks, and v4's two colours come back as the node's ring, which
+the drawing already strokes for a tag node the tag index doesn't hold. A site's `nodeColors` still
+win over both, as in v4.

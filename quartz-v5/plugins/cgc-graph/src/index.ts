@@ -33,6 +33,8 @@ import {
   SHELL_STYLE_SETTINGS,
   TIME_PERIODS,
   colourOptions,
+  isMap,
+  isRange,
   type GraphOptions,
 } from "./options"
 import { GRAPH_INDEX, type GraphEntry, type GraphIndex } from "./graph-index"
@@ -49,8 +51,6 @@ class CgcGraphError extends Error {
 const isColourValue = colourValueCheck(transform)
 const isStringList = (value: unknown) =>
   Array.isArray(value) && value.every((item) => typeof item === "string")
-const isMap = (value: unknown): value is Record<string, unknown> =>
-  value !== null && typeof value === "object" && !Array.isArray(value)
 
 const listed = (words: readonly string[]) => words.map((word) => `"${word}"`).join(", ")
 
@@ -85,8 +85,6 @@ function checkPerKind(
 
 const never = () => false
 const isNumber = (value: unknown) => typeof value === "number"
-const isRange = (value: unknown) =>
-  isMap(value) && !EDGE_KINDS.some((kind) => kind in (value as object))
 
 // One graph's settings: every key one the graph has, every map's keys too, and every word one the
 // setting takes.

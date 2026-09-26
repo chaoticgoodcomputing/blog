@@ -11,14 +11,7 @@ import {
 } from "d3-force"
 import { tagNodeId } from "./pages"
 import type { Settings, Shell } from "./settings"
-import type { GraphData, LinkData, LinkType, NodeData, NodeId } from "./types"
-
-const EDGE_KIND: Record<LinkType, "tagTag" | "tagPost" | "postPost"> = {
-  "tag-tag": "tagTag",
-  "tag-post": "tagPost",
-  "post-post": "postPost",
-}
-export const edgeKind = (type: LinkType) => EDGE_KIND[type]
+import type { GraphData, LinkData, NodeData, NodeId } from "./types"
 
 /**
  * Each node's radius: a tag's grows with the pages under it, a page's with its edges, and a private
@@ -31,7 +24,7 @@ export function radiusOf(data: GraphData, settings: Settings, tagCounts: Map<Nod
     degree.set(target.id, (degree.get(target.id) ?? 0) + 1)
   }
   return (node: NodeData): number => {
-    if (node.tag) {
+    if (node.isTag) {
       return (
         settings.baseSize.tags + settings.sizeScaling.tags * Math.sqrt(tagCounts.get(node.id) ?? 0)
       )
@@ -68,8 +61,8 @@ export function simulationOf(
     .force(
       "link",
       forceLink<NodeData, LinkData>(data.links)
-        .distance((link) => settings.linkDistance[edgeKind(link.type)])
-        .strength((link) => settings.linkStrength[edgeKind(link.type)]),
+        .distance((link) => settings.linkDistance[link.type])
+        .strength((link) => settings.linkStrength[link.type]),
     )
     .force("collide", forceCollide<NodeData>(radius).iterations(3))
 

@@ -21,6 +21,10 @@ export const tagNodeId = (tag: string): NodeId => `tags/${tag}`
 /** Whether a node id is a tag's. */
 export const isTagId = (id: NodeId) => id.length > "tags/".length && id.startsWith("tags/")
 
+/** The tag whose node an id is, `tagNodeId`'s inverse, or null for a page's. */
+export const tagOfNodeId = (id: NodeId): string | null =>
+  isTagId(id) ? id.slice("tags/".length) : null
+
 /**
  * The node id of a slug, full or simple: its simple slug, where a tag's page, generated or a
  * description file, is the tag's node (tags-core's `tagOfPage`). `tags/` alone, the index of every

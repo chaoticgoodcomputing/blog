@@ -3,6 +3,7 @@
 // plugin's default for it, as the component's merge already gave it.
 import {
   PER_KIND,
+  isRange,
   type ContainerConfig,
   type DefaultFilterState,
   type GraphStyle,
@@ -80,12 +81,14 @@ const perNode = (
 const isNumber = (v: unknown): v is number => typeof v === "number"
 const never = (_: unknown): _ is never => false
 
-function edgeOpacity(value: ContainerConfig["edgeOpacity"]): PerEdge<{ min: number; max: number }> {
+function edgeOpacityRanges(
+  value: ContainerConfig["edgeOpacity"],
+): PerEdge<{ min: number; max: number }> {
   const fallback = PER_KIND.edgeOpacity
   if (!value) return fallback
   // v4's older form, one range for every kind of edge.
-  if (!("tagTag" in value || "tagPost" in value || "postPost" in value)) {
-    const { min = 0.2, max = 1.0 } = value as { min?: number; max?: number }
+  if (isRange(value)) {
+    const { min = 0.2, max = 1.0 } = value
     return { tagTag: { min, max }, tagPost: { min, max }, postPost: { min, max } }
   }
   const perKind = value as Partial<PerEdge<{ min?: number; max?: number }>>
@@ -132,7 +135,7 @@ export function settingsOf(cfg: ContainerConfig): Settings {
         : null,
     linkDistance: perEdge(cfg.linkDistance, PER_KIND.linkDistance, isNumber),
     linkStrength: perEdge(cfg.linkStrength, PER_KIND.linkStrength, never),
-    edgeOpacity: edgeOpacity(cfg.edgeOpacity),
+    edgeOpacity: edgeOpacityRanges(cfg.edgeOpacity),
     baseSize: perNode(cfg.baseSize, PER_KIND.baseSize),
     sizeScaling: perNode(cfg.sizeScaling, PER_KIND.sizeScaling),
     nodeColors: {

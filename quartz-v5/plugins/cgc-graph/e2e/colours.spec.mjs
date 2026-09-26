@@ -4,7 +4,7 @@
 // through tags-core's resolver, in the scheme the page is showing. The fixture's tag dictionary is in
 // tests/quartz.config.yaml.
 import { test, expect } from "../../../tests/harness/test.mjs"
-import { localGraph, nodeFill } from "./graph.mjs"
+import { localGraph, marksNear, nodeFill } from "./graph.mjs"
 
 // `fixture: { color: "#0a7d32" }`: one colour in either scheme.
 const FIXTURE = { light: [10, 125, 50], dark: [10, 125, 50] }
@@ -12,6 +12,8 @@ const FIXTURE = { light: [10, 125, 50], dark: [10, 125, 50] }
 const MARKDOWN = { light: [179, 95, 0], dark: [222, 130, 0] }
 // `writing: { color: "var(--secondary)" }`: the fixture palette's `secondary`.
 const SECONDARY = { light: [40, 75, 99], dark: [123, 151, 170] }
+// The fixture palette's `tertiary`, the same in either scheme.
+const TERTIARY = { light: [132, 165, 157], dark: [132, 165, 157] }
 // A tag with no colour in its lineage: the engine's default, the palette's `darkgray`.
 const DARKGRAY = { light: [78, 78, 78], dark: [212, 212, 212] }
 
@@ -52,4 +54,24 @@ test("fills a page with no tags in v4's colours: the current page in secondary",
 }) => {
   await page.goto("/linked-note")
   await expect.poll(() => nodeFill(localGraph(page), "Linked Note")).toEqual(SECONDARY[colorScheme])
+})
+
+test("rings a tagged page in v4's colours: the current page in secondary, a visited one in tertiary", async ({
+  page,
+  colorScheme,
+}) => {
+  // v4 marked the reader's own page and the pages they had been to; a tag's fill keeps both as a
+  // ring. The current page swells, so look in a disc past its widest.
+  await page.goto("/plain-note")
+  const graph = localGraph(page)
+  await expect.poll(() => nodeFill(graph, "Plain Note")).toEqual(FIXTURE[colorScheme])
+  await expect
+    .poll(() => marksNear(graph, "Plain Note", SECONDARY[colorScheme], 24))
+    .toBeGreaterThan(20)
+  // Plain Note links to the .mdx article: there, it is a page the reader has visited.
+  await page.goto("/mdx-article")
+  await expect.poll(() => nodeFill(graph, "Plain Note")).toEqual(FIXTURE[colorScheme])
+  await expect
+    .poll(() => marksNear(graph, "Plain Note", TERTIARY[colorScheme], 20))
+    .toBeGreaterThan(20)
 })

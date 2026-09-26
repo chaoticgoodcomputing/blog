@@ -1,6 +1,7 @@
 // The pointer on a graph: hovering, dragging and following nodes, panning and zooming (v4
 // adapters/d3Behaviors.ts). A click on a node follows it through Quartz's SPA router, as v4's did.
-// While the pointer is over a node, the canvas's tooltip is the node's label.
+// While the pointer is over a node, its item in the text alternative is marked `data-hovered`
+// (docs/adr/0002); the canvas draws its label, as v4's did, with no browser tooltip.
 import { drag } from "d3-drag"
 import { select } from "d3-selection"
 import { zoom, zoomIdentity } from "d3-zoom"
@@ -29,7 +30,7 @@ export function follow(node: NodeData, source: "graph-click" | "graph-drag-click
     from_page: window.location.pathname,
     to_page: url.pathname,
     url: url.toString(),
-    node_type: node.tag ? "tag" : "page",
+    node_type: node.isTag ? "tag" : "page",
   })
   if (window.spaNavigate) window.spaNavigate(url)
   else window.location.assign(url)
@@ -56,10 +57,17 @@ export function attachPointer(scene: Scene, state: HoverState) {
     const rect = canvas.getBoundingClientRect()
     return [event.clientX - rect.left, event.clientY - rect.top] as const
   }
+  // The text alternative's items, by node id, for marking the one under the pointer.
+  const items = new Map<string, HTMLElement>()
+  for (const item of canvas.querySelectorAll<HTMLElement>(".cgc-graph__node"))
+    items.set(item.dataset.node!, item)
+  let marked: HTMLElement | undefined
   const show = (node: NodeRender | null) => {
     hover(state, links, nodes, node)
     canvas.style.cursor = node ? "pointer" : "default"
-    canvas.title = node?.node.text ?? ""
+    marked?.removeAttribute("data-hovered")
+    marked = node ? items.get(node.node.id) : undefined
+    marked?.setAttribute("data-hovered", "")
     if (!state.dragging) fadeForHover(scene.tweens, links, nodes, state.hovered, settings)
   }
 

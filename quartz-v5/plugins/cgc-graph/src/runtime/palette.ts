@@ -59,7 +59,9 @@ export function paletteOf(settings: Settings): Palette {
  * page's primary tag, a tag node's own), as the tag index names them (#77).
  *
  * - The site's private or public node colour, when it sets one, fills every node it covers, as in
- *   v4. Otherwise a node is filled with its tag's colour.
+ *   v4. Otherwise a node is filled with its tag's colour, and ringed in v4's colours for the
+ *   reader's own page and the pages they have visited: `secondary` for the current page, `tertiary`
+ *   for a visited one.
  * - A page with no tags keeps v4's colours: the theme's `secondary` for the current page, `tertiary`
  *   for one the reader has visited, and `gray` for the rest. A tag the tag index doesn't hold, as
  *   when it failed to load, keeps v4's too: filled `gray` and ringed in `tertiary`.
@@ -72,13 +74,16 @@ export function paintOf(
   visited: Set<string>,
   tags: Tags,
 ): { colour: NodeColour; ring: NodeColour | null; icon: string | null } {
-  const tag = node.primary === null ? undefined : tags.get(node.primary)
+  const tag = node.tag === null ? undefined : tags.get(node.tag)
   const icon = tag?.icon ?? null
   const plain = (colour: NodeColour) => ({ colour, ring: null, icon })
   if (node.private && settings.nodeColors.private) return plain("private")
   if (!node.private && settings.nodeColors.public) return plain("public")
-  if (tag) return plain(tag.color as NodeColour)
-  if (node.tag) return { colour: "gray", ring: "tertiary", icon }
+  if (tag) {
+    const ring = node.id === current ? "secondary" : visited.has(node.id) ? "tertiary" : null
+    return { colour: tag.color as NodeColour, ring, icon }
+  }
+  if (node.isTag) return { colour: "gray", ring: "tertiary", icon }
   if (node.id === current) return plain("secondary")
   return plain(visited.has(node.id) ? "tertiary" : "gray")
 }

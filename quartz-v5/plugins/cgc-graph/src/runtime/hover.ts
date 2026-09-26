@@ -17,7 +17,7 @@ function subtreeOf(root: NodeId, isTag: boolean, links: LinkRender[]): Set<NodeI
   while (stack.length > 0) {
     const current = stack.pop()!
     for (const { link } of links) {
-      if (link.type === "tag-tag" && link.source.id === current && !subtree.has(link.target.id)) {
+      if (link.type === "tagTag" && link.source.id === current && !subtree.has(link.target.id)) {
         subtree.add(link.target.id)
         stack.push(link.target.id)
       }
@@ -38,7 +38,7 @@ export function hover(
     for (const link of links) link.active = false
     return
   }
-  const lit = subtreeOf(hovered.node.id, hovered.node.tag, links)
+  const lit = subtreeOf(hovered.node.id, hovered.node.isTag, links)
   const neighbours = new Set(lit)
   for (const link of links) {
     link.active = lit.has(link.link.source.id) || lit.has(link.link.target.id)

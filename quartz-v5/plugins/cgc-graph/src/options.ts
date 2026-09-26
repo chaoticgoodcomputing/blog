@@ -186,8 +186,13 @@ export const DEFAULT_GLOBAL: GraphConfig = {
 
 export const DEFAULT_TITLE = "Graph View"
 
-const isMap = (value: unknown): value is Record<string, unknown> =>
+/** Whether a setting's value is a map of settings, not a number, a word or a list. */
+export const isMap = (value: unknown): value is Record<string, unknown> =>
   value !== null && typeof value === "object" && !Array.isArray(value)
+
+/** Whether an `edgeOpacity` is v4's single `{ min, max }` range for every kind, not a map by kind. */
+export const isRange = (value: unknown): value is { min?: number; max?: number } =>
+  isMap(value) && ("min" in value || "max" in value)
 
 /**
  * One graph's settings: the site's over the defaults, a key at a time, as v4 merged them, except that
@@ -198,7 +203,7 @@ function merged(defaults: GraphConfig, site: Partial<GraphConfig> = {}): GraphCo
   const config: Record<string, unknown> = { ...defaults, ...site }
   for (const key of Object.keys(PER_KIND) as (keyof PerKindSettings)[]) {
     const value = site[key]
-    const perKind = isMap(value) && !("min" in value || "max" in value)
+    const perKind = isMap(value) && !isRange(value)
     if (perKind && isMap(defaults[key])) config[key] = { ...defaults[key], ...value }
   }
   return config as unknown as GraphConfig
@@ -218,7 +223,11 @@ export function containerConfigs(
 } {
   const normalised = (tags: string[] = []) => tags.map((tag) => normaliseTag(tag, slugTag))
   const privateTags = normalised(options?.privateTags)
-  const container = (defaults: GraphConfig, site: Partial<GraphConfig> | undefined, global: boolean) => {
+  const container = (
+    defaults: GraphConfig,
+    site: Partial<GraphConfig> | undefined,
+    global: boolean,
+  ) => {
     const config = merged(defaults, site)
     return { ...config, removeTags: normalised(config.removeTags), privateTags, global }
   }

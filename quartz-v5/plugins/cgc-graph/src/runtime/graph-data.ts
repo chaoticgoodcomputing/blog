@@ -4,7 +4,7 @@
 // under another, or a page private, by tags-core's rules.
 import { lineageOf, parentOf, privatePageTest, underAny } from "@chaoticgoodcomputing/tags-core"
 import type { TimePeriod } from "../options"
-import { hrefOf, isTagId, tagNodeId } from "./pages"
+import { hrefOf, tagNodeId, tagOfNodeId } from "./pages"
 import type { Settings } from "./settings"
 import type { GraphData, NodeData, NodeId, Pages, SimpleLink } from "./types"
 
@@ -17,7 +17,7 @@ export function edgesOf(pages: Pages, settings: Settings): { links: SimpleLink[]
   const links: SimpleLink[] = []
   for (const [source, page] of pages) {
     for (const target of page.links) {
-      if (target !== source && pages.has(target)) links.push({ source, target, type: "post-post" })
+      if (target !== source && pages.has(target)) links.push({ source, target, type: "postPost" })
     }
   }
   if (!settings.showTags) return { links, tags: [] }
@@ -33,11 +33,11 @@ export function edgesOf(pages: Pages, settings: Settings): { links: SimpleLink[]
         if (tags.has(id)) break
         tags.add(id)
         const parent = parentOf(t)
-        if (parent !== null) links.push({ source: tagNodeId(parent), target: id, type: "tag-tag" })
+        if (parent !== null) links.push({ source: tagNodeId(parent), target: id, type: "tagTag" })
       }
       // A tag's description page carries its own tag, which would be an edge to itself.
       const target = tagNodeId(tag)
-      if (target !== source) links.push({ source, target, type: "tag-post" })
+      if (target !== source) links.push({ source, target, type: "tagPost" })
     }
   }
   return { links, tags: [...tags] }
@@ -85,15 +85,16 @@ export function nodesOf(neighbourhood: Set<NodeId>, pages: Pages, settings: Sett
   const isPrivatePage = privatePageTest(settings.privateTags)
   return [...neighbourhood].map((id) => {
     const page = pages.get(id)
-    const tag = isTagId(id)
+    const ownTag = tagOfNodeId(id)
+    const isTag = ownTag !== null
     const tags = page?.tags ?? []
     return {
       id,
-      text: tag ? `#${id.split("/").pop()}` : (page?.title ?? id),
+      text: isTag ? `#${ownTag.split("/").pop()}` : (page?.title ?? id),
       tags,
-      tag,
-      private: !tag && isPrivatePage(tags),
-      primary: tag ? id.slice("tags/".length) : (page?.primary ?? null),
+      isTag,
+      private: !isTag && isPrivatePage(tags),
+      tag: ownTag ?? page?.primary ?? null,
       href: hrefOf(id),
     }
   })
@@ -121,13 +122,13 @@ export function graphDataOf(nodes: NodeData[], links: SimpleLink[]): GraphData {
 export function tagCountsOf(data: GraphData): Map<NodeId, number> {
   const direct = new Map<NodeId, number>()
   const children = new Map<NodeId, NodeId[]>()
-  for (const node of data.nodes) if (node.tag) direct.set(node.id, 0)
+  for (const node of data.nodes) if (node.isTag) direct.set(node.id, 0)
   for (const link of data.links) {
-    if (link.type === "tag-tag") {
+    if (link.type === "tagTag") {
       if (!children.has(link.source.id)) children.set(link.source.id, [])
       children.get(link.source.id)!.push(link.target.id)
-    } else if (link.type === "tag-post") {
-      const tag = link.source.tag ? link.source.id : link.target.id
+    } else if (link.type === "tagPost") {
+      const tag = link.source.isTag ? link.source.id : link.target.id
       direct.set(tag, (direct.get(tag) ?? 0) + 1)
     }
   }
@@ -160,7 +161,7 @@ export function cutoffOf(period: TimePeriod): Date | null {
 
 // Whether a page node passes the filters. A tag always does, until it is left with no pages.
 function passes(node: NodeData, pages: Pages, state: FilterState, cutoff: Date | null): boolean {
-  if (node.tag) return true
+  if (node.isTag) return true
   const page = pages.get(node.id)
   if (!page) return true
   if (!state.includePrivate && node.private) return false
@@ -181,7 +182,7 @@ export function filtered(data: GraphData, pages: Pages, state: FilterState): Gra
   const parents = new Map<NodeId, NodeId[]>()
   const alive = new Set<NodeId>()
   for (const link of links) {
-    if (link.type === "tag-tag") {
+    if (link.type === "tagTag") {
       if (!parents.has(link.target.id)) parents.set(link.target.id, [])
       parents.get(link.target.id)!.push(link.source.id)
     }
@@ -192,11 +193,11 @@ export function filtered(data: GraphData, pages: Pages, state: FilterState): Gra
     for (const parent of parents.get(id) ?? []) keepAlive(parent)
   }
   for (const link of links) {
-    if (link.type !== "tag-post") continue
-    if (link.source.tag) keepAlive(link.source.id)
-    if (link.target.tag) keepAlive(link.target.id)
+    if (link.type !== "tagPost") continue
+    if (link.source.isTag) keepAlive(link.source.id)
+    if (link.target.isTag) keepAlive(link.target.id)
   }
-  for (const node of data.nodes) if (node.tag && !alive.has(node.id)) kept.delete(node.id)
+  for (const node of data.nodes) if (node.isTag && !alive.has(node.id)) kept.delete(node.id)
 
   return {
     nodes: data.nodes.filter((node) => kept.has(node.id)),
@@ -214,7 +215,7 @@ function pagesIn(
   const cutoff = cutoffOf(period)
   return data.nodes.filter(
     (node) =>
-      !node.tag &&
+      !node.isTag &&
       pages.has(node.id) &&
       passes(node, pages, { timePeriod: period, includePrivate }, cutoff),
   ).length

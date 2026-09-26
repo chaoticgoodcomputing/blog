@@ -18,6 +18,7 @@ A heading, and a box holding the **local graph**: the current page, every page i
 - **Drag** a node to pull the layout around, drag the background to pan, and scroll to zoom.
 - **Each node is filled with its tag's colour**, as `cgc-tags` resolves it: a page with its primary tag's, a tag with its own. A tag with no colour of its own takes its nearest ancestor's.
 - **Each node carries its tag's icon**, its own or its nearest ancestor's, cut out of the node in the page's background colour. The icons are drawn when the site builds, so the page fetches none.
+- **The current page and the pages you've visited** are ringed in the theme's colours over their tag's: `secondary` for the current page, `tertiary` for pages you've visited.
 - **A page with no tags** is drawn in the theme's colours: `secondary` for the current page, `tertiary` for pages you've visited, and `gray` for the rest.
 - **The current page** swells and shrinks gently.
 - **Private pages**, those carrying one of the `privateTags` or a tag under one, are drawn like any other page, in their own colour when `nodeColors.private` sets one.
@@ -48,7 +49,7 @@ A canvas is a picture, so inside each one the plugin writes a list of what it dr
 </canvas>
 ```
 
-A private page's item ends with `(private)`.
+A private page's item ends with `(private)`. While the pointer is over a node, its item is marked `data-hovered`.
 
 ## The index
 
@@ -113,6 +114,8 @@ plugins:
       position: right
       priority: 10
 ```
+
+The graph takes one layout slot, the same on every page. This site's Quartz 4 layout had it in the body of the home page and the tag pages; a plugin entry can't be placed twice, so it stays where `layout` puts it.
 
 | Option | Default | |
 | --- | --- | --- |
