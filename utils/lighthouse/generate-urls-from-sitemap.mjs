@@ -7,7 +7,9 @@ import { promisify } from 'util';
 
 const parseXML = promisify(parseString);
 
-const sitemapPath = resolve(process.cwd(), 'dist/public/sitemap.xml');
+// The built site's sitemap: v4's by default; site-v5's eval:multi sets LHCI_SITEMAP to its own build's.
+const sitemapFile = process.env.LHCI_SITEMAP || 'dist/public/sitemap.xml';
+const sitemapPath = resolve(process.cwd(), sitemapFile);
 const outputPath = resolve(process.cwd(), 'utils/lighthouse/lighthouserc.cjs');
 
 // Configuration
@@ -108,7 +110,7 @@ async function shouldIncludeUrl(url) {
 }
 
 async function generateConfig() {
-  console.log('📖 Reading sitemap from dist/public/sitemap.xml...');
+  console.log(`📖 Reading sitemap from ${sitemapFile}...`);
   const sitemapXML = await readFile(sitemapPath, 'utf-8');
 
   console.log('🔍 Parsing sitemap XML...');

@@ -33,6 +33,17 @@ function isPluginNote(url, vault) {
   return Boolean(pkg) && fs.existsSync(path.join(vault, "plugins", `${pkg}.md`))
 }
 
+// Whether a head difference is one value of a page only v5 serves (compare.mjs compares its head with
+// an empty one), as a page search engines index at its own URL carries it: a canonical naming that
+// URL, and no noindex. Its other values, such as article:* and JSON-LD, have nothing in v4 to differ
+// from, so they are accepted with the page.
+function indexedAtOwnUrl(d, { v4, v5 }) {
+  if (d.area !== "head" || v4.pages.has(d.url) || d.removed.length) return false
+  if (d.field === "canonical") return sameSet(d.added, [`${v5.origin}${d.url}`])
+  if (d.field === "robots") return !d.added.includes("noindex")
+  return d.field !== "refresh"
+}
+
 export const ALLOWLIST = [
   {
     ticket: 48,
@@ -47,9 +58,10 @@ export const ALLOWLIST = [
   {
     ticket: 48,
     summary:
-      "A shareable plugin's README is published as its plugin note at /plugins/<pkg>, listed in the sitemap like v4's other notes. v4 leaves out cgc-mdx's until cutover, since its alias would race v4's own /widgets/README. Only a note the vault links at plugins/<pkg>.md.",
-    allows: (d, { vault }) =>
-      ((d.area === "url" && d.kind === "page") || d.area === "sitemap") && d.change === "added" && isPluginNote(d.url, vault),
+      "A shareable plugin's README is published as its plugin note at /plugins/<pkg>, listed in the sitemap and indexed like v4's other notes: its canonical is its own URL, and it is not noindex. v4 leaves out cgc-mdx's until cutover, since its alias would race v4's own /widgets/README. Only a note the vault links at plugins/<pkg>.md.",
+    allows: (d, context) =>
+      isPluginNote(d.url, context.vault) &&
+      ((((d.area === "url" && d.kind === "page") || d.area === "sitemap") && d.change === "added") || indexedAtOwnUrl(d, context)),
   },
   {
     ticket: 23,
@@ -73,8 +85,9 @@ export const ALLOWLIST = [
   {
     ticket: 43,
     summary:
-      "A tag description file is its tag's page, even for a tag no page uses. It stays at /tags/<t>/ until the cutover rename to tags/<t>.md, then serves /tags/<t>. Only a tag with a description file in the vault.",
-    allows: (d, { vault }) => d.area === "url" && d.change === "added" && d.kind === "page" && isDescribedTag(d.url, vault),
+      "A tag description file is its tag's page, even for a tag no page uses, indexed at its own URL as v4's tag pages are. It stays at /tags/<t>/ until the cutover rename to tags/<t>.md, then serves /tags/<t>. Only a tag with a description file in the vault.",
+    allows: (d, context) =>
+      isDescribedTag(d.url, context.vault) && ((d.area === "url" && d.change === "added" && d.kind === "page") || indexedAtOwnUrl(d, context)),
   },
   {
     ticket: 37,

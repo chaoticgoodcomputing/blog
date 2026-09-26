@@ -1,15 +1,16 @@
 // Prepares the vendored copy to build the real site. Run by site-v5's `build` and `serve` targets.
 //
 // 1. Quartz reads `quartz.config.yaml` from its cwd, the vendored root, and nowhere else, so the
-//    tracked config one level up is reached through a gitignored symlink there (VENDORED.md).
+//    tracked site config one level up is reached through a gitignored symlink there
+//    (VENDORED.md).
 // 2. A local plugin resolves Quartz's own dependencies (Preact above all) through a gitignored
 //    `node_modules` link to the vendored install, beside it in `plugins/` or `site-plugins/`
 //    (VENDORED.md, "Dependencies"). The e2e harness makes the same link for its fixture sites.
 // 3. Quartz only symlinks a local plugin into `.quartz/plugins/`, never builds it (ADR-0004), so
-//    every local plugin the config enables is built here, after an install of its own build-time
-//    dependencies whenever its lockfile has moved on from what is installed, and of our libraries'
-//    dependencies, which a plugin inlines (VENDORED.md). `local-plugins.mjs` holds those steps, and
-//    the e2e harness takes them from it for the fixture (`tests/harness/site.mjs`).
+//    every local plugin the site config enables is built here, after an install of its own
+//    build-time dependencies whenever its lockfile has moved on from what is installed, and of our
+//    libraries' dependencies, which a plugin inlines (VENDORED.md). `local-plugins.mjs` holds those
+//    steps, and the e2e harness takes them from it for the fixture (`tests/harness/site.mjs`).
 import fs from "node:fs"
 import path from "node:path"
 import { execFileSync } from "node:child_process"

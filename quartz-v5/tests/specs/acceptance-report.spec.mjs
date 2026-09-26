@@ -283,6 +283,7 @@ test("allows what #48 decided: cgc-mdx's plugin note at /plugins/cgc-mdx, and it
   expect(result.code, result.stdout).toBe(0)
   expect(result.json.verdict).toBe("pass")
   expect(result.json.allowed.map((d) => [d.area, d.change ?? d.field, d.url, d.ticket]).sort()).toEqual([
+    ["head", "canonical", "/plugins/cgc-mdx", 48],
     ["head", "refresh", "/widgets/README", 48],
     ["sitemap", "added", "/plugins/cgc-mdx", 48],
     ["sitemap", "removed", "/widgets/README", 48],
@@ -301,6 +302,59 @@ test("allows what #48 decided: cgc-mdx's plugin note at /plugins/cgc-mdx, and it
   const stray = await report(site("v4", BASE), site("v5", { ...BASE, "plugins/cgc-stray.html": page({ title: "cgc-stray" }) }), { vault })
   expect(stray.code, stray.stdout).toBe(1)
   expect(stray.json.failing).toEqual([expect.objectContaining({ area: "url", change: "added", url: "/plugins/cgc-stray" })])
+})
+
+test("compares the head of a page only v5 serves, and allows a plugin note's or tag description's only when it is indexed at its own URL (#48, #43)", async () => {
+  const vault = site("vault", {
+    "plugins/cgc-mdx.md": "---\ntitle: cgc-mdx\n---\nWidgets.\n",
+    "tags/described/index.md": "---\ntitle: Described\n---\nAbout the tag.\n",
+  })
+  const note = (head) => page({ title: "cgc-mdx", ...head })
+  const tag = (head) => page({ title: "Described", ...head })
+
+  // Indexed at their own URLs, as v4's other notes and tag pages are: what the decisions expect.
+  const decided = site("v5", {
+    ...BASE,
+    "plugins/cgc-mdx.html": note({ canonical: `${ORIGIN}/plugins/cgc-mdx`, jsonld: { "@type": "Article", headline: "cgc-mdx" } }),
+    "tags/described/index.html": tag({ canonical: `${ORIGIN}/tags/described/` }),
+  })
+  const result = await report(site("v4", BASE), decided, { vault })
+  expect(result.code, result.stdout).toBe(0)
+  const heads = result.json.allowed.filter((d) => d.area === "head").map((d) => [d.url, d.field, d.added, d.ticket])
+  expect(heads.sort()).toEqual([
+    ["/plugins/cgc-mdx", "canonical", [`${ORIGIN}/plugins/cgc-mdx`], 48],
+    ["/plugins/cgc-mdx", "jsonld.@type", ["Article"], 48],
+    ["/plugins/cgc-mdx", "jsonld.headline", ["cgc-mdx"], 48],
+    ["/tags/described/", "canonical", [`${ORIGIN}/tags/described/`], 43],
+  ])
+
+  // A plugin note kept out of search, or a tag page that sends crawlers elsewhere, is not.
+  const hidden = site("v5", {
+    ...BASE,
+    "plugins/cgc-mdx.html": note({ canonical: `${ORIGIN}/plugins/cgc-mdx`, robots: "noindex" }),
+    "tags/described/index.html": tag({ canonical: `${ORIGIN}/tags/elsewhere` }),
+  })
+  const wrong = await report(site("v4", BASE), hidden, { vault })
+  expect(wrong.code, wrong.stdout).toBe(1)
+  expect(wrong.json.failing).toHaveLength(2)
+  expect(wrong.json.failing).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ area: "head", url: "/plugins/cgc-mdx", field: "robots", removed: [], added: ["noindex"] }),
+      expect.objectContaining({ area: "head", url: "/tags/described/", field: "canonical", removed: [], added: [`${ORIGIN}/tags/elsewhere`] }),
+    ]),
+  )
+  expect(wrong.stdout).toContain("pages whose robots v5 added")
+
+  // A page no decision covers fails for being there, and its head is reported with it.
+  const stray = await report(site("v4", BASE), site("v5", { ...BASE, "content/notes/new.html": page({ title: "New", canonical: `${ORIGIN}/content/notes/new` }) }))
+  expect(stray.code, stray.stdout).toBe(1)
+  expect(stray.json.failing).toHaveLength(2)
+  expect(stray.json.failing).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ area: "url", change: "added", url: "/content/notes/new" }),
+      expect.objectContaining({ area: "head", url: "/content/notes/new", field: "canonical", added: [`${ORIGIN}/content/notes/new`] }),
+    ]),
+  )
 })
 
 test("never allows an .mdx page v5 leaves out, nor the article that takes its place in the feed", async () => {

@@ -91,8 +91,12 @@ function minus(a, b) {
   })
 }
 
+// A page only v5 serves is compared with a head that has nothing in it, so each of its head values is
+// a difference for the allowlist to accept or not.
+const NO_HEAD = { fields: new Map() }
+
 function compareHeads(url, to, v4, v5, differences) {
-  const before = v4.pages.get(url)
+  const before = v4.pages.get(url) ?? NO_HEAD
   const after = v5.pages.get(to)
   // A redirect page is compared by where it sends the reader, nothing else.
   const redirect = before.fields.has("refresh") || after.fields.has("refresh")
@@ -134,7 +138,8 @@ function compareFeed(area, v4, v5, differences) {
  *   `redirect` says whether the old URL redirects there, where that can be checked) or `added`;
  * - `sitemap`, `rss`: `removed` or `added` members, after each v4 URL's move; and, for an RSS item
  *   both feeds carry, `changed` with the `description` v5 `removed` and `added`;
- * - `head`: per page and field, the values v5 `removed` and `added`;
+ * - `head`: per page and field, the values v5 `removed` and `added`. A page only v5 serves has every
+ *   value it carries `added`, against an empty head, under its own URL;
  * - and `also`, what checks of the v5 site alone found (cascade.mjs's `layers`), labelled the same way.
  *
  * Each difference carries `allowedBy`, the first allowlist entry accepting it, or `pending`, the
@@ -168,13 +173,17 @@ export function compare(v4, v5, { allowlist, pending = [], caseSensitive, vault,
       differences.push({ area: "url", change: "removed", url, kind, ...(to !== url && { to }) })
     }
   }
+  const added = []
   for (const [url, { kind }] of v5.urls) {
-    if (kind !== "generated" && !claimed.has(url) && !v4.urls.has(url)) differences.push({ area: "url", change: "added", url, kind })
+    if (kind === "generated" || claimed.has(url) || v4.urls.has(url)) continue
+    differences.push({ area: "url", change: "added", url, kind })
+    if (kind === "page") added.push(url)
   }
 
   compareFeed("sitemap", v4, v5, differences)
   compareFeed("rss", v4, v5, differences)
   for (const [url, to] of pairs) if (v5.pages.has(to)) compareHeads(url, to, v4, v5, differences)
+  for (const url of added) if (v5.pages.has(url)) compareHeads(url, url, v4, v5, differences)
   differences.push(...also)
 
   const context = { v4, v5, caseSensitive, vault }
@@ -188,5 +197,5 @@ export function compare(v4, v5, { allowlist, pending = [], caseSensitive, vault,
       difference.pending = pending.find((candidate) => candidate.matches(difference, context))
     }
   }
-  return { differences, pairs: pairs.length, used }
+  return { differences, pairs: pairs.length, added: added.length, used }
 }

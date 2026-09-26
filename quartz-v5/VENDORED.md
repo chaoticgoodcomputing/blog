@@ -22,6 +22,8 @@ quartz-v5/
 ├── upstream.json         the pinned upstream ref — machine-readable source of truth
 ├── quartz.config.yaml    our Quartz 5 configuration — tracked here, symlinked into quartz/
 ├── robots.txt            the site's own robots.txt — copied into the build by postbuild.mjs
+├── BingSiteAuth.xml      Bing Webmaster's verification file — copied to the site root by postbuild.mjs
+├── a6e41ab6-….txt        the IndexNow key file — copied to the site root by postbuild.mjs
 ├── icon.png              the site's own icon — put over stock's in the build by postbuild.mjs
 ├── icons/                the site's own icon collection, `custom:` — SVG files, drawn by @chaoticgoodcomputing/icons
 ├── plugins/              our Quartz plugins (`cgc-*`)
@@ -59,13 +61,20 @@ prefers it over `quartz.config.default.yaml`, so an empty one silently disables 
 plugin.
 
 `site-v5:build` builds the real vault, `content/public`, into `quartz/public`, then finishes it with
-`utils/postbuild.mjs`: it copies in the site's own root-level files (`robots.txt`), since v5's Static
-emitter writes only under `/static/`, and puts the site's icon over stock's, `static/icon.png` and
+`utils/postbuild.mjs`: it copies in the site's own root-level files (`robots.txt`, Bing Webmaster's
+verification file `BingSiteAuth.xml` and the IndexNow key file), since v5's Static emitter writes only
+under `/static/`, and puts the site's icon over stock's, `static/icon.png` and
 `favicon.ico` (#44, #70). Quartz reads the icon from `quartz/static/icon.png` in this copy, so there
 is no other way to swap it without drift, and a site emitter would race the Static emitter's copy.
 Extra flags go to `quartz build`, e.g.
-`pnpm nx run site-v5:build --concurrency=4`. The e2e suite proves the config itself on a scratch
-site built from it (`tests/specs/site-config.spec.mjs`, through the harness's `siteConfig()`).
+`pnpm nx run site-v5:build --concurrency=4`. The e2e suite proves the site config itself on a
+scratch site built from it (`tests/specs/site-config.spec.mjs`, through the harness's
+`siteConfig()`).
+
+The Lighthouse targets sit beside it, ported from v4's `site` project and run with the repo's
+`utils/lighthouse/` tooling. `site-v5:eval` builds the site, serves `quartz/public` on port 8080
+(`_serve-static`) and audits its home page. `site-v5:eval:multi` audits the first public pages of
+that build's sitemap, and `site-v5:eval:live` audits the live site.
 
 One consequence to remember: `source:` entries inside that config are resolved with
 `path.resolve()` against cwd ([`gitLoader.ts:99`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L99)), which is the
@@ -161,7 +170,7 @@ and that is what the loader's shared externals assume. A local plugin is only sy
 Node resolves from the symlink's target under `plugins/`, which would otherwise walk up to the v4
 tree's `node_modules` at the repo root: a second, older Preact. A plugin's own install therefore
 omits peers (`npm ci --omit=peer`), so its local `node_modules` never shadows a host singleton. `site-plugins/` needs the same link, `site-plugins/node_modules`, for the same reason. It's
-decided on [#39](https://github.com/chaoticgoodcomputing/blog/issues/39) and wired on [#64](https://github.com/chaoticgoodcomputing/blog/issues/64): `site-v5:prebuild` makes it for the real site once the config enables a site plugin, and the e2e harness makes it beside `plugins/node_modules`, building every site plugin too, because scratch sites built from the site config load them. No fixture config lists a site plugin. Upstream uses **npm** with its own `package-lock.json`,
+decided on [#39](https://github.com/chaoticgoodcomputing/blog/issues/39) and wired on [#64](https://github.com/chaoticgoodcomputing/blog/issues/64): `site-v5:prebuild` makes it for the real site once the site config enables a site plugin, and the e2e harness makes it beside `plugins/node_modules`, building every site plugin too, because scratch sites built from the site config load them. No fixture config lists a site plugin. Upstream uses **npm** with its own `package-lock.json`,
 and its versions conflict with the v4 tree at the repo root (preact, unified, shiki). This
 directory is deliberately _not_ a pnpm workspace package, so the root `pnpm install` ignores it.
 

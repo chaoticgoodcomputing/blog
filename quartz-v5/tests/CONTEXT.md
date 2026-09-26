@@ -139,7 +139,8 @@ _Avoid_: diff, comparison
 **Difference**:
 One thing a reader or crawler would find changed between the two builds: a URL served or not, a
 sitemap or RSS member, the description of an RSS item both feeds carry, or one head value
-(`noindex`, canonical, `article:*`, JSON-LD) on one page.
+(`noindex`, canonical, `article:*`, JSON-LD) on one page. A page only v5 serves is compared with an
+empty head, so each value its head carries is one.
 Also, from site-styles' guard on the v5 build, a set of stylesheets whose cascade layers don't rank
 as the site's stack declares (`layers`).
 _Avoid_: change, regression (it may be intended)
@@ -170,5 +171,6 @@ _Avoid_: exceptions, ignore list, expected failures
 
 **Pending gap**:
 A difference no allowlist entry allows, which an open ticket is expected to close. It still fails the
-report. The acceptance report's first run recorded the migration's known pending gaps.
+report, which lists it under that ticket (`PENDING` in allowlist.mjs). A failing difference no open
+ticket owns is listed under "no ticket covers these" until one does.
 _Avoid_: baseline (the fixture site with our plugins off), known failure

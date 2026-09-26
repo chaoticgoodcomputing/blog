@@ -152,7 +152,7 @@ const isOurs = (source) =>
 // they stand in for, as an .mdx page is with its .md twin.
 const STANDS_IN_FOR = { "../../plugins/cgc-tag-page": "@quartz-community/tag-page" }
 
-// Fixture pins: what a fixture build would otherwise fetch from the network, pinned by hand. The
+// Fixture cache: what a fixture build would otherwise fetch from the network, pinned by hand. The
 // directory mirrors a fixture root's `.cache/` (cgc-annotator's source documents, by mirror name,
 // under `cgc-annotator/`) and is copied in before every build, so the fixture needs no network.
 const fixtureCache = path.join(testsRoot, "fixture-cache")

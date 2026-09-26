@@ -187,7 +187,7 @@ function verdictOf({ options, differences }) {
 }
 
 function render(result, full) {
-  const { options, sites, caseSensitive, differences, used, pairs } = result
+  const { options, sites, caseSensitive, differences, used, pairs, added } = result
   const lines = []
   const out = (line = "") => lines.push(line)
   const relative = (dir) => {
@@ -202,8 +202,9 @@ function render(result, full) {
     out(`      heads read: canonical ${s.heads.canonical} · noindex ${s.heads.noindex} · article:* ${s.heads.article} · JSON-LD ${s.heads.jsonld}`)
   }
   out(`  Not compared: Quartz's own build output (/static/, root CSS and JS bundles, OG images), v4 ${sites.v4.generated} and v5 ${sites.v5.generated} files.`)
-  out(`  Heads compared on ${plural(pairs, "pair")} of pages. Values naming a URL are compared after that URL's move, and a date`)
-  out(`  each build took from its own clock counts as the same date.`)
+  out(`  Heads compared on ${plural(pairs, "pair")} of pages, and on ${plural(added, "page")} only v5 serves against an empty head.`)
+  out(`  Values naming a URL are compared after that URL's move, and a date each build took from its own clock`)
+  out(`  counts as the same date.`)
   const { layers } = sites.v5
   out(`  v5's cascade layers checked against the site's stack declaration: ${plural(layers.pages, "page")} share`)
   out(`  ${plural(layers.sets, "set")} of stylesheets, and one page of each set was loaded.`)
@@ -254,13 +255,14 @@ function render(result, full) {
 }
 
 function toJson(result) {
-  const { options, sites, caseSensitive, differences, used, pairs } = result
+  const { options, sites, caseSensitive, differences, used, pairs, added } = result
   const plain = ({ allowedBy, pending, ...d }) => ({ ...d, ...(allowedBy && { ticket: allowedBy.ticket }), ...(pending && { pending: pending.ticket }) })
   return {
     origin: options.origin,
     caseSensitive,
     sites,
     pairs,
+    added,
     verdict: verdictOf(result),
     allowed: differences.filter((d) => d.allowedBy).map(plain),
     failing: differences.filter((d) => !d.allowedBy).map(plain),
@@ -277,7 +279,7 @@ async function main() {
   const v5 = readSite(options.v5, options.origin, { builtDuring: clocks.v5 })
   const caseSensitive = isCaseSensitive(v5)
   const cascade = await checkCascade(v5)
-  const { differences, used, pairs } = compare(v4, v5, {
+  const { differences, used, pairs, added } = compare(v4, v5, {
     allowlist: ALLOWLIST,
     pending: PENDING,
     caseSensitive,
@@ -285,7 +287,7 @@ async function main() {
     also: cascade.differences,
   })
   const sites = { v4: summarize(v4), v5: { ...summarize(v5), layers: cascade.summary } }
-  const result = { options, sites, caseSensitive, differences, used, pairs }
+  const result = { options, sites, caseSensitive, differences, used, pairs, added }
 
   fs.mkdirSync(options.out, { recursive: true })
   fs.writeFileSync(path.join(options.out, "report.txt"), `${render(result, true)}\n`)

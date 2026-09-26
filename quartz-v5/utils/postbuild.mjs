@@ -20,6 +20,10 @@ const sharp = createRequire(path.join(root, "quartz", "package.json"))("sharp")
 const SITE_FILES = [
   // Hand-written. Keeps cgc-annotator's mirrors out of search (#37).
   { from: "robots.txt", to: "robots.txt" },
+  // Bing Webmaster's check that the site is ours.
+  { from: "BingSiteAuth.xml", to: "BingSiteAuth.xml" },
+  // IndexNow's: the key utils/indexnow/submit-urls.mjs submits with, served under its own name.
+  { from: "a6e41ab6-6753-4d94-9b54-b4405d806883.txt", to: "a6e41ab6-6753-4d94-9b54-b4405d806883.txt" },
   // The site's icon, over stock's: what the head links and the page title shows.
   { from: "icon.png", to: "static/icon.png" },
 ]
