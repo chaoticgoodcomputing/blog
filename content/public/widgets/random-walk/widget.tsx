@@ -47,7 +47,8 @@ export interface RandomWalkProps {
   viewportBounds?: { min: [number, number]; max: [number, number] }
 }
 
-// The canvas's colours, from the skin in widget.css and each node's own `color`, as they resolve now.
+// The canvas's colours, from the skin in widget.css and each node's own `color`, as they resolve now,
+// and the font the widget's text inherits from the page.
 function readPalette(root: HTMLElement, nodes: NodeDefinition[]): Palette {
   const colour = (name: string) => skin(root, `--random-walk-${name}`)
   const [one, other] = [colour("ink-dark"), colour("ink-light")]
@@ -65,6 +66,7 @@ function readPalette(root: HTMLElement, nodes: NodeDefinition[]): Palette {
     ant: colour("ant"),
     ink: { dark, light, on: (fill) => (isLight(fill) ? dark : light) },
     fills: new Map(nodes.filter((node) => node.color).map((node) => [node.id, resolveColour(root, node.color!)])),
+    font: getComputedStyle(root).fontFamily,
   }
 }
 
@@ -121,6 +123,8 @@ export function RandomWalk({
     const simulation = new RandomWalkSimulation(canvas, config, readPalette(root, nodes), setState)
     walk.current = simulation
     const stopWatching = onSchemeChange(() => simulation.repaint(readPalette(root, nodes)))
+    // Labels drawn before the page's font has loaded are in a fallback until the next paint.
+    document.fonts?.ready.then(() => walk.current === simulation && simulation.repaint(readPalette(root, nodes)))
     return () => {
       stopWatching()
       simulation.destroy()

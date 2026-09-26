@@ -5,7 +5,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import { test, expect } from "../../../tests/harness/test.mjs"
-import { serveScratchSite } from "../../../tests/harness/site.mjs"
+import { serveScratchSite, testsRoot, vendored } from "../../../tests/harness/site.mjs"
 
 const note = (title, body) => `---\ntitle: ${title}\n---\n\n${body}\n`
 const withWidget = (text) => note("Page", `import Hello from './Hello'\n\n${text}\n\n<Hello />`)
@@ -34,4 +34,17 @@ test("an .mdx page rebuilds under serve when it, or a widget it imports, changes
   } finally {
     await site.stop()
   }
+})
+
+// The serve run above writes its output outside the Quartz root, because serve's source watcher
+// watches every `.ts` and `.tsx` under the root, and takes a widget's source, copied into an output
+// there, for Quartz's own: it then restarts the whole build, over and over. The site's own serve
+// writes outside the root too, so what the spec proves is what the site does.
+test("the site's serve writes outside the Quartz root, as the serve run does", () => {
+  const { serve } = JSON.parse(fs.readFileSync(path.join(testsRoot, "../project.json"), "utf8")).targets
+  const cwd = serve.options.cwd.replace("{workspaceRoot}", path.resolve(testsRoot, "../.."))
+  expect(cwd).toBe(vendored)
+  const output = serve.options.command.match(/--output\s+(\S+)/)?.[1]
+  expect(output).toBeTruthy()
+  expect(path.relative(vendored, path.resolve(cwd, output)).startsWith("..")).toBe(true)
 })

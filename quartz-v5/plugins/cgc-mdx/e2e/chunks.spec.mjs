@@ -1,6 +1,8 @@
 // ADR-0001: one esbuild build with shared chunks, and each page loads only what its imports reach.
-// ADR-0002's widget-layer amendment: that CSS lands in `cgc.mdx.widgets`, above core, below the site.
-import { test, expect, resolvedColour } from "../../../tests/harness/test.mjs"
+// ADR-0002's widget-layer amendment: that CSS lands in `cgc.mdx.widgets`, above core and themes,
+// below the site.
+import { test, expect, layerOrder, resolvedColour, routeSite } from "../../../tests/harness/test.mjs"
+import { fixtureConfig, othersOff, withPlugins } from "../../../tests/harness/site.mjs"
 
 // Every cgc-mdx asset the page fetches from here on.
 function recordWidgetRequests(page) {
@@ -142,7 +144,10 @@ const REMOTE = "https://widgets.cgc-fixture.invalid"
 const REMOTE_CSS = {
   "/remote.css": ".cascade__remote { border-radius: 8px; outline-offset: 3px }",
   "/layered.css": "",
+  // More specific than the widget's own `.cascade__anonymous`, which it must still lose to.
+  "/anonymous.css": ".cascade p.cascade__anonymous { border-radius: 2px; outline-offset: 3px }",
 }
+const escape = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
 async function gotoCascade(page) {
   await page.route(`${REMOTE}/**`, (route) =>
     route.fulfill({ contentType: "text/css", body: REMOTE_CSS[new URL(route.request().url()).pathname] ?? "" }),
@@ -153,7 +158,7 @@ async function gotoCascade(page) {
 test("a widget's own layer nests inside the widget layer", async ({ page }) => {
   await gotoCascade(page)
   expect((await widgetSheet(page, "Cascade"))?.at(-1)).toEqual({
-    "@layer cgc.mdx.widgets": [".cascade", ".cascade__strong", { "@layer cascade": [".cascade__nested"] }],
+    "@layer cgc.mdx.widgets": [".cascade", ".cascade__strong", ".cascade__anonymous", { "@layer cascade": [".cascade__nested"] }],
   })
   await addSiteCss(page, ".cascade__nested { border-radius: 2px }")
   await expect(page.locator(".cascade__nested")).toHaveCSS("border-radius", "2px")
@@ -165,11 +170,22 @@ test("a remote @import is hoisted into the widget layer", async ({ page }) => {
     "@layer cgc.mdx.widgets.cascade-remote, cgc.mdx.widgets.cascade;",
     `@import ${REMOTE}/remote.css layer(cgc.mdx.widgets)`,
     `@import ${REMOTE}/layered.css layer(cgc.mdx.widgets.cascade-remote)`,
+    expect.stringMatching(new RegExp(`^@import ${escape(REMOTE)}/anonymous\\.css layer\\(cgc\\.mdx\\.widgets\\.anonymous-[\\w-]+\\)$`)),
   ])
   // The imported rule applies, and the site's rule still beats it.
   await addSiteCss(page, ".cascade__remote { border-radius: 2px }")
   await expect(page.locator(".cascade__remote")).toHaveCSS("outline-offset", "3px")
   await expect(page.locator(".cascade__remote")).toHaveCSS("border-radius", "2px")
+})
+
+// An anonymous layer can't be named under another, so the import gets a sublayer of its own, and the
+// widget's own rules outrank it as they did before the wrapper, rather than tying with it on
+// specificity inside the widget layer.
+test("a remote @import into an anonymous layer stays below the widget's own rules", async ({ page }) => {
+  await gotoCascade(page)
+  const anonymous = page.locator(".cascade__anonymous")
+  await expect(anonymous).toHaveCSS("outline-offset", "3px")
+  await expect(anonymous).toHaveCSS("border-radius", "8px")
 })
 
 test("a widget rule beats a core rule of higher specificity", async ({ page }) => {
@@ -182,4 +198,48 @@ test("a widget rule beats a core rule of higher specificity", async ({ page }) =
   // Without the widget's class, core's rule is what colours the same element.
   await page.locator(".cascade__strong").evaluate((el) => el.classList.remove("cascade__strong"))
   await expect(page.locator(".cascade strong")).toHaveCSS("color", dark)
+})
+
+// cgc-mdx takes no cgc-styles dependency (its ADR-0003), so on a site without that engine nothing
+// positions `cgc` but the widget link itself. The link arrives through `additionalHead`, after every
+// plugin's stylesheet, a theme's included, so the widget layer still ranks above the theme's layers.
+// The theme is stood in for as cgc-styles' layer spec does: its layer statement, at its own order.
+const THEME = "../fixture-plugins/fixture-theme"
+const THEME_LAYERS = ["obsidian-theme", "quartz-themes-base", "obsidian-theme-overrides"]
+
+test("a widget rule beats a theme's, on a site without cgc-styles", async ({ page, scratch }) => {
+  const config = fixtureConfig()
+  const site = await scratch.site(
+    "mdx-over-theme",
+    {
+      "index.md": "# Home\n",
+      "boxed.mdx": "---\ntitle: Boxed\n---\n\nimport { Boxed } from './Boxed'\n\n<Boxed />\n",
+      "Boxed.tsx": 'import "./boxed.css"\n\nexport function Boxed() {\n  return <p class="boxed">A boxed widget.</p>\n}\n',
+      "boxed.css": ".boxed { border-radius: 8px }\n",
+    },
+    {
+      // Every other plugin of ours off, and the fixture plugins that need one of them.
+      config: withPlugins(config, [
+        ...othersOff(config, ["cgc-mdx"]),
+        { source: "../fixture-plugins/fixture-consumer", enabled: false },
+        { source: "../fixture-plugins/fixture-tag-reader", enabled: false },
+        { source: THEME, enabled: true },
+      ]),
+    },
+  )
+  expect(site.code, site.output).toBe(0)
+  await routeSite(page, site.public, "https://fixture.invalid")
+  await page.goto("https://fixture.invalid/boxed")
+  const top = (await layerOrder(page))[""]
+  for (const layer of THEME_LAYERS) {
+    expect(top, layer).toContain(layer)
+    expect(top.indexOf("cgc"), `cgc above ${layer}`).toBeGreaterThan(top.indexOf(layer))
+  }
+  // A rule in the theme's highest layer still loses to the widget's.
+  await page.evaluate(() => {
+    const style = document.createElement("style")
+    style.textContent = "@layer obsidian-theme-overrides { .boxed { border-radius: 3px } }"
+    document.head.append(style)
+  })
+  await expect(page.locator(".boxed")).toHaveCSS("border-radius", "8px")
 })

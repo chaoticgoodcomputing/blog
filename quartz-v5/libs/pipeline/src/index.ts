@@ -34,8 +34,6 @@ export interface PipelineOptions {
   skip?: Iterable<string>
   /** remark plugins of the caller's own, run before or after every transformer's markdown plugins. */
   markdownPlugins?: { before?: PluggableList; after?: PluggableList }
-  /** rehype plugins of the caller's own, run before or after every transformer's html plugins. */
-  htmlPlugins?: { before?: PluggableList; after?: PluggableList }
 }
 
 /** The data Quartz gives every markdown file before parsing it, which transformers rely on. */
@@ -48,8 +46,6 @@ export interface SourceData {
 }
 
 export interface Pipeline {
-  /** The transformers that run, in the site's order. */
-  readonly transformers: readonly Transformer[]
   /**
    * Runs one source through the pipeline as Quartz runs a markdown file: trimmed, through every
    * text transform, parsed, then every markdown plugin and every html plugin. Resolves with the
@@ -71,12 +67,9 @@ export function createPipeline(ctx: PipelineContext, options: PipelineOptions = 
     .use(options.markdownPlugins?.after ?? [])
   const html = unified()
     .use(remarkRehype, { allowDangerousHtml: true })
-    .use(options.htmlPlugins?.before ?? [])
     .use(transformers.flatMap((t) => t.htmlPlugins?.(ctx) ?? []))
-    .use(options.htmlPlugins?.after ?? [])
 
   return {
-    transformers,
     async run(source, data) {
       let value = source.trim()
       for (const t of transformers) if (t.textTransform) value = t.textTransform(ctx, value)

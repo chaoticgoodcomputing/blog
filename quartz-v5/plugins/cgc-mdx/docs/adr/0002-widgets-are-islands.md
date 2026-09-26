@@ -102,14 +102,21 @@ as it emits it.
   it ever has any, stays apart from CSS it only hosts, and a site can still rank the two
   separately. No stack declaration needs an edit, because the `cgc` entry already ranks
   everything under it.
-- **Nothing a widget ships escapes the wrapper.** A widget's own `@layer foo` nests to
+- **Nothing a widget's stylesheet holds escapes the wrapper.** A widget's own `@layer foo` nests to
   `cgc.mdx.widgets.foo`. A remote `@import`, which esbuild leaves in place and which can't sit
   inside a block, is hoisted ahead of the wrapper as `@import url(…) layer(cgc.mdx.widgets);`.
   The rest of what has to stay ahead of a block goes under the wrapper the same way: an import
   that names its own layer `foo` lands in `cgc.mdx.widgets.foo`, and a `@layer foo, bar;`
   statement ordering those imports stays in front of them as `cgc.mdx.widgets.foo,
-  cgc.mdx.widgets.bar`, so the widget's own order holds. `src/layer.ts` does the rewrite, and the
-  `/lab/cascade` fixture tries each escape.
+  cgc.mdx.widgets.bar`, so the widget's own order holds. An import into an anonymous `layer` has no
+  dotted name, so it gets a sublayer of its own, `cgc.mdx.widgets.anonymous-<id>`, named for its
+  stylesheet alone, and its rules still rank below the widget's own. `src/layer.ts` does the
+  rewrite, and the `/lab/cascade` fixture tries each escape.
+- **What a widget's script adds at run time is outside the wrapper.** The wrapper covers the CSS a
+  widget imports, which is all the build ever sees. A `<style>` a widget's script injects, such as
+  the global sheet Plotly adds to the head for `probability-convolutions`, and inline `style`
+  attributes are unlayered, so they outrank the site. No build can layer them. A widget keeps such
+  CSS to its own elements, as Plotly's selectors do.
 - **Rule 9 of ADR-0003 does not reach widgets.** A `<link>` can never get inside `quartz-base`, so
   a widget has no vendor-layer escape hatch. A widget namespaces any third-party CSS it ships.
 - **No `cgc-styles` dependency.** See [ADR-0003](./0003-no-opinionated-dependencies.md).

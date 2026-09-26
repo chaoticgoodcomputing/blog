@@ -1,5 +1,6 @@
 // The pipeline rebuilt from the site's configured transformers can leave some of them out: a
-// denylist, by transformer name. Exercised through a probe plugin until cgc-annotator uses it.
+// denylist, by transformer name. Exercised through a probe plugin, which tests the library on its
+// own; cgc-annotator's specs prove it on a real plugin.
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"

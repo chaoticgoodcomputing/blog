@@ -91,7 +91,11 @@ aliases to it the same way.
   under a running `quartz build --serve`. With the compile cached across builds instead, it fails.
 - **What watch does, beyond that, is Quartz's.** A deleted page, `.mdx` or `.md`, stays in the
   output until the next full build. And a widget whose source sits in the content folder is copied
-  into the output, where serve's source watcher, which watches every `**/*.tsx` under the Quartz
-  root ([handlers.js:588-603](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/cli/handlers.js#L588-L603)),
-  takes the copy for Quartz's own source and restarts the whole build after the content rebuild.
-  The page is right after either.
+  into the output. When the output is under the Quartz root, as stock Quartz's default `public` is,
+  serve's source watcher, which watches every `**/*.tsx` under that root
+  ([handlers.js:588-603](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/cli/handlers.js#L588-L603)),
+  takes the copy for Quartz's own source and restarts the whole build after the content rebuild,
+  often several times over, and later edits can each rebuild more than once. The page is right after
+  every rebuild. So this site's `site-v5:serve` writes outside the Quartz root, to
+  `quartz-v5/.serve-public`, as `e2e/watch.spec.mjs`'s serve run does, and that spec checks the two
+  stay alike. The README tells other sites the same.

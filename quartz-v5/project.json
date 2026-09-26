@@ -85,10 +85,10 @@
       ]
     },
     "serve": {
-      "//": "Build the real site and serve it with Quartz's dev server, rebuilding on content changes. Mixed-case redirects are only emitted on a case-sensitive filesystem, so a macOS serve shows none.",
+      "//": "Build the real site and serve it with Quartz's dev server, rebuilding on content changes. Mixed-case redirects are only emitted on a case-sensitive filesystem, so a macOS serve shows none. The output, quartz-v5/.serve-public, is outside the vendored copy on purpose: serve's source watcher watches every .ts and .tsx under it, and would take the vault's widget sources, which the build copies into its output, for Quartz's own and restart the whole build over and over (cgc-mdx's watch spec).",
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx quartz build --serve -d ../../content/public --output public",
+        "command": "npx quartz build --serve -d ../../content/public --output ../.serve-public",
         "cwd": "{workspaceRoot}/quartz-v5/quartz"
       },
       "dependsOn": ["prebuild"],
@@ -158,6 +158,7 @@
       "options": {
         "commands": [
           "rm -rf quartz-v5/quartz/public",
+          "rm -rf quartz-v5/.serve-public",
           "rm -rf quartz-v5/quartz/.quartz-cache"
         ],
         "cwd": "{workspaceRoot}",

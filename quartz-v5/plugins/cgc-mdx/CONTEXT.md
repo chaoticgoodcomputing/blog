@@ -37,8 +37,9 @@ plugin's markers alone. Widgets never touch Quartz's navigation events themselve
 _Avoid_: widget script, loader, hydrator
 
 **Widget layer**:
-`cgc.mdx.widgets`, the cascade layer every widget's CSS lands in, whatever the widget's source.
-A sublayer of this package's family layer, so it ranks above core and themes and below the site.
+`cgc.mdx.widgets`, the cascade layer every widget's imported CSS lands in, whatever the widget's
+source. A sublayer of this package's family layer, so it ranks above core and themes and below the
+site. CSS a widget's script injects at run time is outside it (ADR-0002).
 _Avoid_: widget CSS layer, island layer
 
 **Directive**:

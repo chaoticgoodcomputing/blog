@@ -9,8 +9,11 @@
 // Those stay ahead of the wrapper and are rewritten into the widget layer, so nothing escapes it:
 //   @import "https://…" screen;        →  @import "https://…" layer(cgc.mdx.widgets) screen;
 //   @import "https://…" layer(foo);    →  @import "https://…" layer(cgc.mdx.widgets.foo);
+//   @import "https://…" layer;         →  @import "https://…" layer(cgc.mdx.widgets.anonymous-<id>);
 //   @layer foo, bar;                   →  @layer cgc.mdx.widgets.foo,cgc.mdx.widgets.bar;
 // One spelling per layer is not a concern here: the browser reads these files, never lightningcss.
+import { createHash } from "node:crypto"
+
 export const WIDGET_LAYER = "cgc.mdx.widgets"
 
 const PREAMBLE_RULE = /^@(charset|import|layer|namespace)(?![\w-])/i
@@ -18,6 +21,10 @@ const PREAMBLE_RULE = /^@(charset|import|layer|namespace)(?![\w-])/i
 /** Wraps one of esbuild's CSS outputs in the widget layer. */
 export function layerWidgetCss(css: string, layer: string = WIDGET_LAYER): string {
   const preamble: string[] = []
+  // Names for this stylesheet's anonymous imports, which no other stylesheet's can share.
+  const sheet = createHash("sha256").update(css).digest("hex").slice(0, 8)
+  let anonymous = 0
+  const anonymousLayer = () => `${layer}.anonymous-${sheet}-${anonymous++}`
   let i = 0
   for (;;) {
     const start = skipTrivia(css, i)
@@ -30,7 +37,7 @@ export function layerWidgetCss(css: string, layer: string = WIDGET_LAYER): strin
     // `@layer foo {…}` is a block, and belongs inside the wrapper with everything after it.
     if (terminator !== ";") break
     const prelude = css.slice(i + keyword.length + 1, end)
-    if (keyword === "import") preamble.push(`@import ${layerImport(prelude, layer)};`)
+    if (keyword === "import") preamble.push(`@import ${layerImport(prelude, layer, anonymousLayer)};`)
     else if (keyword === "layer") preamble.push(`@layer ${prelude.split(",").map((name) => `${layer}.${name.trim()}`).join(",")};`)
     else preamble.push(css.slice(i, end + 1))
     i = end + 1
@@ -39,8 +46,9 @@ export function layerWidgetCss(css: string, layer: string = WIDGET_LAYER): strin
 }
 
 // `url layer(name) conditions` with the layer moved under ours. An anonymous `layer` has no dotted
-// form, so it lands in the widget layer itself.
-function layerImport(prelude: string, layer: string) {
+// form, so it gets a sublayer named for it alone: its rules still rank below the widget's own, as
+// they did before the wrapper, rather than tying with them in the widget layer itself.
+function layerImport(prelude: string, layer: string, anonymousLayer: () => string) {
   const start = skipTrivia(prelude, 0)
   const urlEnd = tokenEnd(prelude, start)
   const url = prelude.slice(start, urlEnd)
@@ -51,7 +59,10 @@ function layerImport(prelude: string, layer: string) {
     const close = tokenEnd(rest, 0)
     name = `${layer}.${rest.slice(named[0].length, close - 1).trim()}`
     rest = rest.slice(close)
-  } else if (/^layer(?![\w-])/i.test(rest)) rest = rest.slice("layer".length)
+  } else if (/^layer(?![\w-])/i.test(rest)) {
+    name = anonymousLayer()
+    rest = rest.slice("layer".length)
+  }
   rest = rest.trim()
   return `${url} layer(${name})${rest ? ` ${rest}` : ""}`
 }

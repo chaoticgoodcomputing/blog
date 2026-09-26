@@ -8,6 +8,8 @@
    specs that need the sheets serve them. */
 @import url("https://widgets.cgc-fixture.invalid/remote.css");
 @import url("https://widgets.cgc-fixture.invalid/layered.css") layer(cascade-remote);
+/* An anonymous layer, which ranks below the widget's own rules whatever its specificity. */
+@import url("https://widgets.cgc-fixture.invalid/anonymous.css") layer;
 
 .cascade {
   margin: 1rem 0;
@@ -19,6 +21,11 @@
 /* Core's `.page article p > strong` is more specific; only the layer order lets this win. */
 .cascade__strong {
   color: var(--secondary);
+}
+
+/* Less specific than the anonymous-layer import's rule for the same element, and still wins. */
+.cascade__anonymous {
+  border-radius: 8px;
 }
 
 /* The widget's own layer, which nests inside the widget layer. */

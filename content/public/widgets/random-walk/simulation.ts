@@ -4,7 +4,8 @@
 //
 // Ported from v4's script.inline.ts beside this file, which Quartz 4 reads until cutover. What
 // changed: the widget, not this class, owns the controls and the step and node readouts, and every
-// colour comes from the palette the widget reads from the theme, painted again when it changes.
+// colour, and the labels' font, comes from the palette the widget reads from the page, painted again
+// when it changes.
 
 export interface NodeDefinition {
   /** Unique identifier for the node. */
@@ -54,7 +55,7 @@ export interface WalkConfig {
   viewportBounds?: { min: [number, number]; max: [number, number] }
 }
 
-/** Every colour the canvas paints, resolved for the colour scheme showing now. */
+/** Every colour the canvas paints, resolved for the colour scheme showing now, and its font. */
 export interface Palette {
   paper: string
   edge: string
@@ -70,6 +71,8 @@ export interface Palette {
   ink: { dark: string; light: string; on: (fill: string) => string }
   /** Each node's own `color`, resolved. */
   fills: Map<string, string>
+  /** The font family every label is drawn in: the page's, never a literal one. */
+  font: string
 }
 
 /** What the widget shows beside the canvas. */
@@ -350,7 +353,7 @@ export class RandomWalkSimulation {
         }
         const midX = (startX + endX) / 2
         const midY = (startY + endY) / 2
-        ctx.font = `${12 * scale}px sans-serif`
+        ctx.font = `${12 * scale}px ${palette.font}`
         ctx.textAlign = "center"
         ctx.textBaseline = "middle"
         const width = ctx.measureText(label).width
@@ -396,7 +399,7 @@ export class RandomWalkSimulation {
 
       if (node.label) {
         ctx.fillStyle = palette.ink.on(fill)
-        ctx.font = `bold ${14 * scale}px sans-serif`
+        ctx.font = `bold ${14 * scale}px ${palette.font}`
         ctx.textAlign = "center"
         ctx.textBaseline = "middle"
         ctx.fillText(node.label, node.screenX, node.screenY)
@@ -410,7 +413,7 @@ export class RandomWalkSimulation {
         ctx.arc(bx, by, 10 * scale, 0, Math.PI * 2)
         ctx.fill()
         ctx.fillStyle = palette.badgeText
-        ctx.font = `bold ${10 * scale}px sans-serif`
+        ctx.font = `bold ${10 * scale}px ${palette.font}`
         ctx.fillText(String(node.visitCount), bx, by)
       }
     }

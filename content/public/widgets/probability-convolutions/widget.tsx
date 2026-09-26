@@ -69,6 +69,8 @@ export function ProbabilityConvolutions({
   if (dist) shown.current = { dist, threshold }
 
   // Plotly is heavy and browser-only, so it loads when the widget hydrates, never at build time.
+  // Its global stylesheet, which it adds to the head itself, is outside cgc-mdx's widget layer and
+  // outranks the site's CSS; its selectors reach only Plotly's own elements (cgc-mdx ADR-0002).
   useEffect(() => {
     let live = true
     const el = chartRef.current!

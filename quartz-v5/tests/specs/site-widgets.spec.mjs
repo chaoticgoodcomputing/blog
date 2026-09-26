@@ -35,6 +35,8 @@ const vaultFiles = (dir, keep) =>
     .map((rel) => path.join(dir, rel))
     .filter((rel) => fs.statSync(path.join(VAULT, rel)).isFile() && keep(rel))
 
+const RESUME_PDF = "assets/Elkington_Resume.pdf"
+
 const mdxFiles = () => vaultFiles(".", (rel) => rel.endsWith(".mdx") && !rel.startsWith("private"))
 
 function content() {
@@ -43,7 +45,8 @@ function content() {
     // Where the vault's own imports of packages resolve from: the repo root's install.
     node_modules: { symlink: path.join(REPO, "node_modules") },
   }
-  for (const rel of [...mdxFiles(), ...vaultFiles("widgets", (rel) => !V4_FILES.has(path.basename(rel)))]) {
+  // The resume's PDF too, so the build emits it where v5 puts the vault's assets.
+  for (const rel of [...mdxFiles(), ...vaultFiles("widgets", (rel) => !V4_FILES.has(path.basename(rel))), RESUME_PDF]) {
     files[rel] = fs.readFileSync(path.join(VAULT, rel))
   }
   return files
@@ -164,12 +167,23 @@ test.describe("resume", () => {
     expect(html).toMatch(/class="cgc-mdx-island"[^>]*>\s*<div class="cgc-pdf-viewer"/)
     // Where the asset is served is #26's decision (v5 lowercases asset URLs); the widget fetches the
     // URL the article gives it.
-    await page.route(`${ORIGIN}/assets/Elkington_Resume.pdf`, (route) =>
-      route.fulfill({ contentType: "application/pdf", path: path.join(VAULT, "assets/Elkington_Resume.pdf") }),
+    await page.route(`${ORIGIN}/${RESUME_PDF}`, (route) =>
+      route.fulfill({ contentType: "application/pdf", path: path.join(VAULT, RESUME_PDF) }),
     )
     await open(page, "resume")
     await expect(page.locator(".cgc-pdf-viewer__title")).toHaveText("Spencer Elkington - Resume")
     await expect(page.locator(".cgc-pdf-viewer__page").first()).toBeVisible()
+  })
+
+  // The gap the test above steps around, kept in sight. v5 lowercases an asset's URL, and the
+  // article's `src` is a widget prop, which no build re-resolves, so on a case-sensitive host the
+  // viewer's fetch finds nothing. Where the asset lives at cutover is #26's decision (a redirect page
+  // won't do: the viewer fetches the PDF directly). Expected to fail until then; once the build
+  // serves the PDF at the article's URL, it passes, and `test.fail` comes off.
+  test.fail("the build serves the resume at the URL the article gives the viewer (#26)", () => {
+    const src = fs.readFileSync(path.join(VAULT, "resume.mdx"), "utf8").match(/<PDFViewer\b[^>]*\ssrc="([^"]+)"/)[1]
+    // Listed rather than looked up, which a case-insensitive filesystem would answer either way.
+    expect(fs.readdirSync(path.join(site.public, path.posix.dirname(src)))).toContain(path.posix.basename(src))
   })
 })
 
@@ -298,5 +312,31 @@ test.describe("ants-in-the-neighborhood", () => {
     expect(await pixel(canvas, 2, 2)).toBe(await resolvedColour(page, "var(--light)"))
     await toggleScheme(page)
     await expect.poll(async () => pixel(canvas, 2, 2)).toBe(await resolvedColour(page, "var(--light)"))
+  })
+
+  test("the random walks label their canvases in the theme's body font", async ({ page }) => {
+    // Every font a random walk's canvas is set to, as the widget sets it.
+    await page.addInitScript(() => {
+      const fonts = (window.__canvasFonts = [])
+      const font = Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype, "font")
+      Object.defineProperty(CanvasRenderingContext2D.prototype, "font", {
+        ...font,
+        set(value) {
+          if (this.canvas?.closest?.(".random-walk")) fonts.push(value)
+          font.set.call(this, value)
+        },
+      })
+    })
+    await open(page, "content/notes/ants-in-the-neighborhood")
+    const body = await page.locator("article").evaluate((article) => {
+      const probe = article.appendChild(document.createElement("i"))
+      probe.style.fontFamily = "var(--bodyFont)"
+      const family = getComputedStyle(probe).fontFamily
+      probe.remove()
+      return family
+    })
+    await expect.poll(() => page.evaluate(() => window.__canvasFonts.length)).toBeGreaterThan(0)
+    const families = await page.evaluate(() => [...new Set(window.__canvasFonts.map((font) => font.replace(/^(bold )?[\d.]+px /, "")))])
+    expect(families).toEqual([body])
   })
 })

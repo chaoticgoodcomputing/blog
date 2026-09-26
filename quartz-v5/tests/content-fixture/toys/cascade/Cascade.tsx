@@ -10,6 +10,7 @@ export function Cascade() {
       </p>
       <p class="cascade__nested">Styled from the widget's own layer.</p>
       <p class="cascade__remote">Styled from a remote import.</p>
+      <p class="cascade__anonymous">Styled over an anonymous-layer import.</p>
     </div>
   )
 }

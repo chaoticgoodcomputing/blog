@@ -75,7 +75,8 @@ OS picks. Only for what a plugin does differently under serve (ADR-0004). Left u
 
 **Probe plugin**:
 A throwaway plugin a library's spec compiles from source (`harness/probe.mjs`) and loads into a
-scratch site, standing in for the plugin that will one day use that capability of the library.
+scratch site, standing in for a plugin that uses (or will one day use) that capability of the
+library, so the library is tested on its own.
 _Avoid_: test plugin, mock plugin, fake
 
 **Source host**:

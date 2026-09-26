@@ -10,7 +10,7 @@ aliases:
 
 `cgc-mdx` lets a [Quartz 5](https://quartz.jzhao.xyz/) site publish `.mdx` pages: Markdown that imports interactive Preact **widgets** and places them in the text. Each widget is drawn into the page when the site builds, then comes alive in the browser, and a page loads only the widget code it uses.
 
-It started as the MDX half of this site's Quartz 4 fork, and it runs on a stock copy of Quartz 5. It ships no widgets of its own.
+It started as the MDX half of this site's Quartz 4 fork. It ships no widgets of its own. It runs on Quartz 5 with one change upstream hasn't taken yet: a page type's `generate` has to be awaitable ([#25](https://github.com/chaoticgoodcomputing/blog/issues/25)). On a stock Quartz 5 the build fails with `virtualPages is not iterable`, so until that change lands upstream the plugin can't be shared ([ADR-0001](https://github.com/chaoticgoodcomputing/blog/blob/main/docs/adr/0001-customization-through-plugins.md)).
 
 ## What it does
 
@@ -25,6 +25,8 @@ It started as the MDX half of this site's Quartz 4 fork, and it runs on a stock 
 ```shell
 npx quartz plugin add git+https://github.com/chaoticgoodcomputing/blog.git#v<version> --subdir quartz-v5/plugins/cgc-mdx --name cgc-mdx
 ```
+
+It needs a Quartz 5 whose page-type `generate` is awaitable ([#25](https://github.com/chaoticgoodcomputing/blog/issues/25)). Stock v5.0.0 isn't yet.
 
 Releases are `v<semver>` tags on [the monorepo](https://github.com/chaoticgoodcomputing/blog). Every package there shares one version.
 
@@ -146,10 +148,13 @@ All widget CSS lands in the `cgc.mdx.widgets` cascade layer, whatever its source
 - **Namespace every class** after the widget (`.dice-chart`, `.dice-chart__legend`), and select only elements the widget renders.
 - **Take colours and fonts from the theme's custom properties,** such as `var(--dark)`, `var(--secondary)` and `var(--bodyFont)`, never literal values. The widget then follows the site's theme and both colour schemes.
 - **Redraw on `themechange`** if the widget reads colours in script, for a canvas say. A reader can switch the colour scheme while the widget is on screen.
+- **Only the CSS a widget imports is layered.** CSS its script adds to the page at run time, such as the global `<style>` Plotly puts in the head, and inline `style` attributes stay outside the widget layer, so they outrank the site's own CSS. Keep such CSS to the widget's own elements, as Plotly's selectors do.
 
 ## Under `quartz build --serve`
 
-Editing an `.mdx` page, or adding one, rebuilds it like any other note, and so does editing a widget kept in the content folder. Quartz then restarts the whole build once more, because it copies the widget's source into the output and takes the copy for its own source. As with `.md` pages, a page you delete stays in the output until the next full build.
+Editing an `.mdx` page, or adding one, rebuilds it like any other note, and so does editing a widget kept in the content folder. As with `.md` pages, a page you delete stays in the output until the next full build.
+
+Quartz copies a widget's source from the content folder into the output. When the output is inside the Quartz folder, as the default `public` is, serve takes those copies for Quartz's own source: a widget edit then restarts the whole build, often several times, and can leave later edits rebuilding more than once each. The page is right after every rebuild. Serving to an output outside the Quartz folder, such as `--output ../public`, avoids it.
 
 ## Coming from this site's Quartz 4 widgets
 

@@ -197,5 +197,6 @@ Only the content changes. The first build holds the build lock, and the rebuilds
 because they re-run what the process has already imported. That holds only while Quartz doesn't
 re-transpile itself, so the output goes outside the Quartz root: serve's source watcher watches
 every `.ts` and `.tsx` under that root, and would take a widget's source, which Quartz copies into
-the output, for its own.
+the output, for its own. The site's own serve (`site-v5:serve`) writes outside the root for the same
+reason, so a serve run left up is laid out as the site's serve is.
 
