@@ -43,13 +43,13 @@ It takes no options. It runs on a stock copy of Quartz 5.
 
 ## Where the family ranks
 
-`cgc-styles` is a transformer with a default `order` of **15**. Quartz emits plugin stylesheets in `order`, so the `cgc` layer ranks:
+`cgc-styles` is a transformer with a default `order` of **15**. Quartz emits every transformer's stylesheets, sorted by `order`, before any emitter's, so the family layer, `cgc`, ranks:
 
 - above `quartz-base`, always, because core's stylesheet comes first on every page;
 - above a theme at its default order, such as [`@quartz-themes/core`](https://github.com/quartz-themes/core) at 10;
-- below any layer a plugin with a higher `order` introduces. On a stock site that includes `@quartz-community/quartz-fonts`' `quartz-fonts` layer, which only sets font variables, so it never competes with our rules.
+- below any layer introduced by a transformer with a higher `order`, or by any emitter whatever its order. On a stock site that includes `@quartz-community/quartz-fonts`' `quartz-fonts` layer, which only sets font variables, so it never competes with our rules.
 
-To move the family, set `order:` on this plugin. To fix every layer on the page at once, name them all in one `@layer` statement that loads before any plugin's CSS; that overrules every plugin's `order`. The reasoning behind 15 is in the package's [ADR-0001](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz-v5/plugins/cgc-styles/docs/adr/0001-the-family-ranks-just-above-themes.md).
+To move the family, set `order:` on this plugin; that moves it among transformers only, never past an emitter's layer. To fix every layer on the page at once, name them all in one `@layer` statement that loads before any plugin's CSS; that overrules every plugin's `order`. The reasoning behind 15 is in the package's [ADR-0001](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz-v5/plugins/cgc-styles/docs/adr/0001-the-family-ranks-just-above-themes.md).
 
 ## Writing a plugin that uses it
 

@@ -86,6 +86,31 @@ function scratchPlugins(manifests) {
   return { entries, remove: () => fs.rmSync(dir, { recursive: true, force: true }) }
 }
 
+// #40's other requirement: resolving by name is additive. A dependency written as the engine's
+// exact `source:` string still resolves to that entry first, as on stock Quartz, so upstream configs
+// behave as before. Name-only resolution would miss it and refuse the build as missing its engine.
+test("a dependency written as the engine's exact source resolves to it", async () => {
+  const plugins = scratchPlugins({ "source-consumer": { defaultOrder: 20, dependencies: [`../../plugins/${ENGINE}`] } })
+  try {
+    const { code, output } = await buildScratchSite("exact-source", HOME, { config: withPlugins(fixtureConfig(), plugins.entries) })
+    expect(code, output).toBe(0)
+  } finally {
+    plugins.remove()
+  }
+})
+
+// And the order check reads the engine's manifest through that exact-source key, not the fallback.
+test("a consumer ordered before the engine it names by exact source is refused", async () => {
+  const plugins = scratchPlugins({ "source-consumer": { defaultOrder: 10, dependencies: [`../../plugins/${ENGINE}`] } })
+  try {
+    const { code, output } = await buildScratchSite("exact-source-first", HOME, { config: withPlugins(fixtureConfig(), plugins.entries) })
+    expect(code).not.toBe(0)
+    expect(output).toContain(`(order: 10) depends on "${ENGINE}" (order: 15)`)
+  } finally {
+    plugins.remove()
+  }
+})
+
 // #40's warning: had only the presence check learned names, the order check would read the engine's
 // manifest by the raw string, miss, and fall back to order 50. An engine whose own order is above
 // 50 would then let a consumer run in front of it, silently.

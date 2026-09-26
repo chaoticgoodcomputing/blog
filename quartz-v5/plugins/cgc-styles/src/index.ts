@@ -1,5 +1,5 @@
 // cgc-styles: the engine that owns the family layer's position (ADR-0003's family-layer amendment,
-// #30). Its published artifact is a cascade position, and all it emits is the statement that fixes
+// #30). Its published artifact is the family position, and all it emits is the statement that fixes
 // it: `@layer cgc;`, with no rules.
 //
 // A layer ranks by the first place its name appears among its siblings. Core's `index.css` comes
