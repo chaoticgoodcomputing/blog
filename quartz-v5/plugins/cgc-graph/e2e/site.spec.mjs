@@ -142,7 +142,8 @@ test("draws the site's own icons, from its icon collection", () => {
   const { icons } = JSON.parse(
     fs.readFileSync(path.join(site.public, "static/cgcGraph.json"), "utf8"),
   )
-  // The plugin note is tagged `projects/site: { icon: custom:quartz-filled }`, from quartz-v5/icons/.
+  // The plugin note is tagged `projects/site/plugins`, which takes its parent's icon,
+  // `projects/site: { icon: custom:quartz-filled }`, from quartz-v5/icons/.
   expect(Object.keys(icons)).toEqual(
     expect.arrayContaining(["custom:quartz-filled", "mdi:robot", "mdi:wrench", "mdi:pencil"]),
   )

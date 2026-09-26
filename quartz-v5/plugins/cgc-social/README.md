@@ -1,7 +1,7 @@
 ---
 title: cgc-social
 tags:
-  - projects/site
+  - projects/site/plugins
   - engineering/frontend
 ---
 

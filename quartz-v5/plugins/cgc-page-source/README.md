@@ -1,7 +1,7 @@
 ---
 title: cgc-page-source
 tags:
-  - projects/site
+  - projects/site/plugins
 ---
 
 A [Quartz 5](https://quartz.jzhao.xyz/) plugin that puts a "View source on GitHub" link on each page, pointing at the file the page was built from.

@@ -1,7 +1,7 @@
 ---
 title: cgc-post-listing
 tags:
-  - projects/site
+  - projects/site/plugins
   - engineering/frontend
 ---
 

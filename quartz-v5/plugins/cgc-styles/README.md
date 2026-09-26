@@ -1,7 +1,7 @@
 ---
 title: cgc-styles
 tags:
-  - projects/site
+  - projects/site/plugins
   - engineering/frontend
 ---
 

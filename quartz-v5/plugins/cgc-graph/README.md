@@ -1,7 +1,7 @@
 ---
 title: cgc-graph
 tags:
-  - projects/site
+  - projects/site/plugins
   - engineering/frontend
 ---
 

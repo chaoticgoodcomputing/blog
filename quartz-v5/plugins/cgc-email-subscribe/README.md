@@ -1,7 +1,7 @@
 ---
 title: cgc-email-subscribe
 tags:
-  - projects/site
+  - projects/site/plugins
 ---
 
 A [Quartz 5](https://quartz.jzhao.xyz/) plugin that adds a newsletter subscribe box to your pages. The box posts the reader's address to [Buttondown](https://buttondown.com/).

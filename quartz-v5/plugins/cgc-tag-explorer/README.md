@@ -1,7 +1,7 @@
 ---
 title: cgc-tag-explorer
 tags:
-  - projects/site
+  - projects/site/plugins
   - engineering/frontend
 ---
 

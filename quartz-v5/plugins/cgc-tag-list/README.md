@@ -1,7 +1,7 @@
 ---
 title: cgc-tag-list
 tags:
-  - projects/site
+  - projects/site/plugins
   - engineering/frontend
 ---
 

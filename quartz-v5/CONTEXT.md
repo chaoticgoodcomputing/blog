@@ -63,8 +63,17 @@ _Avoid_: real config, production config, the config (while the fixture's exists 
 **Plugin note**:
 A shareable plugin's README, published on this site as a content note at `/plugins/<name>`. The
 same file is the plugin's documentation on GitHub and its page on the site. Libraries and site
-plugins have none.
+plugins have none. Every plugin note carries the tag `projects/site/plugins`, so that tag's page
+lists them all, under the **plugin DAG**.
 _Avoid_: plugin page, docs page
+
+**Plugin DAG**:
+The flowchart of how every package here depends on the others, on the description note of the tag
+`projects/site/plugins`: a solid edge from a plugin to each plugin its manifest's `dependencies`
+names, and a dotted one from a package to each **library** it builds with, with the site plugins
+drawn apart. Generated from the manifests by `site-v5:plugin-dag` (#86), never edited by hand, and
+guarded by a spec that fails when the note drifts from the packages.
+_Avoid_: dependency graph (the graph is cgc-graph's), plugin map (the FORK-LEDGER's is the v4 → v5 map)
 
 **Upstream proposal**:
 The pull request that retires a vendored change by getting it accepted upstream. Every vendored

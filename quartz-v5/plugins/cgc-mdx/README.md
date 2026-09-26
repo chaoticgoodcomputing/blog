@@ -1,7 +1,7 @@
 ---
 title: cgc-mdx
 tags:
-  - projects/site
+  - projects/site/plugins
   - engineering/languages/typescript
   - engineering/frontend
 aliases:

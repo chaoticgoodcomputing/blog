@@ -1,7 +1,7 @@
 ---
 title: cgc-og-image
 tags:
-  - projects/site
+  - projects/site/plugins
   - engineering/languages/typescript
 ---
 

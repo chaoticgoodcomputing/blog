@@ -83,6 +83,14 @@ vendored root —
 not `./plugins/cgc-tags`. A plugin option that names a file resolves the same way, so the site's
 icon is `icon: ../icon.png` on `cgc-og-image`.
 
+`site-v5:plugin-dag` writes the **plugin DAG** (`utils/plugin-dag.mjs`, #86): the Mermaid flowchart of
+how every package under `plugins/`, `libs/` and `site-plugins/` depends on the others, between the
+generated markers in the description note of the plugins' tag, the vault's
+`tags/projects/site/plugins/index.md`. It reads only the packages' manifests, so run
+it after changing a manifest's `quartz.dependencies` or a library dependency, or adding a package.
+`tests/specs/plugin-dag.spec.mjs` fails while the note has drifted, and `node
+utils/plugin-dag.mjs --check` says so without writing.
+
 ## Provenance
 
 |          |                                            |

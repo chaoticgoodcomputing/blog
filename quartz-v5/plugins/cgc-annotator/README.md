@@ -1,7 +1,7 @@
 ---
 title: cgc-annotator
 tags:
-  - projects/site
+  - projects/site/plugins
   - writing/annotations
 ---
 

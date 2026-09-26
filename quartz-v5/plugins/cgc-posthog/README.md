@@ -1,7 +1,7 @@
 ---
 title: cgc-posthog
 tags:
-  - projects/site
+  - projects/site/plugins
 ---
 
 A [Quartz 5](https://quartz.jzhao.xyz/) plugin that adds [PostHog](https://posthog.com/) analytics to your site, set up to respect your readers' privacy:

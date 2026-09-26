@@ -1,7 +1,7 @@
 ---
 title: cgc-seo
 tags:
-  - projects/site
+  - projects/site/plugins
   - engineering/languages/typescript
 ---
 

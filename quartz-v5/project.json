@@ -60,6 +60,14 @@
         "parallel": false
       }
     },
+    "plugin-dag": {
+      "//": "Rewrite the dependency DAG on the plugins' tag page, the Mermaid block between the generated markers in content/public/tags/projects/site/plugins/index.md, from every package's manifest: engine edges from `quartz.dependencies`, library edges from the libraries a package builds with (#86). tests/specs/plugin-dag.spec.mjs fails while the note has drifted. Check without writing: node quartz-v5/utils/plugin-dag.mjs --check",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node quartz-v5/utils/plugin-dag.mjs",
+        "cwd": "{workspaceRoot}"
+      }
+    },
     "prebuild": {
       "//": "Prepare the vendored copy to build the real site: symlink the tracked quartz-v5/quartz.config.yaml into it, link host node_modules beside local plugins, and build every local plugin the site config enables. See VENDORED.md.",
       "executor": "nx:run-commands",
