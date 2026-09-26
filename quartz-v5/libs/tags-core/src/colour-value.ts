@@ -11,7 +11,7 @@
 // it holds, is the theme's business at runtime. Such a value passes when it is shaped like a colour:
 // one `var()`, or a colour function (`light-dark()`, `color-mix()`, `rgb()`…) that uses one, with
 // every part that isn't a reference itself a colour; and when some stand-in for each reference (a
-// colour, a number, a percentage, or three channels) makes the whole value one lightningcss reads
+// colour, a number, a percentage, or three channels, with or without commas) makes the whole value one lightningcss reads
 // as a colour, so a colour function's other arguments are checked too.
 //
 // `!important` never passes. The engine writes a tag's colour into its cascade layer, where an
@@ -129,8 +129,9 @@ export function colourValueCheck(transform: CssTransform): (value: unknown) => b
 }
 
 // What a reference might stand for inside a colour: a colour, a number, a percentage, or three
-// channels.
-const STAND_INS = ["black", "0", "0%", "0 0 0"]
+// channels, space-separated or comma-separated as legacy `rgb()` and `hsl()` take them
+// (`rgba(var(--rgb), 0.5)` with `--rgb: 12, 34, 56`).
+const STAND_INS = ["black", "0", "0%", "0 0 0", "0, 0, 0", "0, 0%, 0%"]
 
 const combinations = (n: number): string[][] =>
   n === 0

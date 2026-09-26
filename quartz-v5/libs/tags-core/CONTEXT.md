@@ -114,7 +114,8 @@ _Avoid_: colour validator, colour parser
   colour-value check through `cgc-tags`', `cgc-graph`'s and `cgc-social`'s option specs; the
   colour resolver through `cgc-graph`'s colour and scheme specs, which paint the theme's colours
   and every tag's with it (#74, #77), and its options spec, which paints private pages in a
-  `color()` whose computed value isn't `rgb()`; `tagOfPage()` through what
+  `color()` whose computed value isn't `rgb()` (the paint the reader sees, not the resolver's
+  internal `rgba()` return shape); `tagOfPage()` through what
   `cgc-post-listing` and `cgc-tag-list` render on tag pages (`e2e/tag-pages.spec.mjs`), and
   through `cgc-graph`'s tag nodes; `privatePageTest()`, `underAny()` and `normaliseTag()` through
   every plugin that treats private pages differently, on a site that names its private tags once

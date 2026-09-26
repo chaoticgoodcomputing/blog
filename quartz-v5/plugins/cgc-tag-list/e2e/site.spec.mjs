@@ -41,8 +41,6 @@ test("draws the site's own icons and MDI's, each in its tag's colour", async ({ 
   page.on("request", (request) => requests.push(request.url()))
   await routeSite(page, site.public, ORIGIN)
   await page.goto(`${ORIGIN}/content/notes/tagged`)
-  // Every icon inline, as the site built the page: none fetched.
-  expect(requests.filter((url) => ICON_REQUEST.test(url))).toEqual([])
   for (const tag of Object.keys(DRAWN)) {
     const ring = ringOf(page, tag)
     const svg = ring.locator("svg")
@@ -59,4 +57,7 @@ test("draws the site's own icons and MDI's, each in its tag's colour", async ({ 
     expect(drawn.width * drawn.height, `${tag} draws something`).toBeGreaterThan(0)
     expect(drawn.paints, `${tag} is painted in its tag's colour`).toEqual([colour])
   }
+  // Every icon inline, as the site built the page: none fetched, even once the page has settled.
+  await page.waitForLoadState("networkidle")
+  expect(requests.filter((url) => ICON_REQUEST.test(url))).toEqual([])
 })

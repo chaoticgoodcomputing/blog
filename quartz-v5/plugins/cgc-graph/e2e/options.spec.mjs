@@ -98,7 +98,9 @@ test("fills a per-kind setting's missing kinds from the defaults", async ({ page
 
 // A colour value in each form a site can write it: a theme's reference, which follows the theme; a
 // `light-dark()` pair, which follows the scheme; and a `color()`, whose computed value isn't `rgb()`,
-// so the colour resolver has to normalise it before the canvas can take it. Nothing else in the
+// which the colour resolver takes through its normalising path and the reader still sees painted in
+// that colour. (Chromium's canvas takes `color()` as it is, so this proves the paint, not the
+// resolver's `rgba()` return shape, which is internal to the runtime.) Nothing else in the
 // graph is drawn in any of them: the `private` tag, whose default colour is the theme's `darkgray`,
 // is left out, as the real site leaves it out.
 const PRIVATE = {

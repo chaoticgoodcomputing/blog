@@ -3,6 +3,9 @@
 import { test, expect } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, fixtureConfig, withPlugins } from "../../../tests/harness/site.mjs"
 
+// Every case builds a scratch site, and waits its turn at the harness's build lock under a full run.
+test.describe.configure({ timeout: 180_000 })
+
 const HOME = { "index.md": "---\ntitle: Home\ntags: [fixture]\n---\nHome.\n" }
 const withOptions = (options) =>
   withPlugins(fixtureConfig(), [{ source: "../../plugins/cgc-tags", enabled: true, options }])
@@ -41,6 +44,9 @@ test("builds with any colour CSS can read, references included", async () => {
       d: { color: "color-mix(in srgb, var(--secondary) 40%, var(--tertiary))" },
       e: { color: "hsl(var(--hue) 50% 50%)" },
       f: { color: "light-dark(var(--secondary), var(--tertiary, rgb(0 0 0)))" },
+      // The legacy idiom: a custom property holding comma-separated channels, `--rgb: 12, 34, 56`.
+      g: { color: "rgba(var(--rgb), 0.5)" },
+      h: { color: "hsla(var(--hsl), 0.5)" },
     },
     defaultColor: "var(--gray, gray)",
   })
