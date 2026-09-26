@@ -419,13 +419,14 @@ plugins:
       position: right
       priority: 50
       condition: not-index
-  # v4's Backlinks (#44, #78): public pages first, then newest first, and each private page marked
-  # with MDI's lock, drawn when the site builds. The private tags are the ones cgc-seo's
-  # `noindexTags` names, descendants included.
+  # v4's Backlinks (#44, #78): public pages first, then newest first. The private tags are the ones
+  # cgc-seo's `noindexTags` names, descendants included, and private pages are left out, where v4
+  # marked them with a lock (the owner's review notes, #85).
   - source: ../plugins/cgc-backlinks
     enabled: true
     options:
       privateTags: *privateTags
+      excludePrivate: true
     layout:
       position: right
       priority: 50
@@ -504,16 +505,16 @@ plugins:
       priority: 30
       group: toolbar
   # v4's TagExplorer (#42, #44, #76), under the page title and toolbar as in v4: the tag hierarchy,
-  # each tag in its colour with its icon, most pages first, and the pages under each, public first.
-  # `private` stays out of the tree, as v4's `excludeTags` kept it, and its pages are listed under
-  # their other tags with a lock. Below the site's 1000px breakpoint it is a drawer of its own, v4's
-  # MobileSidebarMenu being gone (#42).
+  # each tag in its colour with its icon, most pages first, and the pages under each, newest first.
+  # Private pages are left out altogether, from every count and listing, and the private tags with
+  # them, where v4 kept only `private` out of the tree and listed its pages under their other tags
+  # with a lock (the owner's review notes, #85). Below the site's 1000px breakpoint it is a drawer of
+  # its own, v4's MobileSidebarMenu being gone (#42).
   - source: ../plugins/cgc-tag-explorer
     enabled: true
     options:
-      excludeTags:
-        - private
       privateTags: *privateTags
+      excludePrivate: true
       iconCollections: *iconCollections
       drawerBreakpoint: 1000
     layout:

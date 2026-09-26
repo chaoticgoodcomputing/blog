@@ -1,6 +1,6 @@
 // cgc-tag-explorer on the real site (#76), proven on a scratch site built from the site config, with
-// pages carrying the vault's tags: v4's left-sidebar navigation, `private` left out of the tree but
-// its pages listed under their public tags with a lock, the site's own icons, a drawer at the site's
+// pages carrying the vault's tags: v4's left-sidebar navigation, private pages and `private` left out
+// altogether (the owner's review notes, #85), the site's own icons, a drawer at the site's
 // 1000px breakpoint that leaves a phone's header alone, the 404 page at any depth, v4's PostHog label
 // for a navigation from it, and the plugin note (#48).
 import fs from "node:fs"
@@ -20,7 +20,7 @@ const CONTENT = {
   "index.md": "---\ntitle: Home\n---\nWelcome.\n",
   "content/notes/game-log.md": note("Game log", "2025-02-01", ["projects/games", "engineering/ai"]),
   "content/notes/old-game.md": note("Old game", "2024-01-01", ["projects/games"]),
-  // Private, and the newest: listed after the public pages, with a lock.
+  // Private, and the newest, under a public tag: left out, of the listing and of the count.
   "content/notes/game-plans.md": note("Game plans", "2025-03-01", ["private", "projects/games"]),
   // The plugin note, as the vault has it: a symlink to the README (#48).
   "plugins/cgc-tag-explorer.md": fs.readFileSync(
@@ -82,22 +82,22 @@ test("navigates the site by tag from the left sidebar, `private` left out", asyn
   expect(drawn.paints).toEqual([drawn.colour])
 })
 
-test("lists a private page under its public tag, last, with a lock", async ({ page }) => {
+// v4 listed a private page under its public tags, last, with a lock. The site now leaves it out, as
+// the owner's review notes decided (#85).
+test("leaves a private page out of its public tag's listing and count", async ({ page }) => {
   await page.setViewportSize({ width: 1400, height: 900 })
   await routeSite(page, site.public, ORIGIN)
   await page.goto(`${ORIGIN}/`)
   await fold(page, "projects").click()
+  await expect(
+    tagItem(page, "projects/games").locator(
+      ":scope > .cgc-tag-explorer__row .cgc-tag-explorer__count",
+    ),
+  ).toHaveText("(2)")
   await fold(page, "projects/games").click()
   const pages = list(page, "projects/games").locator(":scope > .cgc-tag-explorer__page")
-  await expect(pages.locator(".cgc-tag-explorer__page-title")).toHaveText([
-    "Game log",
-    "Old game",
-    "Game plans",
-  ])
-  await expect(
-    pages.filter({ hasText: "Game plans" }).locator(".cgc-tag-explorer__lock svg"),
-  ).toHaveCount(1)
-  await expect(pages.locator(".cgc-tag-explorer__lock")).toHaveCount(1)
+  await expect(pages.locator(".cgc-tag-explorer__page-title")).toHaveText(["Game log", "Old game"])
+  await expect(page.locator(".cgc-tag-explorer__tree .cgc-tag-explorer__lock")).toHaveCount(0)
 })
 
 // At the site's own mobile query, `max-width: 1000px`, where site-styles makes the left sidebar a row.
@@ -176,7 +176,6 @@ test("works on the 404 page at any depth", async ({ page }) => {
   await expect(list(page, "projects/games").locator(".cgc-tag-explorer__page-title")).toHaveText([
     "Game log",
     "Old game",
-    "Game plans",
   ])
   await list(page, "projects/games").getByRole("link", { name: "Old game" }).click()
   await expect(page).toHaveURL(`${ORIGIN}/content/notes/old-game`)

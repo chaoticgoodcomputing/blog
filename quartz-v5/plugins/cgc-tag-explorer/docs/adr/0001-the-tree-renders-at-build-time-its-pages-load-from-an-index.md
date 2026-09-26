@@ -70,3 +70,21 @@ the engine's tags. So it writes exactly what the explorer lists, sorted once, at
   undated pages last, and pages with the same date A→Z. The script only renders the order it is
   given. v4 broke same-date ties Z→A. #42 restored upstream's A→Z for the listings that shared that
   tiebreak, and the explorer follows.
+
+## Amendment: a site may leave private pages out of the index
+
+_2026-09-26, from the owner's review notes of that day, on
+[Private pages can be left out of the tag explorer and backlinks](https://github.com/chaoticgoodcomputing/blog/issues/85)._
+
+The index holds every listed page once, and v4's explorer, which #76 carried over, listed a private
+page under its public tags with a lock. The owner asked for an option that leaves private pages out
+of the explorer entirely, from every count and from view, off by default since the plugin is
+shareable, and on for the real site. That departs from #76's v4 parity on the real site, and the
+notes win.
+
+- **`excludePrivate` removes private pages before either half sees them.** The tree counts only the
+  pages left, and the emitter writes only those, so the index never carries a private page's slug or
+  title, and the browser never learns one. Private pages are not listed and then hidden by the script.
+- **The private tags leave the tree** as excluded tags do, and so does a tag that only private pages
+  carry, since it has no page left to count. A tag with a count of 0 would still say it exists.
+- **Off, nothing changes:** private pages are listed last, with a lock, as above.

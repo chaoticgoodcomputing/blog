@@ -5,7 +5,7 @@ tags:
   - engineering/frontend
 ---
 
-`cgc-backlinks` is a [Quartz 5](https://quartz.jzhao.xyz/) plugin that lists the pages linking to a page, as Quartz's own backlinks do, with two differences: public pages come first, and each private page carries a lock.
+`cgc-backlinks` is a [Quartz 5](https://quartz.jzhao.xyz/) plugin that lists the pages linking to a page, as Quartz's own backlinks do, with two differences: public pages come first, and each private page carries a lock, or, if you prefer, is left out.
 
 It is the `Backlinks` component from this site's Quartz 4 days, carried over as a plugin. The lock is now drawn when the site builds, where v4 added it with a script after the page loaded, fetching the icon from a CDN.
 
@@ -40,6 +40,7 @@ A heading, then one link per page that links here:
 - **The order** puts public pages first, then private ones. Within each group, the most recently modified page comes first, falling back to its published date. Pages changed on the same day are in reverse alphabetical order of title, as they were in Quartz 4.
 - **A private page** is one that carries one of the `privateTags`, or a descendant of one: with the default, `private` and `private/work` are private, but `privateer` isn't. Its link gets the `--private` modifier and a lock before its title. The lock is [Material Design Icons](https://pictogrammers.com/library/mdi/)' `mdi:lock`, drawn inline as SVG when the site builds, so the page makes no request for it. It is painted in the link's colour.
 - **A public page** gets a bullet before its title instead.
+- **Private pages can be left out** instead of marked, with `excludePrivate`. Then only public pages are listed, and a page that only private pages link to has no backlinks, so it gets no section unless `hideWhenEmpty` is off.
 - **The links get no page preview on hover.** They aren't marked as Quartz's `internal` links, as they weren't in Quartz 4, so Quartz's popovers pass them by. Following one still navigates within the site.
 - **A long list** scrolls in its own box, with its bottom faded out until the reader scrolls to the end, as Quartz's own backlinks do.
 - **A page no page links to** gets no section at all, unless `hideWhenEmpty` is off. Then the list says there are no backlinks.
@@ -72,6 +73,7 @@ plugins:
     options:
       privateTags:
         - private
+      excludePrivate: true
     layout:
       position: right
       priority: 50
@@ -81,9 +83,12 @@ plugins:
 | Option | Default | |
 | --- | --- | --- |
 | `privateTags` | `[private]` | Tags that make a page private, together with their descendants. |
+| `excludePrivate` | `false` | Leave private pages out of the list, rather than list them after the public pages with a lock. |
 | `hideWhenEmpty` | `true` | Leave the section out of a page no page links to. |
 
-If you also run [cgc-seo](https://blog.chaoticgood.computer/plugins/cgc-seo), [cgc-graph](https://blog.chaoticgood.computer/plugins/cgc-graph) or [cgc-tag-explorer](https://blog.chaoticgood.computer/plugins/cgc-tag-explorer), give them all the same private tags, through a YAML anchor, so the pages search engines are asked to leave out are the ones marked here and in the graph and the explorer.
+If you also run [cgc-seo](https://blog.chaoticgood.computer/plugins/cgc-seo), [cgc-graph](https://blog.chaoticgood.computer/plugins/cgc-graph) or [cgc-tag-explorer](https://blog.chaoticgood.computer/plugins/cgc-tag-explorer), give them all the same private tags, through a YAML anchor, so the pages search engines are asked to leave out are the ones marked, or left out, here and in the graph and the explorer.
+
+This site turns `excludePrivate` on, so its private notes never show in a page's backlinks. Quartz 4 listed them with a lock.
 
 ## Styling
 

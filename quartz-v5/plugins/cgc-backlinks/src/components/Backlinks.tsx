@@ -16,6 +16,12 @@ export interface BacklinksOptions {
    * with one (`privateer`) is not a descendant. Default: `["private"]`, as cgc-seo's `noindexTags`.
    */
   privateTags?: string[]
+  /**
+   * Leave private pages out of the list, rather than list them after the public ones with a lock.
+   * A page only private pages link to then has no backlinks. Default: false, so a private page is
+   * listed and marked.
+   */
+  excludePrivate?: boolean
   /** Leave the section out of a page no page links to, as stock does. Default: true. */
   hideWhenEmpty?: boolean
 }
@@ -23,6 +29,7 @@ export interface BacklinksOptions {
 // Quartz merges no defaults into a component's options, so the component does.
 const DEFAULTS: Required<BacklinksOptions> = {
   privateTags: ["private"],
+  excludePrivate: false,
   hideWhenEmpty: true,
 }
 
@@ -67,7 +74,10 @@ export default ((userOpts?: BacklinksOptions) => {
     const here = simplifySlug(slug as never)
     const sources = allFiles
       .filter(
-        (file) => file.unlisted !== true && (file.links as string[] | undefined)?.includes(here),
+        (file) =>
+          file.unlisted !== true &&
+          (file.links as string[] | undefined)?.includes(here) &&
+          !(opts.excludePrivate && isPrivate(file)),
       )
       .sort(order)
     if (opts.hideWhenEmpty && sources.length === 0) return null

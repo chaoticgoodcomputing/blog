@@ -31,12 +31,19 @@ export interface PagesIndex {
 /** Where the emitter writes the index, relative to the site's output. */
 export const PAGES_INDEX = "static/cgcTagExplorer.json"
 
-// The pages the explorer lists: every page the engine has published tags for, less those a site
-// marks unlisted (`unlisted-pages`), which stock content-index leaves out too.
-const listed = (files: PageData[]) =>
-  files.filter((file) => file.cgcTags !== undefined && file.unlisted !== true)
-
 const tagsOf = (file: PageData) => file.cgcTags as TagsData
+
+// The pages the explorer lists: every page the engine has published tags for, less those a site
+// marks unlisted (`unlisted-pages`), which stock content-index leaves out too, and, when the site
+// leaves them out (`excludePrivate`), the private pages. Those then count under no tag, and no tag
+// only they carry makes the tree.
+const listed = (files: PageData[], settings: Settings) =>
+  files.filter(
+    (file) =>
+      file.cgcTags !== undefined &&
+      file.unlisted !== true &&
+      !(settings.excludePrivate && settings.isPrivate(tagsOf(file).ancestors)),
+  )
 
 const byName = (a: string, b: string) =>
   a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" })
@@ -52,7 +59,7 @@ const ORDERS: Record<TagSort, (a: TagNode, b: TagNode) => number> = {
 /** Every tag in the corpus but the excluded ones, as a tree of top-level tags, each level in order. */
 export function treeOf(files: PageData[], settings: Settings): TagNode[] {
   const nodes = new Map<string, TagNode>()
-  for (const file of listed(files)) {
+  for (const file of listed(files, settings)) {
     for (const [tag, properties] of Object.entries(tagsOf(file).ancestors)) {
       if (settings.excluded(tag)) continue
       const node = nodes.get(tag) ?? { tag, properties, count: 0, children: [] }
@@ -100,7 +107,7 @@ interface Listed {
 export function pagesIndexOf(files: PageData[], settings: Settings): PagesIndex {
   const index: PagesIndex = { pages: [], tags: {} }
   const lists = new Map<string, Listed[]>()
-  for (const file of listed(files)) {
+  for (const file of listed(files, settings)) {
     const data = tagsOf(file)
     const own = Object.keys(data.tags).filter((tag) => !settings.excluded(tag))
     if (own.length === 0) continue

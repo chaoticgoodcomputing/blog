@@ -26,6 +26,12 @@ export interface TagExplorerOptions {
    * listed after a tag's public pages, with a lock. Default: none.
    */
   privateTags?: string[]
+  /**
+   * Leave every private page out of the explorer, rather than list it with a lock: out of every
+   * tag's count and listing, and out of the pages index the browser loads. The private tags and their
+   * subtags leave the tree, as does any tag only private pages carry. Default: false.
+   */
+  excludePrivate?: boolean
   /** After each tag, the number of pages under it, its subtags' included. Default: true. */
   showCount?: boolean
   /**
@@ -53,6 +59,8 @@ export interface Settings {
   excluded(tag: string): boolean
   /** Whether a page is a private page, from every tag it is under (the engine's `ancestors`). */
   isPrivate(under: Record<string, unknown>): boolean
+  /** Whether private pages are left out of the explorer altogether. */
+  excludePrivate: boolean
 }
 
 const TAG_SORTS: TagSort[] = ["count-desc", "count-asc", "alphabetical", "alphabetical-reverse"]
@@ -64,6 +72,7 @@ const OPTIONS = [
   "tagSort",
   "excludeTags",
   "privateTags",
+  "excludePrivate",
   "showCount",
   "iconCollections",
   "drawerBreakpoint",
@@ -100,7 +109,8 @@ export function settingsOf(options: TagExplorerOptions = {}): Settings {
     useSavedState = true,
     tagSort = "count-desc",
   } = options
-  const { showCount = true, iconCollections = {}, drawerBreakpoint = 800 } = options
+  const { showCount = true, excludePrivate = false } = options
+  const { iconCollections = {}, drawerBreakpoint = 800 } = options
   if (title !== undefined && typeof title !== "string")
     throw new TagExplorerError("title must be text")
   if (!STATES.includes(defaultState)) {
@@ -111,7 +121,7 @@ export function settingsOf(options: TagExplorerOptions = {}): Settings {
   if (!TAG_SORTS.includes(tagSort)) {
     throw new TagExplorerError(`tagSort must be one of ${quoted(TAG_SORTS)}, not "${tagSort}"`)
   }
-  for (const [name, value] of Object.entries({ useSavedState, showCount })) {
+  for (const [name, value] of Object.entries({ useSavedState, showCount, excludePrivate })) {
     if (typeof value !== "boolean") throw new TagExplorerError(`${name} must be true or false`)
   }
   if (!Number.isFinite(drawerBreakpoint) || drawerBreakpoint <= 0) {
@@ -119,8 +129,14 @@ export function settingsOf(options: TagExplorerOptions = {}): Settings {
   }
   // A tag is under a root when it is the root or one of its subtags (tags-core): `privateer` is not
   // under `private`.
-  const excluded = underAny(tagList("excludeTags", options.excludeTags))
-  const isPrivatePage = privatePageTest(tagList("privateTags", options.privateTags))
+  const privateTags = tagList("privateTags", options.privateTags)
+  const isPrivatePage = privatePageTest(privateTags)
+  // Left out of the tree: the excluded tags, and, with private pages left out, the private tags. A
+  // private tag's every page is private, so it would have none left anyway.
+  const excluded = underAny([
+    ...tagList("excludeTags", options.excludeTags),
+    ...(excludePrivate ? privateTags : []),
+  ])
   return {
     title,
     defaultState,
@@ -131,6 +147,7 @@ export function settingsOf(options: TagExplorerOptions = {}): Settings {
     drawerBreakpoint,
     excluded,
     isPrivate: (ancestors) => isPrivatePage(Object.keys(ancestors)),
+    excludePrivate,
   }
 }
 

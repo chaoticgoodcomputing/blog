@@ -1,7 +1,7 @@
 // cgc-backlinks on the real site (#78), proven on a scratch site built from the site config, with pages
 // in the vault's shapes: its private stubs, tagged `private` or a descendant of it, link to public
-// notes as the vault's do. The site resolves links absolutely, as v4 did. The plugin note is the
-// vault's own file.
+// notes as the vault's do, and the site leaves them out of backlinks (the owner's review notes,
+// #85). The site resolves links absolutely, as v4 did. The plugin note is the vault's own file.
 import fs from "node:fs"
 import path from "node:path"
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
@@ -10,13 +10,6 @@ import { buildScratchSite, siteConfig, testsRoot } from "../../../tests/harness/
 // The site is served at its own `baseUrl`, where Quartz points its absolute URLs.
 const ORIGIN = "https://blog.chaoticgood.computer"
 const VAULT = path.resolve(testsRoot, "../../content/public")
-const MDI = JSON.parse(
-  fs.readFileSync(
-    path.resolve(testsRoot, "../libs/icons/node_modules/@iconify-json/mdi/icons.json"),
-    "utf8",
-  ),
-)
-const LOCK = MDI.icons.lock.body.match(/ d="([^"]+)"/)[1]
 
 const CONTENT = {
   "index.md": "---\ntitle: Home\n---\nWelcome. Start at [[content/notes/garden|the garden]].\n",
@@ -46,24 +39,14 @@ test.beforeAll(async () => {
 })
 test.afterAll(() => site?.remove())
 
-const link = (page, name) => page.locator(".cgc-backlinks .cgc-backlinks__link", { hasText: name })
-const glyphOf = (locator) =>
-  locator.evaluate((link) =>
-    [...link.querySelectorAll("svg path")].map((shape) => shape.getAttribute("d")),
-  )
-
-test("lists a note's backlinks public first, each private one marked with MDI's lock", async ({
-  page,
-}) => {
+// v4 listed a private page's backlink after the public ones, with a lock. The site now leaves it
+// out, as the owner's review notes decided (#85).
+test("lists a note's public backlinks, and leaves its private ones out", async ({ page }) => {
   await routeSite(page, site.public, ORIGIN)
   await page.goto(`${ORIGIN}/content/notes/garden`)
   const names = await page.locator(".cgc-backlinks .cgc-backlinks__name").allTextContents()
-  expect(names.slice(0, 2).sort()).toEqual(["A walk", "Home"])
-  expect(names.slice(2).sort()).toEqual(["A daily note", "A standup"])
-  for (const name of ["A daily note", "A standup"])
-    expect(await glyphOf(link(page, name)), name).toEqual([LOCK])
-  for (const name of ["A walk", "Home"])
-    await expect(link(page, name).locator("svg"), name).toHaveCount(0)
+  expect(names.sort()).toEqual(["A walk", "Home"])
+  await expect(page.locator(".cgc-backlinks svg")).toHaveCount(0)
 })
 
 test("leaves backlinks off the index, as v4 did", async ({ page }) => {

@@ -33,8 +33,8 @@ function withPrivateTags(tags) {
 
 const ORIGIN = "https://blog.chaoticgood.computer"
 
-// Every page is under `engineering`, a public tag, so the tag explorer lists each of them there, and
-// links to the target, so each is one of its backlinks and in its local graph.
+// Every page is under `engineering`, a public tag, so the tag explorer would list each of them there,
+// and links to the target, so each would be one of its backlinks, and is in its local graph.
 const note = (title, tags) =>
   `---\ntitle: ${title}\ntags: [${["engineering", ...tags].join(", ")}]\ndate: 2025-01-01\n---\nAbout [[content/notes/target|the target]].\n`
 const PAGES = {
@@ -49,6 +49,10 @@ const PAGES = {
 }
 const PRIVATE = Object.values(PAGES)
   .filter((page) => page.private)
+  .map((page) => page.title)
+  .sort()
+const PUBLIC = Object.values(PAGES)
+  .filter((page) => !page.private)
   .map((page) => page.title)
   .sort()
 
@@ -103,15 +107,14 @@ test("cgc-seo asks search engines not to index the private pages, nor the privat
   }
 })
 
-test("cgc-backlinks marks the private pages' backlinks", async ({ page }) => {
+// The owner's review notes of 2026-09-26 (#85): the site leaves private pages out of backlinks
+// (`excludePrivate`), where v4 marked them.
+test("cgc-backlinks leaves the private pages out", async ({ page }) => {
   await routeSite(page, site.public, ORIGIN)
   await page.goto(`${ORIGIN}/content/notes/target`)
-  const links = page.locator(".cgc-backlinks__link")
-  await expect(links).toHaveCount(Object.keys(PAGES).length)
-  const marked = await page
-    .locator(".cgc-backlinks__link--private .cgc-backlinks__name")
-    .allTextContents()
-  expect(marked.sort()).toEqual(PRIVATE)
+  const listed = await page.locator(".cgc-backlinks__link .cgc-backlinks__name").allTextContents()
+  expect(listed.sort()).toEqual(PUBLIC)
+  await expect(page.locator(".cgc-backlinks__link--private")).toHaveCount(0)
 })
 
 test("cgc-graph draws the private pages as private", async ({ page }) => {
@@ -124,21 +127,29 @@ test("cgc-graph draws the private pages as private", async ({ page }) => {
   expect(marked.sort()).toEqual(PRIVATE)
 })
 
-test("cgc-tag-explorer locks the private pages", async ({ page }) => {
+// The owner's review notes of 2026-09-26 (#85): the site leaves private pages out of the tag
+// explorer (`excludePrivate`), from every count and listing, and the private tags out of its tree,
+// where v4 listed private pages with a lock.
+test("cgc-tag-explorer leaves the private pages and the private tags out", async ({ page }) => {
   await page.setViewportSize({ width: 1400, height: 900 })
   await routeSite(page, site.public, ORIGIN)
   await page.goto(`${ORIGIN}/`)
+  const explorer = page.locator(".cgc-tag-explorer__tree")
+  for (const tag of ["private", "private/work", "secret-stash", "secret-stash/deep"])
+    await expect(explorer.locator(`[data-tag="${tag}"]`), tag).toHaveCount(0)
+  await expect(explorer.locator('[data-tag="privateer"]')).toHaveCount(1)
   const engineering = page.locator('.cgc-tag-explorer__tag[data-tag="engineering"]')
+  await expect(
+    engineering.locator(":scope > .cgc-tag-explorer__row .cgc-tag-explorer__count"),
+  ).toHaveText(`(${PUBLIC.length})`)
   await engineering.locator(":scope > .cgc-tag-explorer__row .cgc-tag-explorer__fold").click()
   const pages = engineering.locator(
     ":scope > .cgc-tag-explorer__children > .cgc-tag-explorer__list > .cgc-tag-explorer__page",
   )
-  await expect(pages).toHaveCount(Object.keys(PAGES).length)
-  const locked = await pages
-    .filter({ has: page.locator(".cgc-tag-explorer__lock") })
-    .locator(".cgc-tag-explorer__page-title")
-    .allTextContents()
-  expect(locked.sort()).toEqual(PRIVATE)
+  await expect(pages).toHaveCount(PUBLIC.length)
+  const listed = await pages.locator(".cgc-tag-explorer__page-title").allTextContents()
+  expect(listed.sort()).toEqual(PUBLIC)
+  await expect(pages.locator(".cgc-tag-explorer__lock")).toHaveCount(0)
 })
 
 test("cgc-post-listing leaves the private pages out", async ({ page }) => {

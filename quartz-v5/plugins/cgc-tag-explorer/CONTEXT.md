@@ -10,7 +10,8 @@ icon vocabulary of [`icons`](../../libs/icons/CONTEXT.md).
 ## Language
 
 **Tree**:
-Every tag in the corpus, less the excluded ones, nested by the tag hierarchy. Each level is in the
+Every tag in the corpus, less the excluded ones and, with **private pages left out**, the private
+tags and any tag only private pages carry, nested by the tag hierarchy. Each level is in the
 `tagSort` order, ties A→Z. The tree is rendered into every page when the site builds
 ([ADR-0001](./docs/adr/0001-the-tree-renders-at-build-time-its-pages-load-from-an-index.md)).
 _Avoid_: tag index (v4's JSON file), trie, sidebar
@@ -32,7 +33,8 @@ The tag colour's one place in a tag's row, `.cgc-tag-explorer__mark`: the tag's 
 _Avoid_: icon (for the element), swatch, badge
 
 **Count**:
-How many pages are under a tag: those carrying it or any of its subtags, each once. The same count
+How many pages are under a tag: those carrying it or any of its subtags, each once, less the private
+ones when **private pages are left out**. The same count
 as cgc-tag-list's badges.
 _Avoid_: post count, total
 
@@ -50,8 +52,17 @@ _Avoid_: content index (stock's, or cgc-graph's), tag index
 
 **Private page**:
 tags-core's: a page carrying one of the `privateTags`, or a tag under one. It is listed after a
-tag's public pages, with a **lock** where a public page has a bullet.
-_Avoid_: locked page, hidden page (it is listed)
+tag's public pages, with a **lock** where a public page has a bullet, unless **private pages are
+left out**.
+_Avoid_: locked page, hidden page (by default it is listed)
+
+**Private pages left out**:
+The `excludePrivate` option, off by default and on for the real site (the owner's review notes of
+2026-09-26, #85). Every private page leaves every tag's **count** and **pages** and the **pages
+index**, so no private title reaches the browser. The private tags and their subtags leave the
+**tree** as **excluded tags** do, and a tag only private pages carry has no pages left, so it leaves
+too. Where it is on, there is no **lock** to see.
+_Avoid_: hidden private pages, private filter
 
 **Excluded tag**:
 A tag in `excludeTags`, left out of the tree with its subtags. Its pages stay under their other tags.

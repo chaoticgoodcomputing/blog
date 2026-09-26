@@ -1,7 +1,7 @@
 # cgc-backlinks
 
 The Quartz 5 component that lists the pages linking to a page, public ones first, with each private
-one marked by a lock: v4's Backlinks fork (#44, #78). It needs no engine: it reads what stock Quartz
+one marked by a lock or, if the site asks, left out: v4's Backlinks fork (#44, #78, #85). It needs no engine: it reads what stock Quartz
 leaves on every page, and takes the private tags as its own option. Inherits the family vocabulary in
 [`quartz-v5/CONTEXT.md`](../../CONTEXT.md), the icon vocabulary of
 [`icons`](../../libs/icons/CONTEXT.md), and the **Private tag**, **Private page** and **Under** of
@@ -20,6 +20,12 @@ A backlink from a private page: one carrying a tag the `privateTags` option name
 site), or a tag under one (`private/work`, but not `privateer`). Its link carries the `--private`
 modifier and the **lock**, and it sorts after every public backlink.
 _Avoid_: locked link, private link
+
+**Private pages left out**:
+The `excludePrivate` option, off by default and on for the real site (the owner's review notes of
+2026-09-26, #85): a private page is no backlink at all, rather than a **private backlink**. A page
+only private pages link to has none, so `hideWhenEmpty` leaves its section out.
+_Avoid_: hidden backlinks, private filter
 
 **Mark**:
 The box before each backlink's title, `.cgc-backlinks__mark`: the **lock** for a private backlink,
@@ -45,6 +51,6 @@ _Avoid_: sort, ranking
 - **It draws the lock itself,** with `@chaoticgoodcomputing/icons`, from MDI, which installs with the
   plugin, once per build. Nothing is fetched in the browser.
 - **Unlisted pages are never backlinks,** as in stock's component: `unlisted: true` hides a page from
-  every listing. A private page stays listed.
+  every listing. A private page stays listed, unless **private pages are left out**.
 - **The list is core's overflow list.** It carries core's `overflow` classes and toggles core's
   `gradient-active`, as stock's does. Its own stylesheet selects none of them (ADR-0003 rule 2).

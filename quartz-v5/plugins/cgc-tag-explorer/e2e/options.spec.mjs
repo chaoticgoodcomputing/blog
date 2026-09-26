@@ -1,7 +1,10 @@
 // cgc-tag-explorer's options other than the ones the fixture sets (#76), on scratch sites: the order
 // of each level of tags (`tagSort`), tags that start open (`defaultState`), no counts (`showCount`),
-// state kept for the visit only (`useSavedState`), and pages with no date. The content fixture keeps
-// the defaults, which tree.spec.mjs and state.spec.mjs prove.
+// state kept for the visit only (`useSavedState`), pages with no date, and private pages left out
+// (`excludePrivate`, #85). The content fixture keeps the defaults, which tree.spec.mjs and
+// state.spec.mjs prove: with `excludePrivate` off, a private page is counted and listed, with a lock.
+import fs from "node:fs"
+import path from "node:path"
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, fixtureConfig, othersOff, withPlugins } from "../../../tests/harness/site.mjs"
 
@@ -58,11 +61,11 @@ const markDocument = (page) => page.evaluate(() => (window.cgcSameDocument = tru
 const sameDocument = (page) => page.evaluate(() => window.cgcSameDocument === true)
 
 // One build per site per colour-scheme project, shared by that site's tests.
-const scratchSite = (name, config) => {
+const scratchSite = (name, config, content = CONTENT) => {
   const site = {}
   test.beforeAll(async () => {
     test.setTimeout(180_000)
-    Object.assign(site, await buildScratchSite(name, CONTENT, { config, keep: true }))
+    Object.assign(site, await buildScratchSite(name, content, { config, keep: true }))
     expect(site.code, site.output).toBe(0)
   })
   test.afterAll(() => site.remove?.())
@@ -167,5 +170,70 @@ test.describe("tags fewest pages first, on a site with no dates", () => {
     await fold(page, "banana").click()
     await fold(page, "banana/zed").click()
     await expect(pageTitles(page, "banana/zed")).toHaveText(["Opt One", "Opt Two"])
+  })
+})
+
+// The owner's review notes of 2026-09-26 (#85): private pages left out of the explorer entirely, from
+// every count and every listing, and the private tags out of the tree. `private` is the private tag
+// and in no `excludeTags`, so the option alone keeps it out. "Locked" also carries the public
+// `shared`; "Locked deep" is under `private/work` and `hush`, which no public page carries.
+// "Privateer" only shares the private tag's prefix, so it is public.
+const PRIVATE_CONTENT = {
+  "index.md": "---\ntitle: Home\n---\nHome.\n",
+  "open.md": note("Open", "2025-01-01", ["shared"]),
+  "locked.md": note("Locked", "2025-01-03", ["shared", "private"]),
+  "locked-deep.md": note("Locked deep", "2025-01-02", ["private/work", "hush"]),
+  "privateer.md": note("Privateer", "2025-01-01", ["privateer", "shared"]),
+}
+
+test.describe("private pages left out", () => {
+  test.describe.configure({ mode: "serial" })
+  const site = scratchSite(
+    "tag-explorer-private",
+    explorerWith({ privateTags: ["private"], excludePrivate: true, defaultState: "open" }),
+    PRIVATE_CONTENT,
+  )
+
+  const counted = (page) =>
+    page.locator(".cgc-tag-explorer__tag").evaluateAll((items) =>
+      Object.fromEntries(
+        items.map((item) => [
+          item.dataset.tag,
+          Number(
+            item
+              .querySelector(":scope > .cgc-tag-explorer__row .cgc-tag-explorer__count")
+              .textContent.replace(/\D/g, ""),
+          ),
+        ]),
+      ),
+    )
+
+  test("leaves the private tags, their subtags and the tags only private pages carry out of the tree, and private pages out of every count", async ({
+    page,
+  }) => {
+    await routeSite(page, site.public, ORIGIN)
+    await page.goto(`${ORIGIN}/`)
+    expect(await counted(page)).toEqual({ shared: 2, privateer: 1 })
+  })
+
+  test("lists only public pages under a tag, with no lock", async ({ page }) => {
+    await routeSite(page, site.public, ORIGIN)
+    await page.goto(`${ORIGIN}/`)
+    await expect(pageTitles(page, "shared")).toHaveText(["Open", "Privateer"])
+    await expect(page.locator(".cgc-tag-explorer__tree .cgc-tag-explorer__lock")).toHaveCount(0)
+  })
+
+  test("never sends a private page to the browser", async () => {
+    const index = JSON.parse(
+      fs.readFileSync(path.join(site.public, "static/cgcTagExplorer.json"), "utf8"),
+    )
+    expect(index.pages.map(({ slug }) => slug).sort()).toEqual(["open", "privateer"])
+    expect(Object.keys(index.tags).sort()).toEqual(["privateer", "shared"])
+  })
+
+  test("shows the same tree on a private page", async ({ page }) => {
+    await routeSite(page, site.public, ORIGIN)
+    await page.goto(`${ORIGIN}/locked`)
+    expect(await counted(page)).toEqual({ shared: 2, privateer: 1 })
   })
 })
