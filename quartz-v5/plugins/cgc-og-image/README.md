@@ -5,7 +5,7 @@ tags:
   - engineering/languages/typescript
 ---
 
-`cgc-og-image` draws the preview card a shared link shows, for every page of a
+`cgc-og-image` draws the card a shared link shows, for every page of a
 [Quartz 5](https://quartz.jzhao.xyz/) site. It runs stock
 [`og-image`](https://github.com/quartz-community/og-image) with a card of its own: each tag chip
 shows the tag's last segment, the card carries your site's icon rather than Quartz's, and nothing

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Quartz 5 social cards: stock og-image with last-segment tag chips, a configurable icon, and no generation under serve. See README.md and CONTEXT.md.",
+  "description": "Quartz 5 cards for shared links: stock og-image with last-segment tag chips, a configurable icon, and no generation under serve. See README.md and CONTEXT.md.",
   "exports": {
     ".": "./dist/index.js",
     "./package.json": "./package.json"
@@ -26,7 +26,7 @@
   },
   "quartz": {
     "name": "cgc-og-image",
-    "displayName": "OG image cards",
+    "displayName": "Link cards",
     "category": "emitter",
     "version": "0.0.0",
     "quartzVersion": ">=5.0.0",

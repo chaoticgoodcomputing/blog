@@ -1,4 +1,4 @@
-// The social card: stock og-image's default card (`defaultImage`, which the package doesn't export),
+// The card: stock og-image's default card (`defaultImage`, which the package doesn't export),
 // ported from our v4 `quartz/util/og.tsx` onto stock's scheme-aware palette. It differs from stock
 // in three places only: each tag chip shows the tag's last segment (`#articles`, not
 // `#writing/articles`), the icon is the site's own when one is configured, and the title leaves off

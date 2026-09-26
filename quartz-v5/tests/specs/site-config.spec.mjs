@@ -4,7 +4,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import { test, expect, layerOrder, routeSite, schemeOf, stackDeclaration, toggleScheme } from "../harness/test.mjs"
-import { buildScratchSite, siteConfig } from "../harness/site.mjs"
+import { buildScratchSite, siteConfig, vendored } from "../harness/site.mjs"
 import { postHogStandIn } from "../harness/analytics.mjs"
 
 const CONTENT = {
@@ -155,12 +155,65 @@ test("self-hosts its fonts, requesting nothing from Google Fonts", async ({ page
 })
 
 // cgc-og-image in place of stock og-image (#58): one card per page, with the site's icon, which a
-// scratch root reaches through `siteConfig()`'s rebased `icon`. What the card shows is its own spec's.
+// scratch root reaches through `siteConfig()`'s rebased `icon`. How a card draws what it shows is its
+// own spec's; which palette and icon the site gives it is the next test's.
 test("points each page's og:image at its own card", async ({ page }) => {
   await routeSite(page, site.public, ORIGIN)
   await page.goto(`${ORIGIN}/content/notes/a-note`)
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", `${ORIGIN}/content/notes/a-note-og-image.webp`)
   expect(fs.existsSync(path.join(site.public, "content/notes/a-note-og-image.webp"))).toBe(true)
+})
+
+// A card as the browser decodes it: its corner's colour, and how far the circle its icon sits in (56px,
+// inside the card's 40px padding, as card.tsx draws it) is, per channel on average, from each of
+// `icons` drawn in that place.
+const readCard = (page, card, icons) =>
+  page.evaluate(
+    async ([cardSrc, iconSrcs]) => {
+      const load = async (src) => {
+        const image = new Image()
+        image.src = src
+        await image.decode()
+        return image
+      }
+      const [card, ...icons] = await Promise.all([cardSrc, ...iconSrcs].map(load))
+      const pixels = (icon) => {
+        const canvas = new OffscreenCanvas(card.naturalWidth, card.naturalHeight)
+        const context = canvas.getContext("2d")
+        context.drawImage(card, 0, 0)
+        if (icon) context.drawImage(icon, 40, 40, 56, 56)
+        return context.getImageData(0, 0, canvas.width, canvas.height).data
+      }
+      const drawn = pixels()
+      const circle = []
+      for (let y = 40; y < 96; y++) {
+        for (let x = 40; x < 96; x++) if ((x - 68) ** 2 + (y - 68) ** 2 < 24 ** 2) circle.push(4 * (y * card.naturalWidth + x))
+      }
+      const distance = (icon) => {
+        const expected = pixels(icon)
+        let sum = 0
+        for (const i of circle) for (const c of [0, 1, 2]) sum += Math.abs(drawn[i + c] - expected[i + c])
+        return sum / (3 * circle.length)
+      }
+      return { corner: [...drawn.slice(0, 3)], distances: icons.map(distance) }
+    },
+    [`data:image/webp;base64,${card.toString("base64")}`, icons.map((icon) => `data:image/png;base64,${icon.toString("base64")}`)],
+  )
+
+// v4's cards (#58): dark whatever scheme the reader is in, which is the site config's
+// `colorScheme: darkMode`, and carrying the site's own icon rather than the one inside Quartz.
+test("draws each card in the dark palette, with the site's icon", async ({ page }) => {
+  await routeSite(page, site.public, ORIGIN)
+  await page.goto(`${ORIGIN}/content/notes/a-note`)
+  const card = fs.readFileSync(path.join(site.public, "content/notes/a-note-og-image.webp"))
+  // The site config's `icon`, which resolves against the vendored root, and the one stock draws.
+  const icons = [path.resolve(vendored, "../icon.png"), path.join(vendored, "quartz/static/icon.png")]
+  const { corner, distances } = await readCard(page, card, icons.map((icon) => fs.readFileSync(icon)))
+  // The dark palette's `light`, give or take lossy WebP.
+  const dark = BACKGROUND.dark.match(/\d+/g).map(Number)
+  corner.forEach((channel, c) => expect(Math.abs(channel - dark[c]), `corner ${corner} is ${BACKGROUND.dark}`).toBeLessThan(10))
+  const [own, stock] = distances
+  expect(own, `the icon is ${own} from the site's and ${stock} from stock's`).toBeLessThan(stock / 2)
 })
 
 // cgc-posthog in place of core analytics (#61): v4's PostHog project and host, v4's privacy options,

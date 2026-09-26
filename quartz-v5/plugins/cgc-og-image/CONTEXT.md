@@ -1,9 +1,9 @@
 # cgc-og-image
 
-The Quartz 5 plugin that draws the preview image a shared link shows: one card per page, pointed at
-by the page's `og:image`. It wraps stock og-image, which still does the drawing, and supplies the
-card. Inherits the family vocabulary in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md). Its one decision
-is [ADR-0001](./docs/adr/0001-stock-og-image-under-its-own-name.md).
+The Quartz 5 plugin that draws the card a shared link shows: one per page, pointed at by the page's
+`og:image`. It wraps stock og-image, which still does the drawing, and supplies the card. Inherits
+the family vocabulary in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md). Its one decision is
+[ADR-0001](./docs/adr/0001-stock-og-image-under-its-own-name.md).
 
 ## Language
 
