@@ -10,7 +10,12 @@
 // A value holding a `var()` can't be resolved at build time: whether the property exists, and what
 // it holds, is the theme's business at runtime. Such a value passes when it is shaped like a colour:
 // one `var()`, or a colour function (`light-dark()`, `color-mix()`, `rgb()`…) that uses one, with
-// every part that isn't a reference itself a colour.
+// every part that isn't a reference itself a colour; and when some stand-in for each reference (a
+// colour, a number, a percentage, or three channels) makes the whole value one lightningcss reads
+// as a colour, so a colour function's other arguments are checked too.
+//
+// `!important` never passes. The engine writes a tag's colour into its cascade layer, where an
+// important declaration would outrank the site's own unlayered override of that property.
 
 /** lightningcss's `transform`, as a plugin imports it from the host: `import { transform } from "lightningcss"`. */
 export type CssTransform = (options: any) => unknown
@@ -35,7 +40,21 @@ export function colourValueCheck(transform: CssTransform): (value: unknown) => b
   const isColourValue = (value: unknown): boolean => {
     // One value, and only a value: nothing that could end the declaration it is written into, or
     // comment out the rest of the stylesheet.
-    if (typeof value !== "string" || !value.trim() || /[;{}]|\/\*|\*\//.test(value)) return false
+    // No `!`, which only `!important` would bring.
+    if (typeof value !== "string" || !value.trim() || /[;{}!]|\/\*|\*\//.test(value)) return false
+    const declaration = declarationOf(value)
+    if (!declaration) return false
+    if (declaration.property === "color") return true
+    return (
+      declaration.property === "unparsed" &&
+      declaration.value.propertyId.property === "color" &&
+      isColourTokens(declaration.value.value) &&
+      standsIn(value)
+    )
+  }
+
+  // The one declaration lightningcss reads from `color: <value>`, or none.
+  function declarationOf(value: string): any {
     const declarations: any[] = []
     try {
       transform({
@@ -49,16 +68,30 @@ export function colourValueCheck(transform: CssTransform): (value: unknown) => b
         },
       })
     } catch {
-      return false
+      return undefined
     }
-    if (declarations.length !== 1) return false
-    const [declaration] = declarations
-    if (declaration.property === "color") return true
-    return (
-      declaration.property === "unparsed" &&
-      declaration.value.propertyId.property === "color" &&
-      isColourTokens(declaration.value.value)
-    )
+    return declarations.length === 1 ? declarations[0] : undefined
+  }
+
+  // Whether some choice of stand-in for each outermost `var()` makes a value lightningcss reads as a
+  // colour outright. Tried in every combination up to four references, and one stand-in for all of
+  // them beyond that.
+  function standsIn(value: string): boolean {
+    const references = outermostVars(value)
+    const choices =
+      references.length <= 4
+        ? combinations(references.length)
+        : STAND_INS.map((stand) => references.map(() => stand))
+    return choices.some((chosen) => {
+      let substituted = ""
+      let from = 0
+      references.forEach(([start, end], i) => {
+        substituted += value.slice(from, start) + chosen[i]
+        from = end
+      })
+      substituted += value.slice(from)
+      return declarationOf(substituted)?.property === "color"
+    })
   }
 
   function isColourTokens(tokens: any[]): boolean {
@@ -93,6 +126,33 @@ export function colourValueCheck(transform: CssTransform): (value: unknown) => b
   }
 
   return isColourValue
+}
+
+// What a reference might stand for inside a colour: a colour, a number, a percentage, or three
+// channels.
+const STAND_INS = ["black", "0", "0%", "0 0 0"]
+
+const combinations = (n: number): string[][] =>
+  n === 0
+    ? [[]]
+    : combinations(n - 1).flatMap((rest) => STAND_INS.map((stand) => [...rest, stand]))
+
+// The `[start, end)` of each `var(…)` not inside another, found by matching parentheses.
+function outermostVars(value: string): [number, number][] {
+  const found: [number, number][] = []
+  const pattern = /var\(/gi
+  let match: RegExpExecArray | null
+  while ((match = pattern.exec(value))) {
+    let depth = 0
+    let end = match.index + 3
+    for (; end < value.length; end++) {
+      if (value[end] === "(") depth++
+      else if (value[end] === ")" && --depth === 0) break
+    }
+    found.push([match.index, end + 1])
+    pattern.lastIndex = end + 1
+  }
+  return found
 }
 
 const isBlank = (token: any) =>

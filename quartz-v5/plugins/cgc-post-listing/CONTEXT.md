@@ -30,7 +30,7 @@ A page for one tag, as tags-core's `tagOfPage()` reads its slug: `tags/<t>`, or 
 a tag's description file in v4's layout. Only a whole `index` segment is dropped, so `tags/reindex`
 is the page for `reindex`. The index of every tag, `tags` or `tags/index` (tags-core's
 `isAllTagsPage()`), is none. cgc-tag-list reads tag pages the same way.
-_Avoid_: tag listing, tag index (that is the page of every tag)
+_Avoid_: tag listing, tag index (that is cgc-tags' `static/cgcTags.json`)
 
 **Tag filter**:
 What narrows a tag page's listing to the **posts** under its tag, those under its subtags included

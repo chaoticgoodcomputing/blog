@@ -15,6 +15,15 @@ test("the first tag breaks a tie between equally specific tags", ({ emitted }) =
   })
 })
 
+// Written out of A→Z order, so an engine that sorted a page's tags, or read them from its expanded
+// ancestor set, would pick the other.
+test("the first tag in frontmatter order, not A→Z, breaks the tie", ({ emitted }) => {
+  // tags: [markdown, fixture]
+  const page = received(emitted)["tag-engine/first-tag"]
+  expect(page.primary.tag).toBe("markdown")
+  expect(Object.keys(page.tags)).toEqual(["markdown", "fixture"])
+})
+
 test("the most specific tag wins over an earlier one", ({ emitted }) => {
   // tags: [fixture, writing/essays]
   expect(received(emitted)["tag-engine/most-specific"].primary).toEqual({

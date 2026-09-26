@@ -11,7 +11,7 @@ in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md). Its decision is
 The one page a tag has, at `tags/<tag>`: for each tag some page carries, each ancestor of one, and
 `tags` itself, the index of tags. Either a **description file**'s page or a **made-up tag page**,
 never both.
-_Avoid_: tag listing, tag index (that is only `tags`), folder page
+_Avoid_: tag listing, tag index (that is cgc-tags' `static/cgcTags.json`), folder page
 
 **Description file**:
 The Markdown file that describes one tag, at `tags/<tag>.md`, whose page is that tag's page. A file

@@ -4,6 +4,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import { test, expect, toggleScheme } from "../../../tests/harness/test.mjs"
+import { FIXTURE_PALETTE } from "../../../tests/harness/palette.mjs"
 import {
   buildPluginCopy,
   buildScratchSite,
@@ -12,6 +13,10 @@ import {
   testsRoot,
   withPlugins,
 } from "../../../tests/harness/site.mjs"
+import { ICON_REQUEST, ring } from "./ring.mjs"
+
+// The fixture palette's `secondary`, and its `darkgray`: the colour of a tag with none in its lineage.
+const { secondary: SECONDARY, darkgray: DARKGRAY } = FIXTURE_PALETTE
 
 // MDI's own drawing of an icon, read from the installed set: the source of truth for what a ring shows.
 const MDI = JSON.parse(
@@ -21,9 +26,6 @@ const MDI = JSON.parse(
   ),
 )
 const mdiPath = (name) => MDI.icons[name].body.match(/ d="([^"]+)"/)[1]
-
-const ring = (page, tag) =>
-  page.locator(`.cgc-tag-list__item[data-tag="${tag}"] .cgc-tag-list__ring`)
 
 // The ring's glyph as the reader sees it: each painted shape's geometry and computed fill.
 const glyphOf = (locator) =>
@@ -45,20 +47,19 @@ test("draws an mdi: icon inline, from the page the site built, with no request",
   expect(glyph.map(({ d }) => d)).toEqual([mdiPath("feather")])
   // In the HTML as built, not added by a script.
   expect(emitted.read("og/tag-sibling.html")).toContain(mdiPath("feather"))
-  // v4 fetched each icon from jsDelivr (`@mdi/svg`), or `/static/icons/` for its own.
-  expect(requests.filter((url) => /\.svg\b|@mdi\/|iconify|\/icons\//i.test(url))).toEqual([])
+  expect(requests.filter((url) => ICON_REQUEST.test(url))).toEqual([])
 })
 
 // The fixture's own collection, tests/fixture-icons/, whose one icon is a diamond, 20px square in a
 // 24px box, drawn in hard-coded magenta and cyan (tests/quartz.config.yaml).
-// The fixture palette's `darkgray`, the colour of a tag with none in its lineage, in each scheme.
-const DARKGRAY = { light: "rgb(78, 78, 78)", dark: "rgb(212, 212, 212)" }
 
 test("draws a custom: icon from the site's own SVG files, in currentColor", async ({
   page,
   emitted,
   colorScheme,
 }) => {
+  const requests = []
+  page.on("request", (request) => requests.push(request.url()))
   // `mdtwin: { icon: "custom:diamond" }`, in the default tag colour
   await page.goto("/md-twin")
   const svg = ring(page, "mdtwin").locator("svg")
@@ -79,7 +80,13 @@ test("draws a custom: icon from the site's own SVG files, in currentColor", asyn
   )
   expect(paints.length).toBeGreaterThan(0)
   expect(new Set(paints)).toEqual(new Set([colour]))
-  expect(emitted.read("md-twin.html")).not.toMatch(/#ff00ff|#0ff|#00ffff|#123456|magenta|cyan/i)
+  const html = emitted.read("md-twin.html")
+  expect(html).not.toMatch(/#ff00ff|#0ff|#00ffff|#123456|magenta|cyan/i)
+  // In the HTML as built, not fetched and added by a script.
+  const d = await svg.locator("path").getAttribute("d")
+  expect(d).toBeTruthy()
+  expect(html).toContain(`d="${d}"`)
+  expect(requests.filter((url) => ICON_REQUEST.test(url))).toEqual([])
 })
 
 test("draws a child tag with no icon of its own with its parent's", async ({ page }) => {
@@ -103,9 +110,6 @@ test("leaves the ring empty for a tag with no icon in its lineage", async ({ pag
   await expect(ring(page, "markdown")).toBeVisible()
   await expect(ring(page, "markdown").locator("*")).toHaveCount(0)
 })
-
-// The fixture palette's `secondary`, in each scheme (tests/quartz.config.yaml).
-const SECONDARY = { light: "rgb(40, 75, 99)", dark: "rgb(123, 151, 170)" }
 
 // The glyph is `currentColor`, the ring's colour, so the tag colour paints it through CSS alone, and a
 // scheme switch on a loaded page repaints it with no script of this plugin's involved.

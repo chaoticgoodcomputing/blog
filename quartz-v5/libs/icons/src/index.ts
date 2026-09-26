@@ -94,7 +94,7 @@ function importCollection(prefix: string, directory: string): IconifyJSON {
   return set.export()
 }
 
-// Converted once per process, however many plugins or components ask.
+// Normalised once per process, however many plugins or components ask.
 const imported = new Map<string, IconifyJSON>()
 
 /** Draws icon ids, from the installed Iconify sets and the site's own `iconCollections`. */

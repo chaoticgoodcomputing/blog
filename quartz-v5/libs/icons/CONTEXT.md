@@ -50,7 +50,7 @@ _Avoid_: converting, compiling, sanitising
 - **Colour and size come from CSS** (ADR-0003): a consumer never writes a colour into an icon.
   A canvas, which CSS can't reach, is the one exception: `cgc-graph` sets an icon's `currentColor` to
   a theme colour it resolves in script, and resolves it again on a scheme switch.
-- **Converted once per process.** A site collection is read the first time one of its icons is
+- **Normalised once per process.** A site collection is read the first time one of its icons is
   drawn, and kept for the rest of the process, so a file added under `--serve` needs a restart.
 - **Tested through its consumers**, `cgc-tag-list`'s `e2e/icons.spec.mjs` and `e2e/site.spec.mjs`,
   `cgc-graph`'s `e2e/icons.spec.mjs` and `cgc-post-listing`'s, against the fixture's own collection

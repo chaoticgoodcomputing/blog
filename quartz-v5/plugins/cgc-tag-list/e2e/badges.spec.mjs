@@ -2,9 +2,8 @@
 // tags is a badge whose ring is painted in the tag's colour, read from the engine's `--cgc-tag-*`
 // custom properties. The fixture's tag dictionary is in tests/quartz.config.yaml.
 import { test, expect, toggleScheme } from "../../../tests/harness/test.mjs"
-
-const ring = (page, tag) =>
-  page.locator(`.cgc-tag-list__item[data-tag="${tag}"] .cgc-tag-list__ring`)
+import { FIXTURE_PALETTE } from "../../../tests/harness/palette.mjs"
+import { ring } from "./ring.mjs"
 
 test("paints a badge's ring in its tag's colour", async ({ page }) => {
   await page.goto("/plain-note")
@@ -12,8 +11,8 @@ test("paints a badge's ring in its tag's colour", async ({ page }) => {
   await expect(ring(page, "fixture")).toHaveCSS("border-top-color", "rgb(10, 125, 50)")
 })
 
-// The fixture palette's `secondary`, in each scheme (tests/quartz.config.yaml).
-const SECONDARY = { light: "rgb(40, 75, 99)", dark: "rgb(123, 151, 170)" }
+// The fixture palette's `secondary`, in each scheme.
+const SECONDARY = FIXTURE_PALETTE.secondary
 
 test("rings a child tag with no colour of its own in its parent's", async ({
   page,

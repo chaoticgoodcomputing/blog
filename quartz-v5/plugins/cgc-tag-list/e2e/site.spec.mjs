@@ -3,6 +3,7 @@
 // quartz-v5/icons/, which the site config names once and shares through a YAML anchor.
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, siteConfig } from "../../../tests/harness/site.mjs"
+import { ICON_REQUEST, ring as ringOf } from "./ring.mjs"
 
 // The site is served at its own `baseUrl`, where Quartz points its absolute URLs.
 const ORIGIN = "https://blog.chaoticgood.computer"
@@ -36,10 +37,14 @@ test.beforeAll(async () => {
 test.afterAll(() => site?.remove())
 
 test("draws the site's own icons and MDI's, each in its tag's colour", async ({ page }) => {
+  const requests = []
+  page.on("request", (request) => requests.push(request.url()))
   await routeSite(page, site.public, ORIGIN)
   await page.goto(`${ORIGIN}/content/notes/tagged`)
+  // Every icon inline, as the site built the page: none fetched.
+  expect(requests.filter((url) => ICON_REQUEST.test(url))).toEqual([])
   for (const tag of Object.keys(DRAWN)) {
-    const ring = page.locator(`.cgc-tag-list__item[data-tag="${tag}"] .cgc-tag-list__ring`)
+    const ring = ringOf(page, tag)
     const svg = ring.locator("svg")
     await expect(svg, tag).toHaveCount(1)
     const colour = await ring.evaluate((ring) => getComputedStyle(ring).color)

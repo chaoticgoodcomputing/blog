@@ -69,7 +69,7 @@ tag's description file in v4's layout. Only a whole `index` segment is dropped, 
 is the page for `reindex`. The index of every tag, `tags` or `tags/index` (`isAllTagsPage()`), is
 for none. One function, so every plugin that treats a tag page differently agrees on which pages
 those are.
-_Avoid_: tag listing, tag index (that is the page of every tag)
+_Avoid_: tag listing, tag index (that is cgc-tags' `static/cgcTags.json`)
 
 **Private tag**:
 One of the tags a site names as private, in the option each plugin that treats private pages
@@ -113,8 +113,8 @@ _Avoid_: colour validator, colour parser
 - **Tested through the plugins that inline it.** The rule and the shapes through `cgc-tags`' specs; the
   colour-value check through `cgc-tags`', `cgc-graph`'s and `cgc-social`'s option specs; the
   colour resolver through `cgc-graph`'s colour and scheme specs, which paint the theme's colours
-  and every tag's with it (#74, #77), and a probe script its own spec runs on a fixture page
-  (`e2e/colour.spec.mjs`) for a colour syntax no consumer paints yet; `tagOfPage()` through what
+  and every tag's with it (#74, #77), and its options spec, which paints private pages in a
+  `color()` whose computed value isn't `rgb()`; `tagOfPage()` through what
   `cgc-post-listing` and `cgc-tag-list` render on tag pages (`e2e/tag-pages.spec.mjs`), and
   through `cgc-graph`'s tag nodes; `privatePageTest()`, `underAny()` and `normaliseTag()` through
   every plugin that treats private pages differently, on a site that names its private tags once

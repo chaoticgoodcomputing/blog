@@ -96,13 +96,15 @@ test("fills a per-kind setting's missing kinds from the defaults", async ({ page
   }
 })
 
-// A colour value in each form a site can write it: a theme's reference, which follows the theme, and
-// a `light-dark()` pair, which follows the scheme. Nothing else in the graph is drawn in either: the
-// `private` tag, whose default colour is the theme's `darkgray`, is left out, as the real site leaves
-// it out.
+// A colour value in each form a site can write it: a theme's reference, which follows the theme; a
+// `light-dark()` pair, which follows the scheme; and a `color()`, whose computed value isn't `rgb()`,
+// so the colour resolver has to normalise it before the canvas can take it. Nothing else in the
+// graph is drawn in any of them: the `private` tag, whose default colour is the theme's `darkgray`,
+// is left out, as the real site leaves it out.
 const PRIVATE = {
   "var(--darkgray)": { light: [78, 78, 78], dark: [212, 212, 212] },
   "light-dark(#b83232, #e06060)": { light: [184, 50, 50], dark: [224, 96, 96] },
+  "color(srgb 0 0.5 1)": { light: [0, 128, 255], dark: [0, 128, 255] },
 }
 
 for (const [value, rgb] of Object.entries(PRIVATE)) {
