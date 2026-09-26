@@ -16,6 +16,10 @@
       "options": { "command": "npm run build", "cwd": "{projectRoot}" },
       "outputs": ["{projectRoot}/dist"]
     },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": { "command": "npm run typecheck", "cwd": "{projectRoot}" }
+    },
     "e2e": {
       "//": "This package's specs only, through the shared suite.",
       "executor": "nx:run-commands",

@@ -15,7 +15,7 @@ It started as the SEO half of this site's Quartz 4 fork, and it runs on a stock 
 
 It adds these to each page's `<head>`, through Quartz's per-page `additionalHead`:
 
-- **`<meta name="robots" content="noindex">` on private pages, and on their tags' pages.** A page is private when it carries one of the `noindexTags`, or a descendant of one. `private/work` is a descendant of `private`, but `privateer` isn't. The page of each of those tags gets it too, `/tags/private` and `/tags/private/work`, whether Quartz generates it or a description note supplies it. There's no `nofollow`, so a private page's links to public pages still count.
+- **`<meta name="robots" content="noindex">` on private pages, and on their tags' pages.** A page is private when it carries one of the `noindexTags`, or a descendant of one. `private/work` is a descendant of `private`, but `privateer` isn't. The page of each of those tags gets it too, `/tags/private` and `/tags/private/work`, whether Quartz generates it or a description note supplies it. There's no `nofollow`, so a private page's links to indexable pages still count.
 - **`<link rel="canonical">` on every page:** the page's URL at the site's `baseUrl`, without a trailing `index`.
 - **OpenGraph article metadata on articles:** `article:published_time`, `article:modified_time`, `article:author`, `article:section` (the first tag's top segment) and one `article:tag` per tag (its last segment).
 - **A JSON-LD article on articles:** its `@type` and `articleSection` come from the page's tags, and its author, publisher, image, dates, description and keywords from the page and your options.
@@ -83,11 +83,13 @@ A page names its own author in frontmatter, overriding `defaultAuthor`:
 ```yaml
 ---
 title: A guest post
-author: Ada Lovelace # or a list, or { name, url, type }
+author: Ada Lovelace # a name
 ---
 ```
 
-The meta description's length isn't set here. It comes from the stock `description` plugin's `descriptionLength` option.
+It's a name, credited as a Person. A list or a `{ name, url, type }` object there isn't read, and the page keeps `defaultAuthor`.
+
+cgc-seo doesn't touch `<meta name="description">`. Quartz core writes it from the page's `socialDescription` or `description` frontmatter, uncut. Stock `description`'s `descriptionLength` and `maxDescriptionLength` only bound a description it derives from the page body. So a long description is no longer cut to 160 characters there, as this site's Quartz 4 fork cut it. A plugin can't change core's tag.
 
 Without a `baseUrl`, the plugin can't build absolute URLs, so it adds only the `noindex` tag, and writes no sitemap or feed.
 
@@ -126,3 +128,12 @@ This is how [chaoticgood.computer](https://chaoticgood.computer) configures it:
 - The JSON-LD image is the page's own OpenGraph image. That's its `socialImage` frontmatter if it has one, then the card that stock `og-image` generates when that plugin is on, and otherwise `static/og-image.png`.
 - The sitemap and feed keep the shape of this site's Quartz 4 versions, so tools that read them, such as an IndexNow submission that reads the sitemap, work unchanged.
 - The terms used here (private page, unlisted page, page author, tag page, feed) are defined in [CONTEXT.md](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz-v5/plugins/cgc-seo/CONTEXT.md).
+
+## Develop
+
+This package is the Nx project `cgc-seo`. Its specs live in [`e2e/`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/plugins/cgc-seo/e2e) and run against the shared fixture site ([ADR-0004](https://github.com/chaoticgoodcomputing/blog/blob/main/docs/adr/0004-playwright-e2e-as-the-plugin-tdd-loop.md)):
+
+```sh
+pnpm nx run cgc-seo:e2e
+pnpm nx run cgc-seo:typecheck
+```

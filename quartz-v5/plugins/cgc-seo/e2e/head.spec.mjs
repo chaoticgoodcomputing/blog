@@ -10,7 +10,7 @@ const jsonLd = async (page) => JSON.parse(await page.locator('head script[type="
 test("a private page asks not to be indexed, and lets its links be followed", async ({ page }) => {
   await page.goto("/seo/private-note")
   await expect(robots(page)).toHaveCount(1)
-  // The stubs' links to public pages should pass value, so no `nofollow` (#28).
+  // The stubs' links to indexable pages should pass value, so no `nofollow` (#28).
   await expect(robots(page)).toHaveAttribute("content", "noindex")
 })
 
@@ -31,7 +31,7 @@ test("private pages stay listed on the site, for search, the graph and the explo
   expect(Object.keys(index)).toEqual(expect.arrayContaining(["seo/private-note", "seo/private-descendant"]))
 })
 
-test("a public page says nothing about indexing", async ({ page }) => {
+test("an indexable page says nothing about indexing", async ({ page }) => {
   // A tag that only starts with the private tag's name is not a descendant of it.
   for (const url of ["/", "/plain-note", "/seo/authored", "/tags/fixture", "/tags/privateer"]) {
     await page.goto(url)

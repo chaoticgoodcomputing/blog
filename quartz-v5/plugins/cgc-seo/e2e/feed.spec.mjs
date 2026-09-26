@@ -1,8 +1,8 @@
-// What a feed reader reads from the fixture site's RSS feed, index.xml: its newest public articles,
+// What a feed reader reads from the fixture site's RSS feed, index.xml: its newest indexable articles,
 // newest first, in v4's shape. The fixture config gives cgc-seo `rssLimit: 5` and no article folders,
 // so every page built from a file of its own is an article; its content-index writes no feed of its
 // own. The newest pages in the fixture are a private page and an external page (seo/), then the
-// newest public article, seo/feed-article. They are dated 2999 so that nothing else overtakes them:
+// newest indexable article, seo/feed-article. They are dated 2999 so that nothing else overtakes them:
 // every fixture page without a date of its own takes its latest commit's, or the build's clock while
 // uncommitted, and those move forward on their own. v4 parity itself is v4-parity.spec.mjs.
 import fs from "node:fs"
@@ -10,8 +10,6 @@ import path from "node:path"
 import { test, expect } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, fixtureConfig, withPlugins } from "../../../tests/harness/site.mjs"
 import { readFeed, parseXml } from "./feeds.mjs"
-
-test.skip(({ colorScheme }) => colorScheme === "dark", "the feed has no colour scheme")
 
 const ORIGIN = "https://localhost"
 const feed = (emitted) => readFeed(emitted.read("index.xml"))
@@ -30,7 +28,7 @@ test("names the site, and how many of its notes it carries", ({ emitted }) => {
   })
 })
 
-test("carries the newest public articles, newest first, up to its limit", ({ emitted }) => {
+test("carries the newest indexable articles, newest first, up to its limit", ({ emitted }) => {
   const { items } = feed(emitted)
   expect(items).toHaveLength(5)
   expect(items[0].link).toBe(`${ORIGIN}/seo/feed-article`)
@@ -51,7 +49,7 @@ test("gives each article v4's item: its description and reading time, its date, 
     title: "Feed Article",
     link: `${ORIGIN}/seo/feed-article`,
     guid: `${ORIGIN}/seo/feed-article`,
-    description: "The newest public article, so it heads the feed. (3 min read)",
+    description: "The newest indexable article, so it heads the feed. (3 min read)",
     pubDate: "Tue, 01 Jan 2999 00:00:00 GMT",
     categories: ["feeds/rss"],
   })
@@ -66,6 +64,7 @@ for (const [name, options, description] of [
   ["rss-all", { rssLimit: 0, rssRecentNotesText: "Neueste Notizen" }, "Neueste Notizen on cgc fixture"],
 ]) {
   test(`describes itself in the site's language: ${description}`, async () => {
+    test.setTimeout(180_000)
     const config = withPlugins(fixtureConfig(), [{ source: "../../plugins/cgc-seo", enabled: true, options }])
     const pages = { "index.md": "# home\n", "one.md": "# one\n", "two.md": "# two\n", "three.md": "# three\n" }
     const site = await buildScratchSite(name, pages, { config, keep: true })

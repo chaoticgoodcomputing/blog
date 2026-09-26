@@ -4,7 +4,7 @@
 import { isAbsoluteURL, joinSegments, simplifySlug, slugTag } from "@quartz-community/utils/path"
 import { unescapeHTML } from "@quartz-community/utils/escape"
 import type { Options } from "./options"
-import type { PageData } from "./page"
+import { toDate, type PageData } from "./page"
 
 interface Author {
   type: string
@@ -20,24 +20,18 @@ export interface Site {
   ogImages: boolean
 }
 
-// Frontmatter may name one author or several, each a name or `{ name, url, type }`.
-function authorsOf(value: unknown, type: string): Author[] {
-  if (Array.isArray(value)) return value.flatMap((item) => authorsOf(item, type))
-  if (typeof value === "string") return value.trim() ? [{ type, name: value.trim() }] : []
+// An author option, `defaultAuthor` or `publisher`: a name, or `{ name, url, type }`, of `type` unless
+// it says otherwise.
+function authorOf(value: unknown, type: string): Author | undefined {
+  if (typeof value === "string") return value.trim() ? { type, name: value.trim() } : undefined
   if (value && typeof value === "object" && typeof (value as Author).name === "string") {
     const { name, url, type: own } = value as Partial<Author>
-    return [{ type: own ?? type, name: name!, ...(url && { url }) }]
+    return { type: own ?? type, name: name!, ...(url && { url }) }
   }
-  return []
+  return undefined
 }
 
 const person = ({ type, name, url }: Author) => ({ "@type": type, name, ...(url && { url }) })
-
-function isoDate(value: unknown): string | undefined {
-  if (value === undefined || value === null) return undefined
-  const date = new Date(value as string)
-  return Number.isNaN(date.getTime()) ? undefined : date.toISOString()
-}
 
 // `</script>` inside a string must not end the script element, so every `<` is written as its JSON
 // unicode escape, which parses back to the same value.
@@ -54,7 +48,7 @@ export interface PageTests {
 /** The `additionalHead` entry: one page's head metadata, from its data. */
 export function headFor(site: Site, opts: Options, { isNoindex, isArticle }: PageTests) {
   const types = (opts.articleTypes ?? []).map((mapping) => ({ ...mapping, tag: slugTag(mapping.tag) }))
-  const siteAuthor = authorsOf(opts.defaultAuthor, "Person")[0] ?? { type: "Organization", name: site.pageTitle ?? "" }
+  const siteAuthor = authorOf(opts.defaultAuthor, "Person") ?? { type: "Organization", name: site.pageTitle ?? "" }
 
   // Everything below needs absolute URLs, so a site without a baseUrl gets `noindex` alone.
   if (!site.baseUrl) return (page: PageData) => (isNoindex(page) ? <meta name="robots" content="noindex" /> : null)
@@ -63,7 +57,7 @@ export function headFor(site: Site, opts: Options, { isNoindex, isArticle }: Pag
   const siteUrl = new URL(origin).toString()
   const absolute = (url: string) => (isAbsoluteURL(url) ? url : joinSegments(siteUrl, url))
 
-  const publisher = authorsOf(opts.publisher, "Organization")[0] ?? siteAuthor
+  const publisher = authorOf(opts.publisher, "Organization") ?? siteAuthor
   const publisherLd = {
     ...person(publisher),
     ...(publisher.type === "Organization" && {
@@ -88,10 +82,11 @@ export function headFor(site: Site, opts: Options, { isNoindex, isArticle }: Pag
     const tags = fm.tags ?? []
     const url = page.slug === "404" ? siteUrl : joinSegments(siteUrl, simplifySlug(page.slug ?? ""))
     const article = isArticle(page)
-    const named = authorsOf(fm.author, "Person")
-    const authors = named.length > 0 ? named : [siteAuthor]
-    const published = isoDate(page.dates?.published)
-    const modified = isoDate(page.dates?.modified)
+    // The **page author** (CONTEXT.md): the name a page gives as its own `author`, as #57 asks.
+    const own = typeof fm.author === "string" ? authorOf(fm.author, "Person") : undefined
+    const author = own ?? siteAuthor
+    const published = toDate(page.dates?.published)?.toISOString()
+    const modified = toDate(page.dates?.modified)?.toISOString()
     const description = fm.socialDescription ?? fm.description ?? unescapeHTML(page.description?.trim() ?? "")
     const mapped = types.find((mapping) => tags.includes(mapping.tag))
 
@@ -103,9 +98,7 @@ export function headFor(site: Site, opts: Options, { isNoindex, isArticle }: Pag
           <>
             {published && <meta property="article:published_time" content={published} />}
             {modified && <meta property="article:modified_time" content={modified} />}
-            {authors.map((author) => (
-              <meta property="article:author" content={author.url ?? author.name} />
-            ))}
+            <meta property="article:author" content={author.url ?? author.name} />
             {tags.length > 0 && (
               <>
                 <meta property="article:section" content={tags[0].split("/")[0]} />
@@ -125,7 +118,7 @@ export function headFor(site: Site, opts: Options, { isNoindex, isArticle }: Pag
                   image: imageOf(page),
                   inLanguage: site.locale,
                   mainEntityOfPage: { "@type": "WebPage", "@id": url },
-                  author: authors.length === 1 ? person(authors[0]) : authors.map(person),
+                  author: person(author),
                   publisher: publisherLd,
                   ...(description && { description }),
                   ...(published && { datePublished: published }),

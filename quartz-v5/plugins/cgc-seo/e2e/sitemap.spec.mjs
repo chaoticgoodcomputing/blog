@@ -6,8 +6,6 @@ import { test, expect } from "../../../tests/harness/test.mjs"
 import { fileFor } from "../../../tests/harness/site.mjs"
 import { readSitemap, parseXml } from "./feeds.mjs"
 
-test.skip(({ colorScheme }) => colorScheme === "dark", "the sitemap has no colour scheme")
-
 const ORIGIN = "https://localhost"
 const sitemap = (emitted) => readSitemap(emitted.read("sitemap.xml"))
 const paths = (emitted) => sitemap(emitted).map(({ loc }) => (loc.startsWith(`${ORIGIN}/`) ? loc.slice(ORIGIN.length) : loc))
@@ -19,7 +17,7 @@ test("is a well-formed sitemap", async ({ page, emitted }) => {
   })
 })
 
-test("lists the public pages and the pages of every tag they carry, each once, at its canonical URL", async ({ emitted }) => {
+test("lists the indexable pages and the pages of every tag they carry, each once, at its canonical URL", async ({ emitted }) => {
   const listed = paths(emitted)
   expect(listed).toEqual(
     expect.arrayContaining([

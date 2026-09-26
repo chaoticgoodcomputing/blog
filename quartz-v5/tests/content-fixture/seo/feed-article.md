@@ -1,6 +1,6 @@
 ---
 title: Feed Article
-description: The newest public article, so it heads the feed.
+description: The newest indexable article, so it heads the feed.
 tags:
   - feeds/rss
 created: 2999-01-01T00:00:00Z
@@ -8,7 +8,7 @@ modified: 2999-01-01T00:00:00Z
 published: 2999-01-01T00:00:00Z
 ---
 
-A feed reader asks a site for its newest writing, and the site answers with a short list: a title, a link, a date and a few words about each piece. This page is the newest public article in the fixture, so it heads that list, and the specs read what the feed says about it.
+A feed reader asks a site for its newest writing, and the site answers with a short list: a title, a link, a date and a few words about each piece. This page is the newest indexable article in the fixture, so it heads that list, and the specs read what the feed says about it.
 
 Its description is written out in its frontmatter, so the feed uses it as it is, and adds how long the page takes to read. The body is long enough that the estimate is more than a minute: a little over five hundred words, read at two hundred words a minute, rounded up to the next whole minute.
 

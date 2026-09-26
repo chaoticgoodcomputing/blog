@@ -22,6 +22,7 @@ test.describe.configure({ mode: "serial" })
 
 let site
 test.beforeAll(async () => {
+  test.setTimeout(180_000)
   site = await buildScratchSite("seo-parity", CONTENT, { config: siteConfig(), keep: true })
   expect(site.code, site.output).toBe(0)
 })

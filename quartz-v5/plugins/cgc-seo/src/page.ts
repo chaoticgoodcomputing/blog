@@ -82,11 +82,18 @@ export function crawlPath(slug: string): string {
   return tag !== null ? `tags/${tag}` : simplifySlug(slug)
 }
 
-/** The page's own date, of the kind the site shows (`defaultDateType`), if it has one. */
-export function dateOf(page: PageData): Date | undefined {
-  const type = page.defaultDateType as keyof NonNullable<PageData["dates"]> | undefined
-  const value = type ? page.dates?.[type] : undefined
+/**
+ * A date Quartz or the frontmatter gives, as a `Date`, or nothing when there is none or it doesn't
+ * parse: an invalid date would throw on `toISOString()`.
+ */
+export function toDate(value: unknown): Date | undefined {
   if (value === undefined || value === null) return undefined
   const date = value instanceof Date ? value : new Date(value as string)
   return Number.isNaN(date.getTime()) ? undefined : date
+}
+
+/** The page's own date, of the kind the site shows (`defaultDateType`), if it has one. */
+export function dateOf(page: PageData): Date | undefined {
+  const type = page.defaultDateType as keyof NonNullable<PageData["dates"]> | undefined
+  return toDate(type ? page.dates?.[type] : undefined)
 }

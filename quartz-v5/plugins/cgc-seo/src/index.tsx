@@ -9,6 +9,7 @@
 import fs from "node:fs/promises"
 import path from "node:path"
 import { joinSegments } from "@quartz-community/utils/path"
+import type { BuildCtx, FilePath, ProcessedContent } from "@quartz-community/types"
 import { headFor } from "./head"
 import type { Options } from "./options"
 import { articleTest, isExternal, noindexTest, type PageData } from "./page"
@@ -17,11 +18,11 @@ import { sitemapFor } from "./sitemap"
 
 export type { Options, AuthorOption } from "./options"
 
-async function write(output: string, file: string, content: string) {
+async function write(output: string, file: string, content: string): Promise<FilePath> {
   const target = joinSegments(output, file)
   await fs.mkdir(path.dirname(target), { recursive: true })
   await fs.writeFile(target, content)
-  return target
+  return target as FilePath
 }
 
 export default function CgcSeo(opts?: Partial<Options>) {
@@ -36,12 +37,12 @@ export default function CgcSeo(opts?: Partial<Options>) {
 
   // Every page the site builds, including those page types generate (tag listings): core hands
   // emitters after its page dispatcher the generated pages too.
-  async function emit(ctx: any, content: [unknown, { data: PageData }][]) {
-    const baseUrl: string | undefined = ctx.cfg.configuration.baseUrl
+  async function emit(ctx: BuildCtx, content: ProcessedContent[]): Promise<FilePath[]> {
+    const baseUrl = ctx.cfg.configuration.baseUrl
     // Both files are lists of absolute URLs, which need the site's address.
     if (!baseUrl) return []
-    const pages = content.map(([, file]) => file.data)
-    const written: string[] = []
+    const pages = content.map(([, file]) => file.data as PageData)
+    const written: FilePath[] = []
     if (options.enableSiteMap !== false) written.push(await write(ctx.argv.output, "sitemap.xml", sitemapFor(baseUrl, pages, listable)))
     if (rss) {
       const channel = {
@@ -59,13 +60,15 @@ export default function CgcSeo(opts?: Partial<Options>) {
 
   return {
     name: "cgc-seo",
-    externalResources(ctx: any) {
+    externalResources(ctx: BuildCtx) {
       const cfg = ctx.cfg.configuration
+      // The types leave the host's plugin lists opaque: only each emitter's name is read here.
+      const emitters = (ctx.cfg.plugins as { emitters?: { name?: string }[] } | undefined)?.emitters ?? []
       const site = {
         baseUrl: cfg.baseUrl,
         pageTitle: cfg.pageTitle,
         locale: cfg.locale,
-        ogImages: (ctx.cfg.plugins?.emitters ?? []).some((emitter: { name?: string }) => emitter.name === "CustomOgImages"),
+        ogImages: emitters.some((emitter) => emitter.name === "CustomOgImages"),
       }
       // Every page links the feed, as v4's did, so a feed reader given any page finds it.
       const feedLink = rss && cfg.baseUrl && (
