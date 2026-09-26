@@ -59,8 +59,10 @@ _Avoid_: hidden tag, filtered tag
 
 **Drawer**:
 The explorer at or below its `drawerBreakpoint`: a **toggle**, v4's caret fixed at the window's left
-edge half way down, opens its **panel** from the left over a backdrop. The panel's close button, the backdrop, Escape or following
-a link close it again. It replaces v4's MobileSidebarMenu, which slid out the whole left sidebar.
+edge half way down, opens its **panel** from the left over a backdrop. The panel takes the focus
+(its close button), and the page behind the backdrop holds still, as v4's did. The panel's close
+button, the backdrop, Escape or following a link close it again, and give the focus back to the
+toggle. It replaces v4's MobileSidebarMenu, which slid out the whole left sidebar.
 _Avoid_: mobile menu, sidebar menu, off-canvas
 
 **Saved state**:

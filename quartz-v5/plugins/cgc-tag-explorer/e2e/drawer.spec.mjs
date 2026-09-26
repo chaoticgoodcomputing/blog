@@ -75,6 +75,43 @@ test.describe("on a narrow screen", () => {
     }
   })
 
+  // v4's drawer took the focus to itself and held the page still behind it (MobileSidebarMenu set
+  // the body's overflow, TagExplorer `mobile-no-scroll`); closing gives both back.
+  test("takes the focus, and holds the page behind it still, while it is open", async ({
+    page,
+  }) => {
+    await page.goto("/plain-note")
+    // Long enough to scroll, whatever the note's length.
+    await page.evaluate(() => (document.body.style.minHeight = "4000px"))
+    const scrolled = () => page.evaluate(() => window.scrollY)
+    await toggle(page).click()
+    await expect(page.locator(".cgc-tag-explorer__close")).toBeFocused()
+    await page.mouse.move(NARROW.width - 40, NARROW.height / 2)
+    await page.mouse.wheel(0, 600)
+    // A wheel that did scroll would have by now.
+    await page.waitForTimeout(300)
+    expect(await scrolled()).toBe(0)
+    await page.keyboard.press("Escape")
+    await expect(toggle(page)).toBeFocused()
+    await page.mouse.wheel(0, 600)
+    await expect.poll(scrolled).toBeGreaterThan(0)
+  })
+
+  test("gives the page its scrolling back when a link in it is followed", async ({ page }) => {
+    await page.goto("/plain-note")
+    await toggle(page).click()
+    await fold(page, "explorer").click()
+    await tagItem(page, "explorer")
+      .locator(".cgc-tag-explorer__page-link")
+      .filter({ hasText: "Alpha" })
+      .click()
+    await expect(page).toHaveURL(/\/tag-explorer\/alpha$/)
+    await expect(panel(page)).toBeHidden()
+    expect(await page.evaluate(() => getComputedStyle(document.documentElement).overflowY)).not.toBe(
+      "hidden",
+    )
+  })
+
   test("closes when a link in it is followed", async ({ page }) => {
     await page.goto("/plain-note")
     await toggle(page).click()
@@ -103,5 +140,9 @@ test.describe("on a narrow screen", () => {
     await expect(backdrop(page)).toBeHidden()
     await expect(toggle(page)).toBeHidden()
     await expect(page.locator(".left.sidebar .cgc-tag-explorer__panel")).toBeVisible()
+    // And the page scrolls again.
+    await expect
+      .poll(() => page.evaluate(() => getComputedStyle(document.documentElement).overflowY))
+      .not.toBe("hidden")
   })
 })

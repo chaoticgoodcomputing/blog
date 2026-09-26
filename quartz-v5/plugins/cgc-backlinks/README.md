@@ -81,11 +81,9 @@ plugins:
 | Option | Default | |
 | --- | --- | --- |
 | `privateTags` | `[private]` | Tags that make a page private, together with their descendants. |
-| `privateIcon` | `mdi:lock` | The icon a private page's link is marked with. An icon id that doesn't exist fails the build. |
-| `iconCollections` | none | Your own icons, for `privateIcon`: a prefix for each set, and the directory of SVG files that holds it. With `custom: ./icons`, the icon `custom:padlock` is `./icons/padlock.svg`. A relative directory resolves against your Quartz folder, as a local plugin's `source:` does. `mdi:` needs no entry. |
 | `hideWhenEmpty` | `true` | Leave the section out of a page no page links to. |
 
-If you also run [cgc-seo](https://blog.chaoticgood.computer/plugins/cgc-seo), [cgc-graph](https://blog.chaoticgood.computer/plugins/cgc-graph) or [cgc-tag-explorer](https://blog.chaoticgood.computer/plugins/cgc-tag-explorer), give them all the same private tags, through a YAML anchor, so the pages search engines are asked to leave out are the ones marked here and in the graph and the explorer. Other plugins in this family that draw icons take the same `iconCollections` option, so a YAML anchor can share one set of collections between them.
+If you also run [cgc-seo](https://blog.chaoticgood.computer/plugins/cgc-seo), [cgc-graph](https://blog.chaoticgood.computer/plugins/cgc-graph) or [cgc-tag-explorer](https://blog.chaoticgood.computer/plugins/cgc-tag-explorer), give them all the same private tags, through a YAML anchor, so the pages search engines are asked to leave out are the ones marked here and in the graph and the explorer.
 
 ## Styling
 

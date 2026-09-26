@@ -14,10 +14,8 @@
 // script so), so every listener sits on the document and reaches the explorer whatever page SPA
 // navigation brings in.
 
-interface PagesIndex {
-  pages: { slug: string; title: string; private?: true }[]
-  tags: Record<string, number[]>
-}
+// The index's shape, as the emitter writes it. A type only: the bundle carries none of tree.ts.
+import type { PagesIndex } from "../tree"
 
 const ROOT = "cgc-tag-explorer"
 const DRAWER_OPEN = `${ROOT}--open`
@@ -180,16 +178,37 @@ async function restore(root: HTMLElement) {
     tree.querySelector(`.${LINK_ACTIVE}`)?.scrollIntoView({ block: "nearest", inline: "nearest" })
 }
 
+// The page behind an open drawer holds still, as v4's did (MobileSidebarMenu set the body's
+// overflow): while a backdrop covers it, which is while a drawer is open at or below its breakpoint.
+// The explorer clears only the lock it set.
+let locked = false
+function holdPage() {
+  const covered = roots().some((root) => {
+    const backdrop = root.querySelector(`.${ROOT}__backdrop`)
+    return backdrop !== null && getComputedStyle(backdrop).display !== "none"
+  })
+  if (covered === locked) return
+  locked = covered
+  document.documentElement.style.overflow = covered ? "hidden" : ""
+}
+
 function setDrawer(root: HTMLElement, open: boolean) {
   root.classList.toggle(DRAWER_OPEN, open)
   const toggle = root.querySelector<HTMLElement>(`.${ROOT}__toggle`)
   toggle?.setAttribute("aria-expanded", String(open))
+  // The panel is visible from the moment it opens (style.css), so it can take the focus at once.
   if (open) root.querySelector<HTMLElement>(`.${ROOT}__close`)?.focus({ preventScroll: true })
   else if (root.contains(document.activeElement)) toggle?.focus({ preventScroll: true })
+  holdPage()
 }
+
+// Widening the window past the breakpoint takes the backdrop away, and with it the hold.
+window.addEventListener("resize", holdPage)
 
 document.addEventListener("nav", () => {
   generation++
+  // A navigation brings in a closed explorer.
+  holdPage()
   for (const root of roots()) void restore(root)
 })
 

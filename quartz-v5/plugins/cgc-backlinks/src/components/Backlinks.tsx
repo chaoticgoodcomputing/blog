@@ -4,7 +4,7 @@ import type {
   QuartzComponentProps,
 } from "@quartz-community/types"
 import { resolveRelative, simplifySlug, slugTag } from "@quartz-community/utils/path"
-import { createIcons, type IconCollections } from "@chaoticgoodcomputing/icons"
+import { createIcons } from "@chaoticgoodcomputing/icons"
 import { normaliseTag, privatePageTest } from "@chaoticgoodcomputing/tags-core"
 import { i18n } from "../i18n"
 import overflow from "./overflow.inline.js" with { type: "text" }
@@ -16,14 +16,6 @@ export interface BacklinksOptions {
    * with one (`privateer`) is not a descendant. Default: `["private"]`, as cgc-seo's `noindexTags`.
    */
   privateTags?: string[]
-  /** The icon id a private backlink is marked with. Default: `mdi:lock`, as v4's. */
-  privateIcon?: string
-  /**
-   * The site's own icon collections, each prefix and its directory of SVG files, resolved against
-   * the Quartz root: `{ custom: "../icons" }` draws `custom:lock` from `../icons/lock.svg`. Installed
-   * Iconify sets, such as `mdi`, need no entry. Default: none.
-   */
-  iconCollections?: IconCollections
   /** Leave the section out of a page no page links to, as stock does. Default: true. */
   hideWhenEmpty?: boolean
 }
@@ -31,8 +23,6 @@ export interface BacklinksOptions {
 // Quartz merges no defaults into a component's options, so the component does.
 const DEFAULTS: Required<BacklinksOptions> = {
   privateTags: ["private"],
-  privateIcon: "mdi:lock",
-  iconCollections: {},
   hideWhenEmpty: true,
 }
 
@@ -52,17 +42,10 @@ export default ((userOpts?: BacklinksOptions) => {
   const normalise = (tag: string) => normaliseTag(tag, slugTag)
   const isPrivatePage = privatePageTest(opts.privateTags.map(normalise))
   const isPrivate = (page: PageData) => isPrivatePage((page.frontmatter?.tags ?? []).map(normalise))
-  const icons = createIcons({ iconCollections: opts.iconCollections })
-  // The private mark, drawn once, on the first page rendered, whether or not that page has a private
-  // backlink: an icon id no collection has fails the build every time.
+  // The private mark, v4's MDI lock, drawn once, on the first page rendered.
+  const icons = createIcons()
   let lock: string | undefined
-  const drawLock = () => {
-    try {
-      return (lock ??= icons.svg(opts.privateIcon, { class: "cgc-backlinks__icon" }))
-    } catch (err) {
-      throw new Error(`cgc-backlinks: privateIcon: ${(err as Error).message}`)
-    }
-  }
+  const drawLock = () => (lock ??= icons.svg("mdi:lock", { class: "cgc-backlinks__icon" }))
 
   // v4's order: public pages first, then the most recently changed, then titles in reverse
   // alphabetical order.

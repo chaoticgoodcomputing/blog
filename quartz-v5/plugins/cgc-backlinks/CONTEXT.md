@@ -27,9 +27,9 @@ and a bullet, drawn by the stylesheet, for a public one.
 _Avoid_: file icon (v4's class name), bullet (for the box itself)
 
 **Lock**:
-The private mark: the `privateIcon` icon id, `mdi:lock` by default, drawn inline once per build as
-`svg.cgc-backlinks__icon`, in `currentColor` and so in the link's colour.
-_Avoid_: private icon (that is the option), padlock
+The private mark: v4's `mdi:lock`, drawn inline once per build as `svg.cgc-backlinks__icon`, in
+`currentColor` and so in the link's colour. It is fixed, as cgc-tag-explorer's lock is.
+_Avoid_: private icon, padlock
 
 **Backlink order**:
 v4's: public before private, then the most recently modified (else published) first, then titles in
@@ -42,8 +42,8 @@ _Avoid_: sort, ranking
   private tags are its own option, as they are cgc-seo's, so a site gives both the same list. Which
   pages are private is tags-core's rule, which it inlines as a library (ADR-0002 rule 4), reading
   each page's frontmatter tags.
-- **It draws the lock itself,** with `@chaoticgoodcomputing/icons`, on the first page rendered,
-  whether or not that page has a private backlink, so an icon id no collection has fails every build.
+- **It draws the lock itself,** with `@chaoticgoodcomputing/icons`, from MDI, which installs with the
+  plugin, once per build. Nothing is fetched in the browser.
 - **Unlisted pages are never backlinks,** as in stock's component: `unlisted: true` hides a page from
   every listing. A private page stays listed.
 - **The list is core's overflow list.** It carries core's `overflow` classes and toggles core's

@@ -287,9 +287,12 @@
         visibility 0.3s ease;
     }
 
+    /* Visible the moment it opens, not after the slide, so it can take the focus at once (the
+       script). It still waits out the slide as it closes. */
     .cgc-tag-explorer--open .cgc-tag-explorer__panel {
       transform: none;
       visibility: visible;
+      transition-property: transform;
     }
 
     .cgc-tag-explorer__bar {

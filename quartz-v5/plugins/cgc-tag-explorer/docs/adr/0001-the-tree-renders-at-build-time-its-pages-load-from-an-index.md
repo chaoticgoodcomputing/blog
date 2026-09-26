@@ -1,5 +1,5 @@
 ---
-status: accepted
+status: proposed
 date: 2026-09-25
 ---
 
@@ -13,8 +13,10 @@ built the tree of tags, and put each tag's pages under it, sorted by date
 Under v5 three things change. The `cgc-tags` engine publishes each page's tags, colours and icon ids
 at build time (ADR-0002). Icons are drawn only at build time, because the icons library reads the
 file system (#71). And stock `content-index` no longer carries `date`. The map's answer to that last
-point was that the explorer would read `date` from `cgc-graph`'s own index (#44). Decided while
-porting the explorer on [#76](https://github.com/chaoticgoodcomputing/blog/issues/76).
+point was that the explorer would read `date` from `cgc-graph`'s own index (#44). Proposed while
+porting the explorer on [#76](https://github.com/chaoticgoodcomputing/blog/issues/76). It departs
+from that settled row of #44's map, so it stays proposed until the owner supersedes the row; if the
+owner keeps the row instead, the explorer reads `date` from `cgc-graph`'s index.
 
 > v4 links point at this repo at `9e48f89`.
 
