@@ -42,22 +42,21 @@ and a link to the post. The build never touches the network, and a URL that isn'
 fails the build.
 
 ```mdx
-import { BlueSkyPost } from "@chaoticgoodcomputing/widgets/bluesky-post"
+import { BlueskyPost } from "@chaoticgoodcomputing/widgets/bluesky-post"
 
-<BlueSkyPost url="https://bsky.app/profile/pfrazee.com/post/3meogr22vtc2d" showMetrics />
+<BlueskyPost url="https://bsky.app/profile/pfrazee.com/post/3meogr22vtc2d" showMetrics />
 ```
 
-| Prop          | Default   | What it is                                                                     |
-| ------------- | --------- | ------------------------------------------------------------------------------ |
-| `url`         | required  | The post, as bsky.app shows it: `https://bsky.app/profile/<handle>/post/<id>`. |
-| `showMetrics` | `false`   | Show the reply, repost and like counts.                                        |
-| `maxWidth`    | `"600px"` | A CSS max-width.                                                               |
+| Prop          | Default   | What it is                                                                      |
+| ------------- | --------- | ------------------------------------------------------------------------------- |
+| `url`         | required  | The post, as bsky.app shows it: `https://bsky.app/profile/<handle>/post/<id>`.  |
+| `showMetrics` | `false`   | Show the reply, repost and like counts. As in v4, only `true` or `"true"` does. |
+| `maxWidth`    | `"600px"` | A CSS max-width.                                                                |
 
-The post shows its author, its text, and its images, link card or quoted post. Its icons are MDI's,
-drawn by [`@chaoticgoodcomputing/icons`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/libs/icons)
-and carried in the widget, so nothing is fetched for them. Its skin is Quartz's colour properties
-(`--light`, `--lightgray`, `--gray`, `--darkgray`, `--dark`, `--secondary`, `--tertiary`,
-`--highlight`) and its details use `--codeFont`. A site with a Content Security Policy must allow
+The post shows its author, its text, and its images, link card or quoted post, and its counts
+beside v4's emoji. Nothing is fetched but the post and its pictures. Its skin is Quartz's colour
+properties (`--light`, `--lightgray`, `--gray`, `--darkgray`, `--dark`, `--secondary`,
+`--tertiary`, `--highlight`) and its details use `--codeFont`. A site with a Content Security Policy must allow
 `https://public.api.bsky.app` in `connect-src` and `https://cdn.bsky.app` in `img-src`.
 
 ## `/bluesky`
@@ -78,7 +77,10 @@ list.innerHTML = feed.map((item) => renderPost(item)).join("")
   `getAuthorFeed(actor, { limit })` each take an optional `signal`. They reject with a
   `BlueskyError` whose `reason` is `not-found`, `blocked` or `unavailable`.
 - `renderPost(item, { showMetrics, showContext, compact })` draws a post, or an item of a feed. The
-  first two default to `true`: its counts, and in a feed, who reposted it or that it replies.
+  first two default to `true`: its counts, beside v4's emoji, and in a feed, who reposted it or
+  that it replies, beside MDI's icons. The icons are drawn by
+  [`@chaoticgoodcomputing/icons`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/libs/icons)
+  and carried in the package, so nothing is fetched for them.
   `compact`, `false` by default, draws it smaller, for a sidebar, as `cgc-social`'s feed does.
   Everything the post carries is escaped, and only `http(s)` URLs become links or images.
 - `escapeHtml`, `relativeTime` and `postUrl` are the renderer's helpers.

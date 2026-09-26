@@ -27,7 +27,7 @@ files, and `cgc-mdx`'s esbuild has no asset handling for `new URL(…, import.me
 
 **So the worker is text.** `document.ts` imports `pdfjs-dist/build/pdf.worker.min.mjs` with
 `with { type: "text" }`, which esbuild honours with no configuration, the same way
-`island-runtime` ships its runtime. Once per document it wraps the text in a `Blob` and sets
+`island-runtime` ships its runtime. Once per page load it wraps the text in a `Blob` and sets
 `GlobalWorkerOptions.workerSrc` to the blob's URL. A `blob:` URL has the page's origin, so PDF.js
 starts it as a module worker directly, with no cross-origin wrapper
 ([api.js:2186-2198](https://github.com/mozilla/pdf.js/blob/50cc4adac01b8f35cf7d311b9eced150502936fe/src/display/api.js#L2186-L2198)).
@@ -46,8 +46,18 @@ widget (#45), and the ledger's plan to put PDF.js's CSS there assumed it could. 
 into the `cgc-pdf-viewer__text-layer` element, where the library-CSS check can see them.
 `--min-font-size`, `--font-height`, `--scale-x` and `--rotate` are PDF.js's own custom properties,
 which PDF.js writes on the elements. The widget only reads them, with fallbacks standing in for
-the defaults PDF.js's CSS declares. That way the only custom properties it declares are
-`--cgc-pdf-viewer-…`.
+the defaults PDF.js's CSS declares. That way the only custom properties its stylesheet declares
+are `--cgc-pdf-viewer-…`.
+
+**Three of PDF.js's properties are set by the widget's script, unprefixed.** `TextLayer` sizes its
+container in terms of `--total-scale-factor`, `--scale-round-x` and `--scale-round-y`
+([display_utils.js:648-667](https://github.com/mozilla/pdf.js/blob/50cc4adac01b8f35cf7d311b9eced150502936fe/src/display/display_utils.js#L648-L667)),
+which PDF.js's own viewer CSS declares on each page. The widget ships none of that CSS, so
+`document.ts` writes the three inline on each `cgc-pdf-viewer__page`. This is a named exception to
+ADR-0003 rule 7 (prefix every custom property we define with `--cgc-`): PDF.js fixes the names, and
+set inline on the widget's own element they reach only its own canvas, text layer and links, and
+no inherited value can override them. The library-CSS check can't see them, since they are set
+from script.
 
 **PDF.js's measuring canvas is removed, not hidden.** `TextLayer` measures text on a canvas that it
 appends to `<body>`, and only PDF.js's global `.hiddenCanvasElement` rule hides it

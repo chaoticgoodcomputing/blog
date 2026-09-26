@@ -18,7 +18,7 @@ const VAULT = path.join(REPO, "content/public")
 // Every .mdx article in the vault, by the clean URL it lives at, and the widgets its imports reach.
 const ARTICLES = {
   resume: ["PDFViewer"],
-  "content/notes/ai-beat-us": ["BlueSkyPost"],
+  "content/notes/ai-beat-us": ["BlueskyPost"],
   "content/notes/ants-in-the-neighborhood": ["RandomWalk"],
   "content/notes/mdx-widgets-test": ["GameOfLife"],
   "content/notes/roll-advantage": ["ProbabilityConvolutions"],

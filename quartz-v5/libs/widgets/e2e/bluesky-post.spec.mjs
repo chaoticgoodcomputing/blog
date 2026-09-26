@@ -1,26 +1,13 @@
 // `bluesky-post`, proven through `cgc-mdx`: the fixture page /lab/bluesky imports it as a package
-// (`@chaoticgoodcomputing/widgets/bluesky-post`) and shows two posts, fetched in the browser after
+// (`@chaoticgoodcomputing/widgets/bluesky-post`) and shows three posts, fetched in the browser after
 // hydration (#36, #75). Bluesky itself is the suite's stand-in (tests/harness/bluesky.mjs), which
 // answers from tests/fixture-bluesky/xrpc.json.
 import { test, expect, resolvedColour, toggleScheme } from "../../../tests/harness/test.mjs"
 import { BLUESKY_API, BLUESKY_HOSTS } from "../../../tests/harness/bluesky.mjs"
 import { jsonResponse } from "../../../tests/harness/stand-in.mjs"
 import { buildScratchSite } from "../../../tests/harness/site.mjs"
-import { createRequire } from "node:module"
-import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
-
-// MDI as installed, the source of truth for how its icons are drawn: read here, beside the icons
-// library that draws them, not through it.
-const iconsLib = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../icons")
-const mdi = JSON.parse(
-  fs.readFileSync(
-    createRequire(path.join(iconsLib, "package.json")).resolve("@iconify-json/mdi/icons.json"),
-    "utf8",
-  ),
-)
-const mdiPath = (name) => /\bd="([^"]+)"/.exec(mdi.icons[name].body)[1]
 
 const PAGE = "/lab/bluesky"
 const POST_A = "https://bsky.app/profile/fixture.bsky.social/post/3lcgcfixturea"
@@ -34,7 +21,7 @@ test("a reader without JavaScript gets a loading state and a link to each post",
   const page = await context.newPage()
   await page.goto(PAGE)
   const widgets = page.locator(".cgc-mdx-island .cgc-bluesky-post")
-  await expect(widgets).toHaveCount(2)
+  await expect(widgets).toHaveCount(3)
   const [first, second] = [widgets.nth(0), widgets.nth(1)]
   await expect(first).toContainText("Loading post")
   await expect(first.getByRole("link", { name: "View on Bluesky" })).toHaveAttribute("href", POST_A)
@@ -54,8 +41,8 @@ async function shown(page) {
     await expect(island).toHaveAttribute("data-cgc-hydrated", "")
   }
   const widgets = page.locator(".cgc-bluesky-post")
-  await expect(widgets.locator(".cgc-bluesky")).toHaveCount(2)
-  return [widgets.nth(0), widgets.nth(1)]
+  await expect(widgets.locator(".cgc-bluesky")).toHaveCount(3)
+  return [widgets.nth(0), widgets.nth(1), widgets.nth(2)]
 }
 
 test("it hydrates, fetches the post in the browser and draws it", async ({ page }) => {
@@ -66,9 +53,10 @@ test("it hydrates, fetches the post in the browser and draws it", async ({ page 
   await page.goto(PAGE)
   const [first] = await shown(page)
   // One call per widget, for the post its URL names.
-  expect(asked.map((u) => u.pathname)).toEqual(Array(2).fill("/xrpc/app.bsky.feed.getPostThread"))
+  expect(asked.map((u) => u.pathname)).toEqual(Array(3).fill("/xrpc/app.bsky.feed.getPostThread"))
   expect(asked.map((u) => u.searchParams.get("uri")).sort()).toEqual([
     "at://fixture.bsky.social/app.bsky.feed.post/3lcgcfixturea",
+    "at://fixture.bsky.social/app.bsky.feed.post/3lcgcfixtureb",
     "at://fixture.bsky.social/app.bsky.feed.post/3lcgcfixtureb",
   ])
 
@@ -140,45 +128,35 @@ test("a link card opens its page in a new tab", async ({ page }) => {
   )
 })
 
-test("with showMetrics, its counts sit beside MDI icons drawn inline, in the text's colour", async ({
-  page,
-}) => {
+test("with showMetrics, its counts sit beside v4's emoji", async ({ page }) => {
   await page.goto(PAGE)
-  const [first, second] = await shown(page)
+  const [first, second, third] = await shown(page)
   const metrics = first.locator(".cgc-bluesky__metric")
   await expect(metrics).toHaveCount(3)
   const expected = [
-    ["12 replies", "comment-outline"],
-    ["3 reposts", "repeat-variant"],
-    ["45 likes", "heart-outline"],
+    ["12 replies", "💬"],
+    ["3 reposts", "🔁"],
+    ["45 likes", "❤️"],
   ]
-  for (const [i, [label, icon]] of expected.entries()) {
+  for (const [i, [label, emoji]] of expected.entries()) {
     const metric = metrics.nth(i)
+    // The count and what it counts are the metric's text; the emoji is decoration before it, with
+    // empty alternative text, so a screen reader hears only the count.
     await expect(metric).toHaveText(label)
-    const svg = metric.locator("svg.cgc-bluesky__icon")
-    await expect(svg).toHaveAttribute("aria-hidden", "true")
-    // The icon is MDI's own glyph, painted in currentColor, so it takes the metric's colour.
-    const drawn = await svg.evaluate((el) => {
-      const mark = el.querySelector("path")
-      return {
-        d: mark.getAttribute("d"),
-        fill: getComputedStyle(mark).fill,
-        color: getComputedStyle(el.parentElement).color,
-      }
-    })
-    expect(drawn.d).toBe(mdiPath(icon))
-    expect(drawn.fill).toBe(drawn.color)
-    // Sized with the text, not by the SVG's own 1em in some other font size.
-    expect((await svg.boundingBox()).width).toBeGreaterThan(0)
+    const before = await metric.evaluate((el) => getComputedStyle(el, "::before").content)
+    expect(before).toBe(`"${emoji}" / ""`)
   }
+  await expect(first.locator("svg")).toHaveCount(0)
   // v4's default: no counts.
   await expect(second.locator(".cgc-bluesky__metrics")).toHaveCount(0)
+  // v4 read the prop as text and showed counts only for "true", so a quoted "false" shows none.
+  await expect(third.locator(".cgc-bluesky__metrics")).toHaveCount(0)
 })
 
 // The stock fixture makes off-site requests of its own on every page (Google Fonts, the graph's d3
 // and pixi from jsDelivr, Plausible), so the widget's page is held to the same page without it.
 // Bluesky's hosts are left to the stand-in; every other off-site request is recorded and refused.
-test("its icons come with the page: nothing is fetched but the post and its pictures", async ({
+test("nothing is fetched but the post and its pictures", async ({
   page,
   baseURL,
 }) => {
@@ -204,7 +182,7 @@ test("its icons come with the page: nothing is fetched but the post and its pict
   offsite = []
   await page.goto(PAGE)
   const [first] = await shown(page)
-  await expect(first.locator("svg.cgc-bluesky__icon")).toHaveCount(3)
+  await expect(first.locator(".cgc-bluesky__metric")).toHaveCount(3)
   await page.waitForLoadState("networkidle")
   expect(offsite.filter((u) => !withoutWidget.includes(u))).toEqual([])
   expect([...new Set(bluesky)].sort()).toEqual(["cdn.bsky.app", "public.api.bsky.app"])
@@ -257,7 +235,7 @@ for (const [when, answer, says] of FAILURES) {
       await expect(island).toHaveAttribute("data-cgc-hydrated", "")
     }
     const widgets = page.locator(".cgc-bluesky-post")
-    for (const [i, url] of [POST_A, POST_B].entries()) {
+    for (const [i, url] of [POST_A, POST_B, POST_B].entries()) {
       const status = widgets.nth(i).locator(".cgc-bluesky-post__status--failed")
       await expect(status).toContainText(says)
       await expect(status.getByRole("link", { name: "View on Bluesky" })).toHaveAttribute(
@@ -279,7 +257,7 @@ test("it survives SPA navigation away and back, drawing each post once", async (
   })
   await page.goto(PAGE)
   await shown(page)
-  expect(asked).toBe(2)
+  expect(asked).toBe(3)
 
   await page.locator("article a.internal", { hasText: "plain-note" }).click()
   await expect(page).toHaveURL(/\/plain-note$/)
@@ -287,10 +265,8 @@ test("it survives SPA navigation away and back, drawing each post once", async (
 
   await page.goBack()
   await expect(page).toHaveURL(/\/lab\/bluesky$/)
-  const [first, second] = await shown(page)
-  await expect(first.locator(".cgc-bluesky")).toHaveCount(1)
-  await expect(second.locator(".cgc-bluesky")).toHaveCount(1)
-  expect(asked).toBe(4)
+  for (const widget of await shown(page)) await expect(widget.locator(".cgc-bluesky")).toHaveCount(1)
+  expect(asked).toBe(6)
 })
 
 // A reader who leaves before the post arrives: the unmounted widget abandons its request, rather than
@@ -306,10 +282,10 @@ test("leaving before the post arrives abandons the request", async ({ page }) =>
   )
   await page.route(BLUESKY_API, (route) => held.push(route))
   await page.goto(PAGE)
-  await expect.poll(() => held.length).toBe(2)
+  await expect.poll(() => held.length).toBe(3)
   await page.locator("article a.internal", { hasText: "plain-note" }).click()
   await expect(page).toHaveURL(/\/plain-note$/)
-  await expect.poll(() => abandoned).toEqual(["net::ERR_ABORTED", "net::ERR_ABORTED"])
+  await expect.poll(() => abandoned).toEqual(Array(3).fill("net::ERR_ABORTED"))
   expect(errors).toEqual([])
 })
 
@@ -321,11 +297,11 @@ test("its skin follows the colour scheme when the reader toggles it", async ({ p
   const skin = async () => ({
     expected: {
       background: await resolvedColour(page, "var(--light)"),
-      icon: await resolvedColour(page, "var(--gray)"),
+      counts: await resolvedColour(page, "var(--gray)"),
     },
     actual: await first.evaluate((el) => ({
       background: getComputedStyle(el.querySelector(".cgc-bluesky")).backgroundColor,
-      icon: getComputedStyle(el.querySelector(".cgc-bluesky__metric path")).fill,
+      counts: getComputedStyle(el.querySelector(".cgc-bluesky__metric")).color,
     })),
   })
   const before = await skin()
@@ -334,7 +310,7 @@ test("its skin follows the colour scheme when the reader toggles it", async ({ p
   const after = await skin()
   expect(after.actual).toEqual(after.expected)
   expect(after.actual.background).not.toBe(before.actual.background)
-  expect(after.actual.icon).not.toBe(before.actual.icon)
+  expect(after.actual.counts).not.toBe(before.actual.counts)
 })
 
 // A post is written by a stranger: everything in it is text, and only http(s) URLs become links or
@@ -398,7 +374,7 @@ test("a URL that isn't a Bluesky post's fails the build, naming the page and the
     "../src/bluesky-post/index.tsx",
   )
   const page = (props) =>
-    `---\ntitle: Broken\n---\n\nimport { BlueSkyPost } from ${JSON.stringify(widget)}\n\n<BlueSkyPost ${props} />\n`
+    `---\ntitle: Broken\n---\n\nimport { BlueskyPost } from ${JSON.stringify(widget)}\n\n<BlueskyPost ${props} />\n`
   const { code, output } = await buildScratchSite("bluesky-url", {
     "index.md": "# home\n",
     "typo.mdx": page('url="https://bsky.app/profile/fixture.bsky.social/posts/3lcgcfixturea"'),

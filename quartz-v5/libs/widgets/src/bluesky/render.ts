@@ -146,15 +146,16 @@ function context(item: FeedViewPost): string {
   return ""
 }
 
-// Each count beside its icon, and what it counts, for a reader that can't see the icon.
+// Each count, and what it counts, for a reader that can't see the emoji the stylesheet puts before
+// it (v4's 💬 🔁 ❤️).
 function metrics(post: PostView): string {
-  const metric = (icon: string, count: unknown, what: string) =>
-    `<span class="cgc-bluesky__metric">${icon}<span class="cgc-bluesky__count">${Number.isFinite(count) ? count : 0}</span><span class="cgc-bluesky__metric-name"> ${what}</span></span>`
+  const metric = (count: unknown, what: string) =>
+    `<span class="cgc-bluesky__metric cgc-bluesky__metric--${what}"><span class="cgc-bluesky__count">${Number.isFinite(count) ? count : 0}</span><span class="cgc-bluesky__metric-name"> ${what}</span></span>`
   return (
     `<span class="cgc-bluesky__metrics">` +
-    metric(icons.replies, post.replyCount, "replies") +
-    metric(icons.reposts, post.repostCount, "reposts") +
-    metric(icons.likes, post.likeCount, "likes") +
+    metric(post.replyCount, "replies") +
+    metric(post.repostCount, "reposts") +
+    metric(post.likeCount, "likes") +
     `</span>`
   )
 }

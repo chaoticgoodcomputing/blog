@@ -1,10 +1,13 @@
 // `/bluesky`, the widget library's non-widget export: Bluesky's public API and a renderer for its
-// posts, which the `bluesky-post` widget is built on and which a plugin such as cgc-social takes
-// without the widget (#36, #75). No plugin takes it yet, so the spec does what one would: it bundles
+// posts, which the `bluesky-post` widget is built on and which a plugin takes without the widget
+// (#36, #75). cgc-social inlines it (#80), and its specs prove the feed there: the requests, who
+// reposted and what replies, the counts and the failures (plugins/cgc-social/e2e/bluesky.spec.mjs).
+// What that consumer doesn't show is kept here, with a probe standing in for a plugin's build: that
+// the bundle carries no widget, Preact or icons library and only the `cgc-bluesky` block's CSS, the
+// context lines' MDI glyphs, the post card at its full size, and why a fetch failed. The probe bundles
 // the export for the browser with esbuild, as a plugin's build bundles its client script, and runs
-// the bundle on a fixture page. Bluesky is the suite's stand-in (tests/harness/bluesky.mjs).
+// it on a fixture page. Bluesky is the suite's stand-in (tests/harness/bluesky.mjs).
 import { test, expect, resolvedColour } from "../../../tests/harness/test.mjs"
-import { BLUESKY_API } from "../../../tests/harness/bluesky.mjs"
 import { testsRoot, vendored } from "../../../tests/harness/site.mjs"
 import { createRequire } from "node:module"
 import fs from "node:fs"
@@ -69,12 +72,10 @@ test("a plugin can bundle /bluesky for the browser without the widget, Preact or
   expect(classes.has(".cgc-bluesky")).toBe(true)
 })
 
-test("a feed drawn with it says who reposted and what replies, beside MDI icons", async ({
+test("a feed drawn with it marks who reposted and what replies with MDI's icons, on full-size cards", async ({
   page,
 }) => {
   const { js, css } = await bundle()
-  const asked = []
-  page.on("request", (req) => BLUESKY_API.test(req.url()) && asked.push(new URL(req.url())))
   await page.goto("/plain-note")
   await page.addStyleTag({ content: css })
   await page.addScriptTag({ content: js })
@@ -86,32 +87,17 @@ test("a feed drawn with it says who reposted and what replies, beside MDI icons"
     list.innerHTML = feed.map((item) => renderPost(item)).join("")
     document.querySelector("article").append(list)
   })
-  expect(asked.map((u) => [u.pathname, Object.fromEntries(u.searchParams)])).toEqual([
-    ["/xrpc/com.atproto.identity.resolveHandle", { handle: "fixture.bsky.social" }],
-    [
-      "/xrpc/app.bsky.feed.getAuthorFeed",
-      { actor: "did:plc:cgcfixtureauthor2345abcd", limit: "3" },
-    ],
-  ])
 
+  // The feed is a repost, a reply and a post (cgc-social's spec checks what each says).
   const posts = page.locator(".cgc-probe-feed .cgc-bluesky")
   await expect(posts).toHaveCount(3)
-  const [repost, reply, own] = [posts.nth(0), posts.nth(1), posts.nth(2)]
-  await expect(repost.locator(".cgc-bluesky__context")).toHaveText("Fixture Author reposted")
-  await expect(repost.locator(".cgc-bluesky__name")).toHaveText("Quoted Author")
-  await expect(reply.locator(".cgc-bluesky__context")).toHaveText("Fixture Author replied")
-  await expect(own.locator(".cgc-bluesky__context")).toHaveCount(0)
+  const [repost, reply] = [posts.nth(0), posts.nth(1)]
   const glyph = (post) =>
     post.locator(".cgc-bluesky__context svg.cgc-bluesky__icon path").getAttribute("d")
   expect(await glyph(repost)).toBe(mdiPath("repeat-variant"))
   expect(await glyph(reply)).toBe(mdiPath("reply"))
-  // v4's renderer showed counts unless told not to.
-  await expect(own.locator(".cgc-bluesky__metric")).toHaveText([
-    "0 replies",
-    "0 reposts",
-    "2 likes",
-  ])
-  // Styled by its own stylesheet: the card's skin is Quartz's colour properties.
+  // Styled by its own stylesheet: the card's skin is Quartz's colour properties, and without
+  // `compact` it is drawn at the post widget's size (cgc-social's compact card has 4px corners).
   const skin = await repost.evaluate((el) => ({
     border: getComputedStyle(el).borderTopColor,
     radius: getComputedStyle(el).borderTopLeftRadius,

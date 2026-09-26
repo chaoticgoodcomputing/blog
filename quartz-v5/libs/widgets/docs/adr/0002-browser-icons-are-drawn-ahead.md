@@ -3,13 +3,14 @@ status: accepted
 date: 2026-09-25
 ---
 
-# Icons a widget shows in the browser are drawn ahead, into its source
+# Icons a subpath shows in the browser are drawn ahead, into its source
 
-A Bluesky post shows its counts and its context beside MDI icons, and #36 says those come from
-`@chaoticgoodcomputing/icons`, so that the CDN v4 fetched them from goes away. But the post is
-drawn in the browser, after a fetch, and the icons library runs only on the server. So the widget
-lists the icon ids it needs in `src/<widget>/icons.json`, and `draw-icons.mjs` draws them with the
-library into `src/<widget>/icons.ts`, one exported SVG string per name. That module is committed,
+A Bluesky post in a feed shows its context, who reposted it or that it replies, beside MDI icons,
+and #36 says those come from `@chaoticgoodcomputing/icons`, so that the CDN v4 fetched them from goes away. But the post is
+drawn in the browser, after a fetch, and the icons library runs only on the server. So `/bluesky`,
+the subpath that draws posts, lists the icon ids it needs in `src/bluesky/icons.json`, and
+`draw-icons.mjs` draws them with the library into `src/bluesky/icons.ts`, one exported SVG string
+per name. That module is committed,
 and the package's `lint` target fails when it differs from what the library draws. Decided while
 building [`bluesky-post`](https://github.com/chaoticgoodcomputing/blog/issues/75).
 
@@ -25,7 +26,7 @@ and `IconService` fetched each from jsDelivr
 ([iconService.ts:53](https://github.com/chaoticgoodcomputing/blog/blob/9e48f89b256f511a94f07d473d46395d91730c53/quartz/util/iconService.ts#L53)).
 Its counts were emoji
 ([blueskyService.ts:352-354](https://github.com/chaoticgoodcomputing/blog/blob/9e48f89b256f511a94f07d473d46395d91730c53/quartz/util/blueskyService.ts#L352-L354)),
-which each platform draws in its own colours, whatever the scheme.
+which need no icon at all.
 
 **The icons library can't reach the browser.** It reads the file system and resolves installed
 sets through `createRequire`: its `src/index.ts` imports `node:fs`, `node:path` and `node:module`.
@@ -47,32 +48,34 @@ source.
 
 ## Decision
 
-- **A widget that shows icons in the browser lists their ids** in `src/<widget>/icons.json`, by
+- **A subpath that shows icons in the browser lists their ids** in `src/<name>/icons.json`, by
   the name its code imports them as.
-- **`npm run icons` draws them** with `@chaoticgoodcomputing/icons` into `src/<widget>/icons.ts`,
-  each with the widget block's icon class, `cgc-<widget>__icon`. The library is a
+- **`npm run icons` draws them** with `@chaoticgoodcomputing/icons` into `src/<name>/icons.ts`,
+  each with its block's icon class, `cgc-<name>__icon`. The library is a
   `workspace:*` devDependency: only the drawing needs it.
 - **`npm run lint` checks them** (`draw-icons.mjs --check`), and fails when an `icons.ts` isn't
   exactly what the library draws from its `icons.json`: a hand edit, an id changed without a
   redraw, or an id the library doesn't know.
-- **`/bluesky`'s renderer draws with them.** Its counts (`mdi:comment-outline`,
-  `mdi:repeat-variant`, `mdi:heart-outline`) replace v4's emoji, and its context lines keep v4's
-  `mdi:repeat-variant` and `mdi:reply`. A plugin that shows posts with the renderer gets the icons
-  with it, and needs neither the icons library nor Iconify's packages.
+- **`/bluesky`'s renderer draws with them.** Its context lines keep v4's `mdi:repeat-variant` and
+  `mdi:reply`. Its counts keep v4's emoji (💬 🔁 ❤️), which its stylesheet puts before each count as
+  decoration: #53 keeps the site looking as it does, and #75 asked only that v4's icons come from
+  the library. A plugin that shows posts with the renderer gets the icons with it, and needs
+  neither the icons library nor Iconify's packages.
 
 ## Consequences
 
 - **The icons are exactly the library's.** Painted in `currentColor`, `aria-hidden`, and sized by
-  the widget's CSS, so they follow the colour scheme with no script.
-- **No fetch, no Iconify at run time.** A page with the widget loads its icons inside the widget's
-  chunk. Downstream, installing the package installs nothing of Iconify's.
+  the block's CSS, so they follow the colour scheme with no script. The counts' emoji don't: each
+  platform draws them in its own colours, as it did in v4.
+- **No fetch, no Iconify at run time.** A page that draws posts loads the icons inside the script
+  that draws them. Downstream, installing the package installs nothing of Iconify's.
 - **MDI is pinned twice over.** The drawn module fixes each glyph as the pinned `@iconify-json/mdi`
   drew it, and moving MDI means a redraw, which the check demands.
 - **A generated file is committed.** It is small and marked as drawn, and the check keeps it
   honest. A site's own icon collection stays the other way round: its SVG files are the source, and
   nothing drawn from them is committed.
 - **Only installed sets.** A site's own icon collection is site configuration, and the library can't
-  know it, so a widget can only show icons from an installed set such as MDI.
+  know it, so a subpath can only show icons from an installed set such as MDI.
 
 ## Considered alternatives
 
@@ -81,6 +84,8 @@ source.
   them back. It needs the library to run in `cgc-mdx`'s Node bundle, which it can't (above), and
   it leans on how Preact treats server markup it didn't render.
 - **Import MDI's data into the widget.** `@iconify-json/mdi` is one 3 MB JSON file, and no bundler
-  can shake it down to five icons.
-- **Keep v4's emoji and fetch nothing.** It leaves the context icons with no source, and colours
-  that ignore the scheme.
+  can shake it down to two icons.
+- **Draw the counts with MDI too** (`comment-outline`, `repeat-variant`, `heart-outline`), so that
+  they follow the colour scheme. It changes what readers see, where #53 keeps the site as it is,
+  and neither #36 nor #75 asked for it. The first build of `bluesky-post` did this, and the review
+  of #75 put it back.

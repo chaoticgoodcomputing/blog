@@ -11,7 +11,7 @@ import workerSource from "pdfjs-dist/build/pdf.worker.min.mjs" with { type: "tex
 
 // PDF.js runs its parser in a worker, which needs a script URL. A library emits no files of its
 // own (the page's bundler does), so the worker ships in this chunk as text and starts from a blob:
-// URL on the page's own origin. Once per document: SPA navigation keeps the URL alive.
+// URL on the page's own origin. Once per page load: SPA navigation keeps the URL alive.
 GlobalWorkerOptions.workerSrc ||= URL.createObjectURL(
   new Blob([workerSource], { type: "text/javascript" }),
 )
@@ -70,7 +70,9 @@ async function drawPage(page: PDFPageProxy, into: HTMLElement, width: number) {
   el.className = "cgc-pdf-viewer__page"
   el.style.width = `${viewport.width}px`
   el.style.height = `${viewport.height}px`
-  // The text layer's sizes are written in terms of PDF.js's own custom properties.
+  // The text layer's sizes are written in terms of PDF.js's own custom properties, which its viewer
+  // CSS would declare on the page. Unprefixed, as PDF.js names them: the library's ADR-0001 records
+  // this exception to ADR-0003 rule 7.
   el.style.setProperty("--total-scale-factor", String(scale))
   el.style.setProperty("--scale-round-x", "1px")
   el.style.setProperty("--scale-round-y", "1px")

@@ -1,16 +1,20 @@
 // bluesky-post: one Bluesky post, fetched in the browser. An island (cgc-mdx ADR-0002): the
 // build-time HTML is a loading state and a link to the post, and hydration fetches the post from
 // Bluesky's public API and draws it with /bluesky's renderer. The build never touches the network
-// (#36). v4's props are kept.
+// (#36). v4's props are kept. The export is spelled as the rest of the package spells Bluesky
+// (v4's was `BlueSkyPost`): v4's MDX shim keys a widget by its import path, not its name.
 import { useEffect, useState } from "preact/hooks"
 import { BlueskyError, getPost, parseBlueskyUrl, renderPost } from "../bluesky"
 import "./bluesky-post.css"
 
-export interface BlueSkyPostProps {
+export interface BlueskyPostProps {
   /** The post's URL, as bsky.app shows it: `https://bsky.app/profile/<handle>/post/<id>`. */
   url: string
-  /** Show the post's reply, repost and like counts. */
-  showMetrics?: boolean
+  /**
+   * Show the post's reply, repost and like counts. Read as v4 read it, as text: only `true` or
+   * `"true"` shows them, so an MDX author's quoted `showMetrics="false"` shows none.
+   */
+  showMetrics?: boolean | "true" | "false"
   /** A CSS max-width. */
   maxWidth?: string
 }
@@ -41,14 +45,19 @@ function failure(error: unknown): Status {
   }
 }
 
-export function BlueSkyPost({ url, showMetrics = false, maxWidth = "600px" }: BlueSkyPostProps) {
+export function BlueskyPost({
+  url,
+  showMetrics: showMetricsProp = false,
+  maxWidth = "600px",
+}: BlueskyPostProps) {
+  const showMetrics = String(showMetricsProp) === "true"
   const [status, setStatus] = useState<Status>({ state: "loading" })
   // Thrown while rendering at build time, a typo fails the build rather than shipping (v4 showed it
   // to readers instead).
   const address = parseBlueskyUrl(url)
   if (!address)
     throw new Error(
-      `BlueSkyPost: ${JSON.stringify(url)} is not a Bluesky post's URL (https://bsky.app/profile/<handle>/post/<id>)`,
+      `BlueskyPost: ${JSON.stringify(url)} is not a Bluesky post's URL (https://bsky.app/profile/<handle>/post/<id>)`,
     )
 
   // Runs only in the browser, after hydration. The cleanup runs when the island unmounts, which

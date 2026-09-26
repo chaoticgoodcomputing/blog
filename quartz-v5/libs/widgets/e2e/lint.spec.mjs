@@ -1,6 +1,6 @@
 // ADR-0003's libraries-that-ship-CSS amendment: a library's CSS is checked, never transformed. The
-// package's Nx `lint` target runs `lint-css.mjs`, which fails on anything a widget's stylesheet puts
-// outside its own namespace. The failing cases run it on a copy of `src/` with the escape planted,
+// package's Nx `lint` target runs `lint-css.mjs`, which fails on anything a stylesheet puts outside
+// its own block. The failing cases run it on a copy of `src/` with the escape planted,
 // since the real tree is shared with the other specs.
 import { test, expect } from "../../../tests/harness/test.mjs"
 import { execFile } from "node:child_process"
@@ -184,9 +184,9 @@ test("a relative import that leaves the package fails, since the check can't see
 // draw-icons.mjs imports the icons library's TypeScript source, as package.json's scripts run it.
 const STRIP_TYPES = ["--experimental-strip-types", "--disable-warning=ExperimentalWarning"]
 
-// The icons a widget shows in the browser are drawn ahead by @chaoticgoodcomputing/icons, into the
-// widget's committed icons.ts (docs/adr/0002). The lint target checks they are still what the
-// library draws from the widget's icons.json.
+// The icons a subpath shows in the browser are drawn ahead by @chaoticgoodcomputing/icons, into its
+// committed icons.ts (docs/adr/0002). The lint target checks they are still what the library draws
+// from the icons.json beside it.
 async function drawIcons(root) {
   try {
     const { stdout, stderr } = await run(

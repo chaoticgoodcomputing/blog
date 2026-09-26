@@ -2,10 +2,10 @@
 // package runs, @chaoticgoodcomputing/css-check, run here as a lint, since a library has no build. It
 // rewrites nothing. The shipped CSS is exactly the source.
 //
-// Each directory under src/ is one widget, and its block is `cgc-<directory>`. Every widget's
-// stylesheet is checked against its own block, with the others as its neighbours, so a name in
+// Each directory under src/ is one subpath, and its block is `cgc-<directory>`. Every block's
+// stylesheet is checked against that block, with the others as its neighbours, so a name in
 // `cgc-bluesky-post`'s namespace is never `cgc-bluesky`'s, though one block's name is a prefix of
-// the other's. A selector starts at an element of the widget and may reach anything inside one
+// the other's. A selector starts at an element of the block and may reach anything inside one
 // (PDF.js writes the text layer's markup), never beside or above it. The stylesheet declares no
 // layer: whoever bundles the widget places it (cgc-mdx in `cgc.mdx.widgets`, cgc-social in its own).
 // CSS the check can't see fails too: an @import, or a source file importing a stylesheet from
@@ -29,19 +29,18 @@ const walk = (dir) =>
     return entry.isDirectory() ? walk(full) : [full]
   })
 
-const widgets = fs
+const blocks = fs
   .readdirSync(root, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
-  .map((entry) => entry.name)
-const blocks = widgets.map((widget) => `cgc-${widget}`)
+  .map((entry) => `cgc-${entry.name}`)
 
 for (const file of walk(root)) {
-  const widget = path.relative(root, file).split(path.sep)[0]
-  const inWidget = widget !== path.basename(file)
+  const dir = path.relative(root, file).split(path.sep)[0]
+  const inBlock = dir !== path.basename(file)
   if (file.endsWith(".css")) {
-    if (!inWidget) {
+    if (!inBlock) {
       problems.push(
-        `${shown(file)}:1:1  a stylesheet belongs to one widget, in its directory under src/`,
+        `${shown(file)}:1:1  a stylesheet belongs to one block, in its directory under src/`,
       )
       continue
     }
@@ -49,7 +48,7 @@ for (const file of walk(root)) {
     problems.push(
       ...checkStylesheet(fs.readFileSync(file, "utf8"), {
         from: shown(file),
-        block: `cgc-${widget}`,
+        block: `cgc-${dir}`,
         neighbours: blocks,
         reach: "inside",
       }),
@@ -63,10 +62,10 @@ for (const file of walk(root)) {
 
 if (problems.length) {
   console.error(
-    `${problems.join("\n")}\n\n${problems.length} error${problems.length === 1 ? "" : "s"}: CSS outside its widget's block (ADR-0003).`,
+    `${problems.join("\n")}\n\n${problems.length} error${problems.length === 1 ? "" : "s"}: CSS outside its block (ADR-0003).`,
   )
   process.exit(1)
 }
 console.log(
-  `${checked} stylesheet${checked === 1 ? "" : "s"} checked: everything is inside its widget's block.`,
+  `${checked} stylesheet${checked === 1 ? "" : "s"} checked: everything is inside its block.`,
 )

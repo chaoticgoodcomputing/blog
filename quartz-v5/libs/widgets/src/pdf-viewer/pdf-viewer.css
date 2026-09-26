@@ -135,7 +135,8 @@
    Prefixed by hand from PDF.js 5.4.530's web/text_layer_builder.css (`.textLayer` in pdfjs-dist's
    web/pdf_viewer.css), keeping only what TextLayer's markup needs. Rule 9's vendor layer can't
    reach a widget, so the rules live in the block like any other (the library's ADR-0001).
-   PDF.js writes --total-scale-factor on the page (from the script), --min-font-size on this
+   The widget's script writes --total-scale-factor on the page for PDF.js to read (the library's
+   ADR-0001 records it as an exception to rule 7), and PDF.js writes --min-font-size on this
    element, and --font-height, --scale-x and --rotate on each span. The fallbacks stand in for the
    defaults text_layer_builder.css declares. */
 .cgc-pdf-viewer__text-layer {

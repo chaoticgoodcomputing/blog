@@ -284,7 +284,24 @@
   color: var(--gray);
 }
 
-/* What a count counts, for a reader who can't see its icon. */
+/* v4's emoji before each count. Decorative (the empty alternative text), since the count's name
+   says what it counts; the first declaration is for a browser without alternative text. */
+.cgc-bluesky__metric--replies::before {
+  content: "💬";
+  content: "💬" / "";
+}
+
+.cgc-bluesky__metric--reposts::before {
+  content: "🔁";
+  content: "🔁" / "";
+}
+
+.cgc-bluesky__metric--likes::before {
+  content: "❤️";
+  content: "❤️" / "";
+}
+
+/* What a count counts, for a reader who can't see its emoji. */
 .cgc-bluesky__metric-name {
   position: absolute;
   width: 1px;

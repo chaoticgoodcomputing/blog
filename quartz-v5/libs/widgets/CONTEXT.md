@@ -26,8 +26,8 @@ _Avoid_: namespace (for one widget's), prefix, scope
 **Library-CSS check**:
 The check every styled package runs, [`@chaoticgoodcomputing/css-check`](../css-check/CONTEXT.md),
 run here by the package's `lint` target, `lint-css.mjs`, since a library has no build. Each
-widget's stylesheet is checked against its directory's block, with the other widgets' blocks as
-its neighbours, at `"inside"` reach: a selector starts at an element of the block and may reach
+subpath's stylesheet is checked against its directory's block, with the other blocks as its
+neighbours, at `"inside"` reach: a selector starts at an element of the block and may reach
 anything inside it (PDF.js writes the text layer), never beside or above it. It also fails a name
 outside the block, a colour or font literal, a layer, and any CSS it can't see: an `@import`, or a
 stylesheet imported from another package or from outside `src/`. It rewrites nothing, so the
@@ -35,9 +35,10 @@ shipped CSS is exactly the source.
 _Avoid_: stylelint, prefixing pass (that one transforms)
 
 **Icon module**:
-A widget's `icons.ts`: the icons it shows in the browser, as **drawn icons** (the icons library's
-term) that `@chaoticgoodcomputing/icons` drew from the ids in the `icons.json` beside it
-(`npm run icons`). Committed, since the widget's browser code can't run the library, and checked by the `lint` target
+A subpath's `icons.ts` (today only `/bluesky`'s): the icons it shows in the browser, as **drawn
+icons** (the icons library's term) that `@chaoticgoodcomputing/icons` drew from the ids in the
+`icons.json` beside it (`npm run icons`). Committed, since its browser code can't run the library,
+and checked by the `lint` target
 against what the library draws ([ADR-0002](./docs/adr/0002-browser-icons-are-drawn-ahead.md)).
 _Avoid_: icon sprite, icon cache, generated icons (in prose)
 
@@ -85,4 +86,4 @@ _Avoid_: embed (a post's own images, link card or quote), tweet, post widget
 - **Widget CSS lands in `cgc.mdx.widgets`**, which `cgc-mdx` wraps around it when it emits it. Rule 9's
   vendor layer can't reach a widget, so third-party CSS goes into the block by hand.
 - **How `pdf-viewer` carries PDF.js** is [ADR-0001](./docs/adr/0001-pdf-js-rides-in-the-widget-chunk.md).
-- **How a widget's browser icons are drawn** is [ADR-0002](./docs/adr/0002-browser-icons-are-drawn-ahead.md).
+- **How a subpath's browser icons are drawn** is [ADR-0002](./docs/adr/0002-browser-icons-are-drawn-ahead.md).
