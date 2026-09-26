@@ -90,6 +90,39 @@ export const ALLOWLIST = [
       d.area === "url" && d.change === "moved" && d.kind === "page" && sameSet(d.how, ["mdx-extension"]) && d.redirect === "verified" && MDX_PAGES.has(d.url),
   },
   {
+    ticket: 26,
+    summary:
+      "The owner's 2026-09-26 decision: v5 lowercases asset URLs as it does page URLs, and the old mixed-case asset URLs are given up. GitHub Pages can't redirect a file, and a meta refresh can't stand in for an image or a PDF. Only a file moved by lowercasing alone.",
+    allows: (d) => d.area === "url" && d.change === "moved" && d.kind === "file" && sameSet(d.how, ["lowercase"]),
+  },
+  {
+    ticket: 81,
+    summary:
+      "The owner's 2026-09-26 decision: the notebook /assets/textimagegen/textimagegen.ipynb moves to index.ipynb, as a folder note, and the old URL is given up.",
+    allows: (d) =>
+      d.area === "url" && d.change === "moved" && d.kind === "file" && sameSet(d.how, ["folder-note"]) && d.url === "/assets/textimagegen/textimagegen.ipynb",
+  },
+  {
+    ticket: 81,
+    summary:
+      "The owner's 2026-09-26 decision: ai-beat-us's JSON-LD description loses v4's text, which was only the Bluesky widget's \"Loading post...\" placeholder.",
+    allows: (d) =>
+      d.area === "head" && d.url === "/content/notes/ai-beat-us" && d.field === "jsonld.description" && sameSet(d.removed, ["Loading post..."]) && d.added.length === 0,
+  },
+  {
+    ticket: 81,
+    summary:
+      "The owner's 2026-09-26 decision: the ants article, which has no prose of its own, gives its RSS reading time as 0 min where v4 gave 1 min. The description is otherwise unchanged.",
+    allows: (d) =>
+      d.area === "rss" &&
+      d.change === "changed" &&
+      d.field === "description" &&
+      d.url === "/content/notes/ants-in-the-neighborhood" &&
+      d.removed.length === 1 &&
+      d.added.length === 1 &&
+      d.removed[0].replace(/\(1 min read\)$/, "(0 min read)") === d.added[0],
+  },
+  {
     ticket: 42,
     summary: "Folder pages are dropped and folder-page is disabled: they were never in the sitemap, and nothing links to them.",
     allows: (d, { v4 }) =>
@@ -134,13 +167,7 @@ export const ALLOWLIST = [
 
 // Not allowances. Each labels differences an open ticket is expected to close, so the report can say
 // what it is waiting on. A pending difference still fails the report.
-export const PENDING = [
-  {
-    ticket: 26,
-    summary: "asset URLs are lowercased with no redirect; open decision",
-    matches: (d) => d.area === "url" && d.change === "moved" && d.kind === "file" && d.how.includes("lowercase"),
-  },
-]
+export const PENDING = []
 
 /** Throws unless every entry cites a ticket and says what it accepts. */
 export function checkAllowlist(entries = ALLOWLIST) {

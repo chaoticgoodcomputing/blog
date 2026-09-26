@@ -443,14 +443,19 @@ test("reads relative site, vault and output paths from the repo root, as its def
   expect(fs.existsSync(path.join(out, "report.json"))).toBe(true)
 })
 
-test("never allows an asset lowercased with no redirect, and says which ticket it waits on", async () => {
-  const v4 = site("v4", { ...BASE, "assets/Resume.pdf": "pdf" })
-  const v5 = site("v5", { ...BASE, "assets/resume.pdf": "pdf" })
-  const result = await report(v4, v5)
-  expect(result.code, result.stdout).toBe(1)
-  expect(result.json.failing).toEqual([
-    expect.objectContaining({ area: "url", change: "moved", url: "/assets/Resume.pdf", to: "/assets/resume.pdf", pending: 26 }),
+test("allows an asset lowercased with no redirect, as the owner decided on #26, and no other asset move", async () => {
+  const lowered = await report(site("v4", { ...BASE, "assets/Resume.pdf": "pdf" }), site("v5", { ...BASE, "assets/resume.pdf": "pdf" }))
+  expect(lowered.code, lowered.stdout).toBe(0)
+  expect(lowered.json.allowed).toEqual([
+    expect.objectContaining({ area: "url", change: "moved", url: "/assets/Resume.pdf", to: "/assets/resume.pdf", ticket: 26 }),
   ])
+  // A folder note's move is allowed only for the one notebook the owner accepted.
+  const folded = await report(
+    site("v4", { ...BASE, "assets/nb/nb.ipynb": "{}" }),
+    site("v5", { ...BASE, "assets/nb/index.ipynb": "{}" }),
+  )
+  expect(folded.code, folded.stdout).toBe(1)
+  expect(folded.json.failing).toEqual([expect.objectContaining({ area: "url", change: "moved", url: "/assets/nb/nb.ipynb", how: ["folder-note"] })])
 })
 
 test("treats a date both builds took from their own clock as the same date", async () => {
