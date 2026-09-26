@@ -3,9 +3,9 @@
 The Quartz 5 component that lists the pages linking to a page, public ones first, with each private
 one marked by a lock: v4's Backlinks fork (#44, #78). It needs no engine: it reads what stock Quartz
 leaves on every page, and takes the private tags as its own option. Inherits the family vocabulary in
-[`quartz-v5/CONTEXT.md`](../../CONTEXT.md) and the icon vocabulary of
-[`icons`](../../libs/icons/CONTEXT.md). **Private page** means what it means in
-[`cgc-seo`](../cgc-seo/CONTEXT.md), less the tag's own listing page.
+[`quartz-v5/CONTEXT.md`](../../CONTEXT.md), the icon vocabulary of
+[`icons`](../../libs/icons/CONTEXT.md), and the **Private tag**, **Private page** and **Under** of
+[`tags-core`](../../libs/tags-core/CONTEXT.md), whose rule it inlines: a library, not an engine.
 
 ## Language
 
@@ -15,15 +15,10 @@ A page that links to the page being read, as Quartz's crawl records it on the li
 One item in the list, `.cgc-backlinks__item`.
 _Avoid_: incoming link, reference, mention
 
-**Private tag**:
-One of the tags the `privateTags` option names (`private` on this site). A page carrying one, or any
-descendant of one (`private/work`), is a **private backlink** wherever it links. A tag that only
-starts with the same letters (`privateer`) is no descendant.
-_Avoid_: hidden tag, noindex tag (that is cgc-seo's option for the same tags)
-
 **Private backlink**:
-A backlink from a private page. Its link carries the `--private` modifier and the **lock**, and it
-sorts after every public backlink.
+A backlink from a private page: one carrying a tag the `privateTags` option names (`private` on this
+site), or a tag under one (`private/work`, but not `privateer`). Its link carries the `--private`
+modifier and the **lock**, and it sorts after every public backlink.
 _Avoid_: locked link, private link
 
 **Mark**:
@@ -44,7 +39,9 @@ _Avoid_: sort, ranking
 ## Constraints
 
 - **No engine.** It depends on `cgc-styles` for its cascade position only, and on no tag engine: the
-  private tags are its own option, as they are cgc-seo's, so a site gives both the same list.
+  private tags are its own option, as they are cgc-seo's, so a site gives both the same list. Which
+  pages are private is tags-core's rule, which it inlines as a library (ADR-0002 rule 4), reading
+  each page's frontmatter tags.
 - **It draws the lock itself,** with `@chaoticgoodcomputing/icons`, on the first page rendered,
   whether or not that page has a private backlink, so an icon id no collection has fails every build.
 - **Unlisted pages are never backlinks,** as in stock's component: `unlisted: true` hides a page from

@@ -1,7 +1,7 @@
 // Which posts a page lists, and in what order. Pure functions of the pages Quartz hands every
 // component, reading tags only from what the cgc-tags engine publishes on each page (ADR-0002).
 import type { QuartzPluginData } from "@quartz-community/types"
-import { tagOfPage, type TagsData } from "@chaoticgoodcomputing/tags-core"
+import { isAllTagsPage, tagOfPage, type TagsData } from "@chaoticgoodcomputing/tags-core"
 import { getDate } from "@quartz-community/utils/sort"
 
 export interface Selection {
@@ -9,9 +9,9 @@ export interface Selection {
   filterToCurrentTag: boolean
   /** Count a post under one of the tag's subtags as under the tag. */
   includeSubtags: boolean
-  /** Leave out the posts under any of these tags, their subtags included. */
+  /** Leave out the posts under any of these tags, their subtags included. Normalised tags. */
   excludeTags: readonly string[]
-  /** Leave out tag pages, such as a tag's description file. */
+  /** Leave out tag pages, such as a tag's description file, and the page of every tag. */
   excludeTagPages: boolean
 }
 
@@ -37,7 +37,8 @@ export function postsFor(
       // 404 page. Quartz sets `filePath` on every page it parses, and cgc-mdx on its .mdx pages.
       if (!file.filePath) return false
       if (file.unlisted === true) return false
-      if (selection.excludeTagPages && (fileSlug === "tags" || fileSlug.startsWith("tags/")))
+      // Which pages are tag pages, and which is the page of every tag, are tags-core's rules.
+      if (selection.excludeTagPages && (tagOfPage(fileSlug) !== null || isAllTagsPage(fileSlug)))
         return false
       if (selection.excludeTags.some((excluded) => isUnder(file, excluded, true))) return false
       return tag === null || isUnder(file, tag, selection.includeSubtags)

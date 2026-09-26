@@ -2,15 +2,17 @@
 
 The Quartz 5 plugin that owns how the site presents itself to search engines and feed readers:
 which pages ask to be indexed, the sitemap, the RSS feed and the metadata in each page's head.
-Inherits the family vocabulary in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md).
+Inherits the family vocabulary in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md), and uses the
+**Private tag**, **Private page** and **Under** of [`tags-core`](../../libs/tags-core/CONTEXT.md),
+whose rules it inlines: a library, so the plugin depends on no engine (#28).
 
 ## Language
 
 **Indexable page**:
 A page the site asks search engines to index and lists in its sitemap, and in its feed when it is an
 **article**. That covers the site's own public content and the **tag pages** that list it: every page
-that is not a private, unlisted or external page, except a generated listing of a tag that no
-indexable page carries, which lists only private stubs.
+that is not a private page, a **private tag page**, an unlisted or an external page, except a
+generated listing of a tag that no indexable page carries, which lists only private stubs.
 _Avoid_: public page, SEO page
 
 **Tag page**:
@@ -22,10 +24,15 @@ _Avoid_: tag listing (that is the generated kind only), tag index (that is `/tag
 every tag)
 
 **Private page**:
-A published stub of a vault note whose body stays private, marked by the `private` tag or a
-descendant of it. It stays listed on the site but is never an indexable page. The `private` tag's
-own listing page is treated the same way.
+tags-core's: a page carrying one of the **private tags**, `noindexTags`, or a tag under one. On this
+site, a published stub of a vault note whose body stays private. It stays listed on the site but is
+never an indexable page, and its head asks not to be indexed.
 _Avoid_: hidden page, unlisted page, draft
+
+**Private tag page**:
+The tag page of a private tag, or of a tag under one: `/tags/private` and `/tags/private/work`,
+generated or a description note. Not a private page, but kept out of search the same way (#28, #67).
+_Avoid_: private listing, private page (for the tag's own page)
 
 **Unlisted page**:
 Stock Quartz's stronger state (`unlisted: true`): hidden from every listing on the site as well

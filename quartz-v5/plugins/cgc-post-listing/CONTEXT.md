@@ -10,8 +10,8 @@ tag vocabulary of [`cgc-tags`](../cgc-tags/CONTEXT.md) and
 ## Language
 
 **Post**:
-Any page the listing may list: every page with a source file of its own, except tag pages, unlisted
-pages and pages under an **excluded tag**. Not only `content/` notes: v4 listed the home page and
+Any page the listing may list: every page with a source file of its own, except tag pages and the
+page of every tag, unlisted pages and pages under an **excluded tag**. Not only `content/` notes: v4 listed the home page and
 the privacy policy too. The .mdx pages cgc-mdx builds are posts. Quartz's virtual pages, which no
 source file backs, never are, though Quartz hands them to components too: a folder page, a tag
 page, the 404 page. "Has a source file" is `fileData.filePath`, which Quartz sets on every page it
@@ -27,8 +27,8 @@ _Avoid_: index page (that is one listing page), listing layout
 **Tag page**:
 A page for one tag, as tags-core's `tagOfPage()` reads its slug: `tags/<t>`, or `tags/<t>/index`,
 a tag's description file in v4's layout. Only a whole `index` segment is dropped, so `tags/reindex`
-is the page for `reindex`. The index of every tag, `tags`, is none. cgc-tag-list reads tag pages the
-same way.
+is the page for `reindex`. The index of every tag, `tags` or `tags/index` (tags-core's
+`isAllTagsPage()`), is none. cgc-tag-list reads tag pages the same way.
 _Avoid_: tag listing, tag index (that is the page of every tag)
 
 **Tag filter**:
@@ -39,6 +39,9 @@ _Avoid_: current-tag filter, tag scope
 
 **Excluded tag**:
 A tag whose **posts**, and its subtags' posts, never appear: `excludeTags`, `private` by default.
+Normalised as the engine normalises a tag (tags-core's `normaliseTag()`), so `Private` names
+`private`. A site that gives it its private tags lists no private page (tags-core's **Private
+page**).
 _Avoid_: hidden tag, private filter
 
 **Listing order**:

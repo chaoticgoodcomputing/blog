@@ -1,9 +1,10 @@
 // Builds the plugin to dist/, in quartz-community/plugin-template's shape: `dist/index.js` is the
 // transformer that ships the stylesheet, `dist/components/index.js` the component. The host's
-// singletons (peerDependencies) stay external; our library, @chaoticgoodcomputing/icons, ships as
-// TypeScript source and is inlined (ADR-0005). The library's own dependencies, Iconify's packages,
-// stay external too: they run while the site builds and can't all be inlined, so they are this
-// plugin's `dependencies`, at the library's versions (libs/icons/docs/adr/0001).
+// singletons (peerDependencies) stay external; our libraries, @chaoticgoodcomputing/icons and
+// @chaoticgoodcomputing/tags-core, ship as TypeScript source and are inlined (ADR-0005). The icons
+// library's own dependencies, Iconify's packages, stay external too: they run while the site builds
+// and can't all be inlined, so they are this plugin's `dependencies`, at the library's versions
+// (libs/icons/docs/adr/0001).
 //
 // The stylesheet is checked first, and the build fails if it breaks ADR-0003's library-CSS rules.
 // It is checked, not rewritten, so the selectors that ship are the ones a reader sees in the source:

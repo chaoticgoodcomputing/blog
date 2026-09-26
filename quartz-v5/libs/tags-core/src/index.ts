@@ -1,11 +1,13 @@
 // The tag system's shared logic (ADR-0002's worked example, #20, #31): the resolution rule, the
 // shapes the `cgc-tags` engine publishes, and the `fileData` augmentation that types them. The
 // engine resolves with it, so the rule lives in one place; consumers import its types, which tag a
-// tag page is for (`tagOfPage()`) and, for a canvas, its colour resolver (`./colour`). See
-// CONTEXT.md.
+// tag page is for (`tagOfPage()`) and, for a canvas, its colour resolver (`./colour`). The tag
+// hierarchy's tests (`underAny()`) and which pages are private (`privatePageTest()`) live here too,
+// for every plugin that needs them, whether or not it consumes the engine. See CONTEXT.md.
 //
-// Every function here takes tags as Quartz publishes them in `frontmatter.tags`: slugified, with `/`
-// between levels and no trailing slash. Normalising what a site writes is the engine's job.
+// Every function here takes tags normalised, as the engine publishes them: slugified, with `/`
+// between levels and none at either end. Normalising what a site writes is the engine's job, and
+// `normaliseTag()` is how it, and any plugin that takes tags as options, does it.
 
 // The module the `fileData` augmentation below extends. Imported for its types alone, so that the
 // augmentation resolves it; nothing of it reaches a bundle.
@@ -83,6 +85,42 @@ export function lineageOf(tag: string): string[] {
 }
 
 /**
+ * A tag as a site writes it in an option, normalised the way the engine normalises the tags in its
+ * dictionary and on pages: trimmed, each level slugified by `slugTag`, and without a `/` at either
+ * end. `slugTag` is the host's, from `@quartz-community/utils/path`, which Quartz slugifies
+ * frontmatter tags with: the caller passes it, so this library carries no copy of it. `""` when
+ * nothing is left.
+ */
+export const normaliseTag = (tag: string, slugTag: (tag: string) => string): string =>
+  slugTag(tag.trim()).replace(/^\/+|\/+$/g, "")
+
+/**
+ * A test of whether a tag is under one of `roots`: is one of them, or a descendant of one at any
+ * depth. `private/work` is under `private`; `privateer` only starts with the same letters, and is
+ * not.
+ */
+export function underAny(roots: Iterable<string>): (tag: string) => boolean {
+  const set = new Set(roots)
+  return (tag) => lineageOf(tag).some((t) => set.has(t))
+}
+
+/**
+ * A test of whether a page is a **private page**: whether it carries one of `privateTags`, or a tag
+ * under one. Give it the page's own tags, or its expanded ancestor set, which gives the same answer.
+ * One function, so every plugin that treats private pages differently agrees on which pages those
+ * are.
+ */
+export function privatePageTest(
+  privateTags: Iterable<string>,
+): (tags: Iterable<string>) => boolean {
+  const isPrivateTag = underAny(privateTags)
+  return (tags) => {
+    for (const tag of tags) if (isPrivateTag(tag)) return true
+    return false
+  }
+}
+
+/**
  * The tag a tag page is for, from the page's slug: `tags/<t>`, or `tags/<t>/index` for a tag's
  * description file in v4's layout. Only a whole `index` segment is dropped, so `tags/reindex` is
  * the page for `reindex`. The index of every tag, `tags` or `tags/index`, is for none, and neither
@@ -93,6 +131,13 @@ export function tagOfPage(slug: string | undefined): string | null {
   const tag = slug.slice("tags/".length).replace(/(^|\/)index$/, "")
   return tag || null
 }
+
+/**
+ * Whether a slug is the page of every tag: `tags`, or `tags/index`, which Quartz generates. It sits
+ * with the tag pages, under `tags/`, but it is the page of no tag (`tagOfPage()`).
+ */
+export const isAllTagsPage = (slug: string | undefined): boolean =>
+  slug === "tags" || slug === "tags/index"
 
 /** How deep a tag sits: 0 for a top-level tag, one more for each `/`. */
 export const depthOf = (tag: string): number => tag.split("/").length - 1

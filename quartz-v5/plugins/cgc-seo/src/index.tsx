@@ -11,7 +11,7 @@ import path from "node:path"
 import { joinSegments } from "@quartz-community/utils/path"
 import { headFor } from "./head"
 import type { Options } from "./options"
-import { articles, isExternal, privatePages, type PageData } from "./page"
+import { articleTest, isExternal, noindexTest, type PageData } from "./page"
 import { rssFor } from "./rss"
 import { sitemapFor } from "./sitemap"
 
@@ -26,10 +26,12 @@ async function write(output: string, file: string, content: string) {
 
 export default function CgcSeo(opts?: Partial<Options>) {
   const options: Options = { noindexTags: ["private"], ...opts }
-  const isPrivate = privatePages(options.noindexTags)
-  // An **indexable page** (CONTEXT.md). An unlisted page is kept off every listing, these included.
-  const indexable = (page: PageData) => page.unlisted !== true && !isPrivate(page) && !isExternal(page)
-  const isArticle = articles(options.articleFolders)
+  const isNoindex = noindexTest(options.noindexTags)
+  const isArticle = articleTest(options.articleFolders)
+  // Whether a page may be listed at all: not a private page or a private tag page, not unlisted (which
+  // keeps a page off every listing, these included) and not external. The sitemap narrows these to
+  // the **indexable pages** (CONTEXT.md); the feed takes their articles, which are all indexable.
+  const listable = (page: PageData) => page.unlisted !== true && !isNoindex(page) && !isExternal(page)
   const rss = options.enableRSS !== false
 
   // Every page the site builds, including those page types generate (tag listings): core hands
@@ -40,7 +42,7 @@ export default function CgcSeo(opts?: Partial<Options>) {
     if (!baseUrl) return []
     const pages = content.map(([, file]) => file.data)
     const written: string[] = []
-    if (options.enableSiteMap !== false) written.push(await write(ctx.argv.output, "sitemap.xml", sitemapFor(baseUrl, pages, indexable)))
+    if (options.enableSiteMap !== false) written.push(await write(ctx.argv.output, "sitemap.xml", sitemapFor(baseUrl, pages, listable)))
     if (rss) {
       const channel = {
         baseUrl,
@@ -49,7 +51,7 @@ export default function CgcSeo(opts?: Partial<Options>) {
         recentNotesText: options.rssRecentNotesText,
         lastFewNotesText: options.rssLastFewNotesText,
       }
-      const feed = rssFor(channel, pages.filter((page) => indexable(page) && isArticle(page)))
+      const feed = rssFor(channel, pages.filter((page) => listable(page) && isArticle(page)))
       written.push(await write(ctx.argv.output, "index.xml", feed))
     }
     return written
@@ -69,7 +71,7 @@ export default function CgcSeo(opts?: Partial<Options>) {
       const feedLink = rss && cfg.baseUrl && (
         <link rel="alternate" type="application/rss+xml" title="RSS Feed" href={`https://${joinSegments(cfg.baseUrl, "index.xml")}`} />
       )
-      return { additionalHead: [headFor(site, options), ...(feedLink ? [feedLink] : [])] }
+      return { additionalHead: [headFor(site, options, { isNoindex, isArticle }), ...(feedLink ? [feedLink] : [])] }
     },
     emit,
     // Rebuilt whole on every change under `serve`, as stock content-index does: which pages are

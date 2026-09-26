@@ -41,7 +41,7 @@ It is the `PostListing` component from this site's Quartz 4 days, carried over a
 ```
 
 - **Order:** newest first, by the date Quartz gives each page (its `defaultDateType`). Posts of the same date are in A→Z order by title, and so are posts with no date, which come last.
-- **Which posts:** every page with a source file of its own, `.mdx` pages included, but tag pages, pages marked unlisted, and pages under an excluded tag (`private`, by default, and its subtags). The pages Quartz makes up, which no file backs, are never posts: a folder page, a tag page, the 404 page.
+- **Which posts:** every page with a source file of its own, `.mdx` pages included, but tag pages and the page of every tag, pages marked unlisted, and pages under an excluded tag (`private`, by default, and its subtags). The pages Quartz makes up, which no file backs, are never posts: a folder page, a tag page, the 404 page.
 - **On a tag page:** only the posts under the tag, those under its subtags included. `/tags/engineering` lists `engineering/ai`'s posts too. A tag with nothing to list says "No posts found." A tag page is `tags/<tag>`, or `tags/<tag>/index`, a tag's description file in Quartz 4's layout; `tags` itself, the index of every tag, is none.
 - **The description line** holds the date, the page's `description` from its frontmatter, and the reading time. A post with no `description` in its frontmatter shows none of the three, as in Quartz 4.
 - **Badges:** each of the post's tags, in its frontmatter order, named by its last segment. The ring is drawn in the tag's colour, through the property `cgc-tags` publishes for it, and never paints text. The badge links to the tag's page, and it is an internal link, so it gets Quartz's page preview on hover. The post's own title link gets none.
@@ -91,10 +91,10 @@ plugins:
 | `title` | `"Recent Posts"` | The heading above the listing. `false` for none. |
 | `limit` | all | List at most this many posts. |
 | `collapsedItemCount` | all shown | Show this many posts, and the rest behind a toggle. |
-| `excludeTags` | `["private"]` | Leave out the posts under any of these tags, their subtags included. |
+| `excludeTags` | `["private"]` | Leave out the posts under any of these tags, their subtags included. Give it the private tags you give [cgc-seo](https://blog.chaoticgood.computer/plugins/cgc-seo) and the rest of the plugin family, and no private page is listed. |
 | `filterToCurrentTag` | `true` | On a tag page, list only the posts under the tag. |
 | `includeSubtags` | `true` | On a tag page, list the posts under its subtags too. |
-| `excludeTagPages` | `true` | Leave out tag pages, such as a tag's description file. |
+| `excludeTagPages` | `true` | Leave out tag pages, such as a tag's description file, and the page of every tag. |
 | `showEmptyMessage` | `true` | Say so when there is nothing to list. |
 | `emptyMessage` | `"No posts found."` | What to say when there is nothing to list. |
 | `showTags` | `true` | Show each post's tag badges. |

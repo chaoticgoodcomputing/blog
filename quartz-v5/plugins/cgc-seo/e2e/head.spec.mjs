@@ -19,7 +19,7 @@ test("a page tagged with a descendant of the private tag is private too", async 
   await expect(robots(page)).toHaveAttribute("content", "noindex")
 })
 
-test("the private tag's own listing pages are private", async ({ page }) => {
+test("a private tag page asks not to be indexed: the private tag's, and its descendants'", async ({ page }) => {
   for (const url of ["/tags/private", "/tags/private/work"]) {
     await page.goto(url)
     await expect(robots(page), url).toHaveAttribute("content", "noindex")

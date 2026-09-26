@@ -91,12 +91,12 @@ plugins:
 | `useSavedState` | `true` | Remember the tags a reader opened across reloads, in their browser's localStorage. Off, the explorer still keeps them open from page to page within one visit. |
 | `tagSort` | `count-desc` | The order of each level of tags: `count-desc` or `count-asc` by the number of pages under each, or `alphabetical` or `alphabetical-reverse`. Ties go A→Z. |
 | `excludeTags` | none | Tags to leave out of the tree, each together with its subtags. Their pages are still listed under their other tags. |
-| `privateTags` | none | Tags whose pages are private. A page under one of them, or under one of its subtags, is listed after a tag's public pages, with a lock. |
+| `privateTags` | none | Tags whose pages are private. A page under one of them, or under one of its subtags, is listed after a tag's public pages, with a lock. The same rule as the rest of the plugin family's, so give [cgc-seo](https://blog.chaoticgood.computer/plugins/cgc-seo), [cgc-backlinks](https://blog.chaoticgood.computer/plugins/cgc-backlinks) and [cgc-graph](https://blog.chaoticgood.computer/plugins/cgc-graph) the same tags, through a YAML anchor. |
 | `showCount` | `true` | Show the number of pages under each tag. |
 | `iconCollections` | none | Your own icons: a prefix for each set, and the directory of SVG files that holds it. With `custom: ./icons`, the icon `custom:d20` is `./icons/d20.svg`. A relative directory resolves against your Quartz folder, as a local plugin's `source:` does. `mdi:` needs no entry. |
 | `drawerBreakpoint` | `800` | The viewport width, in pixels, at or below which the explorer becomes a drawer. The default is Quartz's own mobile breakpoint. A site that moves its breakpoints should set this to match. |
 
-This site sets `excludeTags` and `privateTags` to its `private` tag, as Quartz 4 did. So the private notes stay out of the tree, but a private note that also carries a public tag is listed under that tag, with a lock. The site's breakpoint is 1000px.
+This site sets `excludeTags` and `privateTags` to its `private` tag, as Quartz 4 did, and `privateTags` through the same YAML anchor as its other plugins' private tags. So the private notes stay out of the tree, but a private note that also carries a public tag is listed under that tag, with a lock. The site's breakpoint is 1000px.
 
 Other plugins in this family that draw icons take the same `iconCollections` option. Give each of them the same map, for example through a YAML anchor.
 

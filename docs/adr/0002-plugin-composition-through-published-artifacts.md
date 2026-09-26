@@ -197,3 +197,19 @@ other. Each package's README shows the source with `name:` set.
 `tests/plugins → ../plugins`, which reconcile our two sites and leave every consumer unshareable;
 and dropping `manifest.dependencies` for a runtime check on the engine's artifact, which loses
 the loader's order check, the guarantee the family layer's position rests on.
+
+## Amendment: a plugin may inline the library without the engine
+
+_2026-09-25, from [`cgc-seo`: head metadata and `noindex` for private pages](https://github.com/chaoticgoodcomputing/blog/issues/57)
+and [`cgc-backlinks`: backlinks with private pages marked](https://github.com/chaoticgoodcomputing/blog/issues/78)._
+
+The worked example lists the private-page protection among the engine's consumers. It isn't one.
+`cgc-seo` and `cgc-backlinks` take the private tags as their own option and depend on no engine,
+so a site can run either without `cgc-tags`.
+
+The rule they apply is still shared logic, so rule 4 puts it in the library: `tags-core` holds
+which tags are under which (`underAny()`), which pages are private (`privatePageTest()`), and how
+a tag a site writes in an option is normalised (`normaliseTag()`). Every plugin that treats private
+pages differently inlines that one rule, a consumer of the engine or not. A library is no plugin,
+so inlining it adds no `manifest.dependencies` entry and no engine. A site names its private tags
+once and hands the same list to each plugin; on the real site that is one YAML anchor.

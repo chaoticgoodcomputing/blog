@@ -49,8 +49,8 @@ not a published artifact.
 _Avoid_: content index (stock's, or cgc-graph's), tag index
 
 **Private page**:
-A page under one of the `privateTags`, or a subtag of one. It is listed after a tag's public pages,
-with a **lock** where a public page has a bullet.
+tags-core's: a page carrying one of the `privateTags`, or a tag under one. It is listed after a
+tag's public pages, with a **lock** where a public page has a bullet.
 _Avoid_: locked page, hidden page (it is listed)
 
 **Excluded tag**:
@@ -73,7 +73,9 @@ _Avoid_: collapse state, tree state
 
 - **It reads only what the engine publishes:** the `ancestors` of every page's `fileData.cgcTags`
   for the tree, and each page's own `tags` for its pages. It never reads the engine's options, and
-  it needs no `cgcTags.json` in the browser.
+  it needs no `cgcTags.json` in the browser. Whether a tag is under an excluded one, and whether a
+  page is private, are tags-core's rules (`underAny`, `privatePageTest`), and the tags its options
+  name are normalised as the engine normalises a tag (`normaliseTag`).
 - **It draws icons itself,** with `@chaoticgoodcomputing/icons`, from the ids the engine publishes and
   the site's `iconCollections`. Every tag in the tree is drawn on the first page rendered, so an id
   no collection has fails the build, whichever pages show the tag. The lock is `mdi:lock`.

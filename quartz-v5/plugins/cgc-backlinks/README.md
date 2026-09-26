@@ -46,7 +46,7 @@ A heading, then one link per page that links here:
 
 The heading and the empty-list text come in every locale Quartz's own backlinks have.
 
-The plugin doesn't need a tag engine. It reads each page's tags from its frontmatter, and takes the private tags as its own option, as [cgc-seo](https://blog.chaoticgood.computer/plugins/cgc-seo) does. A private page is still an ordinary link here: marking it only tells the reader that the page behind it is a stub.
+The plugin doesn't need a tag engine. It reads each page's tags from its frontmatter, and takes the private tags as its own option, as [cgc-seo](https://blog.chaoticgood.computer/plugins/cgc-seo) does. Which pages are private is the rule the whole plugin family shares, from the `@chaoticgoodcomputing/tags-core` library, which this plugin builds in. A tag is matched the way Quartz writes tags, so `Private` and `private/` both name `private`. A private page is still an ordinary link here: marking it only tells the reader that the page behind it is a stub.
 
 ## Install
 
@@ -85,7 +85,7 @@ plugins:
 | `iconCollections` | none | Your own icons, for `privateIcon`: a prefix for each set, and the directory of SVG files that holds it. With `custom: ./icons`, the icon `custom:padlock` is `./icons/padlock.svg`. A relative directory resolves against your Quartz folder, as a local plugin's `source:` does. `mdi:` needs no entry. |
 | `hideWhenEmpty` | `true` | Leave the section out of a page no page links to. |
 
-If you also run [cgc-seo](https://blog.chaoticgood.computer/plugins/cgc-seo), give both plugins the same private tags, so the pages search engines are asked to leave out are the ones marked here. Other plugins in this family that draw icons take the same `iconCollections` option, so a YAML anchor can share one set of collections between them.
+If you also run [cgc-seo](https://blog.chaoticgood.computer/plugins/cgc-seo), [cgc-graph](https://blog.chaoticgood.computer/plugins/cgc-graph) or [cgc-tag-explorer](https://blog.chaoticgood.computer/plugins/cgc-tag-explorer), give them all the same private tags, through a YAML anchor, so the pages search engines are asked to leave out are the ones marked here and in the graph and the explorer. Other plugins in this family that draw icons take the same `iconCollections` option, so a YAML anchor can share one set of collections between them.
 
 ## Styling
 

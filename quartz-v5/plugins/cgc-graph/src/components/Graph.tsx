@@ -3,6 +3,7 @@ import type {
   QuartzComponentConstructor,
   QuartzComponentProps,
 } from "@quartz-community/types"
+import { slugTag } from "@quartz-community/utils/path"
 import runtime from "cgc-graph:runtime"
 import { DEFAULT_TITLE, containerConfigs, type GraphOptions } from "../options"
 
@@ -13,7 +14,7 @@ import { DEFAULT_TITLE, containerConfigs, type GraphOptions } from "../options"
 // carries its graph's settings in `data-cfg`, as v4's and stock's do.
 export default ((userOpts?: GraphOptions) => {
   // Quartz merges no defaults into a component's options, so the component does.
-  const { local, global } = containerConfigs(userOpts)
+  const { local, global } = containerConfigs(userOpts, slugTag)
   const title = userOpts?.title ?? DEFAULT_TITLE
   // The private colour, for the global graph's private toggle as for private nodes. Checked as a
   // colour value by the emitter, so it can't break out of the declaration.

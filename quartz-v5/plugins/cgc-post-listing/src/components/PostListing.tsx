@@ -3,10 +3,10 @@ import type {
   QuartzComponentConstructor,
   QuartzComponentProps,
 } from "@quartz-community/types"
-import { resolveRelative } from "@quartz-community/utils/path"
+import { resolveRelative, slugTag } from "@quartz-community/utils/path"
 import { formatDate } from "@quartz-community/utils/date"
 import { getDate } from "@quartz-community/utils/sort"
-import { tagOfPage, type TagsData } from "@chaoticgoodcomputing/tags-core"
+import { normaliseTag, tagOfPage, type TagsData } from "@chaoticgoodcomputing/tags-core"
 import readingTime from "reading-time/lib/reading-time.js"
 import { i18n } from "../i18n"
 import { postsFor } from "../listing"
@@ -32,7 +32,7 @@ export interface PostListingOptions {
   filterToCurrentTag?: boolean
   /** On a tag page, count the posts under its subtags as under the tag. Default: true. */
   includeSubtags?: boolean
-  /** Leave out tag pages, such as a tag's description file. Default: true. */
+  /** Leave out tag pages, such as a tag's description file, and the page of every tag. Default: true. */
   excludeTagPages?: boolean
   /** Say so when there is nothing to list. Default: true. */
   showEmptyMessage?: boolean
@@ -92,7 +92,11 @@ function linkFrom(slug: string, baseUrl: string | undefined) {
 }
 
 export default ((userOpts?: PostListingOptions) => {
-  const opts = { ...DEFAULTS, ...userOpts }
+  const merged = { ...DEFAULTS, ...userOpts }
+  // The excluded tags as the engine normalises a tag a site writes (tags-core), so they match the
+  // tags it publishes on each page.
+  const excludeTags = merged.excludeTags.map((tag) => normaliseTag(tag, slugTag))
+  const opts = { ...merged, excludeTags }
 
   const PostListing: QuartzComponent = ({
     cfg,

@@ -56,7 +56,7 @@ and line style: tag to subtag (`tagTag`), tag to page (`tagPost`), page to page 
 _Avoid_: link (in prose; the option names say it), connection
 
 **Private page**:
-A page carrying one of the `privateTags`, or a tag under one. Drawn like any page, in
+tags-core's: a page carrying one of the `privateTags`, or a tag under one. Drawn like any page, in
 `nodeColors.private` when that is set, in place of its tag's colour, and hidden by the global
 graph's private filter.
 _Avoid_: private note (the filter's label says it), hidden page
@@ -78,7 +78,10 @@ _Avoid_: modal, overlay, portal
 ## Constraints
 
 - **It reads only what `cgc-tags` publishes:** each page's tags in the **graph index** are the keys
-  of its `fileData.cgcTags.tags`. A tag's parent is its path's prefix (`tags-core`'s `parentOf`).
+  of its `fileData.cgcTags.tags`. A tag's parent is its path's prefix (`tags-core`'s `parentOf`),
+  and whether a tag is under another, for `removeTags`, and whether a page is private are
+  `tags-core`'s rules too (`underAny`, `privatePageTest`). The tags its options name are normalised
+  as the engine normalises a tag, when the site builds, so they match the tags in the graph index.
 - **It reads tag colours and icons only as `cgc-tags` names them:** a tag's colour property from the
   engine's tag index, `static/cgcTags.json`, and its icon id there too. It draws the icons itself,
   when the site builds, with `@chaoticgoodcomputing/icons`.

@@ -10,8 +10,9 @@ with, [`@chaoticgoodcomputing/tags-core`](../../libs/tags-core/CONTEXT.md): **Ta
 
 **Tag dictionary**:
 The engine's one table of **tag definitions**, keyed by tag: its `tags` option. The only place a
-tag's colour or icon is written. Keys are normalised as Quartz normalises frontmatter tags, and a
-field a tag doesn't have fails the build.
+tag's colour or icon is written. Keys are normalised as Quartz normalises frontmatter tags, freed
+of stray slashes too (tags-core's `normaliseTag()`, as each page's tags are), and a field a tag
+doesn't have fails the build.
 _Avoid_: tag table (in prose; the site config's comment says it), tag config, tag list
 
 **Corpus**:

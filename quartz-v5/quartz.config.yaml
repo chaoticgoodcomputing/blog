@@ -224,7 +224,9 @@ plugins:
   - source: ../plugins/cgc-seo
     enabled: true
     options:
-      # The site's private tags. cgc-backlinks marks the same pages, through the anchor.
+      # The site's private tags, named once: every plugin that treats private pages differently takes
+      # them through the anchor (cgc-backlinks, cgc-graph, cgc-tag-explorer, cgc-post-listing), so they
+      # agree on which pages are private (tags-core's **private page**).
       noindexTags: &privateTags
         - private
       # v4 gave article metadata to `content/` pages only.
@@ -342,8 +344,7 @@ plugins:
   - source: ../plugins/cgc-graph
     enabled: true
     options:
-      privateTags:
-        - private
+      privateTags: *privateTags
       # The site's own icon collection (#29, #71): `custom:` is quartz-v5/icons/, v4's five SVGs, as
       # the site wrote them. They're turned into currentColor icons when the site builds. Every
       # plugin that draws `custom:` icons takes it, through the anchor, which the first of them in
@@ -467,6 +468,8 @@ plugins:
   - source: ../plugins/cgc-post-listing
     enabled: true
     options:
+      # v4 left private pages out of the listing.
+      excludeTags: *privateTags
       showOn:
         - index
         - "404"
@@ -508,8 +511,7 @@ plugins:
     options:
       excludeTags:
         - private
-      privateTags:
-        - private
+      privateTags: *privateTags
       iconCollections: *iconCollections
       drawerBreakpoint: 1000
     layout:

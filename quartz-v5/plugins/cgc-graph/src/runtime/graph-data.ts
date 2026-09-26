@@ -1,10 +1,11 @@
 // What a graph shows: its nodes and edges, and the global graph's filters (v4 core/graphData.ts,
 // core/tagIndex.ts, ui/filters.ts, ui/filterLogic.ts). The tag hierarchy comes from the tags pages
-// carry, as the cgc-tags engine publishes them: a tag's parent is its path's prefix (tags-core).
-import { lineageOf, parentOf } from "@chaoticgoodcomputing/tags-core"
+// carry, as the cgc-tags engine publishes them: a tag's parent is its path's prefix, and a tag is
+// under another, or a page private, by tags-core's rules.
+import { lineageOf, parentOf, privatePageTest, underAny } from "@chaoticgoodcomputing/tags-core"
 import type { TimePeriod } from "../options"
 import { hrefOf, isTagId, tagNodeId } from "./pages"
-import { underAny, type Settings } from "./settings"
+import type { Settings } from "./settings"
 import type { GraphData, NodeData, NodeId, Pages, SimpleLink } from "./types"
 
 /**
@@ -81,7 +82,7 @@ export function neighbourhoodOf(
 }
 
 export function nodesOf(neighbourhood: Set<NodeId>, pages: Pages, settings: Settings): NodeData[] {
-  const isPrivate = underAny(settings.privateTags)
+  const isPrivatePage = privatePageTest(settings.privateTags)
   return [...neighbourhood].map((id) => {
     const page = pages.get(id)
     const tag = isTagId(id)
@@ -91,7 +92,7 @@ export function nodesOf(neighbourhood: Set<NodeId>, pages: Pages, settings: Sett
       text: tag ? `#${id.split("/").pop()}` : (page?.title ?? id),
       tags,
       tag,
-      private: !tag && tags.some(isPrivate),
+      private: !tag && isPrivatePage(tags),
       primary: tag ? id.slice("tags/".length) : (page?.primary ?? null),
       href: hrefOf(id),
     }

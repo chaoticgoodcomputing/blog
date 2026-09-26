@@ -23,6 +23,7 @@ import {
   colorPropertyOf,
   colorValueOf,
   lineageOf,
+  normaliseTag,
   propertiesOf,
   tagsDataOf,
   type TagDefinition,
@@ -67,8 +68,9 @@ interface Table {
   defaultColor: string
 }
 
-// A tag as the corpus writes it: slugified by Quartz, and here also freed of stray slashes.
-const normalise = (tag: string) => slugTag(tag.trim()).replace(/^\/+|\/+$/g, "")
+// A tag as the corpus writes it: slugified by Quartz, and here also freed of stray slashes. The same
+// rule every plugin that takes tags as options applies to them (tags-core).
+const normalise = (tag: string) => normaliseTag(tag, slugTag)
 
 // The site's options, checked. Any mistake fails the build: an unparseable colour, an icon id that
 // isn't one, a key the dictionary doesn't have (a consumer's field included: ADR-0002 rule 5).

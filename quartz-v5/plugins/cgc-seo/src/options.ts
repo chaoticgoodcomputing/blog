@@ -5,9 +5,10 @@ export type AuthorOption = string | { name: string; url?: string; type?: "Person
 
 export interface Options {
   /**
-   * Tags that make a page a **private page**: a page carrying one of them, or a descendant of one
-   * (`private/work` under `private`), gets `noindex`. So does that tag's own listing page. Default
-   * `["private"]`.
+   * The private tags: a **private page** (tags-core) carries one of them, or a descendant of one
+   * (`private/work` under `private`), and gets `noindex`. So does a **private tag page**, the page of
+   * one of those tags (`tags/private`, `tags/private/work`). Written as a site writes tags, and
+   * normalised as the tag engine normalises them. Default `["private"]`.
    */
   noindexTags: string[]
   /**

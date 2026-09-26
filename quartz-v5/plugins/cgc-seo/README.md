@@ -15,13 +15,15 @@ It started as the SEO half of this site's Quartz 4 fork, and it runs on a stock 
 
 It adds these to each page's `<head>`, through Quartz's per-page `additionalHead`:
 
-- **`<meta name="robots" content="noindex">` on private pages.** A page is private when it carries one of the `noindexTags`, or a descendant of one. `private/work` is a descendant of `private`, but `privateer` isn't. That tag's own listing page, `/tags/private`, is private too. There's no `nofollow`, so a private page's links to public pages still count.
+- **`<meta name="robots" content="noindex">` on private pages, and on their tags' pages.** A page is private when it carries one of the `noindexTags`, or a descendant of one. `private/work` is a descendant of `private`, but `privateer` isn't. The page of each of those tags gets it too, `/tags/private` and `/tags/private/work`, whether Quartz generates it or a description note supplies it. There's no `nofollow`, so a private page's links to public pages still count.
 - **`<link rel="canonical">` on every page:** the page's URL at the site's `baseUrl`, without a trailing `index`.
 - **OpenGraph article metadata on articles:** `article:published_time`, `article:modified_time`, `article:author`, `article:section` (the first tag's top segment) and one `article:tag` per tag (its last segment).
 - **A JSON-LD article on articles:** its `@type` and `articleSection` come from the page's tags, and its author, publisher, image, dates, description and keywords from the page and your options.
 - **`<link rel="alternate" type="application/rss+xml">` on every page**, so a feed reader given any page finds the feed.
 
 A private page is still listed everywhere on the site: search, the graph, the explorer and backlinks. Stock Quartz's `unlisted: true` is a different, stronger state. It also hides the page from all of those.
+
+Which pages are private is the rule the whole plugin family shares, from the `@chaoticgoodcomputing/tags-core` library, which this plugin builds in: it needs no other plugin. Give [cgc-backlinks](https://blog.chaoticgood.computer/plugins/cgc-backlinks), [cgc-graph](https://blog.chaoticgood.computer/plugins/cgc-graph) and [cgc-tag-explorer](https://blog.chaoticgood.computer/plugins/cgc-tag-explorer) the same tags, as their `privateTags`, and they mark the same pages. A tag is matched the way Quartz writes tags, so `Private` and `private/` both name `private`.
 
 Articles are the pages built from a note of their own, optionally limited to some folders. Tag listings and the 404 page are never articles.
 
@@ -62,7 +64,7 @@ Don't mark private pages `unlisted` to keep them out of the sitemap instead: tha
 
 | Option | Default | What it does |
 | --- | --- | --- |
-| `noindexTags` | `[private]` | Tags that make a page private, together with their descendants. |
+| `noindexTags` | `[private]` | Tags that make a page private, together with their descendants. Their own pages are kept out of search too. |
 | `defaultAuthor` | the site, as an Organization named by `pageTitle` | Credited on every page whose frontmatter names no `author`. A name, or `{ name, url, type }`, where `type` is `Person` (the default) or `Organization`. |
 | `publisher` | `defaultAuthor` | The JSON-LD publisher, `{ name, url, type, logo }`. An Organization gets a logo: `logo.url` defaults to the site icon, `static/icon.png`, and `logo.width` and `logo.height` are optional. |
 | `articleFolders` | every note | Limits articles, and so the feed, to the notes in these folders. |

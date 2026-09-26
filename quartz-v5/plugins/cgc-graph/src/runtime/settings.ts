@@ -146,10 +146,3 @@ export function settingsOf(cfg: ContainerConfig): Settings {
     expandSelectedOscillationTime: cfg.expandSelectedOscillationTime ?? 2.0,
   }
 }
-
-/**
- * Whether a tag is one of `roots` or under one: for `privateTags`, whether it makes a page private;
- * for `removeTags`, whether the graph leaves it out. `privateer` is not under `private`.
- */
-export const underAny = (roots: string[]) => (tag: string) =>
-  roots.some((root) => tag === root || tag.startsWith(`${root}/`))

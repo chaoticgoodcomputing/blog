@@ -3,6 +3,7 @@
 // checks them, the component, which hands each graph its settings, and the browser runtime, which
 // reads them. Types and plain data only: the runtime imports this file too.
 import type { IconCollections } from "@chaoticgoodcomputing/icons"
+import { normaliseTag } from "@chaoticgoodcomputing/tags-core"
 
 /** How the pages are laid out. `pseudo-shell` pins chosen top-level tags to a ring. */
 export type GraphStyle = "freeform" | "pseudo-shell"
@@ -203,15 +204,27 @@ function merged(defaults: GraphConfig, site: Partial<GraphConfig> = {}): GraphCo
   return config as unknown as GraphConfig
 }
 
-/** Each graph's settings, as its container carries them. */
-export function containerConfigs(options: GraphOptions = {}): {
+/**
+ * Each graph's settings, as its container carries them. The tags a site writes in them, `privateTags`
+ * and each graph's `removeTags`, are normalised as the tag engine normalises a tag (tags-core's
+ * `normaliseTag()`, with the host's `slugTag`), so they match the tags the graph index carries.
+ */
+export function containerConfigs(
+  options: GraphOptions | undefined,
+  slugTag: (tag: string) => string,
+): {
   local: ContainerConfig
   global: ContainerConfig
 } {
-  const privateTags = options.privateTags ?? []
+  const normalised = (tags: string[] = []) => tags.map((tag) => normaliseTag(tag, slugTag))
+  const privateTags = normalised(options?.privateTags)
+  const container = (defaults: GraphConfig, site: Partial<GraphConfig> | undefined, global: boolean) => {
+    const config = merged(defaults, site)
+    return { ...config, removeTags: normalised(config.removeTags), privateTags, global }
+  }
   return {
-    local: { ...merged(DEFAULT_LOCAL, options.localGraph), privateTags, global: false },
-    global: { ...merged(DEFAULT_GLOBAL, options.globalGraph), privateTags, global: true },
+    local: container(DEFAULT_LOCAL, options?.localGraph, false),
+    global: container(DEFAULT_GLOBAL, options?.globalGraph, true),
   }
 }
 

@@ -3,6 +3,7 @@
 // them, since Quartz merges no defaults into either, and both read them through `settingsOf()`.
 import { slugTag } from "@quartz-community/utils/path"
 import type { IconCollections } from "@chaoticgoodcomputing/icons"
+import { normaliseTag, privatePageTest, underAny } from "@chaoticgoodcomputing/tags-core"
 
 export type TagSort = "count-desc" | "count-asc" | "alphabetical" | "alphabetical-reverse"
 
@@ -21,8 +22,8 @@ export interface TagExplorerOptions {
   /** Tags left out of the tree, each with its subtags. Their pages stay under their other tags. Default: none. */
   excludeTags?: string[]
   /**
-   * Tags whose pages are private: a page under one of them, or under a subtag of one, is listed after
-   * a tag's public pages, with a lock. Default: none.
+   * The private tags: a **private page** (tags-core) carries one of them, or a subtag of one, and is
+   * listed after a tag's public pages, with a lock. Default: none.
    */
   privateTags?: string[]
   /** After each tag, the number of pages under it, its subtags' included. Default: true. */
@@ -50,7 +51,7 @@ export interface Settings {
   drawerBreakpoint: number
   /** Whether a tag is left out of the tree: an excluded tag, or a subtag of one. */
   excluded(tag: string): boolean
-  /** Whether a page is private, from every tag it is under (the engine's `ancestors`). */
+  /** Whether a page is a private page, from every tag it is under (the engine's `ancestors`). */
   isPrivate(under: Record<string, unknown>): boolean
 }
 
@@ -81,13 +82,9 @@ function tagList(name: string, value: unknown): string[] {
   if (!Array.isArray(value) || !value.every((tag) => typeof tag === "string")) {
     throw new TagExplorerError(`${name} must be a list of tags`)
   }
-  // Tags as the corpus writes them: slugified, as the engine does.
-  return value.map((tag) => slugTag(tag.trim()).replace(/^\/+|\/+$/g, "")).filter(Boolean)
+  // Tags as the corpus writes them: normalised, as the engine does (tags-core).
+  return value.map((tag) => normaliseTag(tag, slugTag)).filter(Boolean)
 }
-
-// A tag is under a root when it is the root or one of its subtags. `privateer` is not under `private`.
-const under = (roots: string[]) => (tag: string) =>
-  roots.some((root) => tag === root || tag.startsWith(`${root}/`))
 
 /** The site's options, checked, with every default filled in. Any mistake fails the build. */
 export function settingsOf(options: TagExplorerOptions = {}): Settings {
@@ -120,8 +117,10 @@ export function settingsOf(options: TagExplorerOptions = {}): Settings {
   if (!Number.isFinite(drawerBreakpoint) || drawerBreakpoint <= 0) {
     throw new TagExplorerError(`drawerBreakpoint must be a width in pixels, such as 800`)
   }
-  const excluded = under(tagList("excludeTags", options.excludeTags))
-  const privateTag = under(tagList("privateTags", options.privateTags))
+  // A tag is under a root when it is the root or one of its subtags (tags-core): `privateer` is not
+  // under `private`.
+  const excluded = underAny(tagList("excludeTags", options.excludeTags))
+  const isPrivatePage = privatePageTest(tagList("privateTags", options.privateTags))
   return {
     title,
     defaultState,
@@ -131,7 +130,7 @@ export function settingsOf(options: TagExplorerOptions = {}): Settings {
     iconCollections,
     drawerBreakpoint,
     excluded,
-    isPrivate: (ancestors) => Object.keys(ancestors).some(privateTag),
+    isPrivate: (ancestors) => isPrivatePage(Object.keys(ancestors)),
   }
 }
 

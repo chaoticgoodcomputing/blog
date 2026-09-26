@@ -4,7 +4,7 @@
 import { isAbsoluteURL, joinSegments, simplifySlug, slugTag } from "@quartz-community/utils/path"
 import { unescapeHTML } from "@quartz-community/utils/escape"
 import type { Options } from "./options"
-import { articles, privatePages, type PageData } from "./page"
+import type { PageData } from "./page"
 
 interface Author {
   type: string
@@ -43,15 +43,21 @@ function isoDate(value: unknown): string | undefined {
 // unicode escape, which parses back to the same value.
 const scriptSafe = (value: unknown) => JSON.stringify(value).replaceAll("<", "\\u003c")
 
+/** The tests the plugin builds once from its options, which the head shares with the sitemap and feed. */
+export interface PageTests {
+  /** Whether a page asks not to be indexed (`noindexTest()`). */
+  isNoindex: (page: PageData) => boolean
+  /** Whether a page is an article (`articleTest()`). */
+  isArticle: (page: PageData) => boolean
+}
+
 /** The `additionalHead` entry: one page's head metadata, from its data. */
-export function headFor(site: Site, opts: Options) {
-  const isPrivate = privatePages(opts.noindexTags ?? ["private"])
-  const isArticle = articles(opts.articleFolders)
+export function headFor(site: Site, opts: Options, { isNoindex, isArticle }: PageTests) {
   const types = (opts.articleTypes ?? []).map((mapping) => ({ ...mapping, tag: slugTag(mapping.tag) }))
   const siteAuthor = authorsOf(opts.defaultAuthor, "Person")[0] ?? { type: "Organization", name: site.pageTitle ?? "" }
 
   // Everything below needs absolute URLs, so a site without a baseUrl gets `noindex` alone.
-  if (!site.baseUrl) return (page: PageData) => (isPrivate(page) ? <meta name="robots" content="noindex" /> : null)
+  if (!site.baseUrl) return (page: PageData) => (isNoindex(page) ? <meta name="robots" content="noindex" /> : null)
 
   const origin = `https://${site.baseUrl}`
   const siteUrl = new URL(origin).toString()
@@ -91,7 +97,7 @@ export function headFor(site: Site, opts: Options) {
 
     return (
       <>
-        {isPrivate(page) && <meta name="robots" content="noindex" />}
+        {isNoindex(page) && <meta name="robots" content="noindex" />}
         <link rel="canonical" href={url} />
         {article && (
           <>

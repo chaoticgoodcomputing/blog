@@ -5,14 +5,15 @@ import type {
 } from "@quartz-community/types"
 import { resolveRelative, simplifySlug, slugTag } from "@quartz-community/utils/path"
 import { createIcons, type IconCollections } from "@chaoticgoodcomputing/icons"
+import { normaliseTag, privatePageTest } from "@chaoticgoodcomputing/tags-core"
 import { i18n } from "../i18n"
 import overflow from "./overflow.inline.js" with { type: "text" }
 
 export interface BacklinksOptions {
   /**
-   * Tags that make a page private: a page carrying one of them, or a descendant of one
-   * (`private/work` under `private`), is a private backlink. A tag that only starts with one
-   * (`privateer`) is not a descendant. Default: `["private"]`, as cgc-seo's `noindexTags`.
+   * The private tags: a **private page** (tags-core) carries one of them, or a descendant of one
+   * (`private/work` under `private`), and its backlink is a private backlink. A tag that only starts
+   * with one (`privateer`) is not a descendant. Default: `["private"]`, as cgc-seo's `noindexTags`.
    */
   privateTags?: string[]
   /** The icon id a private backlink is marked with. Default: `mdi:lock`, as v4's. */
@@ -37,15 +38,6 @@ const DEFAULTS: Required<BacklinksOptions> = {
 
 type PageData = QuartzComponentProps["fileData"]
 
-// Whether a page is private: it carries one of the private tags, or a descendant of one. Frontmatter
-// tags arrive slugged (note-properties), so the private tags are slugged the same way to match.
-function privatePages(privateTags: string[]): (page: PageData) => boolean {
-  const roots = privateTags.map((tag) => slugTag(tag))
-  const isPrivateTag = (tag: string) =>
-    roots.some((root) => tag === root || tag.startsWith(`${root}/`))
-  return (page) => (page.frontmatter?.tags ?? []).some(isPrivateTag)
-}
-
 // When a page was last changed, as v4 sorted by it: its modified date, else its published date.
 // Quartz's dates are Dates; a page with neither sorts as the oldest.
 const changed = (page: PageData) => {
@@ -55,7 +47,11 @@ const changed = (page: PageData) => {
 
 export default ((userOpts?: BacklinksOptions) => {
   const opts = { ...DEFAULTS, ...userOpts }
-  const isPrivate = privatePages(opts.privateTags)
+  // Whether a page is a private page, by tags-core's rule, from its frontmatter tags: the plugin reads
+  // no engine. The private tags and the page's tags are both normalised as the engine normalises them.
+  const normalise = (tag: string) => normaliseTag(tag, slugTag)
+  const isPrivatePage = privatePageTest(opts.privateTags.map(normalise))
+  const isPrivate = (page: PageData) => isPrivatePage((page.frontmatter?.tags ?? []).map(normalise))
   const icons = createIcons({ iconCollections: opts.iconCollections })
   // The private mark, drawn once, on the first page rendered, whether or not that page has a private
   // backlink: an icon id no collection has fails the build every time.
