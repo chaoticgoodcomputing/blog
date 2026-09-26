@@ -16,7 +16,7 @@ These graphs are (as far as I can recall) my first attempts at using & visualizi
 
 The below graphs are stock tickers, connected to one another by their supplier relationships. For example, if Company A publicly noted that they received supplies from Company B, that would be denoted by a connecting edge.
 
-![[/assets/messy-graph.svg]]
+![](/assets/messy-graph.svg)
 
 Below is my first (and only) attempt to organize the above output. If I'm recalling correctly (and this was in 2019, so [[/content/notes/caveat-lector|caveat lector]]), this was at least an attempt to get the first-order to third-order suppliers of a given set of equities and place their order in shells around the center. It's messy, it's noisy, and frankly, incomprehensible.
 

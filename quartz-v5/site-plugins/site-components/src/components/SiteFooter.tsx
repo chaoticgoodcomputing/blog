@@ -20,6 +20,7 @@ export default ((opts?: SiteFooterOptions) => {
   const holders = Object.entries(opts?.copyright ?? {})
 
   const SiteFooter: QuartzComponent = ({ cfg, displayClass }: QuartzComponentProps) => {
+    const strings = i18n(cfg?.locale)
     const year = new Date().getFullYear()
     return (
       <footer class={["site-footer", displayClass].filter(Boolean).join(" ")}>
@@ -32,10 +33,10 @@ export default ((opts?: SiteFooterOptions) => {
         </ul>
         {holders.length > 0 && (
           <p>
-            Copyright{" "}
+            {strings.copyright}{" "}
             {holders.map(([name, href], i) => (
               <>
-                {i > 0 && " & "}
+                {i > 0 && strings.holderJoiner}
                 <a href={href}>{name}</a>
               </>
             ))}{" "}
@@ -43,7 +44,7 @@ export default ((opts?: SiteFooterOptions) => {
           </p>
         )}
         <p>
-          {i18n(cfg?.locale).createdWith} <a href="https://quartz.jzhao.xyz/">Quartz</a> © {year}
+          {strings.createdWith} <a href="https://quartz.jzhao.xyz/">Quartz</a> © {year}
         </p>
       </footer>
     )

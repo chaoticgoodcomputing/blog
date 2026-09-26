@@ -4,6 +4,10 @@ interface Strings {
   untitled: string
   byline: (author: string) => string
   createdWith: string
+  /** The copyright line's opening word: "Copyright <a> & <b> © <year>". */
+  copyright: string
+  /** What the copyright line puts between two holders. */
+  holderJoiner: string
 }
 
 const locales: Record<string, Strings> = {
@@ -11,6 +15,8 @@ const locales: Record<string, Strings> = {
     untitled: "Untitled",
     byline: (author) => `by ${author}`,
     createdWith: "Created with",
+    copyright: "Copyright",
+    holderJoiner: " & ",
   },
 }
 

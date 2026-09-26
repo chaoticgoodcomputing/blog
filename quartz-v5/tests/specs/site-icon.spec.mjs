@@ -55,10 +55,10 @@ test("links the site's own icon from every page's head and from the page title",
   const served = await fetched(page, new URL(href, page.url()).href)
   expect(served.status).toBe(200)
   expect(served.body.equals(fs.readFileSync(SITE_ICON)), `${href} is quartz-v5/icon.png`).toBe(true)
-  // The page title's logo: the site's icon is 184px square, stock's 200px.
-  const logo = page.locator(".page-title-icon")
-  await expect(logo).toHaveJSProperty("complete", true)
-  expect(await logo.evaluate((img) => img.naturalWidth)).toBe(184)
+  // The page title's icon: the site's icon is 184px square, stock's 200px.
+  const icon = page.locator(".page-title-icon")
+  await expect(icon).toHaveJSProperty("complete", true)
+  expect(await icon.evaluate((img) => img.naturalWidth)).toBe(184)
 })
 
 // Read from disk rather than fetched: Chromium keeps `/favicon.ico` requests from the page's routing.

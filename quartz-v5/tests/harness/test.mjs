@@ -64,7 +64,7 @@ export const test = base.extend({
   },
 })
 export { expect }
-export { layerOrder, layersOf, stackDeclaration, styleRules } from "./layers.mjs"
+export { layerOrder, layersOf, stackDeclaration, styleRules, unreadableSheets } from "./layers.mjs"
 
 /**
  * Serve a built site from disk to `page` at `origin` (e.g. `https://example.com`), by intercepting

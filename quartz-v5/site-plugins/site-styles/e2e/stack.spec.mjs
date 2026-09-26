@@ -6,7 +6,7 @@
 // stack were not declared first.
 import path from "node:path"
 import { fileURLToPath } from "node:url"
-import { test, expect, layerOrder, routeSite, stackDeclaration } from "../../../tests/harness/test.mjs"
+import { test, expect, layerOrder, routeSite, stackDeclaration, unreadableSheets } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, fixtureConfig, withPlugins } from "../../../tests/harness/site.mjs"
 import { buildProbePlugin } from "../../../tests/harness/probe.mjs"
 
@@ -14,6 +14,14 @@ import { buildProbePlugin } from "../../../tests/harness/probe.mjs"
 const STACK = ["quartz-base", "quartz-fonts", "cgc", "site"]
 // v4's ITCSS tiers, every one kept even where the port leaves it empty.
 const TIERS = ["generic", "elements", "objects", "components", "utilities"]
+// A cross-origin stylesheet's rules are closed to the page, so the CSSOM can't show its layers. Each
+// source of one the page links must be checked by hand and listed here as declaring none: any other
+// fails the guard rather than passing unread. Google Fonts' CSS API, where core links the theme's
+// fonts from, serves only `@font-face` rules; KaTeX's sheet, which `@quartz-community/latex` links
+// from its CDN, declares no layer.
+const LAYER_FREE = ["https://fonts.googleapis.com/css2?", "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"]
+const unlisted = async (page) =>
+  (await unreadableSheets(page)).filter((href) => !LAYER_FREE.some((source) => href.startsWith(source)))
 
 const CONTENT = {
   "index.md": "---\ntitle: Home\n---\nWelcome.\n",
@@ -56,6 +64,7 @@ test("ranks every layer on the page in the stack's order, with the site's tiers 
   // Exact: a layer the stack doesn't list, or one out of place, fails here.
   expect(order[""]).toEqual(STACK)
   expect(order.site).toEqual(TIERS)
+  expect(await unlisted(page), "cross-origin stylesheets whose layers can't be read").toEqual([])
 })
 
 test("a site rule beats a more specific family rule on the same element", async ({ page }) => {
@@ -72,6 +81,25 @@ test("fails on a layer the stack doesn't list, wherever it first appears", async
   // A stylesheet late in the page, as a theme's or a stray plugin's would be.
   await page.addStyleTag({ content: "@layer rogue { #quartz-root { outline: none } }" })
   expect((await layerOrder(page))[""]).toEqual([...STACK, "rogue"])
+})
+
+test("fails on a cross-origin stylesheet it can't read, rather than passing its layers unseen", async ({ page }) => {
+  await open(page, "/a-note")
+  // A theme's or a plugin's CDN stylesheet, served without CORS: its rules are closed to the page.
+  const href = "https://elsewhere.invalid/theme.css"
+  await page.route(href, (route) => route.fulfill({ contentType: "text/css", body: "@layer rogue { #quartz-root { outline: none } }" }))
+  await page.evaluate(
+    (href) =>
+      new Promise((resolve, reject) => {
+        const link = Object.assign(document.createElement("link"), { rel: "stylesheet", href, onload: resolve, onerror: reject })
+        document.head.append(link)
+      }),
+    href,
+  )
+  // The layer ranks, yet the CSSOM can't show it…
+  expect((await layerOrder(page))[""]).toEqual(STACK)
+  // …so the sheet is reported instead.
+  expect(await unlisted(page)).toEqual([href])
 })
 
 // The fixture sites stay stock by construction (#39): a plugin that looks right only because the

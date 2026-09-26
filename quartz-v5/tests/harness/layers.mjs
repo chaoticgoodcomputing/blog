@@ -8,11 +8,13 @@
 // the sublayers of `site`. `sheets` holds each stylesheet's own top-level names, in its order. With
 // `withRules`, `rules` holds every style rule, nested ones included: its selector, the dotted name
 // of the layer it sits in (`""` for none) and its declarations. An anonymous layer is named
-// `(anonymous)`. A cross-origin sheet the page may not read, such as a font CDN's, is skipped.
+// `(anonymous)`. A cross-origin sheet the page may not read, such as a font CDN's, can't be walked:
+// its URL goes in `unreadable` instead, so a check can fail on it rather than pass it unseen.
 function readLayers(withRules) {
   const order = {}
   const sheets = []
   const rules = []
+  const unreadable = []
   let own
   const note = (parent, name) => {
     let full = parent
@@ -29,6 +31,7 @@ function readLayers(withRules) {
     try {
       list = sheet.cssRules
     } catch {
+      unreadable.push(sheet.href)
       return
     }
     walk(list, parent)
@@ -58,7 +61,7 @@ function readLayers(withRules) {
     readSheet(sheet, "")
     sheets.push(own)
   }
-  return { order, sheets, rules }
+  return { order, sheets, rules, unreadable }
 }
 
 /**
@@ -66,6 +69,12 @@ function readLayers(withRules) {
  * ranking, and `order.cgc` the family layer's sublayers.
  */
 export const layerOrder = async (page) => (await page.evaluate(readLayers, false)).order
+
+/**
+ * The URLs of the page's stylesheets whose rules it may not read (a cross-origin sheet served without
+ * CORS), in document order. Their layers rank but are missing from every other reading here.
+ */
+export const unreadableSheets = async (page) => (await page.evaluate(readLayers, false)).unreadable
 
 /**
  * The site's stack declaration as the page carries it: the top-level layers of the first stylesheet

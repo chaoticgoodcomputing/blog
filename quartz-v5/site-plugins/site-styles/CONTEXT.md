@@ -60,4 +60,5 @@ _Avoid_: component title, widget header
 - **lightningcss rewrites the declaration** when core serves the sheet: it folds
   `@layer …, site; @layer site {…}` into `@layer …;@layer site{…}`, and an empty tier into a bare
   statement. The order is unchanged, so the specs read the order back from the CSSOM, never the
-  text.
+  text. A cross-origin stylesheet's rules are closed to the CSSOM, so `e2e/stack.spec.mjs` fails on
+  any the page links unless its source has been checked by hand and listed as declaring no layer.
