@@ -4,8 +4,8 @@
  * colour properties. build.mjs refuses anything else. Sizes are v4's, as the live site computed them.
  *
  * A badge's ring gets its tag's colour as its own `color`, set inline from the cgc-tags engine's
- * `--cgc-tag-*` property, as cgc-tag-list's rings do. It paints the ring's border, and in time the
- * icon inside it, and never text: the ring holds none, and the badge's text keeps the listing's.
+ * `--cgc-tag-*` property, as cgc-tag-list's rings do. It paints the ring's border and the icon
+ * inside it, and never text: the ring holds none, and the badge's text keeps the listing's.
  */
 @layer cgc.post-listing {
   .cgc-post-listing__title {
@@ -80,6 +80,13 @@
     border-radius: 50%;
     font-size: 16px;
     line-height: 1;
+  }
+
+  /* The tag's icon: inline SVG whose every mark is `currentColor`, the ring's colour. v4's size. */
+  .cgc-post-listing__icon {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
   }
 
   .cgc-post-listing__tag-name {

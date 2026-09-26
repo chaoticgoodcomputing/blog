@@ -38,7 +38,7 @@ function refuseStockBeside(ctx: BuildCtx, stockName: string) {
 // page type generated before this one: a higher priority than stock's 10, or the same priority and
 // earlier in the config. Stock counts only the Markdown Quartz parsed, so a tag that
 // only `.mdx` pages carry would get no page, and their tag badges would link nowhere.
-const madeUpSoFar = (ctx: BuildCtx) =>
+const otherPageTypesPages = (ctx: BuildCtx) =>
   (ctx as { virtualPages?: ProcessedContent[] }).virtualPages ?? []
 
 const CgcTagPage: QuartzPageTypePlugin<Options> = (opts) => {
@@ -50,7 +50,7 @@ const CgcTagPage: QuartzPageTypePlugin<Options> = (opts) => {
     name: "cgc-tag-page",
     generate(args) {
       refuseStockBeside(args.ctx, stock.name)
-      return stock.generate!({ ...args, content: [...args.content, ...madeUpSoFar(args.ctx)] })
+      return stock.generate!({ ...args, content: [...args.content, ...otherPageTypesPages(args.ctx)] })
     },
     body: DescriptionBody,
   }

@@ -475,6 +475,7 @@ plugins:
         - index
         - "404"
       collapsedItemCount: 5
+      iconCollections: *iconCollections
     layout:
       position: afterBody
       priority: 10

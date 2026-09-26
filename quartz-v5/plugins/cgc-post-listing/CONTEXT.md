@@ -4,8 +4,9 @@ The Quartz 5 component that lists a site's posts, newest first, under the home p
 tag page, where it lists that tag's posts: v4's PostListing, as a consumer of the `cgc-tags` engine
 (#42, #44, #73). Inherits the family vocabulary in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md), and the
 tag vocabulary of [`cgc-tags`](../cgc-tags/CONTEXT.md) and
-[`tags-core`](../../libs/tags-core/CONTEXT.md). Its badges are
-[`cgc-tag-list`](../cgc-tag-list/CONTEXT.md)'s: a **badge** with a **ring**, a name and a **count**.
+[`tags-core`](../../libs/tags-core/CONTEXT.md), and the icon vocabulary of
+[`icons`](../../libs/icons/CONTEXT.md). Its badges are [`cgc-tag-list`](../cgc-tag-list/CONTEXT.md)'s: a
+**badge** with a **ring** around the tag's **icon**, a name and a **count**.
 
 ## Language
 
@@ -62,7 +63,11 @@ _Avoid_: collapse, show more
 
 ## Constraints
 
-- **The tag colour paints the ring and never text**, as in `cgc-tag-list` (its ADR-0001).
+- **The tag colour paints the ring and its icon, and never text**, as in `cgc-tag-list` (its
+  ADR-0001).
+- **It draws icons itself,** with `@chaoticgoodcomputing/icons`, from the ids the engine publishes and
+  the site's `iconCollections`, as `svg.cgc-post-listing__icon`. Every tag in the corpus is drawn on
+  the first page rendered, listing page or not, so an id no collection has fails every build.
 - **It reads only what the engine publishes:** each page's `fileData.cgcTags`, for its tags, the
   **tag filter** and the **excluded tags**. Never `frontmatter.tags`.
 - **Its links are relative, except on the 404 page**, which Quartz serves at any depth: there they

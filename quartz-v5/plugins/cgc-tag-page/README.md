@@ -7,7 +7,7 @@ tags:
 
 `cgc-tag-page` makes the tag pages of a [Quartz 5](https://quartz.jzhao.xyz/) site show the tag's description, and nothing else. It runs stock [`tag-page`](https://github.com/quartz-community/tag-page), which decides which tags get a page, and replaces only what the page shows under its title.
 
-It is the tag page from this site's Quartz 4 days, carried over as a plugin. On this site, the list of a tag's posts comes from a plugin of its own, placed in the tag page's layout.
+It is the tag page from this site's Quartz 4 days, carried over as a plugin. On this site, the list of a tag's posts comes from a plugin of its own, placed in a slot the tag page shares with every other page.
 
 ## What a tag page shows
 
@@ -31,7 +31,7 @@ The main change is the page's body. Stock shows the description, then a count an
 - **A tag with none** gets a page with an empty article. Its title is the tag, or `Tag: <tag>` with `prefixTags` on.
 - **Page previews** of a tag page show its description, since the article sits in the part of the page Quartz's preview copies.
 
-Anything else a tag page needs goes in its layout, `layout.byPageType.tag`, as on any other page.
+Anything else a tag page shows comes from the site's layout, as on any other page: a plugin placed in a slot every page shares, such as `afterBody`, appears on tag pages too. `layout.byPageType.tag` can only take plugins off tag pages (`exclude`), clear a slot or pick a frame; it can't add one.
 
 ## Description files
 

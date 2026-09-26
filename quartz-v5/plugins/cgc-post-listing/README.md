@@ -5,9 +5,9 @@ tags:
   - engineering/frontend
 ---
 
-`cgc-post-listing` is a [Quartz 5](https://quartz.jzhao.xyz/) plugin that lists a site's posts, newest first, under the home page and on every tag page. On a tag page it lists only that tag's posts. Each post shows its title, date, description and reading time, and its tags as badges ringed in their colours, which come from [cgc-tags](https://blog.chaoticgood.computer/plugins/cgc-tags), the plugin that holds the site's tag dictionary.
+`cgc-post-listing` is a [Quartz 5](https://quartz.jzhao.xyz/) plugin that lists a site's posts, newest first, under the home page and on every tag page. On a tag page it lists only that tag's posts. Each post shows its title, date, description and reading time, and its tags as badges, each a ring in the tag's colour around the tag's icon. The colours and icons come from [cgc-tags](https://blog.chaoticgood.computer/plugins/cgc-tags), the plugin that holds the site's tag dictionary.
 
-It is the `PostListing` component from this site's Quartz 4 days, carried over as a plugin. The tag colours are now painted when the site builds, where v4 painted them with a script after the page loaded.
+It is the `PostListing` component from this site's Quartz 4 days, carried over as a plugin. The tag colours and icons are now drawn when the site builds, where v4 drew them with a script after the page loaded, fetching every icon from a CDN.
 
 ## What it renders
 
@@ -26,7 +26,9 @@ It is the `PostListing` component from this site's Quartz 4 days, carried over a
       <ul class="cgc-post-listing__tags">
         <li class="cgc-post-listing__tag" data-tag="engineering/ai">
           <a class="internal cgc-post-listing__tag-link" href="./tags/engineering/ai">
-            <span class="cgc-post-listing__ring" style="color: var(--cgc-tag-engineering--ai)" title="engineering/ai"></span>
+            <span class="cgc-post-listing__ring" style="color: var(--cgc-tag-engineering--ai)" title="engineering/ai"
+              ><svg class="cgc-post-listing__icon" viewBox="0 0 24 24" aria-hidden="true" …><path fill="currentColor" d="…" /></svg
+            ></span>
             <span class="cgc-post-listing__tag-name">ai</span>
           </a>
         </li>
@@ -44,7 +46,7 @@ It is the `PostListing` component from this site's Quartz 4 days, carried over a
 - **Which posts:** every page with a source file of its own, `.mdx` pages included, but tag pages and the page of every tag, pages marked unlisted, and pages under an excluded tag (`private`, by default, and its subtags). The pages Quartz makes up, which no file backs, are never posts: a folder page, a tag page, the 404 page.
 - **On a tag page:** only the posts under the tag, those under its subtags included. `/tags/engineering` lists `engineering/ai`'s posts too. A tag with nothing to list says "No posts found." A tag page is `tags/<tag>`, or `tags/<tag>/index`, a tag's description file in Quartz 4's layout; `tags` itself, the index of every tag, is none.
 - **The description line** holds the date, the page's `description` from its frontmatter, and the reading time. A post with no `description` in its frontmatter shows none of the three, as in Quartz 4.
-- **Badges:** each of the post's tags, in its frontmatter order, named by its last segment. The ring is drawn in the tag's colour, through the property `cgc-tags` publishes for it, and never paints text. The badge links to the tag's page, and it is an internal link, so it gets Quartz's page preview on hover. The post's own title link gets none.
+- **Badges:** each of the post's tags, in its frontmatter order, named by its last segment. The ring is drawn in the tag's colour, through the property `cgc-tags` publishes for it, around the tag's icon, drawn inline as SVG in the same colour; the colour never paints text. Icons work as in [cgc-tag-list](https://blog.chaoticgood.computer/plugins/cgc-tag-list): a tag with no icon of its own gets its parent's, a tag with none in its lineage has an empty ring, and an icon id that doesn't exist fails the build. The badge links to the tag's page, and it is an internal link, so it gets Quartz's page preview on hover. The post's own title link gets none.
 - **The toggle:** with `collapsedItemCount` set, the first posts show and the rest sit behind "Show N more posts".
 - **On a narrow screen**, 1000px or less, each badge shows only its ring. Pressing and holding one expands it to show the tag's name, without following the link. A tap follows the link.
 
@@ -66,6 +68,8 @@ Plugins in this family ship as source from [the blog's monorepo](https://github.
 npx quartz plugin add git+https://github.com/chaoticgoodcomputing/blog.git#v<x.y.z> --subdir quartz-v5/plugins/cgc-post-listing --name cgc-post-listing
 ```
 
+The install also installs [Iconify](https://iconify.design/)'s packages, which draw the icons while the site builds, MDI's icons among them.
+
 Keep `--name`: without it, a plugin installed from a subdirectory is named after the repository, and every plugin in the family would install over the last.
 
 > [!WARNING]
@@ -80,6 +84,7 @@ plugins:
     options:
       showOn: [index, "404"]
       collapsedItemCount: 5
+      iconCollections: *iconCollections # the one you gave cgc-tag-list
     layout:
       position: afterBody
       priority: 10
@@ -101,6 +106,7 @@ plugins:
 | `showDates` | `true` | Show each post's date in its description line. |
 | `showDescriptions` | `true` | Show each post's description line. |
 | `showTagCounts` | `false` | After each tag, the number of pages under it, its subtags' included. |
+| `iconCollections` | none | Your own icons: a prefix for each set, and the directory of SVG files that holds it, as for [cgc-tag-list](https://blog.chaoticgood.computer/plugins/cgc-tag-list). `mdi:` needs no entry. |
 
 One plugin has one set of options for every page. Quartz 4 set them per layout, and only its tags layout turned on the tag filter, so here the tag filter and the subtags are on by default: only a tag page has a tag to filter by.
 
@@ -110,9 +116,9 @@ The dates are the ones Quartz's `created-modified-date` plugin gives each page. 
 
 The CSS is library CSS, following [ADR-0003](https://github.com/chaoticgoodcomputing/blog/blob/main/docs/adr/0003-library-css-in-plugins-application-css-at-the-site.md):
 
-- **Classes:** one BEM block, `.cgc-post-listing`, with the elements `__title`, `__list`, `__post`, `__heading`, `__link`, `__description`, `__date`, `__tags`, `__tag`, `__tag-link`, `__ring`, `__tag-name`, `__tag-count`, `__more`, `__more-toggle` and `__empty`, and the modifier `__tag-link--expanded` for a badge a long press has opened. Selectors are single classes, apart from the narrow-screen rules that hide a badge's name and count.
+- **Classes:** one BEM block, `.cgc-post-listing`, with the elements `__title`, `__list`, `__post`, `__heading`, `__link`, `__description`, `__date`, `__tags`, `__tag`, `__tag-link`, `__ring`, `__icon`, `__tag-name`, `__tag-count`, `__more`, `__more-toggle` and `__empty`, and the modifier `__tag-link--expanded` for a badge a long press has opened. Selectors are single classes, apart from the narrow-screen rules that hide a badge's name and count.
 - **Cascade layer:** the rules sit in the `cgc.post-listing` layer, above Quartz's own styles and themes, and below any unlayered site CSS.
-- **Colours:** the description line and the count are the theme's `--gray`, the badge's background is `--lightgray` (`--gray` on hover), and the toggle is `--secondary` (`--tertiary` on hover). Each ring's colour is its tag's.
+- **Colours:** the description line and the count are the theme's `--gray`, the badge's background is `--lightgray` (`--gray` on hover), and the toggle is `--secondary` (`--tertiary` on hover). Each ring's colour is its tag's, and its icon, 18px square, is drawn in `currentColor`, so it takes the same colour.
 
 To change a tag's colour, change it in `cgc-tags`' dictionary, or override the tag's property, `--cgc-tag-…`, in your own CSS. The ring takes its colour from its own `color`, as [cgc-tag-list](https://blog.chaoticgood.computer/plugins/cgc-tag-list)'s rings do.
 

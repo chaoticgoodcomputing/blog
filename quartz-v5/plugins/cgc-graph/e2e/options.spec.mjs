@@ -40,12 +40,13 @@ test("fails the build on icon collections that aren't directories by prefix", as
 })
 
 // An icon id the tag dictionary names and no collection has: the graph draws every icon a tag in the
-// site carries when it builds, and fails rather than draw a node without one (#29). The tag list,
-// which fails the same way, is off, so the failure is the graph's own.
+// site carries when it builds, and fails rather than draw a node without one (#29). The tag list and
+// the post listing, which fail the same way, are off, so the failure is the graph's own.
 test("fails the build on an icon no collection has", async () => {
   const config = editConfig(withOptions({ privateTags: ["private"] }), (doc, entry) => {
     entry("../../plugins/cgc-tags").setIn(["options", "tags"], doc.createNode({ private: { icon: "mdi:no-such-icon" } }))
     entry("../../plugins/cgc-tag-list").set("enabled", false)
+    entry("../../plugins/cgc-post-listing").set("enabled", false)
   })
   const { code, output } = await buildScratchSite("graph-unknown-icon", CONTENT, { config })
   expect(code).not.toBe(0)

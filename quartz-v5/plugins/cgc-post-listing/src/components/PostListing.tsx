@@ -7,6 +7,7 @@ import { resolveRelative, slugTag } from "@quartz-community/utils/path"
 import { formatDate } from "@quartz-community/utils/date"
 import { getDate } from "@quartz-community/utils/sort"
 import { normaliseTag, tagOfPage, type TagsData } from "@chaoticgoodcomputing/tags-core"
+import { createIcons, type IconCollections, type Icons } from "@chaoticgoodcomputing/icons"
 import readingTime from "reading-time/lib/reading-time.js"
 import { i18n } from "../i18n"
 import { postsFor } from "../listing"
@@ -46,6 +47,12 @@ export interface PostListingOptions {
   showDescriptions?: boolean
   /** After each tag, the number of pages under it, its subtags' included. Default: false. */
   showTagCounts?: boolean
+  /**
+   * The site's own icon collections, each prefix and its directory of SVG files, resolved against
+   * the Quartz root: `{ custom: "../icons" }` draws `custom:d20` from `../icons/d20.svg`. Installed
+   * Iconify sets, such as `mdi`, need no entry. Default: none.
+   */
+  iconCollections?: IconCollections
 }
 
 // Quartz merges no defaults into a component's options, so the component does. v4's, except that
@@ -64,6 +71,7 @@ const DEFAULTS: Required<
   showDates: true,
   showDescriptions: true,
   showTagCounts: false,
+  iconCollections: {},
 }
 
 type PageData = QuartzComponentProps["fileData"]
@@ -82,6 +90,36 @@ function countsOf(allFiles: PageData[]): Map<string, number> {
   return counts
 }
 
+// The icon in a ring: its glyph, painted in the ring's `color`, which is the tag colour.
+const ICON = { class: "cgc-post-listing__icon" }
+
+// Each tag's icon, drawn, for every tag in the corpus that has one, built once per build. Every tag's
+// is drawn on the first page rendered, whether that page shows the listing or not, so an icon id no
+// collection has fails the build every time, as cgc-tag-list's does.
+function iconsOf(
+  allFiles: PageData[],
+  icons: Icons,
+  drawn: WeakMap<object, Map<string, string>>,
+): Map<string, string> {
+  let byTag = drawn.get(allFiles)
+  if (!byTag) {
+    byTag = new Map()
+    for (const file of allFiles)
+      for (const [tag, { icon }] of Object.entries(
+        (file.cgcTags as TagsData | undefined)?.ancestors ?? {},
+      )) {
+        if (icon === null || byTag.has(tag)) continue
+        try {
+          byTag.set(tag, icons.svg(icon, ICON))
+        } catch (err) {
+          throw new Error(`cgc-post-listing: tag "${tag}": ${(err as Error).message}`)
+        }
+      }
+    drawn.set(allFiles, byTag)
+  }
+  return byTag
+}
+
 // A link from the page being rendered. Relative, as Quartz's own are, except on the 404 page,
 // which is served at any depth: its links start from the site's base path, as Quartz's head does.
 function linkFrom(slug: string, baseUrl: string | undefined) {
@@ -97,6 +135,8 @@ export default ((userOpts?: PostListingOptions) => {
   // tags it publishes on each page.
   const excludeTags = merged.excludeTags.map((tag) => normaliseTag(tag, slugTag))
   const opts = { ...merged, excludeTags }
+  const icons = createIcons({ iconCollections: opts.iconCollections })
+  const drawn = new WeakMap<object, Map<string, string>>()
 
   const PostListing: QuartzComponent = ({
     cfg,
@@ -105,6 +145,7 @@ export default ((userOpts?: PostListingOptions) => {
     displayClass,
   }: QuartzComponentProps) => {
     const slug = fileData.slug as string
+    const iconOf = iconsOf(allFiles, icons, drawn)
     if (tagOfPage(slug) === null && !opts.showOn.includes(slug)) return null
 
     const strings = i18n(cfg.locale)
@@ -156,11 +197,14 @@ export default ((userOpts?: PostListingOptions) => {
                 <li class="cgc-post-listing__tag" data-tag={tag}>
                   {/* `internal`, so core gives the badge a popover like any link to a page of the site. */}
                   <a class="internal cgc-post-listing__tag-link" href={href(`tags/${tag}`)}>
-                    {/* The tag colour paints the ring, and never text (cgc-tag-list's ADR-0001). */}
+                    {/* The tag colour paints the ring and its icon, and never text (cgc-tag-list's ADR-0001). */}
                     <span
                       class="cgc-post-listing__ring"
                       style={{ color: `var(${properties.color})` }}
                       title={tag}
+                      dangerouslySetInnerHTML={
+                        iconOf.has(tag) ? { __html: iconOf.get(tag)! } : undefined
+                      }
                     ></span>
                     <span class="cgc-post-listing__tag-name">{tag.split("/").pop()}</span>
                     {counts && (

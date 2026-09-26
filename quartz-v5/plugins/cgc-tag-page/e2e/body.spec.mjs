@@ -23,7 +23,7 @@ test("renders a tag's description file as its page's body", async ({ page }) => 
 for (const { url, title, why } of [
   { url: "/tags/markdown", title: "markdown", why: "carried by pages" },
   { url: "/tags/writing", title: "writing", why: "only an ancestor of tags pages carry" },
-  // Only .mdx pages carry `mdx`, and cgc-mdx makes those pages up rather than Quartz parsing them.
+  // Only .mdx pages carry `mdx`, and cgc-mdx generates those pages rather than Quartz parsing them.
   { url: "/tags/mdx", title: "mdx", why: "carried only by pages another page type makes" },
 ]) {
   test(`gives a tag with no description file a page with an empty body: ${why}`, async ({

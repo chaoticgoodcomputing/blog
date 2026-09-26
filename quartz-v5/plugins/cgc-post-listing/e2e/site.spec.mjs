@@ -23,7 +23,7 @@ const CONTENT = {
 }
 
 const ORIGIN = "https://blog.chaoticgood.computer"
-// The site's tag table: `engineering: { color: "light-dark(#0070cc, #008CFF)" }`.
+// The site's tag table: `engineering: { color: "light-dark(#0070cc, #008CFF)", icon: mdi:wrench }`.
 const ENGINEERING = { light: "rgb(0, 112, 204)", dark: "rgb(0, 140, 255)" }
 
 // One build per colour-scheme project, shared by that project's tests.
@@ -82,13 +82,17 @@ test("keeps to the index, the 404 page and tag pages", async ({ page }) => {
   await expect(page.locator("h1.article-title")).toHaveText("Alder")
 })
 
-test("rings each post's tags in the site's tag colours", async ({ page, colorScheme }) => {
+test("rings each post's tags in the site's tag colours, around their icons", async ({
+  page,
+  colorScheme,
+}) => {
   await routeSite(page, site.public, ORIGIN)
   await page.goto(`${ORIGIN}/tags/topic`)
   const ring = listing(page).locator(
     '.cgc-post-listing__tag[data-tag="engineering"] .cgc-post-listing__ring',
   )
   await expect(ring).toHaveCSS("border-top-color", ENGINEERING[colorScheme])
+  await expect(ring.locator("svg.cgc-post-listing__icon")).toHaveCount(1)
 })
 
 // v4 labelled a click on a listing's tag badge `tag-badge`, and one on a post's title `other`.

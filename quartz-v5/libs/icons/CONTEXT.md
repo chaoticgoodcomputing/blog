@@ -4,7 +4,7 @@ The library every plugin that draws an icon uses to draw it (#29). It turns an *
 inline SVG when the site builds, from an installed Iconify set or from an **icon collection** the
 site supplies as SVG files, and it knows nothing about tags or any other caller. Engines publish icon
 ids and never drawn icons (ADR-0002 rule 7), so each consumer draws its own: `cgc-tag-list` first,
-then the tag explorer, backlinks and the graph. The Bluesky widget draws with it ahead of time, into
+then the tag explorer, backlinks, the graph and the post listing. The Bluesky widget draws with it ahead of time, into
 its own source (`widgets`' ADR-0002). It ships as TypeScript source,
 and a consuming plugin's build inlines it (ADR-0005). Inherits the family vocabulary in
 [`quartz-v5/CONTEXT.md`](../../CONTEXT.md), where **Icon id** and **Icon collection** are defined.
@@ -53,5 +53,5 @@ _Avoid_: converting, compiling, sanitising
 - **Converted once per process.** A site collection is read the first time one of its icons is
   drawn, and kept for the rest of the process, so a file added under `--serve` needs a restart.
 - **Tested through its consumers**, `cgc-tag-list`'s `e2e/icons.spec.mjs` and `e2e/site.spec.mjs`,
-  and `cgc-graph`'s `e2e/icons.spec.mjs`, against the fixture's own collection
+  `cgc-graph`'s `e2e/icons.spec.mjs` and `cgc-post-listing`'s, against the fixture's own collection
   (`tests/fixture-icons/`) and the site's.

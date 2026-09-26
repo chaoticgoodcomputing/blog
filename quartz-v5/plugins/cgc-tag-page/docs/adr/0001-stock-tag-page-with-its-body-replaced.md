@@ -42,7 +42,7 @@ stock's would carry the list. The plugin looks for stock's page type by name whe
 throws: a hook's throw fails the build, where a factory's is logged and skipped.
 
 **It counts the pages other page types make.** Stock generates from the Markdown Quartz parsed, so a
-tag that only `.mdx` pages carry, which cgc-mdx makes up, got no page, and its badges linked
+tag that only `.mdx` pages carry, which cgc-mdx generates, got no page, and its badges linked
 nowhere. v4 counted them. Quartz empties its list of generated pages before each pass and generates
 in priority order
 ([emit.ts:65-70](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/processors/emit.ts#L65-L70),
