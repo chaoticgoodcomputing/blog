@@ -2,7 +2,7 @@
 // and the site's 1000px/1300px breakpoints where core has 800px/1200px (#22, user story 18). The
 // expected numbers are v4's, measured on the live v4 site with the same viewports. Built from the
 // site config, as the real site is, so the real layout's components are all on the page. Built
-// offline, since no width here depends on the typeface: site-config.spec proves the fonts.
+// offline, since no width here depends on the typeface: `fonts.spec.mjs` proves the fonts.
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, siteConfig } from "../../../tests/harness/site.mjs"
 

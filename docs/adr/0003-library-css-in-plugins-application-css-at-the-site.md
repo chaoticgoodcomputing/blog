@@ -293,7 +293,8 @@ so writing to it is drift, even though upstream intends it as the user's file
 
 **Decided:** the site's application CSS ships from a **site plugin**, `site-styles`, at
 `quartz-v5/site-plugins/site-styles/`. A site plugin fails the shareability test on purpose, because
-it *is* this site. It is a CSS-only transformer that emits, from `externalResources()`:
+it *is* this site. It is a CSS-only transformer (_extended by the self-hosted-fonts amendment
+below:_ and an emitter, for the site's font files) that emits, from `externalResources()`:
 
 ```css
 @layer quartz-base, quartz-fonts, cgc, site;
@@ -422,3 +423,61 @@ become bubbles that way, in their own change.
 - **A bubble per plugin**, each package's own classes and rules, as the ring was: two copies of the
   same markup and CSS, in cgc-tag-list and cgc-post-listing, which every change had to make twice. One
   block gives the family one look to change, and the graph one palette to read.
+
+## Amendment: the site self-hosts its fonts
+
+_2026-09-26, from the owner's review notes of that day ("Font seems to be different across the
+board. It seems very default"), on
+[site-styles self-hosts the fonts](https://github.com/chaoticgoodcomputing/blog/issues/84)._
+
+The site's font rules were right: every page asks for Inter and IBM Plex Mono. The files never
+arrived. The site config had core self-host them (`fontOrigin: googleFonts` with `cdnCaching: false`,
+[componentResources.ts:285](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/emitters/componentResources.ts#L285)),
+and core writes each one into the stylesheet at an absolute production URL,
+`https://${baseUrl}/static/fonts/…`
+([theme.ts:134](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/util/theme.ts#L134)).
+On any host but production (a local serve, a preview, staging) every font 404s and the page falls
+back to system fonts. The site-plugin amendment above made `site-styles` "a CSS-only transformer".
+Where the two conflict, this amendment wins.
+
+**Decided:** fonts are application CSS, so the site ships them, from `site-styles`.
+
+- **Core fetches nothing.** The site config's `theme.fontOrigin` is `local`, which leaves the fonts
+  to the site
+  ([componentResources.ts:283](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/emitters/componentResources.ts#L283)).
+  `@quartz-community/quartz-fonts` stays on with `fontOrigin: local` too, so it links nothing and
+  only sets the font properties to the site's typography.
+- **site-styles fetches the fonts at its own build**, never at the site's and never at run time:
+  Inter as its variable font, 400 to 700, upright and italic, and IBM Plex Mono at 400, 600 and 700,
+  every subset Google Fonts serves, as woff2. The build keeps them in its `node_modules/.cache/`, so a
+  rebuild needs no network, and fails if a fetch fails.
+- **It declares them in its own stylesheet**, one `@font-face` per face in the `site` layer's
+  `generic` tier, at root-relative URLs under the site's base path: the path of `baseUrl`, as core
+  computes it for `data-basepath`, and nothing under `serve`. cgc-tags links its stylesheet the same
+  way (its ADR-0001). A site moved to another base path after building would need rebuilding; one
+  moved to another host would not.
+- **It ships the files at a path it owns, `static/site-styles/fonts/`,** never core's
+  `static/fonts/`. Full builds run every emitter at once
+  ([emit.ts:82](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/processors/emit.ts#L82)),
+  and the stock Static emitter copies the vendored copy's `static/` into the same output directory
+  ([static.ts:18](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/emitters/static.ts#L18)).
+  It writes nothing under `static/site-styles/`, so the two never touch the same file. That is what
+  rules out overwriting a stock file, as the site icon has to (a post-build copy, VENDORED.md).
+- **So site-styles is a transformer and an emitter.** It exports one factory for each, as cgc-tags
+  does, because a plugin in two categories is instantiated once for each and the loader picks a
+  factory by its shape
+  ([config-loader.ts:584](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L584)).
+  Only the transformer emits the stylesheet, so it is emitted once, still first.
+- **A spec serves the site away from its `baseUrl`.** `site-styles/e2e/fonts.spec.mjs` builds the
+  site config and serves it at another origin, at its root and under a base path, and proves that
+  every face loads from there, that text and headings are drawn in Inter and code in IBM Plex Mono,
+  and that no font request leaves the site's origin. The site-config spec, which serves at the
+  `baseUrl` itself, could not have caught this.
+
+**Rejected:**
+
+- **A vendored fix to `processGoogleFonts`**, writing root-relative URLs. It is the right upstream
+  change, but ADR-0001 keeps edits to the vendored copy for when no plugin route exists, and one does.
+- **Linking Google Fonts from every page** (`cdnCaching: true`). Every page view would then ask a
+  third party for the fonts, which v4 never did either.
+- **Committing the woff2 files**, as v4 did. The fetch is cheap, cached, and keeps binaries out of git.

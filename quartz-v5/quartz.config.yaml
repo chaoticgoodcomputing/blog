@@ -31,9 +31,12 @@ configuration:
     # absorbs it and takes its URL, `/widgets/readme`, as an alias.
     - widgets/README.md
   theme:
-    # Self-hosted: core downloads the Google Fonts at build time into `static/fonts/` when CDN
-    # caching is off (FORK-LEDGER, "Fonts delete"). v4's typography.
-    fontOrigin: googleFonts
+    # Self-hosted by the site-styles site plugin, which fetches the fonts at its own build and
+    # declares them at root-relative URLs (#84). `local` keeps core from fetching them itself: it
+    # writes absolute production URLs, which 404 on any other host (FORK-LEDGER, "Fonts"). CDN
+    # caching only matters to `googleFonts`. v4's typography: the names below are what core and
+    # quartz-fonts set the font properties to, and site-styles ships exactly these families.
+    fontOrigin: local
     cdnCaching: false
     typography:
       header: &headerFont Inter
@@ -129,8 +132,9 @@ plugins:
   - source: "@quartz-community/quartz-fonts"
     enabled: true
     options:
-      # Core self-hosts the fonts (above). This plugin's own default links Google Fonts from every
-      # page, and falls back to upstream's typography, so it gets the site's and loads nothing.
+      # site-styles self-hosts the fonts (above, #84). This plugin's own default links Google Fonts
+      # from every page, and falls back to upstream's typography, so it gets the site's and loads
+      # nothing.
       fontOrigin: local
       header: *headerFont
       body: *bodyFont
@@ -143,7 +147,8 @@ plugins:
   # The site's own CSS (#64, ADR-0003's site-plugin amendment): the stack declaration, then v4's
   # five ITCSS tiers under `site`, with the 1000/1300 breakpoints. It runs first (`defaultOrder:
   # -1000`), and its stack names only the layers this config loads: enabling a theme means adding
-  # the theme's layers to it (site-plugins/site-styles/src/styles/site.scss).
+  # the theme's layers to it (site-plugins/site-styles/src/styles/site.scss). It also ships the
+  # site's fonts, Inter and IBM Plex Mono, fetched at its own build, under `static/site-styles/` (#84).
   - source: ../site-plugins/site-styles
     enabled: true
   # The family layer, `cgc`, above core and themes (#30, #63): every cgc-* plugin that emits CSS

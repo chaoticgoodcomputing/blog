@@ -56,10 +56,9 @@ const SCRATCH_PARENT = { fixture: testsRoot, site: path.dirname(vendored) }
 // the same root, and one inside a map of options, such as an icon collection's directory in
 // `iconCollections`. A map shared through a YAML anchor is rebased once, where it is anchored.
 //
-// `offline` switches off the one fetch a build of it makes that fails the build when the network
-// does: core downloading the site's Google Fonts to self-host them (`fontOrigin: googleFonts` with
-// `cdnCaching: false`). The pages then fall back to system fonts, so only a spec that doesn't look at
-// type should ask for it.
+// `offline` once switched off core's download of the site's Google Fonts. The site config now has
+// core fetch nothing (`fontOrigin: local`), and site-styles ships the fonts from its own build (#84),
+// so a build of it makes no font fetch either way and `offline` changes nothing.
 export const siteConfigFile = path.resolve(testsRoot, "../quartz.config.yaml")
 export function siteConfig({ at = "fixture", offline = false } = {}) {
   const config = YAML.parseDocument(fs.readFileSync(siteConfigFile, "utf8"))

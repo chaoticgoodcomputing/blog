@@ -161,7 +161,8 @@ test("self-hosts its fonts, requesting nothing from Google Fonts", async ({ page
     expect(faces, `faces loaded for ${font}`).toBeGreaterThan(0)
   }
   expect(requests.filter((url) => /(^|\.)fonts\.(googleapis|gstatic)\.com$/.test(url.hostname)).map(String)).toEqual([])
-  expect(requests.some((url) => url.origin === ORIGIN && url.pathname.startsWith("/static/fonts/"))).toBe(true)
+  // From site-styles (#84), whose own spec serves them away from the production host too.
+  expect(requests.some((url) => url.origin === ORIGIN && url.pathname.startsWith("/static/site-styles/fonts/"))).toBe(true)
 })
 
 // cgc-og-image in place of stock og-image (#58): one card per page, with the site's icon, which a

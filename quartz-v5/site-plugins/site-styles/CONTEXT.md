@@ -2,13 +2,26 @@
 
 The site plugin that carries this site's application CSS: the **stack declaration** first, then
 v4's ITCSS stack under the `site` layer, compiled from Sass in the plugin's own build and emitted
-from `externalResources()` at `defaultOrder: -1000`. Inherits the family vocabulary in
+from `externalResources()` at `defaultOrder: -1000`. It also ships the **site fonts**, and so is an
+emitter as well as a transformer. Inherits the family vocabulary in
 [`quartz-v5/CONTEXT.md`](../../CONTEXT.md). The decision is ADR-0003's *site plugin* amendment
 ([#39](https://github.com/chaoticgoodcomputing/blog/issues/39)); the port is
 [#64](https://github.com/chaoticgoodcomputing/blog/issues/64). No fixture config loads it, so its
-specs build scratch sites that do.
+specs build scratch sites that do. The fonts are ADR-0003's amendment "the site self-hosts its fonts", from the
+owner's review notes of 2026-09-26 ([#84](https://github.com/chaoticgoodcomputing/blog/issues/84)).
 
 ## Language
+
+**Site fonts**:
+Inter and IBM Plex Mono, v4's typography, as files the site serves itself from
+`static/site-styles/fonts/`. Inter is its variable font, 400 to 700, upright and italic; IBM Plex
+Mono comes at 400, 600 and 700, upright. Every subset Google Fonts serves, as woff2.
+_Avoid_: web fonts, Google Fonts (for the files the site serves), core's fonts
+
+**Font face**:
+One file of the site fonts: a family, a style, a weight range and a Unicode subset, declared by one
+`@font-face`. Named for all four, e.g. `inter-italic-400-700-latin.woff2`.
+_Avoid_: font file (for the declaration), variant
 
 **Tier**:
 One of v4's five ITCSS layers inside `site`, lowest first: `generic`, `elements`, `objects`,
@@ -57,6 +70,25 @@ _Avoid_: component title, widget header
   layers to the declaration in `site.scss`. `e2e/stack.spec.mjs` checks the declaration on a
   fixture-based scratch site, and `tests/specs/site-config.spec.mjs` checks it against the site
   config.
+- **The fonts are fetched at the plugin's build, never later.** `build.mjs` asks Google Fonts' CSS
+  API for the site fonts, as a current Chrome does so it answers with woff2, downloads every face into
+  `dist/fonts/`, and writes what each declares into `dist/index.js`. It keeps them in
+  `node_modules/.cache/site-styles-fonts/`, by the request's URL, so a rebuild needs no network:
+  delete the cache to refetch. A fetch that fails fails the build. The site config's
+  `theme.fontOrigin` is `local`, so core fetches none of its own; core's would sit at absolute
+  production URLs, which 404 on any other host.
+- **The faces are declared at root-relative URLs**, one `@font-face` each, in the `generic` tier,
+  appended to the one stylesheet the transformer emits. Each URL starts with the site's base path, the
+  path of `baseUrl`, as core computes it for `data-basepath`, and with nothing under `serve`. So the
+  site works on any host, and at the base path it was built for.
+- **Two factories, `transformer` and `emitter`.** A plugin in two categories is instantiated once for
+  each, so one factory would emit the stylesheet twice; the loader picks each by its shape. The
+  emitter copies `dist/fonts/` to `static/site-styles/fonts/`, which nothing else writes, so it never
+  races the stock Static emitter that runs beside it. On a `serve` rebuild it emits nothing, since
+  output isn't cleaned between rebuilds.
+- **`e2e/fonts.spec.mjs` serves the site away from its `baseUrl`**, at its root and under a base
+  path, and asks the browser which face it drew each kind of text in. The site-config spec serves at
+  the `baseUrl` itself, where core's absolute URLs happened to work.
 - **lightningcss rewrites the declaration** when core serves the sheet: it folds
   `@layer …, site; @layer site {…}` into `@layer …;@layer site{…}`, and an empty tier into a bare
   statement. The order is unchanged, so the specs read the order back from the CSSOM, never the
