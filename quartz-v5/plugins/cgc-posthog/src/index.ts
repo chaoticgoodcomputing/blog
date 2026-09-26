@@ -57,13 +57,15 @@ const PostHog: QuartzTransformerPlugin<Partial<Options>> = (opts) => ({
     if ((ctx.cfg.configuration.analytics as { provider?: string } | null | undefined)?.provider === "posthog") {
       fail(`it replaces core's PostHog analytics: set configuration.analytics to null`)
     }
+    // `spa`: whether core installs its SPA router, without which no link is followed.
+    const args = { ...settings(opts), spa: ctx.cfg.configuration.enableSPA !== false }
     return {
       js: [
         {
           loadTime: "afterDOMReady",
           contentType: "inline",
           // `<` escaped, so no option can close the script element it ends up in.
-          script: `${script}\ncgcPostHog(${JSON.stringify(settings(opts)).replace(/</g, "\\u003c")})\n`,
+          script: `${script}\ncgcPostHog(${JSON.stringify(args).replace(/</g, "\\u003c")})\n`,
         },
       ],
     }

@@ -49,12 +49,13 @@ test("renders v4's link: GitHub mark, text, new tab", async ({ page }) => {
 })
 
 test("renders nothing on a page with no source file", async ({ page }) => {
-  // A tag with no description file is a page the tag-page plugin makes up.
+  // A tag with no description file is a page the tag-page plugin makes up. Its afterBody slot is
+  // drawn, the subscribe box shows, so the link is missing for want of a source file alone.
   await page.goto("/tags/markdown")
-  await expect(page.locator("article")).toBeAttached()
+  await expect(page.locator(".page-footer .cgc-email-subscribe")).toHaveCount(1)
   await expect(page.locator(".cgc-page-source")).toHaveCount(0)
-  await page.goto("/no-such-page")
-  await expect(page.locator(".cgc-page-source")).toHaveCount(0)
+  // The fixture's 404 is stock's minimal frame, which draws no afterBody slot at all, so it proves
+  // nothing here. site-config.spec checks the real site's 404, whose frame does draw it.
 })
 
 test("styles the link as v4 did, from the theme's colours", async ({ page }) => {

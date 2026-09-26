@@ -45,10 +45,16 @@ const STAND_IN = `(() => {
  * stand-in library. Resolves with the record, which fills as the page runs:
  * - `requests`: the URL of every request the page made to `host`;
  * - `inits`: each `posthog.init(token, config)`, as `{ token, config }`;
- * - `captures`: each `posthog.capture(event, properties)`, as `{ event, properties }`.
+ * - `captures`: each `posthog.capture(event, properties)`, as `{ event, properties }`;
+ * - `events(name)`: the properties of each capture of the event `name`, in order.
  */
 export async function postHogStandIn(page, host) {
-  const record = { requests: [], inits: [], captures: [] }
+  const record = {
+    requests: [],
+    inits: [],
+    captures: [],
+    events: (name) => record.captures.filter(({ event }) => event === name).map(({ properties }) => properties),
+  }
   await page.exposeBinding("__cgcPostHogStandIn", (_source, kind, payload) => {
     record[kind].push(payload)
   })

@@ -63,6 +63,29 @@ plugins:
 
 The box can go in any layout position, such as `right` for the sidebar. To keep it off one page type, exclude the plugin there: for example, `layout.byPageType.404.exclude: [cgc-email-subscribe]`.
 
+Quartz places one component per plugin entry. To show the box in two places, such as after the body of a note and in the sidebar of a tag page, list the plugin again with an object source that gives the second entry a name of its own. Each entry takes its own options and layout, and `byPageType` excludes each one by its name:
+
+```yaml
+plugins:
+  - source:
+      repo: ... # the same source as the first entry
+      name: email-subscribe-sidebar
+    enabled: true
+    options:
+      buttondownUsername: <your Buttondown username>
+    layout:
+      position: right
+      priority: 30
+layout:
+  byPageType:
+    content:
+      exclude: [email-subscribe-sidebar]
+    tag:
+      exclude: [cgc-email-subscribe]
+```
+
+Each entry links the plugin's stylesheet, so a page with both links the same file twice. The rules are the same, so nothing changes.
+
 ## Styling
 
 The CSS is library CSS, following [ADR-0003](https://github.com/chaoticgoodcomputing/blog/blob/main/docs/adr/0003-library-css-in-plugins-application-css-at-the-site.md):

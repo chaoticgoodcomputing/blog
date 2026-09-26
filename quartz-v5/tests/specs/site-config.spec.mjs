@@ -69,13 +69,23 @@ test("closes a note with v4's subscribe box and a link to its source", async ({ 
   await expect(footer.locator(".cgc-email-subscribe + .cgc-page-source")).toHaveCount(1)
   await page.goto(`${ORIGIN}/mixed-case`)
   await expect(page.locator(".cgc-page-source__link")).toHaveAttribute("href", `${source}/Mixed%20Case.md`)
-  // The index and tag pages keep the box but have no source link, as in v4.
-  for (const url of ["/", "/tags/topic"]) {
-    await page.goto(`${ORIGIN}${url}`)
-    await expect(page.locator(".cgc-email-subscribe"), url).toHaveCount(1)
-    await expect(page.locator(".cgc-page-source"), url).toHaveCount(0)
-  }
+  // A note's right sidebar has no box: v4 put it there only on the index and tag pages.
+  await expect(page.locator(".right.sidebar .cgc-email-subscribe")).toHaveCount(0)
+  // A tag page has v4's "Newsletter" box in its right sidebar, and none after the body. No source
+  // link, as in v4.
+  await page.goto(`${ORIGIN}/tags/topic`)
   await expect(page.locator("article")).toContainText("What the topic tag is about")
+  const sidebar = page.locator(".right.sidebar .cgc-email-subscribe")
+  await expect(sidebar.locator(".cgc-email-subscribe__title")).toHaveText("Newsletter")
+  await expect(sidebar.locator(".cgc-email-subscribe__description")).toHaveText("Weekly updates about any new notes!")
+  await expect(sidebar.locator("form")).toHaveAttribute("action", "https://buttondown.com/api/emails/embed-subscribe/chaoticgoodcomputing")
+  await expect(page.locator(".page-footer .cgc-email-subscribe")).toHaveCount(0)
+  await expect(page.locator(".cgc-page-source")).toHaveCount(0)
+  // The index keeps the box after the body until the site can place a component on the index alone
+  // (is-index, #70): v4 had it in the index's right sidebar. No source link, as in v4.
+  await page.goto(`${ORIGIN}/`)
+  await expect(page.locator(".cgc-email-subscribe")).toHaveCount(1)
+  await expect(page.locator(".cgc-page-source")).toHaveCount(0)
 })
 
 // cgc-styles (#63): every cgc-* plugin's own CSS lands in the family layer, which has to outrank core.

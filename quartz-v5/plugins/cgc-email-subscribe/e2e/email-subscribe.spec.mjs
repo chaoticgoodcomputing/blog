@@ -2,19 +2,11 @@
 // Buttondown itself is never reached: every request to it is intercepted.
 import fs from "node:fs"
 import path from "node:path"
-import { test, expect, layersOf, resolvedColour, toggleScheme } from "../../../tests/harness/test.mjs"
+import { test, expect, expectStyles, layersOf, palette, resolvedColour, toggleScheme } from "../../../tests/harness/test.mjs"
 import { buildPluginCopy, buildScratchSite, editConfig, fixtureConfig } from "../../../tests/harness/site.mjs"
 
 // The fixture's `buttondownUsername` is `cgc-fixture`.
 const ENDPOINT = "https://buttondown.com/api/emails/embed-subscribe/cgc-fixture"
-
-// Theme colours as the page resolves them, e.g. `gray` → `rgb(…)`, in the page's scheme.
-const palette = async (page, names) =>
-  Object.fromEntries(await Promise.all(names.map(async (name) => [name, await resolvedColour(page, `var(--${name})`)])))
-
-const expectStyles = async (locator, styles) => {
-  for (const [property, value] of Object.entries(styles)) await expect(locator, property).toHaveCSS(property, value)
-}
 
 test("renders v4's subscribe box, with its default title and description", async ({ page }) => {
   await page.goto("/plain-note")

@@ -20,7 +20,7 @@ It carries over the PostHog setup this site had in its Quartz 4 days. It works o
 | `$pageview` | Each page shown: on load, and after each navigation within the site | `path`: the page's path |
 | `navigation` | A click on a link that Quartz's router follows | `source`: the label of the place the link was in (see `navigationSources`), or `other`. `from_page`, `to_page`: the paths before and after. `url`: the full address followed |
 
-A link counts as followed when Quartz's router would handle the click itself. That rules out clicks with Ctrl or ⌘ held, links that open in a new tab, links marked `data-router-ignore`, links off the site, and links to a heading on the same page, which only scroll.
+A link counts as followed when Quartz's router would handle the click itself. That rules out clicks with Ctrl or ⌘ held, links that open in a new tab, links marked `data-router-ignore`, links off the site, and links to a heading on the same page, which only scroll. With `enableSPA: false`, Quartz has no router, so no link is followed and no `navigation` event is sent: each page a reader reaches counts only as a `$pageview`.
 
 Everything else is PostHog's own behaviour at its defaults, [autocapture](https://posthog.com/docs/product-analytics/autocapture) included.
 

@@ -94,6 +94,15 @@ export const resolvedColour = (page, value) =>
     return colour
   }, value)
 
+/** Theme colours as the page resolves them now, by name: `palette(page, ["gray"])` → `{ gray: "rgb(…)" }`. */
+export const palette = async (page, names) =>
+  Object.fromEntries(await Promise.all(names.map(async (name) => [name, await resolvedColour(page, `var(--${name})`)])))
+
+/** Expect each computed style of `locator`, given as `{ property: value }`, each labelled by its property. */
+export async function expectStyles(locator, styles) {
+  for (const [property, value] of Object.entries(styles)) await expect(locator, property).toHaveCSS(property, value)
+}
+
 /** The colour scheme a loaded page is showing: the stock darkmode plugin's `saved-theme`. */
 export const schemeOf = (page) => page.evaluate(() => document.documentElement.getAttribute("saved-theme"))
 

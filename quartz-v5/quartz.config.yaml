@@ -540,18 +540,31 @@ plugins:
     layout:
       position: afterBody
       priority: 10
-  # v4's subscribe box under a note (#42, #44), with v4's note-page wording. v4 also had it in the
-  # right sidebar of the index and tag pages, as "Newsletter": a plugin takes one layout slot, so
-  # those pages have it here, after the body, too.
+  # v4's subscribe box under a note (#42, #44), with v4's note-page wording. Not on tag pages, which
+  # have the sidebar box below instead.
   - source: ../plugins/cgc-email-subscribe
     enabled: true
     options:
-      buttondownUsername: chaoticgoodcomputing
+      buttondownUsername: &buttondownUsername chaoticgoodcomputing
       title: Subscribe for more!
       description: Be notified weekly about any fresh notes or articles!
     layout:
       position: afterBody
       priority: 20
+  # v4's other subscribe box, "Newsletter" (the plugin's defaults), in the right sidebar of the tag
+  # and index pages, above the backlinks (#42, #44). The loader places one component per entry, so
+  # the plugin is listed again under a placement name of its own, which `byPageType` keeps to tag
+  # pages. The index keeps the box above, after its body, until the site can place a component on
+  # the index alone (is-index, #70). Both entries link the plugin's one stylesheet, the same file.
+  - source:
+      repo: ../plugins/cgc-email-subscribe
+      name: email-subscribe-sidebar
+    enabled: true
+    options:
+      buttondownUsername: *buttondownUsername
+    layout:
+      position: right
+      priority: 30
   # v4's "View source on GitHub", under the subscribe box on notes; not on the index (#42, #44). v4
   # linked the repo's old name, which no longer resolves.
   - source: ../plugins/cgc-page-source
@@ -680,11 +693,17 @@ layout:
       positions:
         beforeBody: []
         right: []
-    content: {}
+    # The sidebar subscribe box is v4's tags and index layouts' alone.
+    content:
+      exclude:
+        - email-subscribe-sidebar
     # Full width for the Viewer (#37), in site-components' frame, which keeps the page title and the
     # toolbar (left) in a bar above it and the graph and backlinks (right) after it, as v4 had them.
     # Core's `full-width` drops both sidebars. v4's annotation pages had no source link, which would
-    # show Annotator's JSON (#68), and no tag explorer, contents or social cards.
+    # show Annotator's JSON (#68), and no tag explorer, contents or social cards. They keep the
+    # subscribe box after the body, as v4 had it, and not the sidebar one. v4's second box, inside
+    # the Viewer's own sidebar, is not reproduced: the Viewer is cgc-annotator's markup (#68), with no
+    # slot a layout entry can fill.
     annotation:
       template: site-full-width
       exclude:
@@ -692,9 +711,16 @@ layout:
         - cgc-tag-explorer
         - "@quartz-community/table-of-contents"
         - cgc-social
-    # v4's tag pages had no source link. A tag page drawn from a description file would get one.
+        - email-subscribe-sidebar
+    # v4's tag pages had no source link, and their subscribe box was in the right sidebar. A tag page
+    # drawn from a description file would get a source link.
     tag:
       exclude:
         - cgc-page-source
-    canvas: {}
-    bases: {}
+        - cgc-email-subscribe
+    canvas:
+      exclude:
+        - email-subscribe-sidebar
+    bases:
+      exclude:
+        - email-subscribe-sidebar

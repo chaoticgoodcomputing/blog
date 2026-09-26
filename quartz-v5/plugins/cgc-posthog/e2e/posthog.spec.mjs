@@ -5,13 +5,13 @@
 //   .left.sidebar → left-sidebar, .callout → callout, article p a.internal → inline-link
 // (tests/quartz.config.yaml), and /posthog/navigation has a link in each of those places, and one in
 // a list, which none of them labels.
-import { test, expect } from "../../../tests/harness/test.mjs"
+import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
 import { postHogStandIn } from "../../../tests/harness/analytics.mjs"
 import { buildScratchSite, editConfig, fixtureConfig } from "../../../tests/harness/site.mjs"
 
 const HOST = "https://posthog.invalid"
-
-const events = (record, name) => record.captures.filter((capture) => capture.event === name).map((capture) => capture.properties)
+// Where a scratch site is served: its `baseUrl`, the fixture's, is `localhost`.
+const SCRATCH_ORIGIN = "http://localhost"
 
 test("loads PostHog from the configured host, once per page load", async ({ page }) => {
   const posthog = await postHogStandIn(page, HOST)
@@ -23,14 +23,15 @@ test("loads PostHog from the configured host, once per page load", async ({ page
   // An SPA navigation keeps the loaded library: no second load, no second init.
   await page.locator("article a.internal", { hasText: "mdx-article" }).first().click()
   await expect(page).toHaveURL(/\/mdx-article$/)
-  await expect.poll(() => events(posthog, "$pageview").length).toBe(2)
+  await expect.poll(() => posthog.events("$pageview").length).toBe(2)
   expect(posthog.requests).toHaveLength(1)
   expect(posthog.inits).toHaveLength(1)
 })
 
-// v4's privacy options. `ip: false` is v4's; PostHog's library has since made it a no-op, so an IP
-// is kept out only by the project's "Discard client IP data" setting (README).
-test("configures capture with ip: false and no session recording", async ({ page }) => {
+// v4's privacy options. `ip: false` is v4's, passed on as v4 did; PostHog's library has since made
+// it a no-op, so this proves nothing about IPs. One is kept out only by the PostHog project's
+// "Discard client IP data" setting (README), which no spec can see.
+test("configures no session recording, and passes v4's ip: false (a no-op; see README)", async ({ page }) => {
   const posthog = await postHogStandIn(page, HOST)
   await page.goto("/plain-note")
   await expect.poll(() => posthog.inits.length).toBe(1)
@@ -46,10 +47,10 @@ test("configures capture with ip: false and no session recording", async ({ page
 test("counts a page view on load and on each SPA navigation", async ({ page }) => {
   const posthog = await postHogStandIn(page, HOST)
   await page.goto("/posthog/navigation")
-  await expect.poll(() => events(posthog, "$pageview")).toEqual([{ path: "/posthog/navigation" }])
+  await expect.poll(() => posthog.events("$pageview")).toEqual([{ path: "/posthog/navigation" }])
   await page.locator("article p a.internal").first().click()
   await expect(page).toHaveURL(/\/plain-note$/)
-  await expect.poll(() => events(posthog, "$pageview")).toEqual([{ path: "/posthog/navigation" }, { path: "/plain-note" }])
+  await expect.poll(() => posthog.events("$pageview")).toEqual([{ path: "/posthog/navigation" }, { path: "/plain-note" }])
 })
 
 // Each case clicks a link on /posthog/navigation, which the SPA router follows. The event carries
@@ -68,7 +69,7 @@ for (const { place, link, label, to } of [
     await expect.poll(() => posthog.inits.length).toBe(1)
     await link(page).click()
     await expect(page).toHaveURL(new URL(to, baseURL).href)
-    await expect.poll(() => events(posthog, "navigation")).toEqual([
+    await expect.poll(() => posthog.events("navigation")).toEqual([
       { source: label, from_page: "/posthog/navigation", to_page: to, url: new URL(to, baseURL).href },
     ])
   })
@@ -85,13 +86,58 @@ test("sends no navigation event for a click the SPA router does not follow", asy
   // Then one that is followed, so the first one's event would have been recorded by now.
   await page.locator("article p a.internal").first().click()
   await expect(page).toHaveURL(/\/plain-note$/)
-  await expect.poll(() => events(posthog, "navigation").map((event) => event.to_page)).toEqual(["/plain-note"])
+  await expect.poll(() => posthog.events("navigation").map((event) => event.to_page)).toEqual(["/plain-note"])
   // Off the site: the browser leaves, and the router is not involved.
   await page.goBack()
   await expect(page).toHaveURL(new URL("/posthog/navigation#below", baseURL).href)
   await page.getByRole("link", { name: "off the site" }).click()
   await expect(page).toHaveURL("https://example.com/elsewhere")
-  expect(events(posthog, "navigation")).toHaveLength(1)
+  expect(posthog.events("navigation")).toHaveLength(1)
+})
+
+// The router's other rules: it leaves a click with Ctrl or ⌘ held, a target="_blank" link and a
+// `data-router-ignore` link to the browser. The browser's own action is held back here, by a listener
+// that runs before the router's and the plugin's and stops neither, so the page stays put.
+test("sends no navigation event for a Ctrl/⌘ click, a new-tab link or a router-ignore link", async ({ page }) => {
+  await page.addInitScript(() =>
+    document.addEventListener(
+      "click",
+      (event) => {
+        if (event.ctrlKey || event.metaKey || event.target.closest?.("[target=_blank], [data-router-ignore]")) event.preventDefault()
+      },
+      true,
+    ),
+  )
+  const posthog = await postHogStandIn(page, HOST)
+  await page.goto("/posthog/navigation")
+  await expect.poll(() => posthog.inits.length).toBe(1)
+  await page.getByRole("link", { name: "in a new tab" }).click()
+  await page.getByRole("link", { name: "ignored by the router" }).click()
+  await page.locator("article p a.internal").first().click({ modifiers: ["ControlOrMeta"] })
+  await expect(page).toHaveURL(/\/posthog\/navigation$/)
+  // Then one that is followed, so the others' events would have been recorded by now.
+  await page.locator("article li a.internal").first().click()
+  await expect(page).toHaveURL(/\/md-twin$/)
+  await expect.poll(() => posthog.events("navigation").map((event) => event.to_page)).toEqual(["/md-twin"])
+})
+
+// With SPA routing off, core installs no router, so no link is followed: every click is a full page
+// load, counted by its `$pageview` alone. The browser's own action is held back, as above, so an
+// event sent for the click could not be lost to the unload; a capture after it proves the record
+// is caught up.
+test("sends no navigation event on a site with SPA routing off", async ({ page, scratch }) => {
+  const config = editConfig(fixtureConfig(), (doc) => doc.setIn(["configuration", "enableSPA"], false))
+  const site = await scratch.site("posthog-no-spa", { "index.md": "# home\n\nTo [[other]].\n", "other.md": "# other\n" }, { config })
+  expect(site.code, site.output).toBe(0)
+  await page.addInitScript(() => document.addEventListener("click", (event) => event.preventDefault(), true))
+  const posthog = await postHogStandIn(page, HOST)
+  await routeSite(page, site.public, SCRATCH_ORIGIN)
+  await page.goto(`${SCRATCH_ORIGIN}/`)
+  await expect.poll(() => posthog.events("$pageview")).toEqual([{ path: "/" }])
+  await page.locator("article a.internal", { hasText: "other" }).click()
+  await page.evaluate(() => window.posthog.capture("probe"))
+  await expect.poll(() => posthog.events("probe")).toHaveLength(1)
+  expect(posthog.events("navigation")).toEqual([])
 })
 
 // v4 checked all three places a browser has reported Do Not Track in. With it set, the page never

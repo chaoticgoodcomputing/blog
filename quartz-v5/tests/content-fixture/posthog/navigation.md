@@ -17,6 +17,8 @@ A list of links, a place no selector labels:
 
 A link to [a heading below](#below), and one [off the site](https://example.com/elsewhere).
 
+Two links the router leaves to the browser: <a href="../plain-note" target="_blank">in a new tab</a>, and <a href="../plain-note" data-router-ignore>ignored by the router</a>.
+
 ## Below
 
 The end of the page.

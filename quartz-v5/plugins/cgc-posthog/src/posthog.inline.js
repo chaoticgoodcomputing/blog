@@ -8,8 +8,9 @@
 //   - v4's privacy options: `ip: false`, no session recording, localStorage persistence;
 //   - a `$pageview` on every `nav`, the first load's included;
 //   - a `navigation` event for every link click the SPA router follows, labelled by the first
-//     selector in `sources` that the link matches, or sits inside, else "other".
-function cgcPostHog({ apiKey, apiHost, sources }) {
+//     selector in `sources` that the link matches, or sits inside, else "other". With `spa` false,
+//     core installs no router, so there are none: every click is a full page load.
+function cgcPostHog({ apiKey, apiHost, sources, spa }) {
   // Wherever a browser has reported it: the standard place, then old Safari's and old IE's.
   const doNotTrack = [navigator.doNotTrack, window.doNotTrack, navigator.msDoNotTrack].some(
     (value) => value === "1" || value === "yes",
@@ -53,7 +54,8 @@ function cgcPostHog({ apiKey, apiHost, sources }) {
   // The clicks Quartz's SPA router follows, decided as its own click handler decides (core
   // spa.inline.ts `getOpts`), which runs after this one on the same event. Not followed: a click
   // with Ctrl or ⌘, on a target="_blank" element, on a `data-router-ignore` link, on a link off the
-  // site, or on a link to a heading on the same page, which only scrolls.
+  // site, or on a link to a heading on the same page, which only scrolls. With no router, nothing.
+  if (!spa) return
   window.addEventListener("click", (event) => {
     const target = event.target
     if (!(target instanceof Element) || event.ctrlKey || event.metaKey) return

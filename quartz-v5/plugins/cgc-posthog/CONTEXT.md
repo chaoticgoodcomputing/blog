@@ -16,8 +16,9 @@ _Avoid_: opt-out (PostHog's name for a reader's choice made on the site), consen
 
 **Followed link**:
 A link whose click Quartz's SPA router handles itself, by the router's own rules. Only a followed
-link produces a **navigation event**. A click with a modifier key, a link off the site, and a link to
-a heading on the same page are not followed.
+link produces a **navigation event**. A click with Ctrl or ⌘ held, a `target="_blank"` link, a
+`data-router-ignore` link, a link off the site, and a link to a heading on the same page are not
+followed. With SPA routing off there is no router, and no link is followed.
 _Avoid_: SPA link, internal link (crawl-links' `.internal` class, which is one possible source)
 
 **Navigation event**:
