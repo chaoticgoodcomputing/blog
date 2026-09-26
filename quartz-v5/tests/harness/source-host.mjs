@@ -44,3 +44,48 @@ export async function closedPort() {
 /** Just enough of a PDF to be one: the header every PDF starts with, and a label to tell them apart. */
 export const pdf = (label) =>
   `%PDF-1.4\n% ${label}\n1 0 obj <</Type /Catalog /Pages 2 0 R>> endobj\n2 0 obj <</Type /Pages /Kids [] /Count 0>> endobj\ntrailer <</Root 1 0 R>>\n%%EOF\n`
+
+/** Where the fixture's annotation page says its source document is: a domain that never resolves. */
+export const FIXTURE_PAPER_URL = "https://cgc-fixture.invalid/paper.pdf"
+
+/**
+ * The fixture's two-page source document, at FIXTURE_PAPER_URL, a real PDF with text for the Viewer to draw and anchor
+ * passages in. Written out here rather than tracked in git, where no PDF goes (#59); every offset in
+ * its cross-reference table is counted as it is written.
+ */
+export function fixturePaper() {
+  const stream = (lines) => {
+    const body = lines.join("\n")
+    return `<< /Length ${Buffer.byteLength(body)} >>\nstream\n${body}\nendstream`
+  }
+  const page = (contents) => `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents ${contents} 0 R >>`
+  const objects = [
+    "<< /Type /Catalog /Pages 2 0 R >>",
+    "<< /Type /Pages /Kids [5 0 R 7 0 R] /Count 2 >>",
+    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>",
+    stream([
+      "BT /F1 24 Tf 72 700 Td (Fixture paper, page one) Tj ET",
+      "BT /F1 14 Tf 72 660 Td (The annotator draws highlights over quoted passages.) Tj ET",
+      "BT /F1 14 Tf 72 630 Td (A second sentence that a note quotes in full.) Tj ET",
+      "0 0 0 1 k BT /F1 14 Tf 72 600 Td (Printed in process black, to wake the colour engine.) Tj ET",
+    ]),
+    page(4),
+    stream([
+      "BT /F1 24 Tf 72 700 Td (Fixture paper, page two) Tj ET",
+      "BT /F1 14 Tf 72 300 Td (Quoted on the last page, far below the fold.) Tj ET",
+    ]),
+    page(6),
+    "<< /Title (cgc-annotator fixture paper) /Producer (written by the cgc e2e harness) >>",
+  ]
+  let out = "%PDF-1.4\n"
+  const offsets = objects.map((object, i) => {
+    const offset = Buffer.byteLength(out)
+    out += `${i + 1} 0 obj\n${object}\nendobj\n`
+    return offset
+  })
+  const xref = Buffer.byteLength(out)
+  out += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`
+  for (const offset of offsets) out += `${String(offset).padStart(10, "0")} 00000 n \n`
+  out += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R /Info ${objects.length} 0 R >>\nstartxref\n${xref}\n%%EOF\n`
+  return out
+}

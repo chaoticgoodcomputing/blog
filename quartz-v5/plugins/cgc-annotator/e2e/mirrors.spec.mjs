@@ -7,7 +7,7 @@ import path from "node:path"
 import { execFileSync } from "node:child_process"
 import { createHash } from "node:crypto"
 import { test, expect } from "../../../tests/harness/test.mjs"
-import { editConfig, fixtureConfig, fixtureRoot, pluginEntries, testsRoot, vendored } from "../../../tests/harness/site.mjs"
+import { editConfig, fixtureConfig, fixtureRoot, pluginEntries, serveScratchSite, testsRoot, vendored } from "../../../tests/harness/site.mjs"
 import { HANG, closedPort, pdf, sourceHost } from "../../../tests/harness/source-host.mjs"
 
 const ANNOTATOR = "../../plugins/cgc-annotator"
@@ -161,6 +161,24 @@ test("a copy pinned by hand, where the warning says, is served in place of a fet
     expect(second.mirrors).toHaveLength(1)
     expect(second.read(second.mirrors[0])).toBe(pdf("saved by hand"))
   } finally {
+    await host.close()
+  }
+})
+
+test("under serve, a page added or changed is mirrored only if it is published, as a full build would", async () => {
+  const host = await sourceHost({ "/draft.pdf": pdf("draft"), "/published.pdf": pdf("published") })
+  // The fixture's config: its own cache, in the scratch root, and mirrors under `mirrors`.
+  const site = await serveScratchSite("annotator-serve", { "index.md": "# home\n" })
+  try {
+    // remove-draft filters a draft out of what a full build emits, so no mirror is made for it.
+    const draft = `---\ntitle: Draft\ndraft: true\nannotation-target: ${host.url("/draft.pdf")}\n---\n\nNotes.\n`
+    await site.write("draft.md", draft)
+    await site.write("published.md", annotationPage(host.url("/published.pdf")))
+    expect(host.hits("/draft.pdf")).toBe(0)
+    expect(host.hits("/published.pdf")).toBe(1)
+    expect(fs.readdirSync(path.join(site.public, "mirrors"))).toEqual([expectedName(host.url("/published.pdf"))])
+  } finally {
+    await site.stop()
     await host.close()
   }
 })

@@ -20,9 +20,24 @@
   font-size: 0.9rem;
 }
 
-.cgc-annotator__source-link {
+.cgc-annotator__source-link,
+.cgc-annotator__read-along-link {
   color: var(--secondary);
   font-weight: 500;
+}
+
+/* Where to read along, for where the Viewer can't say it. A narrow screen shows the first (below);
+   a reader without JavaScript gets the second, from a <noscript>, which a narrow screen then hides
+   so it is said once. */
+.cgc-annotator__read-along {
+  display: none;
+  margin: 0;
+  color: var(--darkgray);
+  font-size: 0.9rem;
+}
+
+.cgc-annotator__read-along--no-script {
+  display: block;
 }
 
 .cgc-annotator__split {
@@ -79,7 +94,7 @@
   font-style: italic;
 }
 
-.cgc-annotator__comment {
+.cgc-annotator__note {
   margin-top: 0.75rem;
   color: var(--dark);
   line-height: 1.6;
@@ -218,6 +233,14 @@
   }
 
   .cgc-annotator__viewer {
+    display: none;
+  }
+
+  .cgc-annotator__read-along {
+    display: block;
+  }
+
+  .cgc-annotator__read-along--no-script {
     display: none;
   }
 

@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "This site's own layout components: the page title, with the site's icon and author, and the footer, with its copyright line. A site plugin, never published. See CONTEXT.md.",
+  "description": "This site's own layout components: the page title, with the site's icon and author, the footer, with its copyright line, and a full-width frame that keeps the sidebars' components. A site plugin, never published. See CONTEXT.md.",
   "exports": {
     ".": "./dist/index.js",
     "./components": "./dist/components/index.js",
+    "./frames": "./dist/frames/index.js",
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
@@ -26,7 +27,7 @@
   "quartz": {
     "name": "site-components",
     "displayName": "Site components",
-    "description": "This site's page title and footer.",
+    "description": "This site's page title, footer and full-width frame.",
     "category": "component",
     "version": "0.0.0",
     "quartzVersion": ">=5.0.0",
@@ -45,6 +46,12 @@
         "displayName": "Footer",
         "defaultPosition": "footer",
         "defaultPriority": 50
+      }
+    },
+    "//frames": "Registered under each frame's own name, which a page type's layout names as its `template` (docs/adr/0002).",
+    "frames": {
+      "SiteFullWidthFrame": {
+        "displayName": "Full width, with the site's chrome"
       }
     }
   }

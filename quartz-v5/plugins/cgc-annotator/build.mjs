@@ -31,7 +31,10 @@ fs.rmSync("dist", { recursive: true, force: true })
 // third-party CSS in this plugin's own markup, so it is prefixed into the Viewer's block rather than
 // left in rule 9's vendor layer, below core, where core's own element rules would reach its spans.
 const TEXT_LAYER = { from: "textLayer", to: "cgc-annotator-viewer__text-layer" }
-// Custom properties PDF.js's script writes on its own elements: read, never declared here.
+// PDF.js's own custom properties: read here, never declared. Its script writes the first four on the
+// text layer's elements. The last three are read by its inline sizes, so pdf.ts writes them on each
+// page under PDF.js's names. This is the one place the plugin sets unprefixed properties (ADR-0003
+// rule 7), and PDF.js forces it.
 const PDFJS_PROPERTIES = ["--min-font-size", "--font-height", "--scale-x", "--rotate", "--total-scale-factor", "--scale-round-x", "--scale-round-y"]
 
 function prefixTextLayer(css, from) {

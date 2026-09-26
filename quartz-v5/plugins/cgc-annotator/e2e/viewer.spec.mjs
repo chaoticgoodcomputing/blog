@@ -1,8 +1,8 @@
 // The annotation page (#37, #68): a note whose frontmatter names an `annotation-target` renders in
 // the full-width frame, with the Viewer showing its mirror, every quoted passage highlighted, beside
 // the annotations themselves. The fixture's /annotations/fixture-paper targets a URL the build never
-// fetches: its source document is pinned by hand (tests/fixture-cache/), as the README tells a site
-// to do for a host that refuses build machines. /annotations/withdrawn targets one that can't be
+// fetches: its source document is pinned into the fixture root's cache by the harness (the fixture
+// cache), as the README tells a site to pin one by hand for a host that refuses build machines. /annotations/withdrawn targets one that can't be
 // fetched, so it has no mirror.
 import { createHash } from "node:crypto"
 import { test, expect, resolvedColour } from "../../../tests/harness/test.mjs"
@@ -20,6 +20,8 @@ const ANCHORED = ["highlights", "quoteonly", "lastpage"]
 
 const viewerOf = (page) => page.locator(".cgc-annotator-viewer")
 const annotation = (page, id) => page.locator(`.cgc-annotator__annotation[data-annotation="${id}"]`)
+// The page's own read-along line, where it is shown: where the Viewer can't say it.
+const readAlong = (page) => page.locator(".cgc-annotator__read-along:visible")
 const highlights = (page, id) => page.locator(`.cgc-annotator-viewer__highlight[data-annotation="${id}"]`)
 
 // The paper's Viewer once its island has hydrated, PDF.js has drawn both pages and every anchored
@@ -82,20 +84,22 @@ test("the annotations sit beside the document, each with the passage it quotes",
   await expect(list.locator(".cgc-annotator__annotation")).toHaveCount(IN_ORDER.length)
   expect(await list.locator(".cgc-annotator__annotation").evaluateAll((els) => els.map((el) => el.dataset.annotation))).toEqual(IN_ORDER)
   await expect(annotation(page, "highlights").locator(".cgc-annotator__quote")).toHaveText("draws highlights over quoted passages")
-  // Annotation text is markdown, rendered through the site's own pipeline: wikilinks resolve.
-  const comment = annotation(page, "highlights").locator(".cgc-annotator__comment")
-  await expect(comment.locator("strong")).toHaveText("highlighted")
-  await expect(comment.getByRole("link", { name: "plain-note" })).toHaveAttribute("href", /\/plain-note$/)
+  // A note is markdown, rendered through the site's own pipeline: wikilinks resolve.
+  const note = annotation(page, "highlights").locator(".cgc-annotator__note")
+  await expect(note.locator("strong")).toHaveText("highlighted")
+  await expect(note.getByRole("link", { name: "plain-note" })).toHaveAttribute("href", /\/plain-note$/)
   await expect(annotation(page, "highlights").locator(".cgc-annotator__tag")).toHaveText("#reading")
   await expect(annotation(page, "highlights").locator("time")).toHaveAttribute("datetime", "2024-03-14T22:23:53.656Z")
   await expect(annotation(page, "highlights").locator("time")).toHaveText("Mar 14, 2024")
   // A highlight with no note of its own still shows its passage.
   await expect(annotation(page, "quoteonly").locator(".cgc-annotator__quote")).toHaveText("A second sentence that a note quotes in full")
-  await expect(annotation(page, "quoteonly").locator(".cgc-annotator__comment")).toHaveCount(0)
+  await expect(annotation(page, "quoteonly").locator(".cgc-annotator__note")).toHaveCount(0)
   // Side by side on a wide screen.
   const [viewerBox, listBox] = [await viewerOf(page).boundingBox(), await list.boundingBox()]
   expect(viewerBox.x + viewerBox.width).toBeLessThanOrEqual(listBox.x + 1)
   expect(viewerBox.width).toBeGreaterThan(listBox.width)
+  // The Viewer shows the document, so the page doesn't also say where to read along.
+  await expect(readAlong(page)).toHaveCount(0)
 })
 
 test("choosing an annotation scrolls the document to its passage, and choosing a highlight picks its annotation", async ({ page }) => {
@@ -146,7 +150,24 @@ test("a reader without JavaScript gets every annotation and a link to the source
   await expect(page.locator(".cgc-annotator__annotation")).toHaveCount(IN_ORDER.length)
   await expect(annotation(page, "lastpage").locator(".cgc-annotator__quote")).toHaveText("far below the fold")
   await expect(page.locator(".cgc-annotator__source-link")).toHaveAttribute("href", TARGET)
+  // The Viewer never loads, so the page says where to read along instead.
+  await expect(readAlong(page)).toHaveCount(1)
+  await expect(readAlong(page)).toContainText("read along at")
+  await expect(readAlong(page).getByRole("link")).toHaveAttribute("href", TARGET)
+  // Said once, on a narrow screen too.
+  await page.setViewportSize({ width: 800, height: 900 })
+  await expect(readAlong(page)).toHaveCount(1)
   await context.close()
+})
+
+test("on a narrow screen the annotations take the page, which says where to read along", async ({ page }) => {
+  await page.setViewportSize({ width: 800, height: 900 })
+  await page.goto(PAPER)
+  await expect(viewerOf(page)).toBeHidden()
+  await expect(annotation(page, "lastpage").locator(".cgc-annotator__quote")).toBeVisible()
+  await expect(readAlong(page)).toHaveCount(1)
+  await expect(readAlong(page)).toContainText("read along at")
+  await expect(readAlong(page).getByRole("link")).toHaveAttribute("href", TARGET)
 })
 
 // The two SPA bugs the v4 annotation page carried (#34, #37): its viewer CSS went missing on the
@@ -297,7 +318,7 @@ test("a note whose annotation-target is empty stays an ordinary note", async ({ 
   await expect(page.locator(".cgc-annotator")).toHaveCount(0)
 })
 
-test("annotation text feeds backlinks, the graph and search, and the Annotator markup is gone", async ({ page, emitted }) => {
+test("notes feed backlinks, the graph and search, and the Annotator markup is gone", async ({ page, emitted }) => {
   const index = JSON.parse(emitted.read("static/contentIndex.json"))
   const entry = index["annotations/fixture-paper"]
   expect(entry.links).toEqual(expect.arrayContaining(["plain-note", "linked-note", "annotations/withdrawn"]))

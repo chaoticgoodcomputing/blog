@@ -6,9 +6,9 @@ tags:
 annotation-target: https://cgc-fixture.invalid/paper.pdf
 ---
 
-An annotation page whose source document is pinned by hand, in `tests/fixture-cache/`: its
-`annotation-target` is on a domain that never resolves, so the build never fetches it. The Viewer
-shows the pinned copy.
+An annotation page whose source document the suite's harness pins into the fixture root's cache:
+its `annotation-target` is on a domain that never resolves, so the build never fetches it. The
+Viewer shows the pinned copy.
 
 >%%
 >```annotation-json

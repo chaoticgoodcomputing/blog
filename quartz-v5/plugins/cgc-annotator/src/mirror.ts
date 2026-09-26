@@ -1,7 +1,7 @@
 // Mirrors: pinned copies of annotation pages' source documents (CONTEXT.md, docs/adr/0001).
 //
 // This module is the one owner of the URL → mirror name rule. Whatever needs a mirror's name, the
-// emitter now and the Viewer later, takes it from here.
+// emitter and the page type (which hands the Viewer its path), takes it from here.
 import fs from "node:fs"
 import http from "node:http"
 import https from "node:https"

@@ -31,7 +31,7 @@ An annotation page is its own page type, laid out in Quartz's `full-width` frame
   highlighted. Choose an annotation and the document scrolls to its passage; choose a highlight and
   the annotation it belongs to is picked out. Drag the divider between them to give the document
   more or less of the width, and it's drawn again to fit. On a narrow screen the Viewer is left out,
-  and the annotations take the page.
+  and the annotations take the page, under a line saying where to read along.
 - **The annotations** are in the order their passages come in the document. Each shows the passage
   it quotes, the note written on it, its tags and its date.
 
@@ -42,7 +42,8 @@ navigation: leave while a document is loading and the load stops there.
 
 **If the document can't be shown, the notes still can.** When there's no mirror to draw (see below),
 or it fails to load, the Viewer says so and links to the source document to read along with, and the
-annotations, each with the passage it quotes, take the width. The build carries on either way.
+annotations, each with the passage it quotes, take the width. The build carries on either way. A
+reader without JavaScript, whose Viewer never loads, is told where to read along by the page itself.
 
 Only PDFs are shown. A target that isn't a web URL builds its page with the Viewer's notice, and a
 warning.
@@ -73,7 +74,10 @@ layout:
 ```
 
 The `full-width` frame has no sidebars, so components you've placed `left` or `right` aren't on
-annotation pages. To give them the default frame back, set `template: default` there.
+annotation pages. To give them the default frame back, set `template: default` there, which narrows
+the Viewer to the centre column. To keep the width and the components, name a frame a plugin
+registers that places them elsewhere: this site's `site-full-width` (site-components) puts the
+`left` ones above the page and the `right` ones after it.
 
 ## Mirrors
 

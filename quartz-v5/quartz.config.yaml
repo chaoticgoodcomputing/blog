@@ -681,11 +681,17 @@ layout:
         beforeBody: []
         right: []
     content: {}
-    # v4's annotation pages had no source link, which would show Annotator's JSON (#68). Their
-    # full-width frame has no sidebars, so the graph and backlinks (right) are not on them.
+    # Full width for the Viewer (#37), in site-components' frame, which keeps the page title and the
+    # toolbar (left) in a bar above it and the graph and backlinks (right) after it, as v4 had them.
+    # Core's `full-width` drops both sidebars. v4's annotation pages had no source link, which would
+    # show Annotator's JSON (#68), and no tag explorer, contents or social cards.
     annotation:
+      template: site-full-width
       exclude:
         - cgc-page-source
+        - cgc-tag-explorer
+        - "@quartz-community/table-of-contents"
+        - cgc-social
     # v4's tag pages had no source link. A tag page drawn from a description file would get one.
     tag:
       exclude:

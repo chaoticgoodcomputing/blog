@@ -9,10 +9,12 @@ import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
 import { execFile, spawn } from "node:child_process"
+import { createHash } from "node:crypto"
 import { createRequire } from "node:module"
 import { promisify } from "node:util"
 import { fileURLToPath } from "node:url"
 import { buildLocalPlugin, installLibs } from "../../utils/local-plugins.mjs"
+import { FIXTURE_PAPER_URL, fixturePaper } from "./source-host.mjs"
 
 const run = promisify(execFile)
 const here = path.dirname(fileURLToPath(import.meta.url))
@@ -152,10 +154,13 @@ const isOurs = (source) =>
 // they stand in for, as an .mdx page is with its .md twin.
 const STANDS_IN_FOR = { "../../plugins/cgc-tag-page": "@quartz-community/tag-page" }
 
-// Fixture cache: what a fixture build would otherwise fetch from the network, pinned by hand. The
-// directory mirrors a fixture root's `.cache/` (cgc-annotator's source documents, by mirror name,
-// under `cgc-annotator/`) and is copied in before every build, so the fixture needs no network.
-const fixtureCache = path.join(testsRoot, "fixture-cache")
+// The fixture cache: what a fixture build would otherwise fetch from the network, pinned into a
+// fixture root's `.cache/` before every build, so the fixture needs no network. Written out by the
+// harness, since no PDF is tracked in git (#59): cgc-annotator's source document for the fixture's
+// annotation page, under its mirror name (the first 16 hex digits of the SHA-256 of its URL).
+const FIXTURE_CACHE = {
+  [`cgc-annotator/${createHash("sha256").update(new URL(FIXTURE_PAPER_URL).href).digest("hex").slice(0, 16)}`]: fixturePaper,
+}
 
 // Links a fixture or scratch root to the vendored copy: everything but the config it holds itself.
 function linkVendored(root) {
@@ -169,7 +174,11 @@ function writeFixtureRoot(variant) {
   const root = fixtureRoot(variant)
   fs.mkdirSync(root, { recursive: true })
   linkVendored(root)
-  if (fs.existsSync(fixtureCache)) fs.cpSync(fixtureCache, path.join(root, ".cache"), { recursive: true })
+  for (const [rel, contents] of Object.entries(FIXTURE_CACHE)) {
+    const file = path.join(root, ".cache", rel)
+    fs.mkdirSync(path.dirname(file), { recursive: true })
+    fs.writeFileSync(file, contents())
+  }
   const config = YAML.parseDocument(fixtureConfig())
   if (variant === "baseline") {
     const standIns = new Set()

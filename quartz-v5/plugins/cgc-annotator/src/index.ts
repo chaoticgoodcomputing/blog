@@ -8,14 +8,17 @@
 //     Viewer's browser files. Mirrors are pinned on first fetch, and a document that can't be
 //     fetched costs a warning, never the build (docs/adr/0001).
 //
-// Quartz makes a separate instance of this plugin for each of the three, from the same options.
+// Two factories, one per shape, as cgc-mdx and cgc-tags export theirs: the loader picks the one
+// whose instance fits each category the manifest declares, and calls it with the same options.
+// `CgcAnnotatorTransformer` is the transformer, and ships the stylesheet; `CgcAnnotator` is the page
+// type and the emitter. One object for every role would have Quartz collect the stylesheet twice, as
+// a transformer's and as an emitter's.
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
-import { styleText } from "node:util"
 import { annotationTarget, cacheEntry, mirrorName, pinned, sourceUrl, Unmirrorable } from "./mirror"
 import { Body, STATIC_DIR } from "./page"
-import { DEFAULT_DENYLIST, NAME, Transformer } from "./transformer"
+import { DEFAULT_DENYLIST, NAME, Transformer, warn } from "./transformer"
 
 // Written in by build.mjs: the plugin's stylesheet, already in its family layer (ADR-0003).
 declare const __CGC_ANNOTATOR_CSS__: string
@@ -55,17 +58,24 @@ interface ChangeEvent {
   file?: File
 }
 
-const warn = (message: string) => console.warn(styleText("yellow", "⚠") + ` cgc-annotator: ${message}`)
-
 // The Viewer's browser files, built beside this module by build.mjs: its entry and chunks, PDF.js's
 // worker and wasm.
 const CLIENT_DIR = fileURLToPath(new URL("./client/", import.meta.url))
 
-// Each instance offers the stylesheet, and the first one Quartz asks in a build keeps it, so the
-// page gets it once, not once per instance.
-const stylesheetOwner = new WeakMap<object, object>()
+/** The transformer: each annotation page's annotations, with their notes rendered. */
+export function CgcAnnotatorTransformer(userOpts?: Partial<Options>) {
+  const opts = { ...defaults, ...userOpts }
+  return {
+    name: NAME,
+    ...Transformer(opts.denylist),
+    // ADR-0003 rule 11: the stylesheet goes in the family layer, `cgc.annotator`, from here. It is
+    // global, like every plugin stylesheet in Quartz 5, so SPA navigation never drops it.
+    externalResources: () => ({ css: [{ content: __CGC_ANNOTATOR_CSS__, inline: true }] }),
+  }
+}
 
-export default function CgcAnnotator(userOpts?: Partial<Options>) {
+/** The page type and the emitter: one object fits both shapes. */
+export function CgcAnnotator(userOpts?: Partial<Options>) {
   const opts = { ...defaults, ...userOpts }
   // Quartz runs from its root, so a relative cache directory is taken from there.
   const cacheDir = path.resolve(opts.cacheDir)
@@ -123,9 +133,8 @@ export default function CgcAnnotator(userOpts?: Partial<Options>) {
       .map((entry) => path.join(entry.parentPath, entry.name))
   }
 
-  const instance = {
+  return {
     name: NAME,
-    ...Transformer(opts.denylist),
 
     // Page type: a non-empty `annotation-target` makes a note an annotation page. Above
     // content-page (0), whose pages these would otherwise be.
@@ -141,19 +150,15 @@ export default function CgcAnnotator(userOpts?: Partial<Options>) {
       return [...(await mirror(ctx, files)), ...(await viewerFiles(ctx, files))]
     },
     // Under `serve`, only pages that were added or changed can name a new source document. Output
-    // is not cleaned between rebuilds, so every other mirror is still in place.
-    async partialEmit(ctx: Ctx, _content: Content, _resources: unknown, changes: ChangeEvent[]) {
-      const files = changes.filter((change) => change.type !== "delete").map((change) => change.file)
+    // is not cleaned between rebuilds, so every other mirror is still in place. The changes are
+    // Quartz's unfiltered ones: a page the filters leave out (a draft, say) is not in `content`,
+    // whose entries are the same objects, and gets no mirror, as in a full build.
+    async partialEmit(ctx: Ctx, content: Content, _resources: unknown, changes: ChangeEvent[]) {
+      const published = new Set(content.map(([, file]) => file))
+      const files = changes
+        .filter((change) => change.type !== "delete" && change.file && published.has(change.file))
+        .map((change) => change.file)
       return [...(await mirror(ctx, files)), ...(await viewerFiles(ctx, files))]
     },
-
-    // ADR-0003 rule 11: the stylesheet goes in the family layer, `cgc.annotator`, from here. It is
-    // global, like every plugin stylesheet in Quartz 5, so SPA navigation never drops it.
-    externalResources(ctx: object) {
-      if (!stylesheetOwner.has(ctx)) stylesheetOwner.set(ctx, instance)
-      if (stylesheetOwner.get(ctx) !== instance) return {}
-      return { css: [{ content: __CGC_ANNOTATOR_CSS__, inline: true }] }
-    },
   }
-  return instance
 }

@@ -4,6 +4,7 @@
 import { islandAttributes, islandRuntime } from "@chaoticgoodcomputing/island-runtime"
 import type { AnnotatorData } from "./transformer"
 import { annotationTarget, mirrorName, sourceUrl, Unmirrorable } from "./mirror"
+import type { Passage } from "./viewer/anchor"
 import Viewer, { type ViewerProps } from "./viewer/Viewer"
 
 // Written in by build.mjs: the Viewer's browser entry, as the emitter lays it out under the site.
@@ -39,8 +40,21 @@ export function Body(mirrorDir: string) {
       linkable,
       passages: annotations
         .filter((a) => a.exact)
-        .map(({ id, exact, prefix, suffix, start }) => ({ id, exact, prefix, suffix, start })),
+        // Only the passage: notes and their HTML stay out of the island's serialized props.
+        .map(({ id, exact, prefix, suffix, start }): Passage => ({ id, exact, prefix, suffix, start })),
     }
+    // Where to read along, for where the Viewer can't say it: a narrow screen, which hides the
+    // Viewer, and a reader without JavaScript, whose Viewer never loads. Otherwise hidden.
+    const readAlong = (noScript: boolean) =>
+      linkable && (
+        <p class={noScript ? "cgc-annotator__read-along cgc-annotator__read-along--no-script" : "cgc-annotator__read-along"}>
+          You can read along at{" "}
+          <a class="cgc-annotator__read-along-link" href={url.href} target="_blank" rel="noopener noreferrer">
+            {url.href}
+          </a>
+          .
+        </p>
+      )
     return (
       <div class="cgc-annotator" itemscope itemtype="https://schema.org/DigitalDocument">
         <p class="cgc-annotator__source">
@@ -53,6 +67,8 @@ export function Body(mirrorDir: string) {
             <span class="cgc-annotator__source-link">{target}</span>
           )}
         </p>
+        {readAlong(false)}
+        <noscript>{readAlong(true)}</noscript>
         <div class="cgc-annotator__split">
           {/* The Viewer's island. It hydrates only once it's on screen, so where a narrow screen hides it,
               PDF.js is never fetched. */}
@@ -67,7 +83,7 @@ export function Body(mirrorDir: string) {
             {annotations.map((a) => (
               <article class="cgc-annotator__annotation" data-annotation={a.id} itemprop="comment" itemscope itemtype="https://schema.org/Comment">
                 {a.exact && <blockquote class="cgc-annotator__quote">{a.exact}</blockquote>}
-                {a.html && <div class="cgc-annotator__comment" itemprop="text" dangerouslySetInnerHTML={{ __html: a.html }} />}
+                {a.html && <div class="cgc-annotator__note" itemprop="text" dangerouslySetInnerHTML={{ __html: a.html }} />}
                 {a.tags.length > 0 && (
                   <p class="cgc-annotator__tags">
                     {a.tags.map((tag) => (

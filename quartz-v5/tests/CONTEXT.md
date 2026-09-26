@@ -86,10 +86,11 @@ OS picks, so a build never reaches the network.
 _Avoid_: mock server, fake remote, test server
 
 **Fixture cache**:
-What a fixture build would otherwise fetch from the network, pinned by hand in `fixture-cache/` and
-copied into each fixture root's `.cache/` before it builds: the source document of the fixture's
-annotation page, by mirror name under `cgc-annotator/`. So that page's Viewer has a document to show
-though its `annotation-target` never resolves.
+What a fixture build would otherwise fetch from the network, written by the harness into each
+fixture root's `.cache/` before it builds (`FIXTURE_CACHE` in `harness/site.mjs`): the source
+document of the fixture's annotation page, `fixturePaper()` from `harness/source-host.mjs`, by
+mirror name under `cgc-annotator/`. So that page's Viewer has a document to show though its
+`annotation-target` never resolves. Generated rather than tracked, since no PDF goes in git (#59).
 _Avoid_: fixture downloads, test cache
 
 **Analytics stand-in**:

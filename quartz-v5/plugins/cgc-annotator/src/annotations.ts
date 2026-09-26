@@ -16,18 +16,10 @@
 //   ^id
 //
 // The JSON is the record; everything after it is Annotator's view of it for Obsidian.
+import type { Passage } from "./viewer/anchor"
 
 /** One annotation: a passage of the source document, and what was written about it. */
-export interface Annotation {
-  /** Annotator's block id, unique within its page. */
-  id: string
-  /** The passage, as its `TextQuoteSelector` quotes it. Empty when it has none. */
-  exact: string
-  /** A little of the text before and after the passage, which tells repeats apart. */
-  prefix?: string
-  suffix?: string
-  /** Where the passage starts in the document's text, from its `TextPositionSelector`: a hint. */
-  start?: number
+export interface Annotation extends Passage {
   /** The note written on the passage, in markdown. */
   text?: string
   tags: string[]

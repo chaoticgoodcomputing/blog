@@ -38,7 +38,7 @@ async function build(scratch, name, files, options) {
 
 // The one annotation's rendered note, from the page's HTML.
 const noteOf = (html) =>
-  html.match(/<div class="cgc-annotator__comment"[^>]*>([\s\S]*?)<\/div>(?=<p class="cgc-annotator__tags"|<time|<\/article>)/)?.[1]
+  html.match(/<div class="cgc-annotator__note"[^>]*>([\s\S]*?)<\/div>(?=<p class="cgc-annotator__tags"|<time|<\/article>)/)?.[1]
 
 const TARGET = "https://cgc-fixture.invalid/notes.pdf"
 const NOTE = "---\ntitle: not frontmatter\n---\nSquared: $x^2$, from [[other]]."

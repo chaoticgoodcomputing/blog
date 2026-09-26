@@ -35,7 +35,8 @@ export interface AnnotatorData {
   annotations: RenderedAnnotation[]
 }
 
-const warn = (message: string) => console.warn(styleText("yellow", "⚠") + ` cgc-annotator: ${message}`)
+/** Every warning this plugin prints, in one format. It never fails the build. */
+export const warn = (message: string) => console.warn(styleText("yellow", "⚠") + ` ${NAME}: ${message}`)
 
 // The same text Quartz's `description` transformer puts in `text`.
 const escapeHTML = (text: string) =>

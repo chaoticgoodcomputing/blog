@@ -2,7 +2,8 @@
 
 The site plugin that carries this site's own layout components: v4's page title, with the site's
 icon and its author, and v4's footer, with its copyright line. It is a component-only plugin, and
-each component is placed by an entry of its own in the site config. Inherits the family vocabulary in
+each component is placed by an entry of its own in the site config. It also registers the site's
+own full-width frame, for annotation pages ([ADR-0002](./docs/adr/0002-a-full-width-frame-that-keeps-the-sidebars.md)). Inherits the family vocabulary in
 [`quartz-v5/CONTEXT.md`](../../CONTEXT.md). The decisions are
 [#44](https://github.com/chaoticgoodcomputing/blog/issues/44) (what the plugin holds) and
 [ADR-0001](./docs/adr/0001-one-config-entry-per-component.md) (how the site config places it). The
@@ -25,6 +26,14 @@ component by the placement name in PascalCase: `site-page-title` places `SitePag
 `site-footer` places `SiteFooter`. So a placement name is what `byPageType.exclude` takes. The plugin
 itself is still `site-components`: its directory, Nx project and manifest name.
 _Avoid_: instance, alias, plugin name (for a placement's)
+
+**Site frame**:
+`site-full-width`, the frame this plugin registers: the page's width for the body, like core's
+`full-width`, with the `left` components in a bar at the top of the page header and the `right`
+ones after the body, where core's drops both. A page type gets it through `template` under
+`layout.byPageType`; the site gives it to annotation pages (#37). Styled by site-styles' objects
+tier.
+_Avoid_: layout, template (that is the config key naming it), full-width frame (core's)
 
 **Site author**:
 The person the page title's byline names: its `author` option, fixed for the whole site. The site

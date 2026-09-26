@@ -4,9 +4,9 @@
 
 // Objects: the page's layout (v4 `styles/_objects.scss`). Only where the site departs from core's
 // `base.scss`: the page width, the grid at the site's breakpoints, the sidebars' spacing, and the
-// 40em measure. The grid is the default frame's. Core's other frames (full-width, minimal) and
-// plugins' own frames keep core's layout, as v4's full-width variant maps to a frame (FORK-LEDGER
-// `styles/_objects.scss`).
+// 40em measure. The grid is the default frame's, and the site's own full-width frame's, which is
+// v4's full-width variant (FORK-LEDGER `styles/_objects.scss`). Core's other frames (full-width,
+// minimal) and other plugins' frames keep core's layout.
 @layer objects {
   .page {
     max-width: calc(#{map.get($breakpoints, desktop)} + 300px);
@@ -130,5 +130,49 @@
 
   .page[data-frame="default"] > #quartz-body > footer {
     max-width: $centerPanelWidth;
+  }
+
+  // The site's full-width frame (site-components' `site-full-width`, for annotation pages), v4's
+  // full-width variant: one column the page's width less a gutter, v4's reduced gutter beside an
+  // annotation viewer. The page header's and footer's blocks keep to the measure, the body doesn't.
+  .page[data-frame="site-full-width"] > #quartz-body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "grid-center"
+      "grid-footer";
+    column-gap: 0;
+    padding: 0 1rem;
+
+    @include respond-to(tablet) {
+      padding: 0 0.75rem;
+    }
+
+    @include respond-to(mobile) {
+      padding: 0 0.5rem;
+    }
+
+    & > .center {
+      grid-area: grid-center;
+    }
+
+    & > .center > .page-header > .popover-hint,
+    & > .center > .page-footer > *,
+    & > footer {
+      max-width: $centerPanelWidth;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  // The left components, across the top of the page header: the page title, then the toolbar.
+  .page[data-frame="site-full-width"] .site-full-width__bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    & > .page-title {
+      flex: 1 1 auto;
+    }
   }
 }

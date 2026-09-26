@@ -7,13 +7,16 @@
 //   - the search stops at a page where the quote and one side of its context match exactly.
 import approxSearch, { type Match } from "approx-string-match"
 
-/** A passage to find, as an annotation records it. */
+/** A passage to find, as an annotation records it. An `Annotation` is one, with its note. */
 export interface Passage {
+  /** Annotator's block id, unique within its page. */
   id: string
+  /** The passage, as its `TextQuoteSelector` quotes it. Empty when it has none. */
   exact: string
+  /** A little of the text before and after the passage, which tells repeats apart. */
   prefix?: string
   suffix?: string
-  /** Offset of the passage in the whole document's text: a hint. */
+  /** Where the passage starts in the whole document's text, from its `TextPositionSelector`: a hint. */
   start?: number
 }
 
