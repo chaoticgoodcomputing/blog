@@ -36,13 +36,14 @@ test("strokes the edges on the canvas, not only in the text alternative", async 
   page,
   colorScheme,
 }) => {
-  // Resting edges are drawn in the theme's `lightgray` (tests/quartz.config.yaml), which nothing
-  // else in a local graph is: six nodes, and more edges between them, make a few hundred pixels.
+  // Resting edges are drawn in the theme's `lightgray` (tests/quartz.config.yaml), each at its
+  // opacity. A tag bubble's circle is `lightgray` too, but opaque, so only the edges paint it
+  // partly: six nodes, and more edges between them, make a few hundred pixels.
   const LIGHTGRAY = { light: [229, 229, 229], dark: [57, 54, 57] }
   await page.goto("/links/from-md")
   const graph = localGraph(page)
   await drawnGraph(graph)
-  await expect.poll(() => pixelsLike(graph, LIGHTGRAY[colorScheme])).toBeGreaterThan(100)
+  await expect.poll(() => pixelsLike(graph, LIGHTGRAY[colorScheme], { translucent: true })).toBeGreaterThan(100)
 })
 
 test("marks the node under the pointer in the text alternative, with no browser tooltip", async ({

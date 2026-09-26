@@ -6,9 +6,14 @@
 // in its tag index and defines in its stylesheet, inherited through the cascade. The scheme can change
 // under a loaded page, so the graph makes a new palette on `themechange` (ADR-0003's *the scheme
 // changes under a loaded page* amendment).
+//
+// A node with a tag is drawn as its tag's bubble (#83), the one every badge draws, from the palette
+// tags-core's `./bubble` names: a rim in the tag's colour property, a circle in the theme's
+// `--lightgray` and the icon in its `--dark` (ADR-0003's tag bubble amendment).
+import { BUBBLE_PALETTE, bubblePaletteOf } from "@chaoticgoodcomputing/tags-core/bubble"
 import { resolveColour, resolveTagColour } from "@chaoticgoodcomputing/tags-core/colour"
 import type { Settings } from "./settings"
-import type { NodeColour, NodeData, Tags, ThemeColour } from "./types"
+import type { NodeColour, NodeData, NodePaint, Tags, ThemeColour } from "./types"
 
 export interface Palette {
   /** A node's colour, resolved. */
@@ -17,13 +22,16 @@ export interface Palette {
   lightgray: string
   dark: string
   shell: string
-  /** The colour icons are cut out of their nodes in: the page's background, the theme's `light`. */
+  /** A tag bubble's circle, the theme's `--lightgray`, as tags-core's `BUBBLE_PALETTE` names it. */
+  circle: string
+  /** A tag bubble's icon, the theme's `--dark`, as tags-core's `BUBBLE_PALETTE` names it. */
   icon: string
   /** The label font, the theme's body font. */
   font: string
 }
 
 const theme = (name: string) => resolveColour(`var(--${name})`)
+const property = (name: string) => resolveColour(`var(${name})`)
 
 export function paletteOf(settings: Settings): Palette {
   const gray = theme("gray")
@@ -47,7 +55,8 @@ export function paletteOf(settings: Settings): Palette {
     lightgray: theme("lightgray"),
     dark: theme("dark"),
     shell: resolveColour(settings.shell?.color ?? "var(--lightgray)"),
-    icon: theme("light"),
+    circle: property(BUBBLE_PALETTE.circle),
+    icon: property(BUBBLE_PALETTE.icon),
     font:
       getComputedStyle(document.documentElement).getPropertyValue("--bodyFont").trim() ||
       "sans-serif",
@@ -55,17 +64,20 @@ export function paletteOf(settings: Settings): Palette {
 }
 
 /**
- * How a node is drawn: its fill, its ring and its icon, all its tag's, the tag that stands for it (a
- * page's primary tag, a tag node's own), as the tag index names them (#77).
+ * How a node is drawn (#77, #83; docs/adr/0004).
  *
- * - The site's private or public node colour, when it sets one, fills every node it covers, as in
- *   v4. Otherwise a node is filled with its tag's colour, and ringed in v4's colours for the
- *   reader's own page and the pages they have visited: `secondary` for the current page, `tertiary`
- *   for a visited one.
- * - A page with no tags keeps v4's colours: the theme's `secondary` for the current page, `tertiary`
- *   for one the reader has visited, and `gray` for the rest. A tag the tag index doesn't hold, as
- *   when it failed to load, keeps v4's too: filled `gray` and ringed in `tertiary`.
- * - The icon is its tag's, its own or inherited, whatever colour fills it.
+ * - A node with a tag, the one that stands for it (a page's primary tag, a tag node's own), is that
+ *   tag's bubble: rimmed in its tag's colour, as the tag index names it, with the tag's icon, its own
+ *   or inherited. The circle and the icon are the palette's, the same for every bubble.
+ * - The reader's own page and the pages they have visited keep v4's cues, as its history ring,
+ *   outside the rim, since the circle is always the theme's gray: `secondary` for the current page,
+ *   `tertiary` for a visited one.
+ * - The site's private or public node colour, when it sets one, rims every bubble it covers in place
+ *   of the tag's, and fills every page with no tags it covers, as v4 filled every node.
+ * - A page with no tags has no bubble, and keeps v4's disc: filled with the theme's `secondary` for
+ *   the current page, `tertiary` for one the reader has visited, and `gray` for the rest. A tag the
+ *   tag index doesn't hold, as when it failed to load, is a bubble rimmed in `tertiary`, the ring it
+ *   had before (#77), with no icon.
  */
 export function paintOf(
   node: NodeData,
@@ -73,17 +85,15 @@ export function paintOf(
   current: string,
   visited: Set<string>,
   tags: Tags,
-): { colour: NodeColour; ring: NodeColour | null; icon: string | null } {
+): NodePaint {
   const tag = node.tag === null ? undefined : tags.get(node.tag)
-  const icon = tag?.icon ?? null
-  const plain = (colour: NodeColour) => ({ colour, ring: null, icon })
-  if (node.private && settings.nodeColors.private) return plain("private")
-  if (!node.private && settings.nodeColors.public) return plain("public")
+  const kind = node.private ? "private" : "public"
+  const site: ThemeColour | null = settings.nodeColors[kind] ? kind : null
+  const history = node.id === current ? "secondary" : visited.has(node.id) ? "tertiary" : null
   if (tag) {
-    const ring = node.id === current ? "secondary" : visited.has(node.id) ? "tertiary" : null
-    return { colour: tag.color as NodeColour, ring, icon }
+    const { rim } = bubblePaletteOf(tag.color)
+    return { kind: "bubble", rim: site ?? (rim as `--${string}`), history, icon: tag.icon ?? null }
   }
-  if (node.isTag) return { colour: "gray", ring: "tertiary", icon }
-  if (node.id === current) return plain("secondary")
-  return plain(visited.has(node.id) ? "tertiary" : "gray")
+  if (node.isTag) return { kind: "bubble", rim: site ?? "tertiary", history, icon: null }
+  return { kind: "disc", fill: site ?? history ?? "gray" }
 }

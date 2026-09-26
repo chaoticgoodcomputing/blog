@@ -9,8 +9,13 @@ import type { Palette } from "./palette"
 import type { Settings } from "./settings"
 import type { Label, LinkData, LinkRender, NodeData, NodeId, NodeRender, Transform } from "./types"
 
-/** An icon's size, as a multiple of its node's radius (v4 ui/nodeFactory.ts). */
-const ICON_SCALE = 1.4
+// A tag bubble's proportions, as tags-core's `bubble.css` draws one in a badge (#83): a 32px circle
+// with a 2.5px rim and an 18px icon, here as multiples of the node's radius, so a node of any size,
+// at any zoom, is the same bubble.
+/** The rim's width. */
+const RIM_SCALE = 2.5 / 16
+/** The icon's size. */
+const ICON_SCALE = 18 / 16
 
 export interface Canvas {
   canvas: HTMLCanvasElement
@@ -185,33 +190,52 @@ export function animate(scene: Scene): () => void {
       }
       ctx.save()
       ctx.globalAlpha = node.alpha
-      ctx.beginPath()
-      ctx.arc(x + cx, y + cy, radius, 0, 2 * Math.PI)
-      ctx.fillStyle = palette.node(node.colour)
-      ctx.fill()
-      if (node.ring !== null) {
-        ctx.strokeStyle = palette.node(node.ring)
-        ctx.lineWidth = 2
+      const [nx, ny] = [x + cx, y + cy]
+      const ring = (at: number, width: number, colour: string) => {
+        ctx.beginPath()
+        ctx.arc(nx, ny, at, 0, 2 * Math.PI)
+        ctx.strokeStyle = colour
+        ctx.lineWidth = width
         ctx.stroke()
       }
-      // Its icon, centred, at v4's size, swelling with it.
-      const icon = node.icon === null ? null : scene.icons.image(node.icon, palette.icon)
-      if (icon) {
-        const size = radius * ICON_SCALE
-        ctx.drawImage(icon, x + cx - size / 2, y + cy - size / 2, size, size)
+      const { paint } = node
+      ctx.beginPath()
+      ctx.arc(nx, ny, radius, 0, 2 * Math.PI)
+      if (paint.kind === "disc") {
+        // A page with no tags: v4's disc, filled.
+        ctx.fillStyle = palette.node(paint.fill)
+        ctx.fill()
+      } else {
+        // Its tag's bubble: the circle, the rim inside its edge, and the icon, centred, swelling with
+        // it. The reader's own page or a visited one is ringed outside the rim, a rim's width clear.
+        ctx.fillStyle = palette.circle
+        ctx.fill()
+        const rim = Math.max(1, radius * RIM_SCALE)
+        ring(radius - rim / 2, rim, palette.node(paint.rim))
+        if (paint.history !== null) ring(radius + rim * 1.5, rim, palette.node(paint.history))
+        const icon = paint.icon === null ? null : scene.icons.image(paint.icon, palette.icon)
+        if (icon) {
+          const size = radius * ICON_SCALE
+          ctx.drawImage(icon, nx - size / 2, ny - size / 2, size, size)
+        }
       }
       ctx.restore()
     }
 
-    for (const { node, label, radius } of nodes) {
+    for (const { node, label, radius, paint } of nodes) {
       if (node.x == null || node.y == null || label.alpha <= 0) continue
+      // Below the node, and below its history ring where it has one.
+      const reach =
+        paint.kind === "bubble" && paint.history !== null
+          ? radius + 2 * Math.max(1, radius * RIM_SCALE)
+          : radius
       ctx.save()
       ctx.globalAlpha = label.alpha
       ctx.font = `${label.fontSize * label.scale}px ${palette.font}`
       ctx.fillStyle = palette.dark
       ctx.textAlign = "center"
       ctx.textBaseline = "top"
-      ctx.fillText(label.text, node.x + cx, node.y + cy + radius + 2)
+      ctx.fillText(label.text, node.x + cx, node.y + cy + reach + 2)
       ctx.restore()
     }
 

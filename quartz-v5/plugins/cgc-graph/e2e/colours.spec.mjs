@@ -1,10 +1,17 @@
-// Each node is filled with its tag's colour (#31, #77): a page with its primary tag's, a tag node with
-// its own, inherited from the nearest ancestor that has one, as the cgc-tags engine resolves it. The
+// Each node with a tag is drawn as a tag bubble (#83), the one the badges draw (tags-core's
+// `./bubble`, #82): a rim in its tag's colour, a circle in the theme's `--lightgray`, and its icon in
+// the theme's `--dark`. The owner's review notes of 2026-09-26 asked for one bubble "shared across
+// both the list/badges as well as on graph nodes" (ADR-0003's tag bubble amendment), in place of the
+// node filled with its tag colour (#77). The tag is a page's primary tag, or a tag node's own, its
+// colour inherited from the nearest ancestor that has one, as the cgc-tags engine resolves it. The
 // graph reads each tag's colour property from the engine's `static/cgcTags.json` and resolves it
 // through tags-core's resolver, in the scheme the page is showing. The fixture's tag dictionary is in
 // tests/quartz.config.yaml.
 import { test, expect } from "../../../tests/harness/test.mjs"
-import { localGraph, marksNear, nodeFill } from "./graph.mjs"
+import { bubblePaint, bubbleTheme, localGraph, marksNear, nodeFill } from "./graph.mjs"
+
+// A sharper canvas, so a bubble's rim is whole pixels.
+test.use({ deviceScaleFactor: 2 })
 
 // `fixture: { color: "#0a7d32" }`: one colour in either scheme.
 const FIXTURE = { light: [10, 125, 50], dark: [10, 125, 50] }
@@ -17,61 +24,82 @@ const TERTIARY = { light: [132, 165, 157], dark: [132, 165, 157] }
 // A tag with no colour in its lineage: the engine's default, the palette's `darkgray`.
 const DARKGRAY = { light: [78, 78, 78], dark: [212, 212, 212] }
 
-test("fills each page with its primary tag's colour", async ({ page, colorScheme }) => {
+// The node labelled `label` is its tag's bubble: rimmed in `rim`, on the theme's gray.
+const expectBubble = async (page, label, rim) => {
+  const graph = localGraph(page)
+  const { circle } = await bubbleTheme(page)
+  await expect.poll(() => bubblePaint(graph, label), label).toEqual({ rim, circle })
+}
+
+test("draws each page as its primary tag's bubble: rimmed in the tag colour, on the theme's gray, with a dark icon", async ({
+  page,
+  colorScheme,
+}) => {
+  // `writing/essays` stands for most-specific, with an icon of its own, `mdi:feather`, and
+  // `writing`'s colour, `var(--secondary)`.
+  await page.goto("/tag-engine/most-specific")
+  const theme = await bubbleTheme(page)
+  // Three different colours, so a bubble that swapped two of them fails.
+  expect(new Set([SECONDARY[colorScheme], theme.circle, theme.icon].map(String)).size).toBe(3)
+  await expectBubble(page, "Most Specific", SECONDARY[colorScheme])
+  await expect
+    .poll(() => marksNear(localGraph(page), "Most Specific", theme.icon))
+    .toBeGreaterThan(5)
+})
+
+test("rims each page in its primary tag's colour", async ({ page, colorScheme }) => {
   // plain-note is tagged `fixture` then `markdown`, equally specific: the first stands for it.
   // primary-override, which links to it, has the same tags, and `primaryTag: markdown`.
   await page.goto("/plain-note")
-  const graph = localGraph(page)
-  await expect.poll(() => nodeFill(graph, "Plain Note")).toEqual(FIXTURE[colorScheme])
-  await expect.poll(() => nodeFill(graph, "Primary Override")).toEqual(MARKDOWN[colorScheme])
-  // seo/private-note is tagged `private`, which has no colour: private pages are painted as any
+  await expectBubble(page, "Plain Note", FIXTURE[colorScheme])
+  await expectBubble(page, "Primary Override", MARKDOWN[colorScheme])
+  // seo/private-note is tagged `private`, which has no colour: private pages are drawn as any
   // other, where the site sets no `nodeColors.private`.
-  await expect.poll(() => nodeFill(graph, "Private Note")).toEqual(DARKGRAY[colorScheme])
+  await expectBubble(page, "Private Note", DARKGRAY[colorScheme])
 })
 
-test("fills each tag node with its tag's colour", async ({ page, colorScheme }) => {
+test("rims each tag node in its tag's colour", async ({ page, colorScheme }) => {
   await page.goto("/plain-note")
-  const graph = localGraph(page)
-  await expect.poll(() => nodeFill(graph, "#fixture")).toEqual(FIXTURE[colorScheme])
-  await expect.poll(() => nodeFill(graph, "#markdown")).toEqual(MARKDOWN[colorScheme])
+  await expectBubble(page, "#fixture", FIXTURE[colorScheme])
+  await expectBubble(page, "#markdown", MARKDOWN[colorScheme])
 })
 
-test("fills a page and a tag with the colour they inherit", async ({ page, colorScheme }) => {
+test("rims a page and a tag in the colour they inherit", async ({ page, colorScheme }) => {
   // `writing/essays` has an icon of its own and no colour: it takes `writing`'s.
   await page.goto("/tag-engine/most-specific")
-  const graph = localGraph(page)
-  await expect.poll(() => nodeFill(graph, "Most Specific")).toEqual(SECONDARY[colorScheme])
-  await expect.poll(() => nodeFill(graph, "#essays")).toEqual(SECONDARY[colorScheme])
+  await expectBubble(page, "#essays", SECONDARY[colorScheme])
   // `reindex/deep`, and `reindex` above it, have none: down the chain to the default.
   await page.goto("/tag-engine/index-suffix")
-  await expect.poll(() => nodeFill(graph, "Index Suffix")).toEqual(DARKGRAY[colorScheme])
-  await expect.poll(() => nodeFill(graph, "#deep")).toEqual(DARKGRAY[colorScheme])
+  await expectBubble(page, "Index Suffix", DARKGRAY[colorScheme])
+  await expectBubble(page, "#deep", DARKGRAY[colorScheme])
 })
 
 test("fills a page with no tags in v4's colours: the current page in secondary", async ({
   page,
   colorScheme,
 }) => {
+  // No tag, so no bubble: v4's disc.
   await page.goto("/linked-note")
   await expect.poll(() => nodeFill(localGraph(page), "Linked Note")).toEqual(SECONDARY[colorScheme])
 })
 
-test("rings a tagged page in v4's colours: the current page in secondary, a visited one in tertiary", async ({
+test("rings a tagged page's bubble in v4's colours: the current page in secondary, a visited one in tertiary", async ({
   page,
   colorScheme,
 }) => {
-  // v4 marked the reader's own page and the pages they had been to; a tag's fill keeps both as a
-  // ring. The current page swells, so look in a disc past its widest.
+  // v4 marked the reader's own page and the pages they had been to by filling them; a bubble's
+  // circle is always the theme's gray, so a ring outside its rim marks them. The current page
+  // swells, so look in a disc past its widest.
   await page.goto("/plain-note")
   const graph = localGraph(page)
-  await expect.poll(() => nodeFill(graph, "Plain Note")).toEqual(FIXTURE[colorScheme])
+  await expectBubble(page, "Plain Note", FIXTURE[colorScheme])
   await expect
-    .poll(() => marksNear(graph, "Plain Note", SECONDARY[colorScheme], 24))
+    .poll(() => marksNear(graph, "Plain Note", SECONDARY[colorScheme], 26))
     .toBeGreaterThan(20)
   // Plain Note links to the .mdx article: there, it is a page the reader has visited.
   await page.goto("/mdx-article.mdx")
-  await expect.poll(() => nodeFill(graph, "Plain Note")).toEqual(FIXTURE[colorScheme])
+  await expectBubble(page, "Plain Note", FIXTURE[colorScheme])
   await expect
-    .poll(() => marksNear(graph, "Plain Note", TERTIARY[colorScheme], 20))
+    .poll(() => marksNear(graph, "Plain Note", TERTIARY[colorScheme], 22))
     .toBeGreaterThan(20)
 })

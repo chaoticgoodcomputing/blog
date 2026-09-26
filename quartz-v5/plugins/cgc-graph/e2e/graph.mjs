@@ -4,7 +4,7 @@
 //   whoever can't see it (docs/adr/0002);
 // - the node under the pointer, which the text alternative marks `data-hovered` while the drawing
 //   lights it up.
-import { expect } from "../../../tests/harness/test.mjs"
+import { expect, resolvedColour } from "../../../tests/harness/test.mjs"
 
 /** The local graph, in the page's layout, and the global graph, in its dialog. */
 export const localGraph = (page) => page.locator(".cgc-graph__local")
@@ -68,8 +68,13 @@ export async function nodePosition(container, label) {
       canvas.dispatchEvent(new MouseEvent("mouseleave"))
       return hits ? { x: x / hits, y: y / hits } : null
     }, label)
-    // Settled: where it was a moment ago.
-    if (at && last && Math.hypot(at.x - last.x, at.y - last.y) < 1) return at
+    // Settled: where it was a moment ago. The sweep lit up every node's neighbours in turn, and
+    // their labels fade back out once the pointer leaves: wait for that, so what is read of the
+    // canvas next is the graph at rest, not a label passing over it.
+    if (at && last && Math.hypot(at.x - last.x, at.y - last.y) < 1) {
+      await canvas.page().waitForTimeout(300)
+      return at
+    }
     last = at
     await canvas.page().waitForTimeout(200)
   }
@@ -109,9 +114,10 @@ const pixelsNear = (container, at, shape) =>
   )
 
 /**
- * The colour the node labelled `label` is filled with, as `[r, g, b]`: the commonest colour round a
- * ring inside its edge, clear of the icon at its centre. Nodes must be big enough for that: the
- * fixture's local graph draws them at the real site's size (tests/quartz.config.yaml).
+ * The colour a node drawn as a disc is filled with, as `[r, g, b]`: the commonest colour round a ring
+ * inside its edge. For a page with no tags, which v4's colours fill (docs/adr/0004); a node with a
+ * tag is a bubble, read with `bubblePaint`. Nodes must be big enough for that: the fixture's local
+ * graph draws them at the real site's size (tests/quartz.config.yaml).
  */
 export async function nodeFill(container, label) {
   const at = await nodePosition(container, label)
@@ -125,6 +131,57 @@ export async function nodeFill(container, label) {
 }
 
 /**
+ * The colours of the tag bubble the node labelled `label` is drawn as (tags-core's `./bubble`), each
+ * as `[r, g, b]`: its `rim`, and its `circle` between the rim and the icon. Read along rays out
+ * from the node's centre, each through the node's opaque pixels to the rim's anti-aliased edge: the
+ * last opaque pixel on a ray is the rim's, and those from 60% to 80% of the way out are the
+ * circle's, clear of the icon. The commonest colour over every ray wins, so an edge or a label a ray
+ * crosses doesn't count. Wants a canvas at `deviceScaleFactor: 2`, so the rim is whole pixels.
+ */
+export async function bubblePaint(container, label) {
+  const at = await nodePosition(container, label)
+  return container.locator(".cgc-graph__canvas").evaluate((canvas, at) => {
+    const rect = canvas.getBoundingClientRect()
+    const k = canvas.width / rect.width
+    const [cx, cy] = [(at.x - rect.left) * k, (at.y - rect.top) * k]
+    const data = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height).data
+    const pixel = (x, y) => {
+      const i = (Math.round(y) * canvas.width + Math.round(x)) * 4
+      return data[i + 3] === 255 ? `${data[i]},${data[i + 1]},${data[i + 2]}` : null
+    }
+    const [rims, circles] = [new Map(), new Map()]
+    const vote = (votes, key) => votes.set(key, (votes.get(key) ?? 0) + 1)
+    for (let i = 0; i < 32; i++) {
+      const angle = (i * Math.PI) / 16
+      const run = []
+      for (let d = 0; d < 80 * k; d++) {
+        const key = pixel(cx + d * Math.cos(angle), cy + d * Math.sin(angle))
+        if (key === null) break
+        run.push(key)
+      }
+      if (run.length < 8) continue
+      vote(rims, run[run.length - 1])
+      for (let d = Math.ceil(run.length * 0.6); d <= run.length * 0.8; d++) vote(circles, run[d])
+    }
+    const commonest = (votes) => {
+      const [top] = [...votes].sort((a, b) => b[1] - a[1])
+      return top ? top[0].split(",").map(Number) : null
+    }
+    return { rim: commonest(rims), circle: commonest(circles) }
+  }, at)
+}
+
+/** A colour as the page resolves it now, in the scheme it shows, as `[r, g, b]`. */
+export const rgbOf = async (page, value) =>
+  (await resolvedColour(page, value)).match(/\d+/g).slice(0, 3).map(Number)
+
+/** The bubble's palette as the page resolves it now: the theme's `--lightgray` and `--dark`. */
+export const bubbleTheme = async (page) => ({
+  circle: await rgbOf(page, "var(--lightgray)"),
+  icon: await rgbOf(page, "var(--dark)"),
+})
+
+/**
  * How many of the canvas's pixels within `disc` CSS pixels of the centre of the node labelled `label`
  * are within a few levels of `rgb`: by default, where its icon is drawn, the icon's marks.
  */
@@ -136,16 +193,22 @@ export async function marksNear(container, label, rgb, disc = 5) {
 }
 
 /**
- * How many of the canvas's pixels are painted within a few levels of `rgb`, at any opacity: for the
- * theme's `lightgray`, which nothing but a resting edge is drawn in, the edges' strokes.
+ * How many of the canvas's pixels are painted within a few levels of `rgb`: at any opacity, or with
+ * `translucent`, only those painted partly. For the theme's `lightgray`, translucent, the edges'
+ * strokes: each is drawn at its opacity, while a bubble's circle, the one other mark in `lightgray`,
+ * is opaque, and its rim covers its anti-aliased edge.
  */
-export const pixelsLike = (container, rgb) =>
-  container.locator(".cgc-graph__canvas").evaluate((canvas, rgb) => {
-    const data = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height).data
-    let count = 0
-    for (let i = 0; i < data.length; i += 4) {
-      const off = Math.max(...[0, 1, 2].map((c) => Math.abs(data[i + c] - rgb[c])))
-      if (data[i + 3] > 0 && off <= 8) count++
-    }
-    return count
-  }, rgb)
+export const pixelsLike = (container, rgb, { translucent = false } = {}) =>
+  container.locator(".cgc-graph__canvas").evaluate(
+    (canvas, { rgb, translucent }) => {
+      const data = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height).data
+      let count = 0
+      for (let i = 0; i < data.length; i += 4) {
+        const off = Math.max(...[0, 1, 2].map((c) => Math.abs(data[i + c] - rgb[c])))
+        const alpha = data[i + 3]
+        if (alpha > 0 && (!translucent || alpha < 255) && off <= 8) count++
+      }
+      return count
+    },
+    { rgb, translucent },
+  )

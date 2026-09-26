@@ -82,7 +82,10 @@ export interface GraphConfig {
   edgeOpacity?: Partial<PerEdge<{ min?: number; max?: number }>> | { min?: number; max?: number }
   baseSize?: number | Partial<PerNode<number>>
   sizeScaling?: number | Partial<PerNode<number>>
-  /** Colour values for page nodes, public and private, in place of the graph's own colours. */
+  /**
+   * Colour values for page nodes, public and private, in place of the graph's own colours: each rims
+   * a page's tag bubble in place of its tag's colour, and fills a page with no tags (docs/adr/0004).
+   */
   nodeColors?: { public?: string; private?: string }
   linkStyle?: Partial<PerEdge<LineStyle>>
   /** Private pages' size, as a share of a public page's. */
@@ -98,8 +101,8 @@ export interface GraphConfig {
 export interface GraphOptions {
   /**
    * The tags that make a page private: a page carrying one of them, or a descendant of one. Private
-   * pages are drawn like any other, in `nodeColors.private` when that is set, and the global graph
-   * can hide them. Default: none.
+   * pages are drawn like any other, rimmed in `nodeColors.private` when that is set, and the global
+   * graph can hide them. Default: none.
    */
   privateTags?: string[]
   /** The heading above the local graph. Default: `Graph View`. */

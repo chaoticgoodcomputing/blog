@@ -81,7 +81,7 @@ export function renderGraph(container: HTMLElement, slug: string, sources: Sourc
       return {
         node,
         radius: radius(node),
-        ...paintOf(node, settings, current, visited, tags),
+        paint: paintOf(node, settings, current, visited, tags),
         alpha: 1,
         active: false,
         label: {

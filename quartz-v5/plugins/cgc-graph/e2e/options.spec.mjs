@@ -3,7 +3,10 @@
 // a `light-dark()` pair, and an option must be one the plugin has.
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, editConfig, fixtureConfig } from "../../../tests/harness/site.mjs"
-import { drawnGraph, localGraph } from "./graph.mjs"
+import { bubblePaint, drawnGraph, localGraph } from "./graph.mjs"
+
+// A sharper canvas, so a bubble's rim is whole pixels.
+test.use({ deviceScaleFactor: 2 })
 
 const CONTENT = {
   "index.md": "---\ntitle: Home\n---\nSee [[secret]].\n",
@@ -100,21 +103,27 @@ test("fills a per-kind setting's missing kinds from the defaults", async ({ page
 // `light-dark()` pair, which follows the scheme; and a `color()`, whose computed value isn't `rgb()`,
 // which the colour resolver takes through its normalising path and the reader still sees painted in
 // that colour. (Chromium's canvas takes `color()` as it is, so this proves the paint, not the
-// resolver's `rgba()` return shape, which is internal to the runtime.) Nothing else in the
-// graph is drawn in any of them: the `private` tag, whose default colour is the theme's `darkgray`,
-// is left out, as the real site leaves it out.
+// resolver's `rgba()` return shape, which is internal to the runtime.) The private page is a bubble
+// (#83), so the site's colour rims it in place of its tag's: the `private` tag's, the theme's
+// `darkgray` by default, which none of them is. The tag's own node is left out, as the real site
+// leaves it out.
 const PRIVATE = {
-  "var(--darkgray)": { light: [78, 78, 78], dark: [212, 212, 212] },
+  "var(--dark)": { light: [43, 43, 43], dark: [235, 235, 236] },
   "light-dark(#b83232, #e06060)": { light: [184, 50, 50], dark: [224, 96, 96] },
   "color(srgb 0 0.5 1)": { light: [0, 128, 255], dark: [0, 128, 255] },
 }
 
 for (const [value, rgb] of Object.entries(PRIVATE)) {
-  test(`draws private pages in ${value}`, async ({ page, colorScheme }) => {
+  test(`rims private pages in ${value}`, async ({ page, colorScheme }) => {
     const site = await buildScratchSite("graph-private-colour", CONTENT, {
       config: withOptions({
         privateTags: ["private"],
-        localGraph: { nodeColors: { private: value }, removeTags: ["private"] },
+        localGraph: {
+          nodeColors: { private: value },
+          removeTags: ["private"],
+          // Nodes big enough to read a rim from.
+          baseSize: { tags: 10, posts: 10 },
+        },
       }),
       keep: true,
     })
@@ -123,20 +132,9 @@ for (const [value, rgb] of Object.entries(PRIVATE)) {
       await routeSite(page, site.public, "https://localhost")
       await page.goto("https://localhost/")
       expect((await drawnGraph(localGraph(page))).secret.private).toBe(true)
-      const count = () =>
-        localGraph(page)
-          .locator(".cgc-graph__canvas")
-          .evaluate((canvas, [r, g, b]) => {
-            const data = canvas
-              .getContext("2d")
-              .getImageData(0, 0, canvas.width, canvas.height).data
-            let n = 0
-            for (let i = 0; i < data.length; i += 4)
-              if (data[i] === r && data[i + 1] === g && data[i + 2] === b && data[i + 3] === 255)
-                n++
-            return n
-          }, rgb[colorScheme])
-      await expect.poll(count).toBeGreaterThan(10)
+      await expect
+        .poll(async () => (await bubblePaint(localGraph(page), "Secret")).rim)
+        .toEqual(rgb[colorScheme])
     } finally {
       site.remove()
     }

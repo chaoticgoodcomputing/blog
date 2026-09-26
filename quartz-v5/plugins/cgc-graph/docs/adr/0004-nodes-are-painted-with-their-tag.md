@@ -87,3 +87,70 @@ like the rest. v4 marked both, filling the current page `secondary` and visited 
 The tag's fill stays, as the ticket asks, and v4's two colours come back as the node's ring, which
 the drawing already strokes for a tag node the tag index doesn't hold. A site's `nodeColors` still
 win over both, as in v4.
+
+## Amendment: a node with a tag is its tag's bubble
+
+_2026-09-26, from the owner's review notes of that day, on
+[Graph nodes drawn as tag bubbles](https://github.com/chaoticgoodcomputing/blog/issues/83). The notes
+come after spec #53 and win where they differ from an earlier ticket or ADR._
+
+The owner asked for one bubble style "shared across both the list/badges as well as on graph nodes":
+a rim in the tag colour, a light or dark gray circle, and a black or white icon. The family records
+that rule in
+[ADR-0003's tag bubble amendment](../../../../../docs/adr/0003-library-css-in-plugins-application-css-at-the-site.md#amendment-the-tag-bubble-and-what-the-tag-colour-paints),
+and builds the bubble once, in `@chaoticgoodcomputing/tags-core` (`./bubble` and `./bubble.css`). The
+filled node above breaks it, and the rule wins.
+
+**Decided:** a node with a tag, a page's primary tag or a tag node's own, is drawn as that tag's
+bubble.
+
+- **The palette is tags-core's.** The rim is the tag's colour property (`bubblePaletteOf`), the circle
+  the theme's `--lightgray` and the icon its `--dark` (`BUBBLE_PALETTE`). Each is resolved through the
+  one resolver, and again on `themechange`, so a scheme switch repaints all three where the graph
+  stands. The icon's `currentColor` is the resolved `--dark` in place of the page's `light`, which
+  replaces this ADR's cut-out icon.
+- **Its proportions are the badge's.** `bubble.css` draws a 32px circle with a 2.5px rim and an 18px
+  icon. The canvas draws the same shape at the node's radius, with the rim 2.5/16 of the radius (never
+  under a pixel) inside the node's edge and the icon 18/16 of it, so a node of any size and zoom is the
+  same bubble. v4's icon at 1.4 times the radius would reach the rim.
+- **The reader's own page and the pages they have visited** keep v4's cues, as a ring outside the rim,
+  a rim's width clear of it: `secondary` for the current page, `tertiary` for a visited one. v4 filled
+  those nodes, and the first amendment ringed them over the fill, but a bubble's circle is always the
+  theme's gray and its rim is the tag's. The current page still swells, and a label sits below the
+  ring.
+- **A page with no tags keeps v4's disc,** filled `secondary` for the current page, `tertiary` for a
+  visited one and `gray` for the rest. It has no tag, so no bubble, and the disc is v4's look
+  unchanged. A tag the tag index doesn't hold, as when the index failed to load, is a bubble rimmed in
+  `tertiary`, with no icon.
+- **The site's `nodeColors` rim a bubble** in place of the tag colour, and fill a page with no tags,
+  as v4 filled every node. The bubble keeps its circle and icon. The real site's
+  `nodeColors: { private: "#c54040" }` is **deleted**: it painted over the tag colour of every private
+  page, and the site's `private` tag already carries a red of its own, `light-dark(#cc0000, #FF0000)`,
+  with a lock icon, so private pages are rimmed in red by the rule itself. The global graph's private
+  toggle, which took `nodeColors.private`, falls back to the theme's `--secondary` on the real site.
+
+v4 already drew a tag node this way, a grey disc ringed in its tag's colour
+([nodeFactory.ts:87-97](https://github.com/chaoticgoodcomputing/blog/blob/9e48f89b256f511a94f07d473d46395d91730c53/quartz/components/scripts/graph/ui/nodeFactory.ts#L87-L97)),
+so the bubble is v4's tag node, with the theme's gray in place of v4's grey, and a page with a tag now
+looks like one.
+
+**Rejected:**
+
+- **Filling the current page's circle in `secondary`,** v4's cue, or ringing its rim in it: the circle
+  is always the theme's gray and the rim always the tag's, so either would break the rule on the one
+  node the reader looks for first.
+- **An empty bubble for a page with no tags,** rimmed in the engine's default colour: it would look
+  like a page tagged with a colourless tag, and lose v4's disc, the nearest look the rule allows for a
+  node it doesn't cover.
+- **Dropping `nodeColors`.** It is v4's option and a site may still want it. As a rim it keeps the
+  bubble's shape; only the real site's value conflicted with the rule.
+
+**Consequences:**
+
+- **Small nodes show little tag colour.** In the global graph a page's radius is a few pixels, so its
+  bubble is mostly gray with a one-pixel rim, where a filled node showed its tag's colour whole.
+- **Edges and circles share `--lightgray`.** Edges are drawn under the nodes, at their opacity, so a
+  circle hides the edges that meet it; cgc-graph's edge spec counts the edges' translucent pixels.
+- **Proven at the fixture seam** by `e2e/colours.spec.mjs`, `e2e/icons.spec.mjs` and
+  `e2e/scheme.spec.mjs`, which read each bubble's rim, circle and icon off the canvas in both schemes
+  and after a switch, and by `e2e/site.spec.mjs` on the real site's config.

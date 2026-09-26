@@ -344,10 +344,11 @@ plugins:
   # v4's graph (#74), drawn from its own index, which carries each page's date (#21), with v4's
   # settings (layouts/conf/graph.layout.ts): the local graph on every page, and the global graph in
   # v4's pseudo-shell, its top-level tags pinned to a ring, filtered to the last month, or wider until
-  # three pages show. Private pages are drawn in v4's red and hidden from the global graph as it
-  # opens, and the `private` tag hub is left out. v4 put the graph in the body of the index and tag
-  # pages; a plugin takes one layout slot, so they have it in the right sidebar too. Each node is
-  # filled with its tag's colour and carries its tag's icon (#77).
+  # three pages show. Private pages are hidden from the global graph as it opens, and the `private`
+  # tag hub is left out. v4 put the graph in the body of the index and tag pages; a plugin takes one
+  # layout slot, so they have it in the right sidebar too. Each node with a tag is its tag's bubble,
+  # as the badges draw it: rimmed in the tag's colour, with its icon (#77, #83). v4's red for private
+  # pages is the `private` tag's own colour now, so no `nodeColors` paints over it.
   - source: ../plugins/cgc-graph
     enabled: true
     options:
@@ -370,7 +371,6 @@ plugins:
           postPost: { min: 0.5, max: 1 }
         baseSize: { tags: 10, posts: 10 }
         sizeScaling: &sizeScaling { tags: 1.2, posts: 1 }
-        nodeColors: &nodeColors { private: "#c54040" }
         linkStyle: &linkStyle { tagTag: solid, tagPost: solid, postPost: dotted }
         privatePostSizeMultiplier: 0.8
         removeTags: &removeTags [private]
@@ -388,7 +388,6 @@ plugins:
           postPost: { min: 0.2, max: 1 }
         baseSize: { tags: 15, posts: 10 }
         sizeScaling: *sizeScaling
-        nodeColors: *nodeColors
         linkStyle: *linkStyle
         privatePostSizeMultiplier: 0.8
         removeTags: *removeTags

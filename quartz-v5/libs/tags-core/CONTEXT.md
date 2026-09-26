@@ -132,7 +132,7 @@ _Avoid_: colour validator, colour parser
 - **Tested through the plugins that inline it.** The rule and the shapes through `cgc-tags`' specs; the
   colour-value check through `cgc-tags`', `cgc-graph`'s and `cgc-social`'s option specs; the
   colour resolver through `cgc-graph`'s colour and scheme specs, which paint the theme's colours
-  and every tag's with it (#74, #77), and its options spec, which paints private pages in a
+  and every tag's with it (#74, #77), and its options spec, which rims private pages in a
   `color()` whose computed value isn't `rgb()` (the paint the reader sees, not the resolver's
   internal `rgba()` return shape); `tagOfPage()` through what
   `cgc-post-listing` and `cgc-tag-list` render on tag pages (`e2e/tag-pages.spec.mjs`), and
@@ -140,4 +140,5 @@ _Avoid_: colour validator, colour parser
   every plugin that treats private pages differently, on a site that names its private tags once
   (`tests/specs/private-pages.spec.mjs`); the tag bubble, its palette and the badges that hold it
   through `cgc-tag-list`'s and `cgc-post-listing`'s badges, side by side on one tag page, and its
-  stylesheet through the library's lint (`e2e/bubble.spec.mjs`).
+  stylesheet through the library's lint (`e2e/bubble.spec.mjs`); the palette on a canvas through
+  `cgc-graph`'s nodes, each read off the canvas in both schemes and after a switch (#83).

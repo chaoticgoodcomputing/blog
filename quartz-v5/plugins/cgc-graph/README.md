@@ -5,7 +5,7 @@ tags:
   - engineering/frontend
 ---
 
-`cgc-graph` is a [Quartz 5](https://quartz.jzhao.xyz/) plugin that draws the graph view: the pages around the current one, and, behind a button, every page of the site, with a filter for how recently each changed. Each node is painted with its tag's colour and icon. It draws from an index it publishes itself, which carries each page's date.
+`cgc-graph` is a [Quartz 5](https://quartz.jzhao.xyz/) plugin that draws the graph view: the pages around the current one, and, behind a button, every page of the site, with a filter for how recently each changed. Each page and tag is drawn as its tag's bubble, the one the site's tag badges use: rimmed in the tag's colour, with the tag's icon. It draws from an index it publishes itself, which carries each page's date.
 
 It is the graph from this site's Quartz 4 days, carried over as a plugin. Quartz's own graph plugin reads only Quartz's content index, which has no dates, so the filter needs this one. Its tags, with their colours and icons, come from [cgc-tags](https://blog.chaoticgood.computer/plugins/cgc-tags), the plugin that holds the site's tag dictionary.
 
@@ -16,12 +16,12 @@ A heading, and a box holding the **local graph**: the current page, every page i
 - **Hover** a node to see its label, light up its neighbours and fade the rest. Hovering a tag lights up its whole subtree of subtags.
 - **Click** a node to go to its page. Quartz's router follows it, as it follows a link, with no page reload.
 - **Drag** a node to pull the layout around, drag the background to pan, and scroll to zoom.
-- **Each node is filled with its tag's colour**, as `cgc-tags` resolves it: a page with its primary tag's, a tag with its own. A tag with no colour of its own takes its nearest ancestor's.
-- **Each node carries its tag's icon**, its own or its nearest ancestor's, cut out of the node in the page's background colour. The icons are drawn when the site builds, so the page fetches none.
-- **The current page and the pages you've visited** are ringed in the theme's colours over their tag's: `secondary` for the current page, `tertiary` for pages you've visited.
-- **A page with no tags** is drawn in the theme's colours: `secondary` for the current page, `tertiary` for pages you've visited, and `gray` for the rest.
+- **Each node is its tag's bubble**, the same bubble as a tag badge's elsewhere on the site: a page is its primary tag's, a tag its own. The tag's colour, as `cgc-tags` resolves it, paints only the rim. The circle is the theme's `lightgray`, and the icon the theme's `dark`, black in the light scheme and white in the dark. A tag with no colour of its own takes its nearest ancestor's.
+- **Each bubble carries its tag's icon**, its own or its nearest ancestor's. The icons are drawn when the site builds, so the page fetches none.
+- **The current page and the pages you've visited** are ringed outside the bubble's rim in the theme's colours: `secondary` for the current page, `tertiary` for pages you've visited.
+- **A page with no tags** has no bubble. It is a plain disc in the theme's colours, as in Quartz 4: `secondary` for the current page, `tertiary` for pages you've visited, and `gray` for the rest.
 - **The current page** swells and shrinks gently.
-- **Private pages**, those carrying one of the `privateTags` or a tag under one, are drawn like any other page, in their own colour when `nodeColors.private` sets one.
+- **Private pages**, those carrying one of the `privateTags` or a tag under one, are drawn like any other page, rimmed in their own colour when `nodeColors.private` sets one.
 
 The **View Global Graph** button, or Ctrl+G (⌘+G on a Mac), opens the **global graph** in a dialog: every page and tag of the site, with two filters.
 
@@ -30,7 +30,7 @@ The **View Global Graph** button, or Ctrl+G (⌘+G on a Mac), opens the **global
 
 Escape, a click outside the graph, or Ctrl+G again closes it.
 
-The graph follows the colour scheme. Switching between light and dark repaints it where it stands, tag colours and icons included.
+The graph follows the colour scheme. Switching between light and dark repaints it where it stands, every bubble's rim, circle and icon included.
 
 ### The text alternative
 
@@ -144,7 +144,7 @@ Each graph's settings are merged over its defaults a key at a time. A map by kin
 | `enableRadial` | `false` | `true` | Whether a ring-shaped force holds the freeform layout together. |
 | `graphStyle` | `freeform` | `freeform` | `pseudo-shell` pins `pseudoShellConfig.pinnedTags` to a ring, and zooms to fit it. |
 | `pseudoShellConfig` | | | The ring's `radiusBase`, `radiusScale`, `pinnedTags`, `showShell`, `zoomMargin`, `circumferentialRepulsion` and `shellStyle` (`color`, `opacity`, `lineStyle`, `lineWidth`). |
-| `nodeColors` | none | none | `public` and `private`: a colour for every public page, or every private page, in place of the graph's own. |
+| `nodeColors` | none | none | `public` and `private`: a colour for every public page, or every private page, in place of the graph's own. It rims a page's bubble in place of its tag's colour, and fills a page with no tags. |
 | `linkStyle` | `{ tagTag: solid, tagPost: solid, postPost: dotted }` | same | Each kind of edge, `solid` or `dotted`. |
 | `privatePostSizeMultiplier` | `1` | `1` | A private page's size, as a share of a public page's. |
 | `defaultFilterState` | | `{ timePeriod: all, includePrivate: true }` | The global graph's filters as it opens. `adaptiveTimePeriod: { minPosts: 3 }` starts on the narrowest period that holds at least that many pages. |
@@ -168,7 +168,7 @@ The CSS is library CSS, following [ADR-0003](https://github.com/chaoticgoodcompu
 - **Size:** the box is square, as wide as the block. Where the layout caps the block's height, as Quartz does to each right-sidebar component below its desktop width, the box gives up height to fit, and the graph is drawn to the box's size.
 - **Colours and fonts:** all the theme's. The box's border is `--lightgray`, the dialog's background `--light`, and the button and filters use `--codeFont`. The private toggle takes `nodeColors.private`, through the block's `--cgc-graph-private` property, or `--secondary` without one.
 
-The canvas can't use CSS, so the plugin resolves each colour in script, the theme's, the options' and each tag's alike, and resolves them again when the colour scheme changes. A tag's colour is its `--cgc-tag-…` property from `cgc-tags`, so a site that restyles a tag's colour restyles its nodes too. Icons are cut out in the theme's `--light`.
+The canvas can't use CSS, so the plugin resolves each colour in script, the theme's, the options' and each tag's alike, and resolves them again when the colour scheme changes. A tag's colour is its `--cgc-tag-…` property from `cgc-tags`, so a site that restyles a tag's colour restyles its nodes' rims too. A bubble's circle and icon are the theme's `--lightgray` and `--dark`, the palette `@chaoticgoodcomputing/tags-core` publishes for every tag bubble, so the graph's bubbles and the badges' can't drift apart.
 
 The build checks the stylesheet with `@chaoticgoodcomputing/css-check` and fails if a selector reaches outside the block, if it defines a custom property or other name outside the block, or if it sets a colour literal or a font family other than one of the theme's four, such as `var(--bodyFont)`.
 

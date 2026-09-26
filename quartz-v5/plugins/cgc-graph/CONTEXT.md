@@ -45,10 +45,17 @@ _Avoid_: tag page (that is the page it links to)
 
 **Node's tag**:
 The tag that paints a node: a page's **primary tag**, as `cgc-tags` resolves it, or a tag node's
-own tag. Its **tag colour** fills the node and its icon is cut out of it, in the page's background
-colour (docs/adr/0004). A page with no tags has none, and is drawn in the theme's colours, as v4
-drew every page.
+own tag. The node is that tag's **tag bubble**, the one every badge draws: its **tag colour** rims
+it, the circle is the theme's `--lightgray` and its icon the theme's `--dark`, from `tags-core`'s
+**bubble palette** (docs/adr/0004's bubble amendment, #83). A page with no tags has none, and no
+bubble: it is v4's disc, filled in the theme's colours.
 _Avoid_: node colour, node tag, category
+
+**History ring**:
+The ring outside a bubble's rim, a rim's width clear of it, that marks the reader's own page in
+`secondary` and a page they have visited in `tertiary`: v4's two cues, which v4 drew as the node's
+fill, and a bubble's circle never takes (docs/adr/0004).
+_Avoid_: halo, highlight, selection ring
 
 **Edge**:
 A line between two nodes, of one of three kinds, each with its own distance, strength, opacity
@@ -56,9 +63,10 @@ and line style: tag to subtag (`tagTag`), tag to page (`tagPost`), page to page 
 _Avoid_: link (in prose; the option names say it), connection
 
 **Private page**:
-tags-core's: a page carrying one of the `privateTags`, or a tag under one. Drawn like any page, in
-`nodeColors.private` when that is set, in place of its tag's colour, and hidden by the global
-graph's private filter.
+tags-core's: a page carrying one of the `privateTags`, or a tag under one. Drawn like any page, its
+bubble rimmed in `nodeColors.private` when that is set, in place of its tag's colour, and hidden by
+the global graph's private filter. The real site sets no `nodeColors`: its `private` tag carries a
+red of its own.
 _Avoid_: private note (the filter's label says it), hidden page
 
 **Filters**:
@@ -86,8 +94,9 @@ _Avoid_: modal, overlay, portal
   engine's tag index, `static/cgcTags.json`, and its icon id there too. It draws the icons itself,
   when the site builds, with `@chaoticgoodcomputing/icons`.
 - **Every colour it paints is resolved in script** through `tags-core`'s one resolver, the theme's,
-  the site's options and each tag's, and resolved again on `themechange`, with no new layout. Icons
-  are cut out in a resolved colour too.
+  the site's options and each tag's, and resolved again on `themechange`, with no new layout. A
+  bubble's three come from `tags-core`'s **bubble palette**, never from colours of its own, so the
+  canvas's bubble and the badges' can't drift apart. Icons are drawn in the resolved `--dark`.
 - **The browser runtime is one self-contained script,** d3 and tween.js inlined by `build.mjs`: a page
   fetches nothing for the graph but the **graph index** and the engine's tag index, once per load,
   and never an icon.

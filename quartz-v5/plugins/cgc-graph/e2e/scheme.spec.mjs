@@ -1,9 +1,13 @@
 // The graph paints on a canvas, which can't follow the theme's custom properties by itself: it
 // resolves each colour in script, the theme's and each tag's, so it must resolve them again when the
 // reader switches scheme on a loaded page (ADR-0003's *the scheme changes under a loaded page*
-// amendment). Each spec loads the page in one scheme, switches, and looks for the other's colours.
+// amendment). Each spec loads the page in one scheme, switches, and looks for the other's colours:
+// v4's, on a page with no tags, and a tag bubble's three (#83), on a node with a tag.
 import { test, expect, toggleScheme } from "../../../tests/harness/test.mjs"
-import { localGraph, nodeFill } from "./graph.mjs"
+import { bubblePaint, bubbleTheme, localGraph, marksNear, rgbOf } from "./graph.mjs"
+
+// A sharper canvas, so a bubble's rim is whole pixels.
+test.use({ deviceScaleFactor: 2 })
 
 // The fixture palette's `secondary`, in each scheme (tests/quartz.config.yaml).
 const SECONDARY = { light: [40, 75, 99], dark: [123, 151, 170] }
@@ -34,28 +38,42 @@ test("repaints the theme's colours when the reader switches scheme", async ({
   expect(await pixels(canvas, SECONDARY[colorScheme])).toBe(0)
 })
 
-test("repaints each tag's colour when the reader switches scheme", async ({
+test("repaints each bubble's rim in its tag's colour when the reader switches scheme", async ({
   page,
   colorScheme,
 }) => {
-  // The page, and its tag node, in `markdown`'s colour, which is a pair: one for each scheme.
+  // The page, and its tag node, rimmed in `markdown`'s colour, which is a pair: one for each scheme.
   await page.goto("/tag-engine/primary-override")
   const graph = localGraph(page)
   const canvas = graph.locator(".cgc-graph__canvas")
-  await expect.poll(() => nodeFill(graph, "Primary Override")).toEqual(MARKDOWN[colorScheme])
-  await expect.poll(() => nodeFill(graph, "#markdown")).toEqual(MARKDOWN[colorScheme])
+  const rim = async (label) => (await bubblePaint(graph, label)).rim
+  await expect.poll(() => rim("Primary Override")).toEqual(MARKDOWN[colorScheme])
+  await expect.poll(() => rim("#markdown")).toEqual(MARKDOWN[colorScheme])
   const other = await toggleScheme(page)
-  await expect.poll(() => nodeFill(graph, "Primary Override")).toEqual(MARKDOWN[other])
-  await expect.poll(() => nodeFill(graph, "#markdown")).toEqual(MARKDOWN[other])
+  await expect.poll(() => rim("Primary Override")).toEqual(MARKDOWN[other])
+  await expect.poll(() => rim("#markdown")).toEqual(MARKDOWN[other])
   expect(await pixels(canvas, MARKDOWN[colorScheme])).toBe(0)
 })
 
-test("repaints a tag colour that refers to the theme's", async ({ page, colorScheme }) => {
-  // `writing/essays` inherits `writing: { color: "var(--secondary)" }`.
+test("repaints a bubble whole, rim, circle and icon, in the other scheme's colours", async ({
+  page,
+  colorScheme,
+}) => {
+  // `writing/essays` inherits `writing: { color: "var(--secondary)" }`, and has its own icon.
   await page.goto("/tag-engine/most-specific")
   const graph = localGraph(page)
-  await expect.poll(() => nodeFill(graph, "#essays")).toEqual(SECONDARY[colorScheme])
+  const bubble = async () => {
+    const { circle, icon } = await bubbleTheme(page)
+    await expect
+      .poll(() => bubblePaint(graph, "#essays"))
+      .toEqual({ rim: await rgbOf(page, "var(--secondary)"), circle })
+    await expect.poll(() => marksNear(graph, "#essays", icon)).toBeGreaterThan(5)
+    return { circle, icon }
+  }
+  const before = await bubble()
   const other = await toggleScheme(page)
-  await expect.poll(() => nodeFill(graph, "#essays")).toEqual(SECONDARY[other])
-  await expect.poll(() => nodeFill(graph, "Most Specific")).toEqual(SECONDARY[other])
+  expect(other).not.toBe(colorScheme)
+  const after = await bubble()
+  expect(after).not.toEqual(before)
+  expect((await bubblePaint(graph, "Most Specific")).rim).toEqual(SECONDARY[other])
 })

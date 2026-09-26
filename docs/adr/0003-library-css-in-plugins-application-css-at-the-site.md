@@ -412,8 +412,9 @@ consuming plugin's build, and shipped by each consumer inside its own family sub
 has no `externalResources()`. `./bubble` also publishes the palette as property names (`rim`, the tag's
 colour property; `circle`, `--lightgray`; `icon`, `--dark`), which the lint holds the stylesheet to.
 So a canvas, which CSS can't reach, paints a bubble from the same three through the colour resolver,
-and re-resolves them on `themechange` as the scheme amendment above requires. The graph's tag nodes
-become bubbles that way, in their own change.
+and re-resolves them on `themechange` as the scheme amendment above requires. The graph's nodes
+become bubbles that way, in their own change
+([cgc-graph's ADR-0004, bubble amendment](../../quartz-v5/plugins/cgc-graph/docs/adr/0004-nodes-are-painted-with-their-tag.md#amendment-a-node-with-a-tag-is-its-tags-bubble), #83).
 
 **Rejected:**
 

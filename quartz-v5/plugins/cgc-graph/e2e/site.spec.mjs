@@ -5,7 +5,14 @@ import fs from "node:fs"
 import path from "node:path"
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, siteConfig, testsRoot } from "../../../tests/harness/site.mjs"
-import { drawnGraph, globalGraph, localGraph, marksNear, nodeFill } from "./graph.mjs"
+import {
+  bubblePaint,
+  bubbleTheme,
+  drawnGraph,
+  globalGraph,
+  localGraph,
+  marksNear,
+} from "./graph.mjs"
 
 // The site is served at its own `baseUrl`, where Quartz points its absolute URLs.
 const ORIGIN = "https://blog.chaoticgood.computer"
@@ -32,6 +39,9 @@ const CONTENT = {
   // The plugin note, as the vault has it (#48).
   "plugins/cgc-graph.md": fs.readFileSync(path.join(VAULT, "plugins/cgc-graph.md"), "utf8"),
 }
+
+// A sharper canvas, so a bubble's rim is whole pixels.
+test.use({ deviceScaleFactor: 2 })
 
 // One build per colour-scheme project, shared by that project's tests.
 test.describe.configure({ mode: "serial" })
@@ -102,40 +112,43 @@ test("keeps the graph's box square on a desktop, and draws into all of it", asyn
   expect(Math.abs(canvas.height - (box.height - 2))).toBeLessThan(1)
 })
 
-test("draws private pages in v4's red", async ({ page }) => {
-  await routeSite(page, site.public, ORIGIN)
-  await page.goto(`${ORIGIN}/content/notes/a-note`)
-  await drawnGraph(localGraph(page))
-  // `nodeColors: { private: "#c54040" }`
-  const red = () =>
-    localGraph(page)
-      .locator(".cgc-graph__canvas")
-      .evaluate((canvas) => {
-        const data = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height).data
-        let count = 0
-        for (let i = 0; i < data.length; i += 4)
-          if (data[i] === 197 && data[i + 1] === 64 && data[i + 2] === 64 && data[i + 3] === 255)
-            count++
-        return count
-      })
-  await expect.poll(red).toBeGreaterThan(10)
-})
-
 // The site's tag table (#77): `engineering: { color: "light-dark(#0070cc, #008CFF)", icon: mdi:wrench }`,
 // with v4's blue as the dark half, and `engineering/ai: { icon: mdi:robot }`, which takes the colour.
 const ENGINEERING = { light: [0, 112, 204], dark: [0, 140, 255] }
-// The site palette's `light`, the page's background, which icons are cut out in.
-const LIGHT = { light: [250, 248, 248], dark: [22, 22, 24] }
+// `private: { color: "light-dark(#cc0000, #FF0000)", icon: mdi:lock }`
+const PRIVATE = { light: [204, 0, 0], dark: [255, 0, 0] }
 
-test("paints each node in its tag's colour, with its tag's icon", async ({ page, colorScheme }) => {
+// Each node with a tag is its tag's bubble (#83): rimmed in the tag colour, on the site theme's
+// `--lightgray`, with its icon in the theme's `--dark`.
+const expectBubble = async (page, label, rim) => {
+  const graph = localGraph(page)
+  const { circle, icon } = await bubbleTheme(page)
+  await expect.poll(() => bubblePaint(graph, label), label).toEqual({ rim, circle })
+  await expect.poll(() => marksNear(graph, label, icon), label).toBeGreaterThan(3)
+}
+
+test("draws each node as its tag's bubble, rimmed in the tag's colour, with its icon", async ({
+  page,
+  colorScheme,
+}) => {
   await page.setViewportSize({ width: 1400, height: 900 })
   await routeSite(page, site.public, ORIGIN)
   await page.goto(`${ORIGIN}/content/notes/a-note`)
-  const graph = localGraph(page)
-  for (const label of ["A note", "B note", "#ai"]) {
-    await expect.poll(() => nodeFill(graph, label), label).toEqual(ENGINEERING[colorScheme])
-    await expect.poll(() => marksNear(graph, label, LIGHT[colorScheme]), label).toBeGreaterThan(3)
-  }
+  for (const label of ["A note", "B note", "#ai"])
+    await expectBubble(page, label, ENGINEERING[colorScheme])
+})
+
+test("draws a private page as its tag's bubble too: the private tag's red rim and its lock", async ({
+  page,
+  colorScheme,
+}) => {
+  // v4 filled private pages with `nodeColors: { private: "#c54040" }`. A bubble's circle is always
+  // the theme's gray (the owner's review notes of 2026-09-26), and the site's `private` tag carries
+  // a red of its own, so the site sets no `nodeColors`, and the tag colour rims the page.
+  await page.setViewportSize({ width: 1400, height: 900 })
+  await routeSite(page, site.public, ORIGIN)
+  await page.goto(`${ORIGIN}/content/notes/a-note`)
+  await expectBubble(page, "Secret", PRIVATE[colorScheme])
 })
 
 test("draws the site's own icons, from its icon collection", () => {

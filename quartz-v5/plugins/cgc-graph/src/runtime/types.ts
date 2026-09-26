@@ -48,8 +48,8 @@ export interface NodeData extends SimulationNodeDatum {
   /** Whether the node is a private page (the `privateTags` option). */
   private: boolean
   /**
-   * The node's tag, whose colour fills it: a page's primary tag, or a tag node's own tag. Null for
-   * a page with no tags.
+   * The node's tag, whose bubble it is drawn as: a page's primary tag, or a tag node's own tag. Null
+   * for a page with no tags.
    */
   tag: string | null
   /** Where following it leads. */
@@ -88,15 +88,30 @@ export type ThemeColour = "secondary" | "tertiary" | "gray" | "public" | "privat
 /** A colour a node is drawn in: one of those, or a tag's, by its colour property (`--cgc-tag-…`). */
 export type NodeColour = ThemeColour | `--${string}`
 
+/**
+ * How a node is drawn (docs/adr/0004): a node with a tag as its tag's bubble, the one every badge
+ * draws (tags-core's `./bubble`, #83), and a page with no tags as v4's disc.
+ */
+export type NodePaint =
+  | {
+      kind: "bubble"
+      /** Its rim: its tag's colour, or the site's `nodeColors` in its place. */
+      rim: NodeColour
+      /** Its history ring, outside its rim, for the reader's own page or one they have visited. */
+      history: NodeColour | null
+      /** The icon drawn in it, by its icon id, if its tag has one. */
+      icon: string | null
+    }
+  | {
+      kind: "disc"
+      /** Its fill. */
+      fill: NodeColour
+    }
+
 export interface NodeRender {
   node: NodeData
   label: Label
-  /** Its fill. */
-  colour: NodeColour
-  /** Its ring, if it has one. */
-  ring: NodeColour | null
-  /** The icon drawn on it, by its icon id, if it has one. */
-  icon: string | null
+  paint: NodePaint
   alpha: number
   active: boolean
   radius: number
