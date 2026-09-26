@@ -5,7 +5,7 @@
 // to do for a host that refuses build machines. /annotations/withdrawn targets one that can't be
 // fetched, so it has no mirror.
 import { createHash } from "node:crypto"
-import { test, expect } from "../../../tests/harness/test.mjs"
+import { test, expect, resolvedColour } from "../../../tests/harness/test.mjs"
 
 const PAPER = "/annotations/fixture-paper"
 const WITHDRAWN = "/annotations/withdrawn"
@@ -284,17 +284,10 @@ test("PDF.js, its worker and its wasm come from the site: no CDN request", async
 test("the highlights' colour is the scheme's text highlight", async ({ page }) => {
   await page.goto(PAPER)
   await shown(page)
-  const { actual, expected } = await highlights(page, "highlights")
+  const actual = await highlights(page, "highlights")
     .first()
-    .evaluate((el) => {
-      const probe = document.createElement("div")
-      probe.style.backgroundColor = "var(--textHighlight)"
-      document.body.append(probe)
-      const expected = getComputedStyle(probe).backgroundColor
-      probe.remove()
-      return { actual: getComputedStyle(el).backgroundColor, expected }
-    })
-  expect(actual).toBe(expected)
+    .evaluate((el) => getComputedStyle(el).backgroundColor)
+  expect(actual).toBe(await resolvedColour(page, "var(--textHighlight)"))
 })
 
 test("a note whose annotation-target is empty stays an ordinary note", async ({ page }) => {

@@ -1,14 +1,9 @@
 // cgc-graph's options are checked when the site builds, and a mistake fails the build (ADR-0003's
 // colour-value amendment): a colour option must be a CSS colour, whether a hex, a theme reference or
 // a `light-dark()` pair, and an option must be one the plugin has.
-import fs from "node:fs"
-import path from "node:path"
-import { createRequire } from "node:module"
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
-import { buildScratchSite, fixtureConfig, vendored } from "../../../tests/harness/site.mjs"
+import { buildScratchSite, editConfig, fixtureConfig } from "../../../tests/harness/site.mjs"
 import { drawnGraph, localGraph } from "./graph.mjs"
-
-const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
 
 const CONTENT = {
   "index.md": "---\ntitle: Home\n---\nSee [[secret]].\n",
@@ -16,14 +11,8 @@ const CONTENT = {
 }
 
 // The fixture's config, with cgc-graph's options replaced.
-function withOptions(options) {
-  const config = YAML.parseDocument(fixtureConfig())
-  const entry = config
-    .get("plugins")
-    .items.find((item) => item.get("source") === "../../plugins/cgc-graph")
-  entry.set("options", config.createNode(options))
-  return String(config)
-}
+const withOptions = (options) =>
+  editConfig(fixtureConfig(), (doc, entry) => entry("../../plugins/cgc-graph").set("options", doc.createNode(options)))
 
 test("fails the build on a colour CSS can't read", async () => {
   const { code, output } = await buildScratchSite("graph-bad-colour", CONTENT, {
@@ -54,16 +43,11 @@ test("fails the build on icon collections that aren't directories by prefix", as
 // site carries when it builds, and fails rather than draw a node without one (#29). The tag list,
 // which fails the same way, is off, so the failure is the graph's own.
 test("fails the build on an icon no collection has", async () => {
-  const config = YAML.parseDocument(withOptions({ privateTags: ["private"] }))
-  for (const item of config.get("plugins").items) {
-    const source = item.get("source")
-    if (source === "../../plugins/cgc-tags")
-      item.setIn(["options", "tags"], config.createNode({ private: { icon: "mdi:no-such-icon" } }))
-    if (source === "../../plugins/cgc-tag-list") item.set("enabled", false)
-  }
-  const { code, output } = await buildScratchSite("graph-unknown-icon", CONTENT, {
-    config: String(config),
+  const config = editConfig(withOptions({ privateTags: ["private"] }), (doc, entry) => {
+    entry("../../plugins/cgc-tags").setIn(["options", "tags"], doc.createNode({ private: { icon: "mdi:no-such-icon" } }))
+    entry("../../plugins/cgc-tag-list").set("enabled", false)
   })
+  const { code, output } = await buildScratchSite("graph-unknown-icon", CONTENT, { config })
   expect(code).not.toBe(0)
   expect(output).toContain(
     'cgc-graph: tag "private": unknown icon "mdi:no-such-icon": the "mdi" collection has no icon "no-such-icon"',
@@ -107,7 +91,7 @@ test("fills a per-kind setting's missing kinds from the defaults", async ({ page
     expect(cfg.linkDistance).toEqual({ tagTag: 10, tagPost: 30, postPost: 50 })
     expect(cfg.baseSize).toEqual({ tags: 4, posts: 7 })
   } finally {
-    fs.rmSync(site.root, { recursive: true, force: true })
+    site.remove()
   }
 })
 
@@ -149,7 +133,7 @@ for (const [value, rgb] of Object.entries(PRIVATE)) {
           }, rgb[colorScheme])
       await expect.poll(count).toBeGreaterThan(10)
     } finally {
-      fs.rmSync(site.root, { recursive: true, force: true })
+      site.remove()
     }
   })
 }

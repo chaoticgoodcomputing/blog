@@ -47,7 +47,7 @@ test.beforeAll(async () => {
   })
   expect(site.code, site.output).toBe(0)
 })
-test.afterAll(() => site && fs.rmSync(site.root, { recursive: true, force: true }))
+test.afterAll(() => site?.remove())
 
 test("navigates the site by tag from the left sidebar, `private` left out", async ({ page }) => {
   await page.setViewportSize({ width: 1400, height: 900 })

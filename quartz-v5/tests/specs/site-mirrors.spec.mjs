@@ -2,18 +2,14 @@
 // third-party documents: a crawler must not fetch them from us, and they never go on `main`.
 // Proven on a scratch site built from the site config, finished by the site's own post-build step.
 import fs from "node:fs"
-import os from "node:os"
 import path from "node:path"
 import { execFileSync } from "node:child_process"
-import { createRequire } from "node:module"
 import { test, expect, routeSite } from "../harness/test.mjs"
-import { buildScratchSite, siteConfig, siteConfigFile, testsRoot, vendored } from "../harness/site.mjs"
+import { editConfig, pluginEntries, siteConfig, siteConfigFile, testsRoot, vendored } from "../harness/site.mjs"
 import { pdf, sourceHost } from "../harness/source-host.mjs"
 import { postbuild } from "../../utils/postbuild.mjs"
 
-const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
 const ORIGIN = "https://blog.chaoticgood.computer"
-const isAnnotator = (entry) => String(entry.get("source")).endsWith("plugins/cgc-annotator")
 
 // Whether a generic crawler may fetch `pathname`, by RFC 9309: the `User-agent: *` group's rules,
 // where the longest matching path wins and `allow` wins a tie.
@@ -44,20 +40,17 @@ function crawlable(robots, pathname) {
   return matches.some((rule) => rule.allow && rule.value.length === longest)
 }
 
-test("the site's robots.txt disallows the mirror path", async ({ page }) => {
+test("the site's robots.txt disallows the mirror path", async ({ page, scratch }) => {
   const host = await sourceHost({ "/paper.pdf": pdf("paper") })
-  const cache = fs.mkdtempSync(path.join(os.tmpdir(), "cgc-site-mirrors-cache-"))
   // The site config as it is, except that this test pins into a cache of its own.
-  const config = YAML.parseDocument(siteConfig())
-  const annotator = config.get("plugins").items.find(isAnnotator)
-  expect(annotator, "cgc-annotator is enabled in the site config").toBeDefined()
-  annotator.setIn(["options", "cacheDir"], cache)
-  let site
+  const config = editConfig(siteConfig(), (_, entry) =>
+    entry("../../plugins/cgc-annotator").setIn(["options", "cacheDir"], scratch.dir("site-mirrors-cache")),
+  )
   try {
-    site = await buildScratchSite("site-mirrors", {
+    const site = await scratch.site("site-mirrors", {
       "index.md": "---\ntitle: Home\n---\nWelcome.\n",
       "content/annotations/paper.md": `---\ntitle: A paper\nannotation-target: ${host.url("/paper.pdf")}\n---\nNotes.\n`,
-    }, { config: String(config), keep: true })
+    }, { config })
     expect(site.code, site.output).toBe(0)
     await postbuild(site.public)
 
@@ -77,14 +70,11 @@ test("the site's robots.txt disallows the mirror path", async ({ page }) => {
     expect(robots).toContain(`Sitemap: ${ORIGIN}/sitemap.xml`)
   } finally {
     await host.close()
-    fs.rmSync(cache, { recursive: true, force: true })
-    if (site) fs.rmSync(site.root, { recursive: true, force: true })
   }
 })
 
 test("the real site's mirrors and their cache stay out of git", () => {
-  const { plugins } = YAML.parse(fs.readFileSync(siteConfigFile, "utf8"))
-  const annotator = plugins.find(({ source }) => String(source).endsWith("plugins/cgc-annotator"))
+  const annotator = pluginEntries(fs.readFileSync(siteConfigFile, "utf8")).find(({ source }) => String(source).endsWith("plugins/cgc-annotator"))
   const options = annotator?.options ?? {}
   // Where the real site build pins and emits them: `site-v5:build` runs Quartz from the vendored root
   // into `public/`. The defaults are cgc-annotator's own.

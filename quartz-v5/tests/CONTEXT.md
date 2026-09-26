@@ -51,7 +51,10 @@ The rendered-page form of breaking ADR-0003's rule 2.
 _Avoid_: leak, collision, style pollution
 
 **Harness**:
-The shared `test` and `expect`, with their fixtures, that every spec imports from `harness/test.mjs`.
+The shared `test` and `expect`, with their fixtures, that every spec imports from `harness/test.mjs`,
+and the modules beside it that specs share rather than copy: scratch sites and configs (`site.mjs`),
+the page's cascade layers (`layers.mjs`), the stand-ins, probe plugins and source hosts. Every
+build it starts takes the build lock, so builds run one at a time (ADR-0004).
 _Avoid_: test utils, helpers
 
 **Scratch site**:
@@ -61,7 +64,8 @@ the fixture's (the harness's `siteConfig()`, with `routeSite()` to browse it), o
 (`serve: true`) for what a plugin does under `quartz build --serve`. Its content lives outside the
 repo, because Quartz's content glob honours `.gitignore`. Content that imports packages, as the
 vault's `.mdx` articles do, gets a `node_modules` link among its files, which the site's
-`ignorePatterns` keep out of the site.
+`ignorePatterns` keep out of the site. A spec that keeps one removes it when it is done: the
+`scratch` fixture does that when the test ends.
 _Avoid_: temp site, throwaway build
 
 **Serve run**:
@@ -108,6 +112,8 @@ stand-in** answers Bluesky's: every context the harness hands a spec answers Git
 the made-up users in `fixture-github/users.json`, the contributions API with a made-up year for each
 (a Thursday to a Wednesday, so both end weeks are partial), and the avatar host with one small
 picture. A user it doesn't hold is not found. A spec about a failure routes the host on its page.
+Both stand-ins answer through `harness/stand-in.mjs`, and so does a spec's own failure: an API's
+JSON answer, with CORS headers.
 _Avoid_: mock GitHub, fake API
 
 ### The two seams

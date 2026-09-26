@@ -1,7 +1,6 @@
 // cgc-backlinks' options, on scratch sites: the content fixture keeps the site's own settings. The
 // private tags are the plugin's own option, as cgc-seo's are, so it needs no tag engine (#44, #53
 // story 39), and so is the icon it marks them with.
-import fs from "node:fs"
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, fixtureConfig, withPlugins } from "../../../tests/harness/site.mjs"
 
@@ -45,7 +44,7 @@ test.describe("with its own private tags and icon, shown on every page", () => {
     })
     expect(site.code, site.output).toBe(0)
   })
-  test.afterAll(() => site && fs.rmSync(site.root, { recursive: true, force: true }))
+  test.afterAll(() => site?.remove())
 
   const link = (page, name) => page.locator(".cgc-backlinks__link", { hasText: name })
 

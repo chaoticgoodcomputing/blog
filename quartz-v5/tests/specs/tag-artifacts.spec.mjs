@@ -101,6 +101,6 @@ test("the consumers receive the engine's artifacts at the real site root", async
     const graph = JSON.parse(fs.readFileSync(path.join(site.public, "static/cgcGraph.json"), "utf8"))
     expect(graph.pages["content/notes/a-note"].tags).toEqual(["engineering/ai"])
   } finally {
-    fs.rmSync(site.root, { recursive: true, force: true })
+    site.remove()
   }
 })

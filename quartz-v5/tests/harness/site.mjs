@@ -12,6 +12,7 @@ import { execFile, spawn } from "node:child_process"
 import { createRequire } from "node:module"
 import { promisify } from "node:util"
 import { fileURLToPath } from "node:url"
+import { buildLocalPlugin, installLibs } from "../../utils/local-plugins.mjs"
 
 const run = promisify(execFile)
 const here = path.dirname(fileURLToPath(import.meta.url))
@@ -22,7 +23,6 @@ const pluginsRoot = path.resolve(testsRoot, "../plugins")
 // site config do, so they are built and linked alongside our plugins.
 const sitePluginsRoot = path.resolve(testsRoot, "../site-plugins")
 const PLUGIN_ROOTS = [pluginsRoot, sitePluginsRoot]
-const libsRoot = path.resolve(testsRoot, "../libs")
 const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
 
 // "main" is the fixture site as configured. "baseline" is the same site with every one of our
@@ -91,15 +91,17 @@ function rebaseOptions(map, rebase) {
 // The fixture's own config as YAML text: what a scratch site is built from unless given another.
 export const fixtureConfig = () => fs.readFileSync(path.join(testsRoot, "quartz.config.yaml"), "utf8")
 
-// The `source` of every plugin entry in `config` (YAML text), in YAML order.
-export const pluginSources = (config) => YAML.parse(config).plugins.map((entry) => entry.source)
+// Every plugin entry in `config` (YAML text), as plain values, in YAML order.
+export const pluginEntries = (config) => YAML.parse(config).plugins
 
-// `config` (YAML text) with each of `entries` in its plugin list: an entry replaces the one with the
-// same `source`, or is appended. Appending puts a plugin last in YAML order, which decides nothing
-// its `order` doesn't: plugins run, and emit their CSS, sorted by `order`. Every alias becomes a copy
-// of what it names first, so replacing the entry that holds an anchor, such as cgc-tag-list's
-// `&iconCollections`, leaves the entries that alias it their value.
-export function withPlugins(config, entries) {
+// The `source` of every plugin entry in `config` (YAML text), in YAML order.
+export const pluginSources = (config) => pluginEntries(config).map((entry) => entry.source)
+
+// `config` (YAML text) as `edit(doc, entry)` leaves it, for a scratch site's config: `doc` is the
+// parsed YAML document, and `entry(source)` the plugin entry whose `source` is `source`. Every alias
+// becomes a copy of what it names first, so replacing a value that holds an anchor, such as
+// cgc-tag-list's `&iconCollections`, leaves the entries that alias it their value.
+export function editConfig(config, edit) {
   const doc = YAML.parseDocument(config)
   YAML.visit(doc, {
     Alias(_, alias) {
@@ -108,14 +110,37 @@ export function withPlugins(config, entries) {
       return copy
     },
   })
-  const plugins = doc.get("plugins")
-  for (const entry of entries) {
-    const at = plugins.items.findIndex((item) => item.get("source") === entry.source)
-    if (at < 0) plugins.add(doc.createNode(entry))
-    else plugins.set(at, doc.createNode(entry))
+  const entry = (source) => {
+    const found = doc.get("plugins").items.find((item) => item.get("source") === source)
+    if (!found) throw new Error(`no plugin entry has the source ${source}`)
+    return found
   }
+  edit(doc, entry)
   return String(doc)
 }
+
+// `config` (YAML text) with each of `entries` in its plugin list: an entry replaces the one with the
+// same `source`, or is appended. Appending puts a plugin last in YAML order, which decides nothing
+// its `order` doesn't: plugins run, and emit their CSS, sorted by `order`.
+export const withPlugins = (config, entries) =>
+  editConfig(config, (doc) => {
+    const plugins = doc.get("plugins")
+    for (const entry of entries) {
+      const at = plugins.items.findIndex((item) => item.get("source") === entry.source)
+      if (at < 0) plugins.add(doc.createNode(entry))
+      else plugins.set(at, doc.createNode(entry))
+    }
+  })
+
+// Entries for `withPlugins` that turn off every package under `quartz-v5/plugins/` that `config`
+// lists, except those named in `keep`: for a build that must fail in one plugin's words, which
+// another that checks the same thing, such as another plugin that draws icons, would otherwise fail
+// first. Fixture plugins are left as they are.
+export const othersOff = (config, keep) =>
+  pluginSources(config)
+    .filter((source) => typeof source === "string" && source.startsWith("../../plugins/"))
+    .filter((source) => !keep.includes(path.basename(source)))
+    .map((source) => ({ source, enabled: false }))
 
 const LINKED = ["package.json", "quartz", "node_modules", "tsconfig.json", "quartz.ts", "globals.d.ts", "index.d.ts"]
 // Ours: a package under `quartz-v5/plugins/`, or a fixture plugin standing in for one.
@@ -132,13 +157,18 @@ const STANDS_IN_FOR = { "../../plugins/cgc-tag-page": "@quartz-community/tag-pag
 // under `cgc-annotator/`) and is copied in before every build, so the fixture needs no network.
 const fixtureCache = path.join(testsRoot, "fixture-cache")
 
-function writeFixtureRoot(variant) {
-  const root = fixtureRoot(variant)
-  fs.mkdirSync(root, { recursive: true })
+// Links a fixture or scratch root to the vendored copy: everything but the config it holds itself.
+function linkVendored(root) {
   for (const entry of LINKED) {
     const link = path.join(root, entry)
     if (!fs.existsSync(link)) fs.symlinkSync(path.join(vendored, entry), link)
   }
+}
+
+function writeFixtureRoot(variant) {
+  const root = fixtureRoot(variant)
+  fs.mkdirSync(root, { recursive: true })
+  linkVendored(root)
   if (fs.existsSync(fixtureCache)) fs.cpSync(fixtureCache, path.join(root, ".cache"), { recursive: true })
   const config = YAML.parseDocument(fixtureConfig())
   if (variant === "baseline") {
@@ -157,51 +187,42 @@ function writeFixtureRoot(variant) {
 }
 
 // Quartz symlinks a local plugin into `.quartz/plugins/` but never builds it — only git sources
-// get `npm run build` — so every package is built here first.
+// get `npm run build` — so every package is built here first, as the real site's prebuild builds
+// the ones its config enables (utils/local-plugins.mjs).
 export async function buildPlugins() {
   linkHostModules()
-  await installLibs()
+  await installLibs(run)
   const packages = PLUGIN_ROOTS.flatMap((root) =>
     fs.existsSync(root)
       ? fs.readdirSync(root).filter((dir) => fs.existsSync(path.join(root, dir, "package.json"))).map((dir) => path.join(root, dir))
       : [],
   )
-  await Promise.all(
-    packages.map(async (cwd) => {
-      // A package with build-time dependencies of its own carries a lockfile; install it once, and
-      // again whenever the lockfile moves on from what is installed.
-      if (fs.existsSync(path.join(cwd, "package-lock.json")) && installIsStale(cwd)) {
-        await run("npm", ["ci", "--omit=peer", "--no-audit", "--no-fund"], { cwd })
-      }
-      await run("npm", ["run", "build", "--silent"], { cwd })
-    }),
-  )
+  await Promise.all(packages.map((cwd) => buildLocalPlugin(cwd, run)))
   return packages
 }
 
-// True when a package's lockfile names a package, or a version, that npm's record of its last
-// install (`node_modules/.package-lock.json`) lacks: say, after a merge added a library. Peers are
-// never installed here, and optional packages only on their own platform.
-function installIsStale(cwd) {
-  const installed = path.join(cwd, "node_modules", ".package-lock.json")
-  if (!fs.existsSync(installed)) return true
-  const wanted = JSON.parse(fs.readFileSync(path.join(cwd, "package-lock.json"), "utf8")).packages
-  const have = JSON.parse(fs.readFileSync(installed, "utf8")).packages
-  const id = (entry) => entry?.version ?? entry?.resolved
-  return Object.entries(wanted).some(([key, entry]) => key && !entry.peer && !entry.optional && id(have[key]) !== id(entry))
-}
-
-// Our libraries' own dependencies install through the repo's pnpm workspace (ADR-0005), never
-// through the plugins that inline them: npm installs nothing behind a `file:` link. So a library
-// with dependencies and no install of its own gets the workspace's.
-async function installLibs() {
-  const missing = (fs.existsSync(libsRoot) ? fs.readdirSync(libsRoot) : []).some((dir) => {
-    const manifest = path.join(libsRoot, dir, "package.json")
-    if (!fs.existsSync(manifest)) return false
-    const { dependencies = {}, devDependencies = {} } = JSON.parse(fs.readFileSync(manifest, "utf8"))
-    return Object.keys({ ...dependencies, ...devDependencies }).length > 0 && !fs.existsSync(path.join(libsRoot, dir, "node_modules"))
-  })
-  if (missing) await run("pnpm", ["install", "--frozen-lockfile"], { cwd: path.resolve(testsRoot, "../..") })
+// A copy of our package `name` (a directory under `quartz-v5/plugins/`), changed by `edit(copy)`
+// and built by its own build script, outside the repo: for a build that must refuse, such as one of
+// a stylesheet that selects what the package doesn't own (ADR-0003 rule 3). The copy shares the
+// package's install. Resolves with the exit code, the combined output of a failed build, and whether
+// the build wrote `dist/`, and deletes the copy.
+export async function buildPluginCopy(name, edit) {
+  const source = path.join(pluginsRoot, name)
+  const copy = fs.mkdtempSync(path.join(os.tmpdir(), `${name}-copy-`))
+  try {
+    for (const entry of ["package.json", "build.mjs", "src"]) {
+      fs.cpSync(path.join(source, entry), path.join(copy, entry), { recursive: true })
+    }
+    fs.symlinkSync(path.join(source, "node_modules"), path.join(copy, "node_modules"))
+    edit(copy)
+    const build = await run("node", ["build.mjs"], { cwd: copy }).then(
+      () => ({ code: 0, output: "" }),
+      (err) => ({ code: err.code, output: `${err.stdout}${err.stderr}` }),
+    )
+    return { ...build, dist: fs.existsSync(path.join(copy, "dist")) }
+  } finally {
+    fs.rmSync(copy, { recursive: true, force: true })
+  }
 }
 
 // A git-installed plugin lives at `.quartz/plugins/<name>/` inside the Quartz root, so its bare
@@ -221,109 +242,166 @@ function linkHostModules() {
 // transpiles itself to `quartz/.quartz-cache/transpiled-build.mjs` before importing it. So all
 // builds share that one file, and two at once can import it half-written ("buildQuartz is not a
 // function"). One build at a time, across every worker process: a directory lock, since mkdir is
-// atomic. A lock older than any build is taken to be stale.
-const LOCK = path.join(testsRoot, ".site-build-lock")
+// atomic (ADR-0004). It holds an empty file named for each process the build runs in: the worker
+// that took it, and the build's own once it has started. A worker that times out mid-build is
+// stopped before it can let the lock go, so a lock none of whose processes is still running is free,
+// and so, whatever holds it, is one older than any build.
+export const BUILD_LOCK = path.join(testsRoot, ".site-build-lock")
 const STALE_MS = 5 * 60 * 1000
+const running = (pid) => {
+  try {
+    process.kill(pid, 0)
+    return true
+  } catch (err) {
+    return err.code === "EPERM"
+  }
+}
+function lockIsStale() {
+  const pids = fs.readdirSync(BUILD_LOCK).map(Number).filter(Number.isInteger)
+  if (Date.now() - fs.statSync(BUILD_LOCK).mtimeMs > STALE_MS) return true
+  // Just taken, before its taker has named itself: not stale.
+  return pids.length > 0 && !pids.some(running)
+}
 async function withBuildLock(fn) {
   for (;;) {
     try {
-      fs.mkdirSync(LOCK)
+      fs.mkdirSync(BUILD_LOCK)
       break
     } catch (err) {
       if (err.code !== "EEXIST") throw err
       try {
-        if (Date.now() - fs.statSync(LOCK).mtimeMs > STALE_MS) fs.rmSync(LOCK, { recursive: true, force: true })
+        if (lockIsStale()) fs.rmSync(BUILD_LOCK, { recursive: true, force: true })
       } catch {}
       await new Promise((done) => setTimeout(done, 50))
     }
   }
+  const holds = (pid) => fs.writeFileSync(path.join(BUILD_LOCK, String(pid)), "")
   try {
-    return await fn()
+    holds(process.pid)
+    return await fn(holds)
   } finally {
-    fs.rmSync(LOCK, { recursive: true, force: true })
+    fs.rmSync(BUILD_LOCK, { recursive: true, force: true })
   }
 }
 
 const quartzBuild = (root, args) =>
-  withBuildLock(() => run("node", [path.join(root, "quartz/bootstrap-cli.mjs"), "build", ...args], { cwd: root }))
+  withBuildLock((holds) => {
+    const build = run("node", [path.join(root, "quartz/bootstrap-cli.mjs"), "build", ...args], { cwd: root })
+    holds(build.child.pid)
+    return build
+  })
 
-// `quartz build --serve`, for the one thing a spec may need it for: what a plugin does differently
-// under serve (ADR-0004 keeps it out of everything else). Stopped as soon as its server is up, which
-// is after the first build has been emitted. Its ports are the OS's pick, so it never collides with
-// the suite's own servers or another copy of the suite. Rejects like `quartzBuild` when the build
-// fails, and gives up after `SERVE_TIMEOUT_MS`.
+// `quartz build --serve` at `root`, for what a plugin does differently under serve (ADR-0004 keeps
+// it out of everything else), run under a build lock the caller holds, which `holds` names it in.
+// Its ports are the OS's pick, so it never collides with the suite's own servers or another copy of
+// the suite. Resolves with the server once it is up, which is after the first build has been
+// emitted: its `output` so far, `exited()`, and `stop()`. Rejects like `quartzBuild`, with the exit
+// code and output, if it exits before serving, and gives up after `SERVE_TIMEOUT_MS`.
 const SERVE_TIMEOUT_MS = 2 * 60 * 1000
+const spawnServe = (root, args, holds) =>
+  new Promise((resolve, reject) => {
+    const cli = path.join(root, "quartz/bootstrap-cli.mjs")
+    const child = spawn("node", [cli, "build", "--serve", "--port", "0", "--wsPort", "0", ...args], { cwd: root })
+    holds(child.pid)
+    const closed = new Promise((done) => child.on("close", done))
+    const server = {
+      output: "",
+      exited: () => child.exitCode !== null || child.signalCode !== null,
+      stop: async () => {
+        child.kill()
+        await closed
+      },
+    }
+    const timer = setTimeout(() => child.kill(), SERVE_TIMEOUT_MS)
+    const collect = (chunk) => {
+      server.output += chunk
+      if (server.output.includes("Started a Quartz server")) {
+        clearTimeout(timer)
+        resolve(server)
+      }
+    }
+    child.stdout.on("data", collect)
+    child.stderr.on("data", collect)
+    closed.then((code) => {
+      clearTimeout(timer)
+      reject(Object.assign(new Error(`quartz build --serve exited before serving\n${server.output}`), { code: code ?? 1, stdout: server.output }))
+    })
+  })
+
+// A serve run left up: it holds the build lock until its server is up, and its rebuilds run without it.
+const startServe = (root, args) => withBuildLock((holds) => spawnServe(root, args, holds))
+
+// A serve run stopped as soon as its server is up. It holds the build lock until the server has
+// exited, since serve's source watcher lives as long as the server does.
 const quartzServe = (root, args) =>
-  withBuildLock(
-    () =>
-      new Promise((resolve, reject) => {
-        const cli = path.join(root, "quartz/bootstrap-cli.mjs")
-        const child = spawn("node", [cli, "build", "--serve", "--port", "0", "--wsPort", "0", ...args], { cwd: root })
-        let output = ""
-        let started = false
-        const timer = setTimeout(() => child.kill(), SERVE_TIMEOUT_MS)
-        const collect = (chunk) => {
-          output += chunk
-          if (!started && output.includes("Started a Quartz server")) {
-            started = true
-            child.kill()
-          }
-        }
-        child.stdout.on("data", collect)
-        child.stderr.on("data", collect)
-        child.on("close", (code) => {
-          clearTimeout(timer)
-          if (started) resolve({ stdout: output, stderr: "" })
-          else reject(Object.assign(new Error("quartz build --serve exited before serving"), { code: code ?? 1, stdout: output }))
-        })
-      }),
-  )
+  withBuildLock(async (holds) => {
+    const server = await spawnServe(root, args, holds)
+    await server.stop()
+    return { stdout: server.output, stderr: "" }
+  })
 
 export async function buildSite(variant) {
   writeFixtureRoot(variant)
   await quartzBuild(fixtureRoot(variant), ["-d", "../content-fixture", "-o", outputFor(variant)])
 }
 
+// A scratch site's root, made `at` a place (see SCRATCH_PARENT) under a name of its own, since the
+// same spec runs once per colour scheme, possibly at the same time, with `config` (YAML text) as its
+// config. Its content goes outside the repo, because Quartz's content glob honours .gitignore, which
+// covers every fixture root. `put(rel, text)` writes a content file, and `remove()` deletes the root
+// and the content, never a link's target.
+function makeScratchRoot(name, files, { config = fixtureConfig(), at = "fixture" } = {}) {
+  const root = fs.mkdtempSync(path.join(SCRATCH_PARENT[at], `.site-scratch-${name}-`))
+  const content = fs.mkdtempSync(path.join(os.tmpdir(), `cgc-scratch-${name}-`))
+  const remove = () => {
+    for (const dir of [content, root]) fs.rmSync(dir, { recursive: true, force: true })
+  }
+  const put = (rel, text) => {
+    const file = path.join(content, rel)
+    fs.mkdirSync(path.dirname(file), { recursive: true })
+    if (text?.symlink) fs.symlinkSync(text.symlink, file)
+    else fs.writeFileSync(file, text)
+  }
+  try {
+    for (const [rel, text] of Object.entries(files)) put(rel, text)
+    linkVendored(root)
+    fs.writeFileSync(path.join(root, "quartz.config.yaml"), config)
+  } catch (err) {
+    remove()
+    throw err
+  }
+  return { root, content, put, remove }
+}
+
 // A one-off site for a spec that needs content the shared fixture must not carry — chiefly a build
 // that is supposed to fail. `files` maps content paths to their text (or bytes), or to
 // `{ symlink: target }` for a link to somewhere else, such as a `node_modules` the content's own
-// imports resolve from, the way the vault's resolve from the repo root's. Uses the main variant's
-// config unless `options.config` supplies one (a YAML string), and assumes `buildPlugins` has
-// already run (global setup does it). Resolves with the exit code and combined output rather than
-// throwing. `options.args` are extra `quartz build` flags. `options.serve` builds it as
-// `quartz build --serve` does, stopping the server once it is up. `options.at` is where the root is
-// made: `fixture` (the default) or `site`, see SCRATCH_PARENT. The site is deleted afterwards unless
-// `options.keep` is set; the result then also carries `root` and `public` (the built site), and
-// the caller removes `root`.
+// imports resolve from, the way the vault's resolve from the repo root's. Uses the fixture's config
+// unless `options.config` supplies one (a YAML string), and assumes `buildPlugins` has already run
+// (global setup does it). Resolves with the exit code and combined output rather than throwing.
+// `options.serve` builds it as `quartz build --serve` does, stopping the server once it is up.
+// `options.at` is where the root is made: `fixture` (the default) or `site`, see SCRATCH_PARENT. The
+// site is deleted afterwards unless `options.keep` is set; the result then also carries `public`
+// (the built site) and `remove()`, which the caller must call once it is done with the site.
 export async function buildScratchSite(name, files, options = {}) {
-  // Unique per call: the same spec runs once per colour scheme, possibly at the same time.
-  const root = fs.mkdtempSync(path.join(SCRATCH_PARENT[options.at ?? "fixture"], `.site-scratch-${name}-`))
-  // Outside the repo: Quartz's content glob honours .gitignore, which covers every fixture root.
-  const content = fs.mkdtempSync(path.join(os.tmpdir(), `cgc-scratch-${name}-`))
-  for (const [rel, text] of Object.entries(files)) {
-    fs.mkdirSync(path.dirname(path.join(content, rel)), { recursive: true })
-    if (text?.symlink) fs.symlinkSync(text.symlink, path.join(content, rel))
-    else fs.writeFileSync(path.join(content, rel), text)
-  }
-  fs.mkdirSync(root, { recursive: true })
-  for (const entry of LINKED) {
-    const link = path.join(root, entry)
-    if (!fs.existsSync(link)) fs.symlinkSync(path.join(vendored, entry), link)
-  }
-  const config = options.config ?? fixtureConfig()
-  fs.writeFileSync(path.join(root, "quartz.config.yaml"), config)
-  const kept = options.keep ? { root, public: path.join(root, "public") } : {}
+  const scratch = makeScratchRoot(name, files, options)
+  const kept = options.keep ? { public: path.join(scratch.root, "public"), remove: scratch.remove } : {}
   try {
     const build = options.serve ? quartzServe : quartzBuild
-    const { stdout, stderr } = await build(root, ["-d", content, "-o", "public", ...(options.args ?? [])])
+    const { stdout, stderr } = await build(scratch.root, ["-d", scratch.content, "-o", "public"])
     return { code: 0, output: stdout + stderr, ...kept }
   } catch (err) {
     return { code: err.code ?? 1, output: `${err.stdout ?? ""}${err.stderr ?? ""}`, ...kept }
   } finally {
-    fs.rmSync(content, { recursive: true, force: true })
-    if (!options.keep) fs.rmSync(root, { recursive: true, force: true })
+    // The content is read by now: a kept site keeps only its root.
+    if (options.keep) fs.rmSync(scratch.content, { recursive: true, force: true })
+    else scratch.remove()
   }
 }
+
+// What serve prints as a rebuild starts, and as it ends either way.
+const [DETECTED, DONE, FAILED] = ["Detected change", "Done rebuilding", "Rebuild failed"]
+const REBUILD_LINES = [DETECTED, DONE, FAILED]
 
 // A serve run left up, for what Quartz does when content changes under `quartz build --serve`: a
 // spec edits the content and reads the rebuilt site. It loads the plugins built for this run, so
@@ -331,63 +409,57 @@ export async function buildScratchSite(name, files, options = {}) {
 // arise. Only the first build holds the build lock: a rebuild re-runs what the process has already
 // imported. The output is outside the Quartz root, because serve's source watcher watches every
 // `.ts` and `.tsx` under it, and would take a copied widget's source for Quartz's own and
-// re-transpile Quartz, which is what the lock guards. Takes `files`, `options.config` and
-// `options.at` as `buildScratchSite` does, and resolves once the server is up with the site's `root`, `public` and
-// `content` directories, its `output` so far, `write(rel, text)`, which changes a content file and
-// resolves once the rebuild that follows is done, and `stop()`, which the caller must call: it
+// re-transpile Quartz, which is what the lock guards. Takes `files` as `buildScratchSite` does, with
+// the fixture's config, and resolves once the server is up with the built site, `public`;
+// `write(rel, text)`, which changes a content file and resolves once the rebuild that follows is
+// done, writing it again if serve's watcher missed it; and `stop()`, which the caller must call: it
 // stops the server and deletes the site.
-export async function serveScratchSite(name, files, options = {}) {
-  const root = fs.mkdtempSync(path.join(SCRATCH_PARENT[options.at ?? "fixture"], `.site-scratch-${name}-`))
-  const content = fs.mkdtempSync(path.join(os.tmpdir(), `cgc-scratch-${name}-`))
+export async function serveScratchSite(name, files) {
+  const scratch = makeScratchRoot(name, files)
   const site = fs.mkdtempSync(path.join(os.tmpdir(), `cgc-scratch-${name}-public-`))
-  const put = (rel, text) => {
-    fs.mkdirSync(path.dirname(path.join(content, rel)), { recursive: true })
-    fs.writeFileSync(path.join(content, rel), text)
+  const remove = () => {
+    scratch.remove()
+    fs.rmSync(site, { recursive: true, force: true })
   }
-  for (const [rel, text] of Object.entries(files)) put(rel, text)
-  for (const entry of LINKED) fs.symlinkSync(path.join(vendored, entry), path.join(root, entry))
-  fs.writeFileSync(path.join(root, "quartz.config.yaml"), options.config ?? fixtureConfig())
-
-  let output = ""
-  let child
-  let closed
-  const until = async (done, timeout, what) => {
-    for (const start = Date.now(); !done(); await new Promise((tick) => setTimeout(tick, 50))) {
-      if (child.exitCode !== null || Date.now() - start > timeout) throw new Error(`quartz build --serve: ${what}\n${output}`)
-    }
-  }
-  const stop = async () => {
-    child?.kill()
-    await closed
-    for (const dir of [content, site, root]) fs.rmSync(dir, { recursive: true, force: true })
-  }
+  let server
   try {
-    await withBuildLock(() => {
-      const cli = path.join(root, "quartz/bootstrap-cli.mjs")
-      child = spawn("node", [cli, "build", "--serve", "--port", "0", "--wsPort", "0", "-d", content, "-o", site], { cwd: root })
-      closed = new Promise((done) => child.on("close", done))
-      child.stdout.on("data", (chunk) => (output += chunk))
-      child.stderr.on("data", (chunk) => (output += chunk))
-      return until(() => output.includes("Started a Quartz server"), SERVE_TIMEOUT_MS, "never served")
-    })
+    server = await startServe(scratch.root, ["-d", scratch.content, "-o", site])
   } catch (err) {
-    await stop()
+    remove()
     throw err
   }
 
-  const count = (text) => output.split(text).length - 1
+  const count = (text) => server.output.split(text).length - 1
+  // Whether `done()` comes true within `ms`. Throws if the server exits first.
+  const within = async (ms, done) => {
+    for (const start = Date.now(); !done(); await new Promise((tick) => setTimeout(tick, 50))) {
+      if (server.exited()) throw new Error(`quartz build --serve exited\n${server.output}`)
+      if (Date.now() - start > ms) return false
+    }
+    return true
+  }
   return {
-    root,
-    content,
     public: site,
-    output: () => output,
     async write(rel, text) {
-      const [done, failed] = [count("Done rebuilding"), count("Rebuild failed")]
-      put(rel, text)
-      await until(() => count("Done rebuilding") > done || count("Rebuild failed") > failed, 30_000, `no rebuild after writing ${rel}`)
-      if (count("Rebuild failed") > failed) throw new Error(`quartz build --serve: the rebuild after writing ${rel} failed\n${output}`)
+      const before = Object.fromEntries(REBUILD_LINES.map((line) => [line, count(line)]))
+      const since = (line) => count(line) - before[line]
+      // Serve's content watcher starts as its server does, and misses a write it isn't ready for
+      // yet, which a loaded machine makes likely: the write is made again until the watcher sees it.
+      scratch.put(rel, text)
+      for (let tries = 1; !(await within(5_000, () => since(DETECTED) > 0)); tries++) {
+        if (tries === 6) throw new Error(`quartz build --serve: no rebuild after writing ${rel}\n${server.output}`)
+        scratch.put(rel, text)
+      }
+      // Every rebuild the write set off has finished.
+      if (!(await within(30_000, () => since(DETECTED) <= since(DONE) + since(FAILED)))) {
+        throw new Error(`quartz build --serve: the rebuild after writing ${rel} never finished\n${server.output}`)
+      }
+      if (since(FAILED) > 0) throw new Error(`quartz build --serve: the rebuild after writing ${rel} failed\n${server.output}`)
     },
-    stop,
+    async stop() {
+      await server.stop()
+      remove()
+    },
   }
 }
 

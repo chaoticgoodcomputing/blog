@@ -1,14 +1,8 @@
 // Builds that must fail (#53 story 34): the explorer draws every tag's icon when the site builds, so
 // an icon id that no collection has fails the build, in this plugin's words, whichever pages show the
 // tag; and so does a mistake in its own options. Scratch sites: the content fixture must build.
-import path from "node:path"
 import { test, expect } from "../../../tests/harness/test.mjs"
-import {
-  buildScratchSite,
-  fixtureConfig,
-  pluginSources,
-  withPlugins,
-} from "../../../tests/harness/site.mjs"
+import { buildScratchSite, fixtureConfig, othersOff, withPlugins } from "../../../tests/harness/site.mjs"
 
 const HOME = { "index.md": "---\ntitle: Home\ntags: [fixture]\n---\nHome.\n" }
 const EXPLORER = {
@@ -18,12 +12,7 @@ const EXPLORER = {
 }
 // Every other plugin of ours is off, so no other that draws icons fails the build first. The
 // explorer's entry is replaced whole, since the one that anchors `&iconCollections` is off.
-const OTHERS = pluginSources(fixtureConfig())
-  .filter((source) => typeof source === "string" && source.startsWith("../../plugins/"))
-  .filter(
-    (source) => !["cgc-styles", "cgc-tags", "cgc-tag-explorer"].includes(path.basename(source)),
-  )
-  .map((source) => ({ source, enabled: false }))
+const OTHERS = othersOff(fixtureConfig(), ["cgc-styles", "cgc-tags", "cgc-tag-explorer"])
 
 const build = (tags, options = {}) =>
   buildScratchSite("tag-explorer-build", HOME, {

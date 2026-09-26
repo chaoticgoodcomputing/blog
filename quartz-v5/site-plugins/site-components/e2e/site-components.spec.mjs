@@ -5,8 +5,8 @@
 import fs from "node:fs"
 import path from "node:path"
 import { createRequire } from "node:module"
-import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
-import { buildScratchSite, siteConfig, siteConfigFile, testsRoot, vendored, withPlugins } from "../../../tests/harness/site.mjs"
+import { test, expect, resolvedColour, routeSite } from "../../../tests/harness/test.mjs"
+import { buildScratchSite, fixtureConfig, pluginSources, siteConfig, siteConfigFile, vendored, withPlugins } from "../../../tests/harness/site.mjs"
 
 const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
 
@@ -42,22 +42,12 @@ test.beforeAll(async () => {
   site = await buildScratchSite("site-components", CONTENT, { config, keep: true })
   expect(site.code, site.output).toBe(0)
 })
-test.afterAll(() => site && fs.rmSync(site.root, { recursive: true, force: true }))
+test.afterAll(() => site?.remove())
 
 async function open(page, url) {
   await routeSite(page, site.public, ORIGIN)
   return page.goto(`${ORIGIN}${url}`)
 }
-
-// A theme colour as the page resolves it, e.g. `var(--dark)` → `rgb(…)`, in the page's scheme.
-const colour = (page, value) =>
-  page.evaluate((value) => {
-    const probe = document.body.appendChild(document.createElement("i"))
-    probe.style.color = value
-    const resolved = getComputedStyle(probe).color
-    probe.remove()
-    return resolved
-  }, value)
 
 async function expectStyles(locator, styles) {
   for (const [property, value] of Object.entries(styles)) await expect(locator, property).toHaveCSS(property, value)
@@ -106,7 +96,7 @@ test("styles the page title as v4 did, in the scheme's colours", async ({ page }
     "align-items": "center",
     gap: "8px",
     "text-decoration-line": "none",
-    color: await colour(page, "var(--dark)"),
+    color: await resolvedColour(page, "var(--dark)"),
   })
   const icon = title.locator(".page-title-icon")
   await expectStyles(icon, { width: "64px", height: "64px", "border-radius": "4px", "object-fit": "cover", "flex-shrink": "0" })
@@ -158,7 +148,7 @@ test("styles the footer as v4 did: centred, dimmed, its links in one centred row
 })
 
 test("is left out of every fixture config", () => {
-  const sources = YAML.parse(fs.readFileSync(path.join(testsRoot, "quartz.config.yaml"), "utf8")).plugins.map((entry) => JSON.stringify(entry.source))
+  const sources = pluginSources(fixtureConfig()).map((source) => JSON.stringify(source))
   expect(sources.filter((source) => source.includes("site-components"))).toEqual([])
 })
 

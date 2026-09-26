@@ -3,7 +3,7 @@
 // without the widget (#36, #75). No plugin takes it yet, so the spec does what one would: it bundles
 // the export for the browser with esbuild, as a plugin's build bundles its client script, and runs
 // the bundle on a fixture page. Bluesky is the suite's stand-in (tests/harness/bluesky.mjs).
-import { test, expect } from "../../../tests/harness/test.mjs"
+import { test, expect, resolvedColour } from "../../../tests/harness/test.mjs"
 import { BLUESKY_API } from "../../../tests/harness/bluesky.mjs"
 import { testsRoot, vendored } from "../../../tests/harness/site.mjs"
 import { createRequire } from "node:module"
@@ -112,19 +112,11 @@ test("a feed drawn with it says who reposted and what replies, beside MDI icons"
     "2 likes",
   ])
   // Styled by its own stylesheet: the card's skin is Quartz's colour properties.
-  const skin = await repost.evaluate((el) => {
-    const probe = document.createElement("div")
-    probe.style.borderColor = "var(--lightgray)"
-    document.body.append(probe)
-    const expected = getComputedStyle(probe).borderTopColor
-    probe.remove()
-    return {
-      actual: getComputedStyle(el).borderTopColor,
-      expected,
-      radius: getComputedStyle(el).borderTopLeftRadius,
-    }
-  })
-  expect(skin.actual).toBe(skin.expected)
+  const skin = await repost.evaluate((el) => ({
+    border: getComputedStyle(el).borderTopColor,
+    radius: getComputedStyle(el).borderTopLeftRadius,
+  }))
+  expect(skin.border).toBe(await resolvedColour(page, "var(--lightgray)"))
   expect(skin.radius).toBe("8px")
 })
 

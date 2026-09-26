@@ -1,7 +1,6 @@
 // The family layer's position (ADR-0003's family-layer amendment, #30). cgc-styles emits
 // `@layer cgc;` and nothing else, so the first place the name `cgc` appears on a page, and with it
 // the family's rank, is wherever this plugin's `order` puts its stylesheet.
-import fs from "node:fs"
 import { test, expect, layerOrder, routeSite } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, fixtureConfig, withPlugins } from "../../../tests/harness/site.mjs"
 
@@ -30,7 +29,7 @@ test("emits `@layer cgc;` and nothing else, on every page", async ({ page }) => 
 
 test("the family layer ranks above core's quartz-base", async ({ page }) => {
   await page.goto("/plain-note")
-  const top = (await layerOrder(page)).filter((name) => !name.includes("."))
+  const top = (await layerOrder(page))[""]
   expect(top).toContain("quartz-base")
   expect(top.indexOf("cgc")).toBeGreaterThan(top.indexOf("quartz-base"))
 })
@@ -51,12 +50,12 @@ test("the family layer ranks above a theme's layers", async ({ page }) => {
     expect(site.code, site.output).toBe(0)
     await routeSite(page, site.public, "https://fixture.invalid")
     await page.goto("https://fixture.invalid/")
-    const top = (await layerOrder(page)).filter((name) => !name.includes("."))
+    const top = (await layerOrder(page))[""]
     for (const layer of THEME_LAYERS) {
       expect(top, layer).toContain(layer)
       expect(top.indexOf("cgc"), `cgc above ${layer}`).toBeGreaterThan(top.indexOf(layer))
     }
   } finally {
-    fs.rmSync(site.root, { recursive: true, force: true })
+    site.remove()
   }
 })

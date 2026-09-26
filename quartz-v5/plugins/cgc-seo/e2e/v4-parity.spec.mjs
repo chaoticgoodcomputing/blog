@@ -25,7 +25,7 @@ test.beforeAll(async () => {
   site = await buildScratchSite("seo-parity", CONTENT, { config: siteConfig(), keep: true })
   expect(site.code, site.output).toBe(0)
 })
-test.afterAll(() => site && fs.rmSync(site.root, { recursive: true, force: true }))
+test.afterAll(() => site?.remove())
 
 for (const url of URLS) {
   test(`${url} has v4's canonical URL, feed link, article metadata and JSON-LD`, async ({ page }) => {

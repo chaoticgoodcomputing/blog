@@ -6,11 +6,10 @@
 import fs from "node:fs"
 import path from "node:path"
 import { createRequire } from "node:module"
-import { test, expect, routeSite, toggleScheme } from "../harness/test.mjs"
-import { buildScratchSite, siteConfig, testsRoot, vendored } from "../harness/site.mjs"
+import { test, expect, resolvedColour, routeSite, toggleScheme } from "../harness/test.mjs"
+import { buildScratchSite, editConfig, siteConfig, testsRoot } from "../harness/site.mjs"
 import { BLUESKY_API, XRPC } from "../harness/bluesky.mjs"
-
-const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
+import { jsonResponse } from "../harness/stand-in.mjs"
 // The site is served at its own `baseUrl`, where Quartz points its absolute URLs.
 const ORIGIN = "https://blog.chaoticgood.computer"
 const REPO = path.resolve(testsRoot, "../..")
@@ -51,11 +50,7 @@ function content() {
 }
 
 // The site config as it is, plus the `node_modules` link kept out of the content.
-function config() {
-  const doc = YAML.parseDocument(siteConfig({ offline: true }))
-  doc.get("configuration").get("ignorePatterns").add("node_modules")
-  return String(doc)
-}
+const config = () => editConfig(siteConfig({ offline: true }), (doc) => doc.get("configuration").get("ignorePatterns").add("node_modules"))
 
 // One build per colour-scheme project, shared by that project's tests.
 test.describe.configure({ mode: "serial" })
@@ -66,7 +61,7 @@ test.beforeAll(async () => {
   site = await buildScratchSite("site-widgets", content(), { config: config(), keep: true })
   expect(site.code, site.output).toBe(0)
 })
-test.afterAll(() => site && fs.rmSync(site.root, { recursive: true, force: true }))
+test.afterAll(() => site?.remove())
 
 // Every page browses the scratch site. A test's own routes, added later, take precedence.
 test.beforeEach(({ page }) => routeSite(page, site.public, ORIGIN))
@@ -79,16 +74,6 @@ async function open(page, slug) {
   for (const island of await islands.all()) await expect(island).toHaveAttribute("data-cgc-hydrated", "")
   return islands
 }
-
-// What `color: <value>` resolves to on the page right now, as `rgb(…)`.
-const resolved = (page, value) =>
-  page.evaluate((value) => {
-    const probe = document.body.appendChild(document.createElement("span"))
-    probe.style.color = value
-    const color = getComputedStyle(probe).color
-    probe.remove()
-    return color
-  }, value)
 
 // One pixel of a canvas, as `rgb(…)`.
 const pixel = (canvas, x, y) =>
@@ -196,7 +181,7 @@ test.describe("ai-beat-us", () => {
     const thread = XRPC["app.bsky.feed.getPostThread"]["at://fixture.bsky.social/app.bsky.feed.post/3lcgcfixtureb"]
     await page.route(BLUESKY_API, (route) =>
       new URL(route.request().url()).searchParams.get("uri") === "at://pfrazee.com/app.bsky.feed.post/3meogr22vtc2d"
-        ? route.fulfill({ status: 200, contentType: "application/json", headers: { "access-control-allow-origin": "*" }, body: JSON.stringify(thread) })
+        ? route.fulfill(jsonResponse(200, thread))
         : route.fallback(),
     )
     await open(page, "content/notes/ai-beat-us")
@@ -229,9 +214,9 @@ test.describe("mdx-widgets-test", () => {
     await expect.poll(() => canvas.evaluate((c) => c.toDataURL())).not.toBe(before)
 
     // The top-left cell is in the blank rows above the pattern, so it shows the paper.
-    expect(await pixel(canvas, 5, 5)).toBe(await resolved(page, "var(--light)"))
+    expect(await pixel(canvas, 5, 5)).toBe(await resolvedColour(page, "var(--light)"))
     await toggleScheme(page)
-    await expect.poll(async () => pixel(canvas, 5, 5)).toBe(await resolved(page, "var(--light)"))
+    await expect.poll(async () => pixel(canvas, 5, 5)).toBe(await resolvedColour(page, "var(--light)"))
   })
 })
 
@@ -257,9 +242,9 @@ test.describe("roll-advantage and dice-widget", () => {
     await expect(first.locator(".probability-convolutions__error")).toBeVisible()
 
     const paper = () => first.locator(".main-svg").first().evaluate((svg) => getComputedStyle(svg).backgroundColor)
-    await expect.poll(paper).toBe(await resolved(page, "var(--light)"))
+    await expect.poll(paper).toBe(await resolvedColour(page, "var(--light)"))
     await toggleScheme(page)
-    await expect.poll(paper).toBe(await resolved(page, "var(--light)"))
+    await expect.poll(paper).toBe(await resolvedColour(page, "var(--light)"))
   })
 
   test("dragging the threshold reads off the odds either side of it, snapped between bars", async ({ page }) => {
@@ -310,8 +295,8 @@ test.describe("ants-in-the-neighborhood", () => {
     await expect(walk.locator(".random-walk__current")).toHaveText(/Current: [BC]/)
 
     const canvas = walk.locator("canvas")
-    expect(await pixel(canvas, 2, 2)).toBe(await resolved(page, "var(--light)"))
+    expect(await pixel(canvas, 2, 2)).toBe(await resolvedColour(page, "var(--light)"))
     await toggleScheme(page)
-    await expect.poll(async () => pixel(canvas, 2, 2)).toBe(await resolved(page, "var(--light)"))
+    await expect.poll(async () => pixel(canvas, 2, 2)).toBe(await resolvedColour(page, "var(--light)"))
   })
 })

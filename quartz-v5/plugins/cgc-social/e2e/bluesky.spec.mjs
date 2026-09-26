@@ -4,6 +4,7 @@
 // (tests/harness/bluesky.mjs): `fixture.bsky.social`, whose feed is a repost, a reply and a post.
 import { test, expect } from "../../../tests/harness/test.mjs"
 import { BLUESKY_API } from "../../../tests/harness/bluesky.mjs"
+import { jsonResponse } from "../../../tests/harness/stand-in.mjs"
 import { GITHUB_HOSTS } from "../../../tests/harness/github.mjs"
 import { expectRestOfSidebarUnaffected } from "./sidebar.mjs"
 
@@ -25,14 +26,6 @@ const FEED = [
   ["com.atproto.identity.resolveHandle", { handle: "fixture.bsky.social" }],
   ["app.bsky.feed.getAuthorFeed", { actor: "did:plc:cgcfixtureauthor2345abcd", limit: "5" }],
 ]
-
-// An XRPC failure as the API gives one, readable from the page's origin.
-const xrpcError = (status, body) => ({
-  status,
-  contentType: "application/json",
-  headers: { "access-control-allow-origin": "*" },
-  body: JSON.stringify(body),
-})
 
 test("is built as v4's loading state, below the GitHub card", async ({ emitted }) => {
   const html = emitted.read("index.html")
@@ -109,7 +102,7 @@ test("says so in the card when Bluesky fails, and the sidebar carries on", async
   const errors = []
   page.on("pageerror", (error) => errors.push(error))
   await page.route(BLUESKY_API, (route) =>
-    route.fulfill(xrpcError(500, { error: "InternalServerError", message: "Something broke" })),
+    route.fulfill(jsonResponse(500, { error: "InternalServerError", message: "Something broke" })),
   )
   await page.goto("/")
   const status = card(page).locator(".cgc-social__status--failed")
@@ -125,7 +118,7 @@ test("says so in the card when Bluesky fails, and the sidebar carries on", async
 test("says so when the handle is unknown", async ({ page }) => {
   await page.route(BLUESKY_API, (route) =>
     route.request().url().includes("resolveHandle")
-      ? route.fulfill(xrpcError(400, { error: "InvalidRequest", message: "Unable to resolve handle" }))
+      ? route.fulfill(jsonResponse(400, { error: "InvalidRequest", message: "Unable to resolve handle" }))
       : route.fallback(),
   )
   await page.goto("/")
@@ -144,7 +137,7 @@ test("says so when the network fails", async ({ page }) => {
 test("says there are no posts when the feed is empty", async ({ page }) => {
   await page.route(BLUESKY_API, (route) =>
     route.request().url().includes("getAuthorFeed")
-      ? route.fulfill(xrpcError(200, { feed: [] }))
+      ? route.fulfill(jsonResponse(200, { feed: [] }))
       : route.fallback(),
   )
   await page.goto("/")
@@ -158,7 +151,7 @@ test("fails the card, not the page, on a post it can't read", async ({ page }) =
   page.on("pageerror", (error) => errors.push(error))
   await page.route(BLUESKY_API, (route) =>
     route.request().url().includes("getAuthorFeed")
-      ? route.fulfill(xrpcError(200, { feed: [{ post: { uri: "at://x/app.bsky.feed.post/y" } }] }))
+      ? route.fulfill(jsonResponse(200, { feed: [{ post: { uri: "at://x/app.bsky.feed.post/y" } }] }))
       : route.fallback(),
   )
   await page.goto("/")

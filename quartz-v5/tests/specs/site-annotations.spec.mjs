@@ -5,12 +5,10 @@
 import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
-import { createRequire } from "node:module"
 import { test, expect, routeSite } from "../harness/test.mjs"
-import { buildScratchSite, siteConfig, testsRoot, vendored } from "../harness/site.mjs"
+import { buildScratchSite, editConfig, siteConfig, testsRoot } from "../harness/site.mjs"
 import { sourceHost } from "../harness/source-host.mjs"
 
-const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
 const ORIGIN = "https://blog.chaoticgood.computer"
 // The fixture's two-page source document, pinned there by hand; served here from the host.
 const PAPER = fs.readFileSync(path.join(testsRoot, "fixture-cache/cgc-annotator/1090f1fc08a33a90"))
@@ -33,20 +31,20 @@ test.beforeAll(async () => {
   cache = fs.mkdtempSync(path.join(os.tmpdir(), "cgc-site-annotations-cache-"))
   // The site config as it is, except that the build pins into a cache of its own. Offline: this
   // spec doesn't look at type.
-  const config = YAML.parseDocument(siteConfig({ offline: true }))
-  const annotator = config.get("plugins").items.find((entry) => String(entry.get("source")).endsWith("plugins/cgc-annotator"))
-  annotator.setIn(["options", "cacheDir"], cache)
+  const config = editConfig(siteConfig({ offline: true }), (_, entry) =>
+    entry("../../plugins/cgc-annotator").setIn(["options", "cacheDir"], cache),
+  )
   site = await buildScratchSite(
     "site-annotations",
     { "index.md": "---\ntitle: Home\n---\nWelcome.\n", "content/annotations/paper.md": annotationPage(host.url("/paper.pdf")) },
-    { config: String(config), keep: true },
+    { config, keep: true },
   )
   expect(site.code, site.output).toBe(0)
 })
 test.afterAll(async () => {
   await host?.close()
   if (cache) fs.rmSync(cache, { recursive: true, force: true })
-  if (site) fs.rmSync(site.root, { recursive: true, force: true })
+  site?.remove()
 })
 
 test("an annotation page shows its document from the site's mirror path, highlighted, full-width", async ({ page }) => {

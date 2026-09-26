@@ -1,7 +1,7 @@
 // `pdf-viewer`, proven through `cgc-mdx`: the fixture page /lab/pdf imports it as a package
 // (`@chaoticgoodcomputing/widgets/pdf-viewer`) and shows /lab/fixture.pdf, a two-page PDF with a
 // link on page one. PDF.js is bundled, so nothing is fetched from a CDN (#36, #66).
-import { test, expect, toggleScheme } from "../../../tests/harness/test.mjs"
+import { test, expect, resolvedColour, toggleScheme } from "../../../tests/harness/test.mjs"
 
 const PAGE = "/lab/pdf"
 
@@ -132,15 +132,10 @@ test("its skin follows the colour scheme when the reader toggles it", async ({ p
   await page.goto(PAGE)
   const viewer = await shown(page)
   const toolbar = viewer.locator(".cgc-pdf-viewer__toolbar")
-  const skin = () =>
-    toolbar.evaluate((el) => {
-      const probe = document.createElement("div")
-      probe.style.backgroundColor = "var(--lightgray)"
-      document.body.append(probe)
-      const expected = getComputedStyle(probe).backgroundColor
-      probe.remove()
-      return { actual: getComputedStyle(el).backgroundColor, expected }
-    })
+  const skin = async () => ({
+    actual: await toolbar.evaluate((el) => getComputedStyle(el).backgroundColor),
+    expected: await resolvedColour(page, "var(--lightgray)"),
+  })
   const before = await skin()
   expect(before.actual).toBe(before.expected)
   await toggleScheme(page)

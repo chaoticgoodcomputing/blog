@@ -2,7 +2,6 @@
 // the 404 page and every tag page, as v4's layouts did (FORK-LEDGER components/PostListing.tsx).
 // Proven on a scratch site built from the site config, with a few pages in the vault's shapes.
 // Built offline: nothing here depends on the typeface, and site-config.spec proves the fonts.
-import fs from "node:fs"
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, siteConfig } from "../../../tests/harness/site.mjs"
 import { postHogStandIn } from "../../../tests/harness/analytics.mjs"
@@ -38,7 +37,7 @@ test.beforeAll(async () => {
   })
   expect(site.code, site.output).toBe(0)
 })
-test.afterAll(() => site && fs.rmSync(site.root, { recursive: true, force: true }))
+test.afterAll(() => site?.remove())
 
 const listing = (page) => page.locator(".cgc-post-listing")
 const titles = (page) => listing(page).locator(".cgc-post-listing__link").allTextContents()

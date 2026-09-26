@@ -25,7 +25,7 @@ test.beforeAll(async () => {
   site = await buildScratchSite("mdx-readme", { "index.md": "---\ntitle: Home\n---\nHome.\n", ...titledFiles() }, { keep: true })
   expect(site.code, site.output).toBe(0)
 })
-test.afterAll(() => site && fs.rmSync(site.root, { recursive: true, force: true }))
+test.afterAll(() => site?.remove())
 
 test("the README shows a whole first widget: a page, its widget and the widget's CSS", () => {
   expect(Object.keys(titledFiles()).sort()).toEqual(["hello.mdx", "widgets/initialization.css", "widgets/initialization.tsx"])

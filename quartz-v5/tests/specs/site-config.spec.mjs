@@ -3,12 +3,9 @@
 // in the standing suite. Building `content/public` is the `site-v5:build` target's job.
 import fs from "node:fs"
 import path from "node:path"
-import { test, expect, layerOrder, routeSite, schemeOf, toggleScheme } from "../harness/test.mjs"
+import { test, expect, layerOrder, routeSite, schemeOf, stackDeclaration, toggleScheme } from "../harness/test.mjs"
 import { buildScratchSite, siteConfig } from "../harness/site.mjs"
 import { postHogStandIn } from "../harness/analytics.mjs"
-// layers.mjs reads the layers keyed by parent (site-styles' guard); test.mjs's `layerOrder` is the flat,
-// dotted ranking the family-layer check uses.
-import { layerOrder as layersByParent, stackDeclaration } from "../harness/layers.mjs"
 
 const CONTENT = {
   "index.md": "---\ntitle: Home\n---\nWelcome, with `code`.\n",
@@ -33,7 +30,7 @@ test.beforeAll(async () => {
   site = await buildScratchSite("site-config", CONTENT, { config: siteConfig(), keep: true })
   expect(site.code, site.output).toBe(0)
 })
-test.afterAll(() => site && fs.rmSync(site.root, { recursive: true, force: true }))
+test.afterAll(() => site?.remove())
 
 test("emits no folder pages", () => {
   for (const folder of ["content", "content/notes"]) {
@@ -85,7 +82,7 @@ test("closes a note with v4's subscribe box and a link to its source", async ({ 
 test("ranks the family layer above core's styles", async ({ page }) => {
   await routeSite(page, site.public, ORIGIN)
   await page.goto(`${ORIGIN}/`)
-  const top = (await layerOrder(page)).filter((name) => !name.includes("."))
+  const top = (await layerOrder(page))[""]
   expect(top).toContain("quartz-base")
   expect(top.indexOf("cgc")).toBeGreaterThan(top.indexOf("quartz-base"))
 })
@@ -137,7 +134,7 @@ test("ranks every cascade layer as the site's stack declares, with the site last
   await page.goto(`${ORIGIN}/content/notes/a-note`)
   const declared = await stackDeclaration(page)
   expect(declared?.at(-1)).toBe("site")
-  expect((await layersByParent(page))[""]).toEqual(declared)
+  expect((await layerOrder(page))[""]).toEqual(declared)
 })
 
 test("self-hosts its fonts, requesting nothing from Google Fonts", async ({ page }) => {

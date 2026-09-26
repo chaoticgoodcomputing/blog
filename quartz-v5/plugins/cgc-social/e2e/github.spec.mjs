@@ -1,21 +1,12 @@
 // cgc-social's GitHub card: v4's SocialMediaGitHub (#42, #44, #80), on the fixture's home page in
 // the right sidebar. It reads the user's profile and their year of contributions in the browser,
 // from the suite's GitHub stand-in (tests/harness/github.mjs), which holds one user, `fixture-octo`.
-import { test, expect, toggleScheme } from "../../../tests/harness/test.mjs"
+import { test, expect, resolvedColour, toggleScheme } from "../../../tests/harness/test.mjs"
 import { CONTRIBUTIONS_API, GITHUB_API } from "../../../tests/harness/github.mjs"
+import { jsonResponse } from "../../../tests/harness/stand-in.mjs"
 import { expectRestOfSidebarUnaffected } from "./sidebar.mjs"
 
 const card = (page) => page.locator(".cgc-social__card--github")
-
-// A theme colour as the page resolves it, e.g. `var(--gray)` → `rgb(…)`, in the page's scheme.
-const colour = (page, value) =>
-  page.evaluate((value) => {
-    const probe = document.body.appendChild(document.createElement("i"))
-    probe.style.color = value
-    const resolved = getComputedStyle(probe).color
-    probe.remove()
-    return resolved
-  }, value)
 
 // The calendar's cell for one day, by the tooltip v4 gave it.
 const day = (page, title) => card(page).locator(`.cgc-social__day[title="${title}"]`)
@@ -106,23 +97,23 @@ test("colours each day by its level, from the theme by default", async ({ page }
   await page.goto("/")
   await expect(day(page, "No contributions on Sep 21, 2025")).toHaveCSS(
     "background-color",
-    await colour(page, "var(--lightgray)"),
+    await resolvedColour(page, "var(--lightgray)"),
   )
   await expect(day(page, "10 contributions on Sep 24, 2025")).toHaveCSS(
     "background-color",
-    await colour(page, "var(--secondary)"),
+    await resolvedColour(page, "var(--secondary)"),
   )
-  const between = await colour(page, "color-mix(in srgb, var(--secondary) 25%, var(--lightgray))")
+  const between = await resolvedColour(page, "color-mix(in srgb, var(--secondary) 25%, var(--lightgray))")
   await expect(day(page, "1 contribution on Sep 23, 2025")).toHaveCSS("background-color", between)
 })
 
 test("repaints the calendar when the scheme switches on a loaded page", async ({ page }) => {
   await page.goto("/")
   const busiest = day(page, "10 contributions on Sep 24, 2025")
-  const before = await colour(page, "var(--secondary)")
+  const before = await resolvedColour(page, "var(--secondary)")
   await expect(busiest).toHaveCSS("background-color", before)
   await toggleScheme(page)
-  const after = await colour(page, "var(--secondary)")
+  const after = await resolvedColour(page, "var(--secondary)")
   expect(after).not.toBe(before)
   await expect(busiest).toHaveCSS("background-color", after)
 })
@@ -140,14 +131,7 @@ test("says so in the card when the contributions can't be had, and the sidebar c
 }) => {
   const errors = []
   page.on("pageerror", (error) => errors.push(error))
-  await page.route(CONTRIBUTIONS_API, (route) =>
-    route.fulfill({
-      status: 502,
-      contentType: "application/json",
-      headers: { "access-control-allow-origin": "*" },
-      body: JSON.stringify({ error: "Upstream is down" }),
-    }),
-  )
+  await page.route(CONTRIBUTIONS_API, (route) => route.fulfill(jsonResponse(502, { error: "Upstream is down" })))
   await page.goto("/")
   const status = card(page).locator(".cgc-social__status--failed")
   await expect(status.locator(".cgc-social__message")).toHaveText("Failed to load contributions")

@@ -2,8 +2,9 @@
 // (`@chaoticgoodcomputing/widgets/bluesky-post`) and shows two posts, fetched in the browser after
 // hydration (#36, #75). Bluesky itself is the suite's stand-in (tests/harness/bluesky.mjs), which
 // answers from tests/fixture-bluesky/xrpc.json.
-import { test, expect, toggleScheme } from "../../../tests/harness/test.mjs"
+import { test, expect, resolvedColour, toggleScheme } from "../../../tests/harness/test.mjs"
 import { BLUESKY_API, BLUESKY_HOSTS } from "../../../tests/harness/bluesky.mjs"
+import { jsonResponse } from "../../../tests/harness/stand-in.mjs"
 import { buildScratchSite } from "../../../tests/harness/site.mjs"
 import { createRequire } from "node:module"
 import fs from "node:fs"
@@ -225,41 +226,23 @@ const FAILURES = [
   [
     "the post doesn't exist",
     (route) =>
-      route.fulfill({
-        status: 400,
-        contentType: "application/json",
-        headers: { "access-control-allow-origin": "*" },
-        body: JSON.stringify({ error: "NotFound", message: "Post not found" }),
-      }),
+      route.fulfill(jsonResponse(400, { error: "NotFound", message: "Post not found" })),
     "Post not found",
   ],
   [
     "the post is blocked",
     (route) =>
-      route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        headers: { "access-control-allow-origin": "*" },
-        body: JSON.stringify({
-          thread: { $type: "app.bsky.feed.defs#blockedPost", uri: "at://x", blocked: true },
-        }),
-      }),
+      route.fulfill(
+        jsonResponse(200, { thread: { $type: "app.bsky.feed.defs#blockedPost", uri: "at://x", blocked: true } }),
+      ),
     "Post blocked",
   ],
   [
     "Bluesky answers with a post the renderer can't read",
     (route) =>
-      route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        headers: { "access-control-allow-origin": "*" },
-        body: JSON.stringify({
-          thread: {
-            $type: "app.bsky.feed.defs#threadViewPost",
-            post: { uri: "at://x", author: null },
-          },
-        }),
-      }),
+      route.fulfill(
+        jsonResponse(200, { thread: { $type: "app.bsky.feed.defs#threadViewPost", post: { uri: "at://x", author: null } } }),
+      ),
     "Failed to load post",
   ],
 ]
@@ -335,27 +318,16 @@ test("leaving before the post arrives abandons the request", async ({ page }) =>
 test("its skin follows the colour scheme when the reader toggles it", async ({ page }) => {
   await page.goto(PAGE)
   const [first] = await shown(page)
-  const skin = () =>
-    first.evaluate((el) => {
-      const probe = document.createElement("div")
-      probe.style.backgroundColor = "var(--light)"
-      probe.style.color = "var(--gray)"
-      document.body.append(probe)
-      const expected = {
-        background: getComputedStyle(probe).backgroundColor,
-        icon: getComputedStyle(probe).color,
-      }
-      probe.remove()
-      const card = el.querySelector(".cgc-bluesky")
-      const icon = el.querySelector(".cgc-bluesky__metric path")
-      return {
-        expected,
-        actual: {
-          background: getComputedStyle(card).backgroundColor,
-          icon: getComputedStyle(icon).fill,
-        },
-      }
-    })
+  const skin = async () => ({
+    expected: {
+      background: await resolvedColour(page, "var(--light)"),
+      icon: await resolvedColour(page, "var(--gray)"),
+    },
+    actual: await first.evaluate((el) => ({
+      background: getComputedStyle(el.querySelector(".cgc-bluesky")).backgroundColor,
+      icon: getComputedStyle(el.querySelector(".cgc-bluesky__metric path")).fill,
+    })),
+  })
   const before = await skin()
   expect(before.actual).toEqual(before.expected)
   await toggleScheme(page)
@@ -394,14 +366,7 @@ test("a hostile post is shown as text, and its script URLs lead nowhere", async 
       },
     },
   }
-  await page.route(BLUESKY_API, (route) =>
-    route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      headers: { "access-control-allow-origin": "*" },
-      body: JSON.stringify(hostile),
-    }),
-  )
+  await page.route(BLUESKY_API, (route) => route.fulfill(jsonResponse(200, hostile)))
   await page.goto(PAGE)
   const [first] = await shown(page)
   const post = first.locator(".cgc-bluesky")

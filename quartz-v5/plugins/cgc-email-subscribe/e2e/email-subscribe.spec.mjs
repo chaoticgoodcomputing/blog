@@ -1,53 +1,16 @@
 // cgc-email-subscribe: v4's Buttondown subscribe box (EmailSubscribe, #42/#44), at parity.
 // Buttondown itself is never reached: every request to it is intercepted.
 import fs from "node:fs"
-import os from "node:os"
 import path from "node:path"
-import { execFile } from "node:child_process"
-import { createRequire } from "node:module"
-import { promisify } from "node:util"
-import { test, expect, toggleScheme } from "../../../tests/harness/test.mjs"
-import { buildScratchSite, testsRoot, vendored } from "../../../tests/harness/site.mjs"
+import { test, expect, layersOf, resolvedColour, toggleScheme } from "../../../tests/harness/test.mjs"
+import { buildPluginCopy, buildScratchSite, editConfig, fixtureConfig } from "../../../tests/harness/site.mjs"
 
 // The fixture's `buttondownUsername` is `cgc-fixture`.
 const ENDPOINT = "https://buttondown.com/api/emails/embed-subscribe/cgc-fixture"
-const pluginRoot = path.resolve(testsRoot, "../plugins/cgc-email-subscribe")
-const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
 
-// A theme colour as the page resolves it, e.g. `var(--gray)` → `rgb(…)`, in the page's scheme.
-const colour = (page, value) =>
-  page.evaluate((value) => {
-    const probe = document.body.appendChild(document.createElement("i"))
-    probe.style.color = value
-    const resolved = getComputedStyle(probe).color
-    probe.remove()
-    return resolved
-  }, value)
+// Theme colours as the page resolves them, e.g. `gray` → `rgb(…)`, in the page's scheme.
 const palette = async (page, names) =>
-  Object.fromEntries(await Promise.all(names.map(async (name) => [name, await colour(page, `var(--${name})`)])))
-
-// The cascade layer of every stylesheet rule whose selector mentions `name`.
-const layersOf = (page, name) =>
-  page.evaluate((name) => {
-    const found = []
-    const visit = (rules, layer) => {
-      for (const rule of rules) {
-        if (rule instanceof CSSLayerBlockRule) visit(rule.cssRules, [...layer, rule.name])
-        else if (rule instanceof CSSStyleRule) rule.selectorText.includes(name) && found.push(layer.join("."))
-        else if (rule.cssRules) visit(rule.cssRules, layer)
-      }
-    }
-    for (const sheet of document.styleSheets) {
-      let rules
-      try {
-        rules = sheet.cssRules
-      } catch {
-        continue // a cross-origin sheet (a CDN's) cannot be read, and is not ours
-      }
-      visit(rules, [])
-    }
-    return found
-  }, name)
+  Object.fromEntries(await Promise.all(names.map(async (name) => [name, await resolvedColour(page, `var(--${name})`)])))
 
 const expectStyles = async (locator, styles) => {
   for (const [property, value] of Object.entries(styles)) await expect(locator, property).toHaveCSS(property, value)
@@ -151,10 +114,10 @@ test("styles the box as v4 did, from the theme's colours", async ({ page }) => {
 test("follows a scheme switch on a loaded page", async ({ page }) => {
   await page.goto("/plain-note")
   const submit = page.locator(".cgc-email-subscribe__submit")
-  await expect(submit).toHaveCSS("background-color", await colour(page, "var(--secondary)"))
-  const before = await colour(page, "var(--secondary)")
+  await expect(submit).toHaveCSS("background-color", await resolvedColour(page, "var(--secondary)"))
+  const before = await resolvedColour(page, "var(--secondary)")
   await toggleScheme(page)
-  const after = await colour(page, "var(--secondary)")
+  const after = await resolvedColour(page, "var(--secondary)")
   expect(after).not.toBe(before)
   await expect(submit).toHaveCSS("background-color", after)
 })
@@ -167,10 +130,10 @@ test("ships its CSS in the family layer, cgc.email-subscribe", async ({ page }) 
 })
 
 test("fails the build when buttondownUsername is not set", async () => {
-  const config = YAML.parseDocument(fs.readFileSync(path.join(testsRoot, "quartz.config.yaml"), "utf8"))
-  const entry = config.get("plugins").items.find((item) => item.get("source") === "../../plugins/cgc-email-subscribe")
-  entry.deleteIn(["options", "buttondownUsername"])
-  const { code, output } = await buildScratchSite("email-no-user", { "index.md": "# home\n" }, { config: String(config) })
+  const config = editConfig(fixtureConfig(), (_, entry) =>
+    entry("../../plugins/cgc-email-subscribe").deleteIn(["options", "buttondownUsername"]),
+  )
+  const { code, output } = await buildScratchSite("email-no-user", { "index.md": "# home\n" }, { config })
   expect(code).not.toBe(0)
   expect(output).toContain("cgc-email-subscribe")
   expect(output).toContain("buttondownUsername")
@@ -178,19 +141,10 @@ test("fails the build when buttondownUsername is not set", async () => {
 
 // ADR-0003 rule 3: a selector that escapes the package's namespace fails the plugin's own build.
 test("refuses to build a stylesheet that selects what it does not own", async () => {
-  const copy = fs.mkdtempSync(path.join(os.tmpdir(), "cgc-email-subscribe-"))
-  try {
-    for (const entry of ["package.json", "build.mjs", "src"]) fs.cpSync(path.join(pluginRoot, entry), path.join(copy, entry), { recursive: true })
-    fs.symlinkSync(path.join(pluginRoot, "node_modules"), path.join(copy, "node_modules"))
+  const build = await buildPluginCopy("cgc-email-subscribe", (copy) => {
     fs.appendFileSync(path.join(copy, "src/style.css"), "@layer cgc.email-subscribe {\n  input[type=\"email\"] { padding: 0; }\n}\n")
-    const build = await promisify(execFile)("node", ["build.mjs"], { cwd: copy }).then(
-      () => ({ code: 0, output: "" }),
-      (err) => ({ code: err.code, output: `${err.stdout}${err.stderr}` }),
-    )
-    expect(build.code).not.toBe(0)
-    expect(build.output).toContain("input")
-    expect(fs.existsSync(path.join(copy, "dist"))).toBe(false)
-  } finally {
-    fs.rmSync(copy, { recursive: true, force: true })
-  }
+  })
+  expect(build.code).not.toBe(0)
+  expect(build.output).toContain("input")
+  expect(build.dist).toBe(false)
 })

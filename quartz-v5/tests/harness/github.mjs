@@ -11,6 +11,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
+import { jsonResponse as json, routeStandIn } from "./stand-in.mjs"
 
 /** Every host the GitHub card reads: the REST API, the contributions API and the avatar host. */
 export const GITHUB_HOSTS =
@@ -42,17 +43,6 @@ export const CONTRIBUTIONS = (() => {
   return { total: { lastYear }, contributions }
 })()
 
-// Every avatar: a square the browser can decode.
-const PICTURE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><rect width="8" height="8" fill="#84a59d"/><circle cx="4" cy="4" r="2" fill="#284b63"/></svg>`
-
-// Both APIs answer the page's origin: every response carries CORS headers.
-const json = (status, body) => ({
-  status,
-  contentType: "application/json",
-  headers: { "access-control-allow-origin": "*" },
-  body: JSON.stringify(body),
-})
-
 /** The response the stand-in gives to one request to either API, as `route.fulfill` takes it. */
 export function githubResponse(url) {
   const { host, pathname } = new URL(url)
@@ -67,11 +57,6 @@ export function githubResponse(url) {
   return json(404, { error: `GitHub user "${login}" not found.` })
 }
 
-export async function githubStandIn(context) {
-  await context.route(GITHUB_HOSTS, (route) => {
-    const url = new URL(route.request().url())
-    if (url.host === "avatars.githubusercontent.com")
-      return route.fulfill({ status: 200, contentType: "image/svg+xml", body: PICTURE })
-    return route.fulfill(githubResponse(url.href))
-  })
-}
+// Every avatar is the stand-in's one picture.
+export const githubStandIn = (context) =>
+  routeStandIn(context, GITHUB_HOSTS, { imageHost: "avatars.githubusercontent.com", answer: (url) => githubResponse(url.href) })

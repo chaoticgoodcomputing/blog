@@ -4,8 +4,8 @@ import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { test, expect } from "../../../tests/harness/test.mjs"
-import { buildScratchSite } from "../../../tests/harness/site.mjs"
-import { buildProbePlugin, fixtureConfigWith } from "../../../tests/harness/probe.mjs"
+import { buildScratchSite, fixtureConfig, withPlugins } from "../../../tests/harness/site.mjs"
+import { buildProbePlugin } from "../../../tests/harness/probe.mjs"
 
 const probeSource = path.join(path.dirname(fileURLToPath(import.meta.url)), "probe")
 
@@ -20,11 +20,9 @@ test("a denylisted transformer is left out, and every other one still runs", asy
         "Maths: $e^{i\\pi} + 1 = 0$\n\nA wikilink to [[plain-note]], and ~~struck~~ text.\n",
     },
     {
-      config: fixtureConfigWith({
-        source: probe.path,
-        enabled: true,
-        options: { skip: ["Latex"] },
-      }),
+      config: withPlugins(fixtureConfig(), [
+        { source: probe.path, enabled: true, options: { skip: ["Latex"] } },
+      ]),
       keep: true,
     },
   )
@@ -42,7 +40,7 @@ test("a denylisted transformer is left out, and every other one still runs", asy
       expect(html).toContain("<del>struck</del>")
     }
   } finally {
-    fs.rmSync(site.root, { recursive: true, force: true })
+    site.remove()
     probe.remove()
   }
 })

@@ -45,7 +45,7 @@ test.beforeAll(async () => {
   })
   expect(site.code, site.output).toBe(0)
 })
-test.afterAll(() => site && fs.rmSync(site.root, { recursive: true, force: true }))
+test.afterAll(() => site?.remove())
 
 test("draws the graph in the right sidebar, in stock graph's place", async ({ page }) => {
   await routeSite(page, site.public, ORIGIN)

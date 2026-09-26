@@ -3,7 +3,6 @@
 // expected numbers are v4's, measured on the live v4 site with the same viewports. Built from the
 // site config, as the real site is, so the real layout's components are all on the page. Built
 // offline, since no width here depends on the typeface: site-config.spec proves the fonts.
-import fs from "node:fs"
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, siteConfig } from "../../../tests/harness/site.mjs"
 
@@ -30,7 +29,7 @@ test.beforeAll(async () => {
   site = await buildScratchSite("site-styles-layout", CONTENT, { config: siteConfig({ offline: true }), keep: true })
   expect(site.code, site.output).toBe(0)
 })
-test.afterAll(() => site && fs.rmSync(site.root, { recursive: true, force: true }))
+test.afterAll(() => site?.remove())
 
 async function openAt(page, width, url = "/content/notes/a-note") {
   await page.setViewportSize({ width, height: 900 })

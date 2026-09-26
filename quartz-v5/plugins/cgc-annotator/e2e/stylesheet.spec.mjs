@@ -2,14 +2,9 @@
 // plugin's family layer and its own namespace, PDF.js's text-layer rules included, and a selector
 // that escapes the namespace fails the plugin's own build (rule 3).
 import fs from "node:fs"
-import os from "node:os"
 import path from "node:path"
-import { execFile } from "node:child_process"
-import { promisify } from "node:util"
-import { fileURLToPath } from "node:url"
 import { test, expect } from "../../../tests/harness/test.mjs"
-
-const pluginRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
+import { buildPluginCopy } from "../../../tests/harness/site.mjs"
 
 test("the stylesheet a site gets is PDF.js's text layer and ours, all in cgc.annotator, all namespaced", async ({ page, emitted }) => {
   await page.goto("/annotations/fixture-paper")
@@ -32,21 +27,8 @@ test("the stylesheet a site gets is PDF.js's text layer and ours, all in cgc.ann
   expect(css).toContain("var(--scale-x,1)")
 })
 
-async function buildWith(extraCss) {
-  const copy = fs.mkdtempSync(path.join(os.tmpdir(), "cgc-annotator-css-"))
-  try {
-    for (const entry of ["package.json", "build.mjs", "src"]) fs.cpSync(path.join(pluginRoot, entry), path.join(copy, entry), { recursive: true })
-    fs.symlinkSync(path.join(pluginRoot, "node_modules"), path.join(copy, "node_modules"))
-    fs.appendFileSync(path.join(copy, "src/styles/annotator.css"), extraCss)
-    const build = await promisify(execFile)("node", ["build.mjs"], { cwd: copy }).then(
-      () => ({ code: 0, output: "" }),
-      (err) => ({ code: err.code, output: `${err.stdout}${err.stderr}` }),
-    )
-    return { ...build, dist: fs.existsSync(path.join(copy, "dist")) }
-  } finally {
-    fs.rmSync(copy, { recursive: true, force: true })
-  }
-}
+const buildWith = (extraCss) =>
+  buildPluginCopy("cgc-annotator", (copy) => fs.appendFileSync(path.join(copy, "src/styles/annotator.css"), extraCss))
 
 test("refuses to build a stylesheet that selects what it does not own", async () => {
   // v4's lesson: PDF.js's viewer CSS shipped a bare `.sidebar`, which hid Quartz's sidebars.

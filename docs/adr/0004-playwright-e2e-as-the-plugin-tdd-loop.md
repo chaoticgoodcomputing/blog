@@ -73,7 +73,8 @@ turned it red, and the failure named every affected element and `normal → 2px`
    Playwright and one set of fixtures. Cross-plugin specs, such as no-bleed and composition between
    an engine and its consumers, live centrally in `quartz-v5/tests/specs/`.
 3. **The no-bleed spec is standing.** It isn't opt-in and it isn't CI-only. It costs a second site
-   build, which runs in parallel with the first.
+   build, which runs after the first: builds run one at a time (_Amended below_, one site build at a
+   time).
 4. **The content fixture grows one page at a time**, when a plugin needs a case. It stays small,
    because its build time is the loop's floor.
 5. **The loop:** `nx run site-v5-e2e:e2e`, or narrowed with
@@ -115,8 +116,9 @@ turned it red, and the failure named every affected element and `normal → 2px`
 - **No-bleed checks computed style, not layout.** It compares a fixed list of properties. An
   inserted element that pushes its siblings down doesn't count as a bleed. Geometry is a different
   question, and nothing here answers it yet.
-- **Both site variants share the vendored copy's transpile cache** through the symlinks. They have
-  run in parallel without a race. If they ever do race, build them one after the other.
+- **Both site variants share the vendored copy's transpile cache** through the symlinks, and so does
+  every scratch site. They raced once specs ran under both colour schemes, so every build the harness
+  starts now runs one at a time. _Amended below_, one site build at a time.
 
 ## Amendment: both colour schemes
 
@@ -128,6 +130,46 @@ scheme, and the shareability test covers it: a plugin that only looks right in d
 pass. Whether our own site brings its light scheme back is decided separately. The guarantee can't
 depend on it, so the harness provides it: every fixture spec renders under both `saved-theme`
 values, and a plugin that assumes dark fails the suite.
+
+## Amendment: one site build at a time
+
+_2026-09-25, from [Spec: implement the Quartz v4 → v5 migration](https://github.com/chaoticgoodcomputing/blog/issues/53)._
+
+The race the Consequences above allowed for happened. Every fixture root and scratch root symlinks
+the vendored copy's `quartz/` source directory, and the Quartz CLI transpiles itself into that
+directory before each build: esbuild writes the transpile to `quartz/.quartz-cache/transpiled-build.mjs`
+([handlers.js:336](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/cli/handlers.js#L336),
+the path set at
+[constants.js:13](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/cli/constants.js#L13)),
+and the CLI then imports it
+([handlers.js:439](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/cli/handlers.js#L439)).
+So every build of every root writes and reads the same file. Once each spec ran under both colour
+schemes, the same scratch spec built twice at once, and one build imported the other's half-written
+transpile: `buildQuartz is not a function`.
+
+So the harness builds one site at a time, across every worker process. Each build first takes the
+**build lock**, a directory under `tests/` that it makes with `mkdir`, which is atomic, and removes
+it when it ends. Every build the harness starts takes it: the fixture site, the baseline, each
+scratch site, and a serve run until its server has exited, since serve's source watcher lives as
+long as its server. A serve run left up, below, holds it only until its server is up. The lock
+names the processes it is held for, the worker and the build it started. Playwright stops a worker
+whose test times out before the worker can let the lock go, so a lock whose processes have all
+exited is free, and so is any lock older than a build can take, five minutes. Without the first
+rule, one timeout on a loaded machine stalled every other worker for those five minutes, and their
+tests timed out in turn.
+
+What that costs:
+
+- **The baseline no longer overlaps the fixture site.** Global setup takes the sum of the two builds,
+  not the longer of them. Skipping the baseline, the first lever the Consequences name, saves a whole
+  build now.
+- **Scratch sites queue.** A spec that builds one waits for every other worker's build to finish, so
+  more workers don't make scratch-heavy runs faster: those runs are as slow as their builds in a row.
+- **The lock covers the harness only.** The acceptance report and `site-v5:build` share the same
+  transpile file and take no lock, so neither runs beside the suite in the same checkout.
+
+A private copy of `quartz/` per root would let builds overlap again, at the price of copying the
+source into every root before it builds. Nothing needs that yet.
 
 ## Amendment: a serve run, for what a plugin does under serve
 

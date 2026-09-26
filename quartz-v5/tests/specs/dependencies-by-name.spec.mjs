@@ -27,8 +27,7 @@ test("the consumer names the engine by plugin name, not by either site's source"
 
 test("the consumer's dependency resolves by name at the fixture root", async ({ page }) => {
   await page.goto("/plain-note")
-  const layers = await layerOrder(page)
-  expect(layers).toContain("cgc.fixture-consumer")
+  expect((await layerOrder(page)).cgc).toContain("fixture-consumer")
 })
 
 // The real site runs from the vendored root, `quartz-v5/quartz/`, so its config names the engine
@@ -47,9 +46,9 @@ test("the consumer's dependency resolves by name at the real site root", async (
     const origin = "https://blog.chaoticgood.computer"
     await routeSite(page, site.public, origin)
     await page.goto(`${origin}/`)
-    expect(await layerOrder(page)).toContain("cgc.fixture-consumer")
+    expect((await layerOrder(page)).cgc).toContain("fixture-consumer")
   } finally {
-    fs.rmSync(site.root, { recursive: true, force: true })
+    site.remove()
   }
 })
 

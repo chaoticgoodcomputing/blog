@@ -10,6 +10,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
+import { jsonResponse as json, routeStandIn } from "./stand-in.mjs"
 
 /** Every Bluesky host: the public API, the image CDN and the web app. */
 export const BLUESKY_HOSTS = /^https:\/\/([a-z0-9-]+\.)*bsky\.app\//
@@ -24,17 +25,6 @@ export const XRPC = JSON.parse(
 
 // The parameter that names what each call asks for.
 const KEYS = ["uri", "handle", "actor"]
-
-// Every image the CDN serves, avatars and thumbnails alike: a square the browser can decode.
-const PICTURE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><rect width="8" height="8" fill="#7b97aa"/><circle cx="4" cy="4" r="2" fill="#284b63"/></svg>`
-
-// The API answers the page's origin: every response it gives carries CORS headers.
-const json = (status, body) => ({
-  status,
-  contentType: "application/json",
-  headers: { "access-control-allow-origin": "*" },
-  body: JSON.stringify(body),
-})
 
 /** The response the stand-in gives to one XRPC call, as `route.fulfill` takes it. */
 export function xrpcResponse(url) {
@@ -51,12 +41,12 @@ export function xrpcResponse(url) {
     : json(400, { error: "InvalidRequest", message: `Unknown: ${key}` })
 }
 
-export async function blueskyStandIn(context) {
-  await context.route(BLUESKY_HOSTS, (route) => {
-    const url = new URL(route.request().url())
-    if (url.host === "cdn.bsky.app")
-      return route.fulfill({ status: 200, contentType: "image/svg+xml", body: PICTURE })
-    if (url.pathname.startsWith("/xrpc/")) return route.fulfill(xrpcResponse(url.href))
-    return route.fulfill({ status: 404, contentType: "text/plain", body: "not in the stand-in" })
+// Every image on the CDN is the stand-in's one picture.
+export const blueskyStandIn = (context) =>
+  routeStandIn(context, BLUESKY_HOSTS, {
+    imageHost: "cdn.bsky.app",
+    answer: (url) =>
+      url.pathname.startsWith("/xrpc/")
+        ? xrpcResponse(url.href)
+        : { status: 404, contentType: "text/plain", body: "not in the stand-in" },
   })
-}

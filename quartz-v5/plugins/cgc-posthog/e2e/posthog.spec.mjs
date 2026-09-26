@@ -5,14 +5,11 @@
 //   .left.sidebar → left-sidebar, .callout → callout, article p a.internal → inline-link
 // (tests/quartz.config.yaml), and /posthog/navigation has a link in each of those places, and one in
 // a list, which none of them labels.
-import path from "node:path"
-import { createRequire } from "node:module"
 import { test, expect } from "../../../tests/harness/test.mjs"
 import { postHogStandIn } from "../../../tests/harness/analytics.mjs"
-import { buildScratchSite, fixtureConfig, vendored } from "../../../tests/harness/site.mjs"
+import { buildScratchSite, editConfig, fixtureConfig } from "../../../tests/harness/site.mjs"
 
 const HOST = "https://posthog.invalid"
-const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
 
 const events = (record, name) => record.captures.filter((capture) => capture.event === name).map((capture) => capture.properties)
 
@@ -118,10 +115,8 @@ for (const [where, setDoNotTrack] of [
 }
 
 test("fails the build when apiKey is not set", async () => {
-  const config = YAML.parseDocument(fixtureConfig())
-  const entry = config.get("plugins").items.find((item) => item.get("source") === "../../plugins/cgc-posthog")
-  entry.deleteIn(["options", "apiKey"])
-  const { code, output } = await buildScratchSite("posthog-no-key", { "index.md": "# home\n" }, { config: String(config) })
+  const config = editConfig(fixtureConfig(), (_, entry) => entry("../../plugins/cgc-posthog").deleteIn(["options", "apiKey"]))
+  const { code, output } = await buildScratchSite("posthog-no-key", { "index.md": "# home\n" }, { config })
   expect(code).not.toBe(0)
   expect(output).toContain("cgc-posthog")
   expect(output).toContain("apiKey")
@@ -129,9 +124,10 @@ test("fails the build when apiKey is not set", async () => {
 
 // It replaces core's PostHog, whose snippet would init PostHog a second time and count every page twice.
 test("fails the build when core analytics is PostHog too", async () => {
-  const config = YAML.parseDocument(fixtureConfig())
-  config.setIn(["configuration", "analytics"], config.createNode({ provider: "posthog", apiKey: "phc_fixture" }))
-  const { code, output } = await buildScratchSite("posthog-twice", { "index.md": "# home\n" }, { config: String(config) })
+  const config = editConfig(fixtureConfig(), (doc) =>
+    doc.setIn(["configuration", "analytics"], doc.createNode({ provider: "posthog", apiKey: "phc_fixture" })),
+  )
+  const { code, output } = await buildScratchSite("posthog-twice", { "index.md": "# home\n" }, { config })
   expect(code).not.toBe(0)
   expect(output).toContain("cgc-posthog")
   expect(output).toContain("analytics")

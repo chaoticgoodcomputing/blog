@@ -1,16 +1,18 @@
-// The cascade's layer order, read back out of a loaded page (ADR-0003's family-layer and
-// site-plugin amendments). Layers rank by where each name *first* appears in document order, so the
-// page's stylesheets are walked in order, `@import`ed sheets included, and every layer name is
-// recorded the first time it is seen, under its parent. What the browser ranks is what is asserted:
-// no stylesheet source is parsed here.
+// The cascade's layers, read back out of a loaded page (ADR-0003's family-layer and site-plugin
+// amendments). Layers rank by where each name *first* appears in document order, so the page's
+// stylesheets are walked in order, `@import`ed sheets included, and every layer name is recorded the
+// first time it is seen, under its parent. What the browser ranks is what is asserted: no stylesheet
+// source is parsed here. One walker for every reading, re-exported by `test.mjs` for specs.
 
 // Runs in the page. `order` is keyed by parent: `""` holds the top-level names, and `"site"` (say)
-// the sublayers of `site`. `sheets` holds each stylesheet's own top-level names, in its order. An
-// anonymous layer is recorded as `(anonymous)`. A cross-origin sheet the page may not read is
-// skipped.
-function readLayers() {
+// the sublayers of `site`. `sheets` holds each stylesheet's own top-level names, in its order. With
+// `withRules`, `rules` holds every style rule, nested ones included: its selector, the dotted name
+// of the layer it sits in (`""` for none) and its declarations. An anonymous layer is named
+// `(anonymous)`. A cross-origin sheet the page may not read, such as a font CDN's, is skipped.
+function readLayers(withRules) {
   const order = {}
   const sheets = []
+  const rules = []
   let own
   const note = (parent, name) => {
     let full = parent
@@ -23,16 +25,16 @@ function readLayers() {
     return full
   }
   const readSheet = (sheet, parent) => {
-    let rules
+    let list
     try {
-      rules = sheet.cssRules
+      list = sheet.cssRules
     } catch {
       return
     }
-    walk(rules, parent)
+    walk(list, parent)
   }
-  const walk = (rules, parent) => {
-    for (const rule of rules) {
+  const walk = (list, parent) => {
+    for (const rule of list) {
       if (rule instanceof CSSLayerStatementRule) {
         for (const name of rule.nameList) note(parent, name)
       } else if (rule instanceof CSSLayerBlockRule) {
@@ -40,9 +42,14 @@ function readLayers() {
       } else if (rule instanceof CSSImportRule) {
         const layer = rule.layerName === null ? parent : note(parent, rule.layerName || "(anonymous)")
         if (rule.styleSheet) readSheet(rule.styleSheet, layer)
-      } else if (rule.cssRules) {
+      } else {
+        if (withRules && rule instanceof CSSStyleRule) {
+          const style = {}
+          for (const name of rule.style) style[name] = rule.style.getPropertyValue(name).trim()
+          rules.push({ selector: rule.selectorText, layer: parent, style })
+        }
         // @media, @supports, @container, and nested style rules.
-        walk(rule.cssRules, parent)
+        if (rule.cssRules) walk(rule.cssRules, parent)
       }
     }
   }
@@ -51,11 +58,14 @@ function readLayers() {
     readSheet(sheet, "")
     sheets.push(own)
   }
-  return { order, sheets }
+  return { order, sheets, rules }
 }
 
-/** The page's cascade layers, lowest-ranked first, keyed by parent (`""` for the top level). */
-export const layerOrder = async (page) => (await page.evaluate(readLayers)).order
+/**
+ * The page's cascade layers, lowest-ranked first, keyed by parent: `order[""]` is the top-level
+ * ranking, and `order.cgc` the family layer's sublayers.
+ */
+export const layerOrder = async (page) => (await page.evaluate(readLayers, false)).order
 
 /**
  * The site's stack declaration as the page carries it: the top-level layers of the first stylesheet
@@ -64,4 +74,15 @@ export const layerOrder = async (page) => (await page.evaluate(readLayers)).orde
  * follow it: `@layer a, b, site; @layer site {…}` is served as `@layer a,b;@layer site{…}`.
  */
 export const stackDeclaration = async (page) =>
-  (await page.evaluate(readLayers)).sheets.find((names) => names.includes("site")) ?? null
+  (await page.evaluate(readLayers, false)).sheets.find((names) => names.includes("site")) ?? null
+
+/**
+ * Every style rule on the page, in document order, as `{ selector, layer, style }`: the layer is
+ * dotted (`cgc.tags`), `""` for an unlayered rule, and `style` maps each declared property to its
+ * value as the browser parsed it.
+ */
+export const styleRules = async (page) => (await page.evaluate(readLayers, true)).rules
+
+/** The layer of every style rule whose selector mentions `name`, such as a package's BEM block. */
+export const layersOf = async (page, name) =>
+  (await styleRules(page)).filter(({ selector }) => selector.includes(name)).map(({ layer }) => layer)

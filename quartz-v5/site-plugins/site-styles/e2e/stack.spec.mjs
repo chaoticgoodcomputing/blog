@@ -4,13 +4,11 @@
 // plugin, so it is proven on a scratch site: the fixture's config plus site-styles, and a probe
 // standing in for a family plugin, whose `cgc` sublayer would rank below `quartz-fonts` if the
 // stack were not declared first.
-import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
-import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
-import { buildScratchSite } from "../../../tests/harness/site.mjs"
-import { buildProbePlugin, fixtureConfigWith } from "../../../tests/harness/probe.mjs"
-import { layerOrder, stackDeclaration } from "../../../tests/harness/layers.mjs"
+import { test, expect, layerOrder, routeSite, stackDeclaration } from "../../../tests/harness/test.mjs"
+import { buildScratchSite, fixtureConfig, withPlugins } from "../../../tests/harness/site.mjs"
+import { buildProbePlugin } from "../../../tests/harness/probe.mjs"
 
 // The stack the site's config loads (#39): core, the fonts plugin, the family, the site.
 const STACK = ["quartz-base", "quartz-fonts", "cgc", "site"]
@@ -31,16 +29,16 @@ let site, probe
 test.beforeAll(async () => {
   probe = await buildProbePlugin(probeSource, "cgc-probe", { category: "transformer", defaultOrder: 50 })
   site = await buildScratchSite("site-styles", CONTENT, {
-    config: fixtureConfigWith(
+    config: withPlugins(fixtureConfig(), [
       { source: "../../site-plugins/site-styles", enabled: true },
       { source: probe.path, enabled: true },
-    ),
+    ]),
     keep: true,
   })
   expect(site.code, site.output).toBe(0)
 })
 test.afterAll(() => {
-  if (site) fs.rmSync(site.root, { recursive: true, force: true })
+  site?.remove()
   probe?.remove()
 })
 

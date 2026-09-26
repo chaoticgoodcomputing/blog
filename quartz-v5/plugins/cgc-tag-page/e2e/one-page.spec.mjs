@@ -73,7 +73,7 @@ test.describe("on the site config", () => {
     })
     expect(site.code, site.output).toBe(0)
   })
-  test.afterAll(() => site && fs.rmSync(site.root, { recursive: true, force: true }))
+  test.afterAll(() => site?.remove())
 
   test("emits one page for each tag, nested description files included", () => {
     const urls = tagUrls(fs.readdirSync(site.public, { recursive: true }))

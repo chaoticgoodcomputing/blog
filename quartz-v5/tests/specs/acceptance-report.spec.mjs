@@ -21,11 +21,12 @@ const repoRoot = path.resolve(testsRoot, "../..")
 
 test.skip(({ colorScheme }) => colorScheme === "dark", "the report has no colour scheme")
 
+// What the file made, removed once its tests are done.
 const scratch = []
-test.afterAll(() => scratch.forEach((dir) => fs.rmSync(dir, { recursive: true, force: true })))
+test.afterAll(() => scratch.forEach((remove) => remove()))
 const tempDir = (name) => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), `cgc-acceptance-${name}-`))
-  scratch.push(dir)
+  scratch.push(() => fs.rmSync(dir, { recursive: true, force: true }))
   return dir
 }
 
@@ -464,7 +465,7 @@ test("reads the heads, feeds and URLs both Quartz versions really emit", async (
   const v4 = path.join(tempDir("v4-build"), "public")
   await run("node", ["quartz/bootstrap-cli.mjs", "build", "-d", content, "-o", v4], { cwd: repoRoot, maxBuffer: 64 * 1024 * 1024 })
   const v5 = await buildScratchSite("acceptance", CONTENT, { config: siteConfig(), keep: true })
-  scratch.push(v5.root)
+  scratch.push(v5.remove)
   expect(v5.code, v5.output).toBe(0)
 
   const { json, stdout } = await report(v4, v5.public, { vault: content })

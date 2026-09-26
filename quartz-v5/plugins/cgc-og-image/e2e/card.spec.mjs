@@ -3,21 +3,9 @@
 // two pages that differ only in something the card must not show get byte-identical cards.
 import fs from "node:fs"
 import path from "node:path"
-import { createRequire } from "node:module"
 import { fileURLToPath } from "node:url"
 import { test, expect } from "../../../tests/harness/test.mjs"
-import { buildScratchSite, testsRoot, vendored } from "../../../tests/harness/site.mjs"
-
-const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
-
-// The fixture config, edited, for a scratch site.
-function fixtureConfig(edit) {
-  const config = YAML.parseDocument(fs.readFileSync(path.join(testsRoot, "quartz.config.yaml"), "utf8"))
-  edit(config)
-  return String(config)
-}
-const ourOptions = (config) =>
-  config.get("plugins").items.find((entry) => String(entry.get("source")).endsWith("/cgc-og-image")).get("options")
+import { buildScratchSite, editConfig, fixtureConfig, testsRoot } from "../../../tests/harness/site.mjs"
 
 // The fixture site's baseUrl, where Quartz points a page's `og:image`.
 const SITE = "https://localhost"
@@ -85,7 +73,7 @@ test("a tag chip shows only the tag's last segment", async ({ page, request }) =
 test("the card's title is the page's own, without the site's title suffix", async ({ page, request }) => {
   test.setTimeout(120_000)
   const suffix = " | A site-wide suffix"
-  const config = fixtureConfig((config) => config.setIn(["configuration", "pageTitleSuffix"], suffix))
+  const config = editConfig(fixtureConfig(), (doc) => doc.setIn(["configuration", "pageTitleSuffix"], suffix))
   const flat = fs.readFileSync(path.join(testsRoot, "content-fixture/og/tag-flat.md"), "utf8")
   const site = await buildScratchSite("og-suffix", { "og/tag-flat.md": flat }, { config, keep: true })
   try {
@@ -96,13 +84,13 @@ test("the card's title is the page's own, without the site's title suffix", asyn
     const card = fs.readFileSync(path.join(site.public, "og/tag-flat-og-image.webp"))
     expect(card.equals(await cardOf(page, request, "og/tag-flat"))).toBe(true)
   } finally {
-    fs.rmSync(site.root, { recursive: true, force: true })
+    site.remove()
   }
 })
 
 test("an icon that cannot be read fails the build", async () => {
   test.setTimeout(120_000)
-  const config = fixtureConfig((config) => ourOptions(config).set("icon", "./no-such-icon.png"))
+  const config = editConfig(fixtureConfig(), (_, entry) => entry("../../plugins/cgc-og-image").setIn(["options", "icon"], "./no-such-icon.png"))
   const site = await buildScratchSite("og-no-icon", { "index.md": "---\ntitle: Home\n---\nA page.\n" }, { config })
   expect(site.code, site.output).not.toBe(0)
   expect(site.output).toContain("no-such-icon.png")
@@ -111,9 +99,7 @@ test("an icon that cannot be read fails the build", async () => {
 // Both would write every card and every `og:image` tag, each over the other's.
 test("a site that also enables stock og-image fails the build", async () => {
   test.setTimeout(120_000)
-  const config = fixtureConfig((config) =>
-    config.get("plugins").items.find((entry) => entry.get("source") === "@quartz-community/og-image").set("enabled", true),
-  )
+  const config = editConfig(fixtureConfig(), (_, entry) => entry("@quartz-community/og-image").set("enabled", true))
   const site = await buildScratchSite("og-twice", { "index.md": "---\ntitle: Home\n---\nA page.\n" }, { config })
   expect(site.code, site.output).not.toBe(0)
   expect(site.output).toContain("disable @quartz-community/og-image")

@@ -2,8 +2,9 @@
 // imports `test` and `expect` from here, so there is one @playwright/test and one set of fixtures.
 import { test as base, expect } from "@playwright/test"
 import fs from "node:fs"
+import os from "node:os"
 import path from "node:path"
-import { fileFor, outputFor } from "./site.mjs"
+import { buildScratchSite, fileFor, outputFor } from "./site.mjs"
 import { BASELINE_PORT } from "./env.mjs"
 import { quietAnalytics } from "./analytics.mjs"
 import { blueskyStandIn } from "./bluesky.mjs"
@@ -41,8 +42,29 @@ export const test = base.extend({
     await use(await context.newPage())
     await context.close()
   },
+  // What a test makes for itself, deleted once it ends, pass or fail: `dir(name)`, a fresh directory
+  // outside the repo, and `site(name, files, options)`, a scratch site built as `buildScratchSite`
+  // builds one and kept until then. For a spec whose helpers make them as they go; a spec that builds
+  // one site for a whole file removes it itself, in `afterAll`.
+  scratch: async ({}, use) => {
+    const removals = []
+    await use({
+      dir(name) {
+        const dir = fs.mkdtempSync(path.join(os.tmpdir(), `cgc-${name}-`))
+        removals.push(() => fs.rmSync(dir, { recursive: true, force: true }))
+        return dir
+      },
+      async site(name, files, options = {}) {
+        const site = await buildScratchSite(name, files, { ...options, keep: true })
+        removals.push(site.remove)
+        return site
+      },
+    })
+    for (const remove of removals) remove()
+  },
 })
 export { expect }
+export { layerOrder, layersOf, stackDeclaration, styleRules } from "./layers.mjs"
 
 /**
  * Serve a built site from disk to `page` at `origin` (e.g. `https://example.com`), by intercepting
@@ -59,47 +81,18 @@ export async function routeSite(page, root, origin) {
 }
 
 /**
- * The page's cascade layers as the browser reads them: every layer name, dotted for a sublayer
- * (`cgc.mdx`), at its first appearance in document order. Layers rank by that first appearance
- * among their siblings, lowest first, so `order.filter((n) => !n.includes("."))` is the top-level
- * ranking. Walks statements, blocks, `@import … layer()` and grouping rules such as `@media`.
+ * What `color: <value>` resolves to on a loaded page right now, as `rgb(…)`, through a probe element:
+ * a theme colour such as `var(--gray)` in the scheme the page is showing, or any other colour value,
+ * such as a `color-mix()` of two.
  */
-export const layerOrder = (page) =>
-  page.evaluate(() => {
-    const order = []
-    const add = (name) => {
-      const parts = name.split(".")
-      parts.forEach((_, i) => {
-        const full = parts.slice(0, i + 1).join(".")
-        if (!order.includes(full)) order.push(full)
-      })
-    }
-    const join = (parent, name) => (parent ? `${parent}.${name}` : name)
-    const walk = (rules, parent) => {
-      for (const rule of rules) {
-        if (rule instanceof CSSLayerStatementRule) rule.nameList.forEach((name) => add(join(parent, name)))
-        else if (rule instanceof CSSLayerBlockRule) {
-          // An anonymous block is a layer no one can name, so it holds no rank worth reading.
-          if (!rule.name) continue
-          add(join(parent, rule.name))
-          walk(rule.cssRules, join(parent, rule.name))
-        } else if (rule instanceof CSSImportRule) {
-          if (rule.layerName) add(join(parent, rule.layerName))
-          if (rule.styleSheet) walk(rule.styleSheet.cssRules, rule.layerName ? join(parent, rule.layerName) : parent)
-        } else if (rule instanceof CSSGroupingRule) walk(rule.cssRules, parent)
-      }
-    }
-    for (const sheet of document.styleSheets) {
-      let rules
-      try {
-        rules = sheet.cssRules
-      } catch {
-        continue // cross-origin, such as a font CDN's
-      }
-      walk(rules, "")
-    }
-    return order
-  })
+export const resolvedColour = (page, value) =>
+  page.evaluate((value) => {
+    const probe = document.body.appendChild(document.createElement("i"))
+    probe.style.color = value
+    const colour = getComputedStyle(probe).color
+    probe.remove()
+    return colour
+  }, value)
 
 /** The colour scheme a loaded page is showing: the stock darkmode plugin's `saved-theme`. */
 export const schemeOf = (page) => page.evaluate(() => document.documentElement.getAttribute("saved-theme"))

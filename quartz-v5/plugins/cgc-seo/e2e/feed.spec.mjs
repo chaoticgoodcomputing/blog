@@ -75,7 +75,7 @@ for (const [name, options, description] of [
       expect(channel.description).toBe(description)
       expect(items).toHaveLength(options.rssLimit || 4)
     } finally {
-      fs.rmSync(site.root, { recursive: true, force: true })
+      site.remove()
     }
   })
 }

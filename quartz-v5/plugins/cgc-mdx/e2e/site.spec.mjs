@@ -39,7 +39,7 @@ test.beforeAll(async () => {
   site = await buildScratchSite("mdx-site", content(), { config: siteConfig({ offline: true }), keep: true })
   expect(site.code, site.output).toBe(0)
 })
-test.afterAll(() => site && fs.rmSync(site.root, { recursive: true, force: true }))
+test.afterAll(() => site?.remove())
 
 const emitted = (url) => fs.existsSync(path.join(site.public, `${url}.html`))
 

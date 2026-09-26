@@ -1,6 +1,6 @@
 // ADR-0001: one esbuild build with shared chunks, and each page loads only what its imports reach.
 // ADR-0002's widget-layer amendment: that CSS lands in `cgc.mdx.widgets`, above core, below the site.
-import { test, expect } from "../../../tests/harness/test.mjs"
+import { test, expect, resolvedColour } from "../../../tests/harness/test.mjs"
 
 // Every cgc-mdx asset the page fetches from here on.
 function recordWidgetRequests(page) {
@@ -176,15 +176,7 @@ test("a widget rule beats a core rule of higher specificity", async ({ page }) =
   await gotoCascade(page)
   // Core's `.page article p > strong { color: var(--dark) }` outranks `.cascade__strong` on
   // specificity, so only the layer order can let the widget's `var(--secondary)` win.
-  const resolve = (color) =>
-    page.evaluate((color) => {
-      const probe = document.body.appendChild(document.createElement("span"))
-      probe.style.color = color
-      const resolved = getComputedStyle(probe).color
-      probe.remove()
-      return resolved
-    }, color)
-  const [secondary, dark] = [await resolve("var(--secondary)"), await resolve("var(--dark)")]
+  const [secondary, dark] = [await resolvedColour(page, "var(--secondary)"), await resolvedColour(page, "var(--dark)")]
   expect(secondary).not.toBe(dark)
   await expect(page.locator(".cascade__strong")).toHaveCSS("color", secondary)
   // Without the widget's class, core's rule is what colours the same element.

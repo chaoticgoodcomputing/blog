@@ -2,15 +2,13 @@
 // publishes, drawn when the site builds by @chaoticgoodcomputing/icons, as inline SVG painted in the
 // tag's colour. The fixture's tag dictionary and icon collection are in tests/quartz.config.yaml.
 import fs from "node:fs"
-import os from "node:os"
 import path from "node:path"
-import { execFile } from "node:child_process"
-import { promisify } from "node:util"
 import { test, expect, toggleScheme } from "../../../tests/harness/test.mjs"
 import {
+  buildPluginCopy,
   buildScratchSite,
   fixtureConfig,
-  pluginSources,
+  othersOff,
   testsRoot,
   withPlugins,
 } from "../../../tests/harness/site.mjs"
@@ -137,10 +135,7 @@ const TAG_LIST = {
 // Every other plugin of ours is off in these builds. Another that draws icons (cgc-tag-explorer,
 // #76) would otherwise fail the build first, in its own words, and an entry that aliases the
 // fixture's `&iconCollections` anchor would lose it when the entry below replaces this one.
-const OTHERS = pluginSources(fixtureConfig())
-  .filter((source) => typeof source === "string" && source.startsWith("../../plugins/"))
-  .filter((source) => !["cgc-styles", "cgc-tags", "cgc-tag-list"].includes(path.basename(source)))
-  .map((source) => ({ source, enabled: false }))
+const OTHERS = othersOff(fixtureConfig(), ["cgc-styles", "cgc-tags", "cgc-tag-list"])
 const FAILURES = [
   {
     name: "an icon its collection doesn't have",
@@ -186,23 +181,12 @@ for (const { name, icon, iconCollections, error } of FAILURES) {
 // Iconify's packages run while the site builds and stay out of dist/, so this plugin carries them
 // itself, at the icons library's versions (libs/icons/docs/adr/0001). Its build refuses to drift.
 test("refuses to build unless it carries the icons library's dependencies, at its versions", async () => {
-  const pluginRoot = path.resolve(testsRoot, "../plugins/cgc-tag-list")
-  const copy = fs.mkdtempSync(path.join(os.tmpdir(), "cgc-tag-list-"))
-  try {
-    for (const entry of ["build.mjs", "src"])
-      fs.cpSync(path.join(pluginRoot, entry), path.join(copy, entry), { recursive: true })
-    fs.symlinkSync(path.join(pluginRoot, "node_modules"), path.join(copy, "node_modules"))
-    const pkg = JSON.parse(fs.readFileSync(path.join(pluginRoot, "package.json"), "utf8"))
+  const build = await buildPluginCopy("cgc-tag-list", (copy) => {
+    const pkg = JSON.parse(fs.readFileSync(path.join(copy, "package.json"), "utf8"))
     pkg.dependencies["@iconify-json/mdi"] = "^1.0.0"
     fs.writeFileSync(path.join(copy, "package.json"), JSON.stringify(pkg))
-    const build = await promisify(execFile)("node", ["build.mjs"], { cwd: copy }).then(
-      () => ({ code: 0, output: "" }),
-      (err) => ({ code: err.code, output: `${err.stdout}${err.stderr}` }),
-    )
-    expect(build.code).not.toBe(0)
-    expect(build.output).toContain('"@iconify-json/mdi": "1.2.3" (here: ^1.0.0)')
-    expect(fs.existsSync(path.join(copy, "dist"))).toBe(false)
-  } finally {
-    fs.rmSync(copy, { recursive: true, force: true })
-  }
+  })
+  expect(build.code).not.toBe(0)
+  expect(build.output).toContain('"@iconify-json/mdi": "1.2.3" (here: ^1.0.0)')
+  expect(build.dist).toBe(false)
 })

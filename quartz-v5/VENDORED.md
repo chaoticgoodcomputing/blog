@@ -28,7 +28,7 @@ quartz-v5/
 ├── site-plugins/         this site's own plugins, which fail the shareability test on purpose
 ├── libs/                 our non-plugin packages (`@chaoticgoodcomputing/*`)
 ├── tests/                Playwright suite and `content-fixture/`
-├── utils/                tooling for this context — `upstream.mjs`, `prebuild.mjs`, `postbuild.mjs`
+├── utils/                tooling for this context — `upstream.mjs`, `prebuild.mjs`, `postbuild.mjs`, `local-plugins.mjs`
 └── quartz/               the vendored copy: upstream's repo root, verbatim
 ```
 
@@ -170,8 +170,10 @@ at the repo root lists `quartz-v5/libs/*` and nothing else, so the root `pnpm in
 library's own dependencies beside its source. A plugin names a library it inlines, or one its
 build runs (`@chaoticgoodcomputing/css-check`), as a `file:../../libs/<name>` devDependency
 (ADR-0005), which npm only links: whatever the library imports resolves from the library's own
-install, never the plugin's. The e2e harness and
-`site-v5:prebuild` run `pnpm install --frozen-lockfile` when a library has none.
+install, never the plugin's. The e2e harness and `site-v5:prebuild` run
+`pnpm install --frozen-lockfile` when a library has none, and build each local plugin after an
+install of its own dependencies whenever its lockfile has moved on. Both take these steps from one
+module, `utils/local-plugins.mjs`.
 Content reaches a library the same way: the root `package.json` depends on
 `@chaoticgoodcomputing/widgets` by `workspace:*`, so an `.mdx` page in the vault or the e2e fixture
 resolves `@chaoticgoodcomputing/widgets/<widget>` by Node's upward walk to the root `node_modules` (#36).

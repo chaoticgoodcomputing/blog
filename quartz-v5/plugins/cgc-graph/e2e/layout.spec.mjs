@@ -1,14 +1,9 @@
 // cgc-graph in the page's layout (#74): the local graph's box is square, but never taller than the
 // layout lets its block be. The block sets its own display to do that, which must not stop a layout's
 // `display: desktop-only` from hiding it: Quartz wraps the block in an element of its own for that.
-import fs from "node:fs"
-import path from "node:path"
-import { createRequire } from "node:module"
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
-import { buildScratchSite, fixtureConfig, vendored } from "../../../tests/harness/site.mjs"
+import { buildScratchSite, editConfig, fixtureConfig } from "../../../tests/harness/site.mjs"
 import { drawnGraph, localGraph } from "./graph.mjs"
-
-const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
 
 // Below core's desktop breakpoint its right sidebar is a row of components, each capped at 24rem.
 // The square box shrinks to fit its block there instead of spilling out of it.
@@ -26,14 +21,8 @@ for (const width of [900, 1150]) {
 }
 
 // The fixture's config, with the graph laid out `desktop-only`: core hides it below 800px.
-function desktopOnly() {
-  const config = YAML.parseDocument(fixtureConfig())
-  const entry = config
-    .get("plugins")
-    .items.find((item) => item.get("source") === "../../plugins/cgc-graph")
-  entry.setIn(["layout", "display"], "desktop-only")
-  return String(config)
-}
+const desktopOnly = () =>
+  editConfig(fixtureConfig(), (_, entry) => entry("../../plugins/cgc-graph").setIn(["layout", "display"], "desktop-only"))
 
 test("hides the whole graph where a layout display class says to", async ({ page }) => {
   const site = await buildScratchSite(
@@ -54,6 +43,6 @@ test("hides the whole graph where a layout display class says to", async ({ page
     await expect(page.locator(".cgc-graph__outer")).toBeHidden()
     await expect(page.locator(".cgc-graph__title")).toBeHidden()
   } finally {
-    fs.rmSync(site.root, { recursive: true, force: true })
+    site.remove()
   }
 })

@@ -42,7 +42,7 @@ test.beforeAll(async () => {
   built = { favicon: fs.readFileSync(path.join(site.public, "favicon.ico")) }
   await postbuild(site.public)
 })
-test.afterAll(() => site && fs.rmSync(site.root, { recursive: true, force: true }))
+test.afterAll(() => site?.remove())
 
 test("the build alone draws the favicon from stock's icon, which is what the post-build step is for", async () => {
   expect((await pixels(built.favicon)).data.equals((await pixels(await favicon(STOCK_ICON))).data)).toBe(true)

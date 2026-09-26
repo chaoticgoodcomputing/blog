@@ -1,6 +1,5 @@
 // cgc-social's options: a mistake in them fails the build, naming the option, rather than shipping a
 // card that shows someone else's account, or none; and v4's switches leave parts of a card out.
-import fs from "node:fs"
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, fixtureConfig, withPlugins } from "../../../tests/harness/site.mjs"
 
@@ -84,6 +83,6 @@ test("leaves out the headings, the profile and the total when a site turns them 
     await expect(page.locator(".cgc-social__card--bluesky .cgc-bluesky")).toHaveCount(3)
     await expect(page.locator(".cgc-social .cgc-social__title")).toHaveCount(0)
   } finally {
-    fs.rmSync(site.root, { recursive: true, force: true })
+    site.remove()
   }
 })

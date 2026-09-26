@@ -1,7 +1,6 @@
 // cgc-tag-list on the real site (#69, #71), proven on a scratch site built from the site config, with
 // pages carrying the vault's tags. The site's own icon collection, `custom:`, is its five SVG files in
 // quartz-v5/icons/, which the site config names once and shares through a YAML anchor.
-import fs from "node:fs"
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, siteConfig } from "../../../tests/harness/site.mjs"
 
@@ -34,7 +33,7 @@ test.beforeAll(async () => {
   })
   expect(site.code, site.output).toBe(0)
 })
-test.afterAll(() => site && fs.rmSync(site.root, { recursive: true, force: true }))
+test.afterAll(() => site?.remove())
 
 test("draws the site's own icons and MDI's, each in its tag's colour", async ({ page }) => {
   await routeSite(page, site.public, ORIGIN)

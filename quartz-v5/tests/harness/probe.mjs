@@ -6,11 +6,10 @@ import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
 import { createRequire } from "node:module"
-import { testsRoot, vendored } from "./site.mjs"
+import { vendored } from "./site.mjs"
 
 const require = createRequire(path.join(vendored, "package.json"))
 const esbuild = require("esbuild")
-const YAML = require("yaml")
 
 // Bundles `<source>/index.ts` into a fresh plugin directory called `name` (the plugin's identity,
 // as for any local source), with `quartz` as its manifest. Everything is inlined, so the probe
@@ -40,13 +39,4 @@ export async function buildProbePlugin(source, name, quartz) {
     logLevel: "warning",
   })
   return { path: root, remove: () => fs.rmSync(parent, { recursive: true, force: true }) }
-}
-
-// The fixture site's config with extra plugin entries appended, as YAML for `buildScratchSite`.
-export function fixtureConfigWith(...entries) {
-  const config = YAML.parseDocument(
-    fs.readFileSync(path.join(testsRoot, "quartz.config.yaml"), "utf8"),
-  )
-  for (const entry of entries) config.get("plugins").add(config.createNode(entry))
-  return String(config)
 }

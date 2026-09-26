@@ -3,16 +3,14 @@
 // the build. The source documents come from a local host each test starts, and every test pins
 // into a cache of its own.
 import fs from "node:fs"
-import os from "node:os"
 import path from "node:path"
 import { execFileSync } from "node:child_process"
 import { createHash } from "node:crypto"
-import { createRequire } from "node:module"
 import { test, expect } from "../../../tests/harness/test.mjs"
-import { buildScratchSite, fixtureRoot, testsRoot, vendored } from "../../../tests/harness/site.mjs"
+import { editConfig, fixtureConfig, fixtureRoot, pluginEntries, testsRoot, vendored } from "../../../tests/harness/site.mjs"
 import { HANG, closedPort, pdf, sourceHost } from "../../../tests/harness/source-host.mjs"
 
-const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
+const ANNOTATOR = "../../plugins/cgc-annotator"
 
 // The mirror name a URL must get, written out independently of the plugin's own rule.
 const expectedName = (url) => createHash("sha256").update(new URL(url).href).digest("hex").slice(0, 16)
@@ -20,33 +18,18 @@ const expectedName = (url) => createHash("sha256").update(new URL(url).href).dig
 const annotationPage = (target) => `---\ntitle: Annotated\nannotation-target: ${target}\n---\n\nNotes on the source document.\n`
 
 // The fixture config, with the plugin's options set for one test.
-function config(options) {
-  const doc = YAML.parseDocument(fs.readFileSync(path.join(testsRoot, "quartz.config.yaml"), "utf8"))
-  const entry = doc.get("plugins").items.find((item) => item.get("source") === "../../plugins/cgc-annotator")
-  entry.set("options", options)
-  return String(doc)
-}
+const config = (options) => editConfig(fixtureConfig(), (doc, entry) => entry(ANNOTATOR).set("options", doc.createNode(options)))
 
-const cleanup = []
-const scratchDir = (name) => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), `cgc-annotator-${name}-`))
-  cleanup.push(dir)
-  return dir
-}
-test.afterEach(() => {
-  for (const dir of cleanup.splice(0)) fs.rmSync(dir, { recursive: true, force: true })
-})
-
-async function build(name, files, options) {
-  const site = await buildScratchSite(name, { "index.md": "# home\n", ...files }, { config: config(options), keep: true })
-  cleanup.push(site.root)
+// A scratch site with the plugin's options set, removed when the test that built it ends.
+async function build(scratch, name, files, options) {
+  const site = await scratch.site(name, { "index.md": "# home\n", ...files }, { config: config(options) })
   expect(site.code, site.output).toBe(0)
   const dir = path.join(site.public, options.mirrorDir)
   const mirrors = fs.existsSync(dir) ? fs.readdirSync(dir) : []
   return { ...site, mirrors, read: (name) => fs.readFileSync(path.join(dir, name), "utf8") }
 }
 
-test("each source document is emitted once, as a mirror named by a hash of its URL", async () => {
+test("each source document is emitted once, as a mirror named by a hash of its URL", async ({ scratch }) => {
   // Three URLs serving the same bytes, so a name taken from the content would collide. One of them
   // redirects to a path no page names, so its mirror must be named after the URL the page gave.
   const host = await sourceHost({
@@ -56,8 +39,8 @@ test("each source document is emitted once, as a mirror named by a hash of its U
     "/moved.pdf": { redirect: "/c/paper.pdf" },
   })
   try {
-    const options = { mirrorDir: "mirrors", cacheDir: scratchDir("cache") }
-    const site = await build("mirror", {
+    const options = { mirrorDir: "mirrors", cacheDir: scratch.dir("annotator-cache") }
+    const site = await build(scratch, "mirror", {
       "one.md": annotationPage(host.url("/a/paper.pdf")),
       // The same URL, spelled another way: one URL, so one mirror.
       "same-source.md": annotationPage(host.url("/a/./paper.pdf").replace("http:", "HTTP:")),
@@ -79,26 +62,26 @@ test("each source document is emitted once, as a mirror named by a hash of its U
     for (const name of site.mirrors) expect(site.read(name)).toBe(pdf("paper"))
 
     // The name depends on the URL alone: another site, with a cache of its own, names it the same.
-    const again = await build("mirror-again", { "other-source.md": annotationPage(host.url("/b/paper.pdf")) }, { ...options, cacheDir: scratchDir("cache") })
+    const again = await build(scratch, "mirror-again", { "other-source.md": annotationPage(host.url("/b/paper.pdf")) }, { ...options, cacheDir: scratch.dir("annotator-cache") })
     expect(again.mirrors).toEqual([expectedName(host.url("/b/paper.pdf"))])
   } finally {
     await host.close()
   }
 })
 
-test("a second build reuses the pinned mirror without fetching the source again", async () => {
+test("a second build reuses the pinned mirror without fetching the source again", async ({ scratch }) => {
   // The document changes at its source after the first fetch. The annotations were written against
   // the first copy, so that's the one to keep serving.
   let served = 0
   const host = await sourceHost({ "/paper.pdf": () => ({ body: pdf(`edition ${++served}`) }) })
   try {
-    const options = { mirrorDir: "mirrors", cacheDir: scratchDir("cache") }
+    const options = { mirrorDir: "mirrors", cacheDir: scratch.dir("annotator-cache") }
     const files = { "paper.md": annotationPage(host.url("/paper.pdf")) }
-    const first = await build("pin", files, options)
+    const first = await build(scratch, "pin", files, options)
     expect(first.mirrors).toHaveLength(1)
     expect(first.read(first.mirrors[0])).toBe(pdf("edition 1"))
 
-    const second = await build("pin-again", files, options)
+    const second = await build(scratch, "pin-again", files, options)
     expect(host.hits("/paper.pdf")).toBe(1)
     expect(second.mirrors).toEqual(first.mirrors)
     expect(second.read(second.mirrors[0])).toBe(pdf("edition 1"))
@@ -108,7 +91,7 @@ test("a second build reuses the pinned mirror without fetching the source again"
   }
 })
 
-test("a source document that can't be fetched logs a warning, and the build succeeds", async () => {
+test("a source document that can't be fetched logs a warning, and the build succeeds", async ({ scratch }) => {
   const host = await sourceHost({
     "/paper.pdf": pdf("paper"),
     "/bot-check.pdf": () => ({ body: "<!doctype html><title>Just a moment...</title>", type: "text/html" }),
@@ -123,12 +106,13 @@ test("a source document that can't be fetched logs a warning, and the build succ
       "not-a-url.md": "papers/paper.pdf",
     }
     const site = await build(
+      scratch,
       "unreachable",
       {
         "paper.md": annotationPage(host.url("/paper.pdf")),
         ...Object.fromEntries(Object.entries(unreachable).map(([page, target]) => [page, annotationPage(target)])),
       },
-      { mirrorDir: "mirrors", cacheDir: scratchDir("cache"), fetchTimeout: 1000 },
+      { mirrorDir: "mirrors", cacheDir: scratch.dir("annotator-cache"), fetchTimeout: 1000 },
     )
     // Each one is named in a warning, with the page that wanted it.
     const warnings = site.output.split("\n").filter((line) => line.includes("cgc-annotator"))
@@ -143,16 +127,16 @@ test("a source document that can't be fetched logs a warning, and the build succ
   }
 })
 
-test("a failed fetch pins nothing: the next build tries again", async () => {
+test("a failed fetch pins nothing: the next build tries again", async ({ scratch }) => {
   const routes = {}
   const host = await sourceHost(routes)
   try {
-    const options = { mirrorDir: "mirrors", cacheDir: scratchDir("cache") }
+    const options = { mirrorDir: "mirrors", cacheDir: scratch.dir("annotator-cache") }
     const files = { "paper.md": annotationPage(host.url("/paper.pdf")) }
-    expect((await build("retry", files, options)).mirrors).toEqual([])
+    expect((await build(scratch, "retry", files, options)).mirrors).toEqual([])
 
     routes["/paper.pdf"] = pdf("back")
-    const site = await build("retry-again", files, options)
+    const site = await build(scratch, "retry-again", files, options)
     expect(site.mirrors).toHaveLength(1)
     expect(site.read(site.mirrors[0])).toBe(pdf("back"))
   } finally {
@@ -160,19 +144,19 @@ test("a failed fetch pins nothing: the next build tries again", async () => {
   }
 })
 
-test("a copy pinned by hand, where the warning says, is served in place of a fetch", async () => {
+test("a copy pinned by hand, where the warning says, is served in place of a fetch", async ({ scratch }) => {
   // A host the build can't get the document from: behind a bot check, say.
   const host = await sourceHost({ "/paper.pdf": () => ({ body: "<title>Client Challenge</title>", type: "text/html" }) })
   try {
-    const options = { mirrorDir: "mirrors", cacheDir: scratchDir("cache") }
+    const options = { mirrorDir: "mirrors", cacheDir: scratch.dir("annotator-cache") }
     const files = { "paper.md": annotationPage(host.url("/paper.pdf")) }
-    const first = await build("by-hand", files, options)
+    const first = await build(scratch, "by-hand", files, options)
     expect(first.mirrors).toEqual([])
     const [, where] = first.output.match(/save it as (\S+?)\.?$/m) ?? []
     expect(where, first.output).toBeDefined()
 
     fs.writeFileSync(where, pdf("saved by hand"))
-    const second = await build("by-hand-again", files, options)
+    const second = await build(scratch, "by-hand-again", files, options)
     expect(host.hits("/paper.pdf")).toBe(1)
     expect(second.mirrors).toHaveLength(1)
     expect(second.read(second.mirrors[0])).toBe(pdf("saved by hand"))
@@ -184,8 +168,7 @@ test("a copy pinned by hand, where the warning says, is served in place of a fet
 test("the fixture site pins into a cache of its own, never the real site's", () => {
   // A fixture root symlinks the vendored install's `node_modules`, so the default cache directory
   // there is the one the real site builds pin into.
-  const { plugins } = YAML.parse(fs.readFileSync(path.join(testsRoot, "quartz.config.yaml"), "utf8"))
-  const { options = {} } = plugins.find(({ source }) => source === "../../plugins/cgc-annotator")
+  const { options = {} } = pluginEntries(fixtureConfig()).find(({ source }) => source === ANNOTATOR)
   const cache = path.resolve(fixtureRoot("main"), options.cacheDir ?? "node_modules/.cache/cgc-annotator")
   // Where writing there really lands, through any symlink on the way.
   let existing = cache

@@ -20,6 +20,6 @@ test("a serve run draws no cards, where a build of the same site does", async ()
     // ...without a card.
     expect(cards(served.public)).toEqual([])
   } finally {
-    for (const site of [built, served]) fs.rmSync(site.root, { recursive: true, force: true })
+    for (const site of [built, served]) site.remove()
   }
 })

@@ -3,29 +3,16 @@
 // page, and a site with no annotation page ships none of the Viewer. Asserted on the emitted HTML:
 // what a reader's browser, or a crawler, is sent.
 import fs from "node:fs"
-import os from "node:os"
 import path from "node:path"
-import { createRequire } from "node:module"
 import { test, expect } from "../../../tests/harness/test.mjs"
-import { buildScratchSite, testsRoot, vendored } from "../../../tests/harness/site.mjs"
-
-const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
-
-const cleanup = []
-test.afterEach(() => {
-  for (const dir of cleanup.splice(0)) fs.rmSync(dir, { recursive: true, force: true })
-})
+import { editConfig, fixtureConfig } from "../../../tests/harness/site.mjs"
 
 // The fixture config, with the plugin's options set for one build. Each build pins into a cache of
 // its own, though none of these pages' documents can be fetched.
-function config(options = {}) {
-  const doc = YAML.parseDocument(fs.readFileSync(path.join(testsRoot, "quartz.config.yaml"), "utf8"))
-  const entry = doc.get("plugins").items.find((item) => item.get("source") === "../../plugins/cgc-annotator")
-  const cacheDir = fs.mkdtempSync(path.join(os.tmpdir(), "cgc-annotator-page-"))
-  cleanup.push(cacheDir)
-  entry.set("options", { cacheDir, ...options })
-  return String(doc)
-}
+const config = (scratch, options = {}) =>
+  editConfig(fixtureConfig(), (doc, entry) =>
+    entry("../../plugins/cgc-annotator").set("options", doc.createNode({ cacheDir: scratch.dir("annotator-page"), ...options })),
+  )
 
 // An annotation page in the shape Annotator writes, with one annotation carrying `text`.
 const annotationPage = (target, text) => {
@@ -38,9 +25,9 @@ const annotationPage = (target, text) => {
   return `---\ntitle: Annotated\nannotation-target: ${target}\n---\n\n>%%\n>\`\`\`annotation-json\n>${json}\n>\`\`\`\n>%%\n>*%%HIGHLIGHT%% ==a passage==*\n>%%COMMENT%%\n${comment}\n>%%TAGS%%\n>\n^note\n`
 }
 
-async function build(name, files, options) {
-  const site = await buildScratchSite(name, { "index.md": "# home\n", ...files }, { config: config(options), keep: true })
-  cleanup.push(site.root)
+// A scratch site with the plugin's options set, removed when the test that built it ends.
+async function build(scratch, name, files, options) {
+  const site = await scratch.site(name, { "index.md": "# home\n", ...files }, { config: config(scratch, options) })
   expect(site.code, site.output).toBe(0)
   return {
     output: site.output,
@@ -56,8 +43,8 @@ const noteOf = (html) =>
 const TARGET = "https://cgc-fixture.invalid/notes.pdf"
 const NOTE = "---\ntitle: not frontmatter\n---\nSquared: $x^2$, from [[other]]."
 
-test("a note is rendered by the site's transformers, less the ones that act on a whole page", async () => {
-  const site = await build("pipeline", { "annotated.md": annotationPage(TARGET, NOTE), "other.md": "# other\n" })
+test("a note is rendered by the site's transformers, less the ones that act on a whole page", async ({ scratch }) => {
+  const site = await build(scratch, "pipeline", { "annotated.md": annotationPage(TARGET, NOTE), "other.md": "# other\n" })
   const note = noteOf(site.read("annotated.html"))
   expect(note, "the note is on the page").toBeDefined()
   // In: maths (Latex) and wikilinks (Obsidian-flavored markdown, crawl-links).
@@ -68,8 +55,8 @@ test("a note is rendered by the site's transformers, less the ones that act on a
   expect(note).toContain("title: not frontmatter")
 })
 
-test("a site's denylist leaves out the transformers it names", async () => {
-  const site = await build("denylist", { "annotated.md": annotationPage(TARGET, NOTE), "other.md": "# other\n" }, {
+test("a site's denylist leaves out the transformers it names", async ({ scratch }) => {
+  const site = await build(scratch, "denylist", { "annotated.md": annotationPage(TARGET, NOTE), "other.md": "# other\n" }, {
     denylist: ["NoteProperties", "CreatedModifiedDate", "TableOfContents", "Description", "BasesTransformer", "UnlistedPages", "EncryptedPages", "Latex"],
   })
   const note = noteOf(site.read("annotated.html"))
@@ -79,8 +66,8 @@ test("a site's denylist leaves out the transformers it names", async () => {
   expect(note).toMatch(/<a href="[^"]*other"[^>]*class="[^"]*internal/)
 })
 
-test("a target no mirror can be made of still builds its page, whose Viewer says where to read along", async () => {
-  const site = await build("not-a-url", { "annotated.md": annotationPage("papers/notes.pdf", "A note.") })
+test("a target no mirror can be made of still builds its page, whose Viewer says where to read along", async ({ scratch }) => {
+  const site = await build(scratch, "not-a-url", { "annotated.md": annotationPage("papers/notes.pdf", "A note.") })
   expect(site.output).toContain('its annotation-target "papers/notes.pdf" is not a URL')
   const html = site.read("annotated.html")
   // Sent as it is, before any script runs: there is no mirror to try.
@@ -88,8 +75,8 @@ test("a target no mirror can be made of still builds its page, whose Viewer says
   expect(html).toContain('<blockquote class="cgc-annotator__quote">a passage</blockquote>')
 })
 
-test("a site with no annotation page ships none of the Viewer", async () => {
-  const site = await build("no-annotations", { "note.md": "---\ntitle: A note\nannotation-target:\n---\nAn ordinary note.\n" })
+test("a site with no annotation page ships none of the Viewer", async ({ scratch }) => {
+  const site = await build(scratch, "no-annotations", { "note.md": "---\ntitle: A note\nannotation-target:\n---\nAn ordinary note.\n" })
   expect(site.exists("note.html")).toBe(true)
   expect(site.exists("static/cgc-annotator")).toBe(false)
 })

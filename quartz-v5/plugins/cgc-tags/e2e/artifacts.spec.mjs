@@ -8,7 +8,7 @@
 //   `var(--cgc-tags-default)`, which is `var(--darkgray)`.
 //
 // The fixture's dictionary is in tests/quartz.config.yaml.
-import { test, expect } from "../../../tests/harness/test.mjs"
+import { test, expect, styleRules } from "../../../tests/harness/test.mjs"
 
 test("maps every tag in the corpus to its colour property and icon id", ({ emitted }) => {
   const index = JSON.parse(emitted.read("static/cgcTags.json"))
@@ -32,30 +32,13 @@ test("maps every tag in the corpus to its colour property and icon id", ({ emitt
 })
 
 // Every declaration in the `:root` rules of the `cgc.tags` layer, as the page's browser parsed them.
-const tagProperties = (page) =>
-  page.evaluate(() => {
-    const found = {}
-    const visit = (rules, layer) => {
-      for (const rule of rules) {
-        if (rule instanceof CSSLayerBlockRule) visit(rule.cssRules, [...layer, rule.name])
-        else if (
-          rule instanceof CSSStyleRule &&
-          layer.join(".") === "cgc.tags" &&
-          rule.selectorText === ":root"
-        ) {
-          for (const name of rule.style) found[name] = rule.style.getPropertyValue(name).trim()
-        } else if (rule.cssRules) visit(rule.cssRules, layer)
-      }
-    }
-    for (const sheet of document.styleSheets) {
-      try {
-        visit(sheet.cssRules, [])
-      } catch {
-        // a cross-origin sheet, a font CDN's, is not ours
-      }
-    }
-    return found
-  })
+const tagProperties = async (page) =>
+  Object.assign(
+    {},
+    ...(await styleRules(page))
+      .filter(({ layer, selector }) => layer === "cgc.tags" && selector === ":root")
+      .map(({ style }) => style),
+  )
 
 test("defines one --cgc-tag-* property per tag, inheriting through var()", async ({
   page,

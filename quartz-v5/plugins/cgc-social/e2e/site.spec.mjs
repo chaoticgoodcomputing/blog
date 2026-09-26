@@ -4,7 +4,6 @@
 // site config. The site's own accounts are answered with the stand-ins' (harness/github.mjs,
 // harness/bluesky.mjs), so no request leaves the suite. Built offline: nothing here depends on the
 // typeface, and site-config.spec proves the fonts.
-import fs from "node:fs"
 import { test, expect, routeSite, toggleScheme } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, siteConfig } from "../../../tests/harness/site.mjs"
 import { GITHUB_HOSTS, githubResponse } from "../../../tests/harness/github.mjs"
@@ -28,7 +27,7 @@ test.beforeAll(async () => {
   site = await buildScratchSite("social", CONTENT, { config: siteConfig({ offline: true }), keep: true })
   expect(site.code, site.output).toBe(0)
 })
-test.afterAll(() => site && fs.rmSync(site.root, { recursive: true, force: true }))
+test.afterAll(() => site?.remove())
 
 // The site's accounts, answered as the stand-ins answer theirs, and every account asked for.
 async function standInForTheSite(page) {
