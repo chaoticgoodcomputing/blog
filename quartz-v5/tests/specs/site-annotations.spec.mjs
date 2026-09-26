@@ -29,6 +29,8 @@ test.describe.configure({ mode: "serial" })
 
 let site, host, cache
 test.beforeAll(async () => {
+  // A build of the real site config, which queues on the build lock behind every other build.
+  test.setTimeout(180_000)
   host = await sourceHost({ "/paper.pdf": () => ({ body: PAPER }) })
   cache = fs.mkdtempSync(path.join(os.tmpdir(), "cgc-site-annotations-cache-"))
   // The site config as it is, except that the build pins into a cache of its own. Offline: this
