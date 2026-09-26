@@ -85,3 +85,20 @@ It carries no CSS: the site styles it, in site-styles' objects tier, as it does 
 - **A vendored change** letting `byPageType` move a component. Rejected: a plugin can register a
   frame, so there is no case for another vendored change
   ([the repo's ADR-0001](../../../../../docs/adr/0001-customization-through-plugins.md)).
+
+## Amendment: the page header goes to a body that takes it
+
+_2026-09-26, from the owner's review of the v5 site ([#87](https://github.com/chaoticgoodcomputing/blog/issues/87))._
+
+The owner asked for an annotation page's header, its title, meta and tags, to move "into the
+right-hand Annotations section". The frame above drew the before-body components in the page
+header, over the whole width. Now, when the page body carries `takesPageHeader = true`, as
+cgc-annotator's does, the frame hands the before-body components to the body as its children and
+leaves them out of the page header, which keeps the bar of `left` components. The body places them:
+cgc-annotator puts them at the top of its annotations panel (its
+[ADR-0003](../../../../plugins/cgc-annotator/docs/adr/0003-the-page-header-joins-the-annotations.md)).
+Any other body still gets them in the page header, so the frame stays safe for other page types.
+
+This supersedes "The page header's and footer's blocks keep to the measure" for the before-body
+blocks of an annotation page, which are now in the panel. site-styles' measure rule for the page
+header's `.popover-hint` finds nothing there, and is left for any other body.

@@ -17,6 +17,13 @@ source document they were written against, in the `full-width` frame, under the 
 `annotation`.
 _Avoid_: annotated note, PDF page
 
+**Page header**:
+The annotation page's own header: its title, date and reading time, and tags, which the layout
+places before the body. A frame that sees the body's `takesPageHeader` hands it to the body as
+children, and the body puts it at the top of the annotations panel, over where the source document
+comes from (docs/adr/0003). Under any other frame it stays above the page.
+_Avoid_: title block, heading (that is the panel's "Annotations")
+
 **Source document**:
 The file at an annotation page's `annotation-target` URL. Owned by someone else, and always
 addressed by URL, even when it is our own work.
@@ -52,7 +59,8 @@ _Avoid_: PDF viewer, reader
 
 **Highlight**:
 The Viewer's mark over the characters of an annotation's passage, where it finds them in the
-document: one box per line. An annotation whose passage it can't find has none.
+document: one box per line, laid on once. A line's pieces of text are joined into its box, and
+nothing is covered twice (#87). An annotation whose passage it can't find has none.
 _Avoid_: annotation, selection
 
 **Slice**:

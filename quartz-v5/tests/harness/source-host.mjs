@@ -72,6 +72,8 @@ export function fixturePaper() {
     page(4),
     stream([
       "BT /F1 24 Tf 72 700 Td (Fixture paper, page two) Tj ET",
+      // A line a passage covers whole, from the line before it into the line after (#87).
+      "BT /F1 14 Tf 72 500 Td (A line quoted whole, inside a longer passage.) Tj ET",
       "BT /F1 14 Tf 72 300 Td (Quoted on the last page, far below the fold.) Tj ET",
     ]),
     page(6),

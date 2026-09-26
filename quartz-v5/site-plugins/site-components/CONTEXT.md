@@ -30,9 +30,11 @@ _Avoid_: instance, alias, plugin name (for a placement's)
 **Site frame**:
 `site-full-width`, the frame this plugin registers: the page's width for the body, like core's
 `full-width`, with the `left` components in a bar at the top of the page header and the `right`
-ones after the body, where core's drops both. A page type gets it through `template` under
-`layout.byPageType`; the site gives it to annotation pages (#37). Styled by site-styles' objects
-tier.
+ones after the body, where core's drops both. A body that takes the page header, as cgc-annotator's
+does (`takesPageHeader`), is handed the before-body components as its children, to place itself:
+an annotation page's header is in its annotations panel (#87). A page type gets it through
+`template` under `layout.byPageType`; the site gives it to annotation pages (#37). Styled by
+site-styles' objects tier.
 _Avoid_: layout, template (that is the config key naming it), full-width frame (core's)
 
 **Site author**:

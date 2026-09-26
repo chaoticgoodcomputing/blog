@@ -34,6 +34,9 @@ An annotation page is its own page type, laid out in Quartz's `full-width` frame
   and the annotations take the page, under a line saying where to read along.
 - **The annotations** are in the order their passages come in the document. Each shows the passage
   it quotes, the note written on it, its tags and its date.
+- **The page header** (the page's title, date and tags) can open the annotations panel, beside the
+  document, above where the document comes from. That takes a frame that hands it over (see
+  *Laying out the page*). Otherwise it stays above the page.
 
 The Viewer is built on [PDF.js](https://mozilla.github.io/pdf.js/), bundled into the plugin: your
 site serves it, its worker and its decoders itself, and nothing is fetched from a CDN. PDF.js loads
@@ -78,6 +81,28 @@ annotation pages. To give them the default frame back, set `template: default` t
 the Viewer to the centre column. To keep the width and the components, name a frame a plugin
 registers that places them elsewhere: this site's `site-full-width` (site-components) puts the
 `left` ones above the page and the `right` ones after it.
+
+The annotation page's body takes the page header, the components you've placed `beforeBody`, and
+puts it at the top of the annotations panel, when the frame hands it over. The body's component
+says it takes it with `takesPageHeader`. A frame that finds that flag on the page body draws the
+`beforeBody` components as the body's children instead of above the page:
+
+```tsx
+render({ componentData, beforeBody, pageBody, ...rest }) {
+  const handedOver = pageBody.takesPageHeader === true
+  const header = beforeBody.map((C) => <C {...componentData} />)
+  return (
+    <>
+      {!handedOver && <div class="popover-hint">{header}</div>}
+      {h(pageBody, componentData, handedOver ? header : undefined)}
+      {/* ... */}
+    </>
+  )
+}
+```
+
+`site-full-width` does this. Quartz's own frames don't, so under them the header stays above the
+page.
 
 ## Mirrors
 
@@ -153,3 +178,4 @@ every static host does.
 - [The vocabulary this plugin uses](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz-v5/plugins/cgc-annotator/CONTEXT.md)
 - [Why mirrors are pinned, and why a missing one never fails the build](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz-v5/plugins/cgc-annotator/docs/adr/0001-mirrors-are-pinned-and-a-missing-one-degrades.md)
 - [How a note joins its page](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz-v5/plugins/cgc-annotator/docs/adr/0002-notes-join-their-page.md)
+- [Why the page header joins the annotations, and how a frame hands it over](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz-v5/plugins/cgc-annotator/docs/adr/0003-the-page-header-joins-the-annotations.md)

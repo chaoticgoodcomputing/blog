@@ -4,8 +4,8 @@
    colour properties, and nothing is coloured in script, so it follows the scheme by itself.
    build.mjs puts it all in `@layer cgc.annotator`. */
 
-/* An annotation page's body: where the source document comes from, then the Viewer beside the
-   annotations. */
+/* An annotation page's body: the Viewer beside the annotations, which open with the page header and
+   where the source document comes from. */
 .cgc-annotator {
   /* The document's share of the width, out of 100, which the divider changes. */
   --cgc-annotator-viewer-share: 65;
@@ -59,6 +59,17 @@
   border: 1px solid var(--lightgray);
   border-radius: 0.5rem;
   background: var(--light);
+}
+
+/* The top of the panel: the page header, when the frame hands it over (docs/adr/0003), then where
+   the document comes from. The header's components keep the site's own styles; only the first gives
+   up its top margin to the panel's padding. */
+.cgc-annotator__header {
+  margin: 0 0 1.5rem;
+}
+
+.cgc-annotator__header > :first-child {
+  margin-top: 0;
 }
 
 .cgc-annotator__heading {

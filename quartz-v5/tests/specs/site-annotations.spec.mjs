@@ -1,7 +1,8 @@
 // The real site's annotation pages (#37, #68), proven on a scratch site built from the site config:
 // an annotation page is full-width, in site-components' frame, its Viewer draws the mirror from the
 // site's own mirror path and highlights the passages, and it has no source link, as in v4. The page
-// title and toolbar sit above it and the graph and backlinks after it. The source document comes
+// title and toolbar sit above it and the graph and backlinks after it, and the page's own header is
+// at the top of the annotations panel (#87). The source document comes
 // from a local host, and the build pins it into a cache of its own.
 import fs from "node:fs"
 import os from "node:os"
@@ -107,4 +108,50 @@ test("an annotation page keeps the site's page title, toggle and search, and the
   await expect(page.locator(".cgc-tag-explorer")).toHaveCount(0)
   await expect(page.locator(".toc")).toHaveCount(0)
   await expect(page.locator(".cgc-social")).toHaveCount(0)
+})
+
+// The owner's review (#87): an annotation page's header (its title, date and reading time, and its
+// tags) is at the top of the annotations panel, beside the document, not above the page. The frame
+// hands it to the page body, which places it (cgc-annotator's docs/adr/0003).
+test("an annotation page's header is at the top of the annotations panel", async ({ page }) => {
+  await routeSite(page, site.public, ORIGIN)
+  await page.goto(`${ORIGIN}/content/annotations/paper`)
+  const panel = page.locator(".cgc-annotator__annotations")
+  const header = panel.locator(".cgc-annotator__header")
+  // Once on the page, and in the panel.
+  await expect(page.locator(".article-title")).toHaveCount(1)
+  await expect(header.locator(".article-title")).toHaveText("A paper")
+  await expect(header.locator(".content-meta")).toHaveCount(1)
+  await expect(header.locator(".cgc-tag-list")).toHaveCount(1)
+  await expect(header.locator('.cgc-tag-list__item[data-tag="writing/annotations"]')).toBeVisible()
+  await expect(page.locator(".page-header .article-title, .page-header .cgc-tag-list")).toHaveCount(0)
+  // With where the document comes from.
+  await expect(header.locator(".cgc-annotator__source-link")).toHaveAttribute("href", host.url("/paper.pdf"))
+
+  // Beside the document, at the top of the panel, before its annotations.
+  const [viewerBox, panelBox, titleBox, headingBox] = await Promise.all(
+    [page.locator(".cgc-annotator-viewer"), panel, header.locator(".article-title"), panel.locator(".cgc-annotator__heading")].map((l) => l.boundingBox()),
+  )
+  expect(titleBox.x).toBeGreaterThanOrEqual(viewerBox.x + viewerBox.width)
+  expect(titleBox.x + titleBox.width).toBeLessThanOrEqual(panelBox.x + panelBox.width)
+  expect(titleBox.y).toBeGreaterThanOrEqual(panelBox.y)
+  expect(titleBox.y - panelBox.y).toBeLessThan(80)
+  expect(titleBox.y + titleBox.height).toBeLessThanOrEqual(headingBox.y)
+  // The site's bar still sits above the document.
+  expect((await page.locator(".page-title").boundingBox()).y + 1).toBeLessThan(viewerBox.y)
+})
+
+test("on a narrow screen the header heads the annotations, which take the page", async ({ page }) => {
+  await page.setViewportSize({ width: 800, height: 900 })
+  await routeSite(page, site.public, ORIGIN)
+  await page.goto(`${ORIGIN}/content/annotations/paper`)
+  await expect(page.locator(".cgc-annotator-viewer")).toBeHidden()
+  const header = page.locator(".cgc-annotator__annotations .cgc-annotator__header")
+  await expect(header.locator(".article-title")).toBeVisible()
+  await expect(header.locator(".cgc-tag-list")).toBeVisible()
+  await expect(header.locator(".cgc-annotator__read-along:visible")).toHaveCount(1)
+  const [titleBox, first] = await Promise.all([header.locator(".article-title").boundingBox(), page.locator(".cgc-annotator__annotation").first().boundingBox()])
+  expect(titleBox.y + titleBox.height).toBeLessThanOrEqual(first.y)
+  // Nothing overflows the narrow page.
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(800)
 })

@@ -64,3 +64,17 @@ Viewer shows the pinned copy.
 >%%TAGS%%
 >
 ^orphan
+
+
+>%%
+>```annotation-json
+>{"text":"A passage across three lines, the middle one whole: one highlight a line, laid on once.","target":[{"source":"https://cgc-fixture.invalid/paper.pdf","selector":[{"type":"TextPositionSelector","start":187,"end":258},{"type":"TextQuoteSelector","exact":"page two A line quoted whole, inside a longer passage. Quoted on the last page,","prefix":"Fixture paper, ","suffix":" far below the fold."}]}],"created":"2024-03-17T09:00:00.000Z","updated":"2024-03-17T09:00:00.000Z","document":{"title":"cgc-annotator fixture paper","link":[{"href":"https://cgc-fixture.invalid/paper.pdf"}]},"uri":"https://cgc-fixture.invalid/paper.pdf"}
+>```
+>%%
+>*%%PREFIX%%Fixture paper, %%HIGHLIGHT%% ==page two A line quoted whole, inside a longer passage. Quoted on the last page,== %%POSTFIX%% far below the fold.*
+>%%LINK%%[[#^spanning|show annotation]]
+>%%COMMENT%%
+>A passage across three lines, the middle one whole: one highlight a line, laid on once.
+>%%TAGS%%
+>
+^spanning

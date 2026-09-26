@@ -153,7 +153,65 @@ async function drawPage(page: PDFPageProxy, n: number, text: TextContent, width:
   return el
 }
 
-// Covers the characters of `found` on `page` with highlight boxes, one per line fragment.
+interface Box {
+  left: number
+  top: number
+  right: number
+  bottom: number
+}
+
+// The boxes a passage's characters take up, one per line: the boxes of its text alone, each line's
+// joined into one. Never a range's own client rects: a range that holds an element whole, as a
+// passage running through a line does its span, gives that element's box as well as its text's, and
+// the two boxes laid one on the other darken the line (#87). The text layer draws a line as several
+// spans, which touch or overlap a little, so a line's pieces are joined too.
+function lineBoxes(nodes: Text[], start: number, end: number): Box[] {
+  const pieces: Box[] = []
+  const range = document.createRange()
+  let offset = 0
+  for (const node of nodes) {
+    const next = offset + node.data.length
+    if (start < next && end > offset) {
+      range.setStart(node, Math.max(start, offset) - offset)
+      range.setEnd(node, Math.min(end, next) - offset)
+      for (const rect of range.getClientRects()) {
+        if (rect.width >= 1 && rect.height >= 1) pieces.push({ left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom })
+      }
+    }
+    offset = next
+  }
+  const lines: Box[] = []
+  for (const piece of pieces.sort((a, b) => a.top - b.top || a.left - b.left)) {
+    const height = piece.bottom - piece.top
+    // The same line: most of the shorter one's height shared, and no more than a line's height of
+    // gap between them, so a passage running on in the next column stays apart.
+    const line = lines.find((l) => {
+      const shared = Math.min(l.bottom, piece.bottom) - Math.max(l.top, piece.top)
+      const gap = Math.max(l.left, piece.left) - Math.min(l.right, piece.right)
+      return shared >= Math.min(l.bottom - l.top, height) / 2 && gap <= height
+    })
+    if (!line) lines.push({ ...piece })
+    else {
+      line.left = Math.min(line.left, piece.left)
+      line.top = Math.min(line.top, piece.top)
+      line.right = Math.max(line.right, piece.right)
+      line.bottom = Math.max(line.bottom, piece.bottom)
+    }
+  }
+  // Tightly set lines' boxes can still overlap a little, top to bottom: they meet halfway instead.
+  for (const upper of lines) {
+    for (const lower of lines) {
+      const across = Math.min(upper.right, lower.right) - Math.max(upper.left, lower.left)
+      if (upper === lower || across <= 0 || upper.top >= lower.top || upper.bottom <= lower.top) continue
+      const middle = (upper.bottom + lower.top) / 2
+      upper.bottom = middle
+      lower.top = middle
+    }
+  }
+  return lines
+}
+
+// Covers the characters of `found` on `page` with highlight boxes, one per line.
 function highlight(page: HTMLElement, content: TextContent, found: Anchor, id: string) {
   const layer = page.querySelector<HTMLElement>(`.${CLASS}__text-layer`)!
   const into = page.querySelector<HTMLElement>(`.${CLASS}__highlights`)!
@@ -165,24 +223,15 @@ function highlight(page: HTMLElement, content: TextContent, found: Anchor, id: s
   const dom = nodes.map((node) => node.data).join("")
   const [start, end] = translateOffsets(textOf(content), dom, found.start, found.end)
   if (end <= start) return
-  const range = document.createRange()
-  let offset = 0
-  for (const node of nodes) {
-    const next = offset + node.data.length
-    if (start >= offset && start < next) range.setStart(node, start - offset)
-    if (end > offset && end <= next) range.setEnd(node, end - offset)
-    offset = next
-  }
   const origin = page.getBoundingClientRect()
-  for (const rect of range.getClientRects()) {
-    if (rect.width < 1 || rect.height < 1) continue
+  for (const line of lineBoxes(nodes, start, end)) {
     const box = document.createElement("div")
     box.className = `${CLASS}__highlight`
     box.dataset.annotation = id
-    box.style.left = `${rect.left - origin.left}px`
-    box.style.top = `${rect.top - origin.top}px`
-    box.style.width = `${rect.width}px`
-    box.style.height = `${rect.height}px`
+    box.style.left = `${line.left - origin.left}px`
+    box.style.top = `${line.top - origin.top}px`
+    box.style.width = `${line.right - line.left}px`
+    box.style.height = `${line.bottom - line.top}px`
     into.append(box)
   }
 }

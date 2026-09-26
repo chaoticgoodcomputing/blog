@@ -1,6 +1,9 @@
 // The page type half: an annotation page's body. The Viewer sits beside the annotations, each with
-// the passage it quotes and the note written on it. Everything else on the page (title, tags,
-// backlinks, a subscribe box) is the site's to compose in its layout.
+// the passage it quotes and the note written on it. Everything else on the page (backlinks, a
+// subscribe box) is the site's to compose in its layout. The page header (title, meta, tags) is the
+// site's too, but the body takes it: a frame that hands it over as the body's children has it placed
+// at the top of the annotations panel (docs/adr/0003).
+import type { ComponentChildren } from "preact"
 import { islandAttributes, islandRuntime } from "@chaoticgoodcomputing/island-runtime"
 import type { AnnotatorData } from "./transformer"
 import { annotationTarget, mirrorName, sourceUrl, Unmirrorable } from "./mirror"
@@ -26,10 +29,12 @@ const formatDate = (iso: string, locale: string) => {
 interface BodyProps {
   fileData: { frontmatter?: Record<string, unknown>; cgcAnnotator?: AnnotatorData }
   cfg: { locale?: string }
+  /** The page header, when the frame hands it to the body (docs/adr/0003). */
+  children?: ComponentChildren
 }
 
 export function Body(mirrorDir: string) {
-  const AnnotationPage = ({ fileData, cfg }: BodyProps) => {
+  const AnnotationPage = ({ fileData, cfg, children }: BodyProps) => {
     const target = annotationTarget(fileData.frontmatter) ?? ""
     const url = sourceUrl(target)
     const linkable = !(url instanceof Unmirrorable)
@@ -57,18 +62,6 @@ export function Body(mirrorDir: string) {
       )
     return (
       <div class="cgc-annotator" itemscope itemtype="https://schema.org/DigitalDocument">
-        <p class="cgc-annotator__source">
-          Source document:{" "}
-          {linkable ? (
-            <a class="cgc-annotator__source-link" href={url.href} target="_blank" rel="noopener noreferrer" itemprop="url">
-              {url.hostname}
-            </a>
-          ) : (
-            <span class="cgc-annotator__source-link">{target}</span>
-          )}
-        </p>
-        {readAlong(false)}
-        <noscript>{readAlong(true)}</noscript>
         <div class="cgc-annotator__split">
           {/* The Viewer's island. It hydrates only once it's on screen, so where a narrow screen hides it,
               PDF.js is never fetched. */}
@@ -79,6 +72,23 @@ export function Body(mirrorDir: string) {
             <Viewer {...viewer} />
           </div>
           <section class="cgc-annotator__annotations popover-hint" aria-label="Annotations">
+            {/* The page's header, handed over by the frame, then where the document comes from. Not a
+                popover hint of its own: the panel is one, and a popover shows each hint it finds. */}
+            <div class="cgc-annotator__header">
+              {children}
+              <p class="cgc-annotator__source">
+                Source document:{" "}
+                {linkable ? (
+                  <a class="cgc-annotator__source-link" href={url.href} target="_blank" rel="noopener noreferrer" itemprop="url">
+                    {url.hostname}
+                  </a>
+                ) : (
+                  <span class="cgc-annotator__source-link">{target}</span>
+                )}
+              </p>
+              {readAlong(false)}
+              <noscript>{readAlong(true)}</noscript>
+            </div>
             <h2 class="cgc-annotator__heading">Annotations</h2>
             {annotations.map((a) => (
               <article class="cgc-annotator__annotation" data-annotation={a.id} itemprop="comment" itemscope itemtype="https://schema.org/Comment">
@@ -105,5 +115,7 @@ export function Body(mirrorDir: string) {
   }
   // The island runtime, hydrating this plugin's Viewer and no one else's islands.
   AnnotationPage.afterDOMLoaded = islandRuntime(`.${VIEWER}`)
+  // Tells a frame that this body places the page header itself, given it as children (docs/adr/0003).
+  AnnotationPage.takesPageHeader = true
   return AnnotationPage
 }

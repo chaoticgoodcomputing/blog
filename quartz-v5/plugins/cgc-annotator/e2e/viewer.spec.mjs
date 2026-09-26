@@ -14,9 +14,9 @@ const TARGET = "https://cgc-fixture.invalid/paper.pdf"
 // the URL (the emitter's contract, pinned independently by mirrors.spec.mjs).
 const MIRROR = `/mirrors/${createHash("sha256").update(new URL(TARGET).href).digest("hex").slice(0, 16)}`
 // Every annotation on the paper, in the order its passages come in the document.
-const IN_ORDER = ["highlights", "quoteonly", "orphan", "lastpage"]
+const IN_ORDER = ["highlights", "quoteonly", "orphan", "spanning", "lastpage"]
 // The ones whose passage is in the document, and so get a highlight.
-const ANCHORED = ["highlights", "quoteonly", "lastpage"]
+const ANCHORED = ["highlights", "quoteonly", "spanning", "lastpage"]
 
 const viewerOf = (page) => page.locator(".cgc-annotator-viewer")
 const annotation = (page, id) => page.locator(`.cgc-annotator__annotation[data-annotation="${id}"]`)
@@ -42,6 +42,11 @@ const inked = (canvas) =>
     for (let i = 0; i < data.length; i += 4) if (data[i] < 128 && data[i + 3] > 0) ink++
     return ink
   })
+
+// The width of the first drawn page, read in one step in the page: a redraw swaps each page for a new
+// one, and a locator resolved just before the swap would find it gone.
+const drawnWidth = (viewer) =>
+  viewer.evaluate((v) => v.querySelector(".cgc-annotator-viewer__page")?.getBoundingClientRect().width ?? Infinity)
 
 // Marks the loaded document, so a spec can tell an SPA navigation (the mark survives) from a load.
 const mark = (page) => page.evaluate(() => (window.cgcSpaMark = true))
@@ -124,7 +129,7 @@ test("choosing an annotation scrolls the document to its passage, and choosing a
 test("dragging the divider resizes the document, which is drawn again to fit", async ({ page }) => {
   await page.goto(PAPER)
   const viewer = await shown(page)
-  const before = await viewer.locator(".cgc-annotator-viewer__page").first().boundingBox()
+  const before = await drawnWidth(viewer)
   // Grabbed by its middle, scrolled into view first: however tall the page's header grows, the
   // middle of a divider as tall as the document can fall below the fold.
   const grip = page.locator(".cgc-annotator-viewer__handle")
@@ -133,7 +138,7 @@ test("dragging the divider resizes the document, which is drawn again to fit", a
   await page.mouse.down()
   await page.mouse.move(handle.x - 200, handle.y + handle.height / 2, { steps: 8 })
   await page.mouse.up()
-  await expect.poll(async () => (await viewer.locator(".cgc-annotator-viewer__page").first().boundingBox()).width).toBeLessThan(before.width - 100)
+  await expect.poll(() => drawnWidth(viewer)).toBeLessThan(before - 100)
   await expect(viewer.locator(".cgc-annotator-viewer__page")).toHaveCount(2)
   for (const id of ANCHORED) await expect(highlights(page, id)).not.toHaveCount(0)
   // Still over its passage after the redraw.
@@ -309,6 +314,72 @@ test("the highlights' colour is the scheme's text highlight", async ({ page }) =
     .first()
     .evaluate((el) => getComputedStyle(el).backgroundColor)
   expect(actual).toBe(await resolvedColour(page, "var(--textHighlight)"))
+})
+
+// The owner's review (#87): highlights looked laid on twice, darker than the scheme's text highlight.
+// A passage that covers a line whole, as "spanning" covers page two's middle line, got a box for the
+// line's element and another for its text. Each passage is laid on once: one box a line, no two of an
+// annotation's boxes over the same point, each the scheme's text highlight at full opacity. After
+// load, after the document is drawn again to a new width, and after the reader leaves and comes back.
+const coverage = (page, id) =>
+  highlights(page, id).evaluateAll((boxes) => {
+    const rects = boxes.map((box) => box.getBoundingClientRect())
+    // How many of the annotation's boxes lie over each point sampled across each box: once, over all.
+    const depths = rects.flatMap((r) =>
+      [0.1, 0.3, 0.5, 0.7, 0.9].flatMap((fx) =>
+        [0.25, 0.5, 0.75].map((fy) => {
+          const [x, y] = [r.left + r.width * fx, r.top + r.height * fy]
+          return rects.filter((o) => x >= o.left && x <= o.right && y >= o.top && y <= o.bottom).length
+        }),
+      ),
+    )
+    const lines = new Set(rects.map((r) => Math.round(r.top + r.height / 2)))
+    return {
+      boxes: rects.length,
+      lines: lines.size,
+      deepest: Math.max(0, ...depths),
+      opacity: boxes.map((box) => {
+        let opacity = 1
+        for (let el = box; el; el = el.parentElement) opacity *= Number(getComputedStyle(el).opacity)
+        return opacity
+      }),
+      colours: [...new Set(boxes.map((box) => getComputedStyle(box).backgroundColor))],
+    }
+  })
+
+async function expectLaidOnOnce(page) {
+  const highlight = await resolvedColour(page, "var(--textHighlight)")
+  // Three lines, the middle one whole: three boxes, one a line.
+  await expect.poll(async () => (await coverage(page, "spanning")).boxes).toBe(3)
+  for (const id of ANCHORED) {
+    const { boxes, lines, deepest, opacity, colours } = await coverage(page, id)
+    expect(boxes, `${id}: one box a line`).toBe(lines)
+    expect(deepest, `${id}: laid on once`).toBe(1)
+    expect(opacity.every((o) => o === 1), `${id}: at full opacity`).toBe(true)
+    expect(colours, `${id}: the scheme's text highlight`).toEqual([highlight])
+  }
+}
+
+test("each passage is highlighted once: one box a line, after load, a redraw, and a return", async ({ page }) => {
+  await page.goto(PAPER)
+  await shown(page)
+  await expectLaidOnOnce(page)
+
+  // Drawn again to a new width.
+  const viewer = viewerOf(page)
+  const before = await drawnWidth(viewer)
+  await page.setViewportSize({ width: 1100, height: 900 })
+  await expect.poll(() => drawnWidth(viewer)).toBeLessThan(before - 50)
+  await expectLaidOnOnce(page)
+
+  // Away, by SPA navigation, and back.
+  await mark(page)
+  await annotation(page, "highlights").getByRole("link", { name: "plain-note" }).click()
+  await expect(page).toHaveURL(/\/plain-note$/)
+  await page.goBack()
+  await shown(page)
+  expect(await marked(page)).toBe(true)
+  await expectLaidOnOnce(page)
 })
 
 test("a note whose annotation-target is empty stays an ordinary note", async ({ page }) => {

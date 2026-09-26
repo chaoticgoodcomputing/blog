@@ -701,6 +701,7 @@ layout:
         - email-subscribe-sidebar
     # Full width for the Viewer (#37), in site-components' frame, which keeps the page title and the
     # toolbar (left) in a bar above it and the graph and backlinks (right) after it, as v4 had them.
+    # The page header (title, meta, tags) goes to the top of the annotations panel (#87).
     # Core's `full-width` drops both sidebars. v4's annotation pages had no source link, which would
     # show Annotator's JSON (#68), and no tag explorer, contents or social cards. They keep the
     # subscribe box after the body, as v4 had it, and not the sidebar one. v4's second box, inside
