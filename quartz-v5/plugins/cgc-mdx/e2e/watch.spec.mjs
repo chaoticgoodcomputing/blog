@@ -20,17 +20,17 @@ test("an .mdx page rebuilds under serve when it, or a widget it imports, changes
   })
   const page = (slug) => fs.readFileSync(path.join(site.public, `${slug}.html`), "utf8")
   try {
-    expect(page("page")).toContain("First draft.")
-    expect(page("page")).toContain("Hello from the first widget.")
+    expect(page("page.mdx")).toContain("First draft.")
+    expect(page("page.mdx")).toContain("Hello from the first widget.")
 
     await site.write("page.mdx", withWidget("Second draft."))
-    expect(page("page")).toContain("Second draft.")
+    expect(page("page.mdx")).toContain("Second draft.")
 
     await site.write("Hello.tsx", widget("Hello from the second widget."))
-    expect(page("page")).toContain("Hello from the second widget.")
+    expect(page("page.mdx")).toContain("Hello from the second widget.")
 
     await site.write("fresh.mdx", note("Fresh", "A page added while serving."))
-    expect(page("fresh")).toContain("A page added while serving.")
+    expect(page("fresh.mdx")).toContain("A page added while serving.")
   } finally {
     await site.stop()
   }

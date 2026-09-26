@@ -7,7 +7,7 @@ import { test, expect } from "../../../tests/harness/test.mjs"
 test("a runtime leaves another plugin's markers alone", async ({ page }) => {
   const requested = []
   page.on("request", (request) => requested.push(new URL(request.url()).pathname))
-  await page.goto("/lab/life")
+  await page.goto("/lab/life.mdx")
   const own = page.locator(".cgc-mdx-island")
   await expect(own).toHaveAttribute("data-cgc-hydrated", "")
 

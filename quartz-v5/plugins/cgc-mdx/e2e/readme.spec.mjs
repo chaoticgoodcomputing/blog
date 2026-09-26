@@ -33,11 +33,11 @@ test("the README shows a whole first widget: a page, its widget and the widget's
 
 test("the first widget says one thing at build time and another once it hydrates", async ({ page }) => {
   // The build-time HTML, before any script runs.
-  const html = fs.readFileSync(path.join(site.public, "hello.html"), "utf8")
+  const html = fs.readFileSync(path.join(site.public, "hello.mdx.html"), "utf8")
   expect(html).toMatch(/class="cgc-mdx-island"[^>]*>\s*<p class="initialization">Initializing widgets…<\/p>/)
 
   await routeSite(page, site.public, ORIGIN)
-  await page.goto(`${ORIGIN}/hello`)
+  await page.goto(`${ORIGIN}/hello.mdx`)
   await expect(page.locator(".cgc-mdx-island")).toHaveAttribute("data-cgc-hydrated", "")
   await expect(page.locator(".initialization")).toHaveText("Widgets initialized")
   await expect(page.locator(".initialization")).toHaveClass("initialization initialization--ready")

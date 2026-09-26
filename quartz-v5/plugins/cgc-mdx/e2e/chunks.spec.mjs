@@ -36,7 +36,7 @@ async function widgetRequests(page, url) {
 const entry = (paths) => paths.filter((p) => /GameOfLife-[^/]+\.js$/.test(p))
 
 test("a page with no widget loads no widget code", async ({ page }) => {
-  expect(await widgetRequests(page, "/mdx-article")).toEqual([])
+  expect(await widgetRequests(page, "/mdx-article.mdx")).toEqual([])
 })
 
 test("a markdown page loads no widget code", async ({ page }) => {
@@ -51,8 +51,8 @@ test("two pages importing one widget load the same entry", async ({ browser }) =
     await context.close()
     return seen
   }
-  const life = await load("/lab/life")
-  const again = await load("/lab/life-again")
+  const life = await load("/lab/life.mdx")
+  const again = await load("/lab/life-again.mdx")
   expect(entry(life)).toHaveLength(1)
   expect(entry(again)).toEqual(entry(life))
 })
@@ -60,7 +60,7 @@ test("two pages importing one widget load the same entry", async ({ browser }) =
 // The #51 flake made deterministic: a loaded machine idles the page before the scroll.
 test("a visible island's entry is counted even when the page idles before it scrolls into view", async ({ page }) => {
   const seen = recordWidgetRequests(page)
-  await page.goto("/lab/life-again")
+  await page.goto("/lab/life-again.mdx")
   await page.waitForLoadState("networkidle")
   expect(entry(seen)).toEqual([])
   await hydrateIslands(page)
@@ -68,21 +68,21 @@ test("a visible island's entry is counted even when the page idles before it scr
 })
 
 test("a page loads only the widgets it imports", async ({ page }) => {
-  const seen = await widgetRequests(page, "/lab/echo")
+  const seen = await widgetRequests(page, "/lab/echo.mdx")
   expect(seen.some((p) => p.includes("Echo-"))).toBe(true)
   expect(seen.some((p) => p.includes("GameOfLife-"))).toBe(false)
 })
 
 test("the widget's imported CSS reaches the page", async ({ page }) => {
-  await page.goto("/lab/life")
+  await page.goto("/lab/life.mdx")
   await expect(page.locator(".cgc-mdx-island")).toHaveAttribute("data-cgc-hydrated", "")
   await expect(page.locator(".life")).toHaveCSS("border-radius", "8px")
 })
 
 test("the widget's CSS is in the served head, so build-time markup is styled on first paint", async ({ emitted }) => {
-  const head = emitted.read("lab/life.html").split("</head>")[0]
+  const head = emitted.read("lab/life.mdx.html").split("</head>")[0]
   expect(head).toMatch(/<link rel="stylesheet" href="\.\.\/static\/cgc-mdx\/GameOfLife-[^"]+\.css" data-persist/)
-  expect(emitted.read("lab/echo.html")).not.toContain("GameOfLife-")
+  expect(emitted.read("lab/echo.mdx.html")).not.toContain("GameOfLife-")
 })
 
 // The widget layer (ADR-0002, #45). The fixture sites stay stock, so the site's CSS is stood in for
@@ -117,28 +117,28 @@ function widgetSheet(page, widget) {
 }
 
 test("widget CSS in the served head is inside the widget layer", async ({ page }) => {
-  await page.goto("/lab/life")
+  await page.goto("/lab/life.mdx")
   expect(await widgetSheet(page, "GameOfLife")).toEqual([
     { "@layer cgc.mdx.widgets": [".life", ".life__reset", ".life__reset:hover", ".life__canvas"] },
   ])
 })
 
 test("a site-layer rule beats a widget rule on the same element", async ({ page }) => {
-  await page.goto("/lab/life")
+  await page.goto("/lab/life.mdx")
   await addSiteCss(page, ".life { border-radius: 2px }")
   await expect(page.locator(".life")).toHaveCSS("border-radius", "2px")
 })
 
 test("a site-layer rule beats a widget whose CSS arrived by SPA navigation", async ({ page }) => {
-  await page.goto("/lab/echo")
+  await page.goto("/lab/echo.mdx")
   await addSiteCss(page, ".life { border-radius: 2px }")
   await page.locator("article a.internal", { hasText: "Life" }).click()
-  await expect(page).toHaveURL(/\/lab\/life$/)
+  await expect(page).toHaveURL(/\/lab\/life\.mdx$/)
   await expect(page.locator(".cgc-mdx-island")).toHaveAttribute("data-cgc-hydrated", "")
   await expect(page.locator(".life")).toHaveCSS("border-radius", "2px")
 })
 
-// /lab/cascade's widget carries its own layer and two remote imports. Their host never resolves
+// /lab/cascade.mdx's widget carries its own layer and two remote imports. Their host never resolves
 // (`.invalid`, RFC 2606), so these specs serve the imported sheets themselves.
 const REMOTE = "https://widgets.cgc-fixture.invalid"
 const REMOTE_CSS = {
@@ -152,7 +152,7 @@ async function gotoCascade(page) {
   await page.route(`${REMOTE}/**`, (route) =>
     route.fulfill({ contentType: "text/css", body: REMOTE_CSS[new URL(route.request().url()).pathname] ?? "" }),
   )
-  await page.goto("/lab/cascade")
+  await page.goto("/lab/cascade.mdx")
 }
 
 test("a widget's own layer nests inside the widget layer", async ({ page }) => {
@@ -229,7 +229,7 @@ test("a widget rule beats a theme's, on a site without cgc-styles", async ({ pag
   )
   expect(site.code, site.output).toBe(0)
   await routeSite(page, site.public, "https://fixture.invalid")
-  await page.goto("https://fixture.invalid/boxed")
+  await page.goto("https://fixture.invalid/boxed.mdx")
   const top = (await layerOrder(page))[""]
   for (const layer of THEME_LAYERS) {
     expect(top, layer).toContain(layer)

@@ -69,7 +69,7 @@ test("rings a tagged page in v4's colours: the current page in secondary, a visi
     .poll(() => marksNear(graph, "Plain Note", SECONDARY[colorScheme], 24))
     .toBeGreaterThan(20)
   // Plain Note links to the .mdx article: there, it is a page the reader has visited.
-  await page.goto("/mdx-article")
+  await page.goto("/mdx-article.mdx")
   await expect.poll(() => nodeFill(graph, "Plain Note")).toEqual(FIXTURE[colorScheme])
   await expect
     .poll(() => marksNear(graph, "Plain Note", TERTIARY[colorScheme], 20))

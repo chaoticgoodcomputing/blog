@@ -45,6 +45,8 @@
     "dependencies": [],
     "defaultOrder": 45,
     "defaultEnabled": true,
-    "defaultOptions": {}
+    "defaultOptions": {
+      "cleanUrlAliases": true
+    }
   }
 }

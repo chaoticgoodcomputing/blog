@@ -1,9 +1,15 @@
 ---
-status: accepted
+status: superseded by 0005
 date: 2026-09-25
 ---
 
 # `.mdx` pages at their clean URLs, for the whole site
+
+_Superseded on 2026-09-26 by [ADR-0005](./0005-mdx-pages-at-their-own-slugs.md): the owner decided
+that an `.mdx` page lives at its own slug, `lab/life.mdx`, as stock page types keep a file's
+extension, with its clean URL as an alias that redirects there. The clean slugs this record chose
+made stock `alias-redirects` write a case-redirect stub over every page's `.mdx` URL on a
+case-sensitive filesystem (bug A). Kept for the reasoning about hooks and build-context copies._
 
 An `.mdx` page lives at its path without the extension: `lab/life.mdx` is published at `/lab/life`,
 as v4 published `resume.mdx` at `/resume`. Emitting the page there was never the problem. The rest

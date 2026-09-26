@@ -1,4 +1,4 @@
-// `bluesky-post`, proven through `cgc-mdx`: the fixture page /lab/bluesky imports it as a package
+// `bluesky-post`, proven through `cgc-mdx`: the fixture page /lab/bluesky.mdx imports it as a package
 // (`@chaoticgoodcomputing/widgets/bluesky-post`) and shows three posts, fetched in the browser after
 // hydration (#36, #75). Bluesky itself is the suite's stand-in (tests/harness/bluesky.mjs), which
 // answers from tests/fixture-bluesky/xrpc.json.
@@ -9,7 +9,7 @@ import { buildScratchSite } from "../../../tests/harness/site.mjs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 
-const PAGE = "/lab/bluesky"
+const PAGE = "/lab/bluesky.mdx"
 const POST_A = "https://bsky.app/profile/fixture.bsky.social/post/3lcgcfixturea"
 const POST_B = "https://bsky.app/profile/fixture.bsky.social/post/3lcgcfixtureb"
 
@@ -35,7 +35,7 @@ test("a reader without JavaScript gets a loading state and a link to each post",
   await context.close()
 })
 
-// The widgets on /lab/bluesky, once their islands have hydrated and each has drawn its post.
+// The widgets on /lab/bluesky.mdx, once their islands have hydrated and each has drawn its post.
 async function shown(page) {
   for (const island of await page.locator(".cgc-mdx-island").all()) {
     await expect(island).toHaveAttribute("data-cgc-hydrated", "")
@@ -264,7 +264,7 @@ test("it survives SPA navigation away and back, drawing each post once", async (
   await expect(page.locator(".cgc-bluesky-post")).toHaveCount(0)
 
   await page.goBack()
-  await expect(page).toHaveURL(/\/lab\/bluesky$/)
+  await expect(page).toHaveURL(/\/lab\/bluesky\.mdx$/)
   for (const widget of await shown(page)) await expect(widget.locator(".cgc-bluesky")).toHaveCount(1)
   expect(asked).toBe(6)
 })

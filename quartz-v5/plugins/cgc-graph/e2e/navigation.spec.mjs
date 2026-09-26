@@ -14,11 +14,11 @@ test("a click on a node follows it without reloading the page", async ({ page })
   const graph = localGraph(page)
   const mdx = await nodePosition(graph, "MDX Article")
   await page.mouse.click(mdx.x, mdx.y)
-  await expect(page).toHaveURL(/\/mdx-article$/)
+  await expect(page).toHaveURL(/\/mdx-article\.mdx$/)
   expect(await page.evaluate(() => window.cgcSameDocument)).toBe(true)
 
   // The graph survives the navigation: drawn once, around the new page.
-  await expect.poll(async () => (await drawnGraph(graph))["mdx-article"]?.current).toBe(true)
+  await expect.poll(async () => (await drawnGraph(graph))["mdx-article.mdx"]?.current).toBe(true)
   await expect(graph.locator(".cgc-graph__canvas")).toHaveCount(1)
 
   // And it still leads on.
@@ -45,7 +45,7 @@ test("the browser's back button redraws the graph of the page it returns to", as
   const graph = localGraph(page)
   const mdx = await nodePosition(graph, "MDX Article")
   await page.mouse.click(mdx.x, mdx.y)
-  await expect(page).toHaveURL(/\/mdx-article$/)
+  await expect(page).toHaveURL(/\/mdx-article\.mdx$/)
   await page.goBack()
   await expect(page).toHaveURL(/\/links\/from-md$/)
   await expect.poll(async () => (await drawnGraph(graph))["links/from-md"]?.current).toBe(true)
@@ -59,7 +59,7 @@ test("tells PostHog a navigation came from the graph", async ({ page }) => {
   await page.goto("/links/from-md")
   const mdx = await nodePosition(localGraph(page), "MDX Article")
   await page.mouse.click(mdx.x, mdx.y)
-  await expect(page).toHaveURL(/\/mdx-article$/)
+  await expect(page).toHaveURL(/\/mdx-article\.mdx$/)
   await expect
     .poll(() =>
       posthog.captures
@@ -70,7 +70,7 @@ test("tells PostHog a navigation came from the graph", async ({ page }) => {
       expect.objectContaining({
         source: "graph-drag-click",
         from_page: "/links/from-md",
-        to_page: "/mdx-article",
+        to_page: "/mdx-article.mdx",
       }),
     )
 })

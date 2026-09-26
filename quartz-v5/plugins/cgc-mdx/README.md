@@ -15,7 +15,7 @@ It started as the MDX half of this site's Quartz 4 fork. It ships no widgets of 
 ## What it does
 
 - **An `.mdx` page is a page like any other.** Its body goes through the same transformers your `.md` pages do, so wikilinks, callouts, tables, code highlighting, LaTeX, the table of contents, search, backlinks and popovers all work on it.
-- **It lives at a clean URL.** `notes/dice.mdx` is published at `/notes/dice`, and a link to it reaches that URL however it's written: `[[dice]]`, `[[notes/dice.mdx]]` or `[dice](notes/dice.mdx)`. Backlinks and the graph count those links too.
+- **It lives at its own URL, and its clean URL redirects there.** `notes/dice.mdx` is published at `/notes/dice.mdx`, as Quartz's stock page types keep a file's extension (a canvas lives at `/notes/map.canvas`). `/notes/dice` redirects to it, if your site has the stock `alias-redirects` plugin. A link to the page reaches it however it's written: `[[dice]]`, `[[notes/dice.mdx]]` or `[dice](notes/dice.mdx)`. Backlinks and the graph count those links too.
 - **Widgets are ordinary imports.** A widget comes from a file beside the page or from an npm package, the way any bundler resolves an `import`. There's no registry and no alias to configure.
 - **Widgets are islands.** Each one renders to HTML at build time, so the page reads correctly before any script runs, and then hydrates in the browser. Widgets keep working across Quartz's page navigation.
 - **Broken widgets fail the build.** An import that doesn't resolve, a widget that throws while rendering, or a prop that isn't plain data stops the build and names the page, so a broken article never deploys.
@@ -30,7 +30,13 @@ It needs a Quartz 5 whose page-type `generate` is awaitable ([#25](https://githu
 
 Releases are `v<semver>` tags on [the monorepo](https://github.com/chaoticgoodcomputing/blog). Every package there shares one version.
 
-The plugin has no options. It is a page type, an emitter and a transformer in one package. The transformer has to run before `crawl-links`, which its default order (45, to `crawl-links`' 60) takes care of, so leave its `order` below that.
+It is a page type, an emitter and a transformer in one package. The transformer has to run before `crawl-links`, which its default order (45, to `crawl-links`' 60) takes care of, so leave its `order` below that.
+
+It has one option:
+
+| Option | Default | |
+| --- | --- | --- |
+| `cleanUrlAliases` | `true` | Adds each `.mdx` page's clean URL, its path without the extension, to the page's aliases, so `alias-redirects` redirects it to the page. Leave it on if your pages were ever served without the extension. It's skipped for a page whose clean URL another page already lives at. |
 
 ## A first widget
 
@@ -77,7 +83,7 @@ export function Initialization() {
 }
 ```
 
-`/hello` arrives reading "Initializing widgets…", which the build wrote into the page, and switches to "Widgets initialized" as soon as its widget hydrates. Everything else in this README builds on that handoff.
+`/hello.mdx` arrives reading "Initializing widgets…", which the build wrote into the page, and switches to "Widgets initialized" as soon as its widget hydrates. Everything else in this README builds on that handoff.
 
 ## Writing a page
 

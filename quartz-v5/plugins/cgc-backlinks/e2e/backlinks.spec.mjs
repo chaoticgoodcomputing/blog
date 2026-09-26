@@ -49,7 +49,7 @@ test("lists every page that links to a page, .mdx pages included, each linked to
       Object.fromEntries(links.map((a) => [a.textContent.trim(), new URL(a.href).pathname])),
     )
   expect(hrefs).toEqual({
-    "Newer MDX source": "/backlinks/newer",
+    "Newer MDX source": "/backlinks/newer.mdx",
     "Plain source": "/backlinks/plain",
     "Lookalike source": "/backlinks/lookalike",
     "Private Note": "/seo/private-note",
@@ -172,12 +172,12 @@ test("previews no page on hover, and follows a link within the site", async ({ p
 
 // As stock's and v4's: a page no page links to has no backlinks section at all.
 test("leaves the section out of a page no page links to", async ({ page }) => {
-  await page.goto("/backlinks/newer")
+  await page.goto("/backlinks/newer.mdx")
   await expect(page.locator("article")).toContainText("the newest of the public pages")
   await expect(backlinks(page)).toHaveCount(0)
 })
 
 test("an .mdx page's backlinks list the pages that link to it", async ({ page }) => {
-  await page.goto("/mdx-article")
+  await page.goto("/mdx-article.mdx")
   expect(await names(page)).toEqual(expect.arrayContaining(["Plain Note", "Deep Note"]))
 })

@@ -22,14 +22,14 @@ const trackIntervals = () => {
 const canvasPixels = (page, selector = ".life__canvas") => page.locator(selector).first().evaluate((c) => c.toDataURL())
 
 test("the widget is rendered into the page at build time", async ({ emitted }) => {
-  const html = emitted.read("lab/life.html")
+  const html = emitted.read("lab/life.mdx.html")
   expect(html).toMatch(/<div class="cgc-mdx-island"[^>]*data-cgc-hydrate="load"/)
   expect(html).toContain('class="life__canvas"')
   expect(html).not.toContain("import { GameOfLife }")
 })
 
 test("a load island hydrates and runs", async ({ page }) => {
-  await page.goto("/lab/life")
+  await page.goto("/lab/life.mdx")
   const island = page.locator(".cgc-mdx-island")
   await expect(island).toHaveAttribute("data-cgc-hydrated", "")
   const before = await canvasPixels(page)
@@ -37,7 +37,7 @@ test("a load island hydrates and runs", async ({ page }) => {
 })
 
 test("its skin follows the theme's custom properties", async ({ page }) => {
-  await page.goto("/lab/life")
+  await page.goto("/lab/life.mdx")
   const [live, dark] = await page.locator(".life__canvas").evaluate((c) => [
     getComputedStyle(c).getPropertyValue("--life-live").trim(),
     getComputedStyle(document.documentElement).getPropertyValue("--dark").trim(),
@@ -50,7 +50,7 @@ test("navigating away unmounts the island and stops its timer", async ({ page })
   await page.goto("/plain-note")
   const idle = await page.evaluate(() => window.__liveIntervals())
 
-  await page.goto("/lab/life")
+  await page.goto("/lab/life.mdx")
   await expect(page.locator(".cgc-mdx-island")).toHaveAttribute("data-cgc-hydrated", "")
   expect(await page.evaluate(() => window.__liveIntervals())).toBe(idle + 1)
 
@@ -61,14 +61,14 @@ test("navigating away unmounts the island and stops its timer", async ({ page })
 
 test("navigating back rehydrates exactly once", async ({ page }) => {
   await page.addInitScript(trackIntervals)
-  await page.goto("/lab/life")
+  await page.goto("/lab/life.mdx")
   await expect(page.locator(".cgc-mdx-island")).toHaveAttribute("data-cgc-hydrated", "")
   const idle = (await page.evaluate(() => window.__liveIntervals())) - 1
 
   await page.locator("article a.internal", { hasText: "plain-note" }).click()
   await expect(page).toHaveURL(/\/plain-note$/)
   await page.goBack()
-  await expect(page).toHaveURL(/\/lab\/life$/)
+  await expect(page).toHaveURL(/\/lab\/life\.mdx$/)
 
   await expect(page.locator(".cgc-mdx-island")).toHaveAttribute("data-cgc-hydrated", "")
   await expect.poll(() => page.evaluate(() => window.__liveIntervals())).toBe(idle + 1)
@@ -77,7 +77,7 @@ test("navigating back rehydrates exactly once", async ({ page }) => {
 })
 
 test("client:visible waits until the island scrolls into view", async ({ page }) => {
-  await page.goto("/lab/life-again")
+  await page.goto("/lab/life-again.mdx")
   const island = page.locator(".cgc-mdx-island")
   await expect(island).toHaveAttribute("data-cgc-hydrate", "visible")
   await page.waitForTimeout(300)
@@ -88,7 +88,7 @@ test("client:visible waits until the island scrolls into view", async ({ page })
 })
 
 test("an island inside a popover stays static", async ({ page }) => {
-  await page.goto("/lab/life-again")
+  await page.goto("/lab/life-again.mdx")
   await page.locator("article a.internal", { hasText: "Life" }).first().hover()
   const popoverIsland = page.locator(".popover .cgc-mdx-island")
   await expect(popoverIsland).toBeAttached()
@@ -97,7 +97,7 @@ test("an island inside a popover stays static", async ({ page }) => {
 })
 
 test("props are evaluated statically, as live pages write them", async ({ page }) => {
-  await page.goto("/lab/echo")
+  await page.goto("/lab/echo.mdx")
   const props = JSON.parse(await page.locator(".echo__props").textContent())
   expect(props).toEqual({
     label: "plain string",

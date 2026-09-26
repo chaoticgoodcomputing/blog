@@ -5,7 +5,7 @@
 /**
  * How v5 addresses what v4 served at a URL. Descriptive, not normative: a move pairs the two URLs so
  * the report can compare what is served there. Whether the move is acceptable is for the allowlist
- * to say. Applied in this order.
+ * to say. Applied in this order, each seeing the v5 site.
  */
 export const MOVES = [
   {
@@ -31,14 +31,24 @@ export const MOVES = [
       return kind === "page" ? `${segments.slice(0, -1).join("/")}/` : `${segments.slice(0, -1).join("/")}/index${last.slice(base.length)}`
     },
   },
+  {
+    id: "mdx-extension",
+    describe: "v5 serves an .mdx page at its .mdx URL, as stock page types keep a file's extension, and its OG image, named after its slug, with it",
+    apply: (url, kind, v5) => {
+      const image = kind === "generated" && /^(.+)-og-image\.webp$/.exec(url)
+      if (image) return v5?.urls.has(`${image[1]}.mdx-og-image.webp`) ? `${image[1]}.mdx-og-image.webp` : url
+      const page = kind === "page" && !url.endsWith("/") && v5?.pages.get(`${url}.mdx`)
+      return page && !page.fields.has("refresh") ? `${url}.mdx` : url
+    },
+  },
 ]
 
-/** The URL v5 is expected to serve v4's `url` at, and the moves that took it there. */
-export function v5UrlFor(url, kind) {
+/** The URL v5 is expected to serve v4's `url` at, on the `v5` site, and the moves that took it there. */
+export function v5UrlFor(url, kind, v5) {
   let to = url
   const how = []
   for (const move of MOVES) {
-    const next = move.apply(to, kind)
+    const next = move.apply(to, kind, v5)
     if (next !== to) how.push(move.id)
     to = next
   }
@@ -59,7 +69,7 @@ function fromClock(value, site) {
 
 // The v5 form of a value from a v4 head: a URL on the site's own origin follows its page's move, so a
 // canonical that moved with its page is not reported a second time.
-function mappedValue(value, v4) {
+function mappedValue(value, v4, v5) {
   if (fromClock(value, v4)) return BUILD_CLOCK
   if (!value.startsWith(`${v4.origin}/`)) return value
   let pathname
@@ -68,7 +78,7 @@ function mappedValue(value, v4) {
   } catch {
     return value
   }
-  return `${v4.origin}${v5UrlFor(pathname, kindOfPath(v4, pathname)).to}`
+  return `${v4.origin}${v5UrlFor(pathname, kindOfPath(v4, pathname), v5).to}`
 }
 function plainValue(value, site) {
   if (fromClock(value, site)) return BUILD_CLOCK
@@ -103,7 +113,7 @@ function compareHeads(url, to, v4, v5, differences) {
   const fields = new Set([...before.fields.keys(), ...after.fields.keys()])
   for (const field of [...fields].sort()) {
     if (redirect !== (field === "refresh")) continue
-    const a = (before.fields.get(field) ?? []).map((value) => mappedValue(value, v4))
+    const a = (before.fields.get(field) ?? []).map((value) => mappedValue(value, v4, v5))
     const b = (after.fields.get(field) ?? []).map((value) => plainValue(value, v5))
     const removed = minus(a, b)
     const added = minus(b, a)
@@ -116,7 +126,7 @@ function compareFeed(area, v4, v5, differences) {
   const after = v5[area] ?? new Set()
   const expected = new Map()
   for (const url of before) {
-    const to = url.startsWith("/") ? v5UrlFor(url, kindOfPath(v4, url)).to : url
+    const to = url.startsWith("/") ? v5UrlFor(url, kindOfPath(v4, url), v5).to : url
     expected.set(to, [...(expected.get(to) ?? []), url])
   }
   for (const [to, urls] of expected) {
@@ -154,14 +164,16 @@ export function compare(v4, v5, { allowlist, pending = [], caseSensitive, vault,
 
   for (const [url, { kind }] of v4.urls) {
     if (kind === "generated") continue
-    const { to, how } = v5UrlFor(url, kind)
+    const { to, how } = v5UrlFor(url, kind, v5)
     if (to !== url && v5.urls.has(to)) {
       claimed.add(to)
       let redirect
-      if (kind === "page" && how.includes("lowercase")) {
+      // A case redirect is only written where the filesystem can hold it beside its page (#23). An
+      // .mdx page's clean URL is an alias, which any filesystem holds.
+      if (kind === "page" && (how.includes("lowercase") || how.includes("mdx-extension"))) {
         const target = v5.pages.get(url)?.fields.get("refresh")?.[0]
         claimed.add(url)
-        if (!caseSensitive) redirect = "unverifiable"
+        if (how.includes("lowercase") && !caseSensitive) redirect = "unverifiable"
         else redirect = target && plainValue(target, v5) === `${v5.origin}${to}` ? "verified" : "missing"
       }
       differences.push({ area: "url", change: "moved", url, to, how, kind, ...(redirect && { redirect }) })

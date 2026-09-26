@@ -1,9 +1,9 @@
-// `pdf-viewer`, proven through `cgc-mdx`: the fixture page /lab/pdf imports it as a package
+// `pdf-viewer`, proven through `cgc-mdx`: the fixture page /lab/pdf.mdx imports it as a package
 // (`@chaoticgoodcomputing/widgets/pdf-viewer`) and shows /lab/fixture.pdf, a two-page PDF with a
 // link on page one. PDF.js is bundled, so nothing is fetched from a CDN (#36, #66).
 import { test, expect, resolvedColour, toggleScheme } from "../../../tests/harness/test.mjs"
 
-const PAGE = "/lab/pdf"
+const PAGE = "/lab/pdf.mdx"
 
 test("a reader without JavaScript gets the title, a download link and a way to open the PDF", async ({
   browser,
@@ -37,7 +37,7 @@ const inked = (canvas) =>
     return ink
   })
 
-// The viewer on /lab/pdf, once its island has hydrated and PDF.js has drawn both pages.
+// The viewer on /lab/pdf.mdx, once its island has hydrated and PDF.js has drawn both pages.
 async function shown(page) {
   await expect(page.locator(".cgc-mdx-island")).toHaveAttribute("data-cgc-hydrated", "")
   const viewer = page.locator(".cgc-pdf-viewer")
@@ -78,7 +78,7 @@ test("it survives SPA navigation away and back, and lets go of PDF.js in between
   await expect.poll(() => page.workers().length).toBe(0)
 
   await page.goBack()
-  await expect(page).toHaveURL(/\/lab\/pdf$/)
+  await expect(page).toHaveURL(/\/lab\/pdf\.mdx$/)
   const viewer = await shown(page)
   // Drawn once, not once per visit.
   await expect(viewer.locator(".cgc-pdf-viewer__page")).toHaveCount(2)
@@ -106,7 +106,7 @@ test("Download saves the PDF instead of navigating to it", async ({ page }) => {
   ])
   expect(download.suggestedFilename()).toBe("fixture.pdf")
   expect(routed).toEqual([])
-  await expect(page).toHaveURL(/\/lab\/pdf$/)
+  await expect(page).toHaveURL(/\/lab\/pdf\.mdx$/)
   await expect(viewer.locator(".cgc-pdf-viewer__page")).toHaveCount(2)
 })
 

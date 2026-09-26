@@ -13,7 +13,7 @@ test("links a page to its source file in the repository", async ({ page }) => {
   for (const [url, file] of [
     ["/plain-note", "plain-note.md"],
     ["/nested/deep-note", "nested/deep-note.md"],
-    ["/mdx-article", "mdx-article.mdx"],
+    ["/mdx-article.mdx", "mdx-article.mdx"],
   ]) {
     await page.goto(url)
     const link = page.locator(".cgc-page-source__link")

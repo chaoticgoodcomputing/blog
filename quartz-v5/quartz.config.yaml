@@ -304,7 +304,8 @@ plugins:
     enabled: true
     options:
       mirrorDir: assets/annotated-documents
-  # `.mdx` pages, at their extensionless URLs, with widgets as islands (#19, #24, #65).
+  # `.mdx` pages at their `.mdx` URLs, with widgets as islands (#19, #24). Each page's clean URL
+  # redirects there, through alias-redirects (the owner's 2026-09-26 decision, cgc-mdx ADR-0005).
   - source: ../plugins/cgc-mdx
     enabled: true
   # Folder pages are dropped (#42, #43): never in the sitemap or linked, and the tag description

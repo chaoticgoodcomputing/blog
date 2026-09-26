@@ -19,7 +19,7 @@ test("opens every page of the site in a dialog, and closes on Escape", async ({ 
   for (const node of [
     "/",
     "plain-note",
-    "mdx-article",
+    "mdx-article.mdx",
     "graph/old-note",
     "seo/private-note",
     "tags/writing",
@@ -94,8 +94,8 @@ test("closes on navigation, and opens again on the new page", async ({ page }) =
   await openGlobalGraph(page)
   await page.keyboard.press("Escape")
   await page.locator("article").getByRole("link", { name: "mdx-article" }).first().click()
-  await expect(page).toHaveURL(/\/mdx-article$/)
+  await expect(page).toHaveURL(/\/mdx-article\.mdx$/)
   await page.getByRole("button", { name: "View Global Graph" }).click()
   await expect(dialog(page)).toBeVisible()
-  expect((await drawnGraph(globalGraph(page)))["mdx-article"].current).toBe(true)
+  expect((await drawnGraph(globalGraph(page)))["mdx-article.mdx"].current).toBe(true)
 })

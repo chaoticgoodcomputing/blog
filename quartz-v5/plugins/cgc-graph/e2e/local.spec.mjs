@@ -10,26 +10,26 @@ test("draws the pages around the current one, and its edges to .mdx pages", asyn
   const graph = await drawnGraph(localGraph(page))
   expect(Object.keys(graph).sort()).toEqual(
     [
-      "lab/echo",
-      "lab/life",
-      "lab/life-again",
+      "lab/echo.mdx",
+      "lab/life.mdx",
+      "lab/life-again.mdx",
       "links/from-md",
-      "mdx-article",
+      "mdx-article.mdx",
       "tags/fixture",
     ].sort(),
   )
   expect(graph["links/from-md"].current).toBe(true)
   expect(graph["links/from-md"].edges.sort()).toEqual(
-    ["lab/echo", "lab/life", "lab/life-again", "mdx-article", "tags/fixture"].sort(),
+    ["lab/echo.mdx", "lab/life.mdx", "lab/life-again.mdx", "mdx-article.mdx", "tags/fixture"].sort(),
   )
   // Edges between the neighbours are drawn too: from .mdx pages as from any other.
-  expect(graph["lab/echo"].edges).toContain("lab/life")
-  expect(graph["lab/life-again"].edges).toContain("lab/life")
-  expect(graph["mdx-article"].edges).toContain("tags/fixture")
+  expect(graph["lab/echo.mdx"].edges).toContain("lab/life.mdx")
+  expect(graph["lab/life-again.mdx"].edges).toContain("lab/life.mdx")
+  expect(graph["mdx-article.mdx"].edges).toContain("tags/fixture")
   // A tag is its own node, labelled as a tag, linking to its page.
   expect(graph["tags/fixture"].label).toBe("#fixture")
   expect(graph["tags/fixture"].href).toBe("/tags/fixture")
-  expect(graph["mdx-article"].label).toBe("MDX Article")
+  expect(graph["mdx-article.mdx"].label).toBe("MDX Article")
 })
 
 test("strokes the edges on the canvas, not only in the text alternative", async ({
@@ -61,14 +61,14 @@ test("marks the node under the pointer in the text alternative, with no browser 
 })
 
 test("draws an .mdx page's graph, with the pages that link to it", async ({ page }) => {
-  await page.goto("/mdx-article")
+  await page.goto("/mdx-article.mdx")
   const graph = await drawnGraph(localGraph(page))
-  expect(graph["mdx-article"].current).toBe(true)
-  for (const source of ["plain-note", "nested/deep-note", "links/from-md", "links/from-mdx", "/"]) {
-    expect(graph[source]?.edges, source).toContain("mdx-article")
+  expect(graph["mdx-article.mdx"].current).toBe(true)
+  for (const source of ["plain-note", "nested/deep-note", "links/from-md", "links/from-mdx.mdx", "/"]) {
+    expect(graph[source]?.edges, source).toContain("mdx-article.mdx")
   }
   // And the pages it links to: the index is `/`.
-  expect(graph["mdx-article"].edges).toEqual(expect.arrayContaining(["plain-note", "/"]))
+  expect(graph["mdx-article.mdx"].edges).toEqual(expect.arrayContaining(["plain-note", "/"]))
 })
 
 test("draws private pages, marked as private", async ({ page }) => {

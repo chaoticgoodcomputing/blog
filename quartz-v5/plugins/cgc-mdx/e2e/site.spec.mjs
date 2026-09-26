@@ -1,6 +1,7 @@
-// cgc-mdx on the real site (#65), proven on a scratch site built from the site config, with pages in
-// the vault's shapes. The site resolves links absolutely, as v4 did, where the fixture uses Quartz's
-// default, `shortest`, so links take other paths here. The plugin note is the vault's own file.
+// cgc-mdx on the real site (#65, and the owner's 2026-09-26 decision), proven on a scratch site
+// built from the site config, with pages in the vault's shapes. The site resolves links absolutely,
+// as v4 did, where the fixture uses Quartz's default, `shortest`, so links take other paths here.
+// The plugin note is the vault's own file.
 import fs from "node:fs"
 import path from "node:path"
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
@@ -15,6 +16,9 @@ const content = () => ({
   // .mdx pages at the root and in a folder, where the vault has `resume.mdx` and its notes.
   "cv.mdx": "---\ntitle: CV\n---\nThe CV page.\n",
   "content/notes/dice.mdx": "---\ntitle: Dice\n---\nThe dice page, back to [[/cv|the CV]].\n",
+  // An .mdx page beside a .md page of the same name, whose URL its clean URL would take.
+  "content/notes/twin.md": "---\ntitle: Twin, in Markdown\n---\nThe Markdown twin.\n",
+  "content/notes/twin.mdx": "---\ntitle: Twin, in MDX\n---\nThe MDX twin.\n",
   // Links to them in each form the vault writes them.
   "content/notes/links.md": [
     "---\ntitle: Links\n---",
@@ -45,35 +49,70 @@ test.afterAll(() => site?.remove())
 
 const emitted = (url) => fs.existsSync(path.join(site.public, `${url}.html`))
 
-test("every .mdx page is emitted at its extensionless slug", () => {
+// A redirect stub, as stock alias-redirects writes one.
+const isRedirect = (url) => fs.readFileSync(path.join(site.public, `${url}.html`), "utf8").includes('http-equiv="refresh"')
+
+test("every .mdx page is emitted at its .mdx URL, and its old clean URL redirects there", async ({ page }) => {
+  // The owner's 2026-09-26 decision (ADR-0005), overruling #23 and #65's clean URLs.
   for (const slug of ["cv", "content/notes/dice"]) {
-    expect(emitted(slug), slug).toBe(true)
-    expect(emitted(`${slug}.mdx`), `${slug}.mdx`).toBe(false)
+    expect(emitted(`${slug}.mdx`), `${slug}.mdx`).toBe(true)
+    expect(isRedirect(`${slug}.mdx`), `${slug}.mdx is the page`).toBe(false)
+    expect(isRedirect(slug), `${slug} redirects`).toBe(true)
   }
+  await routeSite(page, site.public, ORIGIN)
+  await page.goto(`${ORIGIN}/content/notes/dice`)
+  await expect(page).toHaveURL(`${ORIGIN}/content/notes/dice.mdx`)
+  await expect(page.locator("article")).toContainText("The dice page")
 })
 
-test("links in the vault's forms reach .mdx pages at their clean URLs", async ({ page }) => {
+test("an .mdx page's clean URL is no alias when a .md page lives there", () => {
+  expect(isRedirect("content/notes/twin"), "the .md page").toBe(false)
+  expect(fs.readFileSync(path.join(site.public, "content/notes/twin.html"), "utf8")).toContain("The Markdown twin.")
+  expect(fs.readFileSync(path.join(site.public, "content/notes/twin.mdx.html"), "utf8")).toContain("The MDX twin.")
+})
+
+test("links in the vault's forms reach .mdx pages at their own URLs, not through the redirect", async ({ page }) => {
   await routeSite(page, site.public, ORIGIN)
   await page.goto(`${ORIGIN}/content/notes/links`)
   const article = page.locator("article")
   for (const [text, url] of [
-    ["my cv", "/cv"],
-    ["dice, by file name", "/content/notes/dice"],
-    ["the cv, by file name", "/cv"],
-    ["the cv, relatively", "/cv"],
+    ["my cv", "/cv.mdx"],
+    ["dice, by file name", "/content/notes/dice.mdx"],
+    ["the cv, by file name", "/cv.mdx"],
+    ["the cv, relatively", "/cv.mdx"],
   ]) {
     const href = await article.getByRole("link", { name: text, exact: true }).evaluate((a) => a.href)
     expect(new URL(href).pathname, text).toBe(url)
     expect(emitted(url), url).toBe(true)
+    expect(isRedirect(url), url).toBe(false)
   }
+  // The graph's edges and the backlinks come from the links a page records, which each link above
+  // resolved into: the pages themselves, and never their redirects.
+  const index = JSON.parse(fs.readFileSync(path.join(site.public, "static/contentIndex.json"), "utf8"))
+  const { links } = index["content/notes/links"]
+  expect(links).toEqual(expect.arrayContaining(["cv.mdx", "content/notes/dice.mdx"]))
+  for (const redirect of ["cv", "content/notes/dice"]) expect(links).not.toContain(redirect)
 })
 
 test("an .mdx page's backlinks list the pages that link to it", async ({ page }) => {
   await routeSite(page, site.public, ORIGIN)
-  await page.goto(`${ORIGIN}/cv`)
+  await page.goto(`${ORIGIN}/cv.mdx`)
   for (const title of ["Links", "Dice"]) await expect(page.locator(".cgc-backlinks").getByRole("link", { name: title })).toBeVisible()
-  await page.goto(`${ORIGIN}/content/notes/dice`)
+  await page.goto(`${ORIGIN}/content/notes/dice.mdx`)
   await expect(page.locator(".cgc-backlinks").getByRole("link", { name: "Links" })).toBeVisible()
+})
+
+test("no case-redirect stub collides with or duplicates an .mdx page", () => {
+  // The site config turns alias-redirects' case redirects on (#23). They are written only on a
+  // case-sensitive filesystem, which this check needs to mean anything.
+  const probe = path.join(site.public, ".Case-Probe")
+  fs.writeFileSync(probe, "")
+  const caseSensitive = !fs.existsSync(path.join(site.public, ".case-probe"))
+  fs.rmSync(probe)
+  test.skip(!caseSensitive, "case redirects are only emitted on a case-sensitive filesystem")
+  const pages = fs.readdirSync(site.public, { recursive: true }).filter((file) => file.endsWith(".mdx.html"))
+  expect(pages.sort()).toEqual(["content/notes/dice.mdx.html", "content/notes/twin.mdx.html", "cv.mdx.html"])
+  expect(pages.filter((file) => isRedirect(file.slice(0, -".html".length)))).toEqual([])
 })
 
 test("the plugin note renders at /plugins/cgc-mdx, with absolute links only", async ({ page }) => {

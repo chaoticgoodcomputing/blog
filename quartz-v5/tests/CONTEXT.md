@@ -149,7 +149,8 @@ _Avoid_: change, regression (it may be intended)
 
 **Move**:
 A v4 URL whose page or file v5 serves at another URL: lowercased, a tag page without its trailing
-slash, or a folder note collapsed to its folder. A redirect is what may still serve the old URL
+slash, a folder note collapsed to its folder, or an `.mdx` page at its `.mdx` URL, with its OG image
+(the owner's 2026-09-26 decision, `cgc-mdx` ADR-0005). A redirect is what may still serve the old URL
 after a move.
 _Avoid_: rename, redirect
 

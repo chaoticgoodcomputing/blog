@@ -44,6 +44,16 @@ function indexedAtOwnUrl(d, { v4, v5 }) {
   return d.field !== "refresh"
 }
 
+// The vault's .mdx pages when the owner moved them to their .mdx URLs, on 2026-09-26.
+const MDX_PAGES = new Set([
+  "/resume",
+  "/content/notes/ai-beat-us",
+  "/content/notes/ants-in-the-neighborhood",
+  "/content/notes/mdx-widgets-test",
+  "/content/notes/roll-advantage",
+  "/content/notes/scratch/dice-widget",
+])
+
 export const ALLOWLIST = [
   {
     ticket: 48,
@@ -70,6 +80,14 @@ export const ALLOWLIST = [
     needsRedirect: true,
     allows: (d) =>
       d.area === "url" && d.change === "moved" && d.kind === "page" && sameSet(d.how, ["lowercase"]) && d.redirect !== "missing",
+  },
+  {
+    ticket: 53,
+    summary:
+      "The owner's 2026-09-26 decision (bug A, overruling the clean URLs of #23 and #65): the vault's six .mdx pages are served at their .mdx URLs, as stock page types keep a file's extension (cgc-mdx ADR-0005), and each v4 URL is cgc-mdx's alias, which alias-redirects redirects there. Only these six, and only with the redirect seen.",
+    needsRedirect: true,
+    allows: (d) =>
+      d.area === "url" && d.change === "moved" && d.kind === "page" && sameSet(d.how, ["mdx-extension"]) && d.redirect === "verified" && MDX_PAGES.has(d.url),
   },
   {
     ticket: 42,

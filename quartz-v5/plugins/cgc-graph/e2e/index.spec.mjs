@@ -42,7 +42,7 @@ test("lists every page by its slug, with its title, links and tags", async ({ em
   expect(Object.keys(pages.index).sort()).toEqual(["date", "links", "primary", "tags", "title"])
   expect(pages["plain-note"]).toMatchObject({
     title: "Plain Note",
-    links: ["mdx-article"],
+    links: ["mdx-article.mdx"],
     tags: ["fixture", "markdown"],
   })
   // Tags as the cgc-tags engine publishes them, in frontmatter order.
@@ -61,10 +61,10 @@ test("carries each page's primary tag, as cgc-tags resolves it", async ({ emitte
 
 test("lists .mdx pages and private pages like any other", async ({ emitted }) => {
   const pages = pagesOf(emitted)
-  expect(pages["links/from-mdx"].links).toEqual(
-    expect.arrayContaining(["lab/life", "lab/echo", "mdx-article", "lab/life-again"]),
+  expect(pages["links/from-mdx.mdx"].links).toEqual(
+    expect.arrayContaining(["lab/life.mdx", "lab/echo.mdx", "mdx-article.mdx", "lab/life-again.mdx"]),
   )
-  expect(pages["mdx-article"].tags).toEqual(["fixture", "mdx"])
+  expect(pages["mdx-article.mdx"].tags).toEqual(["fixture", "mdx"])
   expect(pages["seo/private-note"].tags).toEqual(["private"])
   // Its second tag, `backstage`, is one only a private page carries (cgc-seo's sitemap, #67).
   expect(pages["seo/private-descendant"].tags).toEqual(["private/work", "backstage"])

@@ -15,14 +15,16 @@ const ORIGIN = "https://blog.chaoticgood.computer"
 const REPO = path.resolve(testsRoot, "../..")
 const VAULT = path.join(REPO, "content/public")
 
-// Every .mdx article in the vault, by the clean URL it lives at, and the widgets its imports reach.
+// Every .mdx article in the vault, by the URL it lives at, and the widgets its imports reach. The
+// URL keeps the extension, as stock page types' do (the owner's 2026-09-26 decision, cgc-mdx
+// ADR-0005), and the clean URL v4 served it at redirects there.
 const ARTICLES = {
-  resume: ["PDFViewer"],
-  "content/notes/ai-beat-us": ["BlueskyPost"],
-  "content/notes/ants-in-the-neighborhood": ["RandomWalk"],
-  "content/notes/mdx-widgets-test": ["GameOfLife"],
-  "content/notes/roll-advantage": ["ProbabilityConvolutions"],
-  "content/notes/scratch/dice-widget": ["ProbabilityConvolutions"],
+  "resume.mdx": ["PDFViewer"],
+  "content/notes/ai-beat-us.mdx": ["BlueskyPost"],
+  "content/notes/ants-in-the-neighborhood.mdx": ["RandomWalk"],
+  "content/notes/mdx-widgets-test.mdx": ["GameOfLife"],
+  "content/notes/roll-advantage.mdx": ["ProbabilityConvolutions"],
+  "content/notes/scratch/dice-widget.mdx": ["ProbabilityConvolutions"],
 }
 
 // v4's widget files, which only v4 reads and cutover deletes: each widget's component, script,
@@ -85,10 +87,12 @@ const pixel = (canvas, x, y) =>
     return `rgb(${r}, ${g}, ${b})`
   }, [x, y])
 
-test("every .mdx article in the vault builds, at its clean URL", () => {
-  expect(mdxFiles().map((rel) => rel.replace(/\.mdx$/, "")).sort()).toEqual(Object.keys(ARTICLES).sort())
+test("every .mdx article in the vault builds, at its .mdx URL, and its clean URL redirects there", () => {
+  expect(mdxFiles().sort()).toEqual(Object.keys(ARTICLES).sort())
+  const read = (url) => fs.readFileSync(path.join(site.public, `${url}.html`), "utf8")
   for (const slug of Object.keys(ARTICLES)) {
-    expect(fs.existsSync(path.join(site.public, `${slug}.html`)), slug).toBe(true)
+    expect(read(slug), slug).not.toContain('http-equiv="refresh"')
+    expect(read(slug.replace(/\.mdx$/, "")), `${slug}'s clean URL`).toContain('http-equiv="refresh"')
   }
 })
 
@@ -151,26 +155,26 @@ test("widgets unmount and come back across SPA navigation, with no errors", asyn
     await expect(page).toHaveURL(`${ORIGIN}/${slug}`)
     for (const island of await page.locator(".cgc-mdx-island").all()) await expect(island).toHaveAttribute("data-cgc-hydrated", "")
   }
-  await open(page, "content/notes/roll-advantage")
+  await open(page, "content/notes/roll-advantage.mdx")
   await expect(page.locator(".probability-convolutions .main-svg").first()).toBeVisible()
-  await spa("content/notes/ants-in-the-neighborhood")
+  await spa("content/notes/ants-in-the-neighborhood.mdx")
   await page.locator(".random-walk").first().getByRole("button", { name: "Auto-play" }).click()
-  await spa("content/notes/mdx-widgets-test")
-  await spa("content/notes/roll-advantage")
+  await spa("content/notes/mdx-widgets-test.mdx")
+  await spa("content/notes/roll-advantage.mdx")
   await expect(page.locator(".probability-convolutions .main-svg").first()).toBeVisible()
   expect(errors).toEqual([])
 })
 
 test.describe("resume", () => {
   test("the PDF viewer renders at build time and draws the resume", async ({ page }) => {
-    const html = fs.readFileSync(path.join(site.public, "resume.html"), "utf8")
+    const html = fs.readFileSync(path.join(site.public, "resume.mdx.html"), "utf8")
     expect(html).toMatch(/class="cgc-mdx-island"[^>]*>\s*<div class="cgc-pdf-viewer"/)
     // Where the asset is served is #26's decision (v5 lowercases asset URLs); the widget fetches the
     // URL the article gives it.
     await page.route(`${ORIGIN}/${RESUME_PDF}`, (route) =>
       route.fulfill({ contentType: "application/pdf", path: path.join(VAULT, RESUME_PDF) }),
     )
-    await open(page, "resume")
+    await open(page, "resume.mdx")
     await expect(page.locator(".cgc-pdf-viewer__title")).toHaveText("Spencer Elkington - Resume")
     await expect(page.locator(".cgc-pdf-viewer__page").first()).toBeVisible()
   })
@@ -189,7 +193,7 @@ test.describe("resume", () => {
 
 test.describe("ai-beat-us", () => {
   test("the Bluesky post renders at build time and loads in the browser", async ({ page }) => {
-    const html = fs.readFileSync(path.join(site.public, "content/notes/ai-beat-us.html"), "utf8")
+    const html = fs.readFileSync(path.join(site.public, "content/notes/ai-beat-us.mdx.html"), "utf8")
     expect(html).toContain('class="cgc-bluesky-post"')
     // The suite never reaches the real Bluesky: the article's post is answered with a fixture post.
     const thread = XRPC["app.bsky.feed.getPostThread"]["at://fixture.bsky.social/app.bsky.feed.post/3lcgcfixtureb"]
@@ -198,19 +202,19 @@ test.describe("ai-beat-us", () => {
         ? route.fulfill(jsonResponse(200, thread))
         : route.fallback(),
     )
-    await open(page, "content/notes/ai-beat-us")
+    await open(page, "content/notes/ai-beat-us.mdx")
     await expect(page.locator(".cgc-bluesky-post article.cgc-bluesky")).toBeVisible()
   })
 })
 
 test.describe("mdx-widgets-test", () => {
   test("documents the current contract, with no retired widget left in it", async ({ page }) => {
-    const html = fs.readFileSync(path.join(site.public, "content/notes/mdx-widgets-test.html"), "utf8")
+    const html = fs.readFileSync(path.join(site.public, "content/notes/mdx-widgets-test.mdx.html"), "utf8")
     // v4's status demos and its page-assets meter.
     for (const retired of ["widget-global-initialization", "widget-content-initialization", "widget-page-assets", "Initializing"]) {
       expect(html, retired).not.toContain(retired)
     }
-    const islands = await open(page, "content/notes/mdx-widgets-test")
+    const islands = await open(page, "content/notes/mdx-widgets-test.mdx")
     await expect(islands).toHaveCount(1)
     // It says what replaced v4's widget system, and links the widget guide, which on v5 is the
     // plugin note's alias.
@@ -220,9 +224,9 @@ test.describe("mdx-widgets-test", () => {
   })
 
   test("the game of life renders at build time, runs, and repaints on a scheme switch", async ({ page }) => {
-    const html = fs.readFileSync(path.join(site.public, "content/notes/mdx-widgets-test.html"), "utf8")
+    const html = fs.readFileSync(path.join(site.public, "content/notes/mdx-widgets-test.mdx.html"), "utf8")
     expect(html).toMatch(/<canvas class="game-of-life__canvas"/)
-    await open(page, "content/notes/mdx-widgets-test")
+    await open(page, "content/notes/mdx-widgets-test.mdx")
     const canvas = page.locator(".game-of-life__canvas")
     const before = await canvas.evaluate((c) => c.toDataURL())
     await expect.poll(() => canvas.evaluate((c) => c.toDataURL())).not.toBe(before)
@@ -236,7 +240,7 @@ test.describe("mdx-widgets-test", () => {
 
 test.describe("roll-advantage and dice-widget", () => {
   test("each chart's statistics render at build time", async () => {
-    const html = fs.readFileSync(path.join(site.public, "content/notes/roll-advantage.html"), "utf8")
+    const html = fs.readFileSync(path.join(site.public, "content/notes/roll-advantage.mdx.html"), "utf8")
     // The first chart is one d6 with its threshold at the median, 3: two faces of six below it.
     expect(html).toMatch(/probability-convolutions__mean">3\.50</)
     expect(html).toMatch(/Less than[^]*?3[^]*?33\.3%[^]*?3[^]*?or more[^]*?66\.7%/)
@@ -245,7 +249,7 @@ test.describe("roll-advantage and dice-widget", () => {
   })
 
   test("the charts draw, follow their expression, and repaint on a scheme switch", async ({ page }) => {
-    const islands = await open(page, "content/notes/roll-advantage")
+    const islands = await open(page, "content/notes/roll-advantage.mdx")
     await expect(islands).toHaveCount(9)
     const first = page.locator(".probability-convolutions").first()
     await expect(first.locator(".main-svg").first()).toBeVisible()
@@ -262,7 +266,7 @@ test.describe("roll-advantage and dice-widget", () => {
   })
 
   test("dragging the threshold reads off the odds either side of it, snapped between bars", async ({ page }) => {
-    await open(page, "content/notes/roll-advantage")
+    await open(page, "content/notes/roll-advantage.mdx")
     // One d6, with its threshold between 2 and 3.
     const first = page.locator(".probability-convolutions").first()
     // Plotly lays a wider, invisible path over the line to drag it by.
@@ -290,18 +294,18 @@ test.describe("roll-advantage and dice-widget", () => {
   })
 
   test("the scratch note's chart draws too", async ({ page }) => {
-    await open(page, "content/notes/scratch/dice-widget")
+    await open(page, "content/notes/scratch/dice-widget.mdx")
     await expect(page.locator(".probability-convolutions .main-svg").first()).toBeVisible()
   })
 })
 
 test.describe("ants-in-the-neighborhood", () => {
   test("the random walks render at build time, step, and repaint on a scheme switch", async ({ page }) => {
-    const html = fs.readFileSync(path.join(site.public, "content/notes/ants-in-the-neighborhood.html"), "utf8")
+    const html = fs.readFileSync(path.join(site.public, "content/notes/ants-in-the-neighborhood.mdx.html"), "utf8")
     expect(html).toContain("Steps: 0")
     expect(html).toContain("Current: A")
 
-    const islands = await open(page, "content/notes/ants-in-the-neighborhood")
+    const islands = await open(page, "content/notes/ants-in-the-neighborhood.mdx")
     await expect(islands).toHaveCount(3)
     const walk = page.locator(".random-walk").first()
     await walk.getByRole("button", { name: "Take one step" }).click()
@@ -327,7 +331,7 @@ test.describe("ants-in-the-neighborhood", () => {
         },
       })
     })
-    await open(page, "content/notes/ants-in-the-neighborhood")
+    await open(page, "content/notes/ants-in-the-neighborhood.mdx")
     const body = await page.locator("article").evaluate((article) => {
       const probe = article.appendChild(document.createElement("i"))
       probe.style.fontFamily = "var(--bodyFont)"

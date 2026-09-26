@@ -5,7 +5,8 @@ tags:
 ---
 
 Links to `.mdx` pages, in each form a vault writes them. Every one should reach the page at its
-clean URL, and count as a link for backlinks and the graph.
+own URL, `….mdx`, rather than its clean URL's redirect, and count as a link for backlinks and the
+graph.
 
 - By name alone: [[life]]
 - By path, with the extension: [[lab/echo.mdx|Echo, by its file name]]

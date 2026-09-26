@@ -357,8 +357,57 @@ test("compares the head of a page only v5 serves, and allows a plugin note's or 
   )
 })
 
+// The owner's 2026-09-26 decision (cgc-mdx ADR-0005): an .mdx page lives at its .mdx URL, as stock
+// page types keep a file's extension, and its v4 URL is an alias that alias-redirects redirects there.
+// Its OG image is named after its slug, so it follows the page.
+const MDX_ARTICLE = (url) => ({
+  title: "Dice",
+  canonical: `${ORIGIN}${url}`,
+  jsonld: { "@context": "https://schema.org", "@type": "Article", headline: "Dice", url: `${ORIGIN}${url}`, image: `${ORIGIN}${url}-og-image.webp` },
+})
+function mdxSites({ slug, redirect = true }) {
+  const v4 = site("v4", {
+    ...BASE,
+    [`${slug}.html`]: page(MDX_ARTICLE(`/${slug}`)),
+    [`${slug}-og-image.webp`]: "webp",
+    "sitemap.xml": sitemap(["/", "/content/articles/an-article", `/${slug}`]),
+    "index.xml": rss(["/content/articles/an-article", `/${slug}`]),
+  })
+  const v5 = site("v5", {
+    ...BASE,
+    [`${slug}.mdx.html`]: page(MDX_ARTICLE(`/${slug}.mdx`)),
+    [`${slug}.mdx-og-image.webp`]: "webp",
+    ...(redirect && { [`${slug}.html`]: page({ title: `${slug}.mdx`, refresh: `./${path.posix.basename(slug)}.mdx` }) }),
+    "sitemap.xml": sitemap(["/", "/content/articles/an-article", `/${slug}.mdx`]),
+    "index.xml": rss(["/content/articles/an-article", `/${slug}.mdx`]),
+  })
+  return [v4, v5]
+}
+
+test("classes an .mdx page at its .mdx URL as moved, with its redirect verified, and allows the vault's six", async () => {
+  for (const slug of ["resume", "content/notes/scratch/dice-widget"]) {
+    const result = await report(...mdxSites({ slug }))
+    expect(result.code, result.stdout).toBe(0)
+    // The feeds, the canonical and the OG image follow the page, so the move is the one difference.
+    expect(result.json.allowed).toEqual([
+      expect.objectContaining({ area: "url", change: "moved", url: `/${slug}`, to: `/${slug}.mdx`, how: ["mdx-extension"], redirect: "verified", ticket: 53 }),
+    ])
+    expect(result.stdout).toContain("pages moved (mdx-extension, redirect verified)")
+  }
+})
+
+test("never allows an .mdx page's move without its redirect, nor any .mdx page but the vault's six", async () => {
+  const unredirected = await report(...mdxSites({ slug: "resume", redirect: false }))
+  expect(unredirected.code, unredirected.stdout).toBe(1)
+  expect(unredirected.json.failing).toEqual([expect.objectContaining({ area: "url", change: "moved", url: "/resume", redirect: "missing" })])
+  const another = await report(...mdxSites({ slug: "content/notes/dice" }))
+  expect(another.code, another.stdout).toBe(1)
+  expect(another.json.failing).toEqual([expect.objectContaining({ area: "url", change: "moved", url: "/content/notes/dice", redirect: "verified" })])
+})
+
 test("never allows an .mdx page v5 leaves out, nor the article that takes its place in the feed", async () => {
-  // v5 serves every .mdx article at the URL v4 did (#65), and builds all of them since #79.
+  // v5 serves every .mdx article, at its .mdx URL since the owner's 2026-09-26 decision, and builds
+  // all of them since #79.
   const vault = site("vault", { "content/notes/dice.mdx": "---\ntitle: Dice\n---\nRoll.\n" })
   const v4 = site("v4", {
     ...BASE,

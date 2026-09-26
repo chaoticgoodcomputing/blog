@@ -22,7 +22,7 @@ test("loads PostHog from the configured host, once per page load", async ({ page
   expect(posthog.requests).toEqual([`${HOST}/static/array.js`])
   // An SPA navigation keeps the loaded library: no second load, no second init.
   await page.locator("article a.internal", { hasText: "mdx-article" }).first().click()
-  await expect(page).toHaveURL(/\/mdx-article$/)
+  await expect(page).toHaveURL(/\/mdx-article\.mdx$/)
   await expect.poll(() => posthog.events("$pageview").length).toBe(2)
   expect(posthog.requests).toHaveLength(1)
   expect(posthog.inits).toHaveLength(1)

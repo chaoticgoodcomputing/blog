@@ -5,11 +5,11 @@
 // must compute identically. An element is owned if it, or an ancestor, carries a `cgc-` class.
 import { test, expect } from "../harness/test.mjs"
 
-const PAGES = ["/", "/plain-note", "/md-twin", "/mdx-article", "/lab/cascade", "/lab/pdf", "/lab/bluesky", "/links/from-md", "/links/from-mdx", "/nested/deep-note", "/tags/fixture", "/tags/articles", "/tags/writing", "/tags/listing", "/tag-engine/most-specific", "/tag-engine/primary-override", "/tag-engine/first-tag", "/seo/private-note", "/seo/private-descendant", "/seo/authored", "/seo/external-stub", "/seo/feed-article", "/backlinks/target", "/og/tag-nested", "/linked-note", "/posthog/navigation", "/annotations/fixture-paper", "/annotations/withdrawn", "/graph/old-note", "/tag-explorer/alpha"]
+const PAGES = ["/", "/plain-note", "/md-twin", "/mdx-article.mdx", "/lab/cascade.mdx", "/lab/pdf.mdx", "/lab/bluesky.mdx", "/links/from-md", "/links/from-mdx.mdx", "/nested/deep-note", "/tags/fixture", "/tags/articles", "/tags/writing", "/tags/listing", "/tag-engine/most-specific", "/tag-engine/primary-override", "/tag-engine/first-tag", "/seo/private-note", "/seo/private-descendant", "/seo/authored", "/seo/external-stub", "/seo/feed-article", "/backlinks/target", "/og/tag-nested", "/linked-note", "/posthog/navigation", "/annotations/fixture-paper", "/annotations/withdrawn", "/graph/old-note", "/tag-explorer/alpha"]
 // A page one of our plugins creates has no baseline of its own, so it is compared against the
 // stock page it stands in for: the .mdx article against its byte-identical .md twin. The explorer
 // marks the current page `.active`, which is then a different link on each side, so it is skipped.
-const BASELINE_OF = { "/mdx-article": "/md-twin", "/lab/cascade": "/lab/cascade-twin", "/lab/pdf": "/lab/pdf-twin", "/lab/bluesky": "/lab/bluesky-twin", "/links/from-mdx": "/links/from-md" }
+const BASELINE_OF = { "/mdx-article.mdx": "/md-twin", "/lab/cascade.mdx": "/lab/cascade-twin", "/lab/pdf.mdx": "/lab/pdf-twin", "/lab/bluesky.mdx": "/lab/bluesky-twin", "/links/from-mdx.mdx": "/links/from-md" }
 const TWIN_SKIP = ".explorer .active"
 const PROPS = ["color", "background-color", "font-family", "font-size", "font-weight", "letter-spacing", "line-height", "margin-top", "margin-bottom", "padding-left", "display", "text-decoration-line"]
 
