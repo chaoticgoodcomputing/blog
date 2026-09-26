@@ -6,7 +6,7 @@ tags:
 
 A [Quartz 5](https://quartz.jzhao.xyz/) plugin that adds a newsletter subscribe box to your pages. The box posts the reader's address to [Buttondown](https://buttondown.com/).
 
-It is the `EmailSubscribe` component from this site's Quartz 4 days, carried over as a plugin. It works on a stock copy of Quartz 5.
+It is the `EmailSubscribe` component from this site's Quartz 4 days, carried over as a plugin.
 
 ## What it renders
 
@@ -29,11 +29,14 @@ The form is a plain HTML form and needs no JavaScript. Submitting it takes the r
 
 ## Install
 
-Plugins in this family ship as source from [the blog's monorepo](https://github.com/chaoticgoodcomputing/blog), and a site pins a release tag:
+Plugins in this family ship as source from [the blog's monorepo](https://github.com/chaoticgoodcomputing/blog), and a site pins a release tag. This plugin needs [cgc-styles](https://blog.chaoticgood.computer/plugins/cgc-styles):
 
 ```sh
 npx quartz plugin add git+https://github.com/chaoticgoodcomputing/blog.git#v<x.y.z> --subdir quartz-v5/plugins/cgc-email-subscribe --name cgc-email-subscribe
 ```
+
+> [!WARNING]
+> **Depending on `cgc-styles` by name needs a change to Quartz.** Stock Quartz matches a dependency only against the exact `source:` string. Matching by plugin name is a small change to its loader, carried in this repository's copy of Quartz and proposed upstream on [chaoticgoodcomputing/blog#47](https://github.com/chaoticgoodcomputing/blog/issues/47). Until it lands, this plugin builds only against that copy.
 
 Then set `buttondownUsername` in `quartz.config.yaml`. The build fails until it is set, so that the box never posts to someone else's newsletter.
 

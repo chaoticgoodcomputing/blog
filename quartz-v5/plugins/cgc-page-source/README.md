@@ -6,7 +6,7 @@ tags:
 
 A [Quartz 5](https://quartz.jzhao.xyz/) plugin that puts a "View source on GitHub" link on each page, pointing at the file the page was built from.
 
-It is the `ShowPageSource` component from this site's Quartz 4 days, carried over as a plugin. It works on a stock copy of Quartz 5.
+It is the `ShowPageSource` component from this site's Quartz 4 days, carried over as a plugin.
 
 ## What it renders
 
@@ -27,11 +27,14 @@ A bordered link with the GitHub mark, after the page body by default:
 
 ## Install
 
-Plugins in this family ship as source from [the blog's monorepo](https://github.com/chaoticgoodcomputing/blog), and a site pins a release tag:
+Plugins in this family ship as source from [the blog's monorepo](https://github.com/chaoticgoodcomputing/blog), and a site pins a release tag. This plugin needs [cgc-styles](https://blog.chaoticgood.computer/plugins/cgc-styles):
 
 ```sh
 npx quartz plugin add git+https://github.com/chaoticgoodcomputing/blog.git#v<x.y.z> --subdir quartz-v5/plugins/cgc-page-source --name cgc-page-source
 ```
+
+> [!WARNING]
+> **Depending on `cgc-styles` by name needs a change to Quartz.** Stock Quartz matches a dependency only against the exact `source:` string. Matching by plugin name is a small change to its loader, carried in this repository's copy of Quartz and proposed upstream on [chaoticgoodcomputing/blog#47](https://github.com/chaoticgoodcomputing/blog/issues/47). Until it lands, this plugin builds only against that copy.
 
 Then set `repoUrl` in `quartz.config.yaml`. The build fails until it is set.
 

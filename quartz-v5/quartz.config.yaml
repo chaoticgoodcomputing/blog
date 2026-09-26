@@ -147,7 +147,8 @@ plugins:
   - source: ../site-plugins/site-styles
     enabled: true
   # The family layer, `cgc`, above core and themes (#30, #63): every cgc-* plugin that emits CSS
-  # declares it by name, `dependencies: ["cgc-styles"]`, and the loader holds them to its order.
+  # declares it by name, `dependencies: ["cgc-styles"]`, and the loader holds them to its order
+  # (tests/specs/family-layer-consumers.spec.mjs fails on one that doesn't).
   - source: ../plugins/cgc-styles
     enabled: true
   # The tag engine (#20, #31, #69): the site's one tag dictionary, v4's `tags:` block. Colour and icon
