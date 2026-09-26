@@ -1,8 +1,9 @@
 # cgc-backlinks
 
 The Quartz 5 component that lists the pages linking to a page, public ones first, with each private
-one marked by a lock or, if the site asks, left out: v4's Backlinks fork (#44, #78, #85). It needs no engine: it reads what stock Quartz
-leaves on every page, and takes the private tags as its own option. Inherits the family vocabulary in
+one marked by a lock or, if the site asks, left out: v4's Backlinks fork (#44, #78, #85). It needs no
+engine: it reads what stock Quartz leaves on every page, and takes the private tags as its own
+option. Inherits the family vocabulary in
 [`quartz-v5/CONTEXT.md`](../../CONTEXT.md), the icon vocabulary of
 [`icons`](../../libs/icons/CONTEXT.md), and the **Private tag**, **Private page** and **Under** of
 [`tags-core`](../../libs/tags-core/CONTEXT.md), whose rule it inlines: a library, not an engine.

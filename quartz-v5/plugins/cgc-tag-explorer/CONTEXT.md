@@ -34,8 +34,8 @@ _Avoid_: icon (for the element), swatch, badge
 
 **Count**:
 How many pages are under a tag: those carrying it or any of its subtags, each once, less the private
-ones when **private pages are left out**. The same count
-as cgc-tag-list's badges.
+ones when **private pages are left out**. The same count as cgc-tag-list's badges while private pages
+are listed; cgc-tag-list's badges always count them.
 _Avoid_: post count, total
 
 **Pages** (of a tag):

@@ -25,8 +25,9 @@ _Avoid_: tag listing (that is the generated kind only), tag index (that is cgc-t
 
 **Private page**:
 tags-core's: a page carrying one of the **private tags**, `noindexTags`, or a tag under one. On this
-site, a published stub of a vault note whose body stays private. It stays listed on the site but is
-never an indexable page, and its head asks not to be indexed.
+site, a published stub of a vault note whose body stays private. It stays listed in search and the
+graph (this site's tag explorer and backlinks leave it out, with their `excludePrivate`) but is never
+an indexable page, and its head asks not to be indexed.
 _Avoid_: hidden page, unlisted page, draft
 
 **Private tag page**:
