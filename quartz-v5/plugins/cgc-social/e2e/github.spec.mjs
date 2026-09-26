@@ -37,58 +37,67 @@ test("shows the user's profile, as v4 did, with their bio as text", async ({ pag
   await expect(card(page).locator(".cgc-social__status")).toHaveCount(0)
 })
 
-test("draws the year's contributions as v4's calendar, its newest weeks in the space it has", async ({
-  page,
-}) => {
-  await page.goto("/")
-  await expect(card(page).locator(".cgc-social__total")).toHaveText(
-    "1457 contributions in the last year",
-  )
-  const rows = card(page).locator(".cgc-social__calendar tr")
-  await expect(rows).toHaveCount(7)
-  // Sunday to Saturday, with only Monday, Wednesday and Friday named.
-  expect(await rows.locator(".cgc-social__weekday").allTextContents()).toEqual([
-    "",
-    "Mon",
-    "",
-    "Wed",
-    "",
-    "Fri",
-    "",
-  ])
-  // The fixture's year ends on Wednesday 24 September 2025: the last column is that partial week.
-  // The tooltips are v4's.
-  const lastColumn = await rows.evaluateAll((trs) => trs.map((tr) => tr.lastElementChild.title))
-  expect(lastColumn).toEqual([
-    "No contributions on Sep 21, 2025",
-    "6 contributions on Sep 22, 2025",
-    "1 contribution on Sep 23, 2025",
-    "10 contributions on Sep 24, 2025",
-    "",
-    "",
-    "",
-  ])
-  // Whole weeks before it, as many as fit beside the day names without scrolling.
-  const graph = card(page).locator(".cgc-social__graph")
-  const fits = await graph.evaluate((el) => el.scrollWidth <= el.clientWidth)
-  expect(fits).toBe(true)
-  const columns = await rows.first().locator(".cgc-social__day").count()
-  expect(columns).toBeGreaterThan(8)
-  expect(columns).toBeLessThan(53)
-  // Consecutive weeks: the first column's Sunday is that many weeks before the last one's.
-  const sunday = new Date(Date.UTC(2025, 8, 21 - 7 * (columns - 1)))
-  const named = sunday.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    timeZone: "UTC",
+// A day's date is a calendar day, whatever the reader's zone: v4 read it in the reader's zone and
+// added a day, a day late at or east of UTC, and a naive read in the reader's zone is a day early
+// west of it. So the calendar is drawn in a zone on each side, never the host's.
+for (const timezoneId of ["America/Los_Angeles", "Asia/Tokyo"]) {
+  test.describe(`in ${timezoneId}`, () => {
+    test.use({ timezoneId })
+
+    test("draws the year's contributions as v4's calendar, its newest weeks in the space it has", async ({
+      page,
+    }) => {
+      await page.goto("/")
+      await expect(card(page).locator(".cgc-social__total")).toHaveText(
+        "1457 contributions in the last year",
+      )
+      const rows = card(page).locator(".cgc-social__calendar tr")
+      await expect(rows).toHaveCount(7)
+      // Sunday to Saturday, with only Monday, Wednesday and Friday named.
+      expect(await rows.locator(".cgc-social__weekday").allTextContents()).toEqual([
+        "",
+        "Mon",
+        "",
+        "Wed",
+        "",
+        "Fri",
+        "",
+      ])
+      // The fixture's year ends on Wednesday 24 September 2025: the last column is that partial week.
+      // The tooltips are v4's.
+      const lastColumn = await rows.evaluateAll((trs) => trs.map((tr) => tr.lastElementChild.title))
+      expect(lastColumn).toEqual([
+        "No contributions on Sep 21, 2025",
+        "6 contributions on Sep 22, 2025",
+        "1 contribution on Sep 23, 2025",
+        "10 contributions on Sep 24, 2025",
+        "",
+        "",
+        "",
+      ])
+      // Whole weeks before it, as many as fit beside the day names without scrolling.
+      const graph = card(page).locator(".cgc-social__graph")
+      const fits = await graph.evaluate((el) => el.scrollWidth <= el.clientWidth)
+      expect(fits).toBe(true)
+      const columns = await rows.first().locator(".cgc-social__day").count()
+      expect(columns).toBeGreaterThan(8)
+      expect(columns).toBeLessThan(53)
+      // Consecutive weeks: the first column's Sunday is that many weeks before the last one's.
+      const sunday = new Date(Date.UTC(2025, 8, 21 - 7 * (columns - 1)))
+      const named = sunday.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        timeZone: "UTC",
+      })
+      await expect(rows.first().locator(".cgc-social__day").first()).toHaveAttribute(
+        "title",
+        new RegExp(` on ${named}$`),
+      )
+      await expect(card(page).locator(".cgc-social__day")).toHaveCount(7 * (columns - 1) + 4)
+    })
   })
-  await expect(rows.first().locator(".cgc-social__day").first()).toHaveAttribute(
-    "title",
-    new RegExp(` on ${named}$`),
-  )
-  await expect(card(page).locator(".cgc-social__day")).toHaveCount(7 * (columns - 1) + 4)
-})
+}
 
 // v4's presets were hex literals, GitHub's greens among them. A plugin takes colour values (ADR-0003),
 // and by default the calendar is drawn from the theme: an empty day in `lightgray`, the busiest in

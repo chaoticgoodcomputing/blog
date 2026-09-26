@@ -1,7 +1,8 @@
 // The GitHub card, in the browser: the user's profile from GitHub's REST API, and their year of
 // contributions from the contributions API v4's card read, drawn as v4's calendar. Everything is built
 // as DOM nodes, so what a profile says is text, never markup.
-import { element, failed, reasonOf } from "./status"
+import { element, reasonOf } from "./block"
+import { failed } from "./status"
 
 const PROFILE_API = "https://api.github.com/users/"
 const CONTRIBUTIONS_API = "https://github-contributions-api.jogruber.de/v4/"
@@ -86,7 +87,7 @@ function tooltip(day: Day): string {
 }
 
 // The year as weeks, Sunday first, read in UTC: a contribution's date is a calendar day, with no
-// time zone. v4 read it in the reader's, then added a day, which put it a day late east of UTC.
+// time zone. v4 read it in the reader's, then added a day, which put it a day late at or east of UTC.
 function weeksOf(days: Day[]): Day[][] {
   const weeks: Day[][] = []
   for (const day of days) {

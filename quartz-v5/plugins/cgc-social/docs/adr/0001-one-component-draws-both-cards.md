@@ -52,7 +52,10 @@ leaves one out to have only the other. So one plain `source:` entry places the p
 ## Consequences
 
 - **The cards can't be placed apart**, say GitHub on the left and Bluesky on the right, nor in the
-  other order. A site that needs that can install the plugin twice, one card configured in each.
+  other order. A site that needs that can install the plugin twice, one card configured in each,
+  and takes on the entry-order dependence rejected above: each install ships the stylesheet with
+  the calendar's default colours, and a later copy's defaults win, so the install that sets
+  `github.levelColors` must be the later entry.
 - **One `display` and one `condition` cover both.** On the real site, `display: desktop-only` wraps
   the pair, as v4 wrapped each.
 - **The cards keep to their pages by `showOn`**, as `cgc-post-listing` does (its ADR-0001), since no

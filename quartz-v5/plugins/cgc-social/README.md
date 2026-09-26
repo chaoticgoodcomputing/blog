@@ -124,7 +124,7 @@ The strings are English.
 - **`showFooter` and `showThumbnail` are gone.** Quartz 4 took them, but nothing ever read them.
 - **A missing `username` or `handle` fails the build.** Quartz 4 showed "No username specified" to readers.
 - **A failed Bluesky card** shows "Failed to load posts" with the reason on its own line, as the GitHub card always did.
-- **Days are read as calendar days.** Quartz 4 read a day's date in the reader's time zone and then added a day, which put every day one late for a reader east of UTC.
+- **Days are read as calendar days.** Quartz 4 read a day's date in the reader's time zone and then added a day, which put every day one late for a reader at or east of UTC.
 - **Each visit asks once.** Quartz 4 fetched both cards twice on the first page load.
 
 ## Styling

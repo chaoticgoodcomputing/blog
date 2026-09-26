@@ -1,7 +1,8 @@
 // The Bluesky card, in the browser: the account's latest posts and reposts, drawn by the widget
 // library's renderer as compact post cards. The library escapes everything a post carries.
 import { getAuthorFeed, renderPost, resolveHandle } from "@chaoticgoodcomputing/widgets/bluesky"
-import { element, empty, failed, reasonOf } from "./status"
+import { element, reasonOf } from "./block"
+import { empty, failed } from "./status"
 
 export async function drawBluesky(card: HTMLElement, signal: AbortSignal) {
   const body = card.querySelector<HTMLElement>(".cgc-social__body")
