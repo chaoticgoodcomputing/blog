@@ -19,9 +19,9 @@
     "@quartz-community/types": "*",
     "preact": "^10.29.0"
   },
-  "//devDependencies": "Build-time only: esbuild bundles dist/, and @chaoticgoodcomputing/css-check checks the stylesheet against ADR-0003 before it ships (build.mjs). The library is a `file:` spec on main, which a release commit rewrites to the release's published version (ADR-0005).",
+  "//devDependencies": "Build-time only: esbuild bundles dist/, and @chaoticgoodcomputing/css-check checks the stylesheet against ADR-0003 before it ships (build.mjs). The library is a `workspace:*` spec, which `pnpm publish` rewrites to the published version (ADR-0005).",
   "devDependencies": {
-    "@chaoticgoodcomputing/css-check": "file:../../libs/css-check",
+    "@chaoticgoodcomputing/css-check": "workspace:*",
     "esbuild": "^0.28.2"
   },
   "quartz": {

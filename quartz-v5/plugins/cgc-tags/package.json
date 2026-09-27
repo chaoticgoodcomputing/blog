@@ -19,9 +19,9 @@
     "@quartz-community/utils": "*",
     "lightningcss": "^1.30.0"
   },
-  "//devDependencies": "Inlined into dist by build.mjs, or the build tool itself. Our library is a `file:` spec on main, which a release commit rewrites to the release's published version (ADR-0005).",
+  "//devDependencies": "Inlined into dist by build.mjs, or the build tool itself. Our library is a `workspace:*` spec, which `pnpm publish` rewrites to the published version (ADR-0005).",
   "devDependencies": {
-    "@chaoticgoodcomputing/tags-core": "file:../../libs/tags-core",
+    "@chaoticgoodcomputing/tags-core": "workspace:*",
     "esbuild": "^0.28.2"
   },
   "quartz": {

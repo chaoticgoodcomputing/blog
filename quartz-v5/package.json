@@ -1,0 +1,7 @@
+{
+  "name": "site-v5",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The real site built on Quartz Core: the workspace package the site loads its plugins through. Repo-only: never published (CONTEXT.md). No plugin dependencies yet: plugins still load by local path until #93."
+}

@@ -8,16 +8,16 @@
 //    `node_modules` link to Core's install, beside it in `plugins/` or `site-plugins/`
 //    (VENDORED.md, "Dependencies"). The e2e harness makes the same link for its fixture sites.
 // 3. Quartz only symlinks a local plugin into `.quartz/plugins/`, never builds it (ADR-0004), so
-//    every local plugin the site config enables is built here, after an install of its own
-//    build-time dependencies whenever its lockfile has moved on from what is installed, and of our
-//    libraries' dependencies, which a plugin inlines (VENDORED.md). `local-plugins.mjs` holds those
-//    steps, and the e2e harness takes them from it for the fixture (`tests/harness/site.mjs`).
+//    every local plugin the site config enables is built here, through its cacheable Nx `build`
+//    target, after a frozen install of the repo's pnpm workspace (VENDORED.md). `local-plugins.mjs`
+//    holds those steps, and the e2e harness takes them from it for the fixture
+//    (`tests/harness/site.mjs`).
 import fs from "node:fs"
 import path from "node:path"
 import { execFileSync } from "node:child_process"
 import { createRequire } from "node:module"
 import { fileURLToPath } from "node:url"
-import { buildLocalPlugin, installLibs } from "./local-plugins.mjs"
+import { buildLocalPlugins, installWorkspace } from "./local-plugins.mjs"
 
 const core = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "core")
 const siteConfig = path.join(core, "quartz.config.yaml")
@@ -61,6 +61,6 @@ for (const dir of new Set(local.map((plugin) => path.dirname(plugin)))) {
 }
 
 const run = (command, args, options) => execFileSync(command, args, { ...options, stdio: "inherit" })
-await installLibs(run)
-for (const plugin of local) await buildLocalPlugin(plugin, run)
+await installWorkspace(run)
+await buildLocalPlugins(local, run)
 console.log(`built ${local.length} local plugin(s)`)

@@ -6,20 +6,24 @@
   "projectType": "library",
   "tags": ["cgc", "cgc:plugin"],
   "targets": {
-    "install": {
-      "//": "Isolated npm install of the build-time dependencies. Peers are omitted on purpose: they resolve to the host Quartz's copies through quartz-v5/plugins/node_modules (see tests/harness/site.mjs).",
-      "executor": "nx:run-commands",
-      "options": { "command": "npm ci --omit=peer --no-audit --no-fund", "cwd": "{projectRoot}" }
-    },
     "build": {
       "//": "Checks the stylesheet against ADR-0003, then bundles dist/. See build.mjs.",
       "executor": "nx:run-commands",
-      "options": { "command": "npm run build", "cwd": "{projectRoot}" },
+      "options": { "command": "node build.mjs", "cwd": "{projectRoot}" },
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/package.json",
+        "{projectRoot}/build.mjs",
+        "{projectRoot}/tsconfig.json",
+        "{projectRoot}/src/**/*",
+        "^default",
+        "{workspaceRoot}/quartz-v5/core/pnpm-lock.yaml"
+      ],
       "outputs": ["{projectRoot}/dist"]
     },
     "typecheck": {
       "executor": "nx:run-commands",
-      "options": { "command": "npm run typecheck", "cwd": "{projectRoot}" }
+      "options": { "command": "pnpm run typecheck", "cwd": "{projectRoot}" }
     },
     "e2e": {
       "//": "This package's specs only, through the shared suite.",

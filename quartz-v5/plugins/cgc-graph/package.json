@@ -21,17 +21,17 @@
     "lightningcss": "^1.30.0",
     "preact": "^10.29.0"
   },
-  "//dependencies": "@chaoticgoodcomputing/icons draws the icons the graph shows while the site builds, into the graph's index, with Iconify's packages, which can't all be inlined (svgo, under @iconify/tools, reads its data files at run time). So they stay out of dist/ and install here, at exactly the library's versions, which build.mjs checks (libs/icons/docs/adr/0001). MDI is one of them, pinned by this package's lockfile: nothing is fetched.",
+  "//dependencies": "@chaoticgoodcomputing/icons draws the icons the graph shows while the site builds, into the graph's index, with Iconify's packages, which can't all be inlined (svgo, under @iconify/tools, reads its data files at run time). So they stay out of dist/ and install here, at exactly the library's versions, which build.mjs checks (libs/icons/docs/adr/0001). MDI is one of them, pinned exactly, and by the workspace's lock: nothing is fetched.",
   "dependencies": {
     "@iconify-json/mdi": "1.2.3",
     "@iconify/tools": "5.0.14",
     "@iconify/utils": "3.1.7"
   },
-  "//devDependencies": "Build-time only: esbuild bundles dist/, inlining our libraries and the browser runtime's d3 modules and tween.js, and @chaoticgoodcomputing/css-check checks the stylesheet against ADR-0003 before it ships (build.mjs). The libraries are `file:` specs on main, which a release commit rewrites to the release's published version (ADR-0005).",
+  "//devDependencies": "Build-time only: esbuild bundles dist/, inlining our libraries and the browser runtime's d3 modules and tween.js, and @chaoticgoodcomputing/css-check checks the stylesheet against ADR-0003 before it ships (build.mjs). The libraries are `workspace:*` specs, which `pnpm publish` rewrites to the published version (ADR-0005).",
   "devDependencies": {
-    "@chaoticgoodcomputing/css-check": "file:../../libs/css-check",
-    "@chaoticgoodcomputing/icons": "file:../../libs/icons",
-    "@chaoticgoodcomputing/tags-core": "file:../../libs/tags-core",
+    "@chaoticgoodcomputing/css-check": "workspace:*",
+    "@chaoticgoodcomputing/icons": "workspace:*",
+    "@chaoticgoodcomputing/tags-core": "workspace:*",
     "@tweenjs/tween.js": "^25.0.0",
     "@types/d3-drag": "^3.0.7",
     "@types/d3-force": "^3.0.10",

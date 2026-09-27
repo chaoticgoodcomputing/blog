@@ -26,15 +26,14 @@
   "dependencies": {
     "pdfjs-dist": "5.4.530"
   },
-  "//peerDependencies": "The host's Preact: cgc-mdx pins every widget's preact imports to the host Quartz's copy, so one Preact per page.",
+  "//peerDependencies": "The host's Preact: cgc-mdx pins every widget's preact imports to the host Quartz's copy, so one Preact per page. A peer only, never a devDependency too, so no second copy installs here; the typecheck reads Quartz Core's (tsconfig.json).",
   "peerDependencies": {
     "preact": "^10.0.0"
   },
-  "//devDependencies": "Types; the library-CSS check the lint target runs (@chaoticgoodcomputing/css-check); and the icons library, which draws the icons a widget shows in the browser into its committed icons.ts (docs/adr/0002). Libraries depend on each other by `workspace:*` (ADR-0005).",
+  "//devDependencies": "The library-CSS check the lint target runs (@chaoticgoodcomputing/css-check); and the icons library, which draws the icons a widget shows in the browser into its committed icons.ts (docs/adr/0002). Libraries depend on each other by `workspace:*` (ADR-0005).",
   "devDependencies": {
     "@chaoticgoodcomputing/css-check": "workspace:*",
     "@chaoticgoodcomputing/icons": "workspace:*",
-    "preact": "^10.29.0",
     "typescript": "^5.9.3"
   },
   "publishConfig": {

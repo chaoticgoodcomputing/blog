@@ -18,6 +18,7 @@ last resort, and each one needs a ticket plus a strategy for proposing it upstre
 ```
 quartz-v5/
 ├── project.json          Nx targets (this project is `site-v5`)
+├── package.json          the site package, `site-v5`: repo-only, a member of the repo's pnpm workspace
 ├── CONTEXT.md            glossary for this context
 ├── VENDORED.md           this file
 ├── upstream.json         the pinned upstream ref — machine-readable source of truth
@@ -297,8 +298,10 @@ symlink to `../core/node_modules` that the e2e harness and `site-v5:prebuild` cr
 plugin sits at `.quartz/plugins/<name>/` inside Core, so its bare `import "preact"` finds Quartz's
 copy, and that is what the loader's shared externals assume. A local plugin is only symlinked there,
 and Node resolves from the symlink's target under `plugins/`, which would otherwise walk up to the v4
-tree's `node_modules` at the repo root: a second, older Preact. A plugin's own install therefore
-omits peers (`npm ci --omit=peer`), so its local `node_modules` never shadows a host singleton.
+tree's `node_modules` at the repo root: a second, older Preact. The workspace install therefore
+never installs a peer beside a plugin (`autoInstallPeers: false`, below), and a plugin declares
+Quartz's shared packages (Preact, `vfile`, `unified`, `lightningcss`, `@quartz-community/*`) only
+as peers, never as devDependencies too, so its own `node_modules` never shadows a host singleton.
 `site-plugins/` needs the same link, `site-plugins/node_modules`, for the same reason. It's decided on
 [#39](https://github.com/chaoticgoodcomputing/blog/issues/39) and wired on
 [#64](https://github.com/chaoticgoodcomputing/blog/issues/64): `site-v5:prebuild` makes it for the
@@ -307,14 +310,32 @@ real site once the site config enables a site plugin, and the e2e harness makes 
 config load them. No fixture config lists a site plugin. Both replace a link left pointing anywhere
 else, such as Core's old path.
 
-**Our libraries are a pnpm workspace package of the repo's.** `pnpm-workspace.yaml` at the repo root
-lists `quartz-v5/libs/*`, so the root `pnpm install` installs each library's own dependencies beside
-its source. A plugin names a library it inlines, or one its build runs
-(`@chaoticgoodcomputing/css-check`), as a `file:../../libs/<name>` devDependency (ADR-0005), which npm
-only links: whatever the library imports resolves from the library's own install, never the
-plugin's. The e2e harness and `site-v5:prebuild` run `pnpm install --frozen-lockfile` when a library
-has none, and build each local plugin after an install of its own dependencies whenever its lockfile
-has moved on. Both take these steps from one module, `utils/local-plugins.mjs`.
+**Everything else of ours is one pnpm workspace**
+([#92](https://github.com/chaoticgoodcomputing/blog/issues/92)). `pnpm-workspace.yaml` at the repo
+root lists the libraries, every plugin, every site plugin, the e2e suite and the site package
+(`quartz-v5/package.json`, **repo-only**, named `site-v5` like its Nx project), so one
+`pnpm install --frozen-lockfile` at the root prepares all of them from one lock, `pnpm-lock.yaml`.
+The only other lock is Core's. The root pins pnpm by `packageManager` (`pnpm@11.27.1`, the version
+`site-v5:install` runs for Core), and pnpm switches to it whatever version is installed. The
+workspace settings:
+
+```yaml
+autoInstallPeers: false    # a plugin's peers are Core's copies, reached through the host links above
+allowBuilds:               # pnpm 11 fails an install on any other dependency's build script
+  "@parcel/watcher": true
+  esbuild: true
+  sharp: true
+  nx: false                # its postinstall only prepares the daemon; never run under pnpm 10 either
+```
+
+A plugin names a library it inlines, or one its build runs (`@chaoticgoodcomputing/css-check`), as a
+`workspace:*` devDependency (ADR-0005), which pnpm links: whatever the library imports resolves from
+the library's own install, never the plugin's. Every plugin and site plugin has a cacheable Nx
+`build` target (`node build.mjs`), whose inputs are the package's manifest, build script, tsconfig
+and sources, the libraries it depends on, Core's lock and the workspace's external dependencies, and
+whose output is its `dist/`. A second build with nothing changed is a cache hit. The e2e harness and
+`site-v5:prebuild` take the same two steps from one module, `utils/local-plugins.mjs`: the frozen
+workspace install, a no-op when nothing has moved, then an Nx build of the plugins they load.
 Content reaches a library the same way: the root `package.json` depends on
 `@chaoticgoodcomputing/widgets` by `workspace:*`, so an `.mdx` page in the vault or the e2e fixture
 resolves `@chaoticgoodcomputing/widgets/<widget>` by Node's upward walk to the root `node_modules` (#36).

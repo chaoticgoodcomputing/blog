@@ -1,7 +1,25 @@
-# Only our libraries (`@chaoticgoodcomputing/*`) resolve through this workspace, so each one's own
-# dependencies install beside its source. Plugins and the e2e suite keep their isolated npm
-# installs, as a downstream site does, and Quartz Core is a pnpm project of its own
-# (quartz-v5/core/pnpm-workspace.yaml), which this workspace never reaches. See ADR-0005's
-# *libraries inlined by a plugin* amendment and quartz-v5/VENDORED.md.
+# One workspace for everything of ours outside Quartz Core: the libraries, every plugin and site
+# plugin, the repo-only site package (quartz-v5/package.json) and the e2e suite, installed together
+# by one `pnpm install` from one lock (#92). Quartz Core is a pnpm project of its own
+# (quartz-v5/core/pnpm-workspace.yaml), and pnpm stops at the nearest workspace file, so this
+# workspace never reaches it. See quartz-v5/VENDORED.md, "Dependencies".
 packages:
+  - quartz-v5
   - quartz-v5/libs/*
+  - quartz-v5/plugins/*
+  - quartz-v5/site-plugins/*
+  - quartz-v5/tests
+
+# A plugin's peers (Preact, vfile, unified, lightningcss, @quartz-community/*) are Quartz Core's own
+# copies, reached through the gitignored plugins/node_modules and site-plugins/node_modules links.
+# Installing them beside a plugin would shadow Core's: a second Preact on the page.
+autoInstallPeers: false
+
+# pnpm 11 fails an install on any dependency build script nobody has reviewed. These are the ones
+# the install runs; a new one needs a decision here.
+allowBuilds:
+  "@parcel/watcher": true
+  esbuild: true
+  sharp: true
+  # Nx's postinstall only prepares its daemon; pnpm 10 never ran it here, and Nx works without it.
+  nx: false

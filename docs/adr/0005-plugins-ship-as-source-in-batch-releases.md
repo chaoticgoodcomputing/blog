@@ -134,3 +134,17 @@ spec changes from one to the other.
   `pnpm pack` the libraries, rewrite the plugin's specs to those tarballs and install it into a
   stock site. That tests the rewrite and inlining TypeScript from `node_modules`, with nothing
   published.
+
+## Amendment: plugins join the workspace
+
+_2026-09-27, from [One pnpm 11 workspace for libraries, plugins, site plugins and the e2e suite](https://github.com/chaoticgoodcomputing/blog/issues/92),
+on the way to [#89](https://github.com/chaoticgoodcomputing/blog/issues/89), which rewrites this ADR
+for plugins shipped as npm packages ([#93](https://github.com/chaoticgoodcomputing/blog/issues/93))._
+
+Every plugin and site plugin is now a member of the repo's pnpm workspace, beside the libraries, so
+the alternative ruled out above, `workspace:*` in plugins, is taken. A plugin names each library it
+inlines as a `workspace:*` devDependency instead of a `file:` path, and `pnpm publish` rewrites it,
+so the release commit's spec rewrite is no longer needed. The plugins' `package-lock.json` files and
+their `.npmrc` files are gone: pnpm never installs a peer beside a plugin (`autoInstallPeers: false`),
+and the git install the `.npmrc` served is retired with #89. Until #93, plugins still load by local
+path, and the Consequences above describe a route no longer maintained.

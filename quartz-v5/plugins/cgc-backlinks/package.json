@@ -20,17 +20,17 @@
     "@quartz-community/utils": "*",
     "preact": "^10.29.0"
   },
-  "//dependencies": "@chaoticgoodcomputing/icons draws the private mark while the site builds, with Iconify's packages, which can't all be inlined (svgo, under @iconify/tools, reads its data files at run time). So they stay out of dist/ and install here, at exactly the library's versions, which build.mjs checks (libs/icons/docs/adr/0001). MDI is one of them, pinned by this package's lockfile: nothing is fetched.",
+  "//dependencies": "@chaoticgoodcomputing/icons draws the private mark while the site builds, with Iconify's packages, which can't all be inlined (svgo, under @iconify/tools, reads its data files at run time). So they stay out of dist/ and install here, at exactly the library's versions, which build.mjs checks (libs/icons/docs/adr/0001). MDI is one of them, pinned exactly, and by the workspace's lock: nothing is fetched.",
   "dependencies": {
     "@iconify-json/mdi": "1.2.3",
     "@iconify/tools": "5.0.14",
     "@iconify/utils": "3.1.7"
   },
-  "//devDependencies": "Build-time only: esbuild bundles dist/, inlining our libraries, and @chaoticgoodcomputing/css-check checks the stylesheet against ADR-0003 before it ships (build.mjs). The libraries are `file:` specs on main, which a release commit rewrites to the release's published version (ADR-0005). tags-core is a library, not the cgc-tags engine, so inlining it adds no plugin dependency.",
+  "//devDependencies": "Build-time only: esbuild bundles dist/, inlining our libraries, and @chaoticgoodcomputing/css-check checks the stylesheet against ADR-0003 before it ships (build.mjs). The libraries are `workspace:*` specs, which `pnpm publish` rewrites to the published version (ADR-0005). tags-core is a library, not the cgc-tags engine, so inlining it adds no plugin dependency.",
   "devDependencies": {
-    "@chaoticgoodcomputing/css-check": "file:../../libs/css-check",
-    "@chaoticgoodcomputing/icons": "file:../../libs/icons",
-    "@chaoticgoodcomputing/tags-core": "file:../../libs/tags-core",
+    "@chaoticgoodcomputing/css-check": "workspace:*",
+    "@chaoticgoodcomputing/icons": "workspace:*",
+    "@chaoticgoodcomputing/tags-core": "workspace:*",
     "esbuild": "^0.28.2"
   },
   "quartz": {

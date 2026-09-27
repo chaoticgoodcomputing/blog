@@ -64,7 +64,7 @@ _Avoid_: embed (a post's own images, link card or quote), tweet, post widget
   downstream site installs it from npm. The widget's own dependencies (`pdfjs-dist`) install
   beside it.
 - **A plugin that inlines part of it**, such as `cgc-social` with `/bluesky`, lists it as a
-  `file:../../libs/widgets` devDependency, like any library (ADR-0005). `cgc-social` bundles
+  `workspace:*` devDependency, like any library (ADR-0005). `cgc-social` bundles
   `/bluesky` into its sidebar script and draws its feed as compact **post cards**.
   `/bluesky` brings its stylesheet with it, so the plugin's bundle has a CSS output to place in its
   own layer.
@@ -72,6 +72,8 @@ _Avoid_: embed (a post's own images, link card or quote), tweet, post widget
 ## Constraints
 
 - **Preact is a peer.** `cgc-mdx` pins every widget's `preact` imports to the host Quartz's copy.
+  It is only a peer, never a devDependency too, so no copy installs beside the library; the
+  typecheck reads Quartz Core's through `tsconfig.json`'s `paths` (#92).
   `/bluesky` doesn't use Preact: its renderer returns HTML strings, so a plain script can draw posts.
 - **A heavy dependency loads from an effect.** `pdf-viewer` imports PDF.js dynamically, so PDF.js
   lands in a chunk of its own that only a hydrating island fetches, and it never runs at build time.

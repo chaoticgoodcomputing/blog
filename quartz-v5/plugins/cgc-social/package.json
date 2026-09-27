@@ -20,11 +20,11 @@
     "lightningcss": "^1.30.0",
     "preact": "^10.29.0"
   },
-  "//devDependencies": "Build-time only: esbuild bundles dist/, which inlines the family's colour-value check from tags-core, and the cards' browser script, which inlines the widgets library's Bluesky client and renderer; @chaoticgoodcomputing/css-check checks the stylesheet against ADR-0003 before it ships (build.mjs). The libraries are `file:` specs on main, which a release commit rewrites to the release's published versions (ADR-0005).",
+  "//devDependencies": "Build-time only: esbuild bundles dist/, which inlines the family's colour-value check from tags-core, and the cards' browser script, which inlines the widgets library's Bluesky client and renderer; @chaoticgoodcomputing/css-check checks the stylesheet against ADR-0003 before it ships (build.mjs). The libraries are `workspace:*` specs, which `pnpm publish` rewrites to the published versions (ADR-0005).",
   "devDependencies": {
-    "@chaoticgoodcomputing/css-check": "file:../../libs/css-check",
-    "@chaoticgoodcomputing/tags-core": "file:../../libs/tags-core",
-    "@chaoticgoodcomputing/widgets": "file:../../libs/widgets",
+    "@chaoticgoodcomputing/css-check": "workspace:*",
+    "@chaoticgoodcomputing/tags-core": "workspace:*",
+    "@chaoticgoodcomputing/widgets": "workspace:*",
     "esbuild": "^0.28.2"
   },
   "quartz": {

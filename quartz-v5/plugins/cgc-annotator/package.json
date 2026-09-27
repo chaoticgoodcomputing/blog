@@ -17,11 +17,11 @@
   "peerDependencies": {
     "preact": "^10.29.0"
   },
-  "//devDependencies": "Build-time only: build.mjs bundles dist/, the Viewer's browser chunks and its stylesheet, whose PDF.js text layer PostCSS prefixes into the Viewer's block, and @chaoticgoodcomputing/css-check checks it all against ADR-0003. Our libraries are `file:` specs on main, which a release commit rewrites to the release's published version (ADR-0005). pdfjs-dist is pinned exactly: PDF.js throws if its API and worker differ, and the text-layer CSS is copied from this version.",
+  "//devDependencies": "Build-time only: build.mjs bundles dist/, the Viewer's browser chunks and its stylesheet, whose PDF.js text layer PostCSS prefixes into the Viewer's block, and @chaoticgoodcomputing/css-check checks it all against ADR-0003. Our libraries are `workspace:*` specs, which `pnpm publish` rewrites to the published version (ADR-0005). pdfjs-dist is pinned exactly: PDF.js throws if its API and worker differ, and the text-layer CSS is copied from this version.",
   "devDependencies": {
-    "@chaoticgoodcomputing/css-check": "file:../../libs/css-check",
-    "@chaoticgoodcomputing/island-runtime": "file:../../libs/island-runtime",
-    "@chaoticgoodcomputing/pipeline": "file:../../libs/pipeline",
+    "@chaoticgoodcomputing/css-check": "workspace:*",
+    "@chaoticgoodcomputing/island-runtime": "workspace:*",
+    "@chaoticgoodcomputing/pipeline": "workspace:*",
     "approx-string-match": "^2.0.0",
     "esbuild": "^0.28.2",
     "hast-util-to-html": "^9.0.5",

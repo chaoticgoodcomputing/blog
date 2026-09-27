@@ -11,8 +11,8 @@
 // - an engine edge, solid, from a plugin to each plugin its `quartz.dependencies` names. Those are
 //   plugin names (ADR-0002's plugin-name amendment), matched against each package's `quartz.name`;
 // - a library edge, dotted, from a package to each of our libraries it builds with: a plugin's
-//   `file:` devDependency (ADR-0005's inlined-library amendment), or a library's `workspace:`
-//   dependency on another.
+//   `workspace:` devDependency (ADR-0005's inlined-library amendment; `file:` before #92), or a
+//   library's `workspace:` dependency on another.
 // Packages come in three groups, each drawn apart: the shareable plugins in plugins/ as boxes, the
 // libraries in libs/ as stadiums, and the site plugins in site-plugins/ as hexagons in a subgraph of
 // their own. A shareable plugin's node links to its plugin note.

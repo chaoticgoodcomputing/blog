@@ -200,3 +200,16 @@ every `.ts` and `.tsx` under that root, and would take a widget's source, which 
 the output, for its own. The site's own serve (`site-v5:serve`) writes outside the root for the same
 reason, so a serve run left up is laid out as the site's serve is.
 
+
+## Amendment: one workspace install, and cached plugin builds
+
+_2026-09-27, from [One pnpm 11 workspace for libraries, plugins, site plugins and the e2e suite](https://github.com/chaoticgoodcomputing/blog/issues/92)._
+
+The suite no longer has an isolated npm install (Consequences, above). It, our libraries, every
+plugin and every site plugin are members of the repo's one pnpm workspace, installed by one
+`pnpm install --frozen-lockfile` at the root from one lock. The harness's first step is that frozen
+install, a no-op when nothing has moved. Its second is an Nx build of every plugin and site plugin
+through their `build` targets, which are cacheable, so a plugin whose sources, libraries and
+dependencies are unchanged is restored from Nx's cache rather than rebuilt. "Every run rebuilds all
+plugins" (rule 5) now means every run brings all plugins up to date. The site builds are still cold.
+Plugins still load by local path; `quartz-v5/VENDORED.md` has the workspace's settings.

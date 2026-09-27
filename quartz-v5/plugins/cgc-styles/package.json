@@ -13,9 +13,12 @@
     "build": "node build.mjs",
     "typecheck": "../node_modules/.bin/tsc -p ."
   },
-  "//devDependencies": "Build-time only: esbuild compiles src/ to dist/, and the types are erased. Locally both resolve to the host Quartz's copies through quartz-v5/plugins/node_modules, so the package carries no lockfile and needs no install of its own.",
+  "//peerDependencies": "The host Quartz's own copy, never installed here: only its types are used, and esbuild erases them.",
+  "peerDependencies": {
+    "@quartz-community/types": "*"
+  },
+  "//devDependencies": "Build-time only: esbuild compiles src/ to dist/.",
   "devDependencies": {
-    "@quartz-community/types": "^1.0.0",
     "esbuild": "^0.28.2"
   },
   "quartz": {

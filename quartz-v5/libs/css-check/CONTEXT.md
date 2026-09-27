@@ -108,7 +108,7 @@ saw.
 - **It checks the stylesheet, not the page.** A class a package writes from script, or a custom
   property set inline (`pdf-viewer`'s PDF.js scale properties), never reaches it. The no-bleed spec
   catches what a stylesheet check can't (ADR-0004).
-- **A consumer lists it as a devDependency**: `file:../../libs/css-check` in a plugin, `workspace:*`
+- **A consumer lists it as a devDependency**: `workspace:*`, in a plugin as
   in a library (ADR-0005). The loader installs dev dependencies, builds, then prunes them, and the
   check is needed only while the package builds.
 - **It is proven through its consumers.** Its spec plants escapes in copies of the styled plugins and

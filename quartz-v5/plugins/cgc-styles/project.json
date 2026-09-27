@@ -8,12 +8,21 @@
   "targets": {
     "build": {
       "executor": "nx:run-commands",
-      "options": { "command": "npm run build", "cwd": "{projectRoot}" },
+      "options": { "command": "node build.mjs", "cwd": "{projectRoot}" },
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/package.json",
+        "{projectRoot}/build.mjs",
+        "{projectRoot}/tsconfig.json",
+        "{projectRoot}/src/**/*",
+        "^default",
+        "{workspaceRoot}/quartz-v5/core/pnpm-lock.yaml"
+      ],
       "outputs": ["{projectRoot}/dist"]
     },
     "typecheck": {
       "executor": "nx:run-commands",
-      "options": { "command": "npm run typecheck", "cwd": "{projectRoot}" }
+      "options": { "command": "pnpm run typecheck", "cwd": "{projectRoot}" }
     },
     "e2e": {
       "//": "This package's specs, plus the shared suite's proof that consumers declare it by name, through the shared suite.",

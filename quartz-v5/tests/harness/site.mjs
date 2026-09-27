@@ -13,7 +13,7 @@ import { createHash } from "node:crypto"
 import { createRequire } from "node:module"
 import { promisify } from "node:util"
 import { fileURLToPath } from "node:url"
-import { buildLocalPlugin, installLibs } from "../../utils/local-plugins.mjs"
+import { buildLocalPlugins, installWorkspace } from "../../utils/local-plugins.mjs"
 import { FIXTURE_PAPER_URL, fixturePaper } from "./source-host.mjs"
 
 const run = promisify(execFile)
@@ -203,16 +203,17 @@ function writeFixtureRoot(variant) {
 
 // Quartz symlinks a local plugin into `.quartz/plugins/` but never builds it — only git sources
 // get `npm run build` — so every package is built here first, as the real site's prebuild builds
-// the ones its config enables (utils/local-plugins.mjs).
+// the ones its config enables: a frozen install of the workspace, then the packages' Nx builds,
+// cached (utils/local-plugins.mjs).
 export async function buildPlugins() {
   linkHostModules()
-  await installLibs(run)
+  await installWorkspace(run)
   const packages = PLUGIN_ROOTS.flatMap((root) =>
     fs.existsSync(root)
       ? fs.readdirSync(root).filter((dir) => fs.existsSync(path.join(root, dir, "package.json"))).map((dir) => path.join(root, dir))
       : [],
   )
-  await Promise.all(packages.map((cwd) => buildLocalPlugin(cwd, run)))
+  await buildLocalPlugins(packages, run)
   return packages
 }
 

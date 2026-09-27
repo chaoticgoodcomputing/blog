@@ -3,45 +3,33 @@
 // them: the real site's prebuild (`prebuild.mjs`) and the e2e harness (`tests/harness/site.mjs`).
 // Each runs the commands its own way, through `run(command, args, { cwd })`, which may return a
 // promise or run synchronously.
+//
+// Every package of ours outside Quartz Core is a member of the repo's one pnpm workspace (#92), so
+// getting them ready is two steps: a frozen install of the workspace, which is a no-op when nothing
+// has moved, then an Nx build of the plugins, which Nx takes from its cache for any plugin whose
+// sources, libraries and dependencies are unchanged.
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
-const libs = path.join(root, "libs")
+const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..")
+const nx = path.join(repo, "node_modules", ".bin", "nx")
 
-// True when a package's lockfile names a package, or a version, that npm's record of its last
-// install (`node_modules/.package-lock.json`) lacks: say, after a merge added a library. Peers are
-// never installed here, and optional packages only on their own platform.
-function installIsStale(dir) {
-  const installed = path.join(dir, "node_modules", ".package-lock.json")
-  if (!fs.existsSync(installed)) return true
-  const wanted = JSON.parse(fs.readFileSync(path.join(dir, "package-lock.json"), "utf8")).packages
-  const have = JSON.parse(fs.readFileSync(installed, "utf8")).packages
-  const id = (entry) => entry?.version ?? entry?.resolved
-  return Object.entries(wanted).some(([key, entry]) => key && !entry.peer && !entry.optional && id(have[key]) !== id(entry))
+// The workspace's own install, from its one lock: our libraries, plugins, site plugins and the e2e
+// suite. Peers are never installed beside a plugin (`autoInstallPeers: false`), so a plugin's
+// Preact is Quartz Core's, through the host link beside it (VENDORED.md, "Dependencies").
+export async function installWorkspace(run) {
+  await run("pnpm", ["install", "--frozen-lockfile"], { cwd: repo })
 }
 
-// Our libraries' own dependencies install through the repo's pnpm workspace (ADR-0005), never
-// through the plugins that inline them: npm installs nothing behind a `file:` link, and a library
-// with no install of its own would silently resolve its imports from the v4 tree's. So when a
-// library with dependencies has none, the workspace is installed.
-export async function installLibs(run) {
-  const missing = (fs.existsSync(libs) ? fs.readdirSync(libs) : []).some((dir) => {
-    const manifest = path.join(libs, dir, "package.json")
-    if (!fs.existsSync(manifest)) return false
-    const { dependencies = {}, devDependencies = {} } = JSON.parse(fs.readFileSync(manifest, "utf8"))
-    return Object.keys({ ...dependencies, ...devDependencies }).length > 0 && !fs.existsSync(path.join(libs, dir, "node_modules"))
-  })
-  if (missing) await run("pnpm", ["install", "--frozen-lockfile"], { cwd: path.dirname(root) })
+// The Nx project a package directory is, from its project.json.
+function projectOf(dir) {
+  return JSON.parse(fs.readFileSync(path.join(dir, "project.json"), "utf8")).name
 }
 
-// Builds the local plugin at `dir`. A package with build-time dependencies of its own carries a
-// lockfile, and installs them first, once, and again whenever the lockfile moves on from what is
-// installed. Never its peers: its `node_modules` must not shadow a host singleton (VENDORED.md).
-export async function buildLocalPlugin(dir, run) {
-  if (fs.existsSync(path.join(dir, "package-lock.json")) && installIsStale(dir)) {
-    await run("npm", ["ci", "--omit=peer", "--no-audit", "--no-fund"], { cwd: dir })
-  }
-  await run("npm", ["run", "build", "--silent"], { cwd: dir })
+// Builds the local plugins at `dirs` through their cacheable Nx `build` targets.
+export async function buildLocalPlugins(dirs, run) {
+  if (dirs.length === 0) return
+  const projects = [...new Set(dirs.map(projectOf))]
+  await run(nx, ["run-many", "-t", "build", "-p", projects.join(","), "--outputStyle=static"], { cwd: repo })
 }

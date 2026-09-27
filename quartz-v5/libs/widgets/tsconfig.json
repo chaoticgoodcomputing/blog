@@ -9,7 +9,13 @@
     "lib": ["es2022", "dom", "dom.iterable"],
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
-    "types": []
+    "types": [],
+    // Preact is a peer, never installed here: type-check against the host Quartz's copy, the one
+    // cgc-mdx pins every widget to.
+    "paths": {
+      "preact": ["../../core/node_modules/preact"],
+      "preact/*": ["../../core/node_modules/preact/*"]
+    }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

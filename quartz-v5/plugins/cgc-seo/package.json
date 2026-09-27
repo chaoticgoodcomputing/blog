@@ -19,9 +19,9 @@
     "@quartz-community/utils": "*",
     "preact": "^10.29.0"
   },
-  "//devDependencies": "Build-time only, and inlined into dist by build.mjs (tags-core, our library, and reading-time, v4's reading-time counter): the loader prunes them after `npm run build`. tags-core is a `file:` spec on main, which a release commit rewrites to the release's published version (ADR-0005). It is a library, not the cgc-tags engine, so inlining it adds no plugin dependency.",
+  "//devDependencies": "Build-time only, and inlined into dist by build.mjs (tags-core, our library, and reading-time, v4's reading-time counter): the loader prunes them after `npm run build`. tags-core is a `workspace:*` spec, which `pnpm publish` rewrites to the published version (ADR-0005). It is a library, not the cgc-tags engine, so inlining it adds no plugin dependency.",
   "devDependencies": {
-    "@chaoticgoodcomputing/tags-core": "file:../../libs/tags-core",
+    "@chaoticgoodcomputing/tags-core": "workspace:*",
     "esbuild": "^0.28.2",
     "reading-time": "^1.5.0"
   },

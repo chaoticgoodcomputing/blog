@@ -103,6 +103,14 @@ application layer rather than something for others to install. The opposite of a
 which fails the test only by accident.
 _Avoid_: customization (that is the whole category), local plugin, private plugin
 
+**Repo-only**:
+Of a package: marked `"private": true` in its `package.json`, which makes npm and pnpm refuse to
+publish it. It is never published to npm and is used only in this repo. The site package,
+`quartz-v5/package.json` (`site-v5`), is one (#92), and the site plugins stay ones (#96). Our
+plugins carry the flag too until they become packages (#93–#95). Not npm's
+"private package", a restricted package on the registry, which nothing here means.
+_Avoid_: private (alone), internal, unpublished
+
 **Site config**:
 The real site's Quartz configuration, `quartz-v5/core/quartz.config.yaml`: which plugins the site
 runs and with what options, its layout, theme and fonts. A **steering file**, tracked inside Core,
@@ -140,6 +148,8 @@ _Avoid_: package version, plugin version
 The commit a release's tag points at: a child of `main` that changes package metadata only, setting
 every package's version and pointing each plugin at the release's published libraries. It is never
 merged into `main`. Recorded in [ADR-0005](../docs/adr/0005-plugins-ship-as-source-in-batch-releases.md).
+Being retired (#89): plugins now name libraries by `workspace:*`, which `pnpm publish` rewrites
+itself (#92).
 _Avoid_: release branch, version bump
 
 ### Plugin composition
