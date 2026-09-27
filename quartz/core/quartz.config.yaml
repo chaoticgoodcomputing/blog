@@ -511,7 +511,10 @@ plugins:
         Spencer Elkington: https://chaoticgood.computer/contact
         Chaotic Good Computing: https://github.com/chaoticgoodcomputing
     layout:
-      position: afterBody
+      # An editor validating against Core's schema flags `footer`: the schema's position enum lags
+      # the loader's LayoutPosition, which has it, and every frame renders a footer slot. The
+      # site-config guard amends the schema for it (utils/site-config-schema.mjs).
+      position: footer
       priority: 50
   - source: "@quartz-community/spacer"
     enabled: true
