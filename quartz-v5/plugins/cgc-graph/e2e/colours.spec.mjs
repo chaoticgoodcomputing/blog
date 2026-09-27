@@ -83,23 +83,19 @@ test("fills a page with no tags in v4's colours: the current page in secondary",
   await expect.poll(() => nodeFill(localGraph(page), "Linked Note")).toEqual(SECONDARY[colorScheme])
 })
 
-test("rings a tagged page's bubble in v4's colours: the current page in secondary, a visited one in tertiary", async ({
+test("rims a visited page's bubble in tertiary, as a visited link reads, and rings no node", async ({
   page,
   colorScheme,
 }) => {
-  // v4 marked the reader's own page and the pages they had been to by filling them; a bubble's
-  // circle is always the theme's gray, so a ring outside its rim marks them. The current page
-  // swells, so look in a disc past its widest.
+  // The owner's decision of 2026-09-26: a page the reader has visited is set apart as a visited
+  // link is from an unvisited one, by its rim taking the theme's `tertiary` (v4's visited node
+  // colour) in place of its tag colour. No ring outside the rim: the reader's own page is marked
+  // by its swelling alone, and keeps its tag colour. It swells, so look in a disc past its widest.
   await page.goto("/plain-note")
   const graph = localGraph(page)
   await expectBubble(page, "Plain Note", FIXTURE[colorScheme])
-  await expect
-    .poll(() => marksNear(graph, "Plain Note", SECONDARY[colorScheme], 26))
-    .toBeGreaterThan(20)
+  await expect.poll(() => marksNear(graph, "Plain Note", SECONDARY[colorScheme], 26)).toBe(0)
   // Plain Note links to the .mdx article: there, it is a page the reader has visited.
   await page.goto("/mdx-article.mdx")
-  await expectBubble(page, "Plain Note", FIXTURE[colorScheme])
-  await expect
-    .poll(() => marksNear(graph, "Plain Note", TERTIARY[colorScheme], 22))
-    .toBeGreaterThan(20)
+  await expectBubble(page, "Plain Note", TERTIARY[colorScheme])
 })

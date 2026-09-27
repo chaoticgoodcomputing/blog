@@ -95,10 +95,11 @@ export type NodeColour = ThemeColour | `--${string}`
 export type NodePaint =
   | {
       kind: "bubble"
-      /** Its rim: its tag's colour, or the site's `nodeColors` in its place. */
+      /**
+       * Its rim: its tag's colour, or the site's `nodeColors` in its place, or `tertiary` for a page
+       * the reader has visited, as a visited link is set apart from an unvisited one.
+       */
       rim: NodeColour
-      /** Its history ring, outside its rim, for the reader's own page or one they have visited. */
-      history: NodeColour | null
       /** The icon drawn in it, by its icon id, if its tag has one. */
       icon: string | null
     }

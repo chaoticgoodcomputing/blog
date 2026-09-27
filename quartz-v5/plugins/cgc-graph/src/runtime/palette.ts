@@ -69,9 +69,10 @@ export function paletteOf(settings: Settings): Palette {
  * - A node with a tag, the one that stands for it (a page's primary tag, a tag node's own), is that
  *   tag's bubble: rimmed in its tag's colour, as the tag index names it, with the tag's icon, its own
  *   or inherited. The circle and the icon are the palette's, the same for every bubble.
- * - The reader's own page and the pages they have visited keep v4's cues, as its history ring,
- *   outside the rim, since the circle is always the theme's gray: `secondary` for the current page,
- *   `tertiary` for a visited one.
+ * - A page the reader has visited is set apart as a visited link is from an unvisited one: its
+ *   bubble's rim is the theme's `tertiary`, v4's visited colour, in place of its tag's or the site's
+ *   (the owner's decision of 2026-09-26). The reader's own page, visited as soon as it loads, keeps
+ *   its tag's colour: it is marked by its swelling (draw.ts). No node is ringed outside its rim.
  * - The site's private or public node colour, when it sets one, rims every bubble it covers in place
  *   of the tag's, and fills every page with no tags it covers, as v4 filled every node.
  * - A page with no tags has no bubble, and keeps v4's disc: filled with the theme's `secondary` for
@@ -90,10 +91,11 @@ export function paintOf(
   const kind = node.private ? "private" : "public"
   const site: ThemeColour | null = settings.nodeColors[kind] ? kind : null
   const history = node.id === current ? "secondary" : visited.has(node.id) ? "tertiary" : null
+  const seen = node.id !== current && visited.has(node.id) ? "tertiary" : null
   if (tag) {
     const { rim } = bubblePaletteOf(tag.color)
-    return { kind: "bubble", rim: site ?? (rim as `--${string}`), history, icon: tag.icon ?? null }
+    return { kind: "bubble", rim: seen ?? site ?? (rim as `--${string}`), icon: tag.icon ?? null }
   }
-  if (node.isTag) return { kind: "bubble", rim: site ?? "tertiary", history, icon: null }
+  if (node.isTag) return { kind: "bubble", rim: seen ?? site ?? "tertiary", icon: null }
   return { kind: "disc", fill: site ?? history ?? "gray" }
 }

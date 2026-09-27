@@ -51,11 +51,11 @@ it, the circle is the theme's `--lightgray` and its icon the theme's `--dark`, f
 bubble: it is v4's disc, filled in the theme's colours.
 _Avoid_: node colour, node tag, category
 
-**History ring**:
-The ring outside a bubble's rim, a rim's width clear of it, that marks the reader's own page in
-`secondary` and a page they have visited in `tertiary`: v4's two cues, which v4 drew as the node's
-fill, and a bubble's circle never takes (docs/adr/0004).
-_Avoid_: halo, highlight, selection ring
+**Visited rim**:
+A bubble's rim in the theme's `tertiary`, in place of its tag's colour, for a page the reader has
+visited: the graph's version of a visited link. The reader's own page is exempt, and is marked by its
+swelling instead. No node is ringed outside its rim (docs/adr/0004, visited-rim amendment).
+_Avoid_: history ring (its replaced form), halo, highlight, selection ring
 
 **Edge**:
 A line between two nodes, of one of three kinds, each with its own distance, strength, opacity

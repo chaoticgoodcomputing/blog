@@ -207,12 +207,11 @@ export function animate(scene: Scene): () => void {
         ctx.fill()
       } else {
         // Its tag's bubble: the circle, the rim inside its edge, and the icon, centred, swelling with
-        // it. The reader's own page or a visited one is ringed outside the rim, a rim's width clear.
+        // it. A visited page's rim is `tertiary` (palette.ts); no node is ringed outside it.
         ctx.fillStyle = palette.circle
         ctx.fill()
         const rim = Math.max(1, radius * RIM_SCALE)
         ring(radius - rim / 2, rim, palette.node(paint.rim))
-        if (paint.history !== null) ring(radius + rim * 1.5, rim, palette.node(paint.history))
         const icon = paint.icon === null ? null : scene.icons.image(paint.icon, palette.icon)
         if (icon) {
           const size = radius * ICON_SCALE
@@ -222,20 +221,15 @@ export function animate(scene: Scene): () => void {
       ctx.restore()
     }
 
-    for (const { node, label, radius, paint } of nodes) {
+    for (const { node, label, radius } of nodes) {
       if (node.x == null || node.y == null || label.alpha <= 0) continue
-      // Below the node, and below its history ring where it has one.
-      const reach =
-        paint.kind === "bubble" && paint.history !== null
-          ? radius + 2 * Math.max(1, radius * RIM_SCALE)
-          : radius
       ctx.save()
       ctx.globalAlpha = label.alpha
       ctx.font = `${label.fontSize * label.scale}px ${palette.font}`
       ctx.fillStyle = palette.dark
       ctx.textAlign = "center"
       ctx.textBaseline = "top"
-      ctx.fillText(label.text, node.x + cx, node.y + cy + reach + 2)
+      ctx.fillText(label.text, node.x + cx, node.y + cy + radius + 2)
       ctx.restore()
     }
 

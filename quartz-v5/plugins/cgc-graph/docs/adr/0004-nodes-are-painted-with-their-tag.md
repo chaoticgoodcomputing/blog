@@ -52,7 +52,8 @@ at v4's size of 1.4 times the radius.
 - **A page's node shows the reader's history in its ring,** not its fill: a tagged page is its
   tag's colour whether or not the reader has visited it, ringed in `secondary` when it is the
   current page and `tertiary` when the reader has visited it (see the amendment below). The current
-  page still swells.
+  page still swells. _Superseded by the visited-rim amendment: no node is ringed, and a visited
+  page's rim is `tertiary`._
 - **A page fetches two indexes for the graph**, its own and the engine's, side by side and once per
   load. If the engine's fails, the graph still draws, in v4's colours and without icons.
 - **The index grows by the icons.** On the real vault that is about 40 icons at a few hundred bytes
@@ -117,7 +118,7 @@ bubble.
   a rim's width clear of it: `secondary` for the current page, `tertiary` for a visited one. v4 filled
   those nodes, and the first amendment ringed them over the fill, but a bubble's circle is always the
   theme's gray and its rim is the tag's. The current page still swells, and a label sits below the
-  ring.
+  ring. _Superseded by the visited-rim amendment below._
 - **A page with no tags keeps v4's disc,** filled `secondary` for the current page, `tertiary` for a
   visited one and `gray` for the rest. It has no tag, so no bubble, and the disc is v4's look
   unchanged. A tag the tag index doesn't hold, as when the index failed to load, is a bubble rimmed in
@@ -154,3 +155,30 @@ looks like one.
 - **Proven at the fixture seam** by `e2e/colours.spec.mjs`, `e2e/icons.spec.mjs` and
   `e2e/scheme.spec.mjs`, which read each bubble's rim, circle and icon off the canvas in both schemes
   and after a switch, and by `e2e/site.spec.mjs` on the real site's config.
+
+## Amendment: a visited page's rim is `tertiary`, and no node is ringed
+
+_2026-09-26, the owner's decision on seeing the history ring on the real site._
+
+The ring outside the rim read as confusing: on a reader's own machine most nodes carried one, since
+"visited" is every page the browser has opened (`graph-visited` in `localStorage`, never cleared, as
+in v4). The owner asked for the difference a visited link shows against an unvisited one instead: a
+visited page's bubble takes the theme's **`tertiary`**, v4's visited node colour, **as its rim**, in
+place of its tag's colour (and of the site's `nodeColors`, which is theming, where visited is the
+reader's own cue). Its circle and icon are unchanged, so the tag's icon still says what it is.
+
+- **No node is ringed.** The history ring is gone for visited pages and for the current page alike.
+- **The reader's own page keeps its tag's colour.** It is recorded as visited as soon as it loads, so
+  it is exempt; its swelling (`expandSelectedSize`, v4's) marks it, as the owner noted it already did.
+- **A page with no tags is unchanged:** v4's disc, filled `secondary` for the current page,
+  `tertiary` for a visited one and `gray` for the rest.
+- **Not a link colour.** No visited-link colour exists to borrow: stock Quartz styles every link
+  `var(--secondary)`, visited or not, Obsidian's link and graph variables have no visited state
+  ([Link](https://docs.obsidian.md/Reference/CSS+variables/Editor/Link),
+  [Graph](https://docs.obsidian.md/Reference/CSS+variables/Plugins/Graph)), and neither do
+  `@quartz-themes/core` or its themes. The owner chose to change the graph only, leaving links as
+  they are.
+
+Proven by `e2e/colours.spec.mjs`: the current page's bubble keeps its tag's rim with no `secondary`
+around it, and a page the reader has visited is rimmed in `tertiary`, in both schemes. It went red on
+the ring first.

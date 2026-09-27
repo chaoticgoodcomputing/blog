@@ -18,7 +18,7 @@ A heading, and a box holding the **local graph**: the current page, every page i
 - **Drag** a node to pull the layout around, drag the background to pan, and scroll to zoom.
 - **Each node is its tag's bubble**, the same bubble as a tag badge's elsewhere on the site: a page is its primary tag's, a tag its own. The tag's colour, as `cgc-tags` resolves it, paints only the rim. The circle is the theme's `lightgray`, and the icon the theme's `dark`, black in the light scheme and white in the dark. A tag with no colour of its own takes its nearest ancestor's.
 - **Each bubble carries its tag's icon**, its own or its nearest ancestor's. The icons are drawn when the site builds, so the page fetches none.
-- **The current page and the pages you've visited** are ringed outside the bubble's rim in the theme's colours: `secondary` for the current page, `tertiary` for pages you've visited.
+- **Pages you've visited** have their bubble's rim in the theme's `tertiary` instead of their tag's colour, the way a visited link differs from an unvisited one. **The current page** keeps its tag's colour, and swells and shrinks.
 - **A page with no tags** has no bubble. It is a plain disc in the theme's colours, as in Quartz 4: `secondary` for the current page, `tertiary` for pages you've visited, and `gray` for the rest.
 - **The current page** swells and shrinks gently.
 - **Private pages**, those carrying one of the `privateTags` or a tag under one, are drawn like any other page, rimmed in their own colour when `nodeColors.private` sets one.
