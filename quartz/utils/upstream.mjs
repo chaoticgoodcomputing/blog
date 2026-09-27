@@ -18,7 +18,7 @@ import { execFileSync } from "node:child_process"
 import { join } from "node:path"
 import { CORE_DIR, CORE_REL, MANIFEST_REL, REPO_ROOT, countsAsDrift, tierOf } from "./core-tiers.mjs"
 import { drift as coreDrift } from "./core-drift.mjs"
-import { readManifest, resolveLatest, sh } from "./upstream-git.mjs"
+import { lastUpgrade as lastUpgradeIn, readManifest, resolveLatest, sh } from "./upstream-git.mjs"
 import { upstreamTree } from "./upstream-tree.mjs"
 
 // Core's drift from the upstream tree checked out at `dir` (core-drift.mjs, shared with the repo guards).
@@ -74,14 +74,15 @@ function cmdDiff({ latest }) {
 }
 
 // Every commit that changed Core since it was last upgraded, oldest first, and the drift each made. An
-// upgrade is the most recent commit to touch upstream.json; every commit after it that changed Core is
-// ours and must cite a ticket (`#<n>` anywhere in the message). A commit that only moved Core's files,
-// or only changed files that are not drift, is left out. Core has moved before (into
-// `quartz/core/`, #91) and will again at cutover (#81), so the walk follows its renames back
-// through history rather than naming its old paths. Uncommitted drift is listed too.
+// upgrade is the commit that brought in the ref upstream.json pins (`lastUpgrade`, which follows the
+// manifest's renames); every commit after it that changed Core is ours and must cite a ticket (`#<n>`
+// anywhere in the message). A commit that only moved Core's files, or only changed files that are
+// not drift, is left out. Core has moved before (into `quartz-v5/core/`, #91, then to `quartz/core/`
+// at cutover, #81), so the walk follows its renames back through history rather than naming its old
+// paths. Uncommitted drift is listed too.
 function cmdLog() {
   const git = (...args) => sh("git", ["-C", REPO_ROOT, ...args]).trim()
-  const lastUpgrade = git("log", "-1", "--format=%H", "--", MANIFEST_REL)
+  const lastUpgrade = lastUpgradeIn(REPO_ROOT)
   const range = lastUpgrade ? `${lastUpgrade}..HEAD` : "HEAD"
   const shas = git("log", "--format=%H", range).split("\n").filter(Boolean) // newest first
 
