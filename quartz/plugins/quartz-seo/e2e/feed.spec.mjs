@@ -4,7 +4,7 @@
 // own. The newest pages in the fixture are a private page and an external page (seo/), then the
 // newest indexable article, seo/feed-article. They are dated 2999 so that nothing else overtakes them:
 // every fixture page without a date of its own takes its latest commit's, or the build's clock while
-// uncommitted, and those move forward on their own. v4 parity itself is v4-parity.spec.mjs.
+// uncommitted, and those move forward on their own.
 import fs from "node:fs"
 import path from "node:path"
 import { test, expect } from "../../../tests/harness/test.mjs"

@@ -1,6 +1,6 @@
 // What a crawler reads from the head of each fixture page: whether it may index the page, the page's
 // canonical URL, who wrote it, and where the site's feed is. The fixture config gives quartz-seo `noindexTags: [private]` and a
-// default author; its baseUrl is `localhost`. v4 parity itself is v4-parity.spec.mjs.
+// default author; its baseUrl is `localhost`.
 import { test, expect } from "../../../tests/harness/test.mjs"
 
 const robots = (page) => page.locator('head meta[name="robots"]')

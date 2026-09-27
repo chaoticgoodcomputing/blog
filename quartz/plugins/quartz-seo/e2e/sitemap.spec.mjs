@@ -1,7 +1,7 @@
 // What a crawler reads from the fixture site's sitemap.xml: every indexable page once, at its
 // canonical URL, the tag pages among them, and no private page, external page or listing of a tag
 // only private pages carry. The fixture's baseUrl is `localhost`, and its content-index writes no
-// sitemap of its own. v4 parity itself is v4-parity.spec.mjs.
+// sitemap of its own.
 import { test, expect } from "../../../tests/harness/test.mjs"
 import { fileFor } from "../../../tests/harness/site.mjs"
 import { readSitemap, parseXml } from "./feeds.mjs"
