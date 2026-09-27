@@ -429,6 +429,18 @@ test("never allows an .mdx page v5 leaves out, nor the article that takes its pl
   expect(result.stdout).not.toContain("pending #79")
 })
 
+test("allows v4's widget sources to go at cutover, and no other file under /widgets/ (#81)", async () => {
+  const v4Only = { "widgets/registry.ts": "", "widgets/dice/component.tsx": "", "widgets/dice/script.inline.ts": "" }
+  const gone = await report(site("v4", { ...BASE, ...v4Only, "widgets/dice/widget.tsx": "" }), site("v5", { ...BASE, "widgets/dice/widget.tsx": "" }))
+  expect(gone.code, gone.stdout).toBe(0)
+  expect(gone.json.allowed.map((d) => [d.url, d.ticket]).sort()).toEqual(
+    ["/widgets/dice/component.tsx", "/widgets/dice/script.inline.ts", "/widgets/registry.ts"].map((url) => [url, 81]),
+  )
+  const v5Widget = await report(site("v4", { ...BASE, "widgets/dice/widget.tsx": "" }), site("v5", BASE))
+  expect(v5Widget.code, v5Widget.stdout).toBe(1)
+  expect(v5Widget.json.failing).toEqual([expect.objectContaining({ area: "url", change: "removed", url: "/widgets/dice/widget.tsx" })])
+})
+
 test("refuses to run without a built v4 site, since v4 can no longer be built (#81)", async () => {
   const out = tempDir("out")
   const result = await run("node", [REPORT, "--v5", site("v5", BASE), "--vault", tempDir("vault"), "--out", out]).catch((err) => err)

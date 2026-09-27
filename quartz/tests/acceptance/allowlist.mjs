@@ -55,6 +55,17 @@ const MDX_PAGES = new Set([
 
 export const ALLOWLIST = [
   {
+    ticket: 81,
+    summary:
+      "v4's widget sources, which both sites served as raw files under /widgets/ (each widget's component.tsx, index.ts, script.inline.ts and style.inline.scss, and registry.ts), are deleted from the vault at cutover. Only v4 read them.",
+    allows: (d) =>
+      d.area === "url" &&
+      d.change === "removed" &&
+      d.kind === "file" &&
+      (d.url === "/widgets/registry.ts" ||
+        /^\/widgets\/[^/]+\/(component\.tsx|index\.ts|script\.inline\.ts|style\.inline\.scss)$/.test(d.url)),
+  },
+  {
     ticket: 48,
     summary:
       "/widgets/README is retired, with no redirect: its reference moves into the MDX plugin's note (/plugins/quartz-mdx since #94), whose widgets/README alias v5 lowercases, so only /widgets/readme redirects there. The old URL 404s after cutover, and leaves the sitemap and RSS.",
