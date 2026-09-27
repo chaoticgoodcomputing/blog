@@ -74,6 +74,20 @@ export const ALLOWLIST = [
       ((((d.area === "url" && d.kind === "page") || d.area === "sitemap") && d.change === "added") || indexedAtOwnUrl(d, context)),
   },
   {
+    ticket: 93,
+    summary:
+      "A plugin converted to an npm package moves its plugin note from /plugins/cgc-<name> to /plugins/quartz-<name>, its package's name, with no redirect: the old URL leaves the site and the sitemap. Only where the vault links plugins/quartz-<name>.md and no longer links plugins/cgc-<name>.md.",
+    allows: (d, { vault }) => {
+      const [, name] = /^\/plugins\/cgc-([^/]+)$/.exec(d.url) ?? []
+      return (
+        Boolean(name) &&
+        !isPluginNote(d.url, vault) &&
+        isPluginNote(`/plugins/quartz-${name}`, vault) &&
+        ((d.area === "url" && d.kind === "page" && d.change === "removed") || (d.area === "sitemap" && d.change === "removed"))
+      )
+    },
+  },
+  {
     ticket: 23,
     summary:
       "v5 lowercases page URLs, and stock alias-redirects (enableCaseRedirects, on permanently) serves a redirect at each mixed-case v4 URL. The ticket counted ten outside scratch/; the vault now has more, mostly private.",
