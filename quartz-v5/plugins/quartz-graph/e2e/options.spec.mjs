@@ -15,7 +15,7 @@ const CONTENT = {
 
 // The fixture's config, with cgc-graph's options replaced.
 const withOptions = (options) =>
-  editConfig(fixtureConfig(), (doc, entry) => entry("../../plugins/cgc-graph").set("options", doc.createNode(options)))
+  editConfig(fixtureConfig(), (doc, entry) => entry("@chaoticgoodcomputing/quartz-graph").set("options", doc.createNode(options)))
 
 test("fails the build on a colour CSS can't read", async () => {
   const { code, output } = await buildScratchSite("graph-bad-colour", CONTENT, {

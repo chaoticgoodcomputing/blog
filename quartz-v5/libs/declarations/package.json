@@ -1,0 +1,30 @@
+{
+  "name": "@chaoticgoodcomputing/declarations",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Emits a plugin's type declarations at build time: one bundled .d.ts beside each dist/ entry, with the types of the libraries the plugin inlines inlined too, and its peers' left as imports. Quartz's generated plugin index skips a package without dist/index.d.ts. See CONTEXT.md.",
+  "//exports": "Source only: no build and no dist. JavaScript with JSDoc types, for the same reason as @chaoticgoodcomputing/css-check's: a plugin's build.mjs imports it straight into Node (libs/css-check/docs/adr/0001).",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "//dependencies": "rollup-plugin-dts bundles declarations the way tsup does for @quartz-community/*: one `export { … }` statement per entry, the form Quartz's plugin index reads. It runs TypeScript, which it takes as a peer, so the library carries both.",
+  "dependencies": {
+    "rollup": "^4.63.5",
+    "rollup-plugin-dts": "^6.5.1",
+    "typescript": "^5.9.3"
+  },
+  "//devDependencies": "Types only.",
+  "devDependencies": {
+    "@types/node": "^24.10.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -9,13 +9,16 @@
 //
 // Two kinds of edge, drawn apart:
 // - an engine edge, solid, from a plugin to each plugin its `quartz.dependencies` names. Those are
-//   plugin names (ADR-0002's plugin-name amendment), matched against each package's `quartz.name`;
+//   plugin names (ADR-0002's plugin-name amendment): a package name, for a plugin that is a package
+//   (`@chaoticgoodcomputing/quartz-<name>`, #89), or the manifest name, `quartz.name`, which is how a
+//   dependency on a plugin still loaded by local path is written until it is converted (#94–#96);
 // - a library edge, dotted, from a package to each of our libraries it builds with: a plugin's
 //   `workspace:` devDependency (ADR-0005's inlined-library amendment; `file:` before #92), or a
 //   library's `workspace:` dependency on another.
 // Packages come in three groups, each drawn apart: the shareable plugins in plugins/ as boxes, the
 // libraries in libs/ as stadiums, and the site plugins in site-plugins/ as hexagons in a subgraph of
-// their own. A shareable plugin's node links to its plugin note.
+// their own. Each is drawn by its directory, and a shareable plugin's node links to its plugin note,
+// which is named for the directory too (`/plugins/quartz-graph`).
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
@@ -54,7 +57,11 @@ export function readPackages(root = quartzRoot) {
       .sort()
       .map((dir) => ({ dir, kind, manifest: readJson(path.join(groupDir, dir, "package.json")) }))
   })
-  const byPluginName = new Map(packages.filter((p) => p.manifest.quartz?.name).map((p) => [p.manifest.quartz.name, p]))
+  const plugins = packages.filter((p) => p.manifest.quartz?.name)
+  const byPluginName = new Map([
+    ...plugins.map((p) => [p.manifest.quartz.name, p]),
+    ...plugins.map((p) => [p.manifest.name, p]),
+  ])
   const libraryByName = new Map(packages.filter((p) => p.kind === "library").map((p) => [p.manifest.name, p]))
   return packages.map(({ dir, kind, manifest }) => {
     const engines = (manifest.quartz?.dependencies ?? []).map((name) => {

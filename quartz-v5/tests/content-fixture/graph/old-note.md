@@ -6,4 +6,4 @@ tags:
 ---
 
 A page last changed years ago, so the global graph's time filter leaves it out of the last year and
-the last month. The cgc-graph specs read it.
+the last month. The quartz-graph specs read it.

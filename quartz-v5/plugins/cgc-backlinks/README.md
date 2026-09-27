@@ -86,7 +86,7 @@ plugins:
 | `excludePrivate` | `false` | Leave private pages out of the list, rather than list them after the public pages with a lock. |
 | `hideWhenEmpty` | `true` | Leave the section out of a page no page links to. |
 
-If you also run [cgc-seo](https://blog.chaoticgood.computer/plugins/cgc-seo), [cgc-graph](https://blog.chaoticgood.computer/plugins/cgc-graph) or [cgc-tag-explorer](https://blog.chaoticgood.computer/plugins/cgc-tag-explorer), give them all the same private tags, through a YAML anchor, so the pages search engines are asked to leave out are the ones marked, or left out, here and in the graph and the explorer.
+If you also run [cgc-seo](https://blog.chaoticgood.computer/plugins/cgc-seo), [quartz-graph](https://blog.chaoticgood.computer/plugins/quartz-graph) or [cgc-tag-explorer](https://blog.chaoticgood.computer/plugins/cgc-tag-explorer), give them all the same private tags, through a YAML anchor, so the pages search engines are asked to leave out are the ones marked, or left out, here and in the graph and the explorer.
 
 This site turns `excludePrivate` on, so its private notes never show in a page's backlinks. Quartz 4 listed them with a lock.
 

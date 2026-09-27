@@ -14,7 +14,7 @@ import { checkStylesheet } from "@chaoticgoodcomputing/css-check"
 
 const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"))
 const peers = Object.keys(pkg.peerDependencies)
-const block = pkg.name
+const block = pkg.quartz.name
 const layer = `cgc.${block.replace(/^cgc-/, "")}`
 const stylesheet = "src/style.css"
 

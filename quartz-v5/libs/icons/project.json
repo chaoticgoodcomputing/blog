@@ -11,10 +11,10 @@
       "options": { "command": "pnpm run typecheck", "cwd": "{projectRoot}" }
     },
     "e2e": {
-      "//": "Tested through its consumers' icon specs, cgc-tag-list's and cgc-graph's, in the shared suite. No build target: plugins inline the source.",
+      "//": "Tested through its consumers' icon specs, cgc-tag-list's and quartz-graph's, in the shared suite. No build target: plugins inline the source.",
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx playwright test ../plugins/cgc-tag-list/e2e/icons.spec.mjs ../plugins/cgc-tag-list/e2e/site.spec.mjs ../plugins/cgc-graph/e2e/icons.spec.mjs",
+        "command": "npx playwright test ../plugins/cgc-tag-list/e2e/icons.spec.mjs ../plugins/cgc-tag-list/e2e/site.spec.mjs ../plugins/quartz-graph/e2e/icons.spec.mjs",
         "cwd": "{workspaceRoot}/quartz-v5/tests"
       }
     }

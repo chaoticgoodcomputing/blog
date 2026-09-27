@@ -18,7 +18,8 @@ last resort, and each one needs a ticket plus a strategy for proposing it upstre
 ```
 quartz-v5/
 ├── project.json          Nx targets (this project is `site-v5`)
-├── package.json          the site package, `site-v5`: repo-only, a member of the repo's pnpm workspace
+├── package.json          the site package, `site-v5`: repo-only, a member of the repo's pnpm workspace,
+│                         depending on each plugin that is a package, which the site loads by name
 ├── CONTEXT.md            glossary for this context
 ├── VENDORED.md           this file
 ├── upstream.json         the pinned upstream ref — machine-readable source of truth
@@ -27,7 +28,7 @@ quartz-v5/
 ├── a6e41ab6-….txt        the IndexNow key file — copied to the site root by postbuild.mjs
 ├── icon.png              the site's own icon — put over stock's in the build by postbuild.mjs
 ├── icons/                the site's own icon collection, `custom:` — SVG files, drawn by @chaoticgoodcomputing/icons
-├── plugins/              our Quartz plugins (`cgc-*`)
+├── plugins/              our Quartz plugins: packages (`quartz-*`) and those not yet converted (`cgc-*`)
 ├── site-plugins/         this site's own plugins, which fail the shareability test on purpose
 ├── libs/                 our non-plugin packages (`@chaoticgoodcomputing/*`)
 ├── tests/                Playwright suite and `content-fixture/`
@@ -86,7 +87,11 @@ loader under a dump of its usage, so `site-v5:prebuild` (`utils/prebuild.mjs`), 
 `plugins` list. The e2e harness writes each fixture root's own config and links everything else of
 Core's into it.
 
-`source:` entries inside that config are resolved with `path.resolve()` against cwd
+A plugin of ours that is a package is listed by its package name,
+`source: "@chaoticgoodcomputing/quartz-graph"`, a **package source**: Quartz imports it by name
+([`config-loader.ts:441-442`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L441-L442)),
+and the site package (below, Dependencies) is where the name resolves. The rest are still local
+sources (#94–#96). Local `source:` entries are resolved with `path.resolve()` against cwd
 ([`gitLoader.ts:99`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L99)),
 which is Core's root. Local plugins are therefore `../plugins/cgc-tags`. A plugin option that names a
 file resolves the same way, so the site's icon is `icon: ../icon.png` on `cgc-og-image`.
@@ -329,8 +334,9 @@ differently from npm (the top-level `picomatch` and `string-width` are another o
 lock holds), which no code of ours imports. The upgrade converts the lock at a new ref, from that
 ref's own `package-lock.json` (see Upgrading).
 
-**Local plugins resolve the host's dependencies through `plugins/node_modules`,** a gitignored
-symlink to `../core/node_modules` that the e2e harness and `site-v5:prebuild` create. A git-installed
+**Our plugins resolve the host's dependencies through `plugins/node_modules`,** a gitignored
+symlink to `../core/node_modules` that the e2e harness and `site-v5:prebuild` create. A plugin runs
+from its real path under `plugins/` whether it is listed by local path or by package name. A git-installed
 plugin sits at `.quartz/plugins/<name>/` inside Core, so its bare `import "preact"` finds Quartz's
 copy, and that is what the loader's shared externals assume. A local plugin is only symlinked there,
 and Node resolves from the symlink's target under `plugins/`, which would otherwise walk up to the v4
@@ -368,10 +374,27 @@ A plugin names a library it inlines, or one its build runs (`@chaoticgoodcomputi
 `workspace:*` devDependency (ADR-0005), which pnpm links: whatever the library imports resolves from
 the library's own install, never the plugin's. Every plugin and site plugin has a cacheable Nx
 `build` target (`node build.mjs`), whose inputs are the package's manifest, build script, tsconfig
-and sources, the libraries it depends on, Core's lock and the workspace's external dependencies, and
-whose output is its `dist/`. A second build with nothing changed is a cache hit. The e2e harness and
+and sources, `^production` (the libraries it depends on, as nx.json's `production` named input has
+them: sources and manifests, never their Markdown, `docs/`, `e2e/` or specs, so a doc edit rebuilds
+nothing), Core's lock and the workspace's external dependencies, and whose output is its `dist/`. A
+second build with nothing changed is a cache hit.
+
+**The site package loads the plugins that are packages.** `quartz-v5/package.json` depends on each by
+`workspace:*`, so pnpm links `quartz-v5/node_modules/@chaoticgoodcomputing/quartz-<name>` to its
+directory. Quartz imports a package source from Core source, `core/quartz/`, and Node's upward
+walk from there reaches `quartz-v5/node_modules` after Core's own, so Core's `package.json` stays
+upstream's. A new package is added there, in the same change that lists it in a config (#93). Its
+build emits a `.d.ts` beside each `dist/` entry through `@chaoticgoodcomputing/declarations`, since
+Quartz's generated plugin index (`install-plugins`) skips a package without `dist/index.d.ts`.
+
+**Nx infers targets from the workspace members' `package.json` scripts,** now that plugins and the
+e2e suite are members: a `typecheck` script on a package without a `typecheck` target in its
+`project.json` (`cgc-mdx`, `cgc-og-image`, `site-styles`) becomes one, and `site-v5-e2e` gets `test`
+from the suite's `test` script. So `nx run-many -t test` starts the whole e2e suite. A target in
+`project.json` wins over an inferred one of the same name. The e2e harness and
 `site-v5:prebuild` take the same two steps from one module, `utils/local-plugins.mjs`: the frozen
-workspace install, a no-op when nothing has moved, then an Nx build of the plugins they load.
+workspace install, a no-op when nothing has moved, then an Nx build of the plugins they load, by
+either kind of source (`pluginDirOf`, which also reads a package name).
 Content reaches a library the same way: the root `package.json` depends on
 `@chaoticgoodcomputing/widgets` by `workspace:*`, so an `.mdx` page in the vault or the e2e fixture
 resolves `@chaoticgoodcomputing/widgets/<widget>` by Node's upward walk to the root `node_modules` (#36).

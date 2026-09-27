@@ -1,7 +1,7 @@
 // Every plugin that treats private pages differently agrees on which pages those are: tags-core's
 // **private page**, a page carrying one of the site's private tags or a tag under one. The site config
 // names its private tags once, as `&privateTags` on cgc-seo's `noindexTags`, and every plugin that
-// takes them aliases it: cgc-backlinks', cgc-graph's and cgc-tag-explorer's `privateTags`, and
+// takes them aliases it: cgc-backlinks', quartz-graph's and cgc-tag-explorer's `privateTags`, and
 // cgc-post-listing's `excludeTags`. Each plugin normalises a private tag as the tag engine normalises
 // a tag a site writes (tags-core's `normaliseTag()`).
 //
@@ -12,7 +12,7 @@ import path from "node:path"
 import { createRequire } from "node:module"
 import { test, expect, routeSite } from "../harness/test.mjs"
 import { buildScratchSite, siteConfig, core } from "../harness/site.mjs"
-import { drawnGraph, localGraph } from "../../plugins/cgc-graph/e2e/graph.mjs"
+import { drawnGraph, localGraph } from "../../plugins/quartz-graph/e2e/graph.mjs"
 
 const YAML = createRequire(path.join(core, "package.json"))("yaml")
 
@@ -117,7 +117,7 @@ test("cgc-backlinks leaves the private pages out", async ({ page }) => {
   await expect(page.locator(".cgc-backlinks__link--private")).toHaveCount(0)
 })
 
-test("cgc-graph draws the private pages as private", async ({ page }) => {
+test("quartz-graph draws the private pages as private", async ({ page }) => {
   await routeSite(page, site.public, ORIGIN)
   await page.goto(`${ORIGIN}/content/notes/target`)
   const graph = await drawnGraph(localGraph(page))

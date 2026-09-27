@@ -5,7 +5,7 @@
 //
 // - cgc-tag-list paints its badges with the engine's `--cgc-tag-*` properties, from its stylesheet;
 // - the fixture's `fixture-tag-reader` writes out the `fileData.cgcTags` each page received;
-// - cgc-graph (#74) publishes each page's tags from its `fileData.cgcTags` in its own index.
+// - quartz-graph (#74) publishes each page's tags from its `fileData.cgcTags` in its own index.
 import fs from "node:fs"
 import path from "node:path"
 import { test, expect, routeSite } from "../harness/test.mjs"
@@ -21,7 +21,7 @@ import {
 const ENGINE = "cgc-tags"
 const CONSUMERS = [
   path.resolve(testsRoot, "../plugins/cgc-tag-list"),
-  path.resolve(testsRoot, "../plugins/cgc-graph"),
+  path.resolve(testsRoot, "../plugins/quartz-graph"),
   path.join(testsRoot, "fixture-plugins/fixture-tag-reader"),
 ]
 const bubble = (page, tag) =>
@@ -44,7 +44,7 @@ test("the consumers receive the engine's artifacts at the fixture root", async (
   await expect(bubble(page, "fixture")).toHaveCSS("border-top-color", "rgb(10, 125, 50)")
   const received = JSON.parse(emitted.read("static/fixture-tag-reader.json"))
   expect(received["plain-note"].primary.tag).toBe("fixture")
-  // cgc-graph's index carries each page's tags as the engine published them.
+  // quartz-graph's index carries each page's tags as the engine published them.
   const graph = JSON.parse(emitted.read("static/cgcGraph.json"))
   expect(graph.pages["tag-engine/most-specific"].tags).toEqual(["fixture", "writing/essays"])
 })

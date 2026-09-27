@@ -16,7 +16,7 @@
       }
     },
     "e2e": {
-      "//": "Build every cgc-* plugin and the fixture site (twice: with and without them), then run the suite. Narrow it with --args, e.g. --args=\"../plugins/cgc-tags -g colour\". See docs/adr/0004.",
+      "//": "Build every plugin of ours and the fixture site (twice: with and without them), then run the suite. Narrow it with --args, e.g. --args=\"../plugins/cgc-tags -g colour\". See docs/adr/0004.",
       "executor": "nx:run-commands",
       "options": {
         "command": "npx playwright test {args.args}",

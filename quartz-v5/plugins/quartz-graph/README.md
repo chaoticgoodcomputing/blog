@@ -1,11 +1,11 @@
 ---
-title: cgc-graph
+title: quartz-graph
 tags:
   - projects/site/plugins
   - engineering/frontend
 ---
 
-`cgc-graph` is a [Quartz 5](https://quartz.jzhao.xyz/) plugin that draws the graph view: the pages around the current one, and, behind a button, every page of the site, with a filter for how recently each changed. Each page and tag is drawn as its tag's bubble, the one the site's tag badges use: rimmed in the tag's colour, with the tag's icon. It draws from an index it publishes itself, which carries each page's date.
+`@chaoticgoodcomputing/quartz-graph` is a [Quartz 5](https://quartz.jzhao.xyz/) plugin that draws the graph view: the pages around the current one, and, behind a button, every page of the site, with a filter for how recently each changed. Each page and tag is drawn as its tag's bubble, the one the site's tag badges use: rimmed in the tag's colour, with the tag's icon. It draws from an index it publishes itself, which carries each page's date.
 
 It is the graph from this site's Quartz 4 days, carried over as a plugin. Quartz's own graph plugin reads only Quartz's content index, which has no dates, so the filter needs this one. Its tags, with their colours and icons, come from [cgc-tags](https://blog.chaoticgood.computer/plugins/cgc-tags), the plugin that holds the site's tag dictionary.
 
@@ -84,13 +84,23 @@ The graph draws a tag's description page, at `tags/<tag>` or `tags/<tag>/index`,
 
 ## Install
 
-Plugins in this family ship as source from [the blog's monorepo](https://github.com/chaoticgoodcomputing/blog), and a site pins a release tag. This plugin needs [cgc-tags](https://blog.chaoticgood.computer/plugins/cgc-tags) and [cgc-styles](https://blog.chaoticgood.computer/plugins/cgc-styles):
+The plugin is the npm package `@chaoticgoodcomputing/quartz-graph`, built, with its type declarations, and loaded by name, as Quartz's own `@quartz-community/*` plugins are. It needs [cgc-tags](https://blog.chaoticgood.computer/plugins/cgc-tags) and [cgc-styles](https://blog.chaoticgood.computer/plugins/cgc-styles). Install it into your Quartz site:
 
 ```sh
-npx quartz plugin add git+https://github.com/chaoticgoodcomputing/blog.git#v<x.y.z> --subdir quartz-v5/plugins/cgc-graph --name cgc-graph
+npm install @chaoticgoodcomputing/quartz-graph
 ```
 
-Keep `--name`: without it, a plugin installed from a subdirectory is named after the repository, and every plugin in the family would install over the last. Disable Quartz's own `@quartz-community/graph`, which this plugin replaces.
+and list it in `quartz.config.yaml` by its package name:
+
+```yaml
+plugins:
+  - source: "@chaoticgoodcomputing/quartz-graph"
+    enabled: true
+```
+
+Its peers, Preact, `lightningcss` and Quartz's `@quartz-community/types` and `@quartz-community/utils`, are your site's own copies, so a page has one Preact. The package isn't on npm yet: it is published after this site moves to Quartz 5 ([#90](https://github.com/chaoticgoodcomputing/blog/issues/90)).
+
+Disable Quartz's own `@quartz-community/graph`, which this plugin replaces.
 
 > [!WARNING]
 > **Depending on `cgc-tags` and `cgc-styles` by name needs a change to Quartz.** Stock Quartz matches a dependency only against the exact `source:` string. Matching by plugin name is a small change to its loader, carried in this repository's copy of Quartz and proposed upstream on [chaoticgoodcomputing/blog#47](https://github.com/chaoticgoodcomputing/blog/issues/47). Until it lands, this plugin builds only against that copy.
@@ -99,7 +109,7 @@ Keep `--name`: without it, a plugin installed from a subdirectory is named after
 
 ```yaml
 plugins:
-  - source: ... # as `quartz plugin add` wrote it
+  - source: "@chaoticgoodcomputing/quartz-graph"
     enabled: true
     options:
       privateTags: [private]
@@ -174,11 +184,11 @@ The build checks the stylesheet with `@chaoticgoodcomputing/css-check` and fails
 
 ## Develop
 
-This package is the Nx project `cgc-graph`. Its specs live in [`e2e/`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/plugins/cgc-graph/e2e) and run against the shared fixture site ([ADR-0004](https://github.com/chaoticgoodcomputing/blog/blob/main/docs/adr/0004-playwright-e2e-as-the-plugin-tdd-loop.md)):
+This package is the Nx project `quartz-graph`, in `quartz-v5/plugins/quartz-graph/`. Its manifest name is still `cgc-graph`, which names its CSS block and family layer, so its class names are the ones above. Its specs live in [`e2e/`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/plugins/quartz-graph/e2e) and run against the shared fixture site ([ADR-0004](https://github.com/chaoticgoodcomputing/blog/blob/main/docs/adr/0004-playwright-e2e-as-the-plugin-tdd-loop.md)):
 
 ```sh
-pnpm nx run cgc-graph:e2e
-pnpm nx run cgc-graph:typecheck
+pnpm nx run quartz-graph:e2e
+pnpm nx run quartz-graph:typecheck
 ```
 
-The browser script, in [`src/runtime/`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/plugins/cgc-graph/src/runtime), is bundled with d3 and tween.js into one script when the plugin builds, so a page fetches nothing but the two indexes.
+The browser script, in [`src/runtime/`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/plugins/quartz-graph/src/runtime), is bundled with d3 and tween.js into one script when the plugin builds, so a page fetches nothing but the two indexes.

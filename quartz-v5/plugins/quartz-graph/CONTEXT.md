@@ -1,7 +1,8 @@
-# cgc-graph
+# quartz-graph
 
-The Quartz 5 plugin that draws the graph view: v4's graph (FORK-LEDGER `components/Graph.tsx` and
-`components/scripts/graph/**`), as a consumer of the `cgc-tags` engine (#20, #74, #77). Ours to ship,
+`@chaoticgoodcomputing/quartz-graph`, manifest name `cgc-graph`: the Quartz 5 plugin that draws the
+graph view, and the first of our plugins to be an npm package, loaded by name (#89, #93). It is v4's
+graph (FORK-LEDGER `components/Graph.tsx` and `components/scripts/graph/**`), as a consumer of the `cgc-tags` engine (#20, #74, #77). Ours to ship,
 because stock `@quartz-community/graph` reads only core's content index, which has no dates and none
 of our artifacts. Inherits the family vocabulary in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md), and
 the tag vocabulary of [`cgc-tags`](../cgc-tags/CONTEXT.md) and

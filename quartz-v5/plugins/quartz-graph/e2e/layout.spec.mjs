@@ -22,7 +22,7 @@ for (const width of [900, 1150]) {
 
 // The fixture's config, with the graph laid out `desktop-only`: core hides it below 800px.
 const desktopOnly = () =>
-  editConfig(fixtureConfig(), (_, entry) => entry("../../plugins/cgc-graph").setIn(["layout", "display"], "desktop-only"))
+  editConfig(fixtureConfig(), (_, entry) => entry("@chaoticgoodcomputing/quartz-graph").setIn(["layout", "display"], "desktop-only"))
 
 test("hides the whole graph where a layout display class says to", async ({ page }) => {
   const site = await buildScratchSite(

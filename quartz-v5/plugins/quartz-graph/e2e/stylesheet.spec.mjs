@@ -12,7 +12,7 @@ test("ships its CSS in the family layer, cgc.graph", async ({ page }) => {
   expect(new Set(layers)).toEqual(new Set(["cgc.graph"]))
 })
 
-const buildWith = (css) => buildPluginCopy("cgc-graph", (copy) => fs.appendFileSync(path.join(copy, "src/style.css"), css))
+const buildWith = (css) => buildPluginCopy("quartz-graph", (copy) => fs.appendFileSync(path.join(copy, "src/style.css"), css))
 
 // ADR-0003 rule 3: a selector that escapes the package's namespace fails the plugin's own build.
 test("refuses to build a stylesheet that selects what it does not own", async () => {

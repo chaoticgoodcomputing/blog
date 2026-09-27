@@ -235,7 +235,7 @@ plugins:
     enabled: true
     options:
       # The site's private tags, named once: every plugin that treats private pages differently takes
-      # them through the anchor (cgc-backlinks, cgc-graph, cgc-tag-explorer, cgc-post-listing), so they
+      # them through the anchor (cgc-backlinks, quartz-graph, cgc-tag-explorer, cgc-post-listing), so they
       # agree on which pages are private (tags-core's **private page**).
       noindexTags: &privateTags
         - private
@@ -283,7 +283,7 @@ plugins:
     enabled: true
   # v4's PostHog (#42, #44, #61), in place of core `analytics`: nothing loads under Do Not Track, no
   # session recording, and a `navigation` event per followed link, labelled as v4 labelled it. v4's
-  # graph label arrives with its place: cgc-graph sends it itself (FORK-LEDGER graph rows).
+  # graph label arrives with its place: quartz-graph sends it itself (FORK-LEDGER graph rows).
   - source: ../plugins/cgc-posthog
     enabled: true
     options:
@@ -339,7 +339,7 @@ plugins:
     layout:
       position: left
       priority: 50
-  # Replaced by cgc-graph, in the same slot.
+  # Replaced by quartz-graph, in the same slot.
   - source: "@quartz-community/graph"
     enabled: false
     layout:
@@ -353,7 +353,7 @@ plugins:
   # layout slot, so they have it in the right sidebar too. Each node with a tag is its tag's bubble,
   # as the badges draw it: rimmed in the tag's colour, with its icon (#77, #83). v4's red for private
   # pages is the `private` tag's own colour now, so no `nodeColors` paints over it.
-  - source: ../plugins/cgc-graph
+  - source: "@chaoticgoodcomputing/quartz-graph"
     enabled: true
     options:
       privateTags: *privateTags
@@ -467,7 +467,7 @@ plugins:
     options:
       showSubtags: true
       showParentTag: true
-      # The site's own icon collection (#71), anchored on cgc-graph's entry above.
+      # The site's own icon collection (#71), anchored on quartz-graph's entry above.
       iconCollections: *iconCollections
     layout:
       position: beforeBody

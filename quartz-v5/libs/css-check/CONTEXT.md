@@ -23,7 +23,9 @@ _Avoid_: lint (that's the widgets library's target, which runs it), linter, styl
 
 **Block**:
 A BEM block the stylesheet styles, such as `cgc-social`. A package names its own blocks: one for most
-plugins, two for `cgc-annotator` (`cgc-annotator`, `cgc-annotator-viewer`), one per widget.
+plugins, two for `cgc-annotator` (`cgc-annotator`, `cgc-annotator-viewer`), one per widget. A plugin's
+block is its **manifest name**, which its build reads from `quartz.name`, never its package name: a
+scoped name such as `@chaoticgoodcomputing/quartz-graph` is no CSS identifier (#93).
 _Avoid_: namespace (that is what a block owns), prefix, scope
 
 **Namespace**:

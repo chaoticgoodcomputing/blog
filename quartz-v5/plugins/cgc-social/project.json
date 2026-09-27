@@ -16,7 +16,7 @@
         "{projectRoot}/build.mjs",
         "{projectRoot}/tsconfig.json",
         "{projectRoot}/src/**/*",
-        "^default",
+        "^production",
         "{workspaceRoot}/quartz-v5/core/pnpm-lock.yaml"
       ],
       "outputs": ["{projectRoot}/dist"]

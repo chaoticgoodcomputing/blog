@@ -37,7 +37,7 @@ const CONTENT = {
   // A tag's description file, as the vault has them until cutover renames them (#43).
   "tags/engineering/index.md": "---\ntitle: Engineering\n---\nWhat the engineering tag is about.\n",
   // The plugin note, as the vault has it (#48).
-  "plugins/cgc-graph.md": fs.readFileSync(path.join(VAULT, "plugins/cgc-graph.md"), "utf8"),
+  "plugins/quartz-graph.md": fs.readFileSync(path.join(VAULT, "plugins/quartz-graph.md"), "utf8"),
 }
 
 // A sharper canvas, so a bubble's rim is whole pixels.
@@ -214,12 +214,12 @@ test("publishes the index, with each page's date", () => {
     expect(Date.parse(entry.date), slug).not.toBeNaN()
 })
 
-test("publishes the plugin note at /plugins/cgc-graph, with absolute links only", async ({
+test("publishes the plugin note at /plugins/quartz-graph, with absolute links only", async ({
   page,
 }) => {
   await routeSite(page, site.public, ORIGIN)
-  await page.goto(`${ORIGIN}/plugins/cgc-graph`)
-  await expect(page).toHaveTitle("cgc-graph | Spencer Elkington")
+  await page.goto(`${ORIGIN}/plugins/quartz-graph`)
+  await expect(page).toHaveTitle("quartz-graph | Spencer Elkington")
   const hrefs = await page
     .locator("article a:not([role=anchor])")
     .evaluateAll((links) => links.map((a) => a.getAttribute("href")))

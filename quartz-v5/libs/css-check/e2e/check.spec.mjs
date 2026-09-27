@@ -13,8 +13,9 @@ import { testsRoot } from "../../../tests/harness/site.mjs"
 
 const pluginsRoot = path.resolve(testsRoot, "../plugins")
 
-// Every plugin with a stylesheet of its own under src/, and how an escape is planted in it: inside
-// the package's family sublayer where the source declares it, bare where build.mjs adds the layer.
+// Every plugin with a stylesheet of its own under src/, by its directory, with its block, which is its
+// manifest name (`cgc-graph` in `quartz-graph/`), and how an escape is planted in it: inside the
+// package's family sublayer where the source declares it, bare where build.mjs adds the layer.
 const styled = fs
   .readdirSync(pluginsRoot)
   .map((name) => {
@@ -31,6 +32,7 @@ const styled = fs
       .match(/@layer (cgc\.[\w-]+) \{/)
     return {
       ...plugin,
+      block: JSON.parse(fs.readFileSync(path.join(pluginsRoot, plugin.name, "package.json"), "utf8")).quartz.name,
       wrap: (css) => (layered ? `@layer ${layered[1]} {\n${css}\n}\n` : `${css}\n`),
     }
   })
@@ -63,21 +65,21 @@ test("every styled plugin is found", () => {
       "cgc-annotator",
       "cgc-backlinks",
       "cgc-email-subscribe",
-      "cgc-graph",
       "cgc-page-source",
       "cgc-post-listing",
       "cgc-social",
       "cgc-tag-explorer",
       "cgc-tag-list",
+      "quartz-graph",
     ]),
   )
 })
 
 // A named colour was the literal every copy of the old per-package check let through, so a plugin
 // whose build refuses one runs the shared check.
-for (const { name } of styled) {
+for (const { name, block } of styled) {
   test(`${name}'s build runs the shared check: a named colour fails it`, async () => {
-    const build = await buildWith(plugin(name), `.${name} { color: white; }`)
+    const build = await buildWith(plugin(name), `.${block} { color: white; }`)
     expect(build.code).not.toBe(0)
     expect(build.output).toMatch(/breaks ADR-0003/)
     expect(build.output).toContain("white")

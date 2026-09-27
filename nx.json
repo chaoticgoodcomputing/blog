@@ -1,3 +1,13 @@
 {
-  "$schema": "./node_modules/nx/schemas/nx-schema.json"
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "//namedInputs": "production: what a package's build reads of it, and so what a package that inlines or runs it rebuilds on (`^production` in the plugins' build inputs): its sources and manifests, never its docs, specs or plugin note. Without it, an edit to a library's CONTEXT.md rebuilt every plugin that inlines the library (#93).",
+  "namedInputs": {
+    "production": [
+      "{projectRoot}/**/*",
+      "!{projectRoot}/**/*.md",
+      "!{projectRoot}/docs/**/*",
+      "!{projectRoot}/e2e/**/*",
+      "!{projectRoot}/**/*.spec.mjs"
+    ]
+  }
 }

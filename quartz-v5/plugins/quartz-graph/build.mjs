@@ -6,13 +6,16 @@
 // they run while the site builds and can't all be inlined, so they are this plugin's `dependencies`,
 // at the library's versions (libs/icons/docs/adr/0001).
 //
-// Two bundles, in order:
+// Two bundles, in order, then the declarations:
 //
 // 1. The browser runtime, `src/runtime/main.ts`, with d3's force, drag and zoom modules and tween.js
 //    inlined: one self-contained script, minified, that the component ships as its `afterDOMLoaded`.
 //    Quartz runs it as a module in a build and wraps it in a function under `serve`, so it is an IIFE,
 //    which is both. It stays in memory: the component imports it as text, as `cgc-graph:runtime`.
 // 2. The plugin itself, for Node.
+// 3. Its type declarations, a `.d.ts` beside each entry, by @chaoticgoodcomputing/declarations:
+//    Quartz's generated plugin index skips a package without `dist/index.d.ts`, and a TypeScript site
+//    reads the plugin's options from them. The peers and Iconify's packages stay imports there too.
 //
 // The stylesheet is checked first, by @chaoticgoodcomputing/css-check, and the build fails if it
 // breaks ADR-0003's library-CSS rules: every rule in this package's family layer,
@@ -24,6 +27,7 @@ import esbuild from "esbuild"
 import fs from "node:fs"
 import path from "node:path"
 import { checkStylesheet } from "@chaoticgoodcomputing/css-check"
+import { emitDeclarations } from "@chaoticgoodcomputing/declarations"
 
 const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"))
 const peers = Object.keys(pkg.peerDependencies)
@@ -42,7 +46,9 @@ if (drift.length) {
   process.exit(1)
 }
 const external = [...peers, ...Object.keys(iconsLib)]
-const block = pkg.name
+// The CSS is named for the manifest's name, `cgc-graph`, never the package's scoped name: the
+// published class names don't change with the package's (quartz-v5/CONTEXT.md, "Manifest name").
+const block = pkg.quartz.name
 const layer = `cgc.${block.replace(/^cgc-/, "")}`
 const stylesheet = "src/style.css"
 
@@ -100,8 +106,9 @@ const runtimeModule = {
   },
 }
 
+const entryPoints = { index: "src/index.ts", "components/index": "src/components/index.ts" }
 await esbuild.build({
-  entryPoints: { index: "src/index.ts", "components/index": "src/components/index.ts" },
+  entryPoints,
   outdir: "dist",
   bundle: true,
   format: "esm",
@@ -116,3 +123,5 @@ await esbuild.build({
   plugins: [runtimeModule],
   logLevel: "warning",
 })
+
+await emitDeclarations({ entries: entryPoints, external })

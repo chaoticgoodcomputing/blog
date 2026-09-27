@@ -18,7 +18,6 @@ flowchart LR
   plugin_cgc_annotator["cgc-annotator"]
   plugin_cgc_backlinks["cgc-backlinks"]
   plugin_cgc_email_subscribe["cgc-email-subscribe"]
-  plugin_cgc_graph["cgc-graph"]
   plugin_cgc_mdx["cgc-mdx"]
   plugin_cgc_og_image["cgc-og-image"]
   plugin_cgc_page_source["cgc-page-source"]
@@ -31,7 +30,9 @@ flowchart LR
   plugin_cgc_tag_list["cgc-tag-list"]
   plugin_cgc_tag_page["cgc-tag-page"]
   plugin_cgc_tags["cgc-tags"]
+  plugin_quartz_graph["quartz-graph"]
   library_css_check(["css-check"])
+  library_declarations(["declarations"])
   library_icons(["icons"])
   library_island_runtime(["island-runtime"])
   library_pipeline(["pipeline"])
@@ -44,8 +45,6 @@ flowchart LR
   plugin_cgc_annotator --> plugin_cgc_styles
   plugin_cgc_backlinks --> plugin_cgc_styles
   plugin_cgc_email_subscribe --> plugin_cgc_styles
-  plugin_cgc_graph --> plugin_cgc_styles
-  plugin_cgc_graph --> plugin_cgc_tags
   plugin_cgc_page_source --> plugin_cgc_styles
   plugin_cgc_post_listing --> plugin_cgc_styles
   plugin_cgc_post_listing --> plugin_cgc_tags
@@ -55,6 +54,8 @@ flowchart LR
   plugin_cgc_tag_list --> plugin_cgc_styles
   plugin_cgc_tag_list --> plugin_cgc_tags
   plugin_cgc_tags --> plugin_cgc_styles
+  plugin_quartz_graph --> plugin_cgc_styles
+  plugin_quartz_graph --> plugin_cgc_tags
   plugin_cgc_annotator -.-> library_css_check
   plugin_cgc_annotator -.-> library_island_runtime
   plugin_cgc_annotator -.-> library_pipeline
@@ -62,9 +63,6 @@ flowchart LR
   plugin_cgc_backlinks -.-> library_icons
   plugin_cgc_backlinks -.-> library_tags_core
   plugin_cgc_email_subscribe -.-> library_css_check
-  plugin_cgc_graph -.-> library_css_check
-  plugin_cgc_graph -.-> library_icons
-  plugin_cgc_graph -.-> library_tags_core
   plugin_cgc_mdx -.-> library_island_runtime
   plugin_cgc_mdx -.-> library_pipeline
   plugin_cgc_page_source -.-> library_css_check
@@ -82,13 +80,16 @@ flowchart LR
   plugin_cgc_tag_list -.-> library_icons
   plugin_cgc_tag_list -.-> library_tags_core
   plugin_cgc_tags -.-> library_tags_core
+  plugin_quartz_graph -.-> library_css_check
+  plugin_quartz_graph -.-> library_declarations
+  plugin_quartz_graph -.-> library_icons
+  plugin_quartz_graph -.-> library_tags_core
   library_tags_core -.-> library_css_check
   library_widgets -.-> library_css_check
   library_widgets -.-> library_icons
   click plugin_cgc_annotator "/plugins/cgc-annotator"
   click plugin_cgc_backlinks "/plugins/cgc-backlinks"
   click plugin_cgc_email_subscribe "/plugins/cgc-email-subscribe"
-  click plugin_cgc_graph "/plugins/cgc-graph"
   click plugin_cgc_mdx "/plugins/cgc-mdx"
   click plugin_cgc_og_image "/plugins/cgc-og-image"
   click plugin_cgc_page_source "/plugins/cgc-page-source"
@@ -101,6 +102,7 @@ flowchart LR
   click plugin_cgc_tag_list "/plugins/cgc-tag-list"
   click plugin_cgc_tag_page "/plugins/cgc-tag-page"
   click plugin_cgc_tags "/plugins/cgc-tags"
+  click plugin_quartz_graph "/plugins/quartz-graph"
 ```
 
 %% plugin-dag: end %%

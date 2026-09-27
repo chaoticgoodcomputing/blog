@@ -48,7 +48,7 @@ test.describe("the generated DAG", () => {
     const byKind = (kind) => packages.filter((p) => p.kind === kind).map((p) => p.dir).sort()
     expect(byKind("plugin")).toEqual(pluginDirs())
     expect(byKind("library")).toEqual(
-      expect.arrayContaining(["css-check", "icons", "island-runtime", "pipeline", "tags-core", "widgets"]),
+      expect.arrayContaining(["css-check", "declarations", "icons", "island-runtime", "pipeline", "tags-core", "widgets"]),
     )
     expect(byKind("site-plugin")).toEqual(expect.arrayContaining(["site-components", "site-styles"]))
   })
@@ -56,13 +56,46 @@ test.describe("the generated DAG", () => {
   test("reads engine edges from manifest dependencies, and library edges from the libraries a package builds with", () => {
     const packages = readPackages()
     const of = (dir) => packages.find((p) => p.dir === dir)
-    expect(of("cgc-graph").engines).toEqual(["cgc-styles", "cgc-tags"])
+    expect(of("quartz-graph").engines).toEqual(["cgc-styles", "cgc-tags"])
     expect(of("cgc-tags").engines).toEqual(["cgc-styles"])
     expect(of("cgc-styles").engines).toEqual([])
     expect(of("cgc-tags").libraries).toEqual(["tags-core"])
     // A plugin's `file:` devDependency, and a library's `workspace:` dependency on another.
     expect(of("cgc-annotator").libraries).toEqual(["css-check", "island-runtime", "pipeline"])
     expect(of("widgets").libraries).toEqual(["css-check", "icons"])
+    // A plugin that is a package names the library its build emits declarations with (#93).
+    expect(of("quartz-graph").libraries).toEqual(["css-check", "declarations", "icons", "tags-core"])
+  })
+
+  // A plugin that is a package (#89) is drawn by its directory, which its plugin note is named for,
+  // and a consumer may name it as an engine by its package name, as Quartz matches a dependency on a
+  // package source, or by its manifest name, as it matches one on a local source.
+  test("draws a plugin that is a package by its directory, whichever name a consumer depends on it by", ({ scratch }) => {
+    const root = scratch.dir("plugin-dag-packages")
+    const pkg = (dir, manifest) => {
+      fs.mkdirSync(path.join(root, dir), { recursive: true })
+      fs.writeFileSync(path.join(root, dir, "package.json"), JSON.stringify(manifest))
+    }
+    pkg("plugins/quartz-engine", { name: "@chaoticgoodcomputing/quartz-engine", quartz: { name: "cgc-engine", dependencies: [] } })
+    pkg("plugins/quartz-reader", {
+      name: "@chaoticgoodcomputing/quartz-reader",
+      quartz: { name: "cgc-reader", dependencies: ["@chaoticgoodcomputing/quartz-engine"] },
+    })
+    pkg("plugins/cgc-local", { name: "cgc-local", quartz: { name: "cgc-local", dependencies: ["cgc-engine"] } })
+
+    expect(flowchart(readPackages(root))).toBe(
+      [
+        "flowchart LR",
+        '  plugin_cgc_local["cgc-local"]',
+        '  plugin_quartz_engine["quartz-engine"]',
+        '  plugin_quartz_reader["quartz-reader"]',
+        "  plugin_cgc_local --> plugin_quartz_engine",
+        "  plugin_quartz_reader --> plugin_quartz_engine",
+        '  click plugin_cgc_local "/plugins/cgc-local"',
+        '  click plugin_quartz_engine "/plugins/quartz-engine"',
+        '  click plugin_quartz_reader "/plugins/quartz-reader"',
+      ].join("\n"),
+    )
   })
 
   // A small tree of its own, so the exact shape of what the script writes is pinned here.

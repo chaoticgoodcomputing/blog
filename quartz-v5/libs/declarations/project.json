@@ -1,0 +1,22 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "name": "@chaoticgoodcomputing/declarations",
+  "root": "quartz-v5/libs/declarations",
+  "sourceRoot": "quartz-v5/libs/declarations/src",
+  "projectType": "library",
+  "tags": ["cgc", "cgc:lib"],
+  "targets": {
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run typecheck", "cwd": "{projectRoot}" }
+    },
+    "e2e": {
+      "//": "Tested through its consumers, in the shared suite: a plugin's generated plugin index entry and its package's declarations (tests/specs/package-plugins.spec.mjs). No build target: build.mjs imports the source.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx playwright test specs/package-plugins.spec.mjs",
+        "cwd": "{workspaceRoot}/quartz-v5/tests"
+      }
+    }
+  }
+}

@@ -116,8 +116,8 @@ _Avoid_: customization (that is the whole category), local plugin, private plugi
 **Repo-only**:
 Of a package: marked `"private": true` in its `package.json`, which makes npm and pnpm refuse to
 publish it. It is never published to npm and is used only in this repo. The site package,
-`quartz-v5/package.json` (`site-v5`), is one (#92), and the site plugins stay ones (#96). Our
-plugins carry the flag too until they become packages (#93–#95). Not npm's
+`quartz-v5/package.json` (`site-v5`), is one (#92), and the site plugins stay ones (#96). A plugin
+not yet converted to a package carries the flag too, until it becomes one (#94, #95). Not npm's
 "private package", a restricted package on the registry, which nothing here means.
 _Avoid_: private (alone), internal, unpublished
 
@@ -129,8 +129,18 @@ plugin is _on the real site_ once the site config enables it. The e2e fixture ha
 own, which is not this.
 _Avoid_: real config, production config, the config (while the fixture's exists too)
 
+**Package source**:
+A `source:` that names an npm package, as `@chaoticgoodcomputing/quartz-<name>` names ours: Quartz
+imports it by name, and never copies or links it into `.quartz/plugins/` or builds it, as it does a
+`@quartz-community/*` plugin (ADR-0005). In this repo the name resolves through the site package's
+`node_modules` to the plugin's directory, and prebuild and the e2e harness build it first. A plugin
+not yet converted is listed by a **local source** instead, a relative path Quartz links into
+`.quartz/plugins/`; local sources are retired once every plugin is a package (#94–#96).
+_Avoid_: npm source, registry plugin, package path
+
 **Plugin note**:
-A shareable plugin's README, published on this site as a content note at `/plugins/<name>`. The
+A shareable plugin's README, published on this site as a content note at `/plugins/<dir>`, named for
+the package's directory (`/plugins/quartz-graph`), through a symlink in the vault's `plugins/`. The
 same file is the plugin's documentation on GitHub and its page on the site. Libraries and site
 plugins have none. Every plugin note carries the tag `projects/site/plugins`, so that tag's page
 lists them all, under the **plugin DAG**.
@@ -142,7 +152,7 @@ The flowchart of how every package here depends on the others, on the descriptio
 names, and a dotted one from a package to each **library** it builds with, with the site plugins
 drawn apart. Generated from the manifests by `site-v5:plugin-dag` (#86), never edited by hand, and
 guarded by a spec that fails when the note drifts from the packages.
-_Avoid_: dependency graph (the graph is cgc-graph's), plugin map (the FORK-LEDGER's is the v4 → v5 map)
+_Avoid_: dependency graph (the graph is quartz-graph's), plugin map (the FORK-LEDGER's is the v4 → v5 map)
 
 **Upstream proposal**:
 The pull request that retires a vendored change by getting it accepted upstream. Every vendored
@@ -151,16 +161,10 @@ change is supposed to have one.
 **Release**:
 One version shared by every package in `plugins/` and `libs/`, cut together whenever any of them
 changes, and named by a `v<semver>` tag. A downstream site pins a release, never a package's own
-version or a branch. Recorded in [ADR-0005](../docs/adr/0005-plugins-ship-as-source-in-batch-releases.md).
+version or a branch. Recorded in [ADR-0005](../docs/adr/0005-plugins-ship-as-npm-packages.md); the
+publishing ticket (#90) settles it after cutover. Nothing rewrites a package's metadata at a release:
+`pnpm publish` turns each `workspace:*` into the published version.
 _Avoid_: package version, plugin version
-
-**Release commit**:
-The commit a release's tag points at: a child of `main` that changes package metadata only, setting
-every package's version and pointing each plugin at the release's published libraries. It is never
-merged into `main`. Recorded in [ADR-0005](../docs/adr/0005-plugins-ship-as-source-in-batch-releases.md).
-Being retired (#89): plugins now name libraries by `workspace:*`, which `pnpm publish` rewrites
-itself (#92).
-_Avoid_: release branch, version bump
 
 ### Plugin composition
 

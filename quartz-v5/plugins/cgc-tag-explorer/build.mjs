@@ -38,7 +38,7 @@ if (drift.length) {
   process.exit(1)
 }
 const external = [...peers, ...Object.keys(iconsLib)]
-const block = pkg.name
+const block = pkg.quartz.name
 const layer = `cgc.${block.replace(/^cgc-/, "")}`
 const stylesheet = "src/style.css"
 // The drawer's query, at the default breakpoint (src/index.ts rewrites it).

@@ -1,8 +1,8 @@
 {
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "name": "cgc-graph",
-  "root": "quartz-v5/plugins/cgc-graph",
-  "sourceRoot": "quartz-v5/plugins/cgc-graph/src",
+  "name": "quartz-graph",
+  "root": "quartz-v5/plugins/quartz-graph",
+  "sourceRoot": "quartz-v5/plugins/quartz-graph/src",
   "projectType": "library",
   "tags": ["cgc", "cgc:plugin"],
   "targets": {
@@ -16,7 +16,7 @@
         "{projectRoot}/build.mjs",
         "{projectRoot}/tsconfig.json",
         "{projectRoot}/src/**/*",
-        "^default",
+        "^production",
         "{workspaceRoot}/quartz-v5/core/pnpm-lock.yaml"
       ],
       "outputs": ["{projectRoot}/dist"]
@@ -28,7 +28,7 @@
     "e2e": {
       "//": "This package's specs only, through the shared suite.",
       "executor": "nx:run-commands",
-      "options": { "command": "npx playwright test ../plugins/cgc-graph", "cwd": "{workspaceRoot}/quartz-v5/tests" }
+      "options": { "command": "npx playwright test ../plugins/quartz-graph", "cwd": "{workspaceRoot}/quartz-v5/tests" }
     }
   }
 }

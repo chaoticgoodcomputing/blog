@@ -1,6 +1,7 @@
-// Getting our local plugins ready for Quartz, which only symlinks a local source into
-// `.quartz/plugins/` and never builds it (ADR-0004). One module for both of the places that build
-// them: the real site's prebuild (`prebuild.mjs`) and the e2e harness (`tests/harness/site.mjs`).
+// Getting our plugins ready for Quartz, which only symlinks a local source into `.quartz/plugins/`,
+// and imports a package source by name, and never builds either (ADR-0004). One module for both of
+// the places that build them: the real site's prebuild (`prebuild.mjs`) and the e2e harness
+// (`tests/harness/site.mjs`).
 // Each runs the commands its own way, through `run(command, args, { cwd })`, which may return a
 // promise or run synchronously.
 //
@@ -12,8 +13,38 @@ import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 
-const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..")
+const v5 = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
+const repo = path.dirname(v5)
 const nx = path.join(repo, "node_modules", ".bin", "nx")
+
+// Where our plugins live: shareable ones in `plugins/`, the site's own in `site-plugins/`.
+export const PLUGIN_ROOTS = [path.join(v5, "plugins"), path.join(v5, "site-plugins")]
+
+// Our plugins by package name (#89): every package under the plugin roots, `name` → its directory.
+// A site lists a converted plugin by this name, `@chaoticgoodcomputing/quartz-<name>`, and loads it
+// through the site package's `node_modules` (VENDORED.md), while the rest still load by local path
+// until they are converted (#94–#96). Read from the manifests, so it needs no install.
+export function pluginPackages() {
+  const packages = new Map()
+  for (const root of PLUGIN_ROOTS) {
+    if (!fs.existsSync(root)) continue
+    for (const dir of fs.readdirSync(root)) {
+      const manifest = path.join(root, dir, "package.json")
+      if (fs.existsSync(manifest)) packages.set(JSON.parse(fs.readFileSync(manifest, "utf8")).name, path.join(root, dir))
+    }
+  }
+  return packages
+}
+
+// The directory a config `source:` names: a local path, resolved against `base`, the root the site
+// builds from, or the package name of a plugin of ours. Undefined for anyone else's package, such as
+// `@quartz-community/*`. An object source, `{ repo, name }`, is read by its `repo`, as Quartz reads it.
+export function pluginDirOf(source, base, packages = pluginPackages()) {
+  const spec = typeof source === "string" ? source : source?.repo
+  if (typeof spec !== "string") return undefined
+  if (spec.startsWith(".")) return path.resolve(base, spec)
+  return packages.get(spec)
+}
 
 // The workspace's own install, from its one lock: our libraries, plugins, site plugins and the e2e
 // suite. Peers are never installed beside a plugin (`autoInstallPeers: false`), so a plugin's

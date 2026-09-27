@@ -13,7 +13,7 @@ import { createHash } from "node:crypto"
 import { createRequire } from "node:module"
 import { promisify } from "node:util"
 import { fileURLToPath } from "node:url"
-import { buildLocalPlugins, installWorkspace } from "../../utils/local-plugins.mjs"
+import { PLUGIN_ROOTS, buildLocalPlugins, installWorkspace, pluginDirOf, pluginPackages } from "../../utils/local-plugins.mjs"
 import { FIXTURE_PAPER_URL, fixturePaper } from "./source-host.mjs"
 
 const run = promisify(execFile)
@@ -21,10 +21,10 @@ const here = path.dirname(fileURLToPath(import.meta.url))
 export const testsRoot = path.resolve(here, "..")
 export const core = path.resolve(testsRoot, "../core")
 const pluginsRoot = path.resolve(testsRoot, "../plugins")
-// Site plugins (VENDORED.md layout): no fixture config lists one, but scratch sites built from the
-// site config do, so they are built and linked alongside our plugins.
-const sitePluginsRoot = path.resolve(testsRoot, "../site-plugins")
-const PLUGIN_ROOTS = [pluginsRoot, sitePluginsRoot]
+const fixturePluginsRoot = path.resolve(testsRoot, "fixture-plugins")
+// PLUGIN_ROOTS (utils/local-plugins.mjs) holds `plugins/` and the site plugins' `site-plugins/`
+// (VENDORED.md layout): no fixture config lists a site plugin, but scratch sites built from the site
+// config do, so they are built and linked alongside our plugins.
 const YAML = createRequire(path.join(core, "package.json"))("yaml")
 
 // "main" is the fixture site as configured. "baseline" is the same site with every one of our
@@ -133,24 +133,32 @@ export const withPlugins = (config, entries) =>
     }
   })
 
+// The directory of the plugin a fixture config's `source:` names, if it is ours or a fixture plugin:
+// a local path, resolved against the fixture root, or one of our package names (#93).
+const dirOf = (source) => pluginDirOf(source, fixtureRoot("main"))
+const under = (root) => (dir) => dir !== undefined && dir.startsWith(`${root}${path.sep}`)
+
 // Entries for `withPlugins` that turn off every package under `quartz-v5/plugins/` that `config`
-// lists, except those named in `keep`: for a build that must fail in one plugin's words, which
-// another that checks the same thing, such as another plugin that draws icons, would otherwise fail
-// first. Fixture plugins are left as they are.
+// lists, by package name or by local path, except those named in `keep`, each by its package name
+// (`@chaoticgoodcomputing/quartz-graph`) or its directory (`quartz-graph`, `cgc-tags`): for a build
+// that must fail in one plugin's words, which another that checks the same thing, such as another
+// plugin that draws icons, would otherwise fail first. Fixture plugins are left as they are.
 export const othersOff = (config, keep) =>
   pluginSources(config)
-    .filter((source) => typeof source === "string" && source.startsWith("../../plugins/"))
-    .filter((source) => !keep.includes(path.basename(source)))
+    .filter((source) => typeof source === "string" && under(pluginsRoot)(dirOf(source)))
+    .filter((source) => !keep.includes(source) && !keep.includes(path.basename(dirOf(source))))
     .map((source) => ({ source, enabled: false }))
 
 const LINKED = ["package.json", "quartz", "node_modules", "tsconfig.json", "quartz.ts", "globals.d.ts", "index.d.ts"]
-// Ours: a package under `quartz-v5/plugins/`, or a fixture plugin standing in for one.
+// Ours: a package under `quartz-v5/plugins/`, listed by package name or local path, or a fixture
+// plugin standing in for one.
 const isOurs = (source) =>
-  typeof source === "string" && (source.startsWith("../../plugins/") || source.startsWith("../fixture-plugins/"))
+  typeof source === "string" && [pluginsRoot, fixturePluginsRoot].some((root) => under(root)(dirOf(source)))
 // A stock plugin one of ours replaces, which the baseline turns back on in its place, where the
 // baseline would otherwise lose pages: without stock tag-page it has no tag pages, and no-bleed
 // would compare ours with the 404 page. So the pages ours makes are compared with the stock pages
-// they stand in for, as an .mdx page is with its .md twin.
+// they stand in for, as an .mdx page is with its .md twin. Keyed by the source the fixture config
+// lists ours by: its package name once it is a package (#95), its local path until then.
 const STANDS_IN_FOR = { "../../plugins/cgc-tag-page": "@quartz-community/tag-page" }
 
 // The fixture cache: what a fixture build would otherwise fetch from the network, pinned into a
@@ -201,18 +209,14 @@ function writeFixtureRoot(variant) {
   fs.writeFileSync(path.join(root, "quartz.config.yaml"), String(config))
 }
 
-// Quartz symlinks a local plugin into `.quartz/plugins/` but never builds it — only git sources
-// get `npm run build` — so every package is built here first, as the real site's prebuild builds
-// the ones its config enables: a frozen install of the workspace, then the packages' Nx builds,
-// cached (utils/local-plugins.mjs).
+// Quartz symlinks a local plugin into `.quartz/plugins/`, and imports a package source by name, but
+// never builds either (only git sources get a build), so every package is built here first, as the
+// real site's prebuild builds the ones its config enables: a frozen install of the workspace, then
+// the packages' Nx builds, cached (utils/local-plugins.mjs).
 export async function buildPlugins() {
   linkHostModules()
   await installWorkspace(run)
-  const packages = PLUGIN_ROOTS.flatMap((root) =>
-    fs.existsSync(root)
-      ? fs.readdirSync(root).filter((dir) => fs.existsSync(path.join(root, dir, "package.json"))).map((dir) => path.join(root, dir))
-      : [],
-  )
+  const packages = [...pluginPackages().values()]
   await buildLocalPlugins(packages, run)
   return packages
 }

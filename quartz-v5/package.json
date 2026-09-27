@@ -3,5 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "The real site built on Quartz Core: the workspace package the site loads its plugins through. Repo-only: never published (CONTEXT.md). No plugin dependencies yet: plugins still load by local path until #93."
+  "description": "The real site built on Quartz Core: the workspace package the site loads its plugins through. Repo-only: never published (CONTEXT.md).",
+  "//dependencies": "Every plugin the site and the e2e fixture list by package name, linked from the workspace. Quartz imports a package source by name from Core source, and Node's upward walk from quartz-v5/core/quartz/ reaches this package's node_modules, so Core's own package.json stays upstream's (#89, #93, VENDORED.md). Plugins not yet converted load by local path (#94, #95).",
+  "dependencies": {
+    "@chaoticgoodcomputing/quartz-graph": "workspace:*"
+  }
 }
