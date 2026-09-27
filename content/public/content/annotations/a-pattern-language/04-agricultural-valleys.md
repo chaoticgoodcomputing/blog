@@ -11,7 +11,7 @@ description: "Urban development has the high ground over agricultural and ecolog
 > [!QUOTE]
 > ... this pattern helps maintain the [[/content/annotations/a-pattern-language/01-independent-regions|01-independent-regions]] by making regions more self-sufficient agriculturally; and it will create [[/content/annotations/a-pattern-language/03-city-country-fingers|03-city-country-fingers]] almost automatically by preserving agricultural land in urban areas. But just exactly which land ought to be preserved, and which land built upon?
 > 
-> — *[[/tags/writing/annotations/a-pattern-language/index|A Pattern Language]]*
+> — *[[/tags/writing/annotations/a-pattern-language|A Pattern Language]]*
 
 ## Notes
 

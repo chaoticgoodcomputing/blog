@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [Industrial Ribbon](/content/annotations/a-pattern-language/42-industrial-ribbon)
 - [Local Town Hall](/content/annotations/a-pattern-language/44-local-town-hall)
 - [18-network-of-learning](/content/annotations/a-pattern-language/18-network-of-learning)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

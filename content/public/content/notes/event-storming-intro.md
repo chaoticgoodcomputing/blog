@@ -51,7 +51,7 @@ The term "API surface" has been flashing around in my brain a lot lately, and th
     - **🟪 Policy** entries define what actions from **🟫 Actor** can be reacted to via **🟧 Domain Event** based on the authorization, as well as state, of the application
         - **🟥 Hotspot** seems to be a subset of this for error states
 - Internals/Under-the-hoods:
-    - **🟩 Model/View** defines the actual data backing the application using strong schemas (three cheers for [[/tags/projects/flowthru/index|strong schemas!]])
+    - **🟩 Model/View** defines the actual data backing the application using strong schemas (three cheers for [[/tags/projects/flowthru|strong schemas!]])
     - **💟 External System** defines data/state retrieved through **🟩 Model/View** that is not owned by the application (such as an external API) that the application has less control over, and must be accounted for with **🟥 Hotspot** entries
 - Conceptual:
     - **🟨 Aggregate** is used to "collect" all of the above into higher-level concepts

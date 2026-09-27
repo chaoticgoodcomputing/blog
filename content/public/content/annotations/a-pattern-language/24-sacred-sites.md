@@ -19,4 +19,4 @@ This note originally contained the following links:
 
 - [Parallel Roads](/content/annotations/a-pattern-language/23-parallel-roads)
 - [Access to Water](/content/annotations/a-pattern-language/25-access-to-water)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

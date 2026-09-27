@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Main Building](/content/annotations/a-pattern-language/99-main-building)
 - [95-building-complex](/content/annotations/a-pattern-language/95-building-complex)
 - [96-number-of-stories](/content/annotations/a-pattern-language/96-number-of-stories)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

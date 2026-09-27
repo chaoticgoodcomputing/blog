@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Paving with Cracks Between the Stones](/content/annotations/a-pattern-language/247-paving-with-cracks-between-the-stones)
 - [174-trellised-walk](/content/annotations/a-pattern-language/174-trellised-walk)
 - [238-filtered-light](/content/annotations/a-pattern-language/238-filtered-light)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

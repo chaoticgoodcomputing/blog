@@ -19,4 +19,4 @@ This note originally contained the following links:
 
 - [Secret Place](/content/annotations/a-pattern-language/204-secret-place)
 - [Efficient Structure](/content/annotations/a-pattern-language/206-efficient-structure)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

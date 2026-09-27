@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [University as a Marketplace](/content/annotations/a-pattern-language/43-university-as-a-marketplace)
 - [Necklace of Community Projects](/content/annotations/a-pattern-language/45-necklace-of-community-projects)
 - [12-community-of-7000](/content/annotations/a-pattern-language/12-community-of-7000)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

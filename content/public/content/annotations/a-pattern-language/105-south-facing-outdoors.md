@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [Site Repair](/content/annotations/a-pattern-language/104-site-repair)
 - [Positive Outdoor Space](/content/annotations/a-pattern-language/106-positive-outdoor-space)
 - [104-site-repair](/content/annotations/a-pattern-language/104-site-repair)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Animals](/content/annotations/a-pattern-language/74-animals)
 - [67-common-land](/content/annotations/a-pattern-language/67-common-land)
 - [68-connected-play](/content/annotations/a-pattern-language/68-connected-play)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [The Countryside](/content/annotations/a-pattern-language/07-the-countryside)
 - [Scattered Work](/content/annotations/a-pattern-language/09-scattered-work)
 - [03-city-country-fingers](/content/annotations/a-pattern-language/03-city-country-fingers)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

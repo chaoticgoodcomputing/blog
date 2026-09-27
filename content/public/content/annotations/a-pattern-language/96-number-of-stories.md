@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Shielded Parking](/content/annotations/a-pattern-language/97-shielded-parking)
 - [95-building-complex](/content/annotations/a-pattern-language/95-building-complex)
 - [21-four-story-limit](/content/annotations/a-pattern-language/21-four-story-limit)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

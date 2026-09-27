@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [Market of Many Shops](/content/annotations/a-pattern-language/46-market-of-many-shops)
 - [Housing In Between](/content/annotations/a-pattern-language/48-housing-in-between)
 - [26-life-cycle](/content/annotations/a-pattern-language/26-life-cycle)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

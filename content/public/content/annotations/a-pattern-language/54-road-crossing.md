@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Raised Walk](/content/annotations/a-pattern-language/55-raised-walk)
 - [23-parallel-roads](/content/annotations/a-pattern-language/23-parallel-roads)
 - [52-network-of-paths-and-cars](/content/annotations/a-pattern-language/52-network-of-paths-and-cars)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

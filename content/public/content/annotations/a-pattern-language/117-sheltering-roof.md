@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Roof Garden](/content/annotations/a-pattern-language/118-roof-garden)
 - [107-wings-of-light](/content/annotations/a-pattern-language/107-wings-of-light)
 - [116-cascade-of-roofs](/content/annotations/a-pattern-language/116-cascade-of-roofs)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

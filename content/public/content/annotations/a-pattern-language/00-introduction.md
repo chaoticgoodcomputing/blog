@@ -12,7 +12,7 @@ description: Can graphs be libertarian? Authoritarian? Annotations for the intro
 > [!QUOTE]
 > The elements of this language are entities called *patterns.* Each pattern describes a problem which occurs over and over again in our environment, and then describes the core of the solution to that problem, in such a way that you can still use this solution a million times over, without ever doing it the same way twice.
 > 
-> — [[/tags/writing/annotations/a-pattern-language/index|A Pattern Language]] 
+> — [[/tags/writing/annotations/a-pattern-language|A Pattern Language]] 
 
 ## Notes
 
@@ -41,7 +41,7 @@ One thing did catch my eye, in the Towns precursor description of the first 7 pa
 > 
 > — *[A Pattern Language](https://www.patternlanguage.com/)
 
-Well — that really puts a damper on my early drafts for [[/tags/projects/games/the-neighborhood/index|The Neighborhood]]. If it's possible for algorithms themselves to lie on a scale of "libertarian" to "authoritarian" — which, now that I think about it... *maybe?* — then my early drafts of the generation are certainly on the authoritarian scale. To put it in these terms:
+Well — that really puts a damper on my early drafts for [[/tags/projects/games/the-neighborhood|The Neighborhood]]. If it's possible for algorithms themselves to lie on a scale of "libertarian" to "authoritarian" — which, now that I think about it... *maybe?* — then my early drafts of the generation are certainly on the authoritarian scale. To put it in these terms:
 
 > [!NOTE]
 > An authoritarian graph generation approach goes *from* highest-level topology (global graph), *to* lowest level topology (nodes). A libertarian graph generation approach goes *from* nodes, *to* global-level generation.
@@ -54,8 +54,8 @@ An example of this: initially, when I was using (largely) the graph rendering lo
 
 Since then — largely based on feedback from friends and family who grow less patient with "Can I show you my graph?" by the day — I cleaned up the graph (specifically the global, default view) by doing two things:
 
-- Any tag that is at the top of the tagging hierarchy ([[/tags/engineering/index|engineering]], [[/tags/economics/index|economics]]) "stick" to an outer shell, and a gravitational force pulls all other nodes (subtags and nodes) into the center. This forms something closer to a [ternary plot](https://en.wikipedia.org/wiki/Ternary_plot), with the strength of the connections pulling posts closer to the edge that most closely defines them
-- Filtering to only posts in the last year (by default) in order to effectively "destroy" stale nodes over time. This recurses upward — if any tag (or its subtags) don't have direct child post for a long enough period of time, it filters out ([[/tags/projects/games/roblox/index|roblox]], [[/tags/projects/undergrad/index|college]])
+- Any tag that is at the top of the tagging hierarchy ([[/tags/engineering|engineering]], [[/tags/economics|economics]]) "stick" to an outer shell, and a gravitational force pulls all other nodes (subtags and nodes) into the center. This forms something closer to a [ternary plot](https://en.wikipedia.org/wiki/Ternary_plot), with the strength of the connections pulling posts closer to the edge that most closely defines them
+- Filtering to only posts in the last year (by default) in order to effectively "destroy" stale nodes over time. This recurses upward — if any tag (or its subtags) don't have direct child post for a long enough period of time, it filters out ([[/tags/projects/games/roblox|roblox]], [[/tags/projects/undergrad|college]])
 
 ![[/assets/Pasted image 20260205202218.png]]
 
@@ -87,7 +87,7 @@ This — like the introduction chapter, itself — has gotten longer than I expe
 
 (Now that I think about it, *that* may be the good reason to include the star rankings. I'd expect that the canon level of each pattern decided by the authors would come back to, in some ways, the Markov ranking of the nodes. I'll be interested to see how that shakes out.)
 
-I'll end, then, with a minor [[/tags/engineering/index|engineering-flavored adaptation]] of the text:
+I'll end, then, with a minor [[/tags/engineering|engineering-flavored adaptation]] of the text:
 
 > [!QUOTE]
 > You may think of this process of compressing patterns, as a way to make the cheapest possible [solution] which has the necessary patterns in it. It is, also, the only way of using a pattern language to make [solutions] that are poems.

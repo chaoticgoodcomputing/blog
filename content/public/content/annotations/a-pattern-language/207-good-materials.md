@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Gradual Stiffening](/content/annotations/a-pattern-language/208-gradual-stiffening)
 - [205-structure-follows-social-spaces](/content/annotations/a-pattern-language/205-structure-follows-social-spaces)
 - [206-efficient-structure](/content/annotations/a-pattern-language/206-efficient-structure)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

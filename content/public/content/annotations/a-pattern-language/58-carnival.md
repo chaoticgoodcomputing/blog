@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Quiet Backs](/content/annotations/a-pattern-language/59-quiet-backs)
 - [31-promenade](/content/annotations/a-pattern-language/31-promenade)
 - [33-night-life](/content/annotations/a-pattern-language/33-night-life)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

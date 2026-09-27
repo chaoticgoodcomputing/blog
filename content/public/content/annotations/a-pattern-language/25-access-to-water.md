@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [Sacred Sites](/content/annotations/a-pattern-language/24-sacred-sites)
 - [Life Cycle](/content/annotations/a-pattern-language/26-life-cycle)
 - [24-sacred-sites](/content/annotations/a-pattern-language/24-sacred-sites)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

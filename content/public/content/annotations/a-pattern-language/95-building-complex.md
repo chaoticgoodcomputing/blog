@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [Sleeping in Public](/content/annotations/a-pattern-language/94-sleeping-in-public)
 - [Number of Stories](/content/annotations/a-pattern-language/96-number-of-stories)
 - [96-number-of-stories](/content/annotations/a-pattern-language/96-number-of-stories)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

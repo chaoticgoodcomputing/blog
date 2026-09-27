@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [Common Land](/content/annotations/a-pattern-language/67-common-land)
 - [Public Outdoor Room](/content/annotations/a-pattern-language/69-public-outdoor-room)
 - [67-common-land](/content/annotations/a-pattern-language/67-common-land)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

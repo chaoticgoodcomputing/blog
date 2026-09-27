@@ -9,7 +9,7 @@ tags:
   - horticulture/seasons/rhythm
 ---
 
-During this recent period of [[/tags/horticulture/seasons/rhythm/index|trying to break quite a few years of bad work habits]], I've been putting up little guardrails in my own life to keep myself on-track when I want to stay on-track. One issue I've run into - especially during a *particularly tumultuous US election year* - is a tendency to check the news.
+During this recent period of [[/tags/horticulture/seasons/rhythm|trying to break quite a few years of bad work habits]], I've been putting up little guardrails in my own life to keep myself on-track when I want to stay on-track. One issue I've run into - especially during a *particularly tumultuous US election year* - is a tendency to check the news.
 
 And then, five minutes later, check the news again.
 

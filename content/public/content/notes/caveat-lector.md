@@ -22,7 +22,7 @@ One of my intentions with Chaotic Good Computing is to contribute to the free bo
 - To my knowledge, the things that I'm posting are accurate at the time that I write them down; and
 - If I learn something in the future that corrects something I've written in the past, I'll do my best to make corrections as I find mistakes.
 
-That said, I'm also just *some person on the internet*. I know some things pretty well and other things not-so-much, with a pretty vast in-between. By the very nature of [[/tags/horticulture/index|learning in public]], some things here will be straight-up wrong, if not at least not-as-correct-as-they-could-be.
+That said, I'm also just *some person on the internet*. I know some things pretty well and other things not-so-much, with a pretty vast in-between. By the very nature of [[/tags/horticulture|learning in public]], some things here will be straight-up wrong, if not at least not-as-correct-as-they-could-be.
 
 So, to you, I say:
 

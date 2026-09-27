@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Vegetable Garden](/content/annotations/a-pattern-language/177-vegetable-garden)
 - [172-garden-growing-wild](/content/annotations/a-pattern-language/172-garden-growing-wild)
 - [161-sunny-place](/content/annotations/a-pattern-language/161-sunny-place)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Floor Surface](/content/annotations/a-pattern-language/233-floor-surface)
 - [118-roof-garden](/content/annotations/a-pattern-language/118-roof-garden)
 - [220-roof-vaults](/content/annotations/a-pattern-language/220-roof-vaults)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

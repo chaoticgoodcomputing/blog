@@ -12,7 +12,7 @@ description: Home isn't where the heart is — it's a single node on a very, ver
 > [!QUOTE]
 > **Metropolitan regions will not come to balance until each one is small and autonomous enough to be an independent sphere of culture.**
 > 
-> — *[[/tags/writing/annotations/a-pattern-language/index|A Pattern Language]]*
+> — *[[/tags/writing/annotations/a-pattern-language|A Pattern Language]]*
 
 ## Notes
 
@@ -30,7 +30,7 @@ A lot of this portion has to do with setting up a lot of what I've been calling 
 > - **E.** House clusters and work communities: 30-50 people each.
 > - **F.** Families and work groups: 1-15 people each.
 > 
-> — *[[/tags/writing/annotations/a-pattern-language/index|A Pattern Language]]*
+> — *[[/tags/writing/annotations/a-pattern-language|A Pattern Language]]*
 
 I *loves* me some hard numbers. Setting up this hierarchy, then, I wanted to throw together a quick flowchart to check some of the logic — specifically, some ratios:
 
@@ -89,14 +89,14 @@ That aside — I'll get on with the rest of the note. My last couple thoughts on
 > [!QUOTE]
 > Another group wanting to build a small communal workshop, in a neighborhood currently zones for residential use only, can argue their case based on [[/content/annotations/a-pattern-language/09-scattered-work|Scattered Work]], [[/content/annotations/a-pattern-language/156-settled-work|Settled Work]], etc., and possibly get the city or zoning department to change the zoning regulation on this matter, and thereby slowly work toward introducing patterns, one at a time within the current framework of codes and zoning. 
 > 
-> — *[[/tags/writing/annotations/a-pattern-language/index|A Pattern Language]]*
+> — *[[/tags/writing/annotations/a-pattern-language|A Pattern Language]]*
 
 I'm glad that zoning came up in [[/content/annotations/a-pattern-language/00-introduction|00-introduction]], as I feel like it will come up far more in future chapters, especially ones where the rubber hits the road.
 
 > [!QUOTE]
 > We have worked out a partial version of this process at the Eugene campus of the University of Oregon. That work is described in Volume 3, *The Oregon Experiment*.
 > 
-> — *[[/tags/writing/annotations/a-pattern-language/index|A Pattern Language]]*
+> — *[[/tags/writing/annotations/a-pattern-language|A Pattern Language]]*
 
 I may want to reach out to a couple people I know who are UO alums to see how they think about that campus, versus where they live now. Additionally — it may be worth investigating if the changes made in Volume 3 have persisted. That was, after all, a few decades ago.
 

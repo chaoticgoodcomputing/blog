@@ -19,4 +19,4 @@ This note originally contained the following links:
 
 - [Ring Roads](/content/annotations/a-pattern-language/17-ring-roads)
 - [Web of Shopping](/content/annotations/a-pattern-language/19-web-of-shopping)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)

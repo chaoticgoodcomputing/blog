@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [Window Place](/content/annotations/a-pattern-language/180-window-place)
 - [Eating Atmosphere](/content/annotations/a-pattern-language/182-eating-atmosphere)
 - [129-common-areas-at-the-heart](/content/annotations/a-pattern-language/129-common-areas-at-the-heart)
-- [A Pattern Language](/tags/writing/annotations/a-pattern-language/index)
+- [A Pattern Language](/tags/writing/annotations/a-pattern-language)
