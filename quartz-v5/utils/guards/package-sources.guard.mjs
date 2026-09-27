@@ -20,7 +20,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import { CORE_REL, REPO_ROOT } from "../core-tiers.mjs"
-import { SCOPE, SITE_REL, ourPackages, parseYaml, sitePackage } from "../packages.mjs"
+import { SCOPE, SITE_REL, ourPackages, parseYaml, sitePackage, workspacePackages } from "../packages.mjs"
 import { CannotCheck, guard, option } from "./guard.mjs"
 
 const SITE_CONFIG = `${CORE_REL}/quartz.config.yaml`
@@ -33,20 +33,10 @@ const isOurs = (spec) => isLocal(spec) || spec.includes(SCOPE.slice(1))
 const isPackageName = (spec) => /^@[^/:\s]+\/[^/:\s]+$/.test(spec) || /^[^@./:\s][^/:\s]*$/.test(spec)
 
 /** The name of every package in the workspace, from pnpm-workspace.yaml's `packages` globs. */
-function workspacePackages(repo) {
-  const file = path.join(repo, "pnpm-workspace.yaml")
-  if (!fs.existsSync(file)) throw new CannotCheck(`no pnpm-workspace.yaml at ${repo}`)
-  const names = new Set()
-  for (const glob of parseYaml(fs.readFileSync(file, "utf-8")).packages ?? []) {
-    const dirs = glob.endsWith("/*")
-      ? (fs.existsSync(path.join(repo, glob.slice(0, -2))) ? fs.readdirSync(path.join(repo, glob.slice(0, -2))).map((d) => path.join(glob.slice(0, -2), d)) : [])
-      : [glob]
-    for (const dir of dirs) {
-      const manifest = path.join(repo, dir, "package.json")
-      if (fs.existsSync(manifest)) names.add(JSON.parse(fs.readFileSync(manifest, "utf-8")).name)
-    }
-  }
-  return names
+function workspaceNames(repo) {
+  const members = workspacePackages(repo)
+  if (members === null) throw new CannotCheck(`no pnpm-workspace.yaml at ${repo}`)
+  return new Set(members.map(({ pkg }) => pkg.name))
 }
 
 function checkConfig(repo, rel, { workspace, dependencies, fixture }) {
@@ -87,7 +77,7 @@ function checkConfig(repo, rel, { workspace, dependencies, fixture }) {
 
 await guard(import.meta, "Every source of ours is a package name the workspace has and the site package depends on", (argv) => {
   const repo = path.resolve(option(argv, "repo", REPO_ROOT))
-  const workspace = workspacePackages(repo)
+  const workspace = workspaceNames(repo)
   const dependencies = sitePackage(repo).pkg.dependencies ?? {}
 
   const violations = [
@@ -95,13 +85,7 @@ await guard(import.meta, "Every source of ours is a package name the workspace h
     ...checkConfig(repo, FIXTURE_CONFIG, { workspace, dependencies, fixture: true }),
   ]
 
-  const fixtureRoot = path.join(repo, FIXTURE_PLUGINS)
-  const manifests = [
-    ...ourPackages(repo, ["plugin", "site-plugin"]).map(({ rel, pkg }) => ({ rel, pkg })),
-    ...(fs.existsSync(fixtureRoot) ? fs.readdirSync(fixtureRoot).sort() : [])
-      .filter((dir) => fs.existsSync(path.join(fixtureRoot, dir, "package.json")))
-      .map((dir) => ({ rel: `${FIXTURE_PLUGINS}/${dir}`, pkg: JSON.parse(fs.readFileSync(path.join(fixtureRoot, dir, "package.json"), "utf-8")) })),
-  ]
+  const manifests = ourPackages(repo, ["plugin", "site-plugin", "fixture-plugin"])
   for (const { rel, pkg } of manifests) {
     for (const dependency of (pkg.quartz ?? pkg.manifest)?.dependencies ?? []) {
       if (!workspace.has(dependency)) violations.push(`${rel}: its manifest dependency "${dependency}" names no package in the workspace`)

@@ -18,13 +18,10 @@ import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
 import { execFileSync } from "node:child_process"
-import { CORE_DIR } from "../core-tiers.mjs"
+import { CORE_DIR, CORE_PNPM } from "../core-tiers.mjs"
 import { compareLocks } from "../core-lock.mjs"
 import { upstreamTree } from "../upstream-tree.mjs"
 import { CannotCheck, guard, option } from "./guard.mjs"
-
-/** The pnpm that installs Core (project.json's `install` target), and so the one that imports its lock. */
-const PNPM = "pnpm@11.27.1"
 
 const read = (file) => (fs.existsSync(file) ? fs.readFileSync(file, "utf-8") : undefined)
 const brief = (value) => {
@@ -62,7 +59,7 @@ function freshImport(upstream, core) {
       fs.copyFileSync(path.join(from, file), path.join(work, file))
     }
     try {
-      execFileSync("npx", ["--yes", PNPM, "import"], { cwd: work, stdio: "pipe", encoding: "utf-8" })
+      execFileSync("npx", ["--yes", CORE_PNPM, "import"], { cwd: work, stdio: "pipe", encoding: "utf-8" })
     } catch (err) {
       throw new CannotCheck(`\`pnpm import\` failed in a temp project: ${String(err.stderr || err.stdout || err.message).trim()}`)
     }

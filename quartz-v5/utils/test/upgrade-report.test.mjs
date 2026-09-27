@@ -268,3 +268,120 @@ describe("a site config that does not parse", () => {
     assert.equal(fs.existsSync(fx.root), true)
   })
 })
+
+// The steering file imports names from modules outside the API kinds (as the real quartz.ts imports
+// FullPageLayout from ./quartz/cfg and PageTypeDispatcher from the page-type dispatcher), a default
+// export, and names the target moves.
+describe("the names quartz.ts imports, wherever in Core source they come from", () => {
+  const PINNED_MORE = {
+    "quartz/cfg.ts": lines("export interface FullPageLayout {", "  head: string", "}"),
+    "quartz/plugins/pageTypes/dispatcher.ts": lines(
+      "export function PageTypeDispatcher(pageType: string): string {",
+      "  return pageType",
+      "}",
+    ),
+    "quartz/components/ConditionalRender.tsx": lines(
+      "export default function ConditionalRender(): null {",
+      "  return null",
+      "}",
+    ),
+  }
+  const QUARTZ_TS = lines(
+    'import { loadQuartzLayout } from "./quartz/plugins/loader"',
+    'import type { FullPageLayout } from "./quartz/cfg"',
+    'import { PageTypeDispatcher } from "./quartz/plugins/pageTypes/dispatcher"',
+    'import ConditionalRender from "./quartz/components/ConditionalRender"',
+    'import { slug } from "./quartz/util/path"',
+    "export default loadQuartzLayout()",
+  )
+  let fx, res, out
+  before(() => {
+    fx = makeFixture({
+      pinnedChanges: PINNED_MORE,
+      coreChanges: { "quartz.ts": QUARTZ_TS },
+      targetChanges: {
+        // A layout type outside the API kinds changes.
+        "quartz/cfg.ts": lines(
+          "export interface FullPageLayout {",
+          "  head: string",
+          "  footer: string",
+          "}",
+        ),
+        // A default export's module goes.
+        "quartz/components/ConditionalRender.tsx": null,
+        // A watched export moves to another file of its kind, its signature unchanged.
+        "quartz/plugins/loader/config-loader.ts": lines(
+          "export async function loadQuartzConfig(): Promise<Config> {",
+          "  return {}",
+          "}",
+        ),
+        "quartz/plugins/loader/layout.ts": lines(
+          "export async function loadQuartzLayout(layoutOverrides?: {",
+          "  byPageType?: Record<string, string>",
+          "}): Promise<Layout> {",
+          "  return {}",
+          "}",
+        ),
+        "quartz/plugins/loader/index.ts": lines(
+          'export * from "./conditions"',
+          'export { loadQuartzConfig } from "./config-loader"',
+          'export { loadQuartzLayout } from "./layout"',
+        ),
+        // A name leaves the module quartz.ts imports it from, for another that still exists.
+        "quartz/util/path.ts": lines("export const join = (a: string, b: string) => a + b"),
+        "quartz/util/slug.ts": lines("export const slug = (s: string) => s"),
+      },
+    })
+    res = fx.upgrade(["--report-only", `--ref=${fx.target}`])
+    out = section(res.output, "Exported APIs")
+  })
+  after(() => fx.cleanup())
+
+  test("finds a name exported outside the API kinds, and shows how it changed", () => {
+    assert.equal(res.code, 0, res.output)
+    assert.match(out, /FullPageLayout: changed, and quartz\.ts uses it/)
+    assert.match(out, /\+ footer: string/)
+    assert.match(out, /PageTypeDispatcher: unchanged, and quartz\.ts uses it/)
+    assert.doesNotMatch(out, /not exported at either ref/)
+  })
+
+  test("checks a default import's module", () => {
+    assert.match(
+      out,
+      /quartz\.ts imports ConditionalRender from \.\/quartz\/components\/ConditionalRender, which the target no longer has/,
+    )
+  })
+
+  test("says a watched export that moved has moved, not that it is unchanged", () => {
+    assert.match(
+      out,
+      /loadQuartzLayout: moved from quartz\/plugins\/loader\/config-loader\.ts to quartz\/plugins\/loader\/layout\.ts, and quartz\.ts uses it/,
+    )
+    assert.doesNotMatch(out, /loadQuartzLayout: unchanged/)
+  })
+
+  test("flags a name its module no longer exports, though another module does", () => {
+    assert.match(
+      out,
+      /quartz\.ts imports slug from \.\/quartz\/util\/path, which no longer exports it/,
+    )
+  })
+})
+
+describe("an input the report cannot parse", () => {
+  let fx, res
+  before(() => {
+    fx = makeFixture({
+      targetChanges: { "package.json": "{ not json", "package-lock.json": "{ nor this" },
+    })
+    res = fx.upgrade(["--report-only", `--ref=${fx.target}`])
+  })
+  after(() => fx.cleanup())
+
+  test("is reported in its own section, and the report goes on", () => {
+    assert.equal(res.code, 0, res.output)
+    assert.match(section(res.output, "Core's package.json"), /Could not read/)
+    assert.match(section(res.output, "Our packages' peer ranges"), /Could not read/)
+    assert.match(res.output, /Exported APIs/)
+  })
+})

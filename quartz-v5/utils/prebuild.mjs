@@ -21,26 +21,14 @@
 import fs from "node:fs"
 import path from "node:path"
 import { execFileSync } from "node:child_process"
-import { createRequire } from "node:module"
 import { fileURLToPath } from "node:url"
-import { buildPackages, installWorkspace, pluginDirOf, pluginPackages, pruneGonePlugins } from "./plugin-packages.mjs"
+import { parseYaml } from "./packages.mjs"
+import { buildPackages, installWorkspace, pluginDirOf, pluginPackages, pruneGonePlugins, relink } from "./plugin-packages.mjs"
 
 const core = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "core")
 const siteConfig = path.join(core, "quartz.config.yaml")
-const YAML = createRequire(path.join(core, "package.json"))("yaml")
 
-// Make `at` a symlink to `target`, replacing a stale symlink but never a real file or directory.
-function link(at, target) {
-  const stat = fs.lstatSync(at, { throwIfNoEntry: false })
-  if (stat && !stat.isSymbolicLink()) {
-    throw new Error(`${at} is not a symlink. Move it aside: see quartz-v5/VENDORED.md.`)
-  }
-  if (stat && fs.readlinkSync(at) === target) return
-  fs.rmSync(at, { force: true })
-  fs.symlinkSync(target, at)
-}
-
-const config = fs.existsSync(siteConfig) ? YAML.parse(fs.readFileSync(siteConfig, "utf8")) : undefined
+const config = fs.existsSync(siteConfig) ? parseYaml(fs.readFileSync(siteConfig, "utf8")) : undefined
 if (!Array.isArray(config?.plugins)) {
   console.error(
     `\n  No site config: ${siteConfig} is ${config === undefined ? "missing" : "not a config with a plugins list"}.` +
@@ -65,7 +53,7 @@ const ours = [
 ]
 
 for (const dir of new Set(ours.map((plugin) => path.dirname(plugin)))) {
-  link(path.join(dir, "node_modules"), path.relative(dir, path.join(core, "node_modules")))
+  relink(path.join(dir, "node_modules"), path.relative(dir, path.join(core, "node_modules")))
 }
 
 const run = (command, args, options) => execFileSync(command, args, { ...options, stdio: "inherit" })

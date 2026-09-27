@@ -29,6 +29,38 @@ describe("a dirty working tree", () => {
     assert.equal(fx.status(), before)
     assert.equal(pinnedCommit(fx), fx.pinned)
   })
+
+  test("is refused for uncommitted work anywhere in the repo, not only in Core", () => {
+    fx.git("checkout", "--quiet", "--", CORE)
+    assert.equal(fx.status(), "")
+    fs.mkdirSync(`${fx.root}/quartz-v5/plugins/quartz-wip`, { recursive: true })
+    fs.writeFileSync(`${fx.root}/quartz-v5/plugins/quartz-wip/index.ts`, "// work in progress\n")
+    fs.writeFileSync(`${fx.root}/.gitignore`, fx.read(".gitignore") + "# edited\n")
+
+    const refused = fx.upgrade([`--ref=${fx.target}`])
+
+    assert.notEqual(refused.code, 0)
+    assert.match(refused.output, /uncommitted/i)
+    assert.match(refused.output, /quartz-v5\/plugins\/quartz-wip\/index\.ts/)
+    assert.match(refused.output, /\.gitignore/)
+    assert.equal(pinnedCommit(fx), fx.pinned)
+  })
+})
+
+describe("uncommitted work in content/private, the private vault", () => {
+  let fx, res
+  before(() => {
+    fx = makeFixture()
+    fs.mkdirSync(`${fx.root}/content/private`, { recursive: true })
+    fs.writeFileSync(`${fx.root}/content/private/draft.md`, "# a draft\n")
+    res = fx.upgrade([`--ref=${fx.pinned}`])
+  })
+  after(() => fx.cleanup())
+
+  test("does not stop the upgrade: it is the one path the dirty-tree check leaves out", () => {
+    assert.equal(res.code, 0, res.output)
+    assert.doesNotMatch(res.output, /Refusing/)
+  })
 })
 
 // Our vendored change: PageType.generate is awaitable (as #19's is), on the pinned tree's types.ts.

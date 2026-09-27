@@ -323,18 +323,25 @@ const commitAll = (dir, message) => {
  * Make the pair of repos. Returns `{ dir, root, upstream, pinned, target, upgrade, read, exists,
  * status, cleanup }`, where `upgrade(args, env)` runs the upgrade's command line against them.
  *
+ * - `pinnedChanges`: upstream files at the pinned commit beyond `PINNED`, by path, vendored into Core
+ *   as they are;
  * - `targetChanges`: upstream files at the target commit, by path (null deletes one);
  * - `coreChanges`: Core's files, by path relative to Core's root (null deletes one), committed;
  * - `siteChanges`: other files of the site repo, by path relative to its root, committed.
  */
-export function makeFixture({ targetChanges = {}, coreChanges = {}, siteChanges = {} } = {}) {
+export function makeFixture({
+  pinnedChanges = {},
+  targetChanges = {},
+  coreChanges = {},
+  siteChanges = {},
+} = {}) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "quartz-upgrade-fixture-"))
   const upstream = path.join(dir, "upstream")
   const root = path.join(dir, "site")
 
   fs.mkdirSync(upstream)
   git(upstream, "init", "--quiet", "--initial-branch=v5")
-  writeFiles(upstream, PINNED)
+  writeFiles(upstream, { ...PINNED, ...pinnedChanges })
   const pinned = commitAll(upstream, "pinned")
   writeFiles(upstream, targetChanges)
   const target = commitAll(upstream, "target")
@@ -342,7 +349,7 @@ export function makeFixture({ targetChanges = {}, coreChanges = {}, siteChanges 
   fs.mkdirSync(root)
   git(root, "init", "--quiet")
   const core = path.join(root, CORE_REL)
-  writeFiles(core, PINNED)
+  writeFiles(core, { ...PINNED, ...pinnedChanges })
   writeFiles(core, Object.fromEntries(PRUNED_IN_FIXTURE.map((rel) => [rel, null])))
   writeFiles(core, {
     "pnpm-workspace.yaml": PNPM_WORKSPACE,
@@ -351,7 +358,7 @@ export function makeFixture({ targetChanges = {}, coreChanges = {}, siteChanges 
     ...coreChanges,
   })
   writeFiles(root, {
-    ".gitignore": lines("node_modules/", "quartz-v5/.upstream-cache/"),
+    ".gitignore": lines("node_modules/", "dist/", "quartz-v5/.upstream-cache/"),
     "quartz-v5/upstream.json":
       JSON.stringify(
         {

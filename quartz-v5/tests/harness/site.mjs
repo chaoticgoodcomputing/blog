@@ -17,9 +17,10 @@ import {
   PLUGIN_ROOTS,
   buildPackages,
   installWorkspace,
-  pluginDirOf as packageDirOf,
+  pluginDirOf,
   pluginPackages,
   pruneGonePlugins,
+  relink,
 } from "../../utils/plugin-packages.mjs"
 import { FIXTURE_PAPER_URL, fixturePaper } from "./source-host.mjs"
 
@@ -131,18 +132,18 @@ export const withPlugins = (config, entries) =>
 const under = (root) => (dir) => dir !== undefined && dir.startsWith(`${root}${path.sep}`)
 
 // The directory of the plugin a fixture or scratch config's `source:` names, if it is ours: one of our
-// packages, by its package name (#93-#96), or a fixture plugin, by its local source, resolved against
-// the fixture root. The fixture's own plugins are the one kind still listed by local path
-// (tests/CONTEXT.md, "Fixture plugin"). An object source, `{ repo, name }`, is read by its `repo`.
-export function pluginDirOf(source) {
-  const dir = packageDirOf(source)
+// packages, by its package name (#93-#96, utils' `pluginDirOf`), or a fixture plugin, by its local
+// source, resolved against the fixture root. The fixture's own plugins are the one kind still listed
+// by local path (tests/CONTEXT.md, "Fixture plugin"). An object source, `{ repo, name }`, is read by
+// its `repo`.
+export function packageOrFixtureDirOf(source) {
+  const dir = pluginDirOf(source)
   if (dir) return dir
   const spec = typeof source === "string" ? source : source?.repo
   if (typeof spec !== "string" || !spec.startsWith(".")) return undefined
   const local = path.resolve(fixtureRoot("main"), spec)
   return under(fixturePluginsRoot)(local) ? local : undefined
 }
-const dirOf = pluginDirOf
 
 // Entries for `withPlugins` that turn off every package under `quartz-v5/plugins/` that `config`
 // lists, by package name, except those named in `keep`, each by its package name
@@ -151,15 +152,15 @@ const dirOf = pluginDirOf
 // plugin that draws icons, would otherwise fail first. Fixture plugins are left as they are.
 export const othersOff = (config, keep) =>
   pluginSources(config)
-    .filter((source) => typeof source === "string" && under(pluginsRoot)(dirOf(source)))
-    .filter((source) => !keep.includes(source) && !keep.includes(path.basename(dirOf(source))))
+    .filter((source) => typeof source === "string" && under(pluginsRoot)(packageOrFixtureDirOf(source)))
+    .filter((source) => !keep.includes(source) && !keep.includes(path.basename(packageOrFixtureDirOf(source))))
     .map((source) => ({ source, enabled: false }))
 
 const LINKED = ["package.json", "quartz", "node_modules", "tsconfig.json", "quartz.ts", "globals.d.ts", "index.d.ts"]
 // Ours: a package under `quartz-v5/plugins/`, listed by package name, or a fixture plugin standing
 // in for one, listed by local path.
 const isOurs = (source) =>
-  typeof source === "string" && [pluginsRoot, fixturePluginsRoot].some((root) => under(root)(dirOf(source)))
+  typeof source === "string" && [pluginsRoot, fixturePluginsRoot].some((root) => under(root)(packageOrFixtureDirOf(source)))
 // A stock plugin one of ours replaces, which the baseline turns back on in its place, where the
 // baseline would otherwise lose pages: without stock tag-page it has no tag pages, and no-bleed
 // would compare ours with the 404 page. So the pages ours makes are compared with the stock pages
@@ -179,15 +180,6 @@ const FIXTURE_CACHE = {
 // left pointing somewhere else, such as Core's old path from before it moved (#91), is replaced.
 function linkCore(root) {
   for (const entry of LINKED) relink(path.join(root, entry), path.join(core, entry))
-}
-
-// Make `at` a symlink to `target`, replacing a symlink to anywhere else but never a real file.
-function relink(at, target) {
-  const stat = fs.lstatSync(at, { throwIfNoEntry: false })
-  if (stat?.isSymbolicLink() && fs.readlinkSync(at) === target) return
-  if (stat && !stat.isSymbolicLink()) throw new Error(`${at} is not a symlink: move it aside`)
-  fs.rmSync(at, { force: true })
-  fs.symlinkSync(target, at)
 }
 
 function writeFixtureRoot(variant) {

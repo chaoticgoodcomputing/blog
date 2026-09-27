@@ -7,7 +7,7 @@
  *   node quartz-v5/utils/upgrade.mjs --ref=<ref> [--upstream=<url>] [--report-only | --verify]
  *
  * In order, stopping at the first step that fails, before anything of Core's is written:
- *   1. refuse a dirty tree: uncommitted changes in Core or the pinned ref's record;
+ *   1. refuse a dirty tree: uncommitted changes anywhere but the private vault (content/private);
  *   2. fetch the pinned ref and the target into the upstream cache (`upstream-cache.mjs`);
  *   -  print the API-surface report (`api-report.mjs`, #100): what changed between the two refs in
  *      every upstream API the site depends on. `--report-only` stops here, having written nothing;
@@ -34,14 +34,14 @@ import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
-import { apiReport, formatReport } from "./api-report.mjs"
+import { apiReport, formatReport, unifiedDiff } from "./api-report.mjs"
 import { compareLocks, formatComparison } from "./core-lock.mjs"
-import { CORE_REL, MANIFEST_REL, REPO_ROOT, tierOf } from "./core-tiers.mjs"
-import { CACHE_REL, fetchRef, openCache, readBlob, treeFiles } from "./upstream-cache.mjs"
+import { CORE_PNPM, CORE_REL, MANIFEST_REL, REPO_ROOT, tierOf } from "./core-tiers.mjs"
+import { CACHE_REL, commitFiles, fetchRef, openCache, readBlob } from "./upstream-cache.mjs"
 import { sh } from "./upstream-git.mjs"
 
 /** Core's pnpm, run by exact version whatever pnpm the repo root pins (VENDORED.md). */
-const PNPM = ["--yes", "pnpm@11.27.1"]
+const PNPM = ["--yes", CORE_PNPM]
 
 /** A step's refusal: the upgrade stops, and says why. */
 export class Stop extends Error {
@@ -52,7 +52,17 @@ export class Stop extends Error {
 }
 
 const say = (...lines) => lines.forEach((line) => console.log(line ? `  ${line}` : ""))
-const temp = (prefix) => fs.mkdtempSync(path.join(os.tmpdir(), prefix))
+// Run `fn(dir)` in a fresh temp dir holding `files` (name → content), and remove the dir after.
+function withScratch(prefix, files, fn) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), prefix))
+  try {
+    for (const [name, content] of Object.entries(files))
+      fs.writeFileSync(path.join(dir, name), content)
+    return fn(dir)
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true })
+  }
+}
 const same = (a, b) => (a === null ? b === null : b !== null && a.equals(b))
 const isBinary = (buf) => buf !== null && buf.subarray(0, 8000).includes(0)
 
@@ -127,7 +137,7 @@ const GIT_MODES = { 100644: 0o644, 100755: 0o755, 120000: SYMLINK }
 
 function readTree(cache, sha) {
   const files = new Map()
-  for (const [rel, { mode, blob }] of treeFiles(cache, sha)) {
+  for (const [rel, { mode, blob }] of commitFiles(cache, sha)) {
     if (!(mode in GIT_MODES))
       throw new Stop([
         `Stopped: upstream's ${rel} has git mode ${mode}, which the upgrade cannot carry.`,
@@ -143,6 +153,12 @@ const allPaths = (ctx) =>
 
 // --- 1. Refuse a dirty tree ----------------------------------------------------------------------
 
+/**
+ * The one path the dirty-tree check leaves out: the private vault, a submodule of its own that the
+ * owner's checkout routinely has uncommitted notes in. The upgrade never writes there.
+ */
+export const DIRTY_EXEMPT = "content/private"
+
 function refuseDirty(ctx) {
   const dirty = sh("git", [
     "-C",
@@ -151,15 +167,15 @@ function refuseDirty(ctx) {
     "--porcelain",
     "--untracked-files=all",
     "--",
-    CORE_REL,
-    MANIFEST_REL,
+    ".",
+    `:(exclude)${DIRTY_EXEMPT}`,
   ])
     .split("\n")
     .filter(Boolean)
   if (dirty.length)
     throw new Stop([
-      `Refusing to upgrade: Quartz Core or ${MANIFEST_REL} has uncommitted changes.`,
-      "Commit or stash them first, so the upgrade never mixes with work in progress:",
+      `Refusing to upgrade: the working tree has uncommitted changes (only ${DIRTY_EXEMPT} may).`,
+      "Commit or stash them first, so the upgrade, and --verify's checks, never mix with work in progress:",
       "",
       ...dirty.map((line) => `  ${line}`),
     ])
@@ -167,7 +183,7 @@ function refuseDirty(ctx) {
 
 // --- 2. Fetch -----------------------------------------------------------------------------------
 
-function fetch(ctx) {
+function fetchRefs(ctx) {
   ctx.cache = openCache(path.join(ctx.root, CACHE_REL))
   try {
     ctx.pinned = fetchRef(ctx.cache, ctx.upstream, ctx.manifest.commit)
@@ -208,10 +224,7 @@ function report(ctx) {
 
 // The hunks of `diff -u base ours`, each as a patch of its own on a file named `f`.
 function hunks(base, ours) {
-  const dir = temp("quartz-upgrade-diff-")
-  try {
-    fs.writeFileSync(path.join(dir, "base"), base)
-    fs.writeFileSync(path.join(dir, "ours"), ours)
+  return withScratch("quartz-upgrade-diff-", { base, ours }, (dir) => {
     const res = spawnSync("diff", ["-u", "base", "ours"], {
       cwd: dir,
       encoding: "utf-8",
@@ -230,9 +243,7 @@ function hunks(base, ours) {
       header: lines[0],
       patch: ["--- a/f", "+++ b/f", ...lines, ""].join("\n"),
     }))
-  } finally {
-    fs.rmSync(dir, { recursive: true, force: true })
-  }
+  })
 }
 
 /**
@@ -282,15 +293,13 @@ function reapply(base, ours, next) {
       conflicts: whole("a binary file changed here and upstream"),
     }
 
-  const dir = temp("quartz-upgrade-apply-")
-  const apply = (patch, ...flags) =>
-    spawnSync("git", ["apply", "--whitespace=nowarn", ...flags, "-"], {
-      cwd: dir,
-      input: patch,
-      encoding: "utf-8",
-    }).status === 0
-  try {
-    fs.writeFileSync(path.join(dir, "f"), next)
+  return withScratch("quartz-upgrade-apply-", { f: next }, (dir) => {
+    const apply = (patch, ...flags) =>
+      spawnSync("git", ["apply", "--whitespace=nowarn", ...flags, "-"], {
+        cwd: dir,
+        input: patch,
+        encoding: "utf-8",
+      }).status === 0
     const out = { applied: [], absorbed: [], conflicts: [] }
     for (const hunk of hunks(base, ours)) {
       if (apply(hunk.patch, "--reverse", "--check")) out.absorbed.push(hunk)
@@ -298,12 +307,10 @@ function reapply(base, ours, next) {
       else out.conflicts.push(hunk)
     }
     return { result: fs.readFileSync(path.join(dir, "f")), ...out }
-  } finally {
-    fs.rmSync(dir, { recursive: true, force: true })
-  }
+  })
 }
 
-function replaceSource(ctx) {
+function reapplyVendored(ctx) {
   ctx.absorbed = []
   const conflicts = []
   let applied = 0
@@ -356,14 +363,8 @@ function merge3(ours, base, next) {
   if (same(ours, next) || same(base, next)) return { result: ours }
   if (same(ours, base) || ours === null) return { result: next }
   if (next === null) return { result: ours, conflict: "changed here, and deleted upstream" }
-  const dir = temp("quartz-upgrade-merge-")
-  try {
-    for (const [name, content] of [
-      ["ours", ours],
-      ["base", base ?? Buffer.alloc(0)],
-      ["next", next],
-    ])
-      fs.writeFileSync(path.join(dir, name), content)
+  const files = { ours, base: base ?? Buffer.alloc(0), next }
+  return withScratch("quartz-upgrade-merge-", files, (dir) => {
     const res = spawnSync(
       "git",
       [
@@ -390,9 +391,7 @@ function merge3(ours, base, next) {
       result: res.stdout,
       conflict: res.status > 0 ? `${res.status} conflicting region(s)` : undefined,
     }
-  } finally {
-    fs.rmSync(dir, { recursive: true, force: true })
-  }
+  })
 }
 
 function takeScaffolding(ctx) {
@@ -429,41 +428,17 @@ function takeScaffolding(ctx) {
 
 // --- 5. Steering files --------------------------------------------------------------------------
 
-function unifiedDiff(rel, a, b) {
-  const dir = temp("quartz-upgrade-template-")
-  try {
-    fs.writeFileSync(path.join(dir, "a"), a ?? "")
-    fs.writeFileSync(path.join(dir, "b"), b ?? "")
-    const res = spawnSync(
-      "diff",
-      [
-        "-u",
-        "--label",
-        `upstream (pinned)/${rel}`,
-        "--label",
-        `upstream (target)/${rel}`,
-        "a",
-        "b",
-      ],
-      {
-        cwd: dir,
-        encoding: "utf-8",
-      },
-    )
-    return res.stdout.replace(/\n$/, "").split("\n")
-  } finally {
-    fs.rmSync(dir, { recursive: true, force: true })
-  }
-}
-
 function keepSteering(ctx) {
   const changed = []
   for (const rel of allPaths(ctx).filter((rel) => tierOf(rel) === "steering")) {
     if (ctx.ours.has(rel)) ctx.plan.set(rel, ctx.ours.get(rel))
     const [base, next] = [contentOf(ctx.base, rel), contentOf(ctx.next, rel)]
-    if (!same(base, next)) changed.push({ rel, diff: unifiedDiff(rel, base, next) })
+    if (same(base, next)) continue
+    // The report has already shown the quartz.ts template's diff: name it, and don't diff it twice.
+    const inReport = rel === "quartz.ts" && ctx.reported
+    changed.push({ rel, diff: inReport ? null : unifiedDiff(rel, base, next) })
   }
-  if (changed.length && ctx.reported && changed.every(({ rel }) => rel === "quartz.ts"))
+  if (changed.length === 1 && changed[0].diff === null)
     return say(
       "Steering files: left alone. Upstream's quartz.ts template changed: its diff is in the API-surface report above.",
     )
@@ -474,7 +449,8 @@ function keepSteering(ctx) {
   )
   for (const { rel, diff } of changed) {
     say("", `  ${rel}`)
-    diff.forEach((line) => say(`    ${line}`))
+    if (diff === null) say("    (its diff is in the API-surface report above)")
+    else diff.forEach((line) => say(`    ${line}`))
   }
 }
 
@@ -500,11 +476,12 @@ function convertLock(ctx) {
       `Stopped: Core has no pnpm-workspace.yaml, so there are no pnpm settings to convert under.`,
     ])
 
-  const dir = temp("quartz-upgrade-lock-")
-  try {
-    fs.writeFileSync(path.join(dir, "package.json"), ctx.plan.get("package.json").content)
-    fs.writeFileSync(path.join(dir, "package-lock.json"), npmLock)
-    fs.writeFileSync(path.join(dir, "pnpm-workspace.yaml"), workspace)
+  const project = {
+    "package.json": ctx.plan.get("package.json").content,
+    "package-lock.json": npmLock,
+    "pnpm-workspace.yaml": workspace,
+  }
+  withScratch("quartz-upgrade-lock-", project, (dir) => {
     const res = pnpm(dir, ["import"])
     if (res.status !== 0)
       throw new Stop([
@@ -526,9 +503,7 @@ function convertLock(ctx) {
     ctx.plan.set("pnpm-workspace.yaml", ctx.ours.get("pnpm-workspace.yaml"))
     ctx.plan.set("pnpm-lock.yaml", { content: pnpmLock, mode: 0o644 })
     say(`Lock: converted by pnpm import; ${formatComparison(result)[0]}`)
-  } finally {
-    fs.rmSync(dir, { recursive: true, force: true })
-  }
+  })
 }
 
 // --- Writing Core, and installing ---------------------------------------------------------------
@@ -560,7 +535,6 @@ function writeCore(ctx) {
     }
     written++
   }
-  ctx.wrote = written + removed > 0
   say(`Core: ${written} file(s) written, ${removed} removed.`)
 }
 
@@ -611,8 +585,10 @@ function record(ctx) {
 /**
  * `--verify`'s checks, in order: each a command run from the repo root, `{v4}` standing for the
  * built v4 site the acceptance report compares against (`--v4=<dir>`; the v4 build is not kept
- * working, so it is an input, not something `--verify` builds). The repo guards are one Nx target,
- * so guards added later (#98's) join them there.
+ * working, so it is an input, not something `--verify` builds). The repo guards are one Nx target
+ * (site-v5:guards), so every repo guard, Core's and the packages', runs there. The typechecks are
+ * every project's `typecheck` target: the packages', and site-v5's, which checks Core's source and
+ * the site's quartz.ts.
  */
 export const VERIFY_STEPS = [
   { name: "the repo guards", command: ["pnpm", "nx", "run", "site-v5:guards"] },
@@ -674,11 +650,14 @@ function verify(ctx) {
  * steps before `write Core` only plan, so a stop there leaves the repo as it was. `--verify` adds
  * `VERIFY` at the end, and `--report-only` runs `REPORT_ONLY` instead.
  */
+const FETCH = { name: "fetch", run: fetchRefs }
+const REPORT = { name: "report the API surface", run: report }
+
 export const STEPS = [
   { name: "refuse a dirty tree", run: refuseDirty },
-  { name: "fetch", run: fetch },
-  { name: "report the API surface", run: report },
-  { name: "re-apply vendored changes", run: replaceSource },
+  FETCH,
+  REPORT,
+  { name: "re-apply vendored changes", run: reapplyVendored },
   { name: "take the scaffolding", run: takeScaffolding },
   { name: "leave the steering files", run: keepSteering },
   { name: "keep the pruning", run: keepPruning },
@@ -689,7 +668,7 @@ export const STEPS = [
 ]
 
 /** The report alone: it reads Core and the two refs, and writes nothing but the upstream cache. */
-export const REPORT_ONLY = [STEPS[1], STEPS[2]]
+export const REPORT_ONLY = [FETCH, REPORT]
 
 /** `--verify`: checked before the upgrade starts, and run after it has succeeded. */
 export const VERIFY = {
@@ -719,7 +698,12 @@ export function runUpgrade(ctx, steps = STEPS) {
   return 0
 }
 
+// The flags that take a value, always as `--<name>=<value>`.
+const VALUE_FLAGS = ["ref", "upstream", "root", "v4"]
+
 function parseArgs(argv) {
+  const spaced = argv.find((a) => VALUE_FLAGS.some((name) => a === `--${name}`))
+  if (spaced) throw new Stop([`${spaced} takes its value as ${spaced}=<value>.`])
   const flag = (name) => argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3)
   const has = (name) => argv.includes(`--${name}`)
   const reportOnly = has("report-only")

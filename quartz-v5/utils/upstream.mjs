@@ -15,11 +15,11 @@
  * commits that made them, flagging any that cite no ticket.
  */
 import { execFileSync } from "node:child_process"
-import { rmSync } from "node:fs"
 import { join } from "node:path"
 import { CORE_DIR, CORE_REL, MANIFEST_REL, REPO_ROOT, countsAsDrift, tierOf } from "./core-tiers.mjs"
 import { drift as coreDrift } from "./core-drift.mjs"
-import { cloneUpstream, readManifest, resolveLatest, sh } from "./upstream-git.mjs"
+import { readManifest, resolveLatest, sh } from "./upstream-git.mjs"
+import { upstreamTree } from "./upstream-tree.mjs"
 
 // Core's drift from the upstream tree checked out at `dir` (core-drift.mjs, shared with the repo guards).
 const drift = (dir) => coreDrift(CORE_DIR, dir)
@@ -47,33 +47,30 @@ function cmdDiff({ latest }) {
   const ref = latest ? resolveLatest(m.repo, m.branch) : m.commit
   if (latest) process.stderr.write(`  ${m.branch} tip is ${ref.slice(0, 12)}\n`)
 
-  const dir = cloneUpstream(m.repo, ref)
-  try {
-    const files = drift(dir)
-    if (latest) {
-      // Informational: what an upgrade would pull in, and would collide with our changes.
-      console.log(
-        files.length === 0
-          ? `\n  Quartz Core already matches the tip of ${m.branch}.\n`
-          : `\n  ${files.length} difference(s) vs tip of ${m.branch} (pinned at ${m.commit.slice(0, 12)}):\n`,
-      )
-      files.forEach(({ rel, kind }) => console.log(`    ${kind.padEnd(13)} ${rel}`))
-      if (files.length) console.log(`\n  To take them:  pnpm nx run site-v5:upgrade --ref=${ref}\n`)
-      return 0
-    }
-    // The whole of our vendored changes, generated from the tree. stdout is a patch that applies
-    // with `git apply` from the repo root; the summary goes to stderr so redirection keeps it clean.
-    if (files.length) process.stdout.write(files.map((file) => patchFor(dir, file)).join(""))
-    process.stderr.write(
+  // The tree is cached by commit (upstream-tree.mjs), so only a ref not fetched before goes to the network.
+  const dir = upstreamTree({ repo: m.repo, ref })
+  const files = drift(dir)
+  if (latest) {
+    // Informational: what an upgrade would pull in, and would collide with our changes.
+    console.log(
       files.length === 0
-        ? `\n  CLEAN — Quartz Core is byte-identical to ${ref.slice(0, 12)}, outside its steering, pruned and pnpm files.\n\n`
-        : `\n  ${files.length} file(s) differ from pinned ${ref.slice(0, 12)}. Every one must trace to a ticketed` +
-            `\n  commit — see \`pnpm nx run site-v5:vendored-log\`.\n\n`,
+        ? `\n  Quartz Core already matches the tip of ${m.branch}.\n`
+        : `\n  ${files.length} difference(s) vs tip of ${m.branch} (pinned at ${m.commit.slice(0, 12)}):\n`,
     )
+    files.forEach(({ rel, kind }) => console.log(`    ${kind.padEnd(13)} ${rel}`))
+    if (files.length) console.log(`\n  To take them:  pnpm nx run site-v5:upgrade --ref=${ref}\n`)
     return 0
-  } finally {
-    rmSync(dir, { recursive: true, force: true })
   }
+  // The whole of our vendored changes, generated from the tree. stdout is a patch that applies
+  // with `git apply` from the repo root; the summary goes to stderr so redirection keeps it clean.
+  if (files.length) process.stdout.write(files.map((file) => patchFor(dir, file)).join(""))
+  process.stderr.write(
+    files.length === 0
+      ? `\n  CLEAN — Quartz Core is byte-identical to ${ref.slice(0, 12)}, outside its steering, pruned and pnpm files.\n\n`
+      : `\n  ${files.length} file(s) differ from pinned ${ref.slice(0, 12)}. Every one must trace to a ticketed` +
+          `\n  commit — see \`pnpm nx run site-v5:vendored-log\`.\n\n`,
+  )
+  return 0
 }
 
 // Every commit that changed Core since it was last upgraded, oldest first, and the drift each made. An

@@ -16,7 +16,7 @@ import path from "node:path"
 import { createRequire } from "node:module"
 import { test, expect, routeSite } from "../harness/test.mjs"
 import { layerOrder } from "../harness/layers.mjs"
-import { buildScratchSite, fixtureConfig, pluginDirOf, siteConfig, core } from "../harness/site.mjs"
+import { buildScratchSite, fixtureConfig, packageOrFixtureDirOf, siteConfig, core } from "../harness/site.mjs"
 
 const YAML = createRequire(path.join(core, "package.json"))("yaml")
 const ENGINE = "@chaoticgoodcomputing/quartz-styles"
@@ -37,7 +37,7 @@ function withoutEngine(config) {
   const sourceOf = (item) => (YAML.isMap(item.get("source")) ? item.get("source").toJSON() : item.get("source"))
   const plugins = doc.get("plugins").items.flatMap((item) => {
     const source = sourceOf(item)
-    const dir = pluginDirOf(source)
+    const dir = packageOrFixtureDirOf(source)
     if (!item.get("enabled") || !dir) return []
     const manifest = path.join(dir, "package.json")
     const { dependencies = [] } = JSON.parse(fs.readFileSync(manifest, "utf8")).quartz

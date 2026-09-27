@@ -15,6 +15,12 @@ export const CORE_REL = "quartz-v5/core"
 export const CORE_DIR = path.join(REPO_ROOT, CORE_REL)
 /** The pinned ref's record, relative to the repo root. */
 export const MANIFEST_REL = "quartz-v5/upstream.json"
+/**
+ * The pnpm that installs Core, by exact version, whatever pnpm the repo root pins (VENDORED.md): the
+ * one the upgrade and the `core-lock` guard import Core's lock with. The one other copy is
+ * `site-v5:install`'s command in quartz-v5/project.json, which cannot import it: bump both together.
+ */
+export const CORE_PNPM = "pnpm@11.27.1"
 
 /**
  * Core source: Core's `quartz/` tree, protected. It changes only through a vendored change, and it

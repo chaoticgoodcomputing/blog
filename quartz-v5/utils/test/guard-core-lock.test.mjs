@@ -12,7 +12,7 @@ import assert from "node:assert/strict"
 import fs from "node:fs"
 import path from "node:path"
 import { execFileSync } from "node:child_process"
-import { CORE_DIR } from "../core-tiers.mjs"
+import { CORE_DIR, CORE_PNPM } from "../core-tiers.mjs"
 import { runGuard, scratch, writeTree } from "./guard-helpers.mjs"
 
 const packageJson = `{
@@ -55,7 +55,7 @@ function fixture() {
     "package-lock.json": packageLock,
     "pnpm-workspace.yaml": fs.readFileSync(path.join(CORE_DIR, "pnpm-workspace.yaml"), "utf-8"),
   })
-  execFileSync("npx", ["--yes", "pnpm@11.27.1", "import"], { cwd: work, stdio: "pipe" })
+  execFileSync("npx", ["--yes", CORE_PNPM, "import"], { cwd: work, stdio: "pipe" })
   fs.copyFileSync(path.join(work, "pnpm-lock.yaml"), path.join(core, "pnpm-lock.yaml"))
   return { upstream, core, args: ["--core", core, "--upstream", upstream] }
 }

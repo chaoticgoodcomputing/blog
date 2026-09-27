@@ -15,7 +15,8 @@ import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { CORE_DIR } from "./core-tiers.mjs"
-import { readManifest, showUpstreamFile } from "./upstream-git.mjs"
+import { readManifest } from "./upstream-git.mjs"
+import { upstreamTree } from "./upstream-tree.mjs"
 
 // "name@version" → [name, version], for a scoped name too.
 const split = (key) => {
@@ -107,7 +108,7 @@ function main(argv) {
     console.log(`\n  npm lock: ${flag("--npm-lock")}`)
   } else {
     const { repo, commit } = readManifest()
-    npmLock = showUpstreamFile(repo, commit, "package-lock.json")
+    npmLock = fs.readFileSync(path.join(upstreamTree({ repo, ref: commit }), "package-lock.json"), "utf8")
     console.log(`\n  npm lock: package-lock.json at the pinned ref, ${commit.slice(0, 12)}`)
   }
   console.log(`  pnpm lock: ${path.relative(process.cwd(), pnpmFile) || pnpmFile}\n`)

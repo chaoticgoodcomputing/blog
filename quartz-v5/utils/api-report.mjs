@@ -17,10 +17,9 @@
 // `ctx.base`, `ctx.next` and `ctx.ours`) plus the site repo on disk, and writes nothing.
 import fs from "node:fs"
 import path from "node:path"
-import { createRequire } from "node:module"
 import { spawnSync } from "node:child_process"
 import os from "node:os"
-import { CORE_DIR } from "./core-tiers.mjs"
+import { parseYaml, workspacePackages } from "./packages.mjs"
 import { SCHEMA_REL, amendSchema, formatError, validateSiteConfig } from "./site-config-schema.mjs"
 
 const DEFAULT_CONFIG = "quartz.config.default.yaml"
@@ -48,9 +47,6 @@ export const API_FILES = {
 
 /** The exports the site's steering files use, or will: always named in the report. */
 export const WATCHED = ["registerCondition", "loadQuartzLayout"]
-
-// Core's own YAML parser, the one Quartz reads its config with.
-const yaml = () => createRequire(path.join(CORE_DIR, "package.json"))("yaml")
 
 const text = (files, rel) => files.get(rel)?.content?.toString("utf-8") ?? null
 const show = (value) => JSON.stringify(value)
@@ -114,7 +110,7 @@ function defaultConfigSection(base, next) {
   if (before === null) return ["The target adds a default config; the pinned ref had none."]
   let a, b
   try {
-    ;[a, b] = [yaml().parse(before) ?? {}, yaml().parse(after) ?? {}]
+    ;[a, b] = [parseYaml(before) ?? {}, parseYaml(after) ?? {}]
   } catch (err) {
     return [`Could not read the default config: ${err.message.split("\n")[0]}`]
   }
@@ -242,7 +238,11 @@ function schemaSection(base, next, ours) {
 
 // --- 3. The quartz.ts template ------------------------------------------------------------------
 
-function unifiedDiff(label, a, b) {
+/**
+ * `diff -u` of two versions of the upstream file `label`, the pinned ref's (`a`) and the target's
+ * (`b`), as lines. Either may be null (no such file). The upgrade's steering-files step uses it too.
+ */
+export function unifiedDiff(label, a, b) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "quartz-report-diff-"))
   try {
     fs.writeFileSync(path.join(dir, "a"), a ?? "")
@@ -411,26 +411,64 @@ const BUILTINS = {
   },
 }
 
-// The names our steering file quartz.ts imports from Core source, with the module each comes from.
+// The names our steering file quartz.ts imports from Core source: `{ name, binds, from }`, where
+// `name` is the local name and `binds` the export it binds ("default" for a default import, null
+// for a namespace import, which binds no one name, so only its module is checked).
 function steeringImports(ours) {
-  const source = text(ours, TEMPLATE) ?? ""
+  const source = stripComments(text(ours, TEMPLATE) ?? "")
   const out = []
-  for (const m of source.matchAll(
-    /import\s+(?:type\s+)?\{([^}]*)\}\s*from\s*["'](\.\/quartz\/[^"']+)["']/g,
-  )) {
-    for (const part of m[1]
+  for (const m of source.matchAll(/import\s+([^;'"]*?)\s*from\s*["'](\.\/quartz\/[^"']+)["']/g)) {
+    const clause = m[1].replace(/^type\s+/, "")
+    const named = clause.match(/\{([^}]*)\}/)
+    const first = clause
+      .replace(/\{[^}]*\}/, "")
+      .replace(/,/g, " ")
+      .trim()
+    if (/^[\w$]+$/.test(first)) out.push({ name: first, binds: "default", from: m[2] })
+    else if (first) out.push({ name: first, binds: null, from: m[2] })
+    for (const part of (named?.[1] ?? "")
       .split(",")
       .map((s) => s.trim())
-      .filter(Boolean))
-      out.push({ name: part.replace(/^type /, "").split(/\s+as\s+/)[0], from: m[2] })
+      .filter(Boolean)) {
+      const [binds, alias] = part.replace(/^type /, "").split(/\s+as\s+/)
+      out.push({ name: alias ?? binds, binds, from: m[2] })
+    }
   }
   return out
 }
 
-const moduleExists = (files, spec) =>
-  ["", ".ts", ".tsx", ".js", ".mjs", "/index.ts", "/index.tsx"].some((ext) =>
-    files.has(spec.replace(/^\.\//, "") + ext),
-  )
+const MODULE_EXTENSIONS = ["", ".ts", ".tsx", ".js", ".mjs", "/index.ts", "/index.tsx"]
+
+// The file a module specifier imported from `fromFile` names in `files`, or null.
+function resolveModule(files, fromFile, spec) {
+  const base = path.posix.normalize(path.posix.join(path.posix.dirname(fromFile), spec))
+  return MODULE_EXTENSIONS.map((ext) => base + ext).find((rel) => files.has(rel)) ?? null
+}
+
+const moduleExists = (files, spec) => resolveModule(files, TEMPLATE, spec) !== null
+
+/**
+ * Where the export `name` of module `file` is declared, following re-exports (`export { x } from`,
+ * `export * from`): `{ file, sig }`, or null if the module does not export it.
+ */
+function declarationOf(files, file, name, seen = new Set()) {
+  if (file === null || seen.has(`${file}#${name}`)) return null
+  seen.add(`${file}#${name}`)
+  const exports = exportsOf(text(files, file) ?? "")
+  const sig = exports.get(name)
+  if (sig !== undefined) {
+    const reexport = sig.match(/^(?:type )?([\w$]+) from "([^"]+)"$/)
+    return reexport
+      ? declarationOf(files, resolveModule(files, file, reexport[2]), reexport[1], seen)
+      : { file, sig }
+  }
+  for (const key of exports.keys()) {
+    const star = key.match(/^\* from "([^"]+)"$/)
+    const found = star && declarationOf(files, resolveModule(files, file, star[1]), name, seen)
+    if (found) return found
+  }
+  return null
+}
 
 // How a declaration changed: the lines only one side has, or, for a one-line declaration, both.
 function change(before, after) {
@@ -443,7 +481,7 @@ function change(before, after) {
 
 function exportsSection(base, next, ours) {
   const out = []
-  const status = new Map() // name → "added" | "removed" | "changed"
+  const status = new Map() // name → "added" | "removed" | "changed" | "moved from … to …"
   for (const [kind, entries] of Object.entries(API_FILES)) {
     // Conditions live in the loader's directory, but are their own kind.
     const exclude = kind === "Loader" ? API_FILES.Condition : []
@@ -465,6 +503,12 @@ function exportsSection(base, next, ours) {
     diff.removed.forEach((key) => status.set(bare(key), "removed"))
     diff.added.forEach((key) => status.set(bare(key), status.has(bare(key)) ? "moved" : "added"))
     diff.changed.forEach((key) => status.set(bare(key), "changed"))
+    diff.renamed.forEach(([from, to]) =>
+      status.set(
+        bare(from),
+        `moved from ${from.match(/\((.*)\)$/)[1]} to ${to.match(/\((.*)\)$/)[1]}`,
+      ),
+    )
     const builtin = BUILTINS[kind]
     if (builtin) {
       const [ka, kb] = [
@@ -487,15 +531,15 @@ function exportsSection(base, next, ours) {
   }
 
   // What the site's steering files use, and what they will: registerCondition and loadQuartzLayout.
+  // A name quartz.ts imports is looked up in the module it imports it from, wherever in Core source
+  // that is, following re-exports; a watched name it does not import, among the API kinds.
+  out.push("", "The site's steering files:")
   const imports = steeringImports(ours)
-  const names = [...new Set([...WATCHED, ...imports.map(({ name }) => name)])]
   const exported = (files, name) =>
     Object.values(API_FILES).some((entries) =>
       [...kindExports(files, entries).keys()].some((key) => key.startsWith(`${name} (`)),
     )
-  out.push("", "The site's steering files:")
-  for (const name of names) {
-    const used = imports.some((i) => i.name === name) ? ", and quartz.ts uses it" : ""
+  for (const name of WATCHED.filter((name) => !imports.some((i) => i.binds === name))) {
     const now =
       status.get(name) ??
       (exported(next, name)
@@ -503,12 +547,33 @@ function exportsSection(base, next, ours) {
         : exported(base, name)
           ? "removed"
           : "not exported at either ref")
-    out.push(`  ${name}: ${now}${used}`)
+    out.push(`  ${name}: ${now}`)
   }
-  for (const { name, from } of imports) {
-    if (!moduleExists(next, from))
-      out.push(`  quartz.ts imports ${name} from ${from}, which the target no longer has`)
+  const inApi = (file) => Object.values(API_FILES).some((entries) => inKind(file, entries))
+  const broken = []
+  for (const { name, binds, from } of imports) {
+    if (!moduleExists(next, from)) {
+      broken.push(`  quartz.ts imports ${name} from ${from}, which the target no longer has`)
+      continue
+    }
+    if (binds === null) continue
+    const [was, now] = [base, next].map((files) =>
+      declarationOf(files, resolveModule(files, TEMPLATE, from), binds),
+    )
+    let state
+    let detail = []
+    if (!now) {
+      state = was ? "removed" : "not exported at either ref"
+      broken.push(`  quartz.ts imports ${name} from ${from}, which no longer exports it`)
+    } else if (!was) state = "added"
+    else if (squash(was.sig) !== squash(now.sig)) {
+      state = "changed"
+      // A declaration in an API kind has its change listed above, under its kind.
+      if (!inApi(now.file)) detail = change(was.sig, now.sig).map((line) => `  ${line}`)
+    } else state = was.file === now.file ? "unchanged" : `moved from ${was.file} to ${now.file}`
+    out.push(`  ${name}: ${state}, and quartz.ts uses it`, ...detail)
   }
+  out.push(...broken)
   return out
 }
 
@@ -617,37 +682,6 @@ export function satisfies(version, range) {
   return unreadable ? null : result
 }
 
-// The packages of the site repo's pnpm workspace (its `packages:` list; `dir/*` one level deep).
-function workspacePackages(siteRoot) {
-  const file = path.join(siteRoot, "pnpm-workspace.yaml")
-  if (!fs.existsSync(file)) return []
-  const globs = []
-  let inList = false
-  for (const line of fs.readFileSync(file, "utf-8").split("\n")) {
-    if (/^packages:\s*$/.test(line)) inList = true
-    else if (inList && /^\s+-\s+/.test(line))
-      globs.push(
-        line
-          .replace(/^\s+-\s+/, "")
-          .replace(/["']/g, "")
-          .replace(/\s+#.*$/, "")
-          .trim(),
-      )
-    else if (inList && /^\S/.test(line)) inList = false
-  }
-  const dirs = globs.flatMap((glob) => {
-    if (!glob.endsWith("/*")) return [glob]
-    const dir = path.join(siteRoot, glob.slice(0, -2))
-    return fs.existsSync(dir)
-      ? fs.readdirSync(dir).map((name) => `${glob.slice(0, -2)}/${name}`)
-      : []
-  })
-  return dirs
-    .map((dir) => path.join(siteRoot, dir, "package.json"))
-    .filter((file) => fs.existsSync(file))
-    .map((file) => JSON.parse(fs.readFileSync(file, "utf-8")))
-}
-
 // The version of each package at Core's top level, from an npm lock: what a plugin's peer resolves to.
 function coreVersions(files) {
   const lock = text(files, "package-lock.json")
@@ -664,9 +698,9 @@ function peersSection(base, next, siteRoot) {
   const [before, after] = [coreVersions(base), coreVersions(next)]
   if (after === null)
     return ["The target has no package-lock.json, so Core's versions are unknown."]
-  const packages = workspacePackages(siteRoot).filter(
-    (pkg) => Object.keys(pkg.peerDependencies ?? {}).length,
-  )
+  const packages = (workspacePackages(siteRoot) ?? [])
+    .map(({ pkg }) => pkg)
+    .filter((pkg) => Object.keys(pkg.peerDependencies ?? {}).length)
   if (!packages.length) return nothing("no package of ours declares a peer")
   const out = []
   let checked = 0
@@ -708,25 +742,35 @@ function peersSection(base, next, siteRoot) {
  * peer ranges are checked.
  */
 export function apiReport({ base, next, ours, siteRoot }) {
+  // The report is informational, so a category that cannot read its inputs (a file that does not
+  // parse) says so, and the other categories still report.
+  const section = (title, lines) => {
+    try {
+      return { title, lines: lines() }
+    } catch (err) {
+      return {
+        title,
+        lines: [`Could not read this category's inputs: ${err.message.split("\n")[0]}`],
+      }
+    }
+  }
   return [
-    {
-      title: `The default config (${DEFAULT_CONFIG}, pruned from Core: read from the upstream cache)`,
-      lines: defaultConfigSection(base, next),
-    },
-    {
-      title: `The plugin config schema (${SCHEMA_REL}), and our site config against the target's`,
-      lines: schemaSection(base, next, ours),
-    },
-    { title: `The ${TEMPLATE} template`, lines: templateSection(base, next) },
-    {
-      title: "Exported APIs: plugin, component, loader, condition and frame",
-      lines: exportsSection(base, next, ours),
-    },
-    { title: "Core's package.json: dependencies and engines", lines: packageSection(base, next) },
-    {
-      title: "Our packages' peer ranges against the target's Core",
-      lines: peersSection(base, next, siteRoot),
-    },
+    section(
+      `The default config (${DEFAULT_CONFIG}, pruned from Core: read from the upstream cache)`,
+      () => defaultConfigSection(base, next),
+    ),
+    section(
+      `The plugin config schema (${SCHEMA_REL}), and our site config against the target's`,
+      () => schemaSection(base, next, ours),
+    ),
+    section(`The ${TEMPLATE} template`, () => templateSection(base, next)),
+    section("Exported APIs: plugin, component, loader, condition and frame", () =>
+      exportsSection(base, next, ours),
+    ),
+    section("Core's package.json: dependencies and engines", () => packageSection(base, next)),
+    section("Our packages' peer ranges against the target's Core", () =>
+      peersSection(base, next, siteRoot),
+    ),
   ]
 }
 

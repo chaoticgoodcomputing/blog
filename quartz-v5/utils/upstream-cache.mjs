@@ -9,7 +9,8 @@ import { gitFrom, sh } from "./upstream-git.mjs"
 /** The cache's path, relative to the repo root. */
 export const CACHE_REL = "quartz-v5/.upstream-cache"
 
-const SHA = /^[0-9a-f]{40}$/
+/** A full commit id: what the cache, and the guards' checkouts (upstream-tree.mjs), key commits by. */
+export const SHA = /^[0-9a-f]{40}$/
 
 /** Open the cache at `dir`, creating it if need be. Returns `dir`. */
 export function openCache(dir) {
@@ -52,7 +53,7 @@ export function fetchRef(cache, repo, ref) {
  * Every file of commit `sha`, as a Map of path → `{ mode, blob }`, where `mode` is the file mode
  * git records ("100644", "100755", "120000") and `blob` the object id.
  */
-export function treeFiles(cache, sha) {
+export function commitFiles(cache, sha) {
   const out = sh("git", ["-C", cache, "ls-tree", "-r", "-z", "--full-tree", sha])
   const files = new Map()
   for (const entry of out.split("\0").filter(Boolean)) {
@@ -66,9 +67,3 @@ export function treeFiles(cache, sha) {
 /** One blob's contents, as a Buffer. */
 export const readBlob = (cache, blob) =>
   sh("git", ["-C", cache, "cat-file", "blob", blob], { encoding: "buffer" })
-
-/** One file of commit `sha`, as a Buffer, or null if the commit has no such file. */
-export function readFile(cache, sha, rel) {
-  const entry = treeFiles(cache, sha).get(rel)
-  return entry ? readBlob(cache, entry.blob) : null
-}

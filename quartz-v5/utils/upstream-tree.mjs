@@ -9,7 +9,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import { REPO_ROOT } from "./core-tiers.mjs"
-import { CACHE_REL } from "./upstream-cache.mjs"
+import { CACHE_REL, SHA } from "./upstream-cache.mjs"
 import { gitFrom, readManifest, sh } from "./upstream-git.mjs"
 
 /** Where the checkouts live, relative to the repo root: `trees/` in the upstream cache. */
@@ -23,7 +23,7 @@ export function upstreamTree({ repo, ref } = {}) {
   const manifest = repo && ref ? {} : readManifest()
   repo ??= manifest.repo
   ref ??= manifest.commit
-  if (!/^[0-9a-f]{40}$/.test(ref)) throw new Error(`upstreamTree caches by commit: ${ref} is not a full sha`)
+  if (!SHA.test(ref)) throw new Error(`upstreamTree caches by commit: ${ref} is not a full sha`)
   const root = path.join(REPO_ROOT, TREES_REL)
   const dir = path.join(root, ref)
   if (fs.existsSync(dir)) return dir

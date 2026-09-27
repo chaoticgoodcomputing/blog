@@ -11,8 +11,8 @@
 // schema grows a new kind of constraint is never passed silently.
 import fs from "node:fs"
 import path from "node:path"
-import { createRequire } from "node:module"
 import { CORE_DIR } from "./core-tiers.mjs"
+import { parseYaml } from "./packages.mjs"
 
 /** The schema's path inside a Core tree (Core, or an upstream checkout at any ref). */
 export const SCHEMA_REL = "quartz/plugins/quartz-plugins.schema.json"
@@ -154,9 +154,6 @@ export function amendSchema(schema) {
   return { schema: amended, notes }
 }
 
-// Core's own YAML parser: the one Quartz reads the site config with.
-const yaml = () => createRequire(path.join(CORE_DIR, "package.json"))("yaml")
-
 /**
  * Every way a site config breaks a plugin config schema, as `{ path, message }`. `config` is the
  * config's YAML text, or the config already parsed. `schema` is the schema as a Core tree has it
@@ -167,7 +164,7 @@ export function validateSiteConfig(config, schema) {
   let value = config
   if (typeof config === "string") {
     try {
-      value = yaml().parse(config)
+      value = parseYaml(config)
     } catch (err) {
       return [{ path: "", message: `is not valid YAML: ${err.message.split("\n")[0]}` }]
     }

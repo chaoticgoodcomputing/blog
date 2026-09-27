@@ -14,6 +14,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
+import { ourPackages } from "./packages.mjs"
 
 const v5 = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 const repo = path.dirname(v5)
@@ -26,15 +27,7 @@ export const PLUGIN_ROOTS = [path.join(v5, "plugins"), path.join(v5, "site-plugi
 // A site lists each by this name and loads it through the site package's `node_modules`
 // (VENDORED.md). Read from the manifests, so it needs no install.
 export function pluginPackages() {
-  const packages = new Map()
-  for (const root of PLUGIN_ROOTS) {
-    if (!fs.existsSync(root)) continue
-    for (const dir of fs.readdirSync(root)) {
-      const manifest = path.join(root, dir, "package.json")
-      if (fs.existsSync(manifest)) packages.set(JSON.parse(fs.readFileSync(manifest, "utf8")).name, path.join(root, dir))
-    }
-  }
-  return packages
+  return new Map(ourPackages(repo, ["plugin", "site-plugin"]).map(({ pkg, path: dir }) => [pkg.name, dir]))
 }
 
 // The directory of the plugin of ours a config `source:` names by package name. Undefined for anyone
@@ -43,6 +36,17 @@ export function pluginPackages() {
 export function pluginDirOf(source, packages = pluginPackages()) {
   const spec = typeof source === "string" ? source : source?.repo
   return typeof spec === "string" ? packages.get(spec) : undefined
+}
+
+// Make `at` a symlink to `target`, replacing a symlink to anywhere else but never a real file or
+// directory: prebuild's `node_modules` links beside our plugins, and the harness's links from a
+// fixture root to Core.
+export function relink(at, target) {
+  const stat = fs.lstatSync(at, { throwIfNoEntry: false })
+  if (stat && !stat.isSymbolicLink()) throw new Error(`${at} is not a symlink. Move it aside: see quartz-v5/VENDORED.md.`)
+  if (stat && fs.readlinkSync(at) === target) return
+  fs.rmSync(at, { force: true })
+  fs.symlinkSync(target, at)
 }
 
 // The workspace's own install, from its one lock: our libraries, plugins, site plugins and the e2e

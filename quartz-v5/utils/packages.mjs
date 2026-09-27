@@ -1,6 +1,8 @@
-// Our packages as the package guards read them (#89, #98): every plugin, site plugin and library in
-// a repo shaped like this one, with its manifest, and the site package. Pure reads of the files on
-// disk, no install needed, so each guard can point it at a scratch repo instead of the real one.
+// Our packages (#89, #98): every plugin, site plugin and library in a repo shaped like this one, with
+// its manifest, the e2e fixture's plugins, the site package and the workspace's members. The one walk
+// of our package directories: the package guards, the plugin steps (plugin-packages.mjs), the
+// plugin DAG and the upgrade's report all read packages through it. Pure reads of the files on disk,
+// no install needed, so each guard can point it at a scratch repo instead of the real one.
 import fs from "node:fs"
 import path from "node:path"
 import { createRequire } from "node:module"
@@ -23,20 +25,33 @@ export const SHARED = ["preact", "preact-render-to-string", "vfile", "unified", 
 /** Whether `name` is one of Quartz's shared packages. */
 export const isShared = (name) => SHARED.some((shared) => (shared.endsWith("/") ? name.startsWith(shared) : name === shared))
 
-/** The kinds of package, by the directory each lives in under the site's root. */
-export const KINDS = { plugin: "plugins", "site-plugin": "site-plugins", library: "libs" }
+/**
+ * The kinds of package, by the directory each lives in under the site's root. A fixture plugin
+ * (tests/CONTEXT.md) exists only for the e2e suite, so it is read only when asked for by kind.
+ */
+export const KINDS = {
+  plugin: "plugins",
+  "site-plugin": "site-plugins",
+  library: "libs",
+  "fixture-plugin": "tests/fixture-plugins",
+}
+
+/** The kinds `ourPackages` reads by default: every package we ship or build, not the fixture's. */
+export const OUR_KINDS = ["plugin", "site-plugin", "library"]
 
 const readJson = (file) => JSON.parse(fs.readFileSync(file, "utf-8"))
 
 /**
- * Every package of ours under `repo`: `{ kind, dir, rel, name, pkg, project }`, where `dir` is the
- * directory's basename, `rel` its path from the repo root, `pkg` its package.json and `project` its
- * project.json (or null). A directory with no package.json is skipped, as pnpm skips it.
+ * Every package of ours under `repo` of the given kinds, in that order, each sorted by directory:
+ * `{ kind, dir, rel, path, pkg, project }`, where `dir` is the directory's basename, `rel` its path
+ * from the repo root, `path` its absolute path, `pkg` its package.json and `project` its
+ * project.json (or null). A directory with no package.json is skipped, as pnpm skips it. The kind
+ * directories are read under `siteRoot`, the site's root in `repo` unless given another.
  */
-export function ourPackages(repo = REPO_ROOT, kinds = Object.keys(KINDS)) {
+export function ourPackages(repo = REPO_ROOT, kinds = OUR_KINDS, siteRoot = path.join(repo, SITE_REL)) {
   const packages = []
   for (const kind of kinds) {
-    const root = path.join(repo, SITE_REL, KINDS[kind])
+    const root = path.join(siteRoot, KINDS[kind])
     if (!fs.existsSync(root)) continue
     for (const dir of fs.readdirSync(root).sort()) {
       const at = path.join(root, dir)
@@ -65,9 +80,29 @@ export function sitePackage(repo = REPO_ROOT) {
 export const coreModules = (repo = REPO_ROOT) => path.join(repo, CORE_REL, "node_modules")
 
 /**
- * Parse YAML with Core's own parser, as Quartz and prebuild do (Core must be installed). Core is read
- * from the real repo whatever `repo` a guard checks, since a scratch repo has no install.
+ * Parse YAML with Core's own parser, the one Quartz reads its config with (Core must be installed):
+ * the one YAML reader of the tooling (prebuild, the guards, the site-config validator, the upgrade's
+ * report). Core is read from the real repo whatever `repo` a guard checks, since a scratch repo has
+ * no install.
  */
 export function parseYaml(text) {
   return createRequire(path.join(REPO_ROOT, CORE_REL, "package.json"))("yaml").parse(text)
+}
+
+/**
+ * Every member of `repo`'s pnpm workspace, from `pnpm-workspace.yaml`'s `packages` (a `dir/*` glob
+ * one level deep): `{ rel, pkg }`, `rel` from the repo root. Null when the repo has no
+ * pnpm-workspace.yaml.
+ */
+export function workspacePackages(repo = REPO_ROOT) {
+  const file = path.join(repo, "pnpm-workspace.yaml")
+  if (!fs.existsSync(file)) return null
+  const dirs = (parseYaml(fs.readFileSync(file, "utf-8"))?.packages ?? []).flatMap((glob) => {
+    if (!glob.endsWith("/*")) return [glob]
+    const parent = glob.slice(0, -2)
+    return fs.existsSync(path.join(repo, parent)) ? fs.readdirSync(path.join(repo, parent)).sort().map((dir) => `${parent}/${dir}`) : []
+  })
+  return dirs
+    .filter((rel) => fs.existsSync(path.join(repo, rel, "package.json")))
+    .map((rel) => ({ rel, pkg: readJson(path.join(repo, rel, "package.json")) }))
 }

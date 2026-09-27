@@ -271,7 +271,8 @@ the package builds' outputs, so a second run with nothing changed is a cache hit
 `build` (`^build`: the site package depends on every plugin and site plugin), which Nx takes from its
 cache when a package is unchanged; the package guards take a couple of seconds, most of it clean-packs' `pnpm pack` runs. `core-drift` and `core-lock` compare against the
 pinned ref's tree, fetched once (a depth-1 fetch, a few seconds) into the gitignored
-`quartz-v5/.upstream-cache/trees/<sha>/` (`utils/upstream-tree.mjs`, beside the upgrade's bare repo); after that they need no network, but
+`quartz-v5/.upstream-cache/trees/<sha>/` (`utils/upstream-tree.mjs`, beside the upgrade's bare repo;
+`diff-upstream`, `diff-latest` and `site-v5:core-lock` read their upstream trees from there too); after that they need no network, but
 the fresh `pnpm import` reads pnpm's metadata cache or the registry. Run one guard alone with
 `node quartz-v5/utils/guards/<name>.guard.mjs`; each test, in `utils/test/guard-<name>.test.mjs`,
 says how to break its rule by hand.
@@ -297,8 +298,10 @@ pnpm nx run site-v5:upgrade --ref=<ref> --verify --v4=<a built v4 site>
 It is [`utils/upgrade.mjs`](./utils/upgrade.mjs) ([#99](https://github.com/chaoticgoodcomputing/blog/issues/99)),
 and runs these steps in order, stopping at the first that fails:
 
-1. **Refuse a dirty tree.** Any uncommitted change in `core/` or `upstream.json` stops it, so an
-   upgrade never mixes with work in progress and can always be undone with git.
+1. **Refuse a dirty tree.** Any uncommitted change in the working tree, tracked or untracked, stops
+   it, so neither the upgrade nor `--verify`'s checks ever mix with work in progress, and an upgrade
+   can always be undone with git. The one path left out is `content/private`, the private vault: a
+   submodule of its own, which routinely holds uncommitted notes and which the upgrade never writes.
 2. **Fetch** the pinned ref and the target into the upstream cache, `quartz-v5/.upstream-cache/`
    (gitignored, [`utils/upstream-cache.mjs`](./utils/upstream-cache.mjs)): a bare git repo that never
    fetches a commit twice. The fetch goes to exactly the URL `upstream.json` names; `--upstream=<url>`
@@ -342,8 +345,10 @@ and runs these steps in order, stopping at the first that fails:
    converted lock installed into it frozen. If that install fails, Core's files are restored from git.
 8. **Record** the target in `upstream.json`, last, so a failed upgrade never claims a ref.
 9. **`--verify`** then proves the result, running from the repo root, in order, stopping at the
-   first failure with a non-zero exit: the repo guards (`site-v5:guards`; guards added to it later
-   join them), the typechecks (`nx run-many -t typecheck`), the e2e suite (`site-v5-e2e:e2e`), the
+   first failure with a non-zero exit: the repo guards (`site-v5:guards`, every repo guard, Core's
+   and the packages'), the typechecks (`nx run-many -t typecheck`: every package's, and
+   `site-v5:typecheck`, Core's own `tsc` over Core source and the site's `quartz.ts`, which the
+   esbuild build never type-checks), the e2e suite (`site-v5-e2e:e2e`), the
    real-site build (`site-v5:build`) and the acceptance report against it. The v4 build is not kept
    working, so the acceptance report compares against a v4 site built earlier: `--v4=<dir>`
    (default `dist/public`), which must exist before the upgrade starts. A failure here leaves the
@@ -385,7 +390,9 @@ allowBuilds:               # pnpm 11 fails an install on any other dependency's 
 ```
 
 `allowBuilds` is pnpm 11's, so `site-v5:install` runs pnpm 11 by exact version through `npx`
-(`npx --yes pnpm@11.27.1`), whatever pnpm the repo root pins. Inside `core/` the nearest workspace
+(`npx --yes pnpm@11.27.1`), whatever pnpm the repo root pins. The upgrade and the `core-lock` guard
+import Core's lock with the same pnpm, `CORE_PNPM` in `utils/core-tiers.mjs`: bump it and the
+install target together. Inside `core/` the nearest workspace
 root is Core's, whose `package.json` names no `packageManager`, so pnpm never switches versions there.
 
 **The lock is upstream's, converted.** `core/pnpm-lock.yaml` is `pnpm import` of upstream's
@@ -433,7 +440,8 @@ root lists the libraries, every plugin, every site plugin, the e2e suite and the
 (`quartz-v5/package.json`, **repo-only**, named `site-v5` like its Nx project), so one
 `pnpm install --frozen-lockfile` at the root prepares all of them from one lock, `pnpm-lock.yaml`.
 The only other lock is Core's. The root pins pnpm by `packageManager` (`pnpm@11.27.1`, the version
-`site-v5:install` runs for Core), and pnpm switches to it whatever version is installed. The
+`site-v5:install` runs for Core), and pnpm switches to it whatever version is installed; it is the
+repo's one pnpm pin, installed as no dependency. The
 workspace settings:
 
 ```yaml

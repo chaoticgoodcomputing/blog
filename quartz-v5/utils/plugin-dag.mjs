@@ -24,25 +24,24 @@
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
+import { ourPackages } from "./packages.mjs"
 
 export const quartzRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 export const vault = path.resolve(quartzRoot, "../content/public")
 const TAG = "projects/site/plugins"
 
-// Each group's directory, kind, and how its nodes are drawn, in the order they are drawn. Only the
-// site plugins get a subgraph: Mermaid lays out edges into and out of a subgraph badly, and nothing
-// depends on a site plugin. The other two groups are told apart by shape: a plugin is a box, a
+// Each group's kind (its directory is `KINDS` in packages.mjs), and how its nodes are drawn, in the
+// order they are drawn. Only the site plugins get a subgraph: Mermaid lays out edges into and out of
+// a subgraph badly, and nothing depends on a site plugin. The other two groups are told apart by shape: a plugin is a box, a
 // library a stadium.
 const GROUPS = [
-  { dir: "plugins", kind: "plugin", shape: (label) => `["${label}"]` },
-  { dir: "libs", kind: "library", shape: (label) => `(["${label}"])` },
-  { dir: "site-plugins", kind: "site-plugin", shape: (label) => `{{"${label}"}}`, subgraph: 'site_plugins["Site plugins"]' },
+  { kind: "plugin", shape: (label) => `["${label}"]` },
+  { kind: "library", shape: (label) => `(["${label}"])` },
+  { kind: "site-plugin", shape: (label) => `{{"${label}"}}`, subgraph: 'site_plugins["Site plugins"]' },
 ]
 
 const START = "%% plugin-dag: start. Generated from the packages' manifests by `pnpm nx run site-v5:plugin-dag`: don't edit by hand. %%"
 const END = "%% plugin-dag: end %%"
-
-const readJson = (file) => JSON.parse(fs.readFileSync(file, "utf8"))
 
 /**
  * Every package under `root`, sorted by group then directory: `{ dir, name, kind, engines,
@@ -50,15 +49,8 @@ const readJson = (file) => JSON.parse(fs.readFileSync(file, "utf8"))
  * `libraries` those of the libraries it builds with. Throws on a dependency that names no package.
  */
 export function readPackages(root = quartzRoot) {
-  const packages = GROUPS.flatMap(({ dir: group, kind }) => {
-    const groupDir = path.join(root, group)
-    if (!fs.existsSync(groupDir)) return []
-    return fs
-      .readdirSync(groupDir)
-      .filter((dir) => fs.existsSync(path.join(groupDir, dir, "package.json")))
-      .sort()
-      .map((dir) => ({ dir, kind, manifest: readJson(path.join(groupDir, dir, "package.json")) }))
-  })
+  const kinds = GROUPS.map(({ kind }) => kind)
+  const packages = ourPackages(path.dirname(root), kinds, root).map(({ dir, kind, pkg }) => ({ dir, kind, manifest: pkg }))
   const plugins = packages.filter((p) => p.manifest.quartz?.name)
   const byPluginName = new Map(plugins.map((p) => [p.manifest.name, p]))
   const libraryByName = new Map(packages.filter((p) => p.kind === "library").map((p) => [p.manifest.name, p]))

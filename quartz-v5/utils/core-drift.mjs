@@ -14,7 +14,7 @@ import { sh } from "./upstream-git.mjs"
  * doesn't ignore, that is on disk. Installed dependencies, build output and caches are gitignored, so
  * they are never compared. `dir` may be a git checkout of its own, or a directory inside one.
  */
-export const treeFiles = (dir) =>
+const checkoutFiles = (dir) =>
   sh("git", ["-C", dir, "ls-files", "--cached", "--others", "--exclude-standard", "-z", "--", "."])
     .split("\0")
     .filter((rel) => rel && fs.existsSync(path.join(dir, rel)))
@@ -25,8 +25,8 @@ export const treeFiles = (dir) =>
  * leaving out the tiers that are not drift.
  */
 export function drift(coreDir, upstreamDir) {
-  const upstream = new Set(treeFiles(upstreamDir))
-  const core = new Set(treeFiles(coreDir))
+  const upstream = new Set(checkoutFiles(upstreamDir))
+  const core = new Set(checkoutFiles(coreDir))
   const same = (rel) => fs.readFileSync(path.join(upstreamDir, rel)).equals(fs.readFileSync(path.join(coreDir, rel)))
   return [...new Set([...upstream, ...core])]
     .filter(countsAsDrift)

@@ -39,7 +39,7 @@
       }
     },
     "upgrade": {
-      "//": "Move Quartz Core to another upstream ref, keeping what's ours (utils/upgrade.mjs, VENDORED.md). Refuses a dirty Core; fetches both refs into the upstream cache (quartz-v5/.upstream-cache); re-applies the vendored changes hunk by hunk, stopping on a conflict and reporting hunks upstream absorbed; takes package.json verbatim and three-way merges the other scaffolding; leaves the steering files alone and shows upstream's template changes; keeps the pruning; converts the target's npm lock with pnpm import and the lock check, then installs it frozen; records the new pinned ref last. Upgrading to the pinned ref changes nothing. Before touching the tree it prints the API-surface report (see upgrade-report). With --verify it then proves the result: the repo guards, the typechecks, the e2e suite, the real-site build and the acceptance report against a built v4 site (--v4=<dir>, default dist/public), stopping at the first failure. Usage: pnpm nx run site-v5:upgrade --ref=<commit|branch|tag> [--verify --v4=<dir>]",
+      "//": "Move Quartz Core to another upstream ref, keeping what's ours (utils/upgrade.mjs, VENDORED.md). Refuses a dirty working tree (anything uncommitted but in content/private, the private vault); fetches both refs into the upstream cache (quartz-v5/.upstream-cache); re-applies the vendored changes hunk by hunk, stopping on a conflict and reporting hunks upstream absorbed; takes package.json verbatim and three-way merges the other scaffolding; leaves the steering files alone and shows upstream's template changes; keeps the pruning; converts the target's npm lock with pnpm import and the lock check, then installs it frozen; records the new pinned ref last. Upgrading to the pinned ref changes nothing. Before touching the tree it prints the API-surface report (see upgrade-report). With --verify it then proves the result: the repo guards, the typechecks, the e2e suite, the real-site build and the acceptance report against a built v4 site (--v4=<dir>, default dist/public), stopping at the first failure. Usage: pnpm nx run site-v5:upgrade --ref=<commit|branch|tag> [--verify --v4=<dir>]",
       "executor": "nx:run-commands",
       "options": {
         "command": "node quartz-v5/utils/upgrade.mjs",
@@ -65,8 +65,16 @@
         "parallel": false
       }
     },
+    "typecheck": {
+      "//": "Typecheck Quartz Core's TypeScript with Core's own tsc and tsconfig: Core source (its quartz/ tree, the vendored changes included) and the site's steering file quartz.ts, which reaches into Core's internals. The build transpiles with esbuild, which strips types, so this is the only check that sees a type-level break in either; the upgrade's --verify runs it among the typechecks (nx run-many -t typecheck). Needs site-v5:install.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./node_modules/.bin/tsc --noEmit -p tsconfig.json",
+        "cwd": "{workspaceRoot}/quartz-v5/core"
+      }
+    },
     "core-lock": {
-      "//": "The lock check: Core's pnpm lock holds exactly the packages of the pinned ref's package-lock.json, each at the same version, with nothing on either side the other lacks. Fetches that one file from upstream; compare a local npm lock instead with --args=\"--npm-lock <file>\". Exits 1 on any difference.",
+      "//": "The lock check: Core's pnpm lock holds exactly the packages of the pinned ref's package-lock.json, each at the same version, with nothing on either side the other lacks. Reads that file from the upstream cache's checkout of the pinned ref (utils/upstream-tree.mjs), fetched once; compare a local npm lock instead with --args=\"--npm-lock <file>\". Exits 1 on any difference.",
       "executor": "nx:run-commands",
       "options": {
         "command": "node quartz-v5/utils/core-lock.mjs",
