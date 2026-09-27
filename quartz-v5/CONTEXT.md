@@ -337,10 +337,10 @@ changes**), `core-pruned`, `core-lock` (the **lock check**, plus a fresh `pnpm i
 `site-config` (the **site config** against Core's plugin config schema). The packages' (#98):
 `package-contract` (the **package contract**), `shared-packages` (one copy of each **shared
 package**, Core's), `package-sources` (every source of ours a **package source** the workspace has and
-the site package depends on), `clean-packs` (and no **repo-only** package published). #89's: `plugin-index` (Quartz's generated
-plugin index takes in every plugin). The plugin notes' (#86):
-`plugin-dag` (the **plugin DAG** as generated) and `plugin-notes`. Those that read built output depend
-on the package builds, which Nx takes from its cache.
+the site package depends on), `clean-packs` (and no **repo-only** package published). #89's:
+`plugin-index` (Quartz's generated plugin index takes in every plugin). The plugin
+notes' (#86): `plugin-dag` (the **plugin DAG** as generated) and `plugin-notes`. Those that read
+built output depend on the package builds, which Nx takes from its cache.
 _Avoid_: lint (the formatters and linters are something else), check (alone), test (the e2e suite and
 the `node --test` suites are tests; a guard checks the repo itself)
 

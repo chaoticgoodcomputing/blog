@@ -52,6 +52,7 @@ await emitDeclarations({ entries: entryPoints, external })
 ```
 
 and in its `package.json`, `types` beside `import` for each entry in `exports`. It is tested through
-its consumers: the `plugin-index` repo guard (`utils/guards/`) runs Quartz's own install step and
-checks its plugin index takes every package in, and `tests/specs/package-plugins.spec.mjs` has a
-strict TypeScript site, with `skipLibCheck` off, read a package's types.
+its consumers: `tests/specs/package-plugins.spec.mjs` has a strict TypeScript site, with
+`skipLibCheck` off, read a package's types, and the `plugin-index` repo guard (`utils/guards/`) runs
+Quartz's own install step and checks its plugin index takes every package in. Its `e2e` target runs
+the guard after the suite, whose global setup builds every package the guard reads.

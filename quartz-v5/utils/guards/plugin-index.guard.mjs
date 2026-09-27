@@ -7,9 +7,12 @@
 // cannot resolve or that has none. So the guard runs that script, from Core as installed, in a scratch
 // root whose config lists every plugin and site plugin of ours by package name, and then:
 //   - it skips none of them;
-//   - the index exports from every plugin (`export { … } from "<package>"`, or `export type`). A site
-//     plugin that exports nothing but its factory, as site-styles does, is left out of the index as
-//     every package's default export is, so a site plugin need only not be skipped.
+//   - the index exports from every plugin (`export { … } from "<package>"`, or `export type`). It
+//     checks that some export line is there, not which names it lists; the TypeScript-site spec
+//     (tests/specs/package-plugins.spec.mjs) reads the graph's types through it. A site plugin need
+//     only not be skipped: Core leaves out of the index any value name two packages export, and
+//     site-styles' `emitter` and `transformer` share their names with quartz-tags', so on the full
+//     list site-styles has no export line. Only the site imports a site plugin, by its package.
 // This reads built output: an unbuilt package is skipped.
 //
 //   node quartz-v5/utils/guards/plugin-index.guard.mjs [--repo <dir>]
