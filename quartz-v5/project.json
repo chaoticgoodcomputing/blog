@@ -82,12 +82,13 @@
       }
     },
     "guards": {
-      "//": "The repo guards (utils/guards/): fast, lint-style checks of the repo's architecture, no browser. Each checks one rule, lists every violation, and fails the target on any. Quartz Core's: no drift beyond the recorded vendored changes, pruned files absent, package.json and pnpm lock upstream's at the pinned ref, and the site config valid against Core's plugin config schema. Cached: the inputs are every file a guard reads. The pinned ref's tree is fetched once into quartz-v5/.upstream-cache/trees/. One guard alone: node quartz-v5/utils/guards/run.mjs <name>, or node quartz-v5/utils/guards/<name>.guard.mjs.",
+      "//": "The repo guards (utils/guards/): fast, lint-style checks of the repo's architecture, no browser. Each checks one rule, lists every violation, and fails the target on any. Quartz Core's (#97): no drift beyond the recorded vendored changes, pruned files absent, package.json and pnpm lock upstream's at the pinned ref, and the site config valid against Core's plugin config schema. The packages' (#98): every plugin and site plugin meets the package contract, one copy of each of Quartz's shared packages (Core's), every source of ours a package name the workspace has and the site package depends on, and every publishable package packing only dist/, README, LICENSE and package.json. Three of those read built output, so the target depends on every package's build (the site package's dependencies, ^build), which Nx takes from its cache when nothing changed. Cached itself: the inputs are every file a guard reads, and the builds' outputs. The pinned ref's tree is fetched once into quartz-v5/.upstream-cache/trees/. One guard alone: node quartz-v5/utils/guards/run.mjs <name>, or node quartz-v5/utils/guards/<name>.guard.mjs.",
       "executor": "nx:run-commands",
       "options": {
         "command": "node quartz-v5/utils/guards/run.mjs",
         "cwd": "{workspaceRoot}"
       },
+      "dependsOn": ["^build"],
       "cache": true,
       "inputs": [
         "{projectRoot}/utils/guards/**/*",
@@ -95,7 +96,17 @@
         "{projectRoot}/core/**/*",
         "{projectRoot}/upstream.json",
         "{projectRoot}/VENDORED.md",
+        "{projectRoot}/package.json",
+        "{workspaceRoot}/quartz-v5/plugins/**/*",
+        "{workspaceRoot}/quartz-v5/site-plugins/**/*",
+        "{workspaceRoot}/quartz-v5/libs/*/package.json",
+        "{workspaceRoot}/quartz-v5/tests/quartz.config.yaml",
+        "{workspaceRoot}/quartz-v5/tests/fixture-plugins/*/package.json",
+        "{workspaceRoot}/pnpm-workspace.yaml",
+        "{workspaceRoot}/pnpm-lock.yaml",
+        "{workspaceRoot}/package.json",
         "{workspaceRoot}/.gitignore",
+        { "dependentTasksOutputFiles": "**/*" },
         { "runtime": "node --version" }
       ]
     },

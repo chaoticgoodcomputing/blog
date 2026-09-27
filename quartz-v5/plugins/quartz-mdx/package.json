@@ -29,18 +29,19 @@
     "build": "node build.mjs",
     "typecheck": "../node_modules/.bin/tsc -p ."
   },
-  "//peerDependencies": "The host Quartz's own copies, never bundled or installed here: two Preacts break hydration, and a page type's markup must be the host's vnodes.",
+  "//peerDependencies": "The host Quartz's own copies, never bundled or installed here: two Preacts break hydration, and a page type's markup must be the host's vnodes. unified and vfile are the ones the pipeline library, which this plugin inlines, runs the site's transformers with (#98).",
   "peerDependencies": {
     "@quartz-community/utils": "*",
     "preact": "^10.29.0",
     "preact-render-to-string": "^6.7.0",
+    "unified": "^11.0.5",
     "vfile": "^6.0.0"
   },
   "//dependencies": "esbuild bundles widgets at site-build time, so it stays a runtime dependency; it is native and cannot be inlined.",
   "dependencies": {
     "esbuild": "^0.28.2"
   },
-  "//devDependencies": "Inlined into dist by build.mjs. Our libraries are `workspace:*` specs, which `pnpm publish` rewrites to the published version (ADR-0005). The unified stack is bundled rather than shared, since nothing in it depends on instance identity. vfile, which Quartz shares with its plugins, is a peer instead, never installed here. @chaoticgoodcomputing/declarations writes the .d.ts beside each entry (build.mjs).",
+  "//devDependencies": "Inlined into dist by build.mjs. Our libraries are `workspace:*` specs, which `pnpm publish` rewrites to the published version (ADR-0005). The remark and hast packages are bundled, since nothing in them depends on instance identity. unified and vfile, which Quartz shares with its plugins, are peers instead, never installed here (#98). @chaoticgoodcomputing/declarations writes the .d.ts beside each entry (build.mjs).",
   "devDependencies": {
     "@chaoticgoodcomputing/declarations": "workspace:*",
     "@chaoticgoodcomputing/island-runtime": "workspace:*",

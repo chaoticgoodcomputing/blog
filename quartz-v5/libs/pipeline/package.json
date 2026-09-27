@@ -14,11 +14,14 @@
   "scripts": {
     "typecheck": "tsc -p ."
   },
-  "dependencies": {
-    "remark-parse": "^11.0.0",
-    "remark-rehype": "^11.1.2",
+  "//peerDependencies": "Quartz's shared packages: the host's own copies, which the pipeline runs a site's transformers with, so a consuming plugin takes them as peers too and its build leaves them external. Never installed here, or that plugin's build would bundle this copy (the shared-packages repo guard, #98); the typecheck reads Core's (tsconfig.json).",
+  "peerDependencies": {
     "unified": "^11.0.5",
     "vfile": "^6.0.3"
+  },
+  "dependencies": {
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2"
   },
   "//devDependencies": "Types, and what the probe plugin in e2e/ needs.",
   "devDependencies": {

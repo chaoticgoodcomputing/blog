@@ -85,7 +85,8 @@ OS picks. Only for what a plugin does differently under serve (ADR-0004). Left u
 **Probe plugin**:
 A throwaway plugin a library's spec compiles from source (`harness/probe.mjs`) and loads into a
 scratch site, standing in for a plugin that uses (or will one day use) that capability of the
-library, so the library is tested on its own.
+library, so the library is tested on its own. It inlines everything, Quartz's shared packages as
+Core's copies, since a library never has its own (#98).
 _Avoid_: test plugin, mock plugin, fake
 
 **Source host**:

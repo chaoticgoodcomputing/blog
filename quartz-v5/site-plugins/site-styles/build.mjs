@@ -12,6 +12,7 @@ import crypto from "node:crypto"
 import fs from "node:fs"
 import path from "node:path"
 import * as sass from "sass"
+import { emitDeclarations } from "@chaoticgoodcomputing/declarations"
 
 // 2. The fonts ---------------------------------------------------------------------------------
 
@@ -97,9 +98,10 @@ const compileScss = {
   },
 }
 
+const entryPoints = { index: "src/index.ts" }
 await esbuild.build({
-  entryPoints: ["src/index.ts"],
-  outfile: "dist/index.js",
+  entryPoints,
+  outdir: "dist",
   bundle: true,
   format: "esm",
   platform: "node",
@@ -108,3 +110,7 @@ await esbuild.build({
   define: { __SITE_STYLES_FONT_FACES__: JSON.stringify(faces) },
   logLevel: "warning",
 })
+
+// Its type declarations, `dist/index.d.ts` (@chaoticgoodcomputing/declarations), as every plugin of
+// ours has (the package contract, #98). It imports nothing at run time, so nothing stays external.
+await emitDeclarations({ entries: entryPoints, external: [] })

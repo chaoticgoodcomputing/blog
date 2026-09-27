@@ -20,11 +20,14 @@
     "lint": "node --experimental-strip-types --disable-warning=ExperimentalWarning lint-css.mjs",
     "typecheck": "tsc -p ."
   },
-  "//devDependencies": "Types, and the library-CSS check the lint target runs on the bubble's stylesheet (@chaoticgoodcomputing/css-check). `vfile` is the module the fileData augmentation extends; a consuming plugin resolves its own copy, the host Quartz's. Libraries depend on each other by `workspace:*` (ADR-0005).",
+  "//peerDependencies": "`vfile` is the module the fileData augmentation extends, for its types alone: the host Quartz's copy, a peer, never installed here (the shared-packages repo guard, #98). A consuming plugin resolves the host's; the typecheck reads Core's (tsconfig.json).",
+  "peerDependencies": {
+    "vfile": "^6.0.3"
+  },
+  "//devDependencies": "Types, and the library-CSS check the lint target runs on the bubble's stylesheet (@chaoticgoodcomputing/css-check). Libraries depend on each other by `workspace:*` (ADR-0005).",
   "devDependencies": {
     "@chaoticgoodcomputing/css-check": "workspace:*",
-    "typescript": "^5.9.3",
-    "vfile": "^6.0.3"
+    "typescript": "^5.9.3"
   },
   "publishConfig": {
     "access": "public"

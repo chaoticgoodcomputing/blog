@@ -6,6 +6,11 @@
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true,
+    // Quartz's shared packages are peers, never installed here: type-check against the host
+    // Quartz's copies, the ones a consuming plugin resolves (#98).
+    "paths": {
+      "vfile": ["../../core/node_modules/vfile"]
+    },
     "types": []
   },
   "include": ["src/**/*.ts"]

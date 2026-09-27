@@ -6,12 +6,14 @@
 // the site's application CSS, in site-styles (ADR-0003's site-plugin amendment).
 import esbuild from "esbuild"
 import fs from "node:fs"
+import { emitDeclarations } from "@chaoticgoodcomputing/declarations"
 
 const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"))
 const peers = Object.keys(pkg.peerDependencies)
 
+const entryPoints = { index: "src/index.ts", "components/index": "src/components/index.ts", "frames/index": "src/frames/index.tsx" }
 await esbuild.build({
-  entryPoints: { index: "src/index.ts", "components/index": "src/components/index.ts", "frames/index": "src/frames/index.tsx" },
+  entryPoints,
   outdir: "dist",
   bundle: true,
   format: "esm",
@@ -22,3 +24,7 @@ await esbuild.build({
   external: [...peers, ...peers.map((p) => `${p}/*`)],
   logLevel: "warning",
 })
+
+// Its type declarations, a `.d.ts` beside each entry (@chaoticgoodcomputing/declarations), as every
+// plugin of ours has (the package contract, #98). The peers stay imports there too.
+await emitDeclarations({ entries: entryPoints, external: peers })

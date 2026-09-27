@@ -7,13 +7,27 @@ import os from "node:os"
 import path from "node:path"
 import { createRequire } from "node:module"
 import { core } from "./site.mjs"
+import { isShared } from "../../utils/packages.mjs"
 
 const require = createRequire(path.join(core, "package.json"))
 const esbuild = require("esbuild")
 
+// Quartz's shared packages (vfile, unified, Preact, …) are peers of a library, never installed beside
+// it (the shared-packages repo guard, #98), so the probe takes Core's copies, the ones a plugin that
+// inlines the library resolves at run time. Bundled, since the probe lives outside the repo.
+const hostCopies = {
+  name: "host-copies",
+  setup(build) {
+    build.onResolve({ filter: /^[^./]/ }, (args) => {
+      const name = args.path.split("/").slice(0, args.path.startsWith("@") ? 2 : 1).join("/")
+      return isShared(name) ? { path: require.resolve(args.path) } : undefined
+    })
+  },
+}
+
 // Bundles `<source>/index.ts` into a fresh plugin directory called `name` (the plugin's identity,
-// as for any local source), with `quartz` as its manifest. Everything is inlined, so the probe
-// needs no install. Resolves with the plugin's absolute path and a `remove()` for afterwards.
+// as for any local source), with `quartz` as its manifest. Everything is inlined, Quartz's shared
+// packages as Core's copies, so the probe needs no install. Resolves with the plugin's absolute path and a `remove()` for afterwards.
 export async function buildProbePlugin(source, name, quartz) {
   const parent = fs.mkdtempSync(path.join(os.tmpdir(), "cgc-probe-"))
   const root = path.join(parent, name)
@@ -36,6 +50,7 @@ export async function buildProbePlugin(source, name, quartz) {
     format: "esm",
     platform: "node",
     target: "node22",
+    plugins: [hostCopies],
     logLevel: "warning",
   })
   return { path: root, remove: () => fs.rmSync(parent, { recursive: true, force: true }) }

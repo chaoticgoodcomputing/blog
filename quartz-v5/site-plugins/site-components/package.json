@@ -4,13 +4,37 @@
   "private": true,
   "type": "module",
   "description": "This site's own layout components: the page title, with the site's icon and author, the footer, with its copyright line, and a full-width frame that keeps the sidebars' components. A site plugin: a repo-only package, never published (private), loaded by package name like every other plugin of ours. See CONTEXT.md.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chaoticgoodcomputing/blog.git",
+    "directory": "quartz-v5/site-plugins/site-components"
+  },
+  "//files": "Repo-only (private), so never packed or published; files, license, publishConfig and repository are here because the package contract is one shape for every plugin of ours (#98).",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "//exports": "Every entry has its type declarations beside it, which build.mjs emits, as every plugin of ours does: the package contract (the package-contract repo guard, #98) holds a site plugin to the same shape as a published one. ./package.json is how Quartz reads the manifest (import.meta.resolve).",
   "exports": {
-    ".": "./dist/index.js",
-    "./components": "./dist/components/index.js",
-    "./frames": "./dist/frames/index.js",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js"
+    },
+    "./frames": {
+      "types": "./dist/frames/index.d.ts",
+      "import": "./dist/frames/index.js"
+    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "node build.mjs",
     "typecheck": "../node_modules/.bin/tsc -p ."
@@ -20,8 +44,9 @@
     "@quartz-community/types": "*",
     "preact": "^10.29.0"
   },
-  "//devDependencies": "Build-time only: esbuild bundles dist/.",
+  "//devDependencies": "Build-time only: esbuild bundles dist/, and @chaoticgoodcomputing/declarations writes the .d.ts beside each entry (build.mjs).",
   "devDependencies": {
+    "@chaoticgoodcomputing/declarations": "workspace:*",
     "esbuild": "^0.28.2"
   },
   "quartz": {

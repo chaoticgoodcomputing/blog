@@ -323,9 +323,31 @@ that breaks its rule, and `site-v5:guards` runs them all, cached by Nx on the fi
 keep architecture checks out of the Playwright suite, which stays for what a reader, crawler or
 downstream site sees. Quartz Core's (#97): `core-drift` (no **drift** beyond the recorded **vendored
 changes**), `core-pruned`, `core-lock` (the **lock check**, plus a fresh `pnpm import`) and
-`site-config` (the **site config** against Core's plugin config schema).
+`site-config` (the **site config** against Core's plugin config schema). The packages' (#98):
+`package-contract` (the **package contract**), `shared-packages` (one copy of each **shared
+package**, Core's), `package-sources` (every source of ours a **package source** the workspace has and
+the site package depends on) and `clean-packs`. Those that read built output depend on the package
+builds, which Nx takes from its cache.
 _Avoid_: lint (the formatters and linters are something else), check (alone), test (the e2e suite and
 the `node --test` suites are tests; a guard checks the repo itself)
+
+**Package contract**:
+What every plugin and site plugin's `package.json` holds, so it is publishable and loads the same at
+every site: names that agree (the package `@chaoticgoodcomputing/quartz-<name>` or `site-<name>`, its
+directory and Nx project, and the manifest name `cgc-<name>`, or `site-<name>` for a site plugin);
+`exports` with `./package.json` and `{ types, import }` for each entry, with the `.d.ts` emitted;
+`files`, `license`, `publishConfig` and `repository`; **repo-only** exactly for the site plugins (and
+the site package); and no `requiresInstall`, which would have Quartz `npm install` into Core. A site
+plugin meets it too, though it is never packed. The `package-contract` guard holds every package to it.
+_Avoid_: package shape, manifest rules
+
+**Shared package**:
+One of Quartz's host singletons: Preact (with `preact-render-to-string`), `vfile`, `unified`,
+`lightningcss` and every `@quartz-community/*` package (`SHARED` in `utils/packages.mjs`). A plugin or
+library of ours takes one only as a peer, never installs it beside itself, and never bundles it, so it
+resolves to Core's copy here and the site's own downstream: one Preact per page. A plugin that inlines
+a library takes the library's shared packages as its own peers.
+_Avoid_: singleton (alone), host dependency, external
 
 ### Distinguishing the two copies
 

@@ -102,6 +102,8 @@ flowchart LR
   library_tags_core -.-> library_css_check
   library_widgets -.-> library_css_check
   library_widgets -.-> library_icons
+  site_plugin_site_components -.-> library_declarations
+  site_plugin_site_styles -.-> library_declarations
   click plugin_quartz_annotator "/plugins/quartz-annotator"
   click plugin_quartz_backlinks "/plugins/quartz-backlinks"
   click plugin_quartz_email_subscribe "/plugins/quartz-email-subscribe"

@@ -35,7 +35,7 @@ quartz-v5/
 ├── utils/                tooling for this context — `core-tiers.mjs`, `upstream.mjs`, `core-lock.mjs`,
 │                         `upgrade.mjs`, `api-report.mjs`, `upstream-cache.mjs`, `upstream-tree.mjs`,
 │                         `core-drift.mjs`, `site-config-schema.mjs`, `prebuild.mjs`, `postbuild.mjs`,
-│                         `plugin-packages.mjs`,
+│                         `plugin-packages.mjs`, `packages.mjs`,
 │                         and `guards/`, the repo guards
 ├── .upstream-cache/      gitignored: the upgrade's bare git repo of the upstream commits it has fetched,
 │                         and `trees/<sha>/`, the repo guards' checkouts of the pinned ref
@@ -195,7 +195,8 @@ Core deliberately, so our own files under `quartz-v5/` are still formatted.
 ## Repo guards
 
 `pnpm nx run site-v5:guards` runs the **repo guards** (`utils/guards/`, glossary in
-[CONTEXT.md](./CONTEXT.md)), four of which hold Core to this file:
+[CONTEXT.md](./CONTEXT.md)). Four hold Core to this file, and four hold our packages to how the site
+loads them (#98):
 
 | Guard | Rule |
 | ----- | ---- |
@@ -203,9 +204,16 @@ Core deliberately, so our own files under `quartz-v5/` are still formatted.
 | `core-pruned` | Every pruned file is absent from Core, tracked or not. |
 | `core-lock` | Core's `package.json` is upstream's, byte for byte; its `pnpm-lock.yaml` passes the lock check against upstream's `package-lock.json`, and equals what a fresh `pnpm import` of it writes. |
 | `site-config` | The site config validates against Core's plugin config schema (`quartz/plugins/quartz-plugins.schema.json`), and exists, isn't empty, and has a plugins list. |
+| `package-contract` | Every plugin and site plugin meets the **package contract**: its package, directory, Nx project and manifest names agree; `exports` has `./package.json` and `{ types, import }` for every entry, both emitted; it has `files`, `license`, `publishConfig` and `repository`; it is repo-only exactly when it is a site plugin, and the site package is repo-only; and no manifest sets `requiresInstall`. |
+| `shared-packages` | One copy of each of Quartz's **shared packages** (Preact, `preact-render-to-string`, `vfile`, `unified`, `lightningcss`, `@quartz-community/*`), Core's: no plugin, site plugin or library declares one but as a peer; from each plugin's real path every one resolves into Core's `node_modules`, and every peer resolves; no library has one installed beside it; and no plugin's `dist/` inlines one (read from esbuild's path comments, which every unminified, server-side bundle keeps). |
+| `package-sources` | Every source of ours in the site config and the fixture config is a package name, but the fixture's own plugins (`../fixture-plugins/<name>`, which must exist); each names a workspace package; every manifest dependency (plugins, site plugins, fixture plugins) names a workspace package; and every plugin of ours either config enables is a dependency of the site package, under the name Quartz imports it by (an object source's `name` as an alias of its `repo`). |
+| `clean-packs` | `pnpm pack --dry-run` of every publishable package (each plugin not repo-only) lists only `dist/`, README, LICENSE and `package.json`, and has each. |
 
-Each lists every violation and exits 1 on any. The target is cached on the files the guards read, so
-a second run with nothing changed is a cache hit. `core-drift` and `core-lock` compare against the
+Each lists every violation and exits 1 on any. The target is cached on the files the guards read and
+the package builds' outputs, so a second run with nothing changed is a cache hit. `package-contract`,
+`shared-packages` and `clean-packs` read built output, so the target depends on every package's
+`build` (`^build`: the site package depends on every plugin and site plugin), which Nx takes from its
+cache when a package is unchanged; the package guards take a couple of seconds, most of it clean-packs' `pnpm pack` runs. `core-drift` and `core-lock` compare against the
 pinned ref's tree, fetched once (a depth-1 fetch, a few seconds) into the gitignored
 `quartz-v5/.upstream-cache/trees/<sha>/` (`utils/upstream-tree.mjs`, beside the upgrade's bare repo); after that they need no network, but
 the fresh `pnpm import` reads pnpm's metadata cache or the registry. Run one guard alone with
@@ -349,7 +357,12 @@ instead, from which Node would otherwise walk up to the v4 tree's `node_modules`
 second, older Preact. The workspace install therefore
 never installs a peer beside a plugin (`autoInstallPeers: false`, below), and a plugin declares
 Quartz's shared packages (Preact, `vfile`, `unified`, `lightningcss`, `@quartz-community/*`) only
-as peers, never as devDependencies too, so its own `node_modules` never shadows a host singleton.
+as peers, never as devDependencies too, so its own `node_modules` never shadows a host singleton. A
+library does the same, and a plugin that inlines one takes the library's shared packages as its own
+peers, so its build leaves them external instead of bundling a second copy (the pipeline library's
+`unified` and `vfile`, which `quartz-annotator` and `quartz-mdx` inline, #98). A library's typecheck
+reads Core's copies through its `tsconfig.json` `paths`. The `shared-packages` repo guard checks all
+of it.
 `site-plugins/` needs the same link, `site-plugins/node_modules`, for the same reason. It's decided on
 [#39](https://github.com/chaoticgoodcomputing/blog/issues/39) and wired on
 [#64](https://github.com/chaoticgoodcomputing/blog/issues/64): `site-v5:prebuild` makes it for the

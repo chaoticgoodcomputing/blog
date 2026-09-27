@@ -32,7 +32,8 @@ plugins:
   `types` and `import` for `.` and each subpath (`./components`, `./frames`), plus `./package.json`.
 - **Quartz's shared packages are peers only**: Preact, `preact-render-to-string`, `vfile`, `unified`,
   `lightningcss`, `@quartz-community/*`. They resolve to the site's own copies, so a page has one
-  Preact, with no `.npmrc` and nothing installed beside the plugin.
+  Preact, with no `.npmrc` and nothing installed beside the plugin. A library takes them as peers
+  too, and a plugin that inlines it takes the library's as its own, so no build bundles a copy (#98).
 - **Our libraries are inlined, and are never a published plugin's dependencies.** A plugin lists each
   library it inlines, or whose code its build runs, as a `workspace:*` devDependency. The consumer's
   esbuild inlines its TypeScript source, and the declarations inline its types, so a site never
@@ -46,6 +47,9 @@ plugins:
   `quartz.name` stays `cgc-<name>`, and a plugin's CSS block and family layer are named from it, so
   its published class names never change with its package name.
 - **No `requiresInstall`**, and no `private` flag. `version` is `0.0.0` on `main`.
+- **Repo guards hold these rules** (`site-v5:guards`, #98): the package contract, one copy of each
+  shared package, package sources, and packs holding only `dist/`, README, LICENSE and
+  `package.json`.
 - **One version for everything**, cut together and tagged `v<semver>` (the **Release** in
   `quartz-v5/CONTEXT.md`), until the publishing ticket,
   [#90](https://github.com/chaoticgoodcomputing/blog/issues/90), settles versioning after cutover.

@@ -37,6 +37,10 @@ _Avoid_: blocklist, exclude list, filter
   pipeline was created with.
 - **A source must name a real file.** Some transformers read the file behind `filePath`, such as
   `CreatedModifiedDate` for its dates.
+- **The host's unified and vfile.** They are Quartz's shared packages, so they are this library's
+  peers, never installed beside it, and every plugin that inlines it takes them as peers too, so its
+  build leaves them external and the pipeline runs on the host's copies (the `shared-packages` repo
+  guard, #98). The typecheck reads Core's through `tsconfig.json`'s `paths`.
 - **Tested through a probe plugin**, `e2e/probe/`, built from source into a scratch site by
   `tests/harness/probe.mjs`, and through its consumers. `cgc-annotator`'s specs prove a denylist on
   a real plugin: its default and a site's own.
