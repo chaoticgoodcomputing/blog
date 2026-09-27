@@ -110,14 +110,17 @@ _Avoid_: portable, standalone
 **Site plugin**:
 A plugin that fails the shareability test on purpose, because it carries this site's own
 application layer rather than something for others to install. The opposite of a `cgc-*` plugin,
-which fails the test only by accident.
+which fails the test only by accident. Each is a **repo-only** package,
+`@chaoticgoodcomputing/site-<name>`, in `site-plugins/<name>` under its manifest name `site-<name>`,
+listed in the site config by package name like every other plugin of ours (#96).
 _Avoid_: customization (that is the whole category), local plugin, private plugin
 
 **Repo-only**:
 Of a package: marked `"private": true` in its `package.json`, which makes npm and pnpm refuse to
 publish it. It is never published to npm and is used only in this repo. The site package,
-`quartz-v5/package.json` (`site-v5`), is one (#92), and the site plugins stay ones (#96). A plugin
-not yet converted to a package carries the flag too, until it becomes one (#95). Not npm's
+`quartz-v5/package.json` (`site-v5`), is one (#92), and so is each site plugin (#96). pnpm's
+workspace publish leaves one out; a single package's `pnpm publish --dry-run` stops before the check,
+which only a real publish reaches. Not npm's
 "private package", a restricted package on the registry, which nothing here means.
 _Avoid_: private (alone), internal, unpublished
 
@@ -133,12 +136,14 @@ _Avoid_: real config, production config, the config (while the fixture's exists 
 A `source:` that names an npm package, as `@chaoticgoodcomputing/quartz-<name>` names ours: Quartz
 imports it by name, and never copies or links it into `.quartz/plugins/` or builds it, as it does a
 `@quartz-community/*` plugin (ADR-0005). In this repo the name resolves through the site package's
-`node_modules` to the plugin's directory, and prebuild and the e2e harness build it first. A plugin
-not yet converted is listed by a **local source** instead, a relative path Quartz links into
-`.quartz/plugins/`; local sources are retired once every plugin is a package (#95, #96). A
-package listed a second time, to place its component elsewhere, is an object source named for its
-placement, `{ repo: "<package>", name: "email-subscribe-sidebar" }`, which Quartz imports by that
-name: the site package also depends on the plugin under it, as an alias (VENDORED.md).
+`node_modules` to the plugin's directory, and prebuild and the e2e harness build it first. Every
+plugin of ours, site plugins included, is listed so (#96). The **local source**, a relative path
+Quartz links into `.quartz/plugins/`, is retired for them: only the e2e fixture's own plugins, which
+exist only for the suite, are still listed by one (`tests/CONTEXT.md`). A package listed a second
+time, to place its component elsewhere, is an object source named for its placement,
+`{ repo: "<package>", name: "email-subscribe-sidebar" }`, which Quartz imports by that name: the site
+package also depends on the plugin under it, as an alias (VENDORED.md). site-components' placements,
+`site-page-title` and `site-footer`, are two more.
 _Avoid_: npm source, registry plugin, package path
 
 **Plugin note**:

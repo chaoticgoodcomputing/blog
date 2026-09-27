@@ -16,8 +16,7 @@ import path from "node:path"
 import { createRequire } from "node:module"
 import { test, expect, routeSite } from "../harness/test.mjs"
 import { layerOrder } from "../harness/layers.mjs"
-import { buildScratchSite, fixtureConfig, siteConfig, testsRoot, core } from "../harness/site.mjs"
-import { pluginDirOf } from "../../utils/local-plugins.mjs"
+import { buildScratchSite, fixtureConfig, pluginDirOf, siteConfig, core } from "../harness/site.mjs"
 
 const YAML = createRequire(path.join(core, "package.json"))("yaml")
 const ENGINE = "@chaoticgoodcomputing/quartz-styles"
@@ -30,15 +29,15 @@ const nameOf = (source) =>
 
 // `config` (YAML text) with the engine off, and every enabled plugin of ours that depends on it,
 // directly or through a plugin already off. A dependency is a plugin name or an exact source, as
-// the loader matches it. Our plugins are listed by package name or by local path; both configs' local
-// sources resolve from a scratch root beside the fixture roots (harness/site.mjs), and no stock
-// plugin declares a dependency.
+// the loader matches it. Our plugins are listed by package name, and the fixture's own by local path,
+// which resolves from a scratch root beside the fixture roots (harness/site.mjs). No stock plugin
+// declares a dependency.
 function withoutEngine(config) {
   const doc = YAML.parseDocument(config)
   const sourceOf = (item) => (YAML.isMap(item.get("source")) ? item.get("source").toJSON() : item.get("source"))
   const plugins = doc.get("plugins").items.flatMap((item) => {
     const source = sourceOf(item)
-    const dir = pluginDirOf(source, path.join(testsRoot, ".site-scratch"))
+    const dir = pluginDirOf(source)
     if (!item.get("enabled") || !dir) return []
     const manifest = path.join(dir, "package.json")
     const { dependencies = [] } = JSON.parse(fs.readFileSync(manifest, "utf8")).quartz

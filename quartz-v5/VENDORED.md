@@ -28,14 +28,14 @@ quartz-v5/
 ├── a6e41ab6-….txt        the IndexNow key file — copied to the site root by postbuild.mjs
 ├── icon.png              the site's own icon — put over stock's in the build by postbuild.mjs
 ├── icons/                the site's own icon collection, `custom:` — SVG files, drawn by @chaoticgoodcomputing/icons
-├── plugins/              our Quartz plugins: packages (`quartz-*`) and those not yet converted (`cgc-*`)
-├── site-plugins/         this site's own plugins, which fail the shareability test on purpose
+├── plugins/              our Quartz plugins, each a package, `@chaoticgoodcomputing/quartz-<name>`
+├── site-plugins/         this site's own plugins, repo-only packages (`@chaoticgoodcomputing/site-<name>`)
 ├── libs/                 our non-plugin packages (`@chaoticgoodcomputing/*`)
 ├── tests/                Playwright suite and `content-fixture/`
 ├── utils/                tooling for this context — `core-tiers.mjs`, `upstream.mjs`, `core-lock.mjs`,
 │                         `upgrade.mjs`, `api-report.mjs`, `upstream-cache.mjs`, `upstream-tree.mjs`,
 │                         `core-drift.mjs`, `site-config-schema.mjs`, `prebuild.mjs`, `postbuild.mjs`,
-│                         `local-plugins.mjs`,
+│                         `plugin-packages.mjs`,
 │                         and `guards/`, the repo guards
 ├── .upstream-cache/      gitignored: the upgrade's bare git repo of the upstream commits it has fetched,
 │                         and `trees/<sha>/`, the repo guards' checkouts of the pinned ref
@@ -91,10 +91,16 @@ A plugin of ours that is a package is listed by its package name,
 `source: "@chaoticgoodcomputing/quartz-graph"`, a **package source**: Quartz imports it by name
 ([`config-loader.ts:441-442`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L441-L442)),
 and the site package (below, Dependencies) is where the name resolves. Every plugin in `plugins/` is
-a package (#93-#95); only the site's own, in `site-plugins/`, are local sources. Local `source:` entries are resolved with `path.resolve()` against cwd
+a package (#93-#95), and so is each site plugin in `site-plugins/`, a **repo-only** one
+(`"private": true`) named `@chaoticgoodcomputing/site-<name>`, whose directory and manifest name
+stay `site-<name>` (#96). So the site config lists no local path, and neither prebuild nor the e2e
+harness has a code path that builds or rewrites a local source. Quartz would resolve a local
+`source:` with `path.resolve()` against cwd
 ([`gitLoader.ts:99`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L99)),
-which is Core's root. Local plugins are therefore `../site-plugins/site-styles`. A plugin option that names a
-file resolves the same way, so the site's icon is `icon: ../icon.png` on `quartz-og-image`.
+which is Core's root; only the e2e fixture's own plugins are still listed so, against the fixture
+root (`tests/CONTEXT.md`, "Fixture plugin"). A plugin option that names a file resolves the same way,
+so the site's icon is `icon: ../icon.png` on `quartz-og-image`, and the harness's `siteConfig()`
+rebases such an option for a scratch site built from the site config.
 
 ## Building the site
 
@@ -170,7 +176,7 @@ Current vendored changes:
 | Files | Why | Upstream proposal |
 | ----- | --- | ----------------- |
 | `quartz/plugins/types.ts`, `quartz/plugins/pageTypes/dispatcher.ts` | [#19](https://github.com/chaoticgoodcomputing/blog/issues/19): four default transformers are async, so a page type cannot run the pipeline from a synchronous `generate`. Makes `generate` awaitable. Needed by `cgc-mdx`. | [#25](https://github.com/chaoticgoodcomputing/blog/issues/25), filed after cutover |
-| `quartz/plugins/loader/config-loader.ts` | [#40](https://github.com/chaoticgoodcomputing/blog/issues/40): the loader matches `manifest.dependencies` only against exact `source:` strings, and a local source differs by site root, so no one dependency string holds at the real site, the e2e fixture and a downstream install. `validateDependencies` now resolves each dependency by exact source, then by plugin name, and its presence, order and cycle checks all use the resolved entry. Additive: a dependency that matches a source exactly behaves as before. Landed with `cgc-styles` on [#63](https://github.com/chaoticgoodcomputing/blog/issues/63), proven by `tests/specs/dependencies-by-name.spec.mjs`. Since [#95](https://github.com/chaoticgoodcomputing/blog/issues/95) every consumer names its engine by package name, which is the engine's `source:` at every site and so matches exactly, as on stock Quartz; the change is needed only by a dependency on a plugin listed by a local source, until [#96](https://github.com/chaoticgoodcomputing/blog/issues/96) retires them. | [#47](https://github.com/chaoticgoodcomputing/blog/issues/47), filed after cutover |
+| `quartz/plugins/loader/config-loader.ts` | [#40](https://github.com/chaoticgoodcomputing/blog/issues/40): the loader matches `manifest.dependencies` only against exact `source:` strings, and a local source differs by site root, so no one dependency string holds at the real site, the e2e fixture and a downstream install. `validateDependencies` now resolves each dependency by exact source, then by plugin name, and its presence, order and cycle checks all use the resolved entry. Additive: a dependency that matches a source exactly behaves as before. Landed with `cgc-styles` on [#63](https://github.com/chaoticgoodcomputing/blog/issues/63), proven by `tests/specs/dependencies-by-name.spec.mjs`. Since [#95](https://github.com/chaoticgoodcomputing/blog/issues/95) every consumer names its engine by package name, which is the engine's `source:` at every site and so matches exactly, as on stock Quartz; the change is needed only by a dependency on a plugin listed by a local source. Since [#96](https://github.com/chaoticgoodcomputing/blog/issues/96) neither config has one: only the fixture's own plugins are local sources, and nothing depends on them. The change is exercised only by the spec's scratch cases now; retiring it is a vendored change of its own (ADR-0001), not yet taken. | [#47](https://github.com/chaoticgoodcomputing/blog/issues/47), filed after cutover |
 
 The `core-drift` repo guard (below) reads the first column of this table: every file drift is
 allowed in, as a code span, one row per vendored change. Adding a vendored change means adding its
@@ -336,11 +342,11 @@ ref's own `package-lock.json` (see Upgrading).
 
 **Our plugins resolve the host's dependencies through `plugins/node_modules`,** a gitignored
 symlink to `../core/node_modules` that the e2e harness and `site-v5:prebuild` create. A plugin runs
-from its real path under `plugins/` whether it is listed by local path or by package name. A git-installed
-plugin sits at `.quartz/plugins/<name>/` inside Core, so its bare `import "preact"` finds Quartz's
-copy, and that is what the loader's shared externals assume. A local plugin is only symlinked there,
-and Node resolves from the symlink's target under `plugins/`, which would otherwise walk up to the v4
-tree's `node_modules` at the repo root: a second, older Preact. The workspace install therefore
+from its real path under `plugins/`, where the site package's link leads. A git-installed plugin
+sits at `.quartz/plugins/<name>/` inside Core, so its bare `import "preact"` finds Quartz's copy, and
+that is what the loader's shared externals assume. A package of ours is loaded from its real path
+instead, from which Node would otherwise walk up to the v4 tree's `node_modules` at the repo root: a
+second, older Preact. The workspace install therefore
 never installs a peer beside a plugin (`autoInstallPeers: false`, below), and a plugin declares
 Quartz's shared packages (Preact, `vfile`, `unified`, `lightningcss`, `@quartz-community/*`) only
 as peers, never as devDependencies too, so its own `node_modules` never shadows a host singleton.
@@ -379,9 +385,12 @@ them: sources and manifests, never their Markdown, `docs/`, `e2e/` or specs, so 
 nothing), Core's lock and the workspace's external dependencies, and whose output is its `dist/`. A
 second build with nothing changed is a cache hit.
 
-**The site package loads the plugins that are packages.** `quartz-v5/package.json` depends on each by
-`workspace:*`, so pnpm links `quartz-v5/node_modules/@chaoticgoodcomputing/quartz-<name>` to its
-directory. Quartz imports a package source from Core source, `core/quartz/`, and Node's upward
+**The site package loads every plugin of ours.** `quartz-v5/package.json` depends on each by
+`workspace:*`, so pnpm links `quartz-v5/node_modules/@chaoticgoodcomputing/quartz-<name>`, and each
+site plugin's `@chaoticgoodcomputing/site-<name>`, to its directory. A site plugin is repo-only:
+pnpm's workspace publish (`pnpm -r publish`) leaves it out, and a real publish refuses it
+(`EPRIVATE`); a single package's `pnpm publish --dry-run` stops before that check, so it can't
+show the refusal (pnpm 11.27.1). Quartz imports a package source from Core source, `core/quartz/`, and Node's upward
 walk from there reaches `quartz-v5/node_modules` after Core's own, so Core's `package.json` stays
 upstream's. A new package is added there, in the same change that lists it in a config (#93). Its
 build emits a `.d.ts` beside each `dist/` entry through `@chaoticgoodcomputing/declarations`, since
@@ -393,18 +402,21 @@ second entry is an object source, `{ repo: "<package>", name: "<placement name>"
 imports an object source whose repo is a package by its `name`
 ([`gitLoader.ts:84-93`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L84-L93),
 [`config-loader.ts:441-442`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L441-L442)),
-which the alias resolves to the same directory (#94). Quartz never prunes `.quartz/plugins/`, so
-a plugin that became a package leaves a link to nowhere there; `site-v5:prebuild` and the e2e
-harness remove such links before every build (`pruneGonePlugins` in `utils/local-plugins.mjs`).
+which the alias resolves to the same directory (#94). site-components is listed so twice more,
+once per component it places, under the aliases `site-page-title` and `site-footer` (#96).
+Quartz never prunes `.quartz/plugins/`, so a plugin that became a package leaves its old link
+there, live or pointing nowhere; `site-v5:prebuild` and the e2e harness remove every such link, and
+every link into `plugins/` or `site-plugins/`, before every build (`pruneGonePlugins` in
+`utils/plugin-packages.mjs`).
 
 **Nx infers targets from the workspace members' `package.json` scripts,** now that plugins and the
 e2e suite are members: a `typecheck` script on a package without a `typecheck` target in its
 `project.json` (`quartz-mdx`, `quartz-og-image`, `site-styles`) becomes one, and `site-v5-e2e` gets `test`
 from the suite's `test` script. So `nx run-many -t test` starts the whole e2e suite. A target in
 `project.json` wins over an inferred one of the same name. The e2e harness and
-`site-v5:prebuild` take the same two steps from one module, `utils/local-plugins.mjs`: the frozen
-workspace install, a no-op when nothing has moved, then an Nx build of the plugins they load, by
-either kind of source (`pluginDirOf`, which also reads a package name).
+`site-v5:prebuild` take the same two steps from one module, `utils/plugin-packages.mjs`: the frozen
+workspace install, a no-op when nothing has moved, then an Nx build of the packages they load
+(`pluginDirOf` maps a package name, or an object source's `repo`, to its directory).
 Content reaches a library the same way: the root `package.json` depends on
 `@chaoticgoodcomputing/widgets` by `workspace:*`, so an `.mdx` page in the vault or the e2e fixture
 resolves `@chaoticgoodcomputing/widgets/<widget>` by Node's upward walk to the root `node_modules` (#36).

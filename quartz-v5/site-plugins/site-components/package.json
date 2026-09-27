@@ -1,9 +1,9 @@
 {
-  "name": "site-components",
+  "name": "@chaoticgoodcomputing/site-components",
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "This site's own layout components: the page title, with the site's icon and author, the footer, with its copyright line, and a full-width frame that keeps the sidebars' components. A site plugin, never published. See CONTEXT.md.",
+  "description": "This site's own layout components: the page title, with the site's icon and author, the footer, with its copyright line, and a full-width frame that keeps the sidebars' components. A site plugin: a repo-only package, never published (private), loaded by package name like every other plugin of ours. See CONTEXT.md.",
   "exports": {
     ".": "./dist/index.js",
     "./components": "./dist/components/index.js",

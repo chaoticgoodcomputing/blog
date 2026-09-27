@@ -38,7 +38,7 @@ test.beforeAll(async () => {
   probe = await buildProbePlugin(probeSource, "cgc-probe", { category: "transformer", defaultOrder: 50 })
   site = await buildScratchSite("site-styles", CONTENT, {
     config: withPlugins(fixtureConfig(), [
-      { source: "../../site-plugins/site-styles", enabled: true },
+      { source: "@chaoticgoodcomputing/site-styles", enabled: true },
       { source: probe.path, enabled: true },
     ]),
     keep: true,

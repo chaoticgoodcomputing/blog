@@ -63,3 +63,24 @@ directory, and Node loads one copy of the module through both links.
   and one entry has one position.
 - **A vendored change** to let an entry name the component it places. Rejected: a config-level
   workaround exists, so there is no case for a third vendored change (ADR-0001).
+
+## Amendment: the package name, and an alias per placement
+
+_2026-09-27, from [Site plugins as repo-only packages, and local plugin paths retired](https://github.com/chaoticgoodcomputing/blog/issues/96)._
+
+The plugin is now the repo-only package `@chaoticgoodcomputing/site-components`, listed by package
+name, and the entries read:
+
+```yaml
+- source: { repo: "@chaoticgoodcomputing/site-components", name: site-page-title }
+- source: { repo: "@chaoticgoodcomputing/site-components", name: site-footer }
+```
+
+Quartz imports an object source whose `repo` is a package by its `name`, not its `repo`
+([gitLoader.ts:84-93](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L84-L93),
+[config-loader.ts:441-442](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L441-L442)).
+So the site package, `quartz-v5/package.json`, depends on the plugin under each placement name as
+well, a pnpm workspace alias: `"site-page-title": "workspace:@chaoticgoodcomputing/site-components@*"`,
+and the same for `site-footer`. #94 found this pattern for the subscribe box the site lists twice.
+Without the alias, stock Quartz skips the entry with a warning and places nothing. The harness's
+`siteConfig()` no longer rebases `repo`: it is a package name, the same from any root.

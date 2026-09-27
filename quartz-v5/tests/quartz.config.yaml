@@ -1,7 +1,8 @@
 # The fixture site's config: upstream's default, plus our plugins under test.
 # A plugin under test is listed by its package name, as a downstream site lists it, e.g.
 #   - source: "@chaoticgoodcomputing/quartz-graph"
-# or, for a plugin that is not a package, by a local source resolved against the fixture root:
+# The one exception is the fixture's own plugins, which exist only for the suite and are listed by a
+# local source, resolved against the fixture root (tests/CONTEXT.md, "Fixture plugin"; #96):
 #   - source: ../fixture-plugins/fixture-consumer
 # See quartz-v5/tests/harness/site.mjs and docs/adr/0004.
 # Site plugins (`site-plugins/`) are never listed: the fixture stays stock (#39), and their specs

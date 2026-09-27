@@ -25,7 +25,7 @@ quartz-v5/.serve-public
 # and trees/<sha>/, the repo guards' checkouts of the pinned ref (quartz-v5/utils/upstream-tree.mjs)
 quartz-v5/.upstream-cache/
 quartz-v5/core/.quartz/
-# e2e scratch sites made at the real site root's depth (quartz-v5/tests/harness/site.mjs)
+# leftovers of the e2e scratch "site" location, retired in #96; the harness no longer makes these
 quartz-v5/.site-scratch-*/
 
 .op

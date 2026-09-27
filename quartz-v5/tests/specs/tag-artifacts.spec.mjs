@@ -54,13 +54,14 @@ test("the consumers receive the engine's artifacts at the fixture root", async (
 // the dark half. `engineering/ai` has no colour of its own.
 const ENGINEERING = { light: "rgb(0, 112, 204)", dark: "rgb(0, 140, 255)" }
 
-// The real site runs from Quartz Core's root, `quartz-v5/core/`. A scratch root made beside
-// Core resolves the site config's sources exactly as the real site does.
+// The real site runs from Quartz Core's root, `quartz-v5/core/`. Every source in its config is a
+// package name (#96), which resolves the same from any root, so a scratch site built from the site
+// config resolves them exactly as the real site does.
 test("the consumers receive the engine's artifacts at the real site root", async ({
   page,
   colorScheme,
 }) => {
-  const config = siteConfig({ at: "site" })
+  const config = siteConfig()
   expect(pluginSources(config)).toContain(ENGINE)
   expect(pluginSources(config)).toContain("@chaoticgoodcomputing/quartz-tag-list")
   const site = await buildScratchSite(
@@ -70,9 +71,8 @@ test("the consumers receive the engine's artifacts at the real site root", async
       "content/notes/a-note.md": "---\ntitle: A note\ntags: [engineering/ai]\n---\nA note.\n",
     },
     {
-      at: "site",
       config: withPlugins(config, [
-        { source: "../tests/fixture-plugins/fixture-tag-reader", enabled: true },
+        { source: "../fixture-plugins/fixture-tag-reader", enabled: true },
       ]),
       keep: true,
     },

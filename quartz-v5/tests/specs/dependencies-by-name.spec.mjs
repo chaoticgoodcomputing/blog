@@ -25,7 +25,7 @@ test("the consumer names the engine by its package name, the source both sites l
   const manifest = JSON.parse(fs.readFileSync(path.join(CONSUMER_DIR, "package.json"), "utf8")).quartz
   expect(manifest.dependencies).toEqual([ENGINE])
   expect(pluginSources(fixtureConfig())).toContain(ENGINE)
-  expect(pluginSources(siteConfig({ at: "site" }))).toContain(ENGINE)
+  expect(pluginSources(siteConfig())).toContain(ENGINE)
 })
 
 test("the consumer's dependency resolves by name at the fixture root", async ({ page }) => {
@@ -33,14 +33,13 @@ test("the consumer's dependency resolves by name at the fixture root", async ({ 
   expect((await layerOrder(page)).cgc).toContain("fixture-consumer")
 })
 
-// The real site runs from Quartz Core's root, `quartz-v5/core/`, where a local source would differ
-// from the fixture's. A scratch root made beside Core resolves the site config's sources exactly as
-// the real site does, and the consumer is added to it there.
+// The real site runs from Quartz Core's root, `quartz-v5/core/`. Every source in its config is a
+// package name (#96), which resolves the same from any root, so a scratch site built from the site
+// config resolves them exactly as the real site does. The consumer is added to it.
 test("the consumer's dependency resolves by name at the real site root", async ({ page }) => {
-  const config = siteConfig({ at: "site" })
+  const config = siteConfig()
   const site = await buildScratchSite("site-root", HOME, {
-    at: "site",
-    config: withPlugins(config, [{ source: "../tests/fixture-plugins/fixture-consumer", enabled: true }]),
+    config: withPlugins(config, [{ source: CONSUMER, enabled: true }]),
     keep: true,
   })
   try {

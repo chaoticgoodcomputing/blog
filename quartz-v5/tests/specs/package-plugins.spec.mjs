@@ -7,8 +7,8 @@
 // and on serve, that Quartz's generated plugin index takes it in, and that a TypeScript site can
 // read its types. Its own specs prove what it renders.
 //
-// Every plugin in plugins/ is a package now (#93-#95); only the fixture's own plugins and the site
-// plugins still load by local path.
+// Every plugin of ours is a package now (#93-#96), the site plugins too, as repo-only ones; only the
+// fixture's own plugins still load by local path.
 import fs from "node:fs"
 import path from "node:path"
 import { execFile } from "node:child_process"
@@ -242,5 +242,64 @@ test("Quartz's generated plugin index takes in the tag family", async ({ scratch
   for (const name of Object.keys(FAMILY)) {
     expect(`${stdout}${stderr}`).not.toContain(`Skipping npm package ${name}`)
     expect(index).toContain(`from "${name}"`)
+  }
+})
+
+// The site plugins (#96): repo-only packages, `"private": true`, named `@chaoticgoodcomputing/site-<name>`
+// and loaded by that name like every other plugin of ours, through the site package. Their
+// directories and manifest names are unchanged.
+const SITE_PLUGINS = {
+  "@chaoticgoodcomputing/site-styles": "site-styles",
+  "@chaoticgoodcomputing/site-components": "site-components",
+}
+const sitePackage = () => JSON.parse(fs.readFileSync(path.join(testsRoot, "..", "package.json"), "utf8"))
+const localSources = (config) =>
+  pluginSources(config)
+    .map((source) => (typeof source === "string" ? source : source?.repo))
+    .filter((source) => typeof source === "string" && (source.startsWith(".") || path.isAbsolute(source)))
+
+// Every plugin of ours loads by package name. The one exception is the fixture's own plugins, which
+// exist only for the suite and stay local sources (tests/CONTEXT.md, "Fixture plugin").
+test("no config lists a plugin by local path but the fixture's own plugins", () => {
+  expect(localSources(fs.readFileSync(siteConfigFile, "utf8"))).toEqual([])
+  const fixturePlugins = path.join(testsRoot, "fixture-plugins")
+  const outside = localSources(fixtureConfig()).filter(
+    (source) => !path.resolve(fixtureRoot("main"), source).startsWith(`${fixturePlugins}${path.sep}`),
+  )
+  expect(outside).toEqual([])
+})
+
+test("the site plugins are repo-only packages the site lists by name", () => {
+  const sources = pluginSources(fs.readFileSync(siteConfigFile, "utf8"))
+  const deps = sitePackage().dependencies
+  for (const [name, dir] of Object.entries(SITE_PLUGINS)) {
+    const manifest = JSON.parse(fs.readFileSync(path.join(testsRoot, "..", "site-plugins", dir, "package.json"), "utf8"))
+    expect(manifest.name).toBe(name)
+    expect(manifest.private, name).toBe(true)
+    expect(manifest.quartz.name, name).toBe(dir)
+    expect(deps[name], name).toBe("workspace:*")
+    expect(sources.some((source) => source === name || source?.repo === name), name).toBe(true)
+  }
+  // site-components places one component per entry, each named for it, so the site package depends
+  // on it under each placement name too, as Quartz imports an object source by its `name`.
+  for (const placement of ["site-page-title", "site-footer"]) {
+    const entry = sources.find((source) => source?.name === placement)
+    expect(entry?.repo, placement).toBe("@chaoticgoodcomputing/site-components")
+    expect(deps[placement], placement).toBe("workspace:@chaoticgoodcomputing/site-components@*")
+  }
+})
+
+// pnpm refuses to publish a private package: a workspace publish, the way every package would be
+// published (#90), leaves each site plugin out, where a publishable package would be packed and
+// listed. (A single-package `pnpm publish --dry-run` stops before the check, which lives in the
+// registry step, so it cannot show the refusal.) Nothing here reaches the registry: a private
+// package is dropped before pnpm asks whether it is already published.
+test("a workspace publish leaves the site plugins out", async () => {
+  const repo = path.resolve(testsRoot, "..", "..")
+  for (const name of Object.keys(SITE_PLUGINS)) {
+    const { stdout, stderr } = await run("pnpm", ["-r", "--filter", name, "publish", "--dry-run", "--no-git-checks"], { cwd: repo })
+    const output = `${stdout}${stderr}`
+    expect(output, name).toContain("There are no new packages that should be published")
+    expect(output, name).not.toContain(name)
   }
 })

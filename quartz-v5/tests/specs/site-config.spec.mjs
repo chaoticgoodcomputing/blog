@@ -32,6 +32,18 @@ test.beforeAll(async () => {
 })
 test.afterAll(() => site?.remove())
 
+// Every plugin the site config lists is a package, loaded by name (#96): Quartz links nothing into
+// `.quartz/plugins/`, where it puts a local source, and the site plugins render.
+test("loads every plugin by package name, linking none into .quartz/plugins/", async ({ page }) => {
+  const plugins = path.join(path.dirname(site.public), ".quartz", "plugins")
+  const linked = fs.existsSync(plugins) ? fs.readdirSync(plugins).filter((name) => fs.lstatSync(path.join(plugins, name)).isSymbolicLink()) : []
+  expect(linked).toEqual([])
+  await routeSite(page, site.public, ORIGIN)
+  await page.goto(`${ORIGIN}/`)
+  await expect(page.locator(".left.sidebar > h2.page-title")).toHaveCount(1)
+  await expect(page.locator("footer.site-footer")).toHaveCount(1)
+})
+
 test("emits no folder pages", () => {
   for (const folder of ["content", "content/notes"]) {
     expect(fs.existsSync(path.join(site.public, folder, "index.html")), `${folder}/index.html`).toBe(false)

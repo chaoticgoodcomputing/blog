@@ -15,12 +15,12 @@ import { promisify } from "node:util"
 import { fileURLToPath } from "node:url"
 import {
   PLUGIN_ROOTS,
-  buildLocalPlugins,
+  buildPackages,
   installWorkspace,
-  pluginDirOf,
+  pluginDirOf as packageDirOf,
   pluginPackages,
   pruneGonePlugins,
-} from "../../utils/local-plugins.mjs"
+} from "../../utils/plugin-packages.mjs"
 import { FIXTURE_PAPER_URL, fixturePaper } from "./source-host.mjs"
 
 const run = promisify(execFile)
@@ -29,7 +29,7 @@ export const testsRoot = path.resolve(here, "..")
 export const core = path.resolve(testsRoot, "../core")
 const pluginsRoot = path.resolve(testsRoot, "../plugins")
 const fixturePluginsRoot = path.resolve(testsRoot, "fixture-plugins")
-// PLUGIN_ROOTS (utils/local-plugins.mjs) holds `plugins/` and the site plugins' `site-plugins/`
+// PLUGIN_ROOTS (utils/plugin-packages.mjs) holds `plugins/` and the site plugins' `site-plugins/`
 // (VENDORED.md layout): no fixture config lists a site plugin, but scratch sites built from the site
 // config do, so they are built and linked alongside our plugins.
 const YAML = createRequire(path.join(core, "package.json"))("yaml")
@@ -49,40 +49,28 @@ export function fileFor(root, pathname) {
   return hit ? { file: hit, status: 200 } : { file: path.join(root, "404.html"), status: 404 }
 }
 
-// Where a scratch root is made. `fixture`, the default, is beside the fixture roots, where the
-// fixture config's `../../plugins/<name>` sources resolve. `site` is beside Core, at the
-// real site root's depth, where the site config's `../plugins/<name>` sources resolve unchanged: for
-// a spec about the source strings themselves, such as a dependency declared by plugin name (#40).
-const SCRATCH_PARENT = { fixture: testsRoot, site: path.dirname(core) }
+// Where every scratch root is made: beside the fixture roots, at their depth, so a scratch config's
+// local sources, which only the fixture's own plugins have, resolve as the fixture config's do.
+const SCRATCH_PARENT = testsRoot
 
 // The real site's config, the steering file `quartz-v5/core/quartz.config.yaml`, for a scratch site
-// that has to be built the way the real site is. Its local `source:` paths resolve against Core's root,
-// where the real site builds (VENDORED.md), so they are rebased onto the scratch roots made `at`
-// the given place. At `site`, that leaves a `../` path as it is. So is a plugin option that is a
-// relative path (`./…` or `../…`), such as quartz-og-image's `icon`, which a plugin resolves against
-// the same root, and one inside a map of options, such as an icon collection's directory in
-// `iconCollections`. A map shared through a YAML anchor is rebased once, where it is anchored.
+// that has to be built the way the real site is. Every plugin it lists is a package, loaded by name
+// from any root (#96), so its sources are left as they are. A plugin option that is a relative path
+// (`./…` or `../…`), such as quartz-og-image's `icon`, resolves against the root the site builds
+// from, Core's (VENDORED.md), so it is rebased onto the scratch roots, and so is one inside a map of
+// options, such as an icon collection's directory in `iconCollections`. A map shared through a YAML
+// anchor is rebased once, where it is anchored.
 //
 // `offline` once switched off core's download of the site's Google Fonts. The site config now has
 // core fetch nothing (`fontOrigin: local`), and site-styles ships the fonts from its own build (#84),
 // so a build of it makes no font fetch either way and `offline` changes nothing.
 export const siteConfigFile = path.join(core, "quartz.config.yaml")
-export function siteConfig({ at = "fixture", offline = false } = {}) {
+export function siteConfig({ offline = false } = {}) {
   const config = YAML.parseDocument(fs.readFileSync(siteConfigFile, "utf8"))
   if (offline) config.setIn(["configuration", "theme", "fontOrigin"], "local")
-  const scratchRoot = path.join(SCRATCH_PARENT[at], ".site-scratch")
+  const scratchRoot = path.join(SCRATCH_PARENT, ".site-scratch")
   const rebase = (local) => path.relative(scratchRoot, path.resolve(core, local))
-  for (const entry of config.get("plugins").items) {
-    const source = entry.get("source")
-    if (typeof source === "string" && source.startsWith(".")) {
-      entry.set("source", rebase(source))
-    } else if (YAML.isMap(source) && String(source.get("repo")).startsWith(".")) {
-      // An object source, `{ repo, name }`: how the site lists one local plugin more than once
-      // (site-components, one entry per component).
-      source.set("repo", rebase(source.get("repo")))
-    }
-    rebaseOptions(entry.get("options"), rebase)
-  }
+  for (const entry of config.get("plugins").items) rebaseOptions(entry.get("options"), rebase)
   return String(config)
 }
 
@@ -140,13 +128,24 @@ export const withPlugins = (config, entries) =>
     }
   })
 
-// The directory of the plugin a fixture config's `source:` names, if it is ours or a fixture plugin:
-// a local path, resolved against the fixture root, or one of our package names (#93).
-const dirOf = (source) => pluginDirOf(source, fixtureRoot("main"))
 const under = (root) => (dir) => dir !== undefined && dir.startsWith(`${root}${path.sep}`)
 
+// The directory of the plugin a fixture or scratch config's `source:` names, if it is ours: one of our
+// packages, by its package name (#93-#96), or a fixture plugin, by its local source, resolved against
+// the fixture root. The fixture's own plugins are the one kind still listed by local path
+// (tests/CONTEXT.md, "Fixture plugin"). An object source, `{ repo, name }`, is read by its `repo`.
+export function pluginDirOf(source) {
+  const dir = packageDirOf(source)
+  if (dir) return dir
+  const spec = typeof source === "string" ? source : source?.repo
+  if (typeof spec !== "string" || !spec.startsWith(".")) return undefined
+  const local = path.resolve(fixtureRoot("main"), spec)
+  return under(fixturePluginsRoot)(local) ? local : undefined
+}
+const dirOf = pluginDirOf
+
 // Entries for `withPlugins` that turn off every package under `quartz-v5/plugins/` that `config`
-// lists, by package name or by local path, except those named in `keep`, each by its package name
+// lists, by package name, except those named in `keep`, each by its package name
 // (`@chaoticgoodcomputing/quartz-graph`) or its directory (`quartz-graph`, `quartz-tags`): for a build
 // that must fail in one plugin's words, which another that checks the same thing, such as another
 // plugin that draws icons, would otherwise fail first. Fixture plugins are left as they are.
@@ -157,8 +156,8 @@ export const othersOff = (config, keep) =>
     .map((source) => ({ source, enabled: false }))
 
 const LINKED = ["package.json", "quartz", "node_modules", "tsconfig.json", "quartz.ts", "globals.d.ts", "index.d.ts"]
-// Ours: a package under `quartz-v5/plugins/`, listed by package name or local path, or a fixture
-// plugin standing in for one.
+// Ours: a package under `quartz-v5/plugins/`, listed by package name, or a fixture plugin standing
+// in for one, listed by local path.
 const isOurs = (source) =>
   typeof source === "string" && [pluginsRoot, fixturePluginsRoot].some((root) => under(root)(dirOf(source)))
 // A stock plugin one of ours replaces, which the baseline turns back on in its place, where the
@@ -216,15 +215,15 @@ function writeFixtureRoot(variant) {
   fs.writeFileSync(path.join(root, "quartz.config.yaml"), String(config))
 }
 
-// Quartz symlinks a local plugin into `.quartz/plugins/`, and imports a package source by name, but
-// never builds either (only git sources get a build), so every package is built here first, as the
-// real site's prebuild builds the ones its config enables: a frozen install of the workspace, then
-// the packages' Nx builds, cached (utils/local-plugins.mjs).
+// Quartz imports a package source by name but never builds it (only git sources get a build), so
+// every package of ours is built here first, as the real site's prebuild builds the ones its config
+// enables: a frozen install of the workspace, then the packages' Nx builds, cached
+// (utils/plugin-packages.mjs). The fixture's own plugins, the one local source left, need no build.
 export async function buildPlugins() {
   linkHostModules()
   await installWorkspace(run)
   const packages = [...pluginPackages().values()]
-  await buildLocalPlugins(packages, run)
+  await buildPackages(packages, run)
   return packages
 }
 
@@ -254,10 +253,10 @@ export async function buildPluginCopy(name, edit) {
 
 // A git-installed plugin lives at `.quartz/plugins/<name>/` inside the Quartz root, so its bare
 // imports of Quartz's own dependencies (preact, unified, vfile — the loader's shared externals)
-// resolve to the host's copies. A local plugin is only symlinked there, and Node resolves from the
-// symlink's target under `quartz-v5/plugins/`, which would walk up to the v4 tree's `node_modules`
-// at the repo root instead: a second Preact. This gitignored link restores the git-install lookup,
-// in `site-plugins/` as in `plugins/`.
+// resolve to the host's copies. A package of ours is loaded from its real path under
+// `quartz-v5/plugins/` or `site-plugins/`, from which Node would walk up to the v4 tree's
+// `node_modules` at the repo root instead: a second Preact. This gitignored link restores the
+// git-install lookup, in `site-plugins/` as in `plugins/`.
 function linkHostModules() {
   for (const root of PLUGIN_ROOTS) {
     const link = path.join(root, "node_modules")
@@ -312,7 +311,7 @@ async function withBuildLock(fn) {
 }
 
 // Every build first removes the links a renamed plugin left in its root's `.quartz/plugins/`
-// (utils/local-plugins.mjs), which Quartz itself never prunes: a fixture root outlives the plugins
+// (utils/plugin-packages.mjs), which Quartz itself never prunes: a fixture root outlives the plugins
 // it was first built with.
 export { pruneGonePlugins }
 
@@ -379,13 +378,13 @@ export async function buildSite(variant) {
   await quartzBuild(fixtureRoot(variant), ["-d", "../content-fixture", "-o", outputFor(variant)])
 }
 
-// A scratch site's root, made `at` a place (see SCRATCH_PARENT) under a name of its own, since the
+// A scratch site's root, made beside the fixture roots (SCRATCH_PARENT) under a name of its own, since the
 // same spec runs once per colour scheme, possibly at the same time, with `config` (YAML text) as its
 // config. Its content goes outside the repo, because Quartz's content glob honours .gitignore, which
 // covers every fixture root. `put(rel, text)` writes a content file, and `remove()` deletes the root
 // and the content, never a link's target.
-function makeScratchRoot(name, files, { config = fixtureConfig(), at = "fixture" } = {}) {
-  const root = fs.mkdtempSync(path.join(SCRATCH_PARENT[at], `.site-scratch-${name}-`))
+function makeScratchRoot(name, files, { config = fixtureConfig() } = {}) {
+  const root = fs.mkdtempSync(path.join(SCRATCH_PARENT, `.site-scratch-${name}-`))
   const content = fs.mkdtempSync(path.join(os.tmpdir(), `cgc-scratch-${name}-`))
   const remove = () => {
     for (const dir of [content, root]) fs.rmSync(dir, { recursive: true, force: true })
@@ -414,8 +413,7 @@ function makeScratchRoot(name, files, { config = fixtureConfig(), at = "fixture"
 // unless `options.config` supplies one (a YAML string), and assumes `buildPlugins` has already run
 // (global setup does it). Resolves with the exit code and combined output rather than throwing.
 // `options.serve` builds it as `quartz build --serve` does, stopping the server once it is up.
-// `options.at` is where the root is made: `fixture` (the default) or `site`, see SCRATCH_PARENT. The
-// site is deleted afterwards unless `options.keep` is set; the result then also carries `public`
+// The site is deleted afterwards unless `options.keep` is set; the result then also carries `public`
 // (the built site) and `remove()`, which the caller must call once it is done with the site.
 export async function buildScratchSite(name, files, options = {}) {
   const scratch = makeScratchRoot(name, files, options)

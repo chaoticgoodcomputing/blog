@@ -52,6 +52,6 @@ So the file is read at the start of `emit`, and the build fails naming the path 
 - A `serve` run still refuses stock og-image beside it, but it draws no cards and never reads the
   icon. A broken `icon` shows up on the next build.
 - `icon` resolves against the Quartz root, as a local `source:` does. The e2e harness's
-  `siteConfig()` rebases it for scratch sites, as it rebases `source:`.
+  `siteConfig()` rebases it for scratch sites.
 - If upstream Quartz ever makes the site icon configurable (the optional core PR on the map), the
   `icon` option can defer to it.

@@ -2,10 +2,11 @@
 #
 # A steering file (#91): tracked here, inside Quartz Core, where Quartz reads it from its cwd, and
 # edited as Quartz's docs intend (see VENDORED.md). Upstream's default config is pruned, so Quartz
-# has nothing to fall back on: `site-v5:prebuild` refuses to build without this file. Local
-# `source:` paths resolve against Core's root, `quartz-v5/core/`, so our plugins are
-# `../plugins/<name>` and site plugins `../site-plugins/<name>`. Proven by
-# `tests/specs/site-config.spec.mjs`.
+# has nothing to fall back on: `site-v5:prebuild` refuses to build without this file. Every plugin
+# of ours is listed by its package name, `@chaoticgoodcomputing/quartz-<name>`, and the site plugins
+# by theirs, `@chaoticgoodcomputing/site-<name>`, repo-only (#96): nothing here is a local path. A
+# plugin option that names a file, such as quartz-og-image's `icon`, still resolves against Core's
+# root, `quartz-v5/core/`. Proven by `tests/specs/site-config.spec.mjs`.
 #
 # Kept in upstream's plugin order, so it diffs cleanly against upstream's default config,
 # `quartz.config.default.yaml` at the ref `quartz-v5/upstream.json` pins (pruned from Core, so read
@@ -153,7 +154,7 @@ plugins:
   # -1000`), and its stack names only the layers this config loads: enabling a theme means adding
   # the theme's layers to it (site-plugins/site-styles/src/styles/site.scss). It also ships the
   # site's fonts, Inter and IBM Plex Mono, fetched at its own build, under `static/site-styles/` (#84).
-  - source: ../site-plugins/site-styles
+  - source: "@chaoticgoodcomputing/site-styles"
     enabled: true
   # The family layer, `cgc`, above core and themes (#30, #63): every plugin of ours that emits CSS
   # declares it by its package name, `dependencies: ["@chaoticgoodcomputing/quartz-styles"]` (#95),
@@ -496,8 +497,10 @@ plugins:
   # v4's page title: the site's icon, the title and "by <author>" (#44, #70). The loader places one
   # component per entry, found by the entry's name in PascalCase, so site-components is listed once
   # per component, each entry named for it (site-plugins/site-components/CONTEXT.md, "Placement").
+  # Quartz imports an object source whose repo is a package by its `name`, so the site package also
+  # depends on site-components under each placement name, an alias (quartz-v5/package.json).
   - source:
-      repo: ../site-plugins/site-components
+      repo: "@chaoticgoodcomputing/site-components"
       name: site-page-title
     enabled: true
     options:
@@ -623,7 +626,7 @@ plugins:
   # v4's footer: its links, the copyright line, then the Quartz credit (#44, #70). site-components'
   # second entry, named for its component (see the page title's entry).
   - source:
-      repo: ../site-plugins/site-components
+      repo: "@chaoticgoodcomputing/site-components"
       name: site-footer
     enabled: true
     options:

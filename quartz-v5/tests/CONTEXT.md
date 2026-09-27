@@ -41,6 +41,13 @@ plugin the fixture must not run (`fixture-theme`, for `@quartz-themes/core`), or
 consumer of one of our engines (`fixture-consumer` for quartz-styles; `fixture-tag-reader`, which
 writes out the tag data quartz-tags publishes on each page). Plain ESM with no build step. One the
 fixture config enables counts as one of our plugins, so the baseline disables it.
+Listed by a local source, `../fixture-plugins/<name>`, resolved against the fixture root: the one
+sanctioned exception to "every plugin loads by package name" (#96). Quartz imports a package source
+only through the site package's `node_modules`, so making these packages would list test-only
+plugins among the real site's dependencies; and they need no build, so the harness still has no
+code path that builds or rewrites a local source. Quartz links each into the root's
+`.quartz/plugins/`. A scratch root is always made beside the fixture roots, so the same source
+resolves there.
 _Avoid_: test plugin, mock plugin, stub (in prose)
 
 **Owned element**:

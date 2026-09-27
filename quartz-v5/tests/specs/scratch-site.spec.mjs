@@ -8,7 +8,7 @@ import os from "node:os"
 import path from "node:path"
 import { spawnSync } from "node:child_process"
 import { test, expect } from "../harness/test.mjs"
-import { BUILD_LOCK, VARIANTS, buildScratchSite, fixtureRoot, pruneGonePlugins, serveScratchSite } from "../harness/site.mjs"
+import { BUILD_LOCK, VARIANTS, buildScratchSite, fixtureRoot, pruneGonePlugins, serveScratchSite, testsRoot } from "../harness/site.mjs"
 
 // A folder of content outside the site, reached through a link, as an .mdx page's `node_modules` is.
 let elsewhere
@@ -130,6 +130,26 @@ test("a build first removes the links in .quartz/plugins/ whose plugin has gone"
   }
   // A root with no plugins installed yet has nothing to prune.
   expect(() => pruneGonePlugins(fs.mkdtempSync(path.join(os.tmpdir(), "cgc-scratch-prune-")))).not.toThrow()
+})
+
+// Every plugin of ours loads by package name (#96), so a link Quartz once made into `plugins/` or
+// `site-plugins/` is left from a root built while that plugin was local, though its target is still
+// there. It goes too. A fixture plugin, the one local source left, keeps its link.
+test("a build first removes the links in .quartz/plugins/ to a plugin of ours, now a package", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "cgc-scratch-prune-"))
+  try {
+    const plugins = path.join(root, ".quartz", "plugins")
+    fs.mkdirSync(plugins, { recursive: true })
+    const v5 = path.resolve(testsRoot, "..")
+    fs.symlinkSync(path.join(v5, "site-plugins", "site-styles"), path.join(plugins, "site-styles"))
+    fs.symlinkSync(path.relative(plugins, path.join(v5, "plugins", "quartz-graph")), path.join(plugins, "cgc-graph"))
+    fs.symlinkSync(path.join(testsRoot, "fixture-plugins", "fixture-consumer"), path.join(plugins, "fixture-consumer"))
+    pruneGonePlugins(root)
+    expect(fs.readdirSync(plugins)).toEqual(["fixture-consumer"])
+    expect(fs.existsSync(path.join(v5, "site-plugins", "site-styles", "package.json")), "a link's target is left alone").toBe(true)
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true })
+  }
 })
 
 test("the fixture roots, as global setup built them, hold no link to a plugin that has gone", () => {

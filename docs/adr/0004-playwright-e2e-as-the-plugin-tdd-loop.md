@@ -48,8 +48,9 @@ holds its own config, written from `tests/quartz.config.yaml`. This makes no ven
 ([gitLoader.ts:435-482](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L435-L482)).
 Only a git source gets `npm install` and `npm run build`
 ([:547](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L547)).
-The harness therefore builds every package under `quartz-v5/plugins/` before it builds a site. This
-corrects the trap recorded on
+The harness therefore builds every package under `quartz-v5/plugins/` before it builds a site
+(_Amended below_: every plugin is now a package source, which Quartz imports by name and builds no
+more than a local one). This corrects the trap recorded on
 [Plugin packaging and shared SCSS tokens](https://github.com/chaoticgoodcomputing/blog/issues/22):
 "the loader does run npm" holds for git sources only.
 
@@ -212,4 +213,31 @@ install, a no-op when nothing has moved. Its second is an Nx build of every plug
 through their `build` targets, which are cacheable, so a plugin whose sources, libraries and
 dependencies are unchanged is restored from Nx's cache rather than rebuilt. "Every run rebuilds all
 plugins" (rule 5) now means every run brings all plugins up to date. The site builds are still cold.
-Plugins still load by local path; `quartz-v5/VENDORED.md` has the workspace's settings.
+Plugins still load by local path; `quartz-v5/VENDORED.md` has the workspace's settings. (_Amended
+below_: they no longer do.)
+
+## Amendment: plugins load by package name, and local sources are retired
+
+_2026-09-27, from [Site plugins as repo-only packages, and local plugin paths retired](https://github.com/chaoticgoodcomputing/blog/issues/96)._
+
+Every plugin of ours is now an npm package, loaded by package name at the fixture and at the real
+site, as a downstream site loads it (ADR-0005): the shareable plugins as
+`@chaoticgoodcomputing/quartz-<name>`, and the site plugins as `@chaoticgoodcomputing/site-<name>`,
+repo-only packages (`"private": true`) that are never published. Quartz imports a package source
+through the site package's `node_modules`
+([config-loader.ts:441-442](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L441-L442)),
+and neither links it into `.quartz/plugins/` nor builds it. So "Quartz does not build our plugins"
+holds as before, and the harness still builds every package first, through the workspace install
+and the Nx builds of the amendment above (`quartz-v5/utils/plugin-packages.mjs`). What goes is every
+code path for a local source: neither the harness nor `site-v5:prebuild` resolves, builds or rewrites
+one. The harness's `siteConfig()` leaves the site config's sources as they are, since a package name
+resolves the same from any root, and still rebases a plugin option that is a relative path, such as
+`quartz-og-image`'s `icon`. Its second place for scratch roots, beside Quartz Core, which existed so
+that the site config's `../plugins/<name>` sources resolved unchanged, is gone: every scratch root is
+made beside the fixture roots. Every build first removes the links a plugin left in `.quartz/plugins/`
+while it was a local source.
+
+The fixture's own plugins (`tests/fixture-plugins/`) are the one exception, written down in
+`quartz-v5/tests/CONTEXT.md`: they stay local sources. They exist only for the suite, so making them
+packages would list them among the real site's dependencies, where Quartz resolves a package source;
+and they are plain ESM with no build, so keeping them local brings back no build or rewrite path.

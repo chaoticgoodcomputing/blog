@@ -21,10 +21,13 @@ _Avoid_: widget, cgc component
 
 **Placement**:
 A site config entry that puts one site component in the layout. It names this plugin by an object
-source, `{ repo: ../site-plugins/site-components, name: <placement> }`. The loader finds the
-component by the placement name in PascalCase: `site-page-title` places `SitePageTitle`, and
-`site-footer` places `SiteFooter`. So a placement name is what `byPageType.exclude` takes. The plugin
-itself is still `site-components`: its directory, Nx project and manifest name.
+source, `{ repo: "@chaoticgoodcomputing/site-components", name: <placement> }`. Quartz imports that
+entry by the placement name, so the site package depends on the plugin under each placement name
+too, an alias (#96). The loader finds the component by the placement name in PascalCase:
+`site-page-title` places `SitePageTitle`, and `site-footer` places `SiteFooter`. So a placement name
+is what `byPageType.exclude` takes. The plugin itself is the repo-only package
+`@chaoticgoodcomputing/site-components`, and `site-components` is still its directory, Nx project and
+manifest name.
 _Avoid_: instance, alias, plugin name (for a placement's)
 
 **Site frame**:
