@@ -51,6 +51,12 @@ async function fixLinksInPublicFiles() {
       // Negative lookbehind ensures we don't match URLs like https://example.com/public/path
       content = content.replace(/(?<!:\/\/[^\s]*)\]\((?:private|public)\/([-\w\/\.]+)\)/g, '](/$1)')
 
+      // Point links to a tag's description at the tag page, which Quartz 5 serves at /tags/<tag>: v4
+      // kept the description at tags/<tag>/index.md (#43, #81). Covers wikilinks, with a plain or
+      // table-escaped alias, and markdown links, with or without a leading slash or a heading.
+      // Pattern: [[/tags/<tag>/index|display]] → [[/tags/<tag>|display]], ](/tags/<tag>/index) → ](/tags/<tag>)
+      content = content.replace(/(\[\[|\]\()(\/?tags\/[-\w\/.]+?)\/index(?=\\?\||\]\]|\)|#)/g, "$1$2")
+
       // Only write if changes were made
       if (content !== originalContent) {
         await writeFile(publicFilePath, content, "utf-8")

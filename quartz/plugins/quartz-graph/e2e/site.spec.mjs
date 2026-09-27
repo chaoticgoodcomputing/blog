@@ -34,8 +34,8 @@ const CONTENT = {
     ["private"],
     "A private stub, about [[/content/notes/a-note|a note]].",
   ),
-  // A tag's description file, as the vault has them until cutover renames them (#43).
-  "tags/engineering/index.md": "---\ntitle: Engineering\n---\nWhat the engineering tag is about.\n",
+  // A tag's description file, as the vault has them since the cutover rename (#43).
+  "tags/engineering.md": "---\ntitle: Engineering\n---\nWhat the engineering tag is about.\n",
   // The plugin note, as the vault has it (#48).
   "plugins/quartz-graph.md": fs.readFileSync(path.join(VAULT, "plugins/quartz-graph.md"), "utf8"),
 }
@@ -174,7 +174,7 @@ test("draws a tag page's graph around the tag: its parent and its pages", async 
 
 test("draws a tag's description file as the tag's own node", async ({ page }) => {
   await routeSite(page, site.public, ORIGIN)
-  await page.goto(`${ORIGIN}/tags/engineering/`)
+  await page.goto(`${ORIGIN}/tags/engineering`)
   const graph = await drawnGraph(localGraph(page))
   expect(graph["tags/engineering"]).toMatchObject({ label: "#engineering", current: true })
   expect(graph["content/notes/b-note"].edges).toContain("tags/engineering")

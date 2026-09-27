@@ -14,7 +14,7 @@ const WEEKDAYS = [
 
 // Find the most recent season by date
 const latestSeason = app.vault.getMarkdownFiles()
-  .filter(file => file.path.startsWith(SEASONS_FOLDER))
+  .filter(file => file.path.startsWith(SEASONS_FOLDER + "/"))
   .reduce((latest, file) => {
     const createdAt = app.metadataCache.getFileCache(file)?.frontmatter?.date;
     if (!createdAt) return latest;
@@ -26,7 +26,8 @@ const latestSeason = app.vault.getMarkdownFiles()
   }, null);
 
 // Extract season info with fallback if no season found
-const seasonName = latestSeason?.file.path.split('/').slice(-2)[0] ?? 'daily';
+// A season is its tag's description file, tags/horticulture/seasons/<season>.md
+const seasonName = latestSeason?.file.basename ?? 'daily';
 const seasonTag = `horticulture/seasons/${seasonName}`;
 
 // Calculate day number within season
