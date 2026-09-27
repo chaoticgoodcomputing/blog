@@ -97,9 +97,18 @@ How a family of related plugins holds together. Recorded in
 [ADR-0002](../docs/adr/0002-plugin-composition-through-published-artifacts.md).
 
 **Plugin name**:
-A plugin's identity within a site — the name it installs under, and the name a consumer uses to
-declare it as a dependency. The same at every site that loads the plugin, unlike its source.
-_Avoid_: plugin id, source (that is where a plugin comes from, and differs by site)
+A plugin's identity within a site: its npm package name, `@chaoticgoodcomputing/quartz-<name>`
+(#89). It is the `source:` a site lists and the name a consumer declares it by as a dependency,
+since Quartz matches a dependency against the name it takes from each source, which for a package
+is the whole package name. The same at every site that loads the plugin.
+_Avoid_: plugin id, manifest name (that is the `cgc-<name>` inside the package)
+
+**Manifest name**:
+The `name` in a plugin's `quartz` manifest, `cgc-<name>`, kept when the packages took their
+`quartz-<name>` names (#89). It names the plugin's CSS: its BEM block and its sublayer of the
+**family layer**, so a plugin's published class names never change with its package name. Not what
+a site lists, nor what a consumer depends on.
+_Avoid_: plugin name, package name, block name (in prose)
 
 **Engine**:
 A non-visual plugin that owns one domain's configuration and publishes it for other plugins to
