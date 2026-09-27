@@ -1,13 +1,14 @@
 // Repo guard `clean-packs` (#98): `pnpm pack --dry-run` of each publishable package (every plugin
 // that is not repo-only) lists only its built `dist/`, its README, its LICENSE and `package.json`,
-// and has each of them. A downstream site installs exactly that, and needs no build.
+// and has each of them. A downstream site installs exactly that, and needs no build. A workspace
+// publish leaves out every repo-only package, and the libraries are left out until #90 decides.
 //
 // To reproduce a failure by hand: add "src" to `files` in quartz-v5/plugins/quartz-seo/package.json,
 // then `node quartz-v5/utils/guards/clean-packs.guard.mjs` lists every file under src/ and exits 1.
 // Undo with `git checkout -- quartz-v5/plugins/quartz-seo/package.json`.
 import { test } from "node:test"
 import assert from "node:assert/strict"
-import { runGuard } from "./guard-helpers.mjs"
+import { listed, runGuard } from "./guard-helpers.mjs"
 import { makePackageRepo, pluginFiles, pluginManifest } from "./fixtures/package-repo.mjs"
 
 // pnpm pack rewrites each `workspace:*` spec to the version installed, and the scratch repo has no
@@ -15,10 +16,6 @@ import { makePackageRepo, pluginFiles, pluginManifest } from "./fixtures/package
 const packable = (dir, extra = {}) => ({ ...pluginManifest(dir), devDependencies: undefined, ...extra })
 const packableRepo = (files = {}) =>
   makePackageRepo({ "quartz-v5/plugins/quartz-good/package.json": packable("quartz-good"), ...files })
-
-const listed = (out, ...fragments) => {
-  for (const fragment of fragments) assert.ok(out.includes(fragment), `lists "${fragment}":\n${out}`)
-}
 
 test("a repo whose publishable packages pack only dist/, README, LICENSE and package.json passes", () => {
   const { code, out } = runGuard("clean-packs", ["--repo", packableRepo()])
@@ -56,6 +53,31 @@ test("a pack with no dist/ fails", () => {
   const { code, out } = runGuard("clean-packs", ["--repo", repo])
   assert.equal(code, 1, out)
   listed(out, "quartz-v5/plugins/quartz-good: its pack has no dist/ (build it)")
+})
+
+// pnpm refuses to publish a private package, so a workspace publish, the way every package would be
+// published (#90), leaves each repo-only one out. A single-package `pnpm publish --dry-run` stops
+// before that check, so the guard asks the workspace. A site plugin that is not repo-only would be
+// published. pnpm then asks the registry whether that version exists; offline, the guard's
+// no-retry lookup fails at once and the dry run still names it, so the case needs no network.
+test("a site plugin a workspace publish would publish fails", () => {
+  const repo = packableRepo({
+    "quartz-v5/site-plugins/site-good/package.json": { ...pluginManifest("site-good", { site: true }), private: undefined, devDependencies: undefined },
+  })
+  const { code, out } = runGuard("clean-packs", ["--repo", repo])
+  assert.equal(code, 1, out)
+  listed(out, "quartz-v5/site-plugins/site-good: a workspace publish would publish @chaoticgoodcomputing/site-good: it must be repo-only")
+  assert.match(out, /1 violation\(s\)/)
+})
+
+// #90 decides whether the libraries are published at all, so this guard leaves them out, and says so.
+test("a library is never packed, whatever it would pack", () => {
+  const repo = packableRepo({
+    "quartz-v5/libs/lib-good/package.json": { name: "@chaoticgoodcomputing/lib-good", version: "0.0.0", files: ["src"] },
+  })
+  const { code, out } = runGuard("clean-packs", ["--repo", repo])
+  assert.equal(code, 0, out)
+  assert.ok(!out.includes("lib-good"), out)
 })
 
 test("the real repo's publishable packages pack cleanly", () => {

@@ -14,6 +14,10 @@
 //     reads the path comments esbuild leaves in an unminified bundle, `// <path>/node_modules/<pkg>/…`,
 //     so it covers every server-side entry; the browser bundles some plugins minify carry none.
 //
+// And one more rule of Core's install: its hoisted pnpm layout puts another version of `picomatch` and
+// `string-width` at the top of Core's `node_modules` than npm did (VENDORED.md, "Dependencies"), so no
+// plugin or site plugin source imports either, which it would resolve through Core.
+//
 //   node quartz-v5/utils/guards/shared-packages.guard.mjs [--repo <dir>]
 //
 // Test and how to break it by hand: utils/test/guard-shared-packages.test.mjs.
@@ -24,6 +28,13 @@ import { SHARED, coreModules, isShared, ourPackages } from "../packages.mjs"
 import { CannotCheck, guard, option } from "./guard.mjs"
 
 const FIELDS = ["dependencies", "devDependencies", "optionalDependencies"]
+// Placed differently in Core's hoisted node_modules than npm placed them (VENDORED.md, "Dependencies").
+const PLACED_UNLIKE_NPM = ["picomatch", "string-width"]
+// An import, dynamic import, re-export or require of one of them, or of a file inside it.
+const IMPORTS = new RegExp(
+  `(?:\\bfrom\\s*|\\bimport\\s*\\(?\\s*|\\brequire\\s*\\(\\s*)["'](${PLACED_UNLIKE_NPM.join("|")})(?:/[^"']*)?["']`,
+  "g",
+)
 // esbuild's comment before each module it inlines, and the package that module belongs to.
 const INLINED = /^\s*\/\/ (\S*?node_modules\/(?:\.pnpm\/[^/\s]+\/node_modules\/)?((?:@[^/\s]+\/)?[^/\s]+)\/\S*)$/gm
 
@@ -34,6 +45,15 @@ function resolveFrom(from, name) {
     if (fs.existsSync(candidate)) return fs.realpathSync(candidate)
     if (path.dirname(dir) === dir) return undefined
   }
+}
+
+/** Every source file of the package at `root`, relative to it: all but `dist/` and `node_modules/`. */
+function sources(root) {
+  return fs.readdirSync(root, { withFileTypes: true, recursive: true })
+    .filter((entry) => entry.isFile() && /\.(m|c)?[jt]sx?$/.test(entry.name))
+    .map((entry) => path.relative(root, path.join(entry.parentPath, entry.name)).split(path.sep).join("/"))
+    .filter((file) => !/^(dist|node_modules)\//.test(file) && !file.includes("/node_modules/"))
+    .sort()
 }
 
 /** Every `.js` and `.mjs` file under `dir`, relative to `base`. */
@@ -50,18 +70,17 @@ await guard(import.meta, "One copy of each of Quartz's shared packages, Core's",
   const modules = coreModules(repo)
   if (!fs.existsSync(modules)) throw new CannotCheck(`Quartz Core is not installed (${modules}): pnpm nx run site-v5:install`)
   const core = fs.realpathSync(modules)
-  const scopes = SHARED.filter((name) => name.endsWith("/"))
   // Every shared package there is: the named ones, and each in a shared scope that Core has.
   const shared = [
-    ...SHARED.filter((name) => !name.endsWith("/")),
-    ...scopes.flatMap((scope) => {
+    ...SHARED.names,
+    ...SHARED.scopes.flatMap((scope) => {
       const dir = path.join(modules, scope)
-      return fs.existsSync(dir) ? fs.readdirSync(dir).map((name) => `${scope}${name}`) : []
+      return fs.existsSync(dir) ? fs.readdirSync(dir).map((name) => `${scope}/${name}`) : []
     }),
   ]
 
   const violations = []
-  for (const { kind, rel, path: at, pkg } of ourPackages(repo)) {
+  for (const { kind, rel, root: at, pkg } of ourPackages(repo)) {
     const say = (message) => violations.push(`${rel}: ${message}`)
     for (const field of FIELDS) {
       for (const name of Object.keys(pkg[field] ?? {}).filter(isShared)) say(`declares ${name} in ${field}: a shared package is a peer only`)
@@ -85,6 +104,11 @@ await guard(import.meta, "One copy of each of Quartz's shared packages, Core's",
       } else if (!resolved.startsWith(`${core}${path.sep}`)) {
         say(`${name} resolves to ${resolved}, not Core's copy`)
       }
+    }
+
+    for (const file of sources(at)) {
+      const imported = new Set([...fs.readFileSync(path.join(at, file), "utf-8").matchAll(IMPORTS)].map(([, name]) => name))
+      for (const name of imported) say(`${file} imports ${name}, which Core's install places unlike npm: use another package`)
     }
 
     for (const file of bundles(path.join(at, "dist"), at)) {

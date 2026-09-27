@@ -144,7 +144,11 @@ const TAG_LIST = {
 // Every other plugin of ours is off in these builds. Another that draws icons (quartz-tag-explorer,
 // #76) would otherwise fail the build first, in its own words, and an entry that aliases the
 // fixture's `&iconCollections` anchor would lose it when the entry below replaces this one.
-const OTHERS = othersOff(fixtureConfig(), ["quartz-styles", "quartz-tags", "quartz-tag-list"])
+const OTHERS = othersOff(fixtureConfig(), [
+  "@chaoticgoodcomputing/quartz-styles",
+  "@chaoticgoodcomputing/quartz-tags",
+  "@chaoticgoodcomputing/quartz-tag-list",
+])
 const FAILURES = [
   {
     name: "an icon its collection doesn't have",

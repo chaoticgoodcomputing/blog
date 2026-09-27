@@ -6,7 +6,8 @@
 //     `site-<name>` for all but its package, `@chaoticgoodcomputing/site-<name>`, and its manifest
 //     name, which stays `site-<name>` (#96);
 //   - `exports` has `"./package.json": "./package.json"`, which Quartz reads the manifest through, and
-//     every other entry is `{ types, import }`, both of them emitted (so this reads built output);
+//     `"."`, which Quartz imports the package by; every entry but `./package.json` is
+//     `{ types, import }`, its `types` a `.d.ts`, both of them emitted (so this reads built output);
 //   - `files` is `["dist"]`, `license` is MIT, `publishConfig` is public, and `repository` names this
 //     repo and the package's directory;
 //   - it is repo-only (`"private": true`) exactly when it is a site plugin. The site package,
@@ -26,7 +27,7 @@ import { CannotCheck, guard, option } from "./guard.mjs"
 
 const PREFIX = { plugin: "quartz-", "site-plugin": "site-" }
 
-function contract({ kind, dir, rel, path: at, pkg, project }) {
+function contract({ kind, dir, rel, root: at, pkg, project }) {
   const problems = []
   const say = (message) => problems.push(`${rel}: ${message}`)
 
@@ -44,12 +45,14 @@ function contract({ kind, dir, rel, path: at, pkg, project }) {
   if (!pkg.exports || typeof pkg.exports !== "object") say("it has no exports")
   else {
     if (pkg.exports["./package.json"] !== "./package.json") say('exports has no "./package.json": "./package.json"')
+    if (!("." in pkg.exports)) say('exports has no "." entry { types, import }')
     for (const [entry, target] of Object.entries(pkg.exports)) {
       if (entry === "./package.json") continue
       if (typeof target !== "object" || typeof target?.types !== "string" || typeof target?.import !== "string") {
         say(`exports "${entry}" is not { types, import }`)
         continue
       }
+      if (!/\.d\.[cm]?ts$/.test(target.types)) say(`exports "${entry}" types ${target.types} is not a .d.ts`)
       for (const file of [target.import, target.types]) {
         if (!fs.existsSync(path.join(at, file))) say(`exports "${entry}" has no emitted ${file} (build it)`)
       }

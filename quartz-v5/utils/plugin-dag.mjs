@@ -1,7 +1,7 @@
 // The dependency DAG on the plugins' tag page (#86): a Mermaid flowchart of every package under
 // quartz-v5/, drawn from what their manifests declare, and written between two generated markers in
 // the description note of `projects/site/plugins`. The owner decided it is generated and guarded
-// (review notes, 2026-09-26): tests/specs/plugin-dag.spec.mjs fails whenever the note's block differs
+// (review notes, 2026-09-26): the `plugin-dag` repo guard fails whenever the note's block differs
 // from what this script would write.
 //
 //   node quartz-v5/utils/plugin-dag.mjs          rewrite the note's block  (pnpm nx run site-v5:plugin-dag)

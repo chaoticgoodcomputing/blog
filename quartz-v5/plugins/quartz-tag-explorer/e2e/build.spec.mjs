@@ -12,7 +12,11 @@ const EXPLORER = {
 }
 // Every other plugin of ours is off, so no other that draws icons fails the build first. The
 // explorer's entry is replaced whole, since the one that anchors `&iconCollections` is off.
-const OTHERS = othersOff(fixtureConfig(), ["quartz-styles", "quartz-tags", "quartz-tag-explorer"])
+const OTHERS = othersOff(fixtureConfig(), [
+  "@chaoticgoodcomputing/quartz-styles",
+  "@chaoticgoodcomputing/quartz-tags",
+  "@chaoticgoodcomputing/quartz-tag-explorer",
+])
 
 const build = (tags, options = {}) =>
   buildScratchSite("tag-explorer-build", HOME, {

@@ -82,7 +82,7 @@
       }
     },
     "test-utils": {
-      "//": "The node --test suites of this project's tooling (utils/test/): the lock check, against small synthetic locks; the upgrade, its API-surface report and --verify (with stand-in steps), against a synthetic Quartz-shaped upstream and site repo (offline apart from the pnpm store); and each repo guard, against a scratch copy or fixture that breaks its rule and against the real repo.",
+      "//": "The node --test suites of this project's tooling (utils/test/): the lock check, against small synthetic locks; the upgrade, its API-surface report and --verify (with stand-in steps), against a synthetic Quartz-shaped upstream and site repo (offline apart from the pnpm store); each repo guard, against a scratch copy or fixture that breaks its rule and against the real repo; the plugin DAG script (utils/plugin-dag.mjs); pruneGonePlugins (utils/plugin-packages.mjs); and prebuild's refusal to build without a site config.",
       "executor": "nx:run-commands",
       "options": {
         "command": "node --test \"quartz-v5/utils/test/*.test.mjs\"",
@@ -90,7 +90,7 @@
       }
     },
     "guards": {
-      "//": "The repo guards (utils/guards/): fast, lint-style checks of the repo's architecture, no browser. Each checks one rule, lists every violation, and fails the target on any. Quartz Core's (#97): no drift beyond the recorded vendored changes, pruned files absent, package.json and pnpm lock upstream's at the pinned ref, and the site config valid against Core's plugin config schema. The packages' (#98): every plugin and site plugin meets the package contract, one copy of each of Quartz's shared packages (Core's), every source of ours a package name the workspace has and the site package depends on, and every publishable package packing only dist/, README, LICENSE and package.json. Three of those read built output, so the target depends on every package's build (the site package's dependencies, ^build), which Nx takes from its cache when nothing changed. Cached itself: the inputs are every file a guard reads, and the builds' outputs. The pinned ref's tree is fetched once into quartz-v5/.upstream-cache/trees/. One guard alone: node quartz-v5/utils/guards/run.mjs <name>, or node quartz-v5/utils/guards/<name>.guard.mjs.",
+      "//": "The repo guards (utils/guards/): fast, lint-style checks of the repo's architecture, no browser. Each checks one rule, lists every violation, and fails the target on any. Quartz Core's (#97): no drift beyond the recorded vendored changes, pruned files absent, package.json and pnpm lock upstream's at the pinned ref, and the site config valid against Core's plugin config schema. The packages' (#98): every plugin and site plugin meets the package contract, one copy of each of Quartz's shared packages (Core's), every source of ours a package name the workspace has and the site package depends on, every publishable package packing only dist/, README, LICENSE and package.json with no repo-only one published, and Quartz's generated plugin index taking in every plugin. The plugin notes' (#86): the plugins' tag's note carrying the DAG the packages declare, and every plugin's README its tagged plugin note. Four of those read built output, so the target depends on every package's build (the site package's dependencies, ^build), which Nx takes from its cache when nothing changed. Cached itself: the inputs are every file a guard reads, and the builds' outputs. The pinned ref's tree is fetched once into quartz-v5/.upstream-cache/trees/. One guard alone: node quartz-v5/utils/guards/run.mjs <name>, or node quartz-v5/utils/guards/<name>.guard.mjs.",
       "executor": "nx:run-commands",
       "options": {
         "command": "node quartz-v5/utils/guards/run.mjs",
@@ -110,6 +110,9 @@
         "{workspaceRoot}/quartz-v5/libs/*/package.json",
         "{workspaceRoot}/quartz-v5/tests/quartz.config.yaml",
         "{workspaceRoot}/quartz-v5/tests/fixture-plugins/*/package.json",
+        "{workspaceRoot}/content/public/tags/projects/site/plugins.md",
+        "{workspaceRoot}/content/public/tags/projects/site/plugins/**/*",
+        "{workspaceRoot}/content/public/plugins/*",
         "{workspaceRoot}/pnpm-workspace.yaml",
         "{workspaceRoot}/pnpm-lock.yaml",
         "{workspaceRoot}/package.json",
@@ -119,7 +122,7 @@
       ]
     },
     "plugin-dag": {
-      "//": "Rewrite the dependency DAG on the plugins' tag page, the Mermaid block between the generated markers in content/public/tags/projects/site/plugins/index.md, from every package's manifest: engine edges from `quartz.dependencies`, library edges from the libraries a package builds with (#86). tests/specs/plugin-dag.spec.mjs fails while the note has drifted. Check without writing: node quartz-v5/utils/plugin-dag.mjs --check",
+      "//": "Rewrite the dependency DAG on the plugins' tag page, the Mermaid block between the generated markers in content/public/tags/projects/site/plugins/index.md, from every package's manifest: engine edges from `quartz.dependencies`, library edges from the libraries a package builds with (#86). The plugin-dag repo guard fails while the note has drifted. Check without writing: node quartz-v5/utils/plugin-dag.mjs --check",
       "executor": "nx:run-commands",
       "options": {
         "command": "node quartz-v5/utils/plugin-dag.mjs",

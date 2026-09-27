@@ -11,10 +11,10 @@
       "options": { "command": "pnpm run typecheck", "cwd": "{projectRoot}" }
     },
     "e2e": {
-      "//": "Tested through its consumers, in the shared suite: a plugin's generated plugin index entry and its package's declarations (tests/specs/package-plugins.spec.mjs). No build target: build.mjs imports the source.",
+      "//": "Tested through its consumers: the plugin-index repo guard, that Quartz's generated plugin index takes every package in, then in the shared suite a TypeScript site reading a package's declarations (tests/specs/package-plugins.spec.mjs). No build target: build.mjs imports the source.",
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx playwright test specs/package-plugins.spec.mjs",
+        "command": "node ../utils/guards/plugin-index.guard.mjs && npx playwright test specs/package-plugins.spec.mjs",
         "cwd": "{workspaceRoot}/quartz-v5/tests"
       }
     }

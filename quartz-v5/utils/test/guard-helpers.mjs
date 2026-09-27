@@ -1,4 +1,5 @@
 // Helpers for the repo guards' tests: run a guard at its command line, and build scratch trees.
+import assert from "node:assert/strict"
 import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
@@ -13,6 +14,11 @@ export function runGuard(name, args = []) {
     encoding: "utf-8",
   })
   return { code: status, out: stdout, err: stderr }
+}
+
+/** Assert that a guard's output `out` lists every one of `fragments`. */
+export function listed(out, ...fragments) {
+  for (const fragment of fragments) assert.ok(out.includes(fragment), `lists "${fragment}":\n${out}`)
 }
 
 /** A fresh temp dir, removed when the process exits. */

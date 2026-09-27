@@ -14,19 +14,11 @@ import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
 import { test, expect, layerOrder, routeSite } from "../harness/test.mjs"
-import { buildScratchSite, fixtureConfig, pluginSources, siteConfig, testsRoot, withPlugins } from "../harness/site.mjs"
+import { buildScratchSite, fixtureConfig, siteConfig, withPlugins } from "../harness/site.mjs"
 
-const CONSUMER_DIR = path.join(testsRoot, "fixture-plugins/fixture-consumer")
 const CONSUMER = "../fixture-plugins/fixture-consumer"
 const ENGINE = "@chaoticgoodcomputing/quartz-styles"
 const HOME = { "index.md": "# Home\n" }
-
-test("the consumer names the engine by its package name, the source both sites list it by", () => {
-  const manifest = JSON.parse(fs.readFileSync(path.join(CONSUMER_DIR, "package.json"), "utf8")).quartz
-  expect(manifest.dependencies).toEqual([ENGINE])
-  expect(pluginSources(fixtureConfig())).toContain(ENGINE)
-  expect(pluginSources(siteConfig())).toContain(ENGINE)
-})
 
 test("the consumer's dependency resolves by name at the fixture root", async ({ page }) => {
   await page.goto("/plain-note")
@@ -91,9 +83,11 @@ function scratchPlugins(manifests) {
 
 // #40's other requirement: resolving by name is additive. A dependency written as the engine's
 // exact `source:` string still resolves to that entry first, as on stock Quartz, so upstream configs
-// behave as before. For a package the exact source is its package name; for a local source it is the
-// path, which name-only resolution would miss, refusing the build as missing its engine.
-test("a dependency written as the engine's exact source resolves to it", async () => {
+// behave as before. For a package the exact source is its package name, which is also its plugin
+// name, so a package cannot tell the two apart: this case only shows a scratch plugin resolving the
+// engine's package name. For a local source the exact source is the path, which name-only resolution
+// would miss, refusing the build as missing its engine: the two cases after it prove exact matching.
+test("a dependency written as the engine's package name resolves to it", async () => {
   const plugins = scratchPlugins({ "source-consumer": { defaultOrder: 20, dependencies: [ENGINE] } })
   try {
     const { code, output } = await buildScratchSite("exact-source", HOME, { config: withPlugins(fixtureConfig(), plugins.entries) })
@@ -117,13 +111,18 @@ test("a dependency written as a local engine's exact path resolves to it", async
   }
 })
 
-// And the order check reads the engine's manifest through that exact-source key, not the fallback.
-test("a consumer ordered before the engine it names by exact source is refused", async () => {
-  const plugins = scratchPlugins({ "source-consumer": { defaultOrder: 10, dependencies: [ENGINE] } })
+// And the order check reads the engine's manifest through that exact-source key: a local engine's
+// path, which name-only resolution would not find, refusing the build as missing its engine instead.
+test("a consumer ordered before the local engine it names by exact path is refused", async () => {
+  const plugins = scratchPlugins((dir) => ({
+    "local-engine": { defaultOrder: 15 },
+    "path-consumer": { defaultOrder: 10, dependencies: [path.join(dir, "local-engine")] },
+  }))
   try {
-    const { code, output } = await buildScratchSite("exact-source-first", HOME, { config: withPlugins(fixtureConfig(), plugins.entries) })
+    const { code, output } = await buildScratchSite("exact-path-first", HOME, { config: withPlugins(fixtureConfig(), plugins.entries) })
     expect(code).not.toBe(0)
-    expect(output).toContain(`(order: 10) depends on "${ENGINE}" (order: 15)`)
+    expect(output).toContain('(order: 10) depends on "local-engine" (order: 15)')
+    expect(output).not.toContain('requires "local-engine"')
   } finally {
     plugins.remove()
   }

@@ -181,7 +181,7 @@ how every package under `plugins/`, `libs/` and `site-plugins/` depends on the o
 generated markers in the description note of the plugins' tag, the vault's
 `tags/projects/site/plugins/index.md`. It reads only the packages' manifests, so run
 it after changing a manifest's `quartz.dependencies` or a library dependency, or adding a package.
-`tests/specs/plugin-dag.spec.mjs` fails while the note has drifted, and `node
+The `plugin-dag` repo guard fails while the note has drifted, and `node
 utils/plugin-dag.mjs --check` says so without writing.
 
 ## Provenance
@@ -251,8 +251,9 @@ Core deliberately, so our own files under `quartz-v5/` are still formatted.
 ## Repo guards
 
 `pnpm nx run site-v5:guards` runs the **repo guards** (`utils/guards/`, glossary in
-[CONTEXT.md](./CONTEXT.md)). Four hold Core to this file, and four hold our packages to how the site
-loads them (#98):
+[CONTEXT.md](./CONTEXT.md)). Four hold Core to this file, five hold our packages to how the site
+loads them (four from #98, and `plugin-index` from #89), and two hold the plugin notes to the
+packages (#86):
 
 | Guard | Rule |
 | ----- | ---- |
@@ -260,14 +261,17 @@ loads them (#98):
 | `core-pruned` | Every pruned file is absent from Core, tracked or not. |
 | `core-lock` | Core's `package.json` is upstream's, byte for byte; its `pnpm-lock.yaml` passes the lock check against upstream's `package-lock.json`, and equals what a fresh `pnpm import` of it writes. |
 | `site-config` | The site config validates against Core's plugin config schema (`quartz/plugins/quartz-plugins.schema.json`), and exists, isn't empty, and has a plugins list. |
-| `package-contract` | Every plugin and site plugin meets the **package contract**: its package, directory, Nx project and manifest names agree; `exports` has `./package.json` and `{ types, import }` for every entry, both emitted; it has `files`, `license`, `publishConfig` and `repository`; it is repo-only exactly when it is a site plugin, and the site package is repo-only; and no manifest sets `requiresInstall`. |
-| `shared-packages` | One copy of each of Quartz's **shared packages** (Preact, `preact-render-to-string`, `vfile`, `unified`, `lightningcss`, `@quartz-community/*`), Core's: no plugin, site plugin or library declares one but as a peer; from each plugin's real path every one resolves into Core's `node_modules`, and every peer resolves; no library has one installed beside it; and no plugin's `dist/` inlines one (read from esbuild's path comments, which every unminified, server-side bundle keeps). |
-| `package-sources` | Every source of ours in the site config and the fixture config is a package name, but the fixture's own plugins (`../fixture-plugins/<name>`, which must exist); each names a workspace package; every manifest dependency (plugins, site plugins, fixture plugins) names a workspace package; and every plugin of ours either config enables is a dependency of the site package, under the name Quartz imports it by (an object source's `name` as an alias of its `repo`). |
-| `clean-packs` | `pnpm pack --dry-run` of every publishable package (each plugin not repo-only) lists only `dist/`, README, LICENSE and `package.json`, and has each. |
+| `package-contract` | Every plugin and site plugin meets the **package contract**: its package, directory, Nx project and manifest names agree; `exports` has `./package.json`, has `.`, and has `{ types, import }` for every other entry, `types` a `.d.ts`, both emitted; it has `files`, `license`, `publishConfig` and `repository`; it is repo-only exactly when it is a site plugin, and the site package is repo-only; and no manifest sets `requiresInstall`. |
+| `shared-packages` | One copy of each of Quartz's **shared packages** (Preact, `preact-render-to-string`, `vfile`, `unified`, `lightningcss`, `@quartz-community/*`), Core's: no plugin, site plugin or library declares one but as a peer; from each plugin's real path every one resolves into Core's `node_modules`, and every peer resolves; no library has one installed beside it; and no plugin's `dist/` inlines one (read from esbuild's path comments, which every unminified, server-side bundle keeps). And no plugin or site plugin source imports `picomatch` or `string-width`, which Core's hoisted install places unlike npm (see Dependencies). |
+| `package-sources` | Every source of ours in the site config and the fixture config is a package name, but the fixture's own plugins (`../fixture-plugins/<name>`, which must exist); each names a workspace package; every manifest dependency (plugins, site plugins, fixture plugins) names a workspace package; every plugin of ours either config enables is a dependency of the site package, under the name Quartz imports it by (an object source's `name` as an alias of its `repo`), and one under its own name is `workspace:*`; and both configs list every plugin, and the site config every site plugin. |
+| `clean-packs` | `pnpm pack --dry-run` of every publishable package (each plugin not repo-only) lists only `dist/`, README, LICENSE and `package.json`, and has each; and a workspace publish (`pnpm -r --filter … publish --dry-run`) leaves out every site plugin and the site package. Publishable means the plugins only: the libraries are not repo-only, but are left out on purpose, as whether they are published at all is [#90](https://github.com/chaoticgoodcomputing/blog/issues/90)'s to decide. |
+| `plugin-index` | Core's own `install-plugins` step, run in a scratch root on a config listing every plugin and site plugin by package name, skips none of them, and its generated plugin index (`.quartz/plugins/index.ts`, what a TypeScript site imports from) exports from every plugin. |
+| `plugin-dag` | The plugins' tag's description note is in one shape, and carries exactly the DAG `utils/plugin-dag.mjs` generates from the packages' manifests. |
+| `plugin-notes` | Every shareable plugin's README carries the plugins' tag and is linked into the vault as its plugin note, `content/public/plugins/<dir>.md`. |
 
 Each lists every violation and exits 1 on any. The target is cached on the files the guards read and
 the package builds' outputs, so a second run with nothing changed is a cache hit. `package-contract`,
-`shared-packages` and `clean-packs` read built output, so the target depends on every package's
+`shared-packages`, `clean-packs` and `plugin-index` read built output, so the target depends on every package's
 `build` (`^build`: the site package depends on every plugin and site plugin), which Nx takes from its
 cache when a package is unchanged; the package guards take a couple of seconds, most of it clean-packs' `pnpm pack` runs. `core-drift` and `core-lock` compare against the
 pinned ref's tree, fetched once (a depth-1 fetch, a few seconds) into the gitignored
@@ -408,7 +412,8 @@ node quartz-v5/utils/core-lock.mjs --npm-lock <file>   # against a local npm loc
 
 At 97a2d05 it reads 415 of 415 packages matching. The hoisted layout places two packages
 differently from npm (the top-level `picomatch` and `string-width` are another of the versions the
-lock holds), which no code of ours imports. The upgrade converts the lock at a new ref, from that
+lock holds), which no code of ours imports: the `shared-packages` repo guard fails a plugin or site
+plugin source that does. The upgrade converts the lock at a new ref, from that
 ref's own `package-lock.json` (see Upgrading).
 
 **Our plugins resolve the host's dependencies through `plugins/node_modules`,** a gitignored

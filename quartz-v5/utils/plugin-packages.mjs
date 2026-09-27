@@ -27,14 +27,18 @@ export const PLUGIN_ROOTS = [path.join(v5, "plugins"), path.join(v5, "site-plugi
 // A site lists each by this name and loads it through the site package's `node_modules`
 // (VENDORED.md). Read from the manifests, so it needs no install.
 export function pluginPackages() {
-  return new Map(ourPackages(repo, ["plugin", "site-plugin"]).map(({ pkg, path: dir }) => [pkg.name, dir]))
+  return new Map(ourPackages(repo, ["plugin", "site-plugin"]).map(({ pkg, root }) => [pkg.name, root]))
 }
+
+// What a config `source:` names: the string itself, or an object source's `repo`, `{ repo, name }`
+// being how a site lists one package more than once. Undefined for anything else.
+export const specOf = (source) => (typeof source === "string" ? source : source?.repo)
 
 // The directory of the plugin of ours a config `source:` names by package name. Undefined for anyone
 // else's package, such as `@quartz-community/*`, and for anything that is not a package name. An
-// object source, `{ repo, name }`, is read by its `repo`: how a site lists one package more than once.
+// object source is read by its `repo` (`specOf`).
 export function pluginDirOf(source, packages = pluginPackages()) {
-  const spec = typeof source === "string" ? source : source?.repo
+  const spec = specOf(source)
   return typeof spec === "string" ? packages.get(spec) : undefined
 }
 

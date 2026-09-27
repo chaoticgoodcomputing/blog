@@ -2,7 +2,8 @@
 // preact-render-to-string, vfile, unified, lightningcss, @quartz-community/*), Core's. From each
 // plugin's and site plugin's real path, every one resolves to Core's copy; no plugin, site plugin or
 // library declares one other than as a peer or has one installed beside it; and no plugin's `dist/`
-// inlines one, directly or through a library it inlines.
+// inlines one, directly or through a library it inlines. And no plugin or site plugin source imports
+// picomatch or string-width, which Core's hoisted install places unlike npm.
 //
 // To reproduce a failure by hand: in quartz-v5/libs/pipeline/package.json move `unified` from
 // peerDependencies to dependencies, then `pnpm install && pnpm nx run quartz-annotator:build`, and
@@ -13,12 +14,8 @@ import { test } from "node:test"
 import assert from "node:assert/strict"
 import fs from "node:fs"
 import path from "node:path"
-import { runGuard, writeTree } from "./guard-helpers.mjs"
+import { listed, runGuard, writeTree } from "./guard-helpers.mjs"
 import { makePackageRepo, pluginManifest } from "./fixtures/package-repo.mjs"
-
-const listed = (out, ...fragments) => {
-  for (const fragment of fragments) assert.ok(out.includes(fragment), `lists "${fragment}":\n${out}`)
-}
 
 test("a repo where every shared package is Core's passes", () => {
   const { code, out } = runGuard("shared-packages", ["--repo", makePackageRepo()])
@@ -91,6 +88,28 @@ test("a plugin whose dist/ inlines a shared package fails, naming each one once 
     "quartz-v5/plugins/quartz-good: dist/components/index.js inlines preact",
   )
   assert.ok(!out.includes("vfile-message"), "vfile-message is not vfile")
+  assert.match(out, /3 violation\(s\)/)
+})
+
+// Core's hoisted pnpm install puts another version of these two at its top level than npm did
+// (VENDORED.md, "Dependencies"), so a plugin resolving one through Core would get another major.
+test("a plugin or site plugin source importing picomatch or string-width fails", () => {
+  const repo = makePackageRepo({
+    "quartz-v5/plugins/quartz-good/src/match.ts": 'import picomatch from "picomatch"\nexport const m = picomatch\n',
+    "quartz-v5/plugins/quartz-good/build.mjs": 'const { default: width } = await import("string-width/index.js")\n',
+    "quartz-v5/site-plugins/site-good/src/width.tsx": 'const width = require("string-width")\nexport { width }\n',
+    // Not an import of either: a longer name, and built output.
+    "quartz-v5/plugins/quartz-good/src/ok.ts": 'import x from "picomatch-extra"\nexport { x }\n',
+    "quartz-v5/plugins/quartz-good/dist/extra.js": 'import picomatch from "picomatch"\n',
+  })
+  const { code, out } = runGuard("shared-packages", ["--repo", repo])
+  assert.equal(code, 1, out)
+  listed(
+    out,
+    "quartz-v5/plugins/quartz-good: src/match.ts imports picomatch",
+    "quartz-v5/plugins/quartz-good: build.mjs imports string-width",
+    "quartz-v5/site-plugins/site-good: src/width.tsx imports string-width",
+  )
   assert.match(out, /3 violation\(s\)/)
 })
 

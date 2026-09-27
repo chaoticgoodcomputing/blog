@@ -17,13 +17,17 @@ export const REPOSITORY_URL = "git+https://github.com/chaoticgoodcomputing/blog.
 
 /**
  * Quartz's shared packages: the host's own copies, which a plugin takes as peers and must never carry
- * a copy of, installed or bundled, or a page gets two Preacts (VENDORED.md, "Dependencies"). A name
- * ending in `/` is a scope: every package in it.
+ * a copy of, installed or bundled, or a page gets two Preacts (VENDORED.md, "Dependencies"). `names`
+ * are single packages; `scopes` are whole scopes, every package in each.
  */
-export const SHARED = ["preact", "preact-render-to-string", "vfile", "unified", "lightningcss", "@quartz-community/"]
+export const SHARED = {
+  names: ["preact", "preact-render-to-string", "vfile", "unified", "lightningcss"],
+  scopes: ["@quartz-community"],
+}
 
 /** Whether `name` is one of Quartz's shared packages. */
-export const isShared = (name) => SHARED.some((shared) => (shared.endsWith("/") ? name.startsWith(shared) : name === shared))
+export const isShared = (name) =>
+  SHARED.names.includes(name) || SHARED.scopes.some((scope) => name.startsWith(`${scope}/`))
 
 /**
  * The kinds of package, by the directory each lives in under the site's root. A fixture plugin
@@ -43,8 +47,8 @@ const readJson = (file) => JSON.parse(fs.readFileSync(file, "utf-8"))
 
 /**
  * Every package of ours under `repo` of the given kinds, in that order, each sorted by directory:
- * `{ kind, dir, rel, path, pkg, project }`, where `dir` is the directory's basename, `rel` its path
- * from the repo root, `path` its absolute path, `pkg` its package.json and `project` its
+ * `{ kind, dir, rel, root, pkg, project }`, where `dir` is the directory's basename, `rel` its path
+ * from the repo root, `root` its absolute path, `pkg` its package.json and `project` its
  * project.json (or null). A directory with no package.json is skipped, as pnpm skips it. The kind
  * directories are read under `siteRoot`, the site's root in `repo` unless given another.
  */
@@ -61,7 +65,7 @@ export function ourPackages(repo = REPO_ROOT, kinds = OUR_KINDS, siteRoot = path
         kind,
         dir,
         rel: path.relative(repo, at).split(path.sep).join("/"),
-        path: at,
+        root: at,
         pkg: readJson(path.join(at, "package.json")),
         project: fs.existsSync(project) ? readJson(project) : null,
       })

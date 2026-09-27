@@ -12,7 +12,9 @@
 //   - Every plugin of ours either config enables is a dependency of the site package, under the name
 //     Quartz imports it by: its package name, or for an object source `{ repo, name }`, its `name`, an
 //     alias of `repo` (`"<name>": "workspace:<repo>@*"`). The fixture loads through the site package
-//     too, so it is held to the same.
+//     too, so it is held to the same. A dependency under a package's own name is `workspace:*`.
+//   - Every plugin is listed by both configs, enabled or not, and every site plugin by the site
+//     config: the fixture exercises every plugin, and the site is built with all of ours.
 //
 //   node quartz-v5/utils/guards/package-sources.guard.mjs [--repo <dir>]
 //
@@ -21,6 +23,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { CORE_REL, REPO_ROOT } from "../core-tiers.mjs"
 import { SCOPE, SITE_REL, ourPackages, parseYaml, sitePackage, workspacePackages } from "../packages.mjs"
+import { specOf } from "../plugin-packages.mjs"
 import { CannotCheck, guard, option } from "./guard.mjs"
 
 const SITE_CONFIG = `${CORE_REL}/quartz.config.yaml`
@@ -39,7 +42,7 @@ function workspaceNames(repo) {
   return new Set(members.map(({ pkg }) => pkg.name))
 }
 
-function checkConfig(repo, rel, { workspace, dependencies, fixture }) {
+function checkConfig(repo, rel, { workspace, dependencies, fixture, required }) {
   const file = path.join(repo, rel)
   if (!fs.existsSync(file)) throw new CannotCheck(`no config at ${rel}`)
   const plugins = parseYaml(fs.readFileSync(file, "utf-8"))?.plugins
@@ -48,7 +51,7 @@ function checkConfig(repo, rel, { workspace, dependencies, fixture }) {
   plugins.forEach((entry, i) => {
     const say = (message) => violations.push(`${rel}: plugins[${i}] ${message}`)
     const source = entry?.source
-    const spec = typeof source === "string" ? source : source?.repo
+    const spec = specOf(source)
     if (typeof spec !== "string" || !isOurs(spec)) return
 
     if (isLocal(spec)) {
@@ -72,20 +75,36 @@ function checkConfig(repo, rel, { workspace, dependencies, fixture }) {
       say(`enables "${imported}", but the site package depends on it as "${dependency}", not "workspace:${spec}@*"`)
     }
   })
+  const listed = new Set(plugins.map((entry) => specOf(entry?.source)))
+  for (const { rel: at, pkg } of required) {
+    if (!listed.has(pkg.name)) violations.push(`${rel}: lists no "${pkg.name}" (${at})`)
+  }
   return violations
 }
 
 await guard(import.meta, "Every source of ours is a package name the workspace has and the site package depends on", (argv) => {
   const repo = path.resolve(option(argv, "repo", REPO_ROOT))
   const workspace = workspaceNames(repo)
-  const dependencies = sitePackage(repo).pkg.dependencies ?? {}
+  const site = sitePackage(repo)
+  const dependencies = site.pkg.dependencies ?? {}
+  const plugins = ourPackages(repo, ["plugin"])
+  const sitePlugins = ourPackages(repo, ["site-plugin"])
 
   const violations = [
-    ...checkConfig(repo, SITE_CONFIG, { workspace, dependencies, fixture: false }),
-    ...checkConfig(repo, FIXTURE_CONFIG, { workspace, dependencies, fixture: true }),
+    ...checkConfig(repo, SITE_CONFIG, { workspace, dependencies, fixture: false, required: [...plugins, ...sitePlugins] }),
+    ...checkConfig(repo, FIXTURE_CONFIG, { workspace, dependencies, fixture: true, required: plugins }),
   ]
 
-  const manifests = ourPackages(repo, ["plugin", "site-plugin", "fixture-plugin"])
+  // A package of ours the site package depends on by its own name comes from the workspace, whatever
+  // its version: never the registry, and never a copy of another version.
+  for (const { pkg } of [...plugins, ...sitePlugins]) {
+    const range = dependencies[pkg.name]
+    if (range !== undefined && range !== "workspace:*") {
+      violations.push(`${site.rel}: depends on "${pkg.name}" as "${range}", not "workspace:*"`)
+    }
+  }
+
+  const manifests = [...plugins, ...sitePlugins, ...ourPackages(repo, ["fixture-plugin"])]
   for (const { rel, pkg } of manifests) {
     for (const dependency of (pkg.quartz ?? pkg.manifest)?.dependencies ?? []) {
       if (!workspace.has(dependency)) violations.push(`${rel}: its manifest dependency "${dependency}" names no package in the workspace`)

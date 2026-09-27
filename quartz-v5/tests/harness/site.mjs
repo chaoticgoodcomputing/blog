@@ -21,6 +21,7 @@ import {
   pluginPackages,
   pruneGonePlugins,
   relink,
+  specOf,
 } from "../../utils/plugin-packages.mjs"
 import { FIXTURE_PAPER_URL, fixturePaper } from "./source-host.mjs"
 
@@ -139,7 +140,7 @@ const under = (root) => (dir) => dir !== undefined && dir.startsWith(`${root}${p
 export function packageOrFixtureDirOf(source) {
   const dir = pluginDirOf(source)
   if (dir) return dir
-  const spec = typeof source === "string" ? source : source?.repo
+  const spec = specOf(source)
   if (typeof spec !== "string" || !spec.startsWith(".")) return undefined
   const local = path.resolve(fixtureRoot("main"), spec)
   return under(fixturePluginsRoot)(local) ? local : undefined
@@ -147,13 +148,13 @@ export function packageOrFixtureDirOf(source) {
 
 // Entries for `withPlugins` that turn off every package under `quartz-v5/plugins/` that `config`
 // lists, by package name, except those named in `keep`, each by its package name
-// (`@chaoticgoodcomputing/quartz-graph`) or its directory (`quartz-graph`, `quartz-tags`): for a build
-// that must fail in one plugin's words, which another that checks the same thing, such as another
-// plugin that draws icons, would otherwise fail first. Fixture plugins are left as they are.
+// (`@chaoticgoodcomputing/quartz-graph`): for a build that must fail in one plugin's words, which
+// another that checks the same thing, such as another plugin that draws icons, would otherwise fail
+// first. Fixture plugins are left as they are.
 export const othersOff = (config, keep) =>
   pluginSources(config)
     .filter((source) => typeof source === "string" && under(pluginsRoot)(packageOrFixtureDirOf(source)))
-    .filter((source) => !keep.includes(source) && !keep.includes(path.basename(packageOrFixtureDirOf(source))))
+    .filter((source) => !keep.includes(source))
     .map((source) => ({ source, enabled: false }))
 
 const LINKED = ["package.json", "quartz", "node_modules", "tsconfig.json", "quartz.ts", "globals.d.ts", "index.d.ts"]
@@ -303,10 +304,8 @@ async function withBuildLock(fn) {
 }
 
 // Every build first removes the links a renamed plugin left in its root's `.quartz/plugins/`
-// (utils/plugin-packages.mjs), which Quartz itself never prunes: a fixture root outlives the plugins
-// it was first built with.
-export { pruneGonePlugins }
-
+// (`pruneGonePlugins`, utils/plugin-packages.mjs), which Quartz itself never prunes: a fixture root
+// outlives the plugins it was first built with.
 const quartzBuild = (root, args) =>
   withBuildLock((holds) => {
     pruneGonePlugins(root)

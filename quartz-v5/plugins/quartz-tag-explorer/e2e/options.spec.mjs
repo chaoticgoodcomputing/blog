@@ -24,7 +24,11 @@ const CONTENT = {
 }
 
 // The explorer alone of our plugins that render, beside the engine and the cascade.
-const OTHERS = othersOff(fixtureConfig(), ["quartz-styles", "quartz-tags", "quartz-tag-explorer"])
+const OTHERS = othersOff(fixtureConfig(), [
+  "@chaoticgoodcomputing/quartz-styles",
+  "@chaoticgoodcomputing/quartz-tags",
+  "@chaoticgoodcomputing/quartz-tag-explorer",
+])
 const explorerWith = (options, more = []) =>
   withPlugins(fixtureConfig(), [
     ...OTHERS,

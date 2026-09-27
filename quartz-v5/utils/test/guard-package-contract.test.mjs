@@ -1,6 +1,6 @@
 // Repo guard `package-contract` (#98): every plugin and site plugin meets the package contract. Its
 // names agree (package, directory, Nx project and manifest name); its `exports` include
-// `./package.json` and give each entry `types` and `import`, with the `.d.ts` emitted beside it; it
+// `./package.json` and `.`, and give each entry `types` and `import`, with the `.d.ts` emitted; it
 // has `files`, `license`, `publishConfig` and `repository`; it is repo-only exactly when it is a site
 // plugin (and the site package is repo-only); and no manifest sets `requiresInstall`.
 //
@@ -10,12 +10,8 @@
 // `git checkout -- quartz-v5/plugins/quartz-seo/package.json && pnpm nx run quartz-seo:build`.
 import { test } from "node:test"
 import assert from "node:assert/strict"
-import { runGuard } from "./guard-helpers.mjs"
+import { listed, runGuard } from "./guard-helpers.mjs"
 import { makePackageRepo, pluginFiles, pluginManifest } from "./fixtures/package-repo.mjs"
-
-const listed = (out, ...fragments) => {
-  for (const fragment of fragments) assert.ok(out.includes(fragment), `lists "${fragment}":\n${out}`)
-}
 
 test("a repo whose packages all meet the contract passes", () => {
   const { code, out } = runGuard("package-contract", ["--repo", makePackageRepo()])
@@ -84,6 +80,29 @@ test("exports without ./package.json, types or an emitted .d.ts fail", () => {
     "quartz-v5/site-plugins/site-good: it has no exports",
   )
   assert.match(out, /6 violation\(s\)/)
+})
+
+// Quartz imports a package source by its name, the "." entry, and its plugin index reads that entry's
+// dist/index.d.ts: an exports map without ".", or whose types are not a declaration file, fails.
+test('exports with no "." entry, or types that are no .d.ts, fail', () => {
+  const good = pluginManifest("quartz-good")
+  const repo = makePackageRepo({
+    "quartz-v5/plugins/quartz-good/package.json": {
+      ...good,
+      exports: {
+        "./components": { types: "./dist/components/index.js", import: "./dist/components/index.js" },
+        "./package.json": "./package.json",
+      },
+    },
+  })
+  const { code, out } = runGuard("package-contract", ["--repo", repo])
+  assert.equal(code, 1, out)
+  listed(
+    out,
+    'quartz-v5/plugins/quartz-good: exports has no "." entry { types, import }',
+    'quartz-v5/plugins/quartz-good: exports "./components" types ./dist/components/index.js is not a .d.ts',
+  )
+  assert.match(out, /2 violation\(s\)/)
 })
 
 test("missing files, license, publishConfig or repository fail", () => {

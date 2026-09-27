@@ -169,7 +169,7 @@ The flowchart of how every package here depends on the others, on the descriptio
 `projects/site/plugins`: a solid edge from a plugin to each plugin its manifest's `dependencies`
 names, and a dotted one from a package to each **library** it builds with, with the site plugins
 drawn apart. Generated from the manifests by `site-v5:plugin-dag` (#86), never edited by hand, and
-guarded by a spec that fails when the note drifts from the packages.
+guarded by the `plugin-dag` repo guard, which fails when the note drifts from the packages.
 _Avoid_: dependency graph (the graph is quartz-graph's), plugin map (the FORK-LEDGER's is the v4 → v5 map)
 
 **Upstream proposal**:
@@ -337,8 +337,10 @@ changes**), `core-pruned`, `core-lock` (the **lock check**, plus a fresh `pnpm i
 `site-config` (the **site config** against Core's plugin config schema). The packages' (#98):
 `package-contract` (the **package contract**), `shared-packages` (one copy of each **shared
 package**, Core's), `package-sources` (every source of ours a **package source** the workspace has and
-the site package depends on) and `clean-packs`. Those that read built output depend on the package
-builds, which Nx takes from its cache.
+the site package depends on), `clean-packs` (and no **repo-only** package published). #89's: `plugin-index` (Quartz's generated
+plugin index takes in every plugin). The plugin notes' (#86):
+`plugin-dag` (the **plugin DAG** as generated) and `plugin-notes`. Those that read built output depend
+on the package builds, which Nx takes from its cache.
 _Avoid_: lint (the formatters and linters are something else), check (alone), test (the e2e suite and
 the `node --test` suites are tests; a guard checks the repo itself)
 
@@ -346,7 +348,7 @@ the `node --test` suites are tests; a guard checks the repo itself)
 What every plugin and site plugin's `package.json` holds, so it is publishable and loads the same at
 every site: names that agree (the package `@chaoticgoodcomputing/quartz-<name>` or `site-<name>`, its
 directory and Nx project, and the manifest name `cgc-<name>`, or `site-<name>` for a site plugin);
-`exports` with `./package.json` and `{ types, import }` for each entry, with the `.d.ts` emitted;
+`exports` with `./package.json`, `.`, and `{ types, import }` for each entry, with the `.d.ts` emitted;
 `files`, `license`, `publishConfig` and `repository`; **repo-only** exactly for the site plugins (and
 the site package); and no `requiresInstall`, which would have Quartz `npm install` into Core. A site
 plugin meets it too, though it is never packed. The `package-contract` guard holds every package to it.

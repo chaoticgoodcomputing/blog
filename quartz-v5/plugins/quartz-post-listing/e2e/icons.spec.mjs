@@ -118,7 +118,11 @@ test("fails the build on an icon its collection doesn't have", async () => {
       enabled: true,
       options: { tags: { fixture: { icon: "mdi:no-such-icon" } } },
     },
-    ...othersOff(fixtureConfig(), ["quartz-styles", "quartz-tags", "quartz-post-listing"]),
+    ...othersOff(fixtureConfig(), [
+      "@chaoticgoodcomputing/quartz-styles",
+      "@chaoticgoodcomputing/quartz-tags",
+      "@chaoticgoodcomputing/quartz-post-listing",
+    ]),
   ]
   const { code, output } = await buildScratchSite(
     "post-listing-icon",
