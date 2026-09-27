@@ -564,12 +564,14 @@ layout:
       gap: 0.5rem
   byPageType:
     "404":
+      template: default
       exclude:
         - "@chaoticgoodcomputing/quartz-email-subscribe"
       positions:
         beforeBody: []
         right: []
     annotation:
+      template: site-full-width
       exclude:
         - "@chaoticgoodcomputing/quartz-page-source"
         - "@chaoticgoodcomputing/quartz-tag-explorer"
