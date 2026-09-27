@@ -3,7 +3,7 @@ node_modules
 .quartz-cache
 
 # Quartz Core must stay byte-identical to upstream outside its steering files
-# (quartz/VENDORED.md). Without this, `nx run site:format` rewrites upstream files
+# (quartz/VENDORED.md). Without this, `prettier . --write` rewrites upstream files
 # and silently creates undocumented vendored changes. Its steering files follow
 # upstream's formatting too. Scoped to Core so our own files (project.json,
 # CONTEXT.md, VENDORED.md, upstream.json) are still formatted.

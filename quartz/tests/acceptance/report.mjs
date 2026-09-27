@@ -1,21 +1,21 @@
 #!/usr/bin/env node
 // The real-site acceptance report: the second seam in tests/CONTEXT.md. Builds the real vault
-// (`content/public`) under v4 and under v5, compares what the two sites serve, and prints every
+// (`content/public`) under v5, compares what it serves with a built v4 site, and prints every
 // difference: in the emitted URL set, in sitemap and RSS membership, and in each page's head
 // metadata (noindex, canonical, article:*, JSON-LD). It also runs site-styles' cascade-layer guard on
 // the v5 build (cascade.mjs, #64). Differences a decision expects are on the allowlist
 // (allowlist.mjs), each citing its ticket. Any other difference fails the run.
 //
-// Judgement calls (#62): v4 is built with its inner targets, since `site:build` runs `vault:sync`,
-// which rewrites the vault. Quartz's generated files (read.mjs, `kindOf`) are counted, not compared.
+// Judgement calls (#62): v4 was deleted at cutover (#81), so the report compares against a v4 build
+// kept from before, which `--v4` names; there is no default. Quartz's generated files (read.mjs, `kindOf`) are counted, not compared.
 // On a case-insensitive filesystem the case redirects #23 relies on cannot exist, so a lowercased
 // page is allowed there unverified, and the run exits 3 rather than pass without having seen them;
 // CI's Linux checks them. A move allowed by an entry that needs no redirect (#48's /widgets/README)
 // is not waiting on one.
 //
 // Run it through Nx: `pnpm nx run site-e2e:acceptance`. Options:
-//   --skip-build     compare the sites already built at the default locations
-//   --v4 <dir>       compare this built v4 site instead (implies --skip-build); default dist/public
+//   --v4 <dir>       the built v4 site to compare against; required
+//   --skip-build     compare the v5 site already built at the default location
 //   --v5 <dir>       compare this built v5 site instead (implies --skip-build); default quartz/core/public
 //   --vault <dir>    the content both sites were built from, which some allowlist entries consult;
 //                    default content/public
@@ -52,15 +52,17 @@ function parseArgs(argv) {
     if (flag === "--skip-build") options.build = false
     else if (flag === "--full") options.full = true
     else if (flag === "--allow-unverified-redirects") options.allowUnverifiedRedirects = true
-    else if (flag === "--v4" || flag === "--v5") {
-      options[flag.slice(2)] = path.resolve(repoRoot, value())
+    else if (flag === "--v4") options.v4 = path.resolve(repoRoot, value())
+    else if (flag === "--v5") {
+      options.v5 = path.resolve(repoRoot, value())
       options.build = false
     } else if (flag === "--vault") options.vault = path.resolve(repoRoot, value())
     else if (flag === "--origin") options.origin = value().replace(/\/$/, "")
     else if (flag === "--out") options.out = path.resolve(repoRoot, value())
     else throw new Error(`unknown option ${arg}`)
   }
-  options.v4 ??= path.join(repoRoot, "dist/public")
+  if (!options.v4) throw new Error("pass --v4 <dir>, a v4 build kept from before the cutover (#81): v4 can no longer be built")
+  if (!fs.existsSync(options.v4)) throw new Error(`no v4 build at ${options.v4}`)
   options.v5 ??= path.join(repoRoot, "quartz/core/public")
   options.out ??= path.join(repoRoot, "dist/acceptance")
   options.vault ??= path.join(repoRoot, "content/public")
@@ -69,22 +71,9 @@ function parseArgs(argv) {
   return options
 }
 
-// The builds each site deploys, run through each site's own Nx targets so later changes to them are
-// picked up. v4's `site:build` also runs `vault:sync`, which rewrites the vault, so the report runs
-// its inner targets instead, after the one prebuild step that changes what v4 serves. `clock` marks
-// the step that renders a site's pages, whose run is that site's build clock.
+// The v5 build, run through the site's own Nx target so later changes to it are picked up. `clock`
+// marks the step that renders the site's pages, whose run is the site's build clock.
 const BUILDS = [
-  {
-    label: "v4: fetch the annotation PDFs it serves (vault:download-annotation-pdfs, without vault:sync)",
-    command: ["node", "content/utils/download-annotation-pdfs.mjs"],
-    optional: true,
-  },
-  {
-    label: "v4: build the vault into dist/public (site:_inbuild)",
-    command: ["pnpm", "nx", "run", "site:_inbuild", "--concurrency=4"],
-    clock: "v4",
-  },
-  { label: "v4: copy its root files (site:_postbuild)", command: ["pnpm", "nx", "run", "site:_postbuild"] },
   {
     label: "v5: build the vault into quartz/core/public (site:build)",
     command: ["pnpm", "nx", "run", "site:build", "--concurrency=4"],

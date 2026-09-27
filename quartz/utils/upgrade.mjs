@@ -20,8 +20,8 @@
  *      by the lock check (`core-lock.mjs`), then written to Core and installed frozen;
  *   8. record the new pinned ref in `upstream.json`, only once all of the above has succeeded;
  *   -  with `--verify`, prove the result: the repo guards, the typechecks, the e2e suite, the
- *      real-site build and the acceptance report against a built v4 site (`--v4=<dir>`, default
- *      dist/public), stopping at the first that fails (`VERIFY_STEPS`).
+ *      real-site build and the acceptance report against a built v4 site (`--v4=<dir>`, required:
+ *      v4 was deleted at cutover, #81), stopping at the first that fails (`VERIFY_STEPS`).
  *
  * Upgrading to the pinned ref changes nothing. `npx quartz upgrade` is a different thing, and does
  * not work here (VENDORED.md).
@@ -608,9 +608,6 @@ export const VERIFY_STEPS = [
   },
 ]
 
-/** The built v4 site `--verify`'s acceptance report reads by default, relative to the repo root. */
-const V4_DEFAULT = "dist/public"
-
 // The steps `--verify` runs: VERIFY_STEPS, or, for the tests, stand-ins from the JSON file
 // QUARTZ_VERIFY_STEPS names (the same shape).
 const verifySteps = () =>
@@ -620,7 +617,12 @@ const verifySteps = () =>
 
 // Before anything else: --verify's acceptance report needs a v4 build to compare against.
 function checkVerifyInputs(ctx) {
-  ctx.v4 = path.resolve(ctx.root, ctx.v4 ?? V4_DEFAULT)
+  if (!ctx.v4)
+    throw new Stop([
+      "Refusing to start: --verify's acceptance report compares against a built v4 site.",
+      "Pass one with --v4=<dir>: v4 was deleted at cutover (#81), so keep a build from before.",
+    ])
+  ctx.v4 = path.resolve(ctx.root, ctx.v4)
   if (!fs.existsSync(ctx.v4))
     throw new Stop([
       `Refusing to start: --verify's acceptance report compares against a built v4 site, and ${ctx.v4} does not exist.`,

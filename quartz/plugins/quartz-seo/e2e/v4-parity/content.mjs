@@ -1,8 +1,8 @@
 // The pages v4's head, sitemap and feed were captured from (`v4-head.json` and `v4-feeds.json`, by
-// `capture.mjs`), and the v5 spec builds again from the site config. Vault-shaped: v4 gave article
-// metadata, and a place in the feed, to `content/` pages only. Every page sets its dates as UTC
-// instants: a missing date is the build's clock, and a date-only one is local midnight, in both
-// versions.
+// a `capture.mjs` deleted with v4 at cutover, #81; the JSON stays as the golden files), and the v5
+// spec builds again from the site config. Vault-shaped: v4 gave article metadata, and a place in the
+// feed, to `content/` pages only. Every page sets its dates as UTC instants: a missing date is the
+// build's clock, and a date-only one is local midnight, in both versions.
 
 export const CONTENT = {
   "index.md": "---\ntitle: Home\nmodified: 2024-01-10T12:00:00Z\n---\nThe site root.\n",

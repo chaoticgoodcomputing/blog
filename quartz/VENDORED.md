@@ -243,8 +243,8 @@ Generated and installed files inside Core (`node_modules/`, `.quartz/`, `.quartz
 so never compared. **Nothing else of ours is committed there** but the steering files and the pnpm
 files. Adding to the tiers is a decision about the invariant itself, not a convenience.
 
-This matters because it is easy to violate by accident. `nx run site:format` runs
-`prettier . --write` from the repo root and _will_ rewrite upstream files unless
+This matters because it is easy to violate by accident. `prettier . --write` from the repo root
+(v4's `site:format` target ran exactly that) _will_ rewrite upstream files unless
 `quartz/core` is excluded in `.prettierignore` — which is why it is. The ignore is scoped to
 Core deliberately, so our own files under `quartz/` are still formatted.
 
@@ -354,8 +354,8 @@ and runs these steps in order, stopping at the first that fails:
    `site:typecheck`, Core's own `tsc` over Core source and the site's `quartz.ts`, which the
    esbuild build never type-checks), the e2e suite (`site-e2e:e2e`), the
    real-site build (`site:build`) and the acceptance report against it. The v4 build is not kept
-   working, so the acceptance report compares against a v4 site built earlier: `--v4=<dir>`
-   (default `dist/public`), which must exist before the upgrade starts. A failure here leaves the
+   working, so the acceptance report compares against a v4 site built earlier: `--v4=<dir>`,
+   required, which must exist before the upgrade starts. A failure here leaves the
    upgrade written and recorded (the output says so), for fixing or undoing with git.
 
 Every step up to the lock check only plans, so a stop there leaves Core, its lock and `upstream.json`

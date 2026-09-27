@@ -7,8 +7,8 @@ import { promisify } from 'util';
 
 const parseXML = promisify(parseString);
 
-// The built site's sitemap: v4's by default; site's eval:multi sets LHCI_SITEMAP to its own build's.
-const sitemapFile = process.env.LHCI_SITEMAP || 'dist/public/sitemap.xml';
+// The built site's sitemap, where site:build writes it; LHCI_SITEMAP names another.
+const sitemapFile = process.env.LHCI_SITEMAP || 'quartz/core/public/sitemap.xml';
 const sitemapPath = resolve(process.cwd(), sitemapFile);
 const outputPath = resolve(process.cwd(), 'utils/lighthouse/lighthouserc.cjs');
 

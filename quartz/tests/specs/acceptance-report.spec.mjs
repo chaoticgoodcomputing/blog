@@ -429,6 +429,14 @@ test("never allows an .mdx page v5 leaves out, nor the article that takes its pl
   expect(result.stdout).not.toContain("pending #79")
 })
 
+test("refuses to run without a built v4 site, since v4 can no longer be built (#81)", async () => {
+  const out = tempDir("out")
+  const result = await run("node", [REPORT, "--v5", site("v5", BASE), "--vault", tempDir("vault"), "--out", out]).catch((err) => err)
+  expect(result.code, `${result.stdout}${result.stderr}`).toBe(2)
+  expect(result.stderr).toContain("--v4")
+  expect(fs.existsSync(path.join(out, "report.json"))).toBe(false)
+})
+
 test("reads relative site, vault and output paths from the repo root, as its defaults are", async () => {
   const v4 = site("v4", BASE)
   const v5 = site("v5", BASE)
@@ -554,8 +562,11 @@ test("fails on an RSS item whose description v5 changes, such as its reading tim
   expect(result.stdout).toContain("RSS items whose description v5 changed")
 })
 
-// A few vault-shaped pages built by the real v4 (the repo root's `quartz/`) and by v5 from the site
-// config: proves the report reads what each version actually renders.
+// A few vault-shaped pages as the real v4 built them and as v5 builds them from the site config:
+// proves the report reads what each version actually renders. v4 is gone since the cutover (#81),
+// so its build is frozen in acceptance/fixtures/v4-sample: built from these pages at e64c591, the
+// last commit with v4, with every file but the pages and feeds emptied, since the report reads
+// only those and the others' URLs.
 test("reads the heads, feeds and URLs both Quartz versions really emit", async () => {
   test.setTimeout(240_000)
   const dates = "created: 2024-02-01\nmodified: 2024-03-01\npublished: 2024-02-01\n"
@@ -570,8 +581,7 @@ test("reads the heads, feeds and URLs both Quartz versions really emit", async (
     fs.mkdirSync(path.dirname(path.join(content, file)), { recursive: true })
     fs.writeFileSync(path.join(content, file), text)
   }
-  const v4 = path.join(tempDir("v4-build"), "public")
-  await run("node", ["quartz/bootstrap-cli.mjs", "build", "-d", content, "-o", v4], { cwd: repoRoot, maxBuffer: 64 * 1024 * 1024 })
+  const v4 = path.join(testsRoot, "acceptance/fixtures/v4-sample")
   const v5 = await buildScratchSite("acceptance", CONTENT, { config: siteConfig(), keep: true })
   scratch.push(v5.remove)
   expect(v5.code, v5.output).toBe(0)

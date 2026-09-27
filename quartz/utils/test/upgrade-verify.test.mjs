@@ -75,9 +75,10 @@ describe("--verify, when a step fails", () => {
   let fx, res, ran
   before(() => {
     fx = makeFixture()
-    fs.mkdirSync(path.join(fx.root, "dist/public"), { recursive: true })
+    const v4 = path.join(fx.dir, "v4-public")
+    fs.mkdirSync(v4)
     const stand = standIns(fx, [0, 3, 0, 0, 0])
-    res = fx.upgrade([`--ref=${fx.target}`, "--verify"], stand.env)
+    res = fx.upgrade([`--ref=${fx.target}`, "--verify", `--v4=${v4}`], stand.env)
     ran = stand.ran()
   })
   after(() => fx.cleanup())
@@ -115,20 +116,40 @@ describe("--verify without a v4 build to compare against", () => {
   })
 })
 
+describe("--verify with no --v4 at all", () => {
+  let fx, res, ran
+  before(() => {
+    fx = makeFixture()
+    // Where v4 used to build: no longer read by default, since v4 is gone (#81).
+    fs.mkdirSync(path.join(fx.root, "dist/public"), { recursive: true })
+    const stand = standIns(fx, [0, 0, 0, 0, 0])
+    res = fx.upgrade([`--ref=${fx.target}`, "--verify"], stand.env)
+    ran = stand.ran()
+  })
+  after(() => fx.cleanup())
+
+  test("refuses before the upgrade starts, asking for one, and changes nothing", () => {
+    assert.equal(res.code, 1, res.output)
+    assert.match(res.output, /--v4=<dir>/)
+    assert.deepEqual(ran, [])
+    assert.equal(fx.status(), "")
+    assert.equal(JSON.parse(fx.read(MANIFEST)).commit, fx.pinned)
+  })
+})
+
 describe("--v4 given in the space form, `--v4 <dir>`", () => {
   let fx, res, ran
   before(() => {
     fx = makeFixture()
     const v4 = path.join(fx.dir, "v4-public")
     fs.mkdirSync(v4)
-    fs.mkdirSync(path.join(fx.root, "dist/public"), { recursive: true })
     const stand = standIns(fx, [0, 0, 0, 0, 0])
     res = fx.upgrade([`--ref=${fx.target}`, "--verify", "--v4", v4], stand.env)
     ran = stand.ran()
   })
   after(() => fx.cleanup())
 
-  test("is refused, naming the form it takes, rather than falling back to dist/public", () => {
+  test("is refused, naming the form it takes", () => {
     assert.equal(res.code, 1, res.output)
     assert.match(res.output, /--v4 takes its value as --v4=<value>/)
     assert.deepEqual(ran, [])
