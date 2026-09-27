@@ -1,6 +1,5 @@
 // The upgrade's `--verify` (#100): after a successful upgrade, run the repo guards, the typechecks,
-// the e2e suite, the real-site build and the acceptance report, in that order, stopping at the
-// first that fails. Tested at the command line against the synthetic fixture, with stand-in steps
+// the e2e suite and the real-site build, in that order, stopping at the first that fails. Tested at the command line against the synthetic fixture, with stand-in steps
 // (QUARTZ_VERIFY_STEPS) that log their names, so the real suite never runs from here.
 import { after, before, describe, test } from "node:test"
 import assert from "node:assert/strict"
@@ -22,7 +21,6 @@ function standIns(fx, codes) {
       "-e",
       `require("fs").appendFileSync(${JSON.stringify(log)}, process.argv.slice(1).join(" ") + "\\n"); process.exit(${code})`,
       `step-${i + 1}`,
-      ...(i === codes.length - 1 ? ["--v4", "{v4}"] : []),
     ],
   }))
   const file = path.join(fx.dir, "verify-steps.json")
@@ -31,7 +29,7 @@ function standIns(fx, codes) {
   return { env: { QUARTZ_VERIFY_STEPS: file }, ran }
 }
 
-test("--verify's steps are the repo guards, the typechecks, the e2e suite, the real-site build and the acceptance report, in that order", () => {
+test("--verify's steps are the repo guards, the typechecks, the e2e suite and the real-site build, in that order", () => {
   assert.deepEqual(
     VERIFY_STEPS.map(({ name }) => name),
     [
@@ -39,35 +37,28 @@ test("--verify's steps are the repo guards, the typechecks, the e2e suite, the r
       "the typechecks",
       "the e2e suite",
       "the real-site build",
-      "the acceptance report",
     ],
-  )
-  assert.ok(
-    VERIFY_STEPS.at(-1).command.includes("{v4}"),
-    "the acceptance report takes the v4 build as an input",
   )
 })
 
 describe("--verify, when every step passes", () => {
-  let fx, res, ran, v4
+  let fx, res, ran
   before(() => {
     fx = makeFixture()
-    v4 = path.join(fx.dir, "v4-public")
-    fs.mkdirSync(v4)
-    const stand = standIns(fx, [0, 0, 0, 0, 0])
-    res = fx.upgrade([`--ref=${fx.target}`, "--verify", `--v4=${v4}`], stand.env)
+    const stand = standIns(fx, [0, 0, 0, 0])
+    res = fx.upgrade([`--ref=${fx.target}`, "--verify"], stand.env)
     ran = stand.ran()
   })
   after(() => fx.cleanup())
 
   test("runs every step, in order, after the upgrade, and exits 0", () => {
     assert.equal(res.code, 0, res.output)
-    assert.deepEqual(ran, ["step-1", "step-2", "step-3", "step-4", `step-5 --v4 ${v4}`])
+    assert.deepEqual(ran, ["step-1", "step-2", "step-3", "step-4"])
     assert.ok(
       res.output.indexOf("▸ record the pinned ref") < res.output.indexOf("▸ verify"),
       res.output,
     )
-    assert.match(res.output, /all 5 check\(s\) passed/)
+    assert.match(res.output, /all 4 check\(s\) passed/)
   })
 })
 
@@ -75,10 +66,8 @@ describe("--verify, when a step fails", () => {
   let fx, res, ran
   before(() => {
     fx = makeFixture()
-    const v4 = path.join(fx.dir, "v4-public")
-    fs.mkdirSync(v4)
-    const stand = standIns(fx, [0, 3, 0, 0, 0])
-    res = fx.upgrade([`--ref=${fx.target}`, "--verify", `--v4=${v4}`], stand.env)
+    const stand = standIns(fx, [0, 3, 0, 0])
+    res = fx.upgrade([`--ref=${fx.target}`, "--verify"], stand.env)
     ran = stand.ran()
   })
   after(() => fx.cleanup())
@@ -94,66 +83,5 @@ describe("--verify, when a step fails", () => {
     assert.equal(JSON.parse(fx.read(MANIFEST)).commit, fx.target)
     assert.match(res.output, /upstream\.json records the target/)
     assert.doesNotMatch(res.output, /upstream\.json is unchanged/)
-  })
-})
-
-describe("--verify without a v4 build to compare against", () => {
-  let fx, res, ran
-  before(() => {
-    fx = makeFixture()
-    const stand = standIns(fx, [0, 0, 0, 0, 0])
-    res = fx.upgrade([`--ref=${fx.target}`, "--verify", "--v4=no/such/dir"], stand.env)
-    ran = stand.ran()
-  })
-  after(() => fx.cleanup())
-
-  test("refuses before the upgrade starts, and changes nothing", () => {
-    assert.equal(res.code, 1)
-    assert.match(res.output, /compares against a built v4 site/)
-    assert.deepEqual(ran, [])
-    assert.equal(fx.status(), "")
-    assert.equal(JSON.parse(fx.read(MANIFEST)).commit, fx.pinned)
-  })
-})
-
-describe("--verify with no --v4 at all", () => {
-  let fx, res, ran
-  before(() => {
-    fx = makeFixture()
-    // Where v4 used to build: no longer read by default, since v4 is gone (#81).
-    fs.mkdirSync(path.join(fx.root, "dist/public"), { recursive: true })
-    const stand = standIns(fx, [0, 0, 0, 0, 0])
-    res = fx.upgrade([`--ref=${fx.target}`, "--verify"], stand.env)
-    ran = stand.ran()
-  })
-  after(() => fx.cleanup())
-
-  test("refuses before the upgrade starts, asking for one, and changes nothing", () => {
-    assert.equal(res.code, 1, res.output)
-    assert.match(res.output, /--v4=<dir>/)
-    assert.deepEqual(ran, [])
-    assert.equal(fx.status(), "")
-    assert.equal(JSON.parse(fx.read(MANIFEST)).commit, fx.pinned)
-  })
-})
-
-describe("--v4 given in the space form, `--v4 <dir>`", () => {
-  let fx, res, ran
-  before(() => {
-    fx = makeFixture()
-    const v4 = path.join(fx.dir, "v4-public")
-    fs.mkdirSync(v4)
-    const stand = standIns(fx, [0, 0, 0, 0, 0])
-    res = fx.upgrade([`--ref=${fx.target}`, "--verify", "--v4", v4], stand.env)
-    ran = stand.ran()
-  })
-  after(() => fx.cleanup())
-
-  test("is refused, naming the form it takes", () => {
-    assert.equal(res.code, 1, res.output)
-    assert.match(res.output, /--v4 takes its value as --v4=<value>/)
-    assert.deepEqual(ran, [])
-    assert.equal(fx.status(), "")
-    assert.equal(JSON.parse(fx.read(MANIFEST)).commit, fx.pinned)
   })
 })

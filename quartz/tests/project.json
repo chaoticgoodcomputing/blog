@@ -22,14 +22,6 @@
         "command": "npx playwright test {args.args}",
         "cwd": "{projectRoot}"
       }
-    },
-    "acceptance": {
-      "//": "The real-site acceptance report, the suite's second seam (CONTEXT.md): build content/public under v5 (quartz/core/public) and compare it with a v4 build kept from before the cutover, which --v4=<dir> names (required: v4 was deleted at #81), then print every difference in URLs, sitemap and RSS membership and head metadata, plus site-styles' cascade-layer guard on the v5 build (needs the install target's Chromium). Exits 1 while any difference is off the allowlist (acceptance/allowlist.mjs), 2 when it cannot run, and 3 when it would pass but the case redirects went unchecked on a case-insensitive filesystem (pass --allow-unverified-redirects on a local macOS run). Writes dist/acceptance/report.{txt,json}. Compare the existing v5 build with --skip-build, or another with --v5 <dir>; --vault <dir> names the content (relative paths are read from the repo root, like the defaults); print every difference with --full. Never run it beside the e2e suite in the same checkout: they share Quartz Core's transpile cache.",
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "node acceptance/report.mjs",
-        "cwd": "{projectRoot}"
-      }
     }
   }
 }

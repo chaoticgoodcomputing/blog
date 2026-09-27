@@ -296,7 +296,7 @@ the steering files, the pruning and Core's pnpm settings.
 pnpm nx run site:diff-latest                    # what would an upgrade to the tip of v5 pull in?
 pnpm nx run site:upgrade-report --ref=<ref>     # the API-surface report alone; writes nothing
 pnpm nx run site:upgrade --ref=<commit|branch|tag>
-pnpm nx run site:upgrade --ref=<ref> --verify --v4=<a built v4 site>
+pnpm nx run site:upgrade --ref=<ref> --verify
 ```
 
 It is [`utils/upgrade.mjs`](./utils/upgrade.mjs) ([#99](https://github.com/chaoticgoodcomputing/blog/issues/99)),
@@ -353,9 +353,7 @@ and runs these steps in order, stopping at the first that fails:
    and the packages'), the typechecks (`nx run-many -t typecheck`: every package's, and
    `site:typecheck`, Core's own `tsc` over Core source and the site's `quartz.ts`, which the
    esbuild build never type-checks), the e2e suite (`site-e2e:e2e`), the
-   real-site build (`site:build`) and the acceptance report against it. The v4 build is not kept
-   working, so the acceptance report compares against a v4 site built earlier: `--v4=<dir>`,
-   required, which must exist before the upgrade starts. A failure here leaves the
+   real-site build (`site:build`). A failure here leaves the
    upgrade written and recorded (the output says so), for fixing or undoing with git.
 
 Every step up to the lock check only plans, so a stop there leaves Core, its lock and `upstream.json`

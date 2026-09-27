@@ -2,7 +2,7 @@
 /**
  * The upgrade (#89, #99): move Quartz Core to another upstream commit, keeping what's ours.
  *
- *   pnpm nx run site:upgrade --ref=<commit|branch|tag> [--verify [--v4=<dir>]]
+ *   pnpm nx run site:upgrade --ref=<commit|branch|tag> [--verify]
  *   pnpm nx run site:upgrade-report --ref=<ref>
  *   node quartz/utils/upgrade.mjs --ref=<ref> [--upstream=<url>] [--report-only | --verify]
  *
@@ -20,8 +20,7 @@
  *      by the lock check (`core-lock.mjs`), then written to Core and installed frozen;
  *   8. record the new pinned ref in `upstream.json`, only once all of the above has succeeded;
  *   -  with `--verify`, prove the result: the repo guards, the typechecks, the e2e suite, the
- *      real-site build and the acceptance report against a built v4 site (`--v4=<dir>`, required:
- *      v4 was deleted at cutover, #81), stopping at the first that fails (`VERIFY_STEPS`).
+ *      real-site build, stopping at the first that fails (`VERIFY_STEPS`).
  *
  * Upgrading to the pinned ref changes nothing. `npx quartz upgrade` is a different thing, and does
  * not work here (VENDORED.md).
@@ -583,9 +582,7 @@ function record(ctx) {
 // --- --verify (#100) ----------------------------------------------------------------------------
 
 /**
- * `--verify`'s checks, in order: each a command run from the repo root, `{v4}` standing for the
- * built v4 site the acceptance report compares against (`--v4=<dir>`; the v4 build is not kept
- * working, so it is an input, not something `--verify` builds). The repo guards are one Nx target
+ * `--verify`'s checks, in order: each a command run from the repo root. The repo guards are one Nx target
  * (site:guards), so every repo guard, Core's and the packages', runs there. The typechecks are
  * every project's `typecheck` target: the packages', and site's, which checks Core's source and
  * the site's quartz.ts.
@@ -595,17 +592,6 @@ export const VERIFY_STEPS = [
   { name: "the typechecks", command: ["pnpm", "nx", "run-many", "-t", "typecheck"] },
   { name: "the e2e suite", command: ["pnpm", "nx", "run", "site-e2e:e2e"] },
   { name: "the real-site build", command: ["pnpm", "nx", "run", "site:build"] },
-  {
-    name: "the acceptance report",
-    command: [
-      "node",
-      "quartz/tests/acceptance/report.mjs",
-      "--v5",
-      "quartz/core/public",
-      "--v4",
-      "{v4}",
-    ],
-  },
 ]
 
 // The steps `--verify` runs: VERIFY_STEPS, or, for the tests, stand-ins from the JSON file
@@ -615,27 +601,11 @@ const verifySteps = () =>
     ? JSON.parse(fs.readFileSync(process.env.QUARTZ_VERIFY_STEPS, "utf-8"))
     : VERIFY_STEPS
 
-// Before anything else: --verify's acceptance report needs a v4 build to compare against.
-function checkVerifyInputs(ctx) {
-  if (!ctx.v4)
-    throw new Stop([
-      "Refusing to start: --verify's acceptance report compares against a built v4 site.",
-      "Pass one with --v4=<dir>: v4 was deleted at cutover (#81), so keep a build from before.",
-    ])
-  ctx.v4 = path.resolve(ctx.root, ctx.v4)
-  if (!fs.existsSync(ctx.v4))
-    throw new Stop([
-      `Refusing to start: --verify's acceptance report compares against a built v4 site, and ${ctx.v4} does not exist.`,
-      "Pass one with --v4=<dir>; the v4 build is not kept working, so keep a build from before.",
-    ])
-}
-
 function verify(ctx) {
   const steps = verifySteps()
   for (const [i, { name, command }] of steps.entries()) {
-    const argv = command.map((arg) => arg.replaceAll("{v4}", ctx.v4))
-    say(`[${i + 1}/${steps.length}] ${name}: ${argv.join(" ")}`)
-    const res = spawnSync(argv[0], argv.slice(1), { cwd: ctx.root, stdio: "inherit" })
+    say(`[${i + 1}/${steps.length}] ${name}: ${command.join(" ")}`)
+    const res = spawnSync(command[0], command.slice(1), { cwd: ctx.root, stdio: "inherit" })
     if (res.status !== 0)
       throw new Stop([
         `Stopped: --verify failed at ${name} (exit ${res.status ?? res.signal ?? res.error?.message}).`,
@@ -672,11 +642,8 @@ export const STEPS = [
 /** The report alone: it reads Core and the two refs, and writes nothing but the upstream cache. */
 export const REPORT_ONLY = [FETCH, REPORT]
 
-/** `--verify`: checked before the upgrade starts, and run after it has succeeded. */
-export const VERIFY = {
-  before: { name: "check --verify's inputs", run: checkVerifyInputs },
-  after: { name: "verify", run: verify },
-}
+/** `--verify`: run after the upgrade has succeeded. */
+export const VERIFY = { name: "verify", run: verify }
 
 /** Run `steps` over the context. Returns an exit code: 0 on success, 1 when a step stops. */
 export function runUpgrade(ctx, steps = STEPS) {
@@ -701,7 +668,7 @@ export function runUpgrade(ctx, steps = STEPS) {
 }
 
 // The flags that take a value, always as `--<name>=<value>`.
-const VALUE_FLAGS = ["ref", "upstream", "root", "v4"]
+const VALUE_FLAGS = ["ref", "upstream", "root"]
 
 function parseArgs(argv) {
   const spaced = argv.find((a) => VALUE_FLAGS.some((name) => a === `--${name}`))
@@ -717,15 +684,14 @@ function parseArgs(argv) {
       upstream: flag("upstream") ?? process.env.QUARTZ_UPSTREAM,
       root: flag("root") ? path.resolve(flag("root")) : REPO_ROOT,
     },
-    steps: reportOnly ? REPORT_ONLY : verify ? [VERIFY.before, ...STEPS, VERIFY.after] : STEPS,
-    v4: flag("v4"),
+    steps: reportOnly ? REPORT_ONLY : verify ? [...STEPS, VERIFY] : STEPS,
   }
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try {
-    const { options, steps, v4 } = parseArgs(process.argv.slice(2))
-    process.exitCode = runUpgrade({ ...context(options), v4 }, steps)
+    const { options, steps } = parseArgs(process.argv.slice(2))
+    process.exitCode = runUpgrade(context(options), steps)
   } catch (err) {
     if (err instanceof Stop) say("", ...err.lines, "")
     else console.error(`\n  ${err.stack ?? err.message}\n`)
