@@ -31,9 +31,11 @@ quartz-v5/
 ├── libs/                 our non-plugin packages (`@chaoticgoodcomputing/*`)
 ├── tests/                Playwright suite and `content-fixture/`
 ├── utils/                tooling for this context — `core-tiers.mjs`, `upstream.mjs`, `core-lock.mjs`,
-│                         `upgrade.mjs`, `upstream-cache.mjs`, `prebuild.mjs`, `postbuild.mjs`,
-│                         `local-plugins.mjs`
-├── .upstream-cache/      gitignored: the upgrade's bare git repo of the upstream commits it has fetched
+│                         `upgrade.mjs`, `upstream-cache.mjs`, `upstream-tree.mjs`, `core-drift.mjs`,
+│                         `site-config-schema.mjs`, `prebuild.mjs`, `postbuild.mjs`, `local-plugins.mjs`,
+│                         and `guards/`, the repo guards
+├── .upstream-cache/      gitignored: the upgrade's bare git repo of the upstream commits it has fetched,
+│                         and `trees/<sha>/`, the repo guards' checkouts of the pinned ref
 └── core/                 Quartz Core: upstream's install root, in four tiers
     ├── quartz/               Core source — protected
     ├── quartz.ts             steering file
@@ -163,6 +165,10 @@ Current vendored changes:
 | `quartz/plugins/types.ts`, `quartz/plugins/pageTypes/dispatcher.ts` | [#19](https://github.com/chaoticgoodcomputing/blog/issues/19): four default transformers are async, so a page type cannot run the pipeline from a synchronous `generate`. Makes `generate` awaitable. Needed by `cgc-mdx`. | [#25](https://github.com/chaoticgoodcomputing/blog/issues/25), filed after cutover |
 | `quartz/plugins/loader/config-loader.ts` | [#40](https://github.com/chaoticgoodcomputing/blog/issues/40): the loader matches `manifest.dependencies` only against exact `source:` strings, and a local source differs by site root, so no one dependency string holds at the real site, the e2e fixture and a downstream install. `validateDependencies` now resolves each dependency by exact source, then by plugin name, and its presence, order and cycle checks all use the resolved entry. Additive: a dependency that matches a source exactly behaves as before. Needed by every consumer of `cgc-styles`; landed with it on [#63](https://github.com/chaoticgoodcomputing/blog/issues/63), proven by `tests/specs/dependencies-by-name.spec.mjs`. | [#47](https://github.com/chaoticgoodcomputing/blog/issues/47), filed after cutover |
 
+The `core-drift` repo guard (below) reads the first column of this table: every file drift is
+allowed in, as a code span, one row per vendored change. Adding a vendored change means adding its
+row here in the same commit, and a row whose change upstream has taken fails the guard until it goes.
+
 Generated and installed files inside Core (`node_modules/`, `.quartz/`, `.quartz-cache/`,
 `public/`, `tsconfig.tsbuildinfo`) are gitignored, by upstream's own `.gitignore` and the repo's, and
 so never compared. **Nothing else of ours is committed there** but the steering files and the pnpm
@@ -172,6 +178,32 @@ This matters because it is easy to violate by accident. `nx run site:format` run
 `prettier . --write` from the repo root and _will_ rewrite upstream files unless
 `quartz-v5/core` is excluded in `.prettierignore` — which is why it is. The ignore is scoped to
 Core deliberately, so our own files under `quartz-v5/` are still formatted.
+
+## Repo guards
+
+`pnpm nx run site-v5:guards` runs the **repo guards** (`utils/guards/`, glossary in
+[CONTEXT.md](./CONTEXT.md)), four of which hold Core to this file:
+
+| Guard | Rule |
+| ----- | ---- |
+| `core-drift` | No drift beyond the files the vendored-changes table above records, and no recorded file that no longer drifts. `diff-upstream`, as a guard. |
+| `core-pruned` | Every pruned file is absent from Core, tracked or not. |
+| `core-lock` | Core's `package.json` is upstream's, byte for byte; its `pnpm-lock.yaml` passes the lock check against upstream's `package-lock.json`, and equals what a fresh `pnpm import` of it writes. |
+| `site-config` | The site config validates against Core's plugin config schema (`quartz/plugins/quartz-plugins.schema.json`), and exists, isn't empty, and has a plugins list. |
+
+Each lists every violation and exits 1 on any. The target is cached on the files the guards read, so
+a second run with nothing changed is a cache hit. `core-drift` and `core-lock` compare against the
+pinned ref's tree, fetched once (a depth-1 fetch, a few seconds) into the gitignored
+`quartz-v5/.upstream-cache/trees/<sha>/` (`utils/upstream-tree.mjs`, beside the upgrade's bare repo); after that they need no network, but
+the fresh `pnpm import` reads pnpm's metadata cache or the registry. Run one guard alone with
+`node quartz-v5/utils/guards/<name>.guard.mjs`; each test, in `utils/test/guard-<name>.test.mjs`,
+says how to break its rule by hand.
+
+Upstream's schema lags upstream's own loader: the loader's types take the `header` and `footer`
+layout positions and a page type's frame `template`, which the site config uses, and the schema has
+neither. The validator (`utils/site-config-schema.mjs`, which takes any ref's schema, for the upgrade's
+report) adds exactly those, as `SCHEMA_AMENDMENTS`, each citing the upstream line it follows. An
+amendment a schema no longer needs fails `site-config` until it is retired.
 
 ## Upgrading
 

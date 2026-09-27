@@ -74,7 +74,7 @@ _Avoid_: merged, upstreamed (that is the proposal's outcome, not what the upgrad
 **Upstream cache**:
 The upgrade's bare git repo of the upstream commits it has fetched, `quartz-v5/.upstream-cache/`
 (gitignored). Upstream files Core prunes, such as the default config and the npm lock, are read
-from it.
+from it. The repo guards keep their checkouts of the pinned ref beside it, in `trees/<sha>/`.
 _Avoid_: upstream clone, mirror
 
 **Lock check**:
@@ -278,6 +278,20 @@ A named set of icons addressed by one prefix. Either an installed third-party se
 a site supplies from its own SVG files (`custom`). A collection belongs to whoever supplies it, and
 a site-supplied one is site configuration, never part of a shareable plugin or library.
 _Avoid_: icon provider, icon pack, icon library
+
+### Repo guards
+
+**Repo guard**:
+A fast, lint-style Node script that checks one rule about the repository's architecture against its
+current state, lists every violation, and exits non-zero if there is any. No browser; seconds, not
+minutes. Each is `utils/guards/<name>.guard.mjs`, built test-first against a scratch copy or fixture
+that breaks its rule, and `site-v5:guards` runs them all, cached by Nx on the files they read. They
+keep architecture checks out of the Playwright suite, which stays for what a reader, crawler or
+downstream site sees. Quartz Core's (#97): `core-drift` (no **drift** beyond the recorded **vendored
+changes**), `core-pruned`, `core-lock` (the **lock check**, plus a fresh `pnpm import`) and
+`site-config` (the **site config** against Core's plugin config schema).
+_Avoid_: lint (the formatters and linters are something else), check (alone), test (the e2e suite and
+the `node --test` suites are tests; a guard checks the repo itself)
 
 ### Distinguishing the two copies
 

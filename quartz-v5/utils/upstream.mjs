@@ -15,38 +15,14 @@
  * commits that made them, flagging any that cite no ticket.
  */
 import { execFileSync } from "node:child_process"
-import { existsSync, readFileSync, rmSync } from "node:fs"
+import { rmSync } from "node:fs"
 import { join } from "node:path"
 import { CORE_DIR, CORE_REL, MANIFEST_REL, REPO_ROOT, countsAsDrift, tierOf } from "./core-tiers.mjs"
+import { drift as coreDrift } from "./core-drift.mjs"
 import { cloneUpstream, readManifest, resolveLatest, sh } from "./upstream-git.mjs"
 
-// The files a tree holds: what git tracks there, and any new file git doesn't ignore. Installed
-// dependencies, build output and caches are gitignored, so they are never compared.
-const trackedFiles = (dir, pathspec = ".") =>
-  sh("git", ["-C", dir, "ls-files", "--cached", "--others", "--exclude-standard", "-z", "--", pathspec])
-    .split("\0")
-    .filter(Boolean)
-
-const coreFiles = () =>
-  trackedFiles(REPO_ROOT, CORE_REL)
-    .map((file) => file.slice(CORE_REL.length + 1))
-    .filter((rel) => existsSync(join(CORE_DIR, rel)))
-
-/**
- * Core's drift from the upstream tree checked out at `dir`: every file, relative to Core's root,
- * that differs, is only upstream's, or is only Core's, leaving out the tiers that are not drift.
- */
-function drift(dir) {
-  const upstream = new Set(trackedFiles(dir))
-  const core = new Set(coreFiles())
-  const same = (rel) => readFileSync(join(dir, rel)).equals(readFileSync(join(CORE_DIR, rel)))
-  return [...new Set([...upstream, ...core])]
-    .filter(countsAsDrift)
-    .sort()
-    .flatMap((rel) =>
-      !core.has(rel) ? [{ rel, kind: "only upstream" }] : !upstream.has(rel) ? [{ rel, kind: "only Core" }] : same(rel) ? [] : [{ rel, kind: "changed" }],
-    )
-}
+// Core's drift from the upstream tree checked out at `dir` (core-drift.mjs, shared with the repo guards).
+const drift = (dir) => coreDrift(CORE_DIR, dir)
 
 // One file's difference as a patch `git apply` takes from the repo root.
 function patchFor(dir, { rel, kind }) {

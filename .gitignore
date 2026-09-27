@@ -21,7 +21,8 @@ dist
 quartz-v5/core/public
 # site-v5:serve's output, outside Core (quartz-v5/project.json)
 quartz-v5/.serve-public
-# the upgrade's upstream cache, a bare git repo of the upstream commits it has fetched (quartz-v5/utils/upstream-cache.mjs)
+# the upstream cache: the upgrade's bare git repo of the upstream commits it has fetched (quartz-v5/utils/upstream-cache.mjs),
+# and trees/<sha>/, the repo guards' checkouts of the pinned ref (quartz-v5/utils/upstream-tree.mjs)
 quartz-v5/.upstream-cache/
 quartz-v5/core/.quartz/
 # e2e scratch sites made at the real site root's depth (quartz-v5/tests/harness/site.mjs)
