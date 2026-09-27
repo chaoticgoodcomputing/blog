@@ -1,0 +1,63 @@
+# Builds the site with Quartz 5 and publishes it to the `pages` branch, which GitHub Pages serves at
+# blog.chaoticgood.computer (#81). Deliberately minimal for now: no tests, no affected check, no
+# Bluesky, email or IndexNow jobs; every push to main rebuilds and redeploys the whole site.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# One deploy at a time. A newer push waits rather than cancelling a deploy halfway through.
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    steps:
+      # Full history: page dates fall back to git (created-modified-date's `priority`). The private
+      # vault, content/private, is a submodule on another host and is never checked out.
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      # The version comes from package.json's `packageManager`.
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ".nvmrc"
+          cache: pnpm
+          cache-dependency-path: |
+            pnpm-lock.yaml
+            quartz/core/pnpm-lock.yaml
+
+      # The workspace (our libraries, plugins and site package), then Quartz Core, a pnpm project of
+      # its own that site:build does not install.
+      - name: Install dependencies
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm nx run site:install
+
+      - name: Build site
+        run: pnpm nx run site:build
+
+      # force_orphan: the branch holds exactly this build. peaceiris adds .nojekyll; the build
+      # carries CNAME and the site's other root files.
+      - name: Deploy to pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./quartz/core/public
+          publish_branch: pages
+          force_orphan: true
