@@ -53,22 +53,19 @@ The profile comes from GitHub's API, `api.github.com/users/<username>`, and the 
 
 ### Where it renders
 
-The cards belong on the home page. Quartz 5 places a component with the `layout` of its config entry, and a `condition` could keep it to the home page, but Quartz 5 ships only `not-index`, and a plugin can't add an `is-index`. So the cards keep to their pages by themselves, as [cgc-post-listing](https://blog.chaoticgood.computer/plugins/cgc-post-listing) does: they render on the pages whose slugs `showOn` names, `index` (the home page) by default, and nowhere else, wherever the layout puts them. Place them in a sidebar, and add `display: desktop-only` to keep them off narrow screens.
+The cards belong on the home page. Quartz 5 places a component with the `layout` of its config entry, and a `condition` could keep it to the home page, but Quartz 5 ships only `not-index`, and a plugin can't add an `is-index`. So the cards keep to their pages by themselves, as [quartz-post-listing](https://blog.chaoticgood.computer/plugins/quartz-post-listing) does: they render on the pages whose slugs `showOn` names, `index` (the home page) by default, and nowhere else, wherever the layout puts them. Place them in a sidebar, and add `display: desktop-only` to keep them off narrow screens.
 
 Both cards are one component, so they sit in one place in the layout, the GitHub card above the Bluesky card. The reasoning is in the package's [ADR-0001](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz-v5/plugins/quartz-social/docs/adr/0001-one-component-draws-both-cards.md).
 
 ## Install
 
-The plugin is the npm package `@chaoticgoodcomputing/quartz-social`, built, with its type declarations, and loaded by name, as Quartz's own `@quartz-community/*` plugins are. It needs [cgc-styles](https://blog.chaoticgood.computer/plugins/cgc-styles). Install it into your Quartz site:
+The plugin is the npm package `@chaoticgoodcomputing/quartz-social`, built, with its type declarations, and loaded by name, as Quartz's own `@quartz-community/*` plugins are. It needs [quartz-styles](https://blog.chaoticgood.computer/plugins/quartz-styles). Install it into your Quartz site:
 
 ```sh
 npm install @chaoticgoodcomputing/quartz-social
 ```
 
 and list it in `quartz.config.yaml` by its package name, `source: "@chaoticgoodcomputing/quartz-social"`. Its peers, Preact and Quartz's own packages, are your site's own copies, so a page has one Preact. The package isn't on npm yet: it is published after this site moves to Quartz 5 ([#90](https://github.com/chaoticgoodcomputing/blog/issues/90)).
-
-> [!WARNING]
-> **Depending on `cgc-styles` by name needs a change to Quartz.** Stock Quartz matches a dependency only against the exact `source:` string. Matching by plugin name is a small change to its loader, carried in this repository's copy of Quartz and proposed upstream on [chaoticgoodcomputing/blog#47](https://github.com/chaoticgoodcomputing/blog/issues/47). Until it lands, this plugin builds only against that copy.
 
 Then configure at least one card. The build fails until you do, and it fails on a card with no account, so that a card never shows someone else's.
 

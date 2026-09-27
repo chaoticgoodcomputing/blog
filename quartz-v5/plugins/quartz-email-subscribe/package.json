@@ -55,7 +55,7 @@
     "version": "0.0.0",
     "quartzVersion": ">=5.0.0",
     "dependencies": [
-      "cgc-styles"
+      "@chaoticgoodcomputing/quartz-styles"
     ],
     "defaultOrder": 70,
     "defaultEnabled": true,

@@ -1,5 +1,5 @@
 // The tag system's shared logic (ADR-0002's worked example, #20, #31): the resolution rule, the
-// shapes the `cgc-tags` engine publishes, and the `fileData` augmentation that types them. The
+// shapes the `quartz-tags` engine publishes, and the `fileData` augmentation that types them. The
 // engine resolves with it, so the rule lives in one place; consumers import its types, which tag a
 // tag page is for (`tagOfPage()`) and, for a canvas, its colour resolver (`./colour`). The tag
 // hierarchy's tests (`underAny()`) and which pages are private (`privatePageTest()`) live here too,
@@ -61,7 +61,7 @@ export interface TagsData {
 
 declare module "vfile" {
   interface DataMap {
-    /** Published by the `cgc-tags` engine on every page it transforms. */
+    /** Published by the `quartz-tags` engine on every page it transforms. */
     cgcTags: TagsData
   }
 }

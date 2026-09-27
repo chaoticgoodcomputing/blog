@@ -190,12 +190,14 @@ _Avoid_: plugin name, package name, block name (in prose)
 
 **Engine**:
 A non-visual plugin that owns one domain's configuration and publishes it for other plugins to
-read. Holds no rendering and no knowledge of its consumers.
+read. Holds no rendering and no knowledge of its consumers. Ours are `quartz-styles` and
+`quartz-tags` (#95).
 _Avoid_: core plugin, base plugin, provider
 
 **Consumer**:
-A plugin that declares a hard dependency on an engine and reads its published artifacts rather
-than its configuration.
+A plugin that declares a hard dependency on an engine, in its manifest's `dependencies` by the
+engine's **plugin name** (`@chaoticgoodcomputing/quartz-tags`, never the manifest name `cgc-tags`),
+and reads its published artifacts rather than its configuration.
 _Avoid_: dependent, client, downstream plugin
 
 **Published artifact**:

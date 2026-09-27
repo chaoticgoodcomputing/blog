@@ -57,9 +57,9 @@ _Avoid_: error state, placeholder
   come from the theme, `--lightgray` to `--secondary`; `levelColors` replaces them with five values,
   checked at build time. The CSS paints them, so a scheme switch repaints them with no script.
 - **The colour-value check is the family's one check**, `colourValueCheck` from
-  `@chaoticgoodcomputing/tags-core/colour-value`, handed the host's lightningcss, as `cgc-tags` and
+  `@chaoticgoodcomputing/tags-core/colour-value`, handed the host's lightningcss, as `quartz-tags` and
   `cgc-graph` use it (`src/colour.ts`).
-- **It keeps to its pages by `showOn`**, as `cgc-post-listing` does (its ADR-0001): no plugin can add
+- **It keeps to its pages by `showOn`**, as `quartz-post-listing` does (its ADR-0001): no plugin can add
   an `is-index` condition (#70).
 - **Its stylesheet holds the post card's**, from the Bluesky renderer the script inlines, in the same
   `cgc.social` layer. It never selects the post card's classes itself: the compact size is the

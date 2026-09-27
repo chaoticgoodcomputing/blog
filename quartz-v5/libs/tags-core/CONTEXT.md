@@ -1,13 +1,13 @@
 # @chaoticgoodcomputing/tags-core
 
 The library at the bottom of the tag system (ADR-0002's worked example, #20, #31). It holds the
-resolution rule, the shapes the `cgc-tags` engine publishes, the `fileData` augmentation that
+resolution rule, the shapes the `quartz-tags` engine publishes, the `fileData` augmentation that
 types them, the tag hierarchy's rules, which pages are private, the **tag bubble** every badge
 draws (#82), the one colour resolver for code that paints on a canvas, and the one check that an
 option is a colour value. The engine resolves with it, so the rule lives in one place; its
 consumers import the types, a badge the bubble, a canvas the resolver and the bubble's palette, and
 a plugin with colour options the check. A plugin that needs a rule but not the engine inlines the
-library alone, as `cgc-seo` and `cgc-backlinks` do for **private pages**: a library is no plugin,
+library alone, as `cgc-seo` and `quartz-backlinks` do for **private pages**: a library is no plugin,
 so they stay free of any engine (ADR-0002 rule 4, #57, #78). It ships as TypeScript source, and
 the plugin's build inlines it (ADR-0005). Inherits the family vocabulary in
 [`quartz-v5/CONTEXT.md`](../../CONTEXT.md), where **Tag colour**, **Colour value**, **Icon id**
@@ -71,12 +71,12 @@ tag's description file in v4's layout. Only a whole `index` segment is dropped, 
 is the page for `reindex`. The index of every tag, `tags` or `tags/index` (`isAllTagsPage()`), is
 for none. One function, so every plugin that treats a tag page differently agrees on which pages
 those are.
-_Avoid_: tag listing, tag index (that is cgc-tags' `static/cgcTags.json`)
+_Avoid_: tag listing, tag index (that is quartz-tags' `static/cgcTags.json`)
 
 **Private tag**:
 One of the tags a site names as private, in the option each plugin that treats private pages
-differently takes them by: `cgc-seo`'s `noindexTags`, and `privateTags` in `cgc-backlinks`,
-`cgc-graph` and `cgc-tag-explorer`. A site names them once and gives every such plugin the same list.
+differently takes them by: `cgc-seo`'s `noindexTags`, and `privateTags` in `quartz-backlinks`,
+`quartz-graph` and `quartz-tag-explorer`. A site names them once and gives every such plugin the same list.
 _Avoid_: noindex tag (that is cgc-seo's option), hidden tag
 
 **Private page**:
@@ -130,16 +130,16 @@ _Avoid_: colour validator, colour parser
 - **No dependencies of its own at runtime.** The colour-value check takes lightningcss from its
   caller rather than importing one, which could disagree with the host's, and `normaliseTag()`
   takes the host's `slugTag` for the same reason.
-- **Tested through the plugins that inline it.** The rule and the shapes through `cgc-tags`' specs; the
-  colour-value check through `cgc-tags`', `cgc-graph`'s and `cgc-social`'s option specs; the
-  colour resolver through `cgc-graph`'s colour and scheme specs, which paint the theme's colours
+- **Tested through the plugins that inline it.** The rule and the shapes through `quartz-tags`' specs; the
+  colour-value check through `quartz-tags`', `quartz-graph`'s and `cgc-social`'s option specs; the
+  colour resolver through `quartz-graph`'s colour and scheme specs, which paint the theme's colours
   and every tag's with it (#74, #77), and its options spec, which rims private pages in a
   `color()` whose computed value isn't `rgb()` (the paint the reader sees, not the resolver's
   internal `rgba()` return shape); `tagOfPage()` through what
-  `cgc-post-listing` and `cgc-tag-list` render on tag pages (`e2e/tag-pages.spec.mjs`), and
-  through `cgc-graph`'s tag nodes; `privatePageTest()`, `underAny()` and `normaliseTag()` through
+  `quartz-post-listing` and `quartz-tag-list` render on tag pages (`e2e/tag-pages.spec.mjs`), and
+  through `quartz-graph`'s tag nodes; `privatePageTest()`, `underAny()` and `normaliseTag()` through
   every plugin that treats private pages differently, on a site that names its private tags once
   (`tests/specs/private-pages.spec.mjs`); the tag bubble, its palette and the badges that hold it
-  through `cgc-tag-list`'s and `cgc-post-listing`'s badges, side by side on one tag page, and its
+  through `quartz-tag-list`'s and `quartz-post-listing`'s badges, side by side on one tag page, and its
   stylesheet through the library's lint (`e2e/bubble.spec.mjs`); the palette on a canvas through
-  `cgc-graph`'s nodes, each read off the canvas in both schemes and after a switch (#83).
+  `quartz-graph`'s nodes, each read off the canvas in both schemes and after a switch (#83).

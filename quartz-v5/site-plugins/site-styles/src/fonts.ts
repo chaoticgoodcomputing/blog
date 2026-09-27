@@ -16,7 +16,7 @@ type Ctx = {
 }
 
 // The site's base path, as core computes it for `data-basepath` (renderPage.tsx): the path of
-// `baseUrl`, and nothing under `serve`, which serves from the root. cgc-tags links its stylesheet
+// `baseUrl`, and nothing under `serve`, which serves from the root. quartz-tags links its stylesheet
 // the same way.
 export function basePath(ctx: Ctx): string {
   const { baseUrl } = ctx.cfg.configuration

@@ -7,7 +7,8 @@
 // and on serve, that Quartz's generated plugin index takes it in, and that a TypeScript site can
 // read its types. Its own specs prove what it renders.
 //
-// Every plugin not yet converted still loads by local path, beside them (#95).
+// Every plugin in plugins/ is a package now (#93-#95); only the fixture's own plugins and the site
+// plugins still load by local path.
 import fs from "node:fs"
 import path from "node:path"
 import { execFile } from "node:child_process"
@@ -57,8 +58,8 @@ test("the fixture site loads every package by name: none is put in .quartz/plugi
     expect(installed).not.toContain(dirName(pkg))
     expect(installed).not.toContain(dirName(pkg).replace(/^quartz-/, "cgc-"))
   }
-  // Every other plugin of ours is still a local source, which Quartz links in there.
-  expect(installed).toContain("cgc-tags")
+  // A local source, such as the fixture's own consumer, is what Quartz links in there.
+  expect(installed).toContain("fixture-consumer")
   await page.goto("/plain-note")
   await expect(page.locator(".cgc-graph__canvas")).toHaveCount(1)
 })
@@ -177,4 +178,69 @@ test("a package listed a second time loads under its placement name", async ({ s
   const html = fs.readFileSync(path.join(site.public, "index.html"), "utf8")
   expect(html.match(/<div class="cgc-email-subscribe"/g) ?? []).toHaveLength(2)
   expect(fs.readdirSync(path.join(path.dirname(site.public), ".quartz", "plugins"))).not.toContain("email-subscribe-sidebar")
+})
+
+// The tag family and the styles engine (#95): the two engines, `cgc-styles` and `cgc-tags`, and the
+// plugins that consume them, each a package under its `quartz-<name>` name that keeps its manifest
+// name, `cgc-<name>`, for its CSS.
+const FAMILY = {
+  "@chaoticgoodcomputing/quartz-styles": "cgc-styles",
+  "@chaoticgoodcomputing/quartz-tags": "cgc-tags",
+  "@chaoticgoodcomputing/quartz-tag-list": "cgc-tag-list",
+  "@chaoticgoodcomputing/quartz-tag-page": "cgc-tag-page",
+  "@chaoticgoodcomputing/quartz-tag-explorer": "cgc-tag-explorer",
+  "@chaoticgoodcomputing/quartz-post-listing": "cgc-post-listing",
+  "@chaoticgoodcomputing/quartz-backlinks": "cgc-backlinks",
+}
+
+test("the fixture and the real site list the tag family and the styles engine by package name", () => {
+  for (const config of [fixtureConfig(), fs.readFileSync(siteConfigFile, "utf8")]) {
+    const sources = pluginSources(config).map(String)
+    for (const [name, manifest] of Object.entries(FAMILY)) {
+      expect(sources).toContain(name)
+      const dir = name.split("/")[1]
+      expect(sources.filter((s) => s.startsWith(".") && [manifest, dir].includes(path.basename(s)))).toEqual([])
+    }
+  }
+})
+
+test("the fixture site never puts the tag family in .quartz/plugins/", async ({ page }) => {
+  const installed = fs.readdirSync(path.join(fixtureRoot("main"), ".quartz", "plugins"))
+  for (const [name, manifest] of Object.entries(FAMILY)) {
+    expect(installed).not.toContain(manifest)
+    expect(installed).not.toContain(name.split("/")[1])
+  }
+  // The engines' consumers render on the fixture, so the dependencies by package name resolved.
+  await page.goto("/tags/articles")
+  await expect(page.locator(".cgc-tag-page")).toHaveCount(1)
+})
+
+test("every manifest dependency on an engine is its package name", () => {
+  const roots = ["../plugins", "../site-plugins", "fixture-plugins"].map((d) => path.join(testsRoot, d))
+  const engines = new Set(Object.values(FAMILY).filter((m) => m === "cgc-styles" || m === "cgc-tags"))
+  const found = []
+  for (const root of roots) {
+    for (const dir of fs.readdirSync(root)) {
+      const file = path.join(root, dir, "package.json")
+      if (!fs.existsSync(file)) continue
+      const deps = JSON.parse(fs.readFileSync(file, "utf8")).quartz?.dependencies ?? []
+      for (const dep of deps) if (engines.has(dep) || dep.startsWith(".")) found.push(`${dir}: ${dep}`)
+    }
+  }
+  expect(found).toEqual([])
+})
+
+test("Quartz's generated plugin index takes in the tag family", async ({ scratch }) => {
+  const site = await scratch.site("package-index-family", HOME)
+  expect(site.code, site.output).toBe(0)
+  const root = path.dirname(site.public)
+  const tsx = path.join(core, "node_modules", ".bin", "tsx")
+  const { stdout, stderr } = await run(tsx, ["./quartz/plugins/loader/install-plugins.ts"], {
+    cwd: root,
+  })
+  const index = fs.readFileSync(path.join(root, ".quartz", "plugins", "index.ts"), "utf8")
+  for (const name of Object.keys(FAMILY)) {
+    expect(`${stdout}${stderr}`).not.toContain(`Skipping npm package ${name}`)
+    expect(index).toContain(`from "${name}"`)
+  }
 })

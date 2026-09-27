@@ -9,9 +9,10 @@
 //
 // Two kinds of edge, drawn apart:
 // - an engine edge, solid, from a plugin to each plugin its `quartz.dependencies` names. Those are
-//   plugin names (ADR-0002's plugin-name amendment): a package name, for a plugin that is a package
-//   (`@chaoticgoodcomputing/quartz-<name>`, #89), or the manifest name, `quartz.name`, which is how a
-//   dependency on a plugin still loaded by local path is written until it is converted (#95, #96);
+//   plugin names (ADR-0002's plugin-name amendment), matched as Quartz matches them: by package name,
+//   `@chaoticgoodcomputing/quartz-<name>` for a plugin that is a package (#89, #93-#95), or a local
+//   plugin's directory, which is also its package name. A package's manifest name, `quartz.name`,
+//   names its CSS, not the plugin: a dependency on it finds nothing, here or at a site;
 // - a library edge, dotted, from a package to each of our libraries it builds with: a plugin's
 //   `workspace:` devDependency (ADR-0005's inlined-library amendment; `file:` before #92), or a
 //   library's `workspace:` dependency on another.
@@ -58,10 +59,7 @@ export function readPackages(root = quartzRoot) {
       .map((dir) => ({ dir, kind, manifest: readJson(path.join(groupDir, dir, "package.json")) }))
   })
   const plugins = packages.filter((p) => p.manifest.quartz?.name)
-  const byPluginName = new Map([
-    ...plugins.map((p) => [p.manifest.quartz.name, p]),
-    ...plugins.map((p) => [p.manifest.name, p]),
-  ])
+  const byPluginName = new Map(plugins.map((p) => [p.manifest.name, p]))
   const libraryByName = new Map(packages.filter((p) => p.kind === "library").map((p) => [p.manifest.name, p]))
   return packages.map(({ dir, kind, manifest }) => {
     const engines = (manifest.quartz?.dependencies ?? []).map((name) => {

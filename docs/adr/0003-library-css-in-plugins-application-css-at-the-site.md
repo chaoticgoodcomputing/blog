@@ -397,7 +397,7 @@ This **replaces** two earlier rules:
   tag colour paint "marks (the badge ring, the icon glyph, the graph node)". It now paints a bubble's
   rim and nothing else of the bubble, and still never text;
 - #71's icon in the tag colour, which cgc-tag-list's
-  [ADR-0001](../../quartz-v5/plugins/cgc-tag-list/docs/adr/0001-the-ring-carries-the-tag-colour.md)
+  [ADR-0001](../../quartz-v5/plugins/quartz-tag-list/docs/adr/0001-the-ring-carries-the-tag-colour.md)
   had follow from the ring's inline `color`. The rim now takes the tag colour as an inline
   `border-color`, and the icon's `currentColor` is the bubble's `--dark`.
 

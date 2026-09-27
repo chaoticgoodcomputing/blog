@@ -2,7 +2,7 @@
   "name": "@chaoticgoodcomputing/tags-core",
   "version": "0.0.0",
   "type": "module",
-  "description": "The tag system's shared logic for Quartz 5 plugins: the resolution rule, the shapes the cgc-tags engine publishes, their fileData types, the tag hierarchy's rules and which pages are private, the tag bubble every badge draws, a colour resolver for canvases, and a build-time check for colour values. See CONTEXT.md.",
+  "description": "The tag system's shared logic for Quartz 5 plugins: the resolution rule, the shapes the quartz-tags engine publishes, their fileData types, the tag hierarchy's rules and which pages are private, the tag bubble every badge draws, a colour resolver for canvases, and a build-time check for colour values. See CONTEXT.md.",
   "//exports": "Source only: no build and no dist. The consuming plugin's build inlines it (ADR-0005). `./colour` is browser-only; `./colour-value` is server-only, and takes the host's lightningcss from the plugin that calls it. `./bubble` runs anywhere, and `./bubble.css` is the bubble's library CSS, which the consuming plugin ships in its own family layer.",
   "exports": {
     ".": "./src/index.ts",

@@ -1,4 +1,4 @@
-// A consumer of cgc-tags' per-page artifact, as every tag consumer is one: it reads what the engine
+// A consumer of quartz-tags' per-page artifact, as every tag consumer is one: it reads what the engine
 // published on each page's `fileData.cgcTags`, and nothing of the engine's options. It writes that,
 // by page slug, to `static/fixture-tag-reader.json` for a spec to read. Pages that page types
 // generate (`.mdx` pages, tag pages) are among the content an emitter sees.

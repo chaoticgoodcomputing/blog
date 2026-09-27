@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "//": "The fixture's consumer of cgc-styles (#63): the smallest cgc-* package that emits CSS, declaring its engine by plugin name. Its default order, 20, is above cgc-styles' 15 and below the loader's fallback of 50 on purpose (tests/specs/dependencies-by-name.spec.mjs). Plain ESM, so there is nothing to build.",
+  "//": "The fixture's consumer of quartz-styles (#63): the smallest package of ours that emits CSS, declaring its engine by plugin name, the package name (#95). Its default order, 20, is above quartz-styles' 15 and below the loader's fallback of 50 on purpose (tests/specs/dependencies-by-name.spec.mjs). Plain ESM, so there is nothing to build.",
   "exports": { ".": "./index.js", "./package.json": "./package.json" },
   "main": "./index.js",
   "quartz": {
@@ -12,7 +12,7 @@
     "category": "transformer",
     "version": "0.0.0",
     "quartzVersion": ">=5.0.0",
-    "dependencies": ["cgc-styles"],
+    "dependencies": ["@chaoticgoodcomputing/quartz-styles"],
     "defaultOrder": 20,
     "defaultEnabled": true,
     "defaultOptions": {}

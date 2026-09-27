@@ -1,7 +1,7 @@
 // site-styles: this site's application CSS (ADR-0003's site-plugin amendment, #39), and its fonts
 // (#84, ADR-0003's self-hosted-fonts amendment).
 //
-// Two factories, as cgc-tags has, because a plugin in two categories is instantiated once for each
+// Two factories, as quartz-tags has, because a plugin in two categories is instantiated once for each
 // and one factory would emit the stylesheet twice. The loader picks each by its shape.
 //
 // - `transformer`, CSS only: everything it does is `externalResources()`, one stylesheet that opens

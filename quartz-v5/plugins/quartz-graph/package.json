@@ -74,8 +74,8 @@
     "version": "0.0.0",
     "quartzVersion": ">=5.0.0",
     "dependencies": [
-      "cgc-styles",
-      "cgc-tags"
+      "@chaoticgoodcomputing/quartz-styles",
+      "@chaoticgoodcomputing/quartz-tags"
     ],
     "defaultOrder": 50,
     "defaultEnabled": true,

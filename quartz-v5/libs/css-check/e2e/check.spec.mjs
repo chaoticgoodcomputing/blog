@@ -63,13 +63,13 @@ test("every styled plugin is found", () => {
   expect(styled.map((p) => p.name)).toEqual(
     expect.arrayContaining([
       "quartz-annotator",
-      "cgc-backlinks",
+      "quartz-backlinks",
       "quartz-email-subscribe",
       "quartz-page-source",
-      "cgc-post-listing",
+      "quartz-post-listing",
       "quartz-social",
-      "cgc-tag-explorer",
-      "cgc-tag-list",
+      "quartz-tag-explorer",
+      "quartz-tag-list",
       "quartz-graph",
     ]),
   )
@@ -307,7 +307,7 @@ test("the annotator reaches inside its blocks, never beside or above them", asyn
 // cgc-tag-explorer pins its one media query, the drawer's, which its plugin rewrites.
 test("the tag explorer's pinned media query still holds", async () => {
   const build = await buildWith(
-    plugin("cgc-tag-explorer"),
+    plugin("quartz-tag-explorer"),
     "@media (max-width: 600px) { .cgc-tag-explorer { margin: 0; } }",
   )
   expect(build.code).not.toBe(0)

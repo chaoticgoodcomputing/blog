@@ -73,7 +73,7 @@ layout:
   byPageType:
     annotation:
       exclude:
-        - cgc-page-source
+        - "@chaoticgoodcomputing/quartz-page-source"
 ```
 
 The `full-width` frame has no sidebars, so components you've placed `left` or `right` aren't on
@@ -160,7 +160,7 @@ Its options go in that entry:
       mirrorDir: mirrors
 ```
 
-It needs [`cgc-styles`](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz-v5/plugins/cgc-styles/README.md)
+It needs [`quartz-styles`](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz-v5/plugins/quartz-styles/README.md)
 too, which ranks its stylesheet among your theme's. The build refuses to start without it.
 
 Keep its `order` above `crawl-links`' and `description`'s (60 and 70 by default). Its default, 75,

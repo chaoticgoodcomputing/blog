@@ -213,3 +213,20 @@ a tag a site writes in an option is normalised (`normaliseTag()`). Every plugin 
 pages differently inlines that one rule, a consumer of the engine or not. A library is no plugin,
 so inlining it adds no `manifest.dependencies` entry and no engine. A site names its private tags
 once and hands the same list to each plugin; on the real site that is one YAML anchor.
+
+## Amendment: the plugin name is the package name
+
+_2026-09-27, from [The tag family and the styles engine as packages](https://github.com/chaoticgoodcomputing/blog/issues/95),
+under [#89](https://github.com/chaoticgoodcomputing/blog/issues/89) and
+[ADR-0005](./0005-plugins-ship-as-npm-packages.md)._
+
+Our plugins are npm packages now, and a site lists each by its package name. Quartz names a package
+source by that whole name, so a consumer names its engine by it:
+`manifest.dependencies: ["@chaoticgoodcomputing/quartz-styles"]`, not the manifest name
+`cgc-styles`, which only names the plugin's CSS and which no dependency can match.
+
+The package name is the `source:` at every site, the real site, the e2e fixture and a downstream
+one alike, so stock Quartz's verbatim match finds it. A consumer that depends only on engines that
+are packages no longer needs the vendored change above to build, and passes the shareability test
+on that count. The vendored change stays while any plugin still loads by local path (#96), and the
+object-source `name:` advice above is superseded along with the git route (ADR-0005).

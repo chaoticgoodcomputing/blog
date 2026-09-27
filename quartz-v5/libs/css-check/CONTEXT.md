@@ -94,7 +94,7 @@ A stylesheet fails the check for any of these.
 - **Outside the family layer**, when the package passes one: every rule sits in one top-level
   `@layer cgc.<name> { … }`, and there is no other layer (rule 11). A stylesheet someone else places,
   a widget's or `cgc-annotator`'s before its build wraps it, declares no layer at all.
-- **A media query a package didn't pin**, when it pins them: `cgc-tag-explorer` allows only its
+- **A media query a package didn't pin**, when it pins them: `quartz-tag-explorer` allows only its
   drawer's, which its plugin rewrites to the site's breakpoint.
 
 `checkImports` fails a source file that imports a stylesheet from another package, or from outside

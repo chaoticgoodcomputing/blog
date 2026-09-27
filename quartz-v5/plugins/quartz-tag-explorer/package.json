@@ -1,0 +1,81 @@
+{
+  "name": "@chaoticgoodcomputing/quartz-tag-explorer",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Quartz 5 component: browse a site by tag, in a tree of the quartz-tags engine's tags, each in its tag's colour with its icon, and a drawer of its own on a narrow screen. See README.md and CONTEXT.md.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chaoticgoodcomputing/blog.git",
+    "directory": "quartz-v5/plugins/quartz-tag-explorer"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "//exports": "Every entry has its type declarations beside it, which build.mjs emits: Quartz's generated plugin index skips a package without dist/index.d.ts, and a TypeScript site imports the types from them. ./package.json is how Quartz reads the manifest (import.meta.resolve).",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "../node_modules/.bin/tsc -p ."
+  },
+  "//peerDependencies": "The host Quartz's own copies, never bundled or installed here: the component's vnodes must be the host's Preact's. The types are imported for types only.",
+  "peerDependencies": {
+    "@quartz-community/types": "*",
+    "@quartz-community/utils": "*",
+    "preact": "^10.29.0"
+  },
+  "//dependencies": "@chaoticgoodcomputing/icons draws each tag's icon while the site builds, with Iconify's packages, which can't all be inlined (svgo, under @iconify/tools, reads its data files at run time). So they stay out of dist/ and install here, at exactly the library's versions, which build.mjs checks (libs/icons/docs/adr/0001). MDI is one of them, pinned exactly, and by the workspace's lock: nothing is fetched.",
+  "dependencies": {
+    "@iconify-json/mdi": "1.2.3",
+    "@iconify/tools": "5.0.14",
+    "@iconify/utils": "3.1.7"
+  },
+  "//devDependencies": "Build-time only: esbuild bundles dist/ and the browser script, inlining our libraries, and @chaoticgoodcomputing/css-check checks the stylesheet against ADR-0003 before it ships, and @chaoticgoodcomputing/declarations writes the .d.ts beside each entry (build.mjs). The libraries are `workspace:*` specs, which `pnpm publish` rewrites to the published version (ADR-0005).",
+  "devDependencies": {
+    "@chaoticgoodcomputing/css-check": "workspace:*",
+    "@chaoticgoodcomputing/declarations": "workspace:*",
+    "@chaoticgoodcomputing/icons": "workspace:*",
+    "@chaoticgoodcomputing/tags-core": "workspace:*",
+    "esbuild": "^0.28.2"
+  },
+  "quartz": {
+    "name": "cgc-tag-explorer",
+    "displayName": "Tag explorer",
+    "description": "Browse the site by tag: a tree of the quartz-tags engine's tags, each in its tag's colour with its icon, the pages under each, and a drawer of its own on a narrow screen.",
+    "category": [
+      "emitter",
+      "component"
+    ],
+    "version": "0.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [
+      "@chaoticgoodcomputing/quartz-styles",
+      "@chaoticgoodcomputing/quartz-tags"
+    ],
+    "defaultOrder": 50,
+    "defaultEnabled": true,
+    "defaultOptions": {},
+    "components": {
+      "TagExplorer": {
+        "displayName": "Tag explorer",
+        "defaultPosition": "left",
+        "defaultPriority": 50
+      }
+    }
+  }
+}

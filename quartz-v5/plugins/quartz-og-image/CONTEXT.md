@@ -16,7 +16,7 @@ _Avoid_: OG image (stock's name for the file), social image, thumbnail, preview
 **Tag chip**:
 One of a card's first three tags, drawn as `#` and the tag's last segment: `writing/articles` is
 `#articles`. Text on the card, with no colour or icon of its own.
-_Avoid_: tag badge (that is a rendered page's, from `cgc-tag-list`), pill, label
+_Avoid_: tag badge (that is a rendered page's, from `quartz-tag-list`), pill, label
 
 **Card icon**:
 The image in a card's corner. The file the `icon` option names, and stock's own icon when there is

@@ -273,6 +273,9 @@ importers:
       '@chaoticgoodcomputing/quartz-annotator':
         specifier: workspace:*
         version: link:plugins/quartz-annotator
+      '@chaoticgoodcomputing/quartz-backlinks':
+        specifier: workspace:*
+        version: link:plugins/quartz-backlinks
       '@chaoticgoodcomputing/quartz-email-subscribe':
         specifier: workspace:*
         version: link:plugins/quartz-email-subscribe
@@ -288,6 +291,9 @@ importers:
       '@chaoticgoodcomputing/quartz-page-source':
         specifier: workspace:*
         version: link:plugins/quartz-page-source
+      '@chaoticgoodcomputing/quartz-post-listing':
+        specifier: workspace:*
+        version: link:plugins/quartz-post-listing
       '@chaoticgoodcomputing/quartz-posthog':
         specifier: workspace:*
         version: link:plugins/quartz-posthog
@@ -297,6 +303,21 @@ importers:
       '@chaoticgoodcomputing/quartz-social':
         specifier: workspace:*
         version: link:plugins/quartz-social
+      '@chaoticgoodcomputing/quartz-styles':
+        specifier: workspace:*
+        version: link:plugins/quartz-styles
+      '@chaoticgoodcomputing/quartz-tag-explorer':
+        specifier: workspace:*
+        version: link:plugins/quartz-tag-explorer
+      '@chaoticgoodcomputing/quartz-tag-list':
+        specifier: workspace:*
+        version: link:plugins/quartz-tag-list
+      '@chaoticgoodcomputing/quartz-tag-page':
+        specifier: workspace:*
+        version: link:plugins/quartz-tag-page
+      '@chaoticgoodcomputing/quartz-tags':
+        specifier: workspace:*
+        version: link:plugins/quartz-tags
       email-subscribe-sidebar:
         specifier: workspace:@chaoticgoodcomputing/quartz-email-subscribe@*
         version: link:plugins/quartz-email-subscribe
@@ -417,130 +438,6 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  quartz-v5/plugins/cgc-backlinks:
-    dependencies:
-      '@iconify-json/mdi':
-        specifier: 1.2.3
-        version: 1.2.3
-      '@iconify/tools':
-        specifier: 5.0.14
-        version: 5.0.14
-      '@iconify/utils':
-        specifier: 3.1.7
-        version: 3.1.7
-    devDependencies:
-      '@chaoticgoodcomputing/css-check':
-        specifier: workspace:*
-        version: link:../../libs/css-check
-      '@chaoticgoodcomputing/icons':
-        specifier: workspace:*
-        version: link:../../libs/icons
-      '@chaoticgoodcomputing/tags-core':
-        specifier: workspace:*
-        version: link:../../libs/tags-core
-      esbuild:
-        specifier: ^0.28.2
-        version: 0.28.2
-
-  quartz-v5/plugins/cgc-post-listing:
-    dependencies:
-      '@iconify-json/mdi':
-        specifier: 1.2.3
-        version: 1.2.3
-      '@iconify/tools':
-        specifier: 5.0.14
-        version: 5.0.14
-      '@iconify/utils':
-        specifier: 3.1.7
-        version: 3.1.7
-    devDependencies:
-      '@chaoticgoodcomputing/css-check':
-        specifier: workspace:*
-        version: link:../../libs/css-check
-      '@chaoticgoodcomputing/icons':
-        specifier: workspace:*
-        version: link:../../libs/icons
-      '@chaoticgoodcomputing/tags-core':
-        specifier: workspace:*
-        version: link:../../libs/tags-core
-      esbuild:
-        specifier: ^0.28.2
-        version: 0.28.2
-      reading-time:
-        specifier: ^1.5.0
-        version: 1.5.0
-
-  quartz-v5/plugins/cgc-styles:
-    devDependencies:
-      esbuild:
-        specifier: ^0.28.2
-        version: 0.28.2
-
-  quartz-v5/plugins/cgc-tag-explorer:
-    dependencies:
-      '@iconify-json/mdi':
-        specifier: 1.2.3
-        version: 1.2.3
-      '@iconify/tools':
-        specifier: 5.0.14
-        version: 5.0.14
-      '@iconify/utils':
-        specifier: 3.1.7
-        version: 3.1.7
-    devDependencies:
-      '@chaoticgoodcomputing/css-check':
-        specifier: workspace:*
-        version: link:../../libs/css-check
-      '@chaoticgoodcomputing/icons':
-        specifier: workspace:*
-        version: link:../../libs/icons
-      '@chaoticgoodcomputing/tags-core':
-        specifier: workspace:*
-        version: link:../../libs/tags-core
-      esbuild:
-        specifier: ^0.28.2
-        version: 0.28.2
-
-  quartz-v5/plugins/cgc-tag-list:
-    dependencies:
-      '@iconify-json/mdi':
-        specifier: 1.2.3
-        version: 1.2.3
-      '@iconify/tools':
-        specifier: 5.0.14
-        version: 5.0.14
-      '@iconify/utils':
-        specifier: 3.1.7
-        version: 3.1.7
-    devDependencies:
-      '@chaoticgoodcomputing/css-check':
-        specifier: workspace:*
-        version: link:../../libs/css-check
-      '@chaoticgoodcomputing/icons':
-        specifier: workspace:*
-        version: link:../../libs/icons
-      '@chaoticgoodcomputing/tags-core':
-        specifier: workspace:*
-        version: link:../../libs/tags-core
-      esbuild:
-        specifier: ^0.28.2
-        version: 0.28.2
-
-  quartz-v5/plugins/cgc-tag-page:
-    devDependencies:
-      esbuild:
-        specifier: ^0.28.2
-        version: 0.28.2
-
-  quartz-v5/plugins/cgc-tags:
-    devDependencies:
-      '@chaoticgoodcomputing/tags-core':
-        specifier: workspace:*
-        version: link:../../libs/tags-core
-      esbuild:
-        specifier: ^0.28.2
-        version: 0.28.2
-
   quartz-v5/plugins/quartz-annotator:
     devDependencies:
       '@chaoticgoodcomputing/css-check':
@@ -576,6 +473,34 @@ importers:
       postcss-selector-parser:
         specifier: ^7.1.0
         version: 7.1.6
+
+  quartz-v5/plugins/quartz-backlinks:
+    dependencies:
+      '@iconify-json/mdi':
+        specifier: 1.2.3
+        version: 1.2.3
+      '@iconify/tools':
+        specifier: 5.0.14
+        version: 5.0.14
+      '@iconify/utils':
+        specifier: 3.1.7
+        version: 3.1.7
+    devDependencies:
+      '@chaoticgoodcomputing/css-check':
+        specifier: workspace:*
+        version: link:../../libs/css-check
+      '@chaoticgoodcomputing/declarations':
+        specifier: workspace:*
+        version: link:../../libs/declarations
+      '@chaoticgoodcomputing/icons':
+        specifier: workspace:*
+        version: link:../../libs/icons
+      '@chaoticgoodcomputing/tags-core':
+        specifier: workspace:*
+        version: link:../../libs/tags-core
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
 
   quartz-v5/plugins/quartz-email-subscribe:
     devDependencies:
@@ -693,6 +618,37 @@ importers:
         specifier: ^0.28.2
         version: 0.28.2
 
+  quartz-v5/plugins/quartz-post-listing:
+    dependencies:
+      '@iconify-json/mdi':
+        specifier: 1.2.3
+        version: 1.2.3
+      '@iconify/tools':
+        specifier: 5.0.14
+        version: 5.0.14
+      '@iconify/utils':
+        specifier: 3.1.7
+        version: 3.1.7
+    devDependencies:
+      '@chaoticgoodcomputing/css-check':
+        specifier: workspace:*
+        version: link:../../libs/css-check
+      '@chaoticgoodcomputing/declarations':
+        specifier: workspace:*
+        version: link:../../libs/declarations
+      '@chaoticgoodcomputing/icons':
+        specifier: workspace:*
+        version: link:../../libs/icons
+      '@chaoticgoodcomputing/tags-core':
+        specifier: workspace:*
+        version: link:../../libs/tags-core
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+      reading-time:
+        specifier: ^1.5.0
+        version: 1.5.0
+
   quartz-v5/plugins/quartz-posthog:
     devDependencies:
       '@chaoticgoodcomputing/declarations':
@@ -731,6 +687,92 @@ importers:
       '@chaoticgoodcomputing/widgets':
         specifier: workspace:*
         version: link:../../libs/widgets
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+
+  quartz-v5/plugins/quartz-styles:
+    devDependencies:
+      '@chaoticgoodcomputing/declarations':
+        specifier: workspace:*
+        version: link:../../libs/declarations
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+
+  quartz-v5/plugins/quartz-tag-explorer:
+    dependencies:
+      '@iconify-json/mdi':
+        specifier: 1.2.3
+        version: 1.2.3
+      '@iconify/tools':
+        specifier: 5.0.14
+        version: 5.0.14
+      '@iconify/utils':
+        specifier: 3.1.7
+        version: 3.1.7
+    devDependencies:
+      '@chaoticgoodcomputing/css-check':
+        specifier: workspace:*
+        version: link:../../libs/css-check
+      '@chaoticgoodcomputing/declarations':
+        specifier: workspace:*
+        version: link:../../libs/declarations
+      '@chaoticgoodcomputing/icons':
+        specifier: workspace:*
+        version: link:../../libs/icons
+      '@chaoticgoodcomputing/tags-core':
+        specifier: workspace:*
+        version: link:../../libs/tags-core
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+
+  quartz-v5/plugins/quartz-tag-list:
+    dependencies:
+      '@iconify-json/mdi':
+        specifier: 1.2.3
+        version: 1.2.3
+      '@iconify/tools':
+        specifier: 5.0.14
+        version: 5.0.14
+      '@iconify/utils':
+        specifier: 3.1.7
+        version: 3.1.7
+    devDependencies:
+      '@chaoticgoodcomputing/css-check':
+        specifier: workspace:*
+        version: link:../../libs/css-check
+      '@chaoticgoodcomputing/declarations':
+        specifier: workspace:*
+        version: link:../../libs/declarations
+      '@chaoticgoodcomputing/icons':
+        specifier: workspace:*
+        version: link:../../libs/icons
+      '@chaoticgoodcomputing/tags-core':
+        specifier: workspace:*
+        version: link:../../libs/tags-core
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+
+  quartz-v5/plugins/quartz-tag-page:
+    devDependencies:
+      '@chaoticgoodcomputing/declarations':
+        specifier: workspace:*
+        version: link:../../libs/declarations
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+
+  quartz-v5/plugins/quartz-tags:
+    devDependencies:
+      '@chaoticgoodcomputing/declarations':
+        specifier: workspace:*
+        version: link:../../libs/declarations
+      '@chaoticgoodcomputing/tags-core':
+        specifier: workspace:*
+        version: link:../../libs/tags-core
       esbuild:
         specifier: ^0.28.2
         version: 0.28.2

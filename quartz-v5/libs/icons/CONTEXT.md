@@ -3,7 +3,7 @@
 The library every plugin that draws an icon uses to draw it (#29). It turns an **icon id** into
 inline SVG when the site builds, from an installed Iconify set or from an **icon collection** the
 site supplies as SVG files, and it knows nothing about tags or any other caller. Engines publish icon
-ids and never drawn icons (ADR-0002 rule 7), so each consumer draws its own: `cgc-tag-list` first,
+ids and never drawn icons (ADR-0002 rule 7), so each consumer draws its own: `quartz-tag-list` first,
 then the tag explorer, backlinks, the graph and the post listing. The Bluesky widget draws with it ahead of time, into
 its own source (`widgets`' ADR-0002). It ships as TypeScript source,
 and a consuming plugin's build inlines it (ADR-0005). Inherits the family vocabulary in
@@ -48,10 +48,10 @@ _Avoid_: converting, compiling, sanitising
   inlined, so a consuming plugin keeps the library's dependencies external and lists each as its own
   dependency, at the library's exact versions ([ADR-0001](./docs/adr/0001-consumers-carry-iconify.md)).
 - **Colour and size come from CSS** (ADR-0003): a consumer never writes a colour into an icon.
-  A canvas, which CSS can't reach, is the one exception: `cgc-graph` sets an icon's `currentColor` to
+  A canvas, which CSS can't reach, is the one exception: `quartz-graph` sets an icon's `currentColor` to
   a theme colour it resolves in script, and resolves it again on a scheme switch.
 - **Normalised once per process.** A site collection is read the first time one of its icons is
   drawn, and kept for the rest of the process, so a file added under `--serve` needs a restart.
-- **Tested through its consumers**, `cgc-tag-list`'s `e2e/icons.spec.mjs` and `e2e/site.spec.mjs`,
-  `cgc-graph`'s `e2e/icons.spec.mjs` and `cgc-post-listing`'s, against the fixture's own collection
+- **Tested through its consumers**, `quartz-tag-list`'s `e2e/icons.spec.mjs` and `e2e/site.spec.mjs`,
+  `quartz-graph`'s `e2e/icons.spec.mjs` and `quartz-post-listing`'s, against the fixture's own collection
   (`tests/fixture-icons/`) and the site's.

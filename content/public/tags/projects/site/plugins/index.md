@@ -15,22 +15,22 @@ Click a plugin to read its note.
 
 ```mermaid
 flowchart LR
-  plugin_cgc_backlinks["cgc-backlinks"]
-  plugin_cgc_post_listing["cgc-post-listing"]
-  plugin_cgc_styles["cgc-styles"]
-  plugin_cgc_tag_explorer["cgc-tag-explorer"]
-  plugin_cgc_tag_list["cgc-tag-list"]
-  plugin_cgc_tag_page["cgc-tag-page"]
-  plugin_cgc_tags["cgc-tags"]
   plugin_quartz_annotator["quartz-annotator"]
+  plugin_quartz_backlinks["quartz-backlinks"]
   plugin_quartz_email_subscribe["quartz-email-subscribe"]
   plugin_quartz_graph["quartz-graph"]
   plugin_quartz_mdx["quartz-mdx"]
   plugin_quartz_og_image["quartz-og-image"]
   plugin_quartz_page_source["quartz-page-source"]
+  plugin_quartz_post_listing["quartz-post-listing"]
   plugin_quartz_posthog["quartz-posthog"]
   plugin_quartz_seo["quartz-seo"]
   plugin_quartz_social["quartz-social"]
+  plugin_quartz_styles["quartz-styles"]
+  plugin_quartz_tag_explorer["quartz-tag-explorer"]
+  plugin_quartz_tag_list["quartz-tag-list"]
+  plugin_quartz_tag_page["quartz-tag-page"]
+  plugin_quartz_tags["quartz-tags"]
   library_css_check(["css-check"])
   library_declarations(["declarations"])
   library_icons(["icons"])
@@ -42,37 +42,28 @@ flowchart LR
     site_plugin_site_components{{"site-components"}}
     site_plugin_site_styles{{"site-styles"}}
   end
-  plugin_cgc_backlinks --> plugin_cgc_styles
-  plugin_cgc_post_listing --> plugin_cgc_styles
-  plugin_cgc_post_listing --> plugin_cgc_tags
-  plugin_cgc_tag_explorer --> plugin_cgc_styles
-  plugin_cgc_tag_explorer --> plugin_cgc_tags
-  plugin_cgc_tag_list --> plugin_cgc_styles
-  plugin_cgc_tag_list --> plugin_cgc_tags
-  plugin_cgc_tags --> plugin_cgc_styles
-  plugin_quartz_annotator --> plugin_cgc_styles
-  plugin_quartz_email_subscribe --> plugin_cgc_styles
-  plugin_quartz_graph --> plugin_cgc_styles
-  plugin_quartz_graph --> plugin_cgc_tags
-  plugin_quartz_page_source --> plugin_cgc_styles
-  plugin_quartz_social --> plugin_cgc_styles
-  plugin_cgc_backlinks -.-> library_css_check
-  plugin_cgc_backlinks -.-> library_icons
-  plugin_cgc_backlinks -.-> library_tags_core
-  plugin_cgc_post_listing -.-> library_css_check
-  plugin_cgc_post_listing -.-> library_icons
-  plugin_cgc_post_listing -.-> library_tags_core
-  plugin_cgc_tag_explorer -.-> library_css_check
-  plugin_cgc_tag_explorer -.-> library_icons
-  plugin_cgc_tag_explorer -.-> library_tags_core
-  plugin_cgc_tag_list -.-> library_css_check
-  plugin_cgc_tag_list -.-> library_icons
-  plugin_cgc_tag_list -.-> library_tags_core
-  plugin_cgc_tags -.-> library_tags_core
+  plugin_quartz_annotator --> plugin_quartz_styles
+  plugin_quartz_backlinks --> plugin_quartz_styles
+  plugin_quartz_email_subscribe --> plugin_quartz_styles
+  plugin_quartz_graph --> plugin_quartz_styles
+  plugin_quartz_graph --> plugin_quartz_tags
+  plugin_quartz_page_source --> plugin_quartz_styles
+  plugin_quartz_post_listing --> plugin_quartz_styles
+  plugin_quartz_post_listing --> plugin_quartz_tags
+  plugin_quartz_social --> plugin_quartz_styles
+  plugin_quartz_tag_explorer --> plugin_quartz_styles
+  plugin_quartz_tag_explorer --> plugin_quartz_tags
+  plugin_quartz_tag_list --> plugin_quartz_styles
+  plugin_quartz_tag_list --> plugin_quartz_tags
+  plugin_quartz_tags --> plugin_quartz_styles
   plugin_quartz_annotator -.-> library_css_check
   plugin_quartz_annotator -.-> library_declarations
   plugin_quartz_annotator -.-> library_island_runtime
   plugin_quartz_annotator -.-> library_pipeline
+  plugin_quartz_backlinks -.-> library_css_check
+  plugin_quartz_backlinks -.-> library_declarations
+  plugin_quartz_backlinks -.-> library_icons
+  plugin_quartz_backlinks -.-> library_tags_core
   plugin_quartz_email_subscribe -.-> library_css_check
   plugin_quartz_email_subscribe -.-> library_declarations
   plugin_quartz_graph -.-> library_css_check
@@ -85,6 +76,10 @@ flowchart LR
   plugin_quartz_og_image -.-> library_declarations
   plugin_quartz_page_source -.-> library_css_check
   plugin_quartz_page_source -.-> library_declarations
+  plugin_quartz_post_listing -.-> library_css_check
+  plugin_quartz_post_listing -.-> library_declarations
+  plugin_quartz_post_listing -.-> library_icons
+  plugin_quartz_post_listing -.-> library_tags_core
   plugin_quartz_posthog -.-> library_declarations
   plugin_quartz_seo -.-> library_declarations
   plugin_quartz_seo -.-> library_tags_core
@@ -92,25 +87,37 @@ flowchart LR
   plugin_quartz_social -.-> library_declarations
   plugin_quartz_social -.-> library_tags_core
   plugin_quartz_social -.-> library_widgets
+  plugin_quartz_styles -.-> library_declarations
+  plugin_quartz_tag_explorer -.-> library_css_check
+  plugin_quartz_tag_explorer -.-> library_declarations
+  plugin_quartz_tag_explorer -.-> library_icons
+  plugin_quartz_tag_explorer -.-> library_tags_core
+  plugin_quartz_tag_list -.-> library_css_check
+  plugin_quartz_tag_list -.-> library_declarations
+  plugin_quartz_tag_list -.-> library_icons
+  plugin_quartz_tag_list -.-> library_tags_core
+  plugin_quartz_tag_page -.-> library_declarations
+  plugin_quartz_tags -.-> library_declarations
+  plugin_quartz_tags -.-> library_tags_core
   library_tags_core -.-> library_css_check
   library_widgets -.-> library_css_check
   library_widgets -.-> library_icons
-  click plugin_cgc_backlinks "/plugins/cgc-backlinks"
-  click plugin_cgc_post_listing "/plugins/cgc-post-listing"
-  click plugin_cgc_styles "/plugins/cgc-styles"
-  click plugin_cgc_tag_explorer "/plugins/cgc-tag-explorer"
-  click plugin_cgc_tag_list "/plugins/cgc-tag-list"
-  click plugin_cgc_tag_page "/plugins/cgc-tag-page"
-  click plugin_cgc_tags "/plugins/cgc-tags"
   click plugin_quartz_annotator "/plugins/quartz-annotator"
+  click plugin_quartz_backlinks "/plugins/quartz-backlinks"
   click plugin_quartz_email_subscribe "/plugins/quartz-email-subscribe"
   click plugin_quartz_graph "/plugins/quartz-graph"
   click plugin_quartz_mdx "/plugins/quartz-mdx"
   click plugin_quartz_og_image "/plugins/quartz-og-image"
   click plugin_quartz_page_source "/plugins/quartz-page-source"
+  click plugin_quartz_post_listing "/plugins/quartz-post-listing"
   click plugin_quartz_posthog "/plugins/quartz-posthog"
   click plugin_quartz_seo "/plugins/quartz-seo"
   click plugin_quartz_social "/plugins/quartz-social"
+  click plugin_quartz_styles "/plugins/quartz-styles"
+  click plugin_quartz_tag_explorer "/plugins/quartz-tag-explorer"
+  click plugin_quartz_tag_list "/plugins/quartz-tag-list"
+  click plugin_quartz_tag_page "/plugins/quartz-tag-page"
+  click plugin_quartz_tags "/plugins/quartz-tags"
 ```
 
 %% plugin-dag: end %%

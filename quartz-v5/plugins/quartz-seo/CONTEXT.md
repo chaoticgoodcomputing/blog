@@ -20,7 +20,7 @@ The page for one tag, which crawlers are always given at `/tags/<t>` (#43). Quar
 a listing, or the tag's description note supplies it: `tags/<t>.md`, or `tags/<t>/index.md`, the
 vault's shape until the cutover rename, which is served at `/tags/<t>/` until then. Listed once,
 dated by its description note if it has one.
-_Avoid_: tag listing (that is the generated kind only), tag index (that is cgc-tags'
+_Avoid_: tag listing (that is the generated kind only), tag index (that is quartz-tags'
 `static/cgcTags.json`)
 
 **Private page**:

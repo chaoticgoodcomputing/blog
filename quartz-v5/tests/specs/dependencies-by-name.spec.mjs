@@ -1,12 +1,14 @@
 // Consumers declare an engine by its plugin name (ADR-0002's plugin-name amendment, #40): one
-// string, `dependencies: ["cgc-styles"]`, that holds at every site, although the engine's `source:`
-// differs by where the site runs. Stock Quartz matches a dependency only against the exact source
-// string, so this rests on a vendored change to the loader (#47, VENDORED.md): a dependency resolves
-// by exact source first, then by plugin name, and the presence, order and cycle checks all use the
-// entry it resolves to.
+// string that holds at every site. Since the engines became packages (#95) that name is the engine's
+// package name, `dependencies: ["@chaoticgoodcomputing/quartz-styles"]`, which is also its `source:`
+// at every site, so Quartz matches it as it matches any package source: by the whole package name.
+// A local source differs by where the site runs, so a dependency on a plugin listed by one rests on a
+// vendored change to the loader (#47, VENDORED.md): a dependency resolves by exact source first, then
+// by plugin name, and the presence, order and cycle checks all use the entry it resolves to. The
+// scratch plugins below, loaded by local path, prove that half.
 //
 // The consumer is a fixture plugin, `fixture-consumer`: it writes into `cgc.fixture-consumer` from
-// `externalResources()`. Its default order, 20, sits above cgc-styles' 15 and below the loader's
+// `externalResources()`. Its default order, 20, sits above quartz-styles' 15 and below the loader's
 // fallback of 50, so a build that reads the engine's order anywhere but its own manifest refuses it.
 import fs from "node:fs"
 import os from "node:os"
@@ -16,13 +18,14 @@ import { buildScratchSite, fixtureConfig, pluginSources, siteConfig, testsRoot, 
 
 const CONSUMER_DIR = path.join(testsRoot, "fixture-plugins/fixture-consumer")
 const CONSUMER = "../fixture-plugins/fixture-consumer"
-const ENGINE = "cgc-styles"
+const ENGINE = "@chaoticgoodcomputing/quartz-styles"
 const HOME = { "index.md": "# Home\n" }
 
-test("the consumer names the engine by plugin name, not by either site's source", () => {
+test("the consumer names the engine by its package name, the source both sites list it by", () => {
   const manifest = JSON.parse(fs.readFileSync(path.join(CONSUMER_DIR, "package.json"), "utf8")).quartz
   expect(manifest.dependencies).toEqual([ENGINE])
-  expect(pluginSources(fixtureConfig())).toContain(`../../plugins/${ENGINE}`)
+  expect(pluginSources(fixtureConfig())).toContain(ENGINE)
+  expect(pluginSources(siteConfig({ at: "site" }))).toContain(ENGINE)
 })
 
 test("the consumer's dependency resolves by name at the fixture root", async ({ page }) => {
@@ -30,12 +33,11 @@ test("the consumer's dependency resolves by name at the fixture root", async ({ 
   expect((await layerOrder(page)).cgc).toContain("fixture-consumer")
 })
 
-// The real site runs from Quartz Core's root, `quartz-v5/core/`, so its config names the engine
-// `../plugins/cgc-styles`. A scratch root made beside Core resolves the site config's
-// sources exactly as the real site does, and the consumer is added to it there.
+// The real site runs from Quartz Core's root, `quartz-v5/core/`, where a local source would differ
+// from the fixture's. A scratch root made beside Core resolves the site config's sources exactly as
+// the real site does, and the consumer is added to it there.
 test("the consumer's dependency resolves by name at the real site root", async ({ page }) => {
   const config = siteConfig({ at: "site" })
-  expect(pluginSources(config)).toContain(`../plugins/${ENGINE}`)
   const site = await buildScratchSite("site-root", HOME, {
     at: "site",
     config: withPlugins(config, [{ source: "../tests/fixture-plugins/fixture-consumer", enabled: true }]),
@@ -54,7 +56,7 @@ test("the consumer's dependency resolves by name at the real site root", async (
 
 // Builds that must be refused. Each fails while the loader validates the config, before any page.
 
-test("a consumer ordered before cgc-styles is refused", async () => {
+test("a consumer ordered before the styles engine is refused", async () => {
   const { code, output } = await buildScratchSite("consumer-first", HOME, {
     config: withPlugins(fixtureConfig(), [{ source: CONSUMER, enabled: true, order: 10 }]),
   })
@@ -65,16 +67,18 @@ test("a consumer ordered before cgc-styles is refused", async () => {
 
 test("a consumer whose engine is not enabled is refused", async () => {
   const { code, output } = await buildScratchSite("engine-missing", HOME, {
-    config: withPlugins(fixtureConfig(), [{ source: `../../plugins/${ENGINE}`, enabled: false }]),
+    config: withPlugins(fixtureConfig(), [{ source: ENGINE, enabled: false }]),
   })
   expect(code).not.toBe(0)
   expect(output).toContain(`requires "${ENGINE}"`)
 })
 
 // Throwaway plugins for the cases no real package has: CSS-less transformers, written outside the
-// repo and loaded by absolute source, whose name is their directory's.
+// repo and loaded by absolute source, whose name is their directory's. `manifests` may be a function
+// of the directory they are written to, for a manifest that names another by its exact source.
 function scratchPlugins(manifests) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "cgc-scratch-plugins-"))
+  if (typeof manifests === "function") manifests = manifests(dir)
   const entries = Object.entries(manifests).map(([name, manifest]) => {
     fs.mkdirSync(path.join(dir, name))
     const quartz = { name, category: "transformer", dependencies: [], defaultEnabled: true, ...manifest }
@@ -88,9 +92,10 @@ function scratchPlugins(manifests) {
 
 // #40's other requirement: resolving by name is additive. A dependency written as the engine's
 // exact `source:` string still resolves to that entry first, as on stock Quartz, so upstream configs
-// behave as before. Name-only resolution would miss it and refuse the build as missing its engine.
+// behave as before. For a package the exact source is its package name; for a local source it is the
+// path, which name-only resolution would miss, refusing the build as missing its engine.
 test("a dependency written as the engine's exact source resolves to it", async () => {
-  const plugins = scratchPlugins({ "source-consumer": { defaultOrder: 20, dependencies: [`../../plugins/${ENGINE}`] } })
+  const plugins = scratchPlugins({ "source-consumer": { defaultOrder: 20, dependencies: [ENGINE] } })
   try {
     const { code, output } = await buildScratchSite("exact-source", HOME, { config: withPlugins(fixtureConfig(), plugins.entries) })
     expect(code, output).toBe(0)
@@ -99,9 +104,23 @@ test("a dependency written as the engine's exact source resolves to it", async (
   }
 })
 
+// The same for an engine listed by a local source: its exact path, which is not its name.
+test("a dependency written as a local engine's exact path resolves to it", async () => {
+  const plugins = scratchPlugins((dir) => ({
+    "local-engine": { defaultOrder: 15 },
+    "path-consumer": { defaultOrder: 20, dependencies: [path.join(dir, "local-engine")] },
+  }))
+  try {
+    const { code, output } = await buildScratchSite("exact-path", HOME, { config: withPlugins(fixtureConfig(), plugins.entries) })
+    expect(code, output).toBe(0)
+  } finally {
+    plugins.remove()
+  }
+})
+
 // And the order check reads the engine's manifest through that exact-source key, not the fallback.
 test("a consumer ordered before the engine it names by exact source is refused", async () => {
-  const plugins = scratchPlugins({ "source-consumer": { defaultOrder: 10, dependencies: [`../../plugins/${ENGINE}`] } })
+  const plugins = scratchPlugins({ "source-consumer": { defaultOrder: 10, dependencies: [ENGINE] } })
   try {
     const { code, output } = await buildScratchSite("exact-source-first", HOME, { config: withPlugins(fixtureConfig(), plugins.entries) })
     expect(code).not.toBe(0)

@@ -108,7 +108,7 @@ export const pluginSources = (config) => pluginEntries(config).map((entry) => en
 // `config` (YAML text) as `edit(doc, entry)` leaves it, for a scratch site's config: `doc` is the
 // parsed YAML document, and `entry(source)` the plugin entry whose `source` is `source`. Every alias
 // becomes a copy of what it names first, so replacing a value that holds an anchor, such as
-// cgc-tag-list's `&iconCollections`, leaves the entries that alias it their value.
+// quartz-tag-list's `&iconCollections`, leaves the entries that alias it their value.
 export function editConfig(config, edit) {
   const doc = YAML.parseDocument(config)
   YAML.visit(doc, {
@@ -147,7 +147,7 @@ const under = (root) => (dir) => dir !== undefined && dir.startsWith(`${root}${p
 
 // Entries for `withPlugins` that turn off every package under `quartz-v5/plugins/` that `config`
 // lists, by package name or by local path, except those named in `keep`, each by its package name
-// (`@chaoticgoodcomputing/quartz-graph`) or its directory (`quartz-graph`, `cgc-tags`): for a build
+// (`@chaoticgoodcomputing/quartz-graph`) or its directory (`quartz-graph`, `quartz-tags`): for a build
 // that must fail in one plugin's words, which another that checks the same thing, such as another
 // plugin that draws icons, would otherwise fail first. Fixture plugins are left as they are.
 export const othersOff = (config, keep) =>
@@ -165,8 +165,8 @@ const isOurs = (source) =>
 // baseline would otherwise lose pages: without stock tag-page it has no tag pages, and no-bleed
 // would compare ours with the 404 page. So the pages ours makes are compared with the stock pages
 // they stand in for, as an .mdx page is with its .md twin. Keyed by the source the fixture config
-// lists ours by: its package name once it is a package (#95), its local path until then.
-const STANDS_IN_FOR = { "../../plugins/cgc-tag-page": "@quartz-community/tag-page" }
+// lists ours by: its package name (#95).
+const STANDS_IN_FOR = { "@chaoticgoodcomputing/quartz-tag-page": "@quartz-community/tag-page" }
 
 // The fixture cache: what a fixture build would otherwise fetch from the network, pinned into a
 // fixture root's `.cache/` before every build, so the fixture needs no network. Written out by the

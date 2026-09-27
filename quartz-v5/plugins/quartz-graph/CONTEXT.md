@@ -2,10 +2,10 @@
 
 `@chaoticgoodcomputing/quartz-graph`, manifest name `cgc-graph`: the Quartz 5 plugin that draws the
 graph view, and the first of our plugins to be an npm package, loaded by name (#89, #93). It is v4's
-graph (FORK-LEDGER `components/Graph.tsx` and `components/scripts/graph/**`), as a consumer of the `cgc-tags` engine (#20, #74, #77). Ours to ship,
+graph (FORK-LEDGER `components/Graph.tsx` and `components/scripts/graph/**`), as a consumer of the `quartz-tags` engine (#20, #74, #77). Ours to ship,
 because stock `@quartz-community/graph` reads only core's content index, which has no dates and none
 of our artifacts. Inherits the family vocabulary in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md), and
-the tag vocabulary of [`cgc-tags`](../cgc-tags/CONTEXT.md) and
+the tag vocabulary of [`quartz-tags`](../quartz-tags/CONTEXT.md) and
 [`tags-core`](../../libs/tags-core/CONTEXT.md).
 
 ## Language
@@ -16,7 +16,7 @@ page, keyed by slug, with its title, links, tags, **primary tag** and date, and 
 the site carries, drawn (docs/adr/0001). What every graph is drawn from, with the engine's **tag
 index**.
 _Avoid_: content index (that is core's `contentIndex.json`), graph data, tag index (that is
-`cgc-tags`' `cgcTags.json`)
+`quartz-tags`' `cgcTags.json`)
 
 **Authored page**:
 A page with a file behind it, Markdown or anything a page type renders from a file, such as
@@ -45,7 +45,7 @@ page node of its own.
 _Avoid_: tag page (that is the page it links to)
 
 **Node's tag**:
-The tag that paints a node: a page's **primary tag**, as `cgc-tags` resolves it, or a tag node's
+The tag that paints a node: a page's **primary tag**, as `quartz-tags` resolves it, or a tag node's
 own tag. The node is that tag's **tag bubble**, the one every badge draws: its **tag colour** rims
 it, the circle is the theme's `--lightgray` and its icon the theme's `--dark`, from `tags-core`'s
 **bubble palette** (docs/adr/0004's bubble amendment, #83). A page with no tags has none, and no
@@ -86,12 +86,12 @@ _Avoid_: modal, overlay, portal
 
 ## Constraints
 
-- **It reads only what `cgc-tags` publishes:** each page's tags in the **graph index** are the keys
+- **It reads only what `quartz-tags` publishes:** each page's tags in the **graph index** are the keys
   of its `fileData.cgcTags.tags`. A tag's parent is its path's prefix (`tags-core`'s `parentOf`),
   and whether a tag is under another, for `removeTags`, and whether a page is private are
   `tags-core`'s rules too (`underAny`, `privatePageTest`). The tags its options name are normalised
   as the engine normalises a tag, when the site builds, so they match the tags in the graph index.
-- **It reads tag colours and icons only as `cgc-tags` names them:** a tag's colour property from the
+- **It reads tag colours and icons only as `quartz-tags` names them:** a tag's colour property from the
   engine's tag index, `static/cgcTags.json`, and its icon id there too. It draws the icons itself,
   when the site builds, with `@chaoticgoodcomputing/icons`.
 - **Every colour it paints is resolved in script** through `tags-core`'s one resolver, the theme's,

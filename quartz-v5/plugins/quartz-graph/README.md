@@ -7,7 +7,7 @@ tags:
 
 `@chaoticgoodcomputing/quartz-graph` is a [Quartz 5](https://quartz.jzhao.xyz/) plugin that draws the graph view: the pages around the current one, and, behind a button, every page of the site, with a filter for how recently each changed. Each page and tag is drawn as its tag's bubble, the one the site's tag badges use: rimmed in the tag's colour, with the tag's icon. It draws from an index it publishes itself, which carries each page's date.
 
-It is the graph from this site's Quartz 4 days, carried over as a plugin. Quartz's own graph plugin reads only Quartz's content index, which has no dates, so the filter needs this one. Its tags, with their colours and icons, come from [cgc-tags](https://blog.chaoticgood.computer/plugins/cgc-tags), the plugin that holds the site's tag dictionary.
+It is the graph from this site's Quartz 4 days, carried over as a plugin. Quartz's own graph plugin reads only Quartz's content index, which has no dates, so the filter needs this one. Its tags, with their colours and icons, come from [quartz-tags](https://blog.chaoticgood.computer/plugins/quartz-tags), the plugin that holds the site's tag dictionary.
 
 ## What it renders
 
@@ -16,7 +16,7 @@ A heading, and a box holding the **local graph**: the current page, every page i
 - **Hover** a node to see its label, light up its neighbours and fade the rest. Hovering a tag lights up its whole subtree of subtags.
 - **Click** a node to go to its page. Quartz's router follows it, as it follows a link, with no page reload.
 - **Drag** a node to pull the layout around, drag the background to pan, and scroll to zoom.
-- **Each node is its tag's bubble**, the same bubble as a tag badge's elsewhere on the site: a page is its primary tag's, a tag its own. The tag's colour, as `cgc-tags` resolves it, paints only the rim. The circle is the theme's `lightgray`, and the icon the theme's `dark`, black in the light scheme and white in the dark. A tag with no colour of its own takes its nearest ancestor's.
+- **Each node is its tag's bubble**, the same bubble as a tag badge's elsewhere on the site: a page is its primary tag's, a tag its own. The tag's colour, as `quartz-tags` resolves it, paints only the rim. The circle is the theme's `lightgray`, and the icon the theme's `dark`, black in the light scheme and white in the dark. A tag with no colour of its own takes its nearest ancestor's.
 - **Each bubble carries its tag's icon**, its own or its nearest ancestor's. The icons are drawn when the site builds, so the page fetches none.
 - **Notes you've visited** have their bubble's rim in the theme's `tertiary` instead of their tag's colour, the way a visited link differs from an unvisited one. A tag's node always keeps its tag's colour. **The current page** keeps its tag's colour too, and swells and shrinks.
 - **A page with no tags** has no bubble. It is a plain disc in the theme's colours, as in Quartz 4: `secondary` for the current page, `tertiary` for pages you've visited, and `gray` for the rest.
@@ -74,17 +74,17 @@ The plugin writes `static/cgcGraph.json`: every page of the site keyed by its sl
 
 - **Pages** are every page with a file behind it, Markdown or anything a page type renders from a file, such as `.mdx`. The tag pages and folder pages Quartz generates aren't in it, and neither are unlisted pages.
 - **`links`** are the pages it links to, as Quartz resolves them. The site's index is `/`.
-- **`tags`** are its tags as `cgc-tags` publishes them, and **`primary`** is the one that stands for it, which paints its node. A page with no tags has no `primary`.
+- **`tags`** are its tags as `quartz-tags` publishes them, and **`primary`** is the one that stands for it, which paints its node. A page with no tags has no `primary`.
 - **`date`** is the date Quartz shows for the page, by the site's `defaultDateType`, as an ISO 8601 string.
 - **`icons`** holds every icon a tag of the site carries, drawn when the site built, every mark in `currentColor`.
 
-The graph also reads `cgc-tags`' own index, `static/cgcTags.json`, for each tag's colour and icon.
+The graph also reads `quartz-tags`' own index, `static/cgcTags.json`, for each tag's colour and icon.
 
 The graph draws a tag's description page, at `tags/<tag>` or `tags/<tag>/index`, as the tag's own node.
 
 ## Install
 
-The plugin is the npm package `@chaoticgoodcomputing/quartz-graph`, built, with its type declarations, and loaded by name, as Quartz's own `@quartz-community/*` plugins are. It needs [cgc-tags](https://blog.chaoticgood.computer/plugins/cgc-tags) and [cgc-styles](https://blog.chaoticgood.computer/plugins/cgc-styles). Install it into your Quartz site:
+The plugin is the npm package `@chaoticgoodcomputing/quartz-graph`, built, with its type declarations, and loaded by name, as Quartz's own `@quartz-community/*` plugins are. It needs [quartz-tags](https://blog.chaoticgood.computer/plugins/quartz-tags) and [quartz-styles](https://blog.chaoticgood.computer/plugins/quartz-styles). Install it into your Quartz site:
 
 ```sh
 npm install @chaoticgoodcomputing/quartz-graph
@@ -102,8 +102,7 @@ Its peers, Preact, `lightningcss` and Quartz's `@quartz-community/types` and `@q
 
 Disable Quartz's own `@quartz-community/graph`, which this plugin replaces.
 
-> [!WARNING]
-> **Depending on `cgc-tags` and `cgc-styles` by name needs a change to Quartz.** Stock Quartz matches a dependency only against the exact `source:` string. Matching by plugin name is a small change to its loader, carried in this repository's copy of Quartz and proposed upstream on [chaoticgoodcomputing/blog#47](https://github.com/chaoticgoodcomputing/blog/issues/47). Until it lands, this plugin builds only against that copy.
+It declares both by their package names, `@chaoticgoodcomputing/quartz-tags` and `@chaoticgoodcomputing/quartz-styles`, which are their `source:` at every site, so a stock copy of Quartz matches them.
 
 ## Configure
 
@@ -129,7 +128,7 @@ The graph takes one layout slot, the same on every page. This site's Quartz 4 la
 
 | Option | Default | |
 | --- | --- | --- |
-| `privateTags` | none | The tags that make a page private: a page carrying one, or a tag under one. `privateer` isn't under `private`. The same rule as the rest of the plugin family's, so give [quartz-seo](https://blog.chaoticgood.computer/plugins/quartz-seo), [cgc-backlinks](https://blog.chaoticgood.computer/plugins/cgc-backlinks) and [cgc-tag-explorer](https://blog.chaoticgood.computer/plugins/cgc-tag-explorer) the same tags, through a YAML anchor. |
+| `privateTags` | none | The tags that make a page private: a page carrying one, or a tag under one. `privateer` isn't under `private`. The same rule as the rest of the plugin family's, so give [quartz-seo](https://blog.chaoticgood.computer/plugins/quartz-seo), [quartz-backlinks](https://blog.chaoticgood.computer/plugins/quartz-backlinks) and [quartz-tag-explorer](https://blog.chaoticgood.computer/plugins/quartz-tag-explorer) the same tags, through a YAML anchor. |
 | `title` | `Graph View` | The heading above the local graph. |
 | `localGraph` | see below | The local graph's settings. |
 | `globalGraph` | see below | The global graph's settings. |
@@ -178,7 +177,7 @@ The CSS is library CSS, following [ADR-0003](https://github.com/chaoticgoodcompu
 - **Size:** the box is square, as wide as the block. Where the layout caps the block's height, as Quartz does to each right-sidebar component below its desktop width, the box gives up height to fit, and the graph is drawn to the box's size.
 - **Colours and fonts:** all the theme's. The box's border is `--lightgray`, the dialog's background `--light`, and the button and filters use `--codeFont`. The private toggle takes `nodeColors.private`, through the block's `--cgc-graph-private` property, or `--secondary` without one.
 
-The canvas can't use CSS, so the plugin resolves each colour in script, the theme's, the options' and each tag's alike, and resolves them again when the colour scheme changes. A tag's colour is its `--cgc-tag-…` property from `cgc-tags`, so a site that restyles a tag's colour restyles its nodes' rims too. A bubble's circle and icon are the theme's `--lightgray` and `--dark`, the palette `@chaoticgoodcomputing/tags-core` publishes for every tag bubble, so the graph's bubbles and the badges' can't drift apart.
+The canvas can't use CSS, so the plugin resolves each colour in script, the theme's, the options' and each tag's alike, and resolves them again when the colour scheme changes. A tag's colour is its `--cgc-tag-…` property from `quartz-tags`, so a site that restyles a tag's colour restyles its nodes' rims too. A bubble's circle and icon are the theme's `--lightgray` and `--dark`, the palette `@chaoticgoodcomputing/tags-core` publishes for every tag bubble, so the graph's bubbles and the badges' can't drift apart.
 
 The build checks the stylesheet with `@chaoticgoodcomputing/css-check` and fails if a selector reaches outside the block, if it defines a custom property or other name outside the block, or if it sets a colour literal or a font family other than one of the theme's four, such as `var(--bodyFont)`.
 

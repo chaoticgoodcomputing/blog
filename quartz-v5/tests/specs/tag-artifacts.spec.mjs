@@ -1,9 +1,10 @@
 // The tag engine's consumers receive its artifacts wherever a site runs (ADR-0002, #69). Each
-// consumer names the engine by plugin name, `dependencies: ["cgc-tags"]`, one string that holds at
-// the fixture root, where the engine's source is `../../plugins/cgc-tags`, and at the real site's,
-// where it is `../plugins/cgc-tags` (#40). The consumers read the two kinds of artifact:
+// consumer names the engine by plugin name, its package name,
+// `dependencies: ["@chaoticgoodcomputing/quartz-tags"]` (#40, #95): one string that holds at the
+// fixture root and at the real site's, where the engine's source is that same name. The consumers
+// read the two kinds of artifact:
 //
-// - cgc-tag-list paints its badges with the engine's `--cgc-tag-*` properties, from its stylesheet;
+// - quartz-tag-list paints its badges with the engine's `--cgc-tag-*` properties, from its stylesheet;
 // - the fixture's `fixture-tag-reader` writes out the `fileData.cgcTags` each page received;
 // - quartz-graph (#74) publishes each page's tags from its `fileData.cgcTags` in its own index.
 import fs from "node:fs"
@@ -18,9 +19,9 @@ import {
   withPlugins,
 } from "../harness/site.mjs"
 
-const ENGINE = "cgc-tags"
+const ENGINE = "@chaoticgoodcomputing/quartz-tags"
 const CONSUMERS = [
-  path.resolve(testsRoot, "../plugins/cgc-tag-list"),
+  path.resolve(testsRoot, "../plugins/quartz-tag-list"),
   path.resolve(testsRoot, "../plugins/quartz-graph"),
   path.join(testsRoot, "fixture-plugins/fixture-tag-reader"),
 ]
@@ -38,7 +39,7 @@ test("the consumers receive the engine's artifacts at the fixture root", async (
   page,
   emitted,
 }) => {
-  expect(pluginSources(fixtureConfig())).toContain(`../../plugins/${ENGINE}`)
+  expect(pluginSources(fixtureConfig())).toContain(ENGINE)
   await page.goto("/plain-note")
   // `fixture: { color: "#0a7d32" }`
   await expect(bubble(page, "fixture")).toHaveCSS("border-top-color", "rgb(10, 125, 50)")
@@ -60,8 +61,8 @@ test("the consumers receive the engine's artifacts at the real site root", async
   colorScheme,
 }) => {
   const config = siteConfig({ at: "site" })
-  expect(pluginSources(config)).toContain(`../plugins/${ENGINE}`)
-  expect(pluginSources(config)).toContain("../plugins/cgc-tag-list")
+  expect(pluginSources(config)).toContain(ENGINE)
+  expect(pluginSources(config)).toContain("@chaoticgoodcomputing/quartz-tag-list")
   const site = await buildScratchSite(
     "tags-site-root",
     {

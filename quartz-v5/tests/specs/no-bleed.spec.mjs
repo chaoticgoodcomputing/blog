@@ -47,6 +47,19 @@ const snapshot = ([props, skip]) => {
   return out
 }
 
+// The baseline turns our plugins off, and turns back on the stock plugin one of ours stands in for:
+// stock tag-page for quartz-tag-page, keyed by the package name the fixture lists it by (#95). Without
+// it the baseline's tag pages would be 404s, and the tag pages above would be compared with nothing.
+test("the baseline swaps stock tag-page in for ours", async ({ page, baselinePage }) => {
+  await page.goto("/tags/articles")
+  await expect(page.locator(".cgc-tag-page")).toHaveCount(1)
+  await expect(page.locator(".page-listing")).toHaveCount(0)
+  const response = await baselinePage.goto("/tags/articles")
+  expect(response.status()).toBe(200)
+  await expect(baselinePage.locator(".page-listing")).toHaveCount(1)
+  await expect(baselinePage.locator(".cgc-tag-page")).toHaveCount(0)
+})
+
 for (const url of PAGES) {
   test(`our plugins leave unowned elements alone on ${url}`, async ({ page, baselinePage }) => {
     await page.goto(url)

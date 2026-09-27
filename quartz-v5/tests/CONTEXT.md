@@ -19,7 +19,7 @@ _Avoid_: test site, fixture build
 **Baseline**:
 The same fixture site with every one of our plugins disabled. What the no-bleed check compares against.
 Where one of ours replaces a stock plugin whose pages the baseline would otherwise lose, the stock
-one is on in its place (`STANDS_IN_FOR` in `harness/site.mjs`): stock tag-page, for `cgc-tag-page`.
+one is on in its place (`STANDS_IN_FOR` in `harness/site.mjs`): stock tag-page, for `quartz-tag-page`.
 _Avoid_: control, vanilla site, stock site
 
 **Fixture root**:
@@ -32,14 +32,14 @@ _Avoid_: shadow root (collides with the DOM's), sandbox, workspace
 **Fixture icon collection**:
 The fixture's own icon collection, `custom:`, at `fixture-icons/`: SVG files painted in hard-coded
 colours, so a spec can see them turned into `currentColor`. The fixture config names it once, on
-`cgc-tag-list`, and every plugin that draws icons shares it through the `*iconCollections` anchor.
+`quartz-tag-list`, and every plugin that draws icons shares it through the `*iconCollections` anchor.
 _Avoid_: test icons, custom icons (the site's own set, in `quartz-v5/icons/`)
 
 **Fixture plugin**:
 A plugin that exists only for the suite, under `fixture-plugins/`: a stand-in for a third-party
 plugin the fixture must not run (`fixture-theme`, for `@quartz-themes/core`), or the smallest
-consumer of one of our engines (`fixture-consumer` for cgc-styles; `fixture-tag-reader`, which
-writes out the tag data cgc-tags publishes on each page). Plain ESM with no build step. One the
+consumer of one of our engines (`fixture-consumer` for quartz-styles; `fixture-tag-reader`, which
+writes out the tag data quartz-tags publishes on each page). Plain ESM with no build step. One the
 fixture config enables counts as one of our plugins, so the baseline disables it.
 _Avoid_: test plugin, mock plugin, stub (in prose)
 

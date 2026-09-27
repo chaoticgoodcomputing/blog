@@ -1,8 +1,8 @@
 # The fixture site's config: upstream's default, plus our plugins under test.
 # A plugin under test is listed by its package name, as a downstream site lists it, e.g.
 #   - source: "@chaoticgoodcomputing/quartz-graph"
-# or, until it becomes a package (#95), by a local source resolved against the fixture root:
-#   - source: ../../plugins/cgc-tags
+# or, for a plugin that is not a package, by a local source resolved against the fixture root:
+#   - source: ../fixture-plugins/fixture-consumer
 # See quartz-v5/tests/harness/site.mjs and docs/adr/0004.
 # Site plugins (`site-plugins/`) are never listed: the fixture stays stock (#39), and their specs
 # build scratch sites that load them.
@@ -115,14 +115,14 @@ plugins:
       theme: tokyo-night
       mode: both
   # The family layer's position, above core and themes (#63).
-  - source: ../../plugins/cgc-styles
+  - source: "@chaoticgoodcomputing/quartz-styles"
     enabled: true
-  # A consumer of cgc-styles that declares it by plugin name (#63). Exists only in the fixture.
+  # A consumer of the styles engine that declares it by its package name (#63, #95). Exists only in the fixture.
   - source: ../fixture-plugins/fixture-consumer
     enabled: true
   # The tag engine (#69): one dictionary of tag colours and icon ids. Its colours are in each form a
   # site can write, a hex, a theme variable and a light-dark() pair, and every other tag inherits.
-  - source: ../../plugins/cgc-tags
+  - source: "@chaoticgoodcomputing/quartz-tags"
     enabled: true
     options:
       tags:
@@ -137,7 +137,7 @@ plugins:
     enabled: true
   # The page's tag badges, painted from the engine's colours (#69), in stock tag-list's slot, with
   # the real site's options.
-  - source: ../../plugins/cgc-tag-list
+  - source: "@chaoticgoodcomputing/quartz-tag-list"
     enabled: true
     options:
       showSubtags: true
@@ -153,7 +153,7 @@ plugins:
   # index, and on tag pages filtered to the tag, the first five shown, as on the real site. The
   # fixture's 404 page has stock's bare frame, with no slot after the body, so the real site's
   # `showOn: [index, "404"]` is proven on a scratch site built from the site config instead.
-  - source: ../../plugins/cgc-post-listing
+  - source: "@chaoticgoodcomputing/quartz-post-listing"
     enabled: true
     options:
       collapsedItemCount: 5
@@ -224,10 +224,10 @@ plugins:
       cacheDir: .cache/cgc-annotator
   - source: "@quartz-community/folder-page"
     enabled: true
-  # cgc-tag-page replaces stock tag-page, which it wraps (#72). The baseline turns stock back on.
+  # quartz-tag-page replaces stock tag-page, which it wraps (#72). The baseline turns stock back on.
   - source: "@quartz-community/tag-page"
     enabled: false
-  - source: ../../plugins/cgc-tag-page
+  - source: "@chaoticgoodcomputing/quartz-tag-page"
     enabled: true
   - source: "@quartz-community/explorer"
     enabled: true
@@ -238,7 +238,7 @@ plugins:
   # under it; a drawer on a narrow screen, at the plugin's default width, core's. Beside stock
   # explorer, which the fixture keeps. `secret` is a second private tag, so a private page can sit
   # under a public tag (`explorer`) without changing what other specs count under `private`.
-  - source: ../../plugins/cgc-tag-explorer
+  - source: "@chaoticgoodcomputing/quartz-tag-explorer"
     enabled: true
     options:
       excludeTags:
@@ -281,14 +281,14 @@ plugins:
       group: toolbar
       groupOptions:
         grow: true
-  # Replaced by cgc-backlinks, in the same slot.
+  # Replaced by quartz-backlinks, in the same slot.
   - source: "@quartz-community/backlinks"
     enabled: false
     layout:
       position: right
       priority: 50
   # Backlinks with private pages marked (#78), with the site's private tag, as quartz-seo takes it.
-  - source: ../../plugins/cgc-backlinks
+  - source: "@chaoticgoodcomputing/quartz-backlinks"
     enabled: true
     options:
       privateTags:

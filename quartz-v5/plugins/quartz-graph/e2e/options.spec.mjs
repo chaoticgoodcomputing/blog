@@ -47,9 +47,9 @@ test("fails the build on icon collections that aren't directories by prefix", as
 // the post listing, which fail the same way, are off, so the failure is the graph's own.
 test("fails the build on an icon no collection has", async () => {
   const config = editConfig(withOptions({ privateTags: ["private"] }), (doc, entry) => {
-    entry("../../plugins/cgc-tags").setIn(["options", "tags"], doc.createNode({ private: { icon: "mdi:no-such-icon" } }))
-    entry("../../plugins/cgc-tag-list").set("enabled", false)
-    entry("../../plugins/cgc-post-listing").set("enabled", false)
+    entry("@chaoticgoodcomputing/quartz-tags").setIn(["options", "tags"], doc.createNode({ private: { icon: "mdi:no-such-icon" } }))
+    entry("@chaoticgoodcomputing/quartz-tag-list").set("enabled", false)
+    entry("@chaoticgoodcomputing/quartz-post-listing").set("enabled", false)
   })
   const { code, output } = await buildScratchSite("graph-unknown-icon", CONTENT, { config })
   expect(code).not.toBe(0)

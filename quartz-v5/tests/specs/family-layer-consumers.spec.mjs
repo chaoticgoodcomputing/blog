@@ -1,5 +1,6 @@
-// Every package that writes into the family layer depends on cgc-styles, the engine that owns the
-// family's position (ADR-0003's family-layer amendment; a **Consumer** in cgc-styles' CONTEXT.md).
+// Every package that writes into the family layer depends on quartz-styles, the engine that owns the
+// family's position (ADR-0003's family-layer amendment; a **Consumer** in quartz-styles' CONTEXT.md),
+// by its package name, `@chaoticgoodcomputing/quartz-styles` (#95).
 // The loader holds a package to the engine's presence and order only if the package depends on it,
 // and a package that forgets renders just the same on a site that enables the engine anyway, as the
 // fixture and the real site both do. So nothing else in the suite notices one that forgets.
@@ -19,7 +20,7 @@ import { buildScratchSite, fixtureConfig, siteConfig, testsRoot, core } from "..
 import { pluginDirOf } from "../../utils/local-plugins.mjs"
 
 const YAML = createRequire(path.join(core, "package.json"))("yaml")
-const ENGINE = "cgc-styles"
+const ENGINE = "@chaoticgoodcomputing/quartz-styles"
 const HOME = { "index.md": "---\ntitle: Home\n---\nHome.\n" }
 
 // A plugin entry's name, as the loader takes it: a package source's whole package name, an object

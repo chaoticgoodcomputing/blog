@@ -56,10 +56,10 @@ test.describe("the generated DAG", () => {
   test("reads engine edges from manifest dependencies, and library edges from the libraries a package builds with", () => {
     const packages = readPackages()
     const of = (dir) => packages.find((p) => p.dir === dir)
-    expect(of("quartz-graph").engines).toEqual(["cgc-styles", "cgc-tags"])
-    expect(of("cgc-tags").engines).toEqual(["cgc-styles"])
-    expect(of("cgc-styles").engines).toEqual([])
-    expect(of("cgc-tags").libraries).toEqual(["tags-core"])
+    expect(of("quartz-graph").engines).toEqual(["quartz-styles", "quartz-tags"])
+    expect(of("quartz-tags").engines).toEqual(["quartz-styles"])
+    expect(of("quartz-styles").engines).toEqual([])
+    expect(of("quartz-tags").libraries).toEqual(["declarations", "tags-core"])
     // A plugin's `file:` devDependency, and a library's `workspace:` dependency on another.
     expect(of("quartz-annotator").libraries).toEqual(["css-check", "declarations", "island-runtime", "pipeline"])
     expect(of("widgets").libraries).toEqual(["css-check", "icons"])
@@ -68,9 +68,9 @@ test.describe("the generated DAG", () => {
   })
 
   // A plugin that is a package (#89) is drawn by its directory, which its plugin note is named for,
-  // and a consumer may name it as an engine by its package name, as Quartz matches a dependency on a
-  // package source, or by its manifest name, as it matches one on a local source.
-  test("draws a plugin that is a package by its directory, whichever name a consumer depends on it by", ({ scratch }) => {
+  // and a consumer names it as an engine by its package name, the name Quartz takes from a package
+  // source (#95), whether the consumer is a package itself or still loads by local path.
+  test("draws a plugin that is a package by its directory, and an engine edge from its package name", ({ scratch }) => {
     const root = scratch.dir("plugin-dag-packages")
     const pkg = (dir, manifest) => {
       fs.mkdirSync(path.join(root, dir), { recursive: true })
@@ -81,7 +81,10 @@ test.describe("the generated DAG", () => {
       name: "@chaoticgoodcomputing/quartz-reader",
       quartz: { name: "cgc-reader", dependencies: ["@chaoticgoodcomputing/quartz-engine"] },
     })
-    pkg("plugins/cgc-local", { name: "cgc-local", quartz: { name: "cgc-local", dependencies: ["cgc-engine"] } })
+    pkg("plugins/cgc-local", {
+      name: "cgc-local",
+      quartz: { name: "cgc-local", dependencies: ["@chaoticgoodcomputing/quartz-engine"] },
+    })
 
     expect(flowchart(readPackages(root))).toBe(
       [
@@ -133,6 +136,22 @@ test.describe("the generated DAG", () => {
         '  click plugin_cgc_reader "/plugins/cgc-reader"',
       ].join("\n"),
     )
+  })
+
+  // Quartz names a package source by its whole package name, so a dependency on a package's manifest
+  // name finds nothing at a site, and the loader refuses the build: the DAG refuses it too (#95).
+  test("refuses an engine dependency on a package's manifest name", ({ scratch }) => {
+    const root = scratch.dir("plugin-dag-manifest-name")
+    const pkg = (dir, manifest) => {
+      fs.mkdirSync(path.join(root, dir), { recursive: true })
+      fs.writeFileSync(path.join(root, dir, "package.json"), JSON.stringify(manifest))
+    }
+    pkg("plugins/quartz-engine", { name: "@chaoticgoodcomputing/quartz-engine", quartz: { name: "cgc-engine", dependencies: [] } })
+    pkg("plugins/quartz-reader", {
+      name: "@chaoticgoodcomputing/quartz-reader",
+      quartz: { name: "cgc-reader", dependencies: ["cgc-engine"] },
+    })
+    expect(() => readPackages(root)).toThrow(/quartz-reader.*cgc-engine/)
   })
 
   test("refuses an engine dependency that names no package, rather than drawing the DAG without it", ({ scratch }) => {

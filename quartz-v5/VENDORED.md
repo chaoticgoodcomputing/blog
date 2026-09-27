@@ -90,10 +90,10 @@ Core's into it.
 A plugin of ours that is a package is listed by its package name,
 `source: "@chaoticgoodcomputing/quartz-graph"`, a **package source**: Quartz imports it by name
 ([`config-loader.ts:441-442`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L441-L442)),
-and the site package (below, Dependencies) is where the name resolves. The rest are still local
-sources (#95, #96). Local `source:` entries are resolved with `path.resolve()` against cwd
+and the site package (below, Dependencies) is where the name resolves. Every plugin in `plugins/` is
+a package (#93-#95); only the site's own, in `site-plugins/`, are local sources. Local `source:` entries are resolved with `path.resolve()` against cwd
 ([`gitLoader.ts:99`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L99)),
-which is Core's root. Local plugins are therefore `../plugins/cgc-tags`. A plugin option that names a
+which is Core's root. Local plugins are therefore `../site-plugins/site-styles`. A plugin option that names a
 file resolves the same way, so the site's icon is `icon: ../icon.png` on `quartz-og-image`.
 
 ## Building the site
@@ -170,7 +170,7 @@ Current vendored changes:
 | Files | Why | Upstream proposal |
 | ----- | --- | ----------------- |
 | `quartz/plugins/types.ts`, `quartz/plugins/pageTypes/dispatcher.ts` | [#19](https://github.com/chaoticgoodcomputing/blog/issues/19): four default transformers are async, so a page type cannot run the pipeline from a synchronous `generate`. Makes `generate` awaitable. Needed by `cgc-mdx`. | [#25](https://github.com/chaoticgoodcomputing/blog/issues/25), filed after cutover |
-| `quartz/plugins/loader/config-loader.ts` | [#40](https://github.com/chaoticgoodcomputing/blog/issues/40): the loader matches `manifest.dependencies` only against exact `source:` strings, and a local source differs by site root, so no one dependency string holds at the real site, the e2e fixture and a downstream install. `validateDependencies` now resolves each dependency by exact source, then by plugin name, and its presence, order and cycle checks all use the resolved entry. Additive: a dependency that matches a source exactly behaves as before. Needed by every consumer of `cgc-styles`; landed with it on [#63](https://github.com/chaoticgoodcomputing/blog/issues/63), proven by `tests/specs/dependencies-by-name.spec.mjs`. | [#47](https://github.com/chaoticgoodcomputing/blog/issues/47), filed after cutover |
+| `quartz/plugins/loader/config-loader.ts` | [#40](https://github.com/chaoticgoodcomputing/blog/issues/40): the loader matches `manifest.dependencies` only against exact `source:` strings, and a local source differs by site root, so no one dependency string holds at the real site, the e2e fixture and a downstream install. `validateDependencies` now resolves each dependency by exact source, then by plugin name, and its presence, order and cycle checks all use the resolved entry. Additive: a dependency that matches a source exactly behaves as before. Landed with `cgc-styles` on [#63](https://github.com/chaoticgoodcomputing/blog/issues/63), proven by `tests/specs/dependencies-by-name.spec.mjs`. Since [#95](https://github.com/chaoticgoodcomputing/blog/issues/95) every consumer names its engine by package name, which is the engine's `source:` at every site and so matches exactly, as on stock Quartz; the change is needed only by a dependency on a plugin listed by a local source, until [#96](https://github.com/chaoticgoodcomputing/blog/issues/96) retires them. | [#47](https://github.com/chaoticgoodcomputing/blog/issues/47), filed after cutover |
 
 The `core-drift` repo guard (below) reads the first column of this table: every file drift is
 allowed in, as a code span, one row per vendored change. Adding a vendored change means adding its

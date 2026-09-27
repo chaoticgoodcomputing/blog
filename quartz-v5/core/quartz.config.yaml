@@ -155,18 +155,19 @@ plugins:
   # site's fonts, Inter and IBM Plex Mono, fetched at its own build, under `static/site-styles/` (#84).
   - source: ../site-plugins/site-styles
     enabled: true
-  # The family layer, `cgc`, above core and themes (#30, #63): every cgc-* plugin that emits CSS
-  # declares it by name, `dependencies: ["cgc-styles"]`, and the loader holds them to its order
+  # The family layer, `cgc`, above core and themes (#30, #63): every plugin of ours that emits CSS
+  # declares it by its package name, `dependencies: ["@chaoticgoodcomputing/quartz-styles"]` (#95),
+  # and the loader holds them to its order
   # (tests/specs/family-layer-consumers.spec.mjs fails on one that doesn't).
-  - source: ../plugins/cgc-styles
+  - source: "@chaoticgoodcomputing/quartz-styles"
     enabled: true
   # The tag engine (#20, #31, #69): the site's one tag dictionary, v4's `tags:` block. Colour and icon
   # are both inherited from the nearest ancestor that has one, so only tags that differ from their
   # parent are listed; v4 inherited colours only, and matched icons exactly. Each colour is a
   # light-dark() pair: v4's hex is the dark half, and the light half is a deeper shade of it, at 3:1
   # or more against the light scheme's page and badge. Tags with neither get `var(--darkgray)`, where
-  # v4 had #888888. The engine publishes icon ids; cgc-tag-list draws them (#71).
-  - source: ../plugins/cgc-tags
+  # v4 had #888888. The engine publishes icon ids; quartz-tag-list draws them (#71).
+  - source: "@chaoticgoodcomputing/quartz-tags"
     enabled: true
     options:
       tags:
@@ -235,7 +236,7 @@ plugins:
     enabled: true
     options:
       # The site's private tags, named once: every plugin that treats private pages differently takes
-      # them through the anchor (cgc-backlinks, quartz-graph, cgc-tag-explorer, cgc-post-listing), so they
+      # them through the anchor (quartz-backlinks, quartz-graph, quartz-tag-explorer, quartz-post-listing), so they
       # agree on which pages are private (tags-core's **private page**).
       noindexTags: &privateTags
         - private
@@ -292,7 +293,7 @@ plugins:
       navigationSources:
         # v4 labelled a link anywhere in the tag explorer so, ahead of the tag badges (#76).
         ".cgc-tag-explorer": tag-explorer
-        # v4 labelled a link in the tag list, or any tag link, a tag badge: cgc-tag-list's badges
+        # v4 labelled a link in the tag list, or any tag link, a tag badge: quartz-tag-list's badges
         # (#69), and the `.tag-link`s of page listings and inline #tags.
         ".cgc-tag-list": tag-badge
         # The post listing's badges (#73). A post's title in the listing is `other`, as in v4.
@@ -321,19 +322,19 @@ plugins:
   # files (`tags/<t>/index.md`) would render as folder pages.
   - source: "@quartz-community/folder-page"
     enabled: false
-  # Replaced by cgc-tag-page, which wraps it (#72).
+  # Replaced by quartz-tag-page, which wraps it (#72).
   - source: "@quartz-community/tag-page"
     enabled: false
   # Stock's tag pages, with the tag's description article as their only body (#20, #43, #72). Stock
   # uses a tag's description file only at `tags/<t>.md`. The vault's are still at `tags/<t>/index.md`
   # until cutover renames them (#43), so each described tag has a second page there until then.
-  - source: ../plugins/cgc-tag-page
+  - source: "@chaoticgoodcomputing/quartz-tag-page"
     enabled: true
     options:
       # v4 titled a tag with no description file "Tag: <tag>".
       prefixTags: true
   # A file explorer is in no v4 layout (#42). The tag explorer, with its own drawer, is
-  # cgc-tag-explorer, under the page title and toolbar (#76).
+  # quartz-tag-explorer, under the page title and toolbar (#76).
   - source: "@quartz-community/explorer"
     enabled: false
     layout:
@@ -421,7 +422,7 @@ plugins:
       group: toolbar
       groupOptions:
         grow: true
-  # Replaced by cgc-backlinks, below.
+  # Replaced by quartz-backlinks, below.
   - source: "@quartz-community/backlinks"
     enabled: false
     layout:
@@ -431,7 +432,7 @@ plugins:
   # v4's Backlinks (#44, #78): public pages first, then newest first. The private tags are the ones
   # quartz-seo's `noindexTags` names, descendants included, and private pages are left out, where v4
   # marked them with a lock (the owner's review notes, #85).
-  - source: ../plugins/cgc-backlinks
+  - source: "@chaoticgoodcomputing/quartz-backlinks"
     enabled: true
     options:
       privateTags: *privateTags
@@ -453,7 +454,7 @@ plugins:
       priority: 20
       # v4's index shows no date or reading time.
       condition: not-index
-  # Replaced by cgc-tag-list, in the same slot.
+  # Replaced by quartz-tag-list, in the same slot.
   - source: "@quartz-community/tag-list"
     enabled: false
     layout:
@@ -462,7 +463,7 @@ plugins:
   # v4's TagList under a page's title (#69): badges, each holding its tag's bubble, the icon rimmed in
   # the tag's colour (#71, #82), and the count of pages under it. A tag page lists its parent and subtags
   # instead, as v4's tags layout did.
-  - source: ../plugins/cgc-tag-list
+  - source: "@chaoticgoodcomputing/quartz-tag-list"
     enabled: true
     options:
       showSubtags: true
@@ -476,7 +477,7 @@ plugins:
   # tags' badges (#82), the first five shown. v4 put it after the body of the index, the 404 page and
   # the tags layout, where it lists the tag's posts. Quartz 5 has no `is-index` condition a plugin can
   # add (#70), so the listing keeps to the pages `showOn` names, and to tag pages, by itself.
-  - source: ../plugins/cgc-post-listing
+  - source: "@chaoticgoodcomputing/quartz-post-listing"
     enabled: true
     options:
       # v4 left private pages out of the listing.
@@ -519,7 +520,7 @@ plugins:
   # them, where v4 kept only `private` out of the tree and listed its pages under their other tags
   # with a lock (the owner's review notes, #85). Below the site's 1000px breakpoint it is a drawer of
   # its own, v4's MobileSidebarMenu being gone (#42).
-  - source: ../plugins/cgc-tag-explorer
+  - source: "@chaoticgoodcomputing/quartz-tag-explorer"
     enabled: true
     options:
       privateTags: *privateTags
@@ -724,7 +725,7 @@ layout:
       template: site-full-width
       exclude:
         - "@chaoticgoodcomputing/quartz-page-source"
-        - cgc-tag-explorer
+        - "@chaoticgoodcomputing/quartz-tag-explorer"
         - "@quartz-community/table-of-contents"
         - "@chaoticgoodcomputing/quartz-social"
         - email-subscribe-sidebar

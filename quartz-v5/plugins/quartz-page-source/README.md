@@ -27,16 +27,13 @@ A bordered link with the GitHub mark, after the page body by default:
 
 ## Install
 
-The plugin is the npm package `@chaoticgoodcomputing/quartz-page-source`, built, with its type declarations, and loaded by name, as Quartz's own `@quartz-community/*` plugins are. It needs [cgc-styles](https://blog.chaoticgood.computer/plugins/cgc-styles). Install it into your Quartz site:
+The plugin is the npm package `@chaoticgoodcomputing/quartz-page-source`, built, with its type declarations, and loaded by name, as Quartz's own `@quartz-community/*` plugins are. It needs [quartz-styles](https://blog.chaoticgood.computer/plugins/quartz-styles). Install it into your Quartz site:
 
 ```sh
 npm install @chaoticgoodcomputing/quartz-page-source
 ```
 
 and list it in `quartz.config.yaml` by its package name, `source: "@chaoticgoodcomputing/quartz-page-source"`. Its peers, Preact and Quartz's own packages, are your site's own copies, so a page has one Preact. The package isn't on npm yet: it is published after this site moves to Quartz 5 ([#90](https://github.com/chaoticgoodcomputing/blog/issues/90)).
-
-> [!WARNING]
-> **Depending on `cgc-styles` by name needs a change to Quartz.** Stock Quartz matches a dependency only against the exact `source:` string. Matching by plugin name is a small change to its loader, carried in this repository's copy of Quartz and proposed upstream on [chaoticgoodcomputing/blog#47](https://github.com/chaoticgoodcomputing/blog/issues/47). Until it lands, this plugin builds only against that copy.
 
 Then set `repoUrl` in `quartz.config.yaml`. The build fails until it is set.
 
