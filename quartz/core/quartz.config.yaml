@@ -32,9 +32,6 @@ configuration:
     - private
     - templates
     - .obsidian
-    # v4's widget guide, a symlink into the v4 copy until cutover (#48). quartz-mdx's plugin note
-    # absorbs it and takes its URL, `/widgets/readme`, as an alias.
-    - widgets/README.md
   theme:
     # Self-hosted by the site-styles site plugin, which fetches the fonts at its own build and
     # declares them at root-relative URLs (#84). `local` keeps core from fetching them itself: it

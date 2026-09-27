@@ -30,10 +30,6 @@ const content = () => ({
   ].join("\n"),
   // The plugin note, as the vault has it (#48).
   "plugins/quartz-mdx.md": fs.readFileSync(path.join(VAULT, "plugins/quartz-mdx.md"), "utf8"),
-  // A stand-in for v4's widget guide, which the vault keeps until cutover (#81) as a link into v4's
-  // widget directory, never read here. The site config ignores it, and the plugin note's alias
-  // takes its URL.
-  "widgets/README.md": "---\ntitle: Widgets\n---\nv4's widget guide.\n",
 })
 
 // One build per colour-scheme project, shared by that project's tests.

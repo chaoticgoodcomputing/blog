@@ -1,7 +1,6 @@
 // The vault's live .mdx articles and their widgets (#79), proven on a scratch site built from the
 // site config. The articles are the vault's own files, unchanged. Beside them are the vault's
-// widgets without v4's files, as cutover will leave them, so nothing here can reach v4's widget
-// directory, and a `node_modules` link, so the articles' package imports resolve as the vault's do,
+// widgets, and a `node_modules` link, so the articles' package imports resolve as the vault's do,
 // from the repo root's. Building all of `content/public` is the `site:build` target's job.
 import fs from "node:fs"
 import path from "node:path"
@@ -24,11 +23,8 @@ const ARTICLES = {
   "content/notes/scratch/dice-widget.mdx": ["ProbabilityConvolutions"],
 }
 
-// v4's widget files, which only v4 reads and cutover deletes: each widget's component, script,
-// style and definition, the registry, and the symlink to v4's widget guide.
-const V4_FILES = new Set(["component.tsx", "index.ts", "script.inline.ts", "style.inline.scss", "registry.ts", "README.md"])
 
-const vaultFiles = (dir, keep) =>
+const vaultFiles = (dir, keep = () => true) =>
   fs
     .readdirSync(path.join(VAULT, dir), { recursive: true })
     .map((rel) => path.join(dir, rel))
@@ -45,7 +41,7 @@ function content() {
     node_modules: { symlink: path.join(REPO, "node_modules") },
   }
   // The resume's PDF too, so the build emits it where v5 puts the vault's assets.
-  for (const rel of [...mdxFiles(), ...vaultFiles("widgets", (rel) => !V4_FILES.has(path.basename(rel))), RESUME_PDF]) {
+  for (const rel of [...mdxFiles(), ...vaultFiles("widgets"), RESUME_PDF]) {
     files[rel] = fs.readFileSync(path.join(VAULT, rel))
   }
   return files

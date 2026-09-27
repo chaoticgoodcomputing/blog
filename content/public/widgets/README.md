@@ -1,1 +1,0 @@
-../../../quartz/widgets/README.md
