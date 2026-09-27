@@ -23,7 +23,7 @@ configuration:
   pageTitleSuffix: " | Spencer Elkington"
   enableSPA: true
   enablePopovers: true
-  # None in core: PostHog, with v4's privacy options, comes from the cgc-posthog plugin (#61).
+  # None in core: PostHog, with v4's privacy options, comes from the quartz-posthog plugin (#61).
   analytics: null
   locale: en-US
   baseUrl: blog.chaoticgood.computer
@@ -31,7 +31,7 @@ configuration:
     - private
     - templates
     - .obsidian
-    # v4's widget guide, a symlink into the v4 copy until cutover (#48). cgc-mdx's plugin note
+    # v4's widget guide, a symlink into the v4 copy until cutover (#48). quartz-mdx's plugin note
     # absorbs it and takes its URL, `/widgets/readme`, as an alias.
     - widgets/README.md
   theme:
@@ -220,7 +220,7 @@ plugins:
       # On permanently (#23): v4's mixed-case URLs (89 in the vault today) redirect to their
       # lowercase pages. Emitted only where the output filesystem is case-sensitive, as CI's is.
       enableCaseRedirects: true
-  # cgc-seo writes the sitemap and feed in its place, leaving private pages out (#28, #67). Stock
+  # quartz-seo writes the sitemap and feed in its place, leaving private pages out (#28, #67). Stock
   # `unlisted` would do that too, but also drop them from contentIndex.json, which search and the graph
   # read, so this still writes that.
   - source: "@quartz-community/content-index"
@@ -231,7 +231,7 @@ plugins:
   # What search engines and feed readers see (#28): `noindex` on private pages, which stay listed on
   # the site; the canonical URL, `article:*` meta and JSON-LD of v4's Head fork; and v4's sitemap and
   # RSS feed, without private pages, with every tag's page once at /tags/<t> (#43, #67).
-  - source: ../plugins/cgc-seo
+  - source: "@chaoticgoodcomputing/quartz-seo"
     enabled: true
     options:
       # The site's private tags, named once: every plugin that treats private pages differently takes
@@ -268,11 +268,11 @@ plugins:
       rssLimit: 40
   - source: "@quartz-community/favicon"
     enabled: true
-  # Replaced by cgc-og-image, which wraps it (#58).
+  # Replaced by quartz-og-image, which wraps it (#58).
   - source: "@quartz-community/og-image"
     enabled: false
   # v4's cards: last-segment tag chips, the site's icon, and none drawn under `serve` (#42, #44).
-  - source: ../plugins/cgc-og-image
+  - source: "@chaoticgoodcomputing/quartz-og-image"
     enabled: true
     options:
       # v4's OG images are dark (FORK-LEDGER ogImage.tsx).
@@ -284,7 +284,7 @@ plugins:
   # v4's PostHog (#42, #44, #61), in place of core `analytics`: nothing loads under Do Not Track, no
   # session recording, and a `navigation` event per followed link, labelled as v4 labelled it. v4's
   # graph label arrives with its place: quartz-graph sends it itself (FORK-LEDGER graph rows).
-  - source: ../plugins/cgc-posthog
+  - source: "@chaoticgoodcomputing/quartz-posthog"
     enabled: true
     options:
       apiKey: phc_BviHJVml66FIB1RFmgeAzZpKRWA0nntGdIOo47hTA3X
@@ -309,13 +309,13 @@ plugins:
   # `robots.txt` keeps the mirrors out of search. Notes are rendered with the default denylist: #37
   # swapped v4's hand-picked list, which left out maths, for the site's whole pipeline. Its default
   # order, 75, puts it after crawl-links and description, whose `links` and `text` it adds to.
-  - source: ../plugins/cgc-annotator
+  - source: "@chaoticgoodcomputing/quartz-annotator"
     enabled: true
     options:
       mirrorDir: assets/annotated-documents
   # `.mdx` pages at their `.mdx` URLs, with widgets as islands (#19, #24). Each page's clean URL
-  # redirects there, through alias-redirects (the owner's 2026-09-26 decision, cgc-mdx ADR-0005).
-  - source: ../plugins/cgc-mdx
+  # redirects there, through alias-redirects (the owner's 2026-09-26 decision, quartz-mdx ADR-0005).
+  - source: "@chaoticgoodcomputing/quartz-mdx"
     enabled: true
   # Folder pages are dropped (#42, #43): never in the sitemap or linked, and the tag description
   # files (`tags/<t>/index.md`) would render as folder pages.
@@ -429,7 +429,7 @@ plugins:
       priority: 50
       condition: not-index
   # v4's Backlinks (#44, #78): public pages first, then newest first. The private tags are the ones
-  # cgc-seo's `noindexTags` names, descendants included, and private pages are left out, where v4
+  # quartz-seo's `noindexTags` names, descendants included, and private pages are left out, where v4
   # marked them with a lock (the owner's review notes, #85).
   - source: ../plugins/cgc-backlinks
     enabled: true
@@ -500,7 +500,7 @@ plugins:
       name: site-page-title
     enabled: true
     options:
-      # Fixed for the site, and the one cgc-seo credits: one anchor, set once (#44).
+      # Fixed for the site, and the one quartz-seo credits: one anchor, set once (#44).
       author: *author
     layout:
       position: left
@@ -553,7 +553,7 @@ plugins:
       priority: 10
   # v4's subscribe box under a note (#42, #44), with v4's note-page wording. Not on tag pages, which
   # have the sidebar box below instead.
-  - source: ../plugins/cgc-email-subscribe
+  - source: "@chaoticgoodcomputing/quartz-email-subscribe"
     enabled: true
     options:
       buttondownUsername: &buttondownUsername chaoticgoodcomputing
@@ -567,8 +567,10 @@ plugins:
   # the plugin is listed again under a placement name of its own, which `byPageType` keeps to tag
   # pages. The index keeps the box above, after its body, until the site can place a component on
   # the index alone (is-index, #70). Both entries link the plugin's one stylesheet, the same file.
+  # Quartz imports an object source whose repo is a package by its `name`, so the site package
+  # also depends on the plugin under that name, an alias (quartz-v5/package.json, VENDORED.md).
   - source:
-      repo: ../plugins/cgc-email-subscribe
+      repo: "@chaoticgoodcomputing/quartz-email-subscribe"
       name: email-subscribe-sidebar
     enabled: true
     options:
@@ -578,7 +580,7 @@ plugins:
       priority: 30
   # v4's "View source on GitHub", under the subscribe box on notes; not on the index (#42, #44). v4
   # linked the repo's old name, which no longer resolves.
-  - source: ../plugins/cgc-page-source
+  - source: "@chaoticgoodcomputing/quartz-page-source"
     enabled: true
     options:
       repoUrl: https://github.com/chaoticgoodcomputing/blog/blob/main
@@ -591,7 +593,7 @@ plugins:
   # activity above the Bluesky feed, fetched in the reader's browser. Quartz 5 has no `is-index`
   # condition a plugin can add (#70), so the cards keep to the home page by themselves (`showOn`,
   # whose default is `[index]`).
-  - source: ../plugins/cgc-social
+  - source: "@chaoticgoodcomputing/quartz-social"
     enabled: true
     options:
       github:
@@ -693,6 +695,8 @@ layout:
       priority: 35
       direction: row
       gap: 0.5rem
+  # `exclude` names an entry by its plugin name: a package source's whole package name, or an object
+  # source's `name`.
   byPageType:
     # v4's 404 is in the site's shell, keeping the left navigation, with nothing before the body and
     # nothing on the right. Stock gives it the bare `minimal` frame.
@@ -700,7 +704,7 @@ layout:
       template: default
       # Nor a subscribe box, which v4's 404 did not have.
       exclude:
-        - cgc-email-subscribe
+        - "@chaoticgoodcomputing/quartz-email-subscribe"
       positions:
         beforeBody: []
         right: []
@@ -714,22 +718,22 @@ layout:
     # Core's `full-width` drops both sidebars. v4's annotation pages had no source link, which would
     # show Annotator's JSON (#68), and no tag explorer, contents or social cards. They keep the
     # subscribe box after the body, as v4 had it, and not the sidebar one. v4's second box, inside
-    # the Viewer's own sidebar, is not reproduced: the Viewer is cgc-annotator's markup (#68), with no
+    # the Viewer's own sidebar, is not reproduced: the Viewer is quartz-annotator's markup (#68), with no
     # slot a layout entry can fill.
     annotation:
       template: site-full-width
       exclude:
-        - cgc-page-source
+        - "@chaoticgoodcomputing/quartz-page-source"
         - cgc-tag-explorer
         - "@quartz-community/table-of-contents"
-        - cgc-social
+        - "@chaoticgoodcomputing/quartz-social"
         - email-subscribe-sidebar
     # v4's tag pages had no source link, and their subscribe box was in the right sidebar. A tag page
     # drawn from a description file would get a source link.
     tag:
       exclude:
-        - cgc-page-source
-        - cgc-email-subscribe
+        - "@chaoticgoodcomputing/quartz-page-source"
+        - "@chaoticgoodcomputing/quartz-email-subscribe"
     canvas:
       exclude:
         - email-subscribe-sidebar

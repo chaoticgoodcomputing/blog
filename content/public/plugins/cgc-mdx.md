@@ -1,1 +1,0 @@
-../../../quartz-v5/plugins/cgc-mdx/README.md

@@ -30,9 +30,9 @@ const config: QuartzConfig = {
       "private",
       "templates",
       ".obsidian",
-      // cgc-mdx's plugin note is Quartz 5's (#65). Its `widgets/README` alias would race this
+      // quartz-mdx's plugin note is Quartz 5's (#65, #94). Its `widgets/README` alias would race this
       // site's own /widgets/README page for the same file, so v4 leaves it out until cutover.
-      "plugins/cgc-mdx.md",
+      "plugins/quartz-mdx.md",
     ],
     defaultDateType: "modified",
     tags: {

@@ -1,0 +1,67 @@
+{
+  "name": "@chaoticgoodcomputing/quartz-seo",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Quartz 5 plugin for what search engines and feed readers see: noindex on private pages, canonical URLs, article metadata and JSON-LD, the sitemap and the RSS feed. See README.md and CONTEXT.md.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chaoticgoodcomputing/blog.git",
+    "directory": "quartz-v5/plugins/quartz-seo"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "//exports": "Every entry has its type declarations beside it, which build.mjs emits: Quartz's generated plugin index skips a package without dist/index.d.ts, and a TypeScript site imports the types from them. ./package.json is how Quartz reads the manifest (import.meta.resolve).",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "../node_modules/.bin/tsc -p ."
+  },
+  "//peerDependencies": "The host Quartz's own copies, never bundled or installed here: head elements must be the host's Preact vnodes. The types are imported for types only.",
+  "peerDependencies": {
+    "@quartz-community/types": "*",
+    "@quartz-community/utils": "*",
+    "preact": "^10.29.0"
+  },
+  "//devDependencies": "Build-time only, and inlined into dist by build.mjs (tags-core, our library, and reading-time, v4's reading-time counter): the loader prunes them after `npm run build`. tags-core is a `workspace:*` spec, which `pnpm publish` rewrites to the published version (ADR-0005). It is a library, not the cgc-tags engine, so inlining it adds no plugin dependency. @chaoticgoodcomputing/declarations writes the .d.ts beside each entry (build.mjs).",
+  "devDependencies": {
+    "@chaoticgoodcomputing/declarations": "workspace:*",
+    "@chaoticgoodcomputing/tags-core": "workspace:*",
+    "esbuild": "^0.28.2",
+    "reading-time": "^1.5.0"
+  },
+  "quartz": {
+    "name": "cgc-seo",
+    "displayName": "SEO",
+    "category": [
+      "emitter"
+    ],
+    "version": "0.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 50,
+    "defaultEnabled": true,
+    "defaultOptions": {
+      "noindexTags": [
+        "private"
+      ],
+      "enableSiteMap": true,
+      "enableRSS": true,
+      "rssLimit": 10,
+      "rssRecentNotesText": "Recent notes",
+      "rssLastFewNotesText": "Last {count} notes"
+    }
+  }
+}

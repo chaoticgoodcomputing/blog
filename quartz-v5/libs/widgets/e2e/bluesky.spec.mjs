@@ -1,7 +1,7 @@
 // `/bluesky`, the widget library's non-widget export: Bluesky's public API and a renderer for its
 // posts, which the `bluesky-post` widget is built on and which a plugin takes without the widget
 // (#36, #75). cgc-social inlines it (#80), and its specs prove the feed there: the requests, who
-// reposted and what replies, the counts and the failures (plugins/cgc-social/e2e/bluesky.spec.mjs).
+// reposted and what replies, the counts and the failures (plugins/quartz-social/e2e/bluesky.spec.mjs).
 // What that consumer doesn't show is kept here, with a probe standing in for a plugin's build: that
 // the bundle carries no widget, Preact or icons library and only the `cgc-bluesky` block's CSS, the
 // context lines' MDI glyphs, the post card at its full size, and why a fetch failed. The probe bundles

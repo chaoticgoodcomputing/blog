@@ -1,0 +1,34 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "name": "quartz-email-subscribe",
+  "root": "quartz-v5/plugins/quartz-email-subscribe",
+  "sourceRoot": "quartz-v5/plugins/quartz-email-subscribe/src",
+  "projectType": "library",
+  "tags": ["cgc", "cgc:plugin"],
+  "targets": {
+    "build": {
+      "//": "Checks the stylesheet against ADR-0003, then bundles dist/. See build.mjs.",
+      "executor": "nx:run-commands",
+      "options": { "command": "node build.mjs", "cwd": "{projectRoot}" },
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/package.json",
+        "{projectRoot}/build.mjs",
+        "{projectRoot}/tsconfig.json",
+        "{projectRoot}/src/**/*",
+        "^production",
+        "{workspaceRoot}/quartz-v5/core/pnpm-lock.yaml"
+      ],
+      "outputs": ["{projectRoot}/dist"]
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run typecheck", "cwd": "{projectRoot}" }
+    },
+    "e2e": {
+      "//": "This package's specs only, through the shared suite.",
+      "executor": "nx:run-commands",
+      "options": { "command": "npx playwright test ../plugins/quartz-email-subscribe", "cwd": "{workspaceRoot}/quartz-v5/tests" }
+    }
+  }
+}

@@ -23,7 +23,7 @@ export const PLUGIN_ROOTS = [path.join(v5, "plugins"), path.join(v5, "site-plugi
 // Our plugins by package name (#89): every package under the plugin roots, `name` → its directory.
 // A site lists a converted plugin by this name, `@chaoticgoodcomputing/quartz-<name>`, and loads it
 // through the site package's `node_modules` (VENDORED.md), while the rest still load by local path
-// until they are converted (#94–#96). Read from the manifests, so it needs no install.
+// until they are converted (#95, #96). Read from the manifests, so it needs no install.
 export function pluginPackages() {
   const packages = new Map()
   for (const root of PLUGIN_ROOTS) {
@@ -63,4 +63,17 @@ export async function buildLocalPlugins(dirs, run) {
   if (dirs.length === 0) return
   const projects = [...new Set(dirs.map(projectOf))]
   await run(nx, ["run-many", "-t", "build", "-p", projects.join(","), "--outputStyle=static"], { cwd: repo })
+}
+
+// Quartz links a local plugin into `<root>/.quartz/plugins/<name>` and never prunes the directory, so
+// a plugin renamed, or turned into a package and loaded by name (#93–#96), leaves a link to nowhere
+// in every root built before: it reads as the plugin still being installed there. Called before each
+// build, it removes those links, and leaves every live link, and a git install's real directory, alone.
+export function pruneGonePlugins(root) {
+  const plugins = path.join(root, ".quartz", "plugins")
+  if (!fs.existsSync(plugins)) return
+  for (const name of fs.readdirSync(plugins)) {
+    const entry = path.join(plugins, name)
+    if (fs.lstatSync(entry).isSymbolicLink() && !fs.existsSync(entry)) fs.rmSync(entry)
+  }
 }

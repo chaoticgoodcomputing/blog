@@ -4,7 +4,7 @@ tags:
   - fixture
 ---
 
-Links in the places cgc-posthog labels a navigation by (`plugins/cgc-posthog/e2e`).
+Links in the places cgc-posthog labels a navigation by (`plugins/quartz-posthog/e2e`).
 
 An inline link, to [[plain-note]].
 

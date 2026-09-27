@@ -2,7 +2,7 @@
 
 Preact widgets for [Quartz 5](https://github.com/jackyzha0/quartz) pages written in MDX, rendered
 at build time and hydrated in the browser by
-[`cgc-mdx`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/plugins/cgc-mdx).
+[`cgc-mdx`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/plugins/quartz-mdx).
 Each widget is its own subpath export, and the package has no root export. Import a widget in an
 `.mdx` page like any other package:
 

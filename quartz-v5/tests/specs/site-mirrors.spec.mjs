@@ -44,7 +44,7 @@ test("the site's robots.txt disallows the mirror path", async ({ page, scratch }
   const host = await sourceHost({ "/paper.pdf": pdf("paper") })
   // The site config as it is, except that this test pins into a cache of its own.
   const config = editConfig(siteConfig(), (_, entry) =>
-    entry("../../plugins/cgc-annotator").setIn(["options", "cacheDir"], scratch.dir("site-mirrors-cache")),
+    entry("@chaoticgoodcomputing/quartz-annotator").setIn(["options", "cacheDir"], scratch.dir("site-mirrors-cache")),
   )
   try {
     const site = await scratch.site("site-mirrors", {
@@ -74,10 +74,10 @@ test("the site's robots.txt disallows the mirror path", async ({ page, scratch }
 })
 
 test("the real site's mirrors and their cache stay out of git", () => {
-  const annotator = pluginEntries(fs.readFileSync(siteConfigFile, "utf8")).find(({ source }) => String(source).endsWith("plugins/cgc-annotator"))
+  const annotator = pluginEntries(fs.readFileSync(siteConfigFile, "utf8")).find(({ source }) => source === "@chaoticgoodcomputing/quartz-annotator")
   const options = annotator?.options ?? {}
   // Where the real site build pins and emits them: `site-v5:build` runs Quartz from Core's root
-  // into `public/`. The defaults are cgc-annotator's own.
+  // into `public/`. The defaults are quartz-annotator's own.
   const cache = path.resolve(core, options.cacheDir ?? "node_modules/.cache/cgc-annotator")
   const mirrors = path.join(core, "public", options.mirrorDir ?? "mirrors")
   const repo = path.resolve(testsRoot, "../..")

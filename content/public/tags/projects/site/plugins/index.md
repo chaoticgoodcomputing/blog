@@ -15,22 +15,22 @@ Click a plugin to read its note.
 
 ```mermaid
 flowchart LR
-  plugin_cgc_annotator["cgc-annotator"]
   plugin_cgc_backlinks["cgc-backlinks"]
-  plugin_cgc_email_subscribe["cgc-email-subscribe"]
-  plugin_cgc_mdx["cgc-mdx"]
-  plugin_cgc_og_image["cgc-og-image"]
-  plugin_cgc_page_source["cgc-page-source"]
   plugin_cgc_post_listing["cgc-post-listing"]
-  plugin_cgc_posthog["cgc-posthog"]
-  plugin_cgc_seo["cgc-seo"]
-  plugin_cgc_social["cgc-social"]
   plugin_cgc_styles["cgc-styles"]
   plugin_cgc_tag_explorer["cgc-tag-explorer"]
   plugin_cgc_tag_list["cgc-tag-list"]
   plugin_cgc_tag_page["cgc-tag-page"]
   plugin_cgc_tags["cgc-tags"]
+  plugin_quartz_annotator["quartz-annotator"]
+  plugin_quartz_email_subscribe["quartz-email-subscribe"]
   plugin_quartz_graph["quartz-graph"]
+  plugin_quartz_mdx["quartz-mdx"]
+  plugin_quartz_og_image["quartz-og-image"]
+  plugin_quartz_page_source["quartz-page-source"]
+  plugin_quartz_posthog["quartz-posthog"]
+  plugin_quartz_seo["quartz-seo"]
+  plugin_quartz_social["quartz-social"]
   library_css_check(["css-check"])
   library_declarations(["declarations"])
   library_icons(["icons"])
@@ -42,37 +42,26 @@ flowchart LR
     site_plugin_site_components{{"site-components"}}
     site_plugin_site_styles{{"site-styles"}}
   end
-  plugin_cgc_annotator --> plugin_cgc_styles
   plugin_cgc_backlinks --> plugin_cgc_styles
-  plugin_cgc_email_subscribe --> plugin_cgc_styles
-  plugin_cgc_page_source --> plugin_cgc_styles
   plugin_cgc_post_listing --> plugin_cgc_styles
   plugin_cgc_post_listing --> plugin_cgc_tags
-  plugin_cgc_social --> plugin_cgc_styles
   plugin_cgc_tag_explorer --> plugin_cgc_styles
   plugin_cgc_tag_explorer --> plugin_cgc_tags
   plugin_cgc_tag_list --> plugin_cgc_styles
   plugin_cgc_tag_list --> plugin_cgc_tags
   plugin_cgc_tags --> plugin_cgc_styles
+  plugin_quartz_annotator --> plugin_cgc_styles
+  plugin_quartz_email_subscribe --> plugin_cgc_styles
   plugin_quartz_graph --> plugin_cgc_styles
   plugin_quartz_graph --> plugin_cgc_tags
-  plugin_cgc_annotator -.-> library_css_check
-  plugin_cgc_annotator -.-> library_island_runtime
-  plugin_cgc_annotator -.-> library_pipeline
+  plugin_quartz_page_source --> plugin_cgc_styles
+  plugin_quartz_social --> plugin_cgc_styles
   plugin_cgc_backlinks -.-> library_css_check
   plugin_cgc_backlinks -.-> library_icons
   plugin_cgc_backlinks -.-> library_tags_core
-  plugin_cgc_email_subscribe -.-> library_css_check
-  plugin_cgc_mdx -.-> library_island_runtime
-  plugin_cgc_mdx -.-> library_pipeline
-  plugin_cgc_page_source -.-> library_css_check
   plugin_cgc_post_listing -.-> library_css_check
   plugin_cgc_post_listing -.-> library_icons
   plugin_cgc_post_listing -.-> library_tags_core
-  plugin_cgc_seo -.-> library_tags_core
-  plugin_cgc_social -.-> library_css_check
-  plugin_cgc_social -.-> library_tags_core
-  plugin_cgc_social -.-> library_widgets
   plugin_cgc_tag_explorer -.-> library_css_check
   plugin_cgc_tag_explorer -.-> library_icons
   plugin_cgc_tag_explorer -.-> library_tags_core
@@ -80,29 +69,48 @@ flowchart LR
   plugin_cgc_tag_list -.-> library_icons
   plugin_cgc_tag_list -.-> library_tags_core
   plugin_cgc_tags -.-> library_tags_core
+  plugin_quartz_annotator -.-> library_css_check
+  plugin_quartz_annotator -.-> library_declarations
+  plugin_quartz_annotator -.-> library_island_runtime
+  plugin_quartz_annotator -.-> library_pipeline
+  plugin_quartz_email_subscribe -.-> library_css_check
+  plugin_quartz_email_subscribe -.-> library_declarations
   plugin_quartz_graph -.-> library_css_check
   plugin_quartz_graph -.-> library_declarations
   plugin_quartz_graph -.-> library_icons
   plugin_quartz_graph -.-> library_tags_core
+  plugin_quartz_mdx -.-> library_declarations
+  plugin_quartz_mdx -.-> library_island_runtime
+  plugin_quartz_mdx -.-> library_pipeline
+  plugin_quartz_og_image -.-> library_declarations
+  plugin_quartz_page_source -.-> library_css_check
+  plugin_quartz_page_source -.-> library_declarations
+  plugin_quartz_posthog -.-> library_declarations
+  plugin_quartz_seo -.-> library_declarations
+  plugin_quartz_seo -.-> library_tags_core
+  plugin_quartz_social -.-> library_css_check
+  plugin_quartz_social -.-> library_declarations
+  plugin_quartz_social -.-> library_tags_core
+  plugin_quartz_social -.-> library_widgets
   library_tags_core -.-> library_css_check
   library_widgets -.-> library_css_check
   library_widgets -.-> library_icons
-  click plugin_cgc_annotator "/plugins/cgc-annotator"
   click plugin_cgc_backlinks "/plugins/cgc-backlinks"
-  click plugin_cgc_email_subscribe "/plugins/cgc-email-subscribe"
-  click plugin_cgc_mdx "/plugins/cgc-mdx"
-  click plugin_cgc_og_image "/plugins/cgc-og-image"
-  click plugin_cgc_page_source "/plugins/cgc-page-source"
   click plugin_cgc_post_listing "/plugins/cgc-post-listing"
-  click plugin_cgc_posthog "/plugins/cgc-posthog"
-  click plugin_cgc_seo "/plugins/cgc-seo"
-  click plugin_cgc_social "/plugins/cgc-social"
   click plugin_cgc_styles "/plugins/cgc-styles"
   click plugin_cgc_tag_explorer "/plugins/cgc-tag-explorer"
   click plugin_cgc_tag_list "/plugins/cgc-tag-list"
   click plugin_cgc_tag_page "/plugins/cgc-tag-page"
   click plugin_cgc_tags "/plugins/cgc-tags"
+  click plugin_quartz_annotator "/plugins/quartz-annotator"
+  click plugin_quartz_email_subscribe "/plugins/quartz-email-subscribe"
   click plugin_quartz_graph "/plugins/quartz-graph"
+  click plugin_quartz_mdx "/plugins/quartz-mdx"
+  click plugin_quartz_og_image "/plugins/quartz-og-image"
+  click plugin_quartz_page_source "/plugins/quartz-page-source"
+  click plugin_quartz_posthog "/plugins/quartz-posthog"
+  click plugin_quartz_seo "/plugins/quartz-seo"
+  click plugin_quartz_social "/plugins/quartz-social"
 ```
 
 %% plugin-dag: end %%

@@ -62,12 +62,12 @@ const plugin = (name) => styled.find((p) => p.name === name)
 test("every styled plugin is found", () => {
   expect(styled.map((p) => p.name)).toEqual(
     expect.arrayContaining([
-      "cgc-annotator",
+      "quartz-annotator",
       "cgc-backlinks",
-      "cgc-email-subscribe",
-      "cgc-page-source",
+      "quartz-email-subscribe",
+      "quartz-page-source",
       "cgc-post-listing",
-      "cgc-social",
+      "quartz-social",
       "cgc-tag-explorer",
       "cgc-tag-list",
       "quartz-graph",
@@ -235,7 +235,7 @@ for (const [group, cases] of [
 ]) {
   for (const [what, css, named] of cases) {
     test(`${group}: ${what} fails the build, named`, async () => {
-      const build = await buildWith(plugin("cgc-page-source"), css)
+      const build = await buildWith(plugin("quartz-page-source"), css)
       expect(build.code, css).not.toBe(0)
       expect(build.output, css).toMatch(/src\/style\.css:\d+:\d+/)
       expect(build.output, css).toContain(named)
@@ -249,7 +249,7 @@ for (const [group, cases] of [
 // function), siblings and `of` filters that are the block's own, and the block's names.
 test("theme references, the block's own siblings and the block's names build", async () => {
   const build = await buildWith(
-    plugin("cgc-page-source"),
+    plugin("quartz-page-source"),
     `.cgc-page-source {
       --cgc-page-source-gap: 1rem;
       border: 1px solid color-mix(in srgb, var(--secondary) 25%, var(--lightgray));
@@ -282,7 +282,7 @@ test("theme references, the block's own siblings and the block's names build", a
 // cgc-annotator styles markup PDF.js writes inside its own elements, so its selectors may reach
 // anything inside an element of its blocks, but nothing beside or above one.
 test("the annotator reaches inside its blocks, never beside or above them", async () => {
-  const annotator = plugin("cgc-annotator")
+  const annotator = plugin("quartz-annotator")
   for (const [css, named] of [
     [".cgc-annotator-viewer__page + .sidebar { display: none; }", "+ .sidebar"],
     [".cgc-annotator-viewer__text-layer span ~ .sidebar { display: none; }", "~ .sidebar"],

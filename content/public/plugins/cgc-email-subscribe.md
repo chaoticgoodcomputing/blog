@@ -1,1 +1,0 @@
-../../../quartz-v5/plugins/cgc-email-subscribe/README.md

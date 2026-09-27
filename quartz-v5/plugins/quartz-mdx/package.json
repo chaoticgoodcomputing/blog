@@ -1,0 +1,69 @@
+{
+  "name": "@chaoticgoodcomputing/quartz-mdx",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Quartz 5 page type for .mdx pages, with widgets as islands. See CONTEXT.md and docs/adr/.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chaoticgoodcomputing/blog.git",
+    "directory": "quartz-v5/plugins/quartz-mdx"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "//exports": "Every entry has its type declarations beside it, which build.mjs emits: Quartz's generated plugin index skips a package without dist/index.d.ts, and a TypeScript site imports the types from them. ./package.json is how Quartz reads the manifest (import.meta.resolve).",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "../node_modules/.bin/tsc -p ."
+  },
+  "//peerDependencies": "The host Quartz's own copies, never bundled or installed here: two Preacts break hydration, and a page type's markup must be the host's vnodes.",
+  "peerDependencies": {
+    "@quartz-community/utils": "*",
+    "preact": "^10.29.0",
+    "preact-render-to-string": "^6.7.0",
+    "vfile": "^6.0.0"
+  },
+  "//dependencies": "esbuild bundles widgets at site-build time, so it stays a runtime dependency; it is native and cannot be inlined.",
+  "dependencies": {
+    "esbuild": "^0.28.2"
+  },
+  "//devDependencies": "Inlined into dist by build.mjs. Our libraries are `workspace:*` specs, which `pnpm publish` rewrites to the published version (ADR-0005). The unified stack is bundled rather than shared, since nothing in it depends on instance identity. vfile, which Quartz shares with its plugins, is a peer instead, never installed here. @chaoticgoodcomputing/declarations writes the .d.ts beside each entry (build.mjs).",
+  "devDependencies": {
+    "@chaoticgoodcomputing/declarations": "workspace:*",
+    "@chaoticgoodcomputing/island-runtime": "workspace:*",
+    "@chaoticgoodcomputing/pipeline": "workspace:*",
+    "hast-util-to-html": "^9.0.5",
+    "remark-mdx": "^3.1.1",
+    "unist-util-visit": "^5.1.0"
+  },
+  "quartz": {
+    "name": "cgc-mdx",
+    "displayName": "MDX pages",
+    "category": [
+      "transformer",
+      "pageType",
+      "emitter"
+    ],
+    "version": "0.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 45,
+    "defaultEnabled": true,
+    "defaultOptions": {
+      "cleanUrlAliases": true
+    }
+  }
+}

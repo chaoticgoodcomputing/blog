@@ -11,7 +11,7 @@
 // - an engine edge, solid, from a plugin to each plugin its `quartz.dependencies` names. Those are
 //   plugin names (ADR-0002's plugin-name amendment): a package name, for a plugin that is a package
 //   (`@chaoticgoodcomputing/quartz-<name>`, #89), or the manifest name, `quartz.name`, which is how a
-//   dependency on a plugin still loaded by local path is written until it is converted (#94–#96);
+//   dependency on a plugin still loaded by local path is written until it is converted (#95, #96);
 // - a library edge, dotted, from a package to each of our libraries it builds with: a plugin's
 //   `workspace:` devDependency (ADR-0005's inlined-library amendment; `file:` before #92), or a
 //   library's `workspace:` dependency on another.

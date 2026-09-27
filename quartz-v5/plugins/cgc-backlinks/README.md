@@ -47,7 +47,7 @@ A heading, then one link per page that links here:
 
 The heading and the empty-list text come in every locale Quartz's own backlinks have.
 
-The plugin doesn't need a tag engine. It reads each page's tags from its frontmatter, and takes the private tags as its own option, as [cgc-seo](https://blog.chaoticgood.computer/plugins/cgc-seo) does. Which pages are private is the rule the whole plugin family shares, from the `@chaoticgoodcomputing/tags-core` library, which this plugin builds in. A tag is matched the way Quartz writes tags, so `Private` and `private/` both name `private`. A private page is still an ordinary link here: marking it only tells the reader that the page behind it is a stub.
+The plugin doesn't need a tag engine. It reads each page's tags from its frontmatter, and takes the private tags as its own option, as [quartz-seo](https://blog.chaoticgood.computer/plugins/quartz-seo) does. Which pages are private is the rule the whole plugin family shares, from the `@chaoticgoodcomputing/tags-core` library, which this plugin builds in. A tag is matched the way Quartz writes tags, so `Private` and `private/` both name `private`. A private page is still an ordinary link here: marking it only tells the reader that the page behind it is a stub.
 
 ## Install
 
@@ -86,7 +86,7 @@ plugins:
 | `excludePrivate` | `false` | Leave private pages out of the list, rather than list them after the public pages with a lock. |
 | `hideWhenEmpty` | `true` | Leave the section out of a page no page links to. |
 
-If you also run [cgc-seo](https://blog.chaoticgood.computer/plugins/cgc-seo), [quartz-graph](https://blog.chaoticgood.computer/plugins/quartz-graph) or [cgc-tag-explorer](https://blog.chaoticgood.computer/plugins/cgc-tag-explorer), give them all the same private tags, through a YAML anchor, so the pages search engines are asked to leave out are the ones marked, or left out, here and in the graph and the explorer.
+If you also run [quartz-seo](https://blog.chaoticgood.computer/plugins/quartz-seo), [quartz-graph](https://blog.chaoticgood.computer/plugins/quartz-graph) or [cgc-tag-explorer](https://blog.chaoticgood.computer/plugins/cgc-tag-explorer), give them all the same private tags, through a YAML anchor, so the pages search engines are asked to leave out are the ones marked, or left out, here and in the graph and the explorer.
 
 This site turns `excludePrivate` on, so its private notes never show in a page's backlinks. Quartz 4 listed them with a lock.
 

@@ -1,7 +1,7 @@
 # The fixture site's config: upstream's default, plus our plugins under test.
 # A plugin under test is listed by its package name, as a downstream site lists it, e.g.
 #   - source: "@chaoticgoodcomputing/quartz-graph"
-# or, until it becomes a package (#94, #95), by a local source resolved against the fixture root:
+# or, until it becomes a package (#95), by a local source resolved against the fixture root:
 #   - source: ../../plugins/cgc-tags
 # See quartz-v5/tests/harness/site.mjs and docs/adr/0004.
 # Site plugins (`site-plugins/`) are never listed: the fixture stays stock (#39), and their specs
@@ -169,14 +169,14 @@ plugins:
     enabled: false
   - source: "@quartz-community/alias-redirects"
     enabled: true
-  # cgc-seo writes the sitemap and feed instead, leaving private pages out (#28, #67). This still
+  # quartz-seo writes the sitemap and feed instead, leaving private pages out (#28, #67). This still
   # writes contentIndex.json, which lists them for search and the graph.
   - source: "@quartz-community/content-index"
     enabled: true
     options:
       enableSiteMap: false
       enableRSS: false
-  - source: ../../plugins/cgc-seo
+  - source: "@chaoticgoodcomputing/quartz-seo"
     enabled: true
     options:
       noindexTags:
@@ -189,19 +189,19 @@ plugins:
       rssLimit: 5
   - source: "@quartz-community/favicon"
     enabled: true
-  # cgc-og-image replaces stock og-image, which it wraps.
+  # quartz-og-image replaces stock og-image, which it wraps.
   - source: "@quartz-community/og-image"
     enabled: false
-  - source: ../../plugins/cgc-og-image
+  - source: "@chaoticgoodcomputing/quartz-og-image"
     enabled: true
     options:
       # Resolved against the fixture root, as `source:` is.
-      icon: ../../plugins/cgc-og-image/e2e/icon.png
+      icon: ../../plugins/quartz-og-image/e2e/icon.png
   - source: "@quartz-community/cname"
     enabled: true
   # PostHog at a reserved host that never resolves, which the harness answers (harness/analytics.mjs).
   # A navigation is labelled by the first selector its link matches, in this order.
-  - source: ../../plugins/cgc-posthog
+  - source: "@chaoticgoodcomputing/quartz-posthog"
     enabled: true
     options:
       apiKey: phc_fixture
@@ -214,9 +214,9 @@ plugins:
     enabled: true
   - source: "@quartz-community/content-page"
     enabled: true
-  - source: ../../plugins/cgc-mdx
+  - source: "@chaoticgoodcomputing/quartz-mdx"
     enabled: true
-  - source: ../../plugins/cgc-annotator
+  - source: "@chaoticgoodcomputing/quartz-annotator"
     enabled: true
     options:
       # Resolved against the fixture root, which is gitignored. The default would pin through the
@@ -287,7 +287,7 @@ plugins:
     layout:
       position: right
       priority: 50
-  # Backlinks with private pages marked (#78), with the site's private tag, as cgc-seo takes it.
+  # Backlinks with private pages marked (#78), with the site's private tag, as quartz-seo takes it.
   - source: ../../plugins/cgc-backlinks
     enabled: true
     options:
@@ -342,7 +342,7 @@ plugins:
     layout:
       position: afterBody
       priority: 10
-  - source: ../../plugins/cgc-email-subscribe
+  - source: "@chaoticgoodcomputing/quartz-email-subscribe"
     enabled: true
     options:
       buttondownUsername: cgc-fixture
@@ -350,7 +350,7 @@ plugins:
       position: afterBody
       priority: 20
   # Points at the fixture's own files in this repo, so a spec can check the link reaches a real file.
-  - source: ../../plugins/cgc-page-source
+  - source: "@chaoticgoodcomputing/quartz-page-source"
     enabled: true
     options:
       repoUrl: https://github.com/chaoticgoodcomputing/blog/blob/main
@@ -363,7 +363,7 @@ plugins:
   # (harness/github.mjs, harness/bluesky.mjs), which hold these two accounts. Not `desktop-only`, as
   # on the real site: stock's wrapper for it is a `div` on every page, which renders nothing where
   # the cards don't, but shifts no-bleed's keys for the sidebar. The site spec proves it instead.
-  - source: ../../plugins/cgc-social
+  - source: "@chaoticgoodcomputing/quartz-social"
     enabled: true
     options:
       github:

@@ -96,7 +96,7 @@ header, over the whole width. Now, when the page body carries `takesPageHeader =
 cgc-annotator's does, the frame hands the before-body components to the body as its children and
 leaves them out of the page header, which keeps the bar of `left` components. The body places them:
 cgc-annotator puts them at the top of its annotations panel (its
-[ADR-0003](../../../../plugins/cgc-annotator/docs/adr/0003-the-page-header-joins-the-annotations.md)).
+[ADR-0003](../../../../plugins/quartz-annotator/docs/adr/0003-the-page-header-joins-the-annotations.md)).
 Any other body still gets them in the page header, so the frame stays safe for other page types.
 
 This supersedes "The page header's and footer's blocks keep to the measure" for the before-body

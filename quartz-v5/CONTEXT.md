@@ -117,7 +117,7 @@ _Avoid_: customization (that is the whole category), local plugin, private plugi
 Of a package: marked `"private": true` in its `package.json`, which makes npm and pnpm refuse to
 publish it. It is never published to npm and is used only in this repo. The site package,
 `quartz-v5/package.json` (`site-v5`), is one (#92), and the site plugins stay ones (#96). A plugin
-not yet converted to a package carries the flag too, until it becomes one (#94, #95). Not npm's
+not yet converted to a package carries the flag too, until it becomes one (#95). Not npm's
 "private package", a restricted package on the registry, which nothing here means.
 _Avoid_: private (alone), internal, unpublished
 
@@ -135,7 +135,10 @@ imports it by name, and never copies or links it into `.quartz/plugins/` or buil
 `@quartz-community/*` plugin (ADR-0005). In this repo the name resolves through the site package's
 `node_modules` to the plugin's directory, and prebuild and the e2e harness build it first. A plugin
 not yet converted is listed by a **local source** instead, a relative path Quartz links into
-`.quartz/plugins/`; local sources are retired once every plugin is a package (#94–#96).
+`.quartz/plugins/`; local sources are retired once every plugin is a package (#95, #96). A
+package listed a second time, to place its component elsewhere, is an object source named for its
+placement, `{ repo: "<package>", name: "email-subscribe-sidebar" }`, which Quartz imports by that
+name: the site package also depends on the plugin under it, as an alias (VENDORED.md).
 _Avoid_: npm source, registry plugin, package path
 
 **Plugin note**:

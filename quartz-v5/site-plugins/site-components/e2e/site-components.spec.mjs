@@ -72,15 +72,15 @@ test("puts v4's page title at the top of the left sidebar: the site's icon, its 
 })
 
 // The author is the site's, set once (#44): the page title's `author` is an alias of the anchor on
-// cgc-seo's `defaultAuthor`, so the byline and the page's JSON-LD author can't disagree.
-test("names the configured author, the one cgc-seo credits", async ({ page }) => {
+// quartz-seo's `defaultAuthor`, so the byline and the page's JSON-LD author can't disagree.
+test("names the configured author, the one quartz-seo credits", async ({ page }) => {
   const config = YAML.parseDocument(fs.readFileSync(siteConfigFile, "utf8"))
   const plain = config.toJS().plugins
   const entry = (name) => config.get("plugins").items[plain.findIndex(({ source }) => JSON.stringify(source).includes(name))]
   const author = entry("site-page-title").getIn(["options", "author"], true)
-  const seoAuthor = entry("cgc-seo").getIn(["options", "defaultAuthor", "name"], true)
+  const seoAuthor = entry("quartz-seo").getIn(["options", "defaultAuthor", "name"], true)
   expect(YAML.isAlias(author), "the page title's author is a YAML alias").toBe(true)
-  expect(seoAuthor.anchor, "cgc-seo's defaultAuthor.name carries the anchor").toBe(author.source)
+  expect(seoAuthor.anchor, "quartz-seo's defaultAuthor.name carries the anchor").toBe(author.source)
 
   await open(page, "/content/notes/a-note")
   const jsonLd = JSON.parse(await page.locator('script[type="application/ld+json"]').first().textContent())

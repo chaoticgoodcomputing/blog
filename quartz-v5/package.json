@@ -4,8 +4,17 @@
   "private": true,
   "type": "module",
   "description": "The real site built on Quartz Core: the workspace package the site loads its plugins through. Repo-only: never published (CONTEXT.md).",
-  "//dependencies": "Every plugin the site and the e2e fixture list by package name, linked from the workspace. Quartz imports a package source by name from Core source, and Node's upward walk from quartz-v5/core/quartz/ reaches this package's node_modules, so Core's own package.json stays upstream's (#89, #93, VENDORED.md). Plugins not yet converted load by local path (#94, #95).",
+  "//dependencies": "Every plugin the site and the e2e fixture list by package name, linked from the workspace. Quartz imports a package source by name from Core source, and Node's upward walk from quartz-v5/core/quartz/ reaches this package's node_modules, so Core's own package.json stays upstream's (#89, #93, VENDORED.md). Plugins not yet converted load by local path (#95, #96). A package the site lists twice, each entry placing its component somewhere else, is here a second time under an alias, that entry's placement name: Quartz loads an object source `{ repo, name }` whose repo is a package by importing its `name`, so `email-subscribe-sidebar` is @chaoticgoodcomputing/quartz-email-subscribe under its second entry's name (VENDORED.md).",
   "dependencies": {
-    "@chaoticgoodcomputing/quartz-graph": "workspace:*"
+    "@chaoticgoodcomputing/quartz-annotator": "workspace:*",
+    "@chaoticgoodcomputing/quartz-email-subscribe": "workspace:*",
+    "@chaoticgoodcomputing/quartz-graph": "workspace:*",
+    "@chaoticgoodcomputing/quartz-mdx": "workspace:*",
+    "@chaoticgoodcomputing/quartz-og-image": "workspace:*",
+    "@chaoticgoodcomputing/quartz-page-source": "workspace:*",
+    "@chaoticgoodcomputing/quartz-posthog": "workspace:*",
+    "@chaoticgoodcomputing/quartz-seo": "workspace:*",
+    "@chaoticgoodcomputing/quartz-social": "workspace:*",
+    "email-subscribe-sidebar": "workspace:@chaoticgoodcomputing/quartz-email-subscribe@*"
   }
 }

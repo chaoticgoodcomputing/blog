@@ -36,7 +36,7 @@ test.beforeAll(async () => {
   // The site config as it is, except that the build pins into a cache of its own. Offline: this
   // spec doesn't look at type.
   const config = editConfig(siteConfig({ offline: true }), (_, entry) =>
-    entry("../../plugins/cgc-annotator").setIn(["options", "cacheDir"], cache),
+    entry("@chaoticgoodcomputing/quartz-annotator").setIn(["options", "cacheDir"], cache),
   )
   site = await buildScratchSite(
     "site-annotations",

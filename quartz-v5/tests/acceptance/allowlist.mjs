@@ -58,17 +58,17 @@ export const ALLOWLIST = [
   {
     ticket: 48,
     summary:
-      "/widgets/README is retired, with no redirect: its reference moves into cgc-mdx's plugin note, whose widgets/README alias v5 lowercases, so only /widgets/readme redirects there. The old URL 404s after cutover, and leaves the sitemap and RSS.",
+      "/widgets/README is retired, with no redirect: its reference moves into the MDX plugin's note (/plugins/quartz-mdx since #94), whose widgets/README alias v5 lowercases, so only /widgets/readme redirects there. The old URL 404s after cutover, and leaves the sitemap and RSS.",
     allows: (d, { v5 }) =>
       d.url === "/widgets/README" &&
       ((d.area === "url" && (d.change === "removed" || d.change === "moved")) ||
         ((d.area === "sitemap" || d.area === "rss") && d.change === "removed") ||
-        (d.area === "head" && d.field === "refresh" && d.removed.length === 0 && sameSet(d.added, [`${v5.origin}/plugins/cgc-mdx`]))),
+        (d.area === "head" && d.field === "refresh" && d.removed.length === 0 && sameSet(d.added, [`${v5.origin}/plugins/quartz-mdx`]))),
   },
   {
     ticket: 48,
     summary:
-      "A shareable plugin's README is published as its plugin note at /plugins/<pkg>, listed in the sitemap and indexed like v4's other notes: its canonical is its own URL, and it is not noindex. v4 leaves out cgc-mdx's until cutover, since its alias would race v4's own /widgets/README. Only a note the vault links at plugins/<pkg>.md.",
+      "A shareable plugin's README is published as its plugin note at /plugins/<pkg>, listed in the sitemap and indexed like v4's other notes: its canonical is its own URL, and it is not noindex. v4 leaves out quartz-mdx's until cutover, since its alias would race v4's own /widgets/README. Only a note the vault links at plugins/<pkg>.md.",
     allows: (d, context) =>
       isPluginNote(d.url, context.vault) &&
       ((((d.area === "url" && d.kind === "page") || d.area === "sitemap") && d.change === "added") || indexedAtOwnUrl(d, context)),

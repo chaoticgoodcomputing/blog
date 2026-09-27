@@ -96,7 +96,7 @@ plugins:
 | `title` | `"Recent Posts"` | The heading above the listing. `false` for none. |
 | `limit` | all | List at most this many posts. |
 | `collapsedItemCount` | all shown | Show this many posts, and the rest behind a toggle. |
-| `excludeTags` | `["private"]` | Leave out the posts under any of these tags, their subtags included. Give it the private tags you give [cgc-seo](https://blog.chaoticgood.computer/plugins/cgc-seo) and the rest of the plugin family, and no private page is listed. |
+| `excludeTags` | `["private"]` | Leave out the posts under any of these tags, their subtags included. Give it the private tags you give [quartz-seo](https://blog.chaoticgood.computer/plugins/quartz-seo) and the rest of the plugin family, and no private page is listed. |
 | `filterToCurrentTag` | `true` | On a tag page, list only the posts under the tag. |
 | `includeSubtags` | `true` | On a tag page, list the posts under its subtags too. |
 | `excludeTagPages` | `true` | Leave out tag pages, such as a tag's description file, and the page of every tag. |

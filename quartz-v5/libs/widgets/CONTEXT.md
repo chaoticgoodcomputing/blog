@@ -3,7 +3,7 @@
 Preact widgets that an `.mdx` page imports like any npm package, one subpath export per widget:
 `/pdf-viewer` and `/bluesky-post`, beside `/bluesky`, the non-widget Bluesky client the second is
 built on. There is no root export. The package ships as TypeScript source, and the page's bundler
-compiles it: [`cgc-mdx`](../../plugins/cgc-mdx/CONTEXT.md) makes each use of a widget an island. It
+compiles it: [`cgc-mdx`](../../plugins/quartz-mdx/CONTEXT.md) makes each use of a widget an island. It
 is a **Library**, not a plugin, so it has no Quartz hooks and no place in a site's config. Inherits
 the family vocabulary in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md), and uses **Widget**,
 **Island** and **Widget layer** as `cgc-mdx` defines them. Decided on

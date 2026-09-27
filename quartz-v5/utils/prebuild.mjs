@@ -13,12 +13,15 @@
 //    enables, by either kind of source, is built here, through its cacheable Nx `build` target,
 //    after a frozen install of the repo's pnpm workspace (VENDORED.md). `local-plugins.mjs` holds
 //    those steps, and the e2e harness takes them from it for the fixture (`tests/harness/site.mjs`).
+// 4. Quartz never prunes `.quartz/plugins/`, so a plugin renamed or turned into a package leaves a
+//    link to nowhere there. Prebuild removes such links before Quartz runs, as the harness does
+//    before each fixture or scratch build.
 import fs from "node:fs"
 import path from "node:path"
 import { execFileSync } from "node:child_process"
 import { createRequire } from "node:module"
 import { fileURLToPath } from "node:url"
-import { buildLocalPlugins, installWorkspace, pluginDirOf, pluginPackages } from "./local-plugins.mjs"
+import { buildLocalPlugins, installWorkspace, pluginDirOf, pluginPackages, pruneGonePlugins } from "./local-plugins.mjs"
 
 const core = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "core")
 const siteConfig = path.join(core, "quartz.config.yaml")
@@ -66,4 +69,5 @@ for (const dir of new Set(ours.map((plugin) => path.dirname(plugin)))) {
 const run = (command, args, options) => execFileSync(command, args, { ...options, stdio: "inherit" })
 await installWorkspace(run)
 await buildLocalPlugins(ours, run)
+pruneGonePlugins(core)
 console.log(`built ${ours.length} plugin(s) of ours`)

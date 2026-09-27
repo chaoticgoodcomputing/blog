@@ -13,7 +13,14 @@ import { createHash } from "node:crypto"
 import { createRequire } from "node:module"
 import { promisify } from "node:util"
 import { fileURLToPath } from "node:url"
-import { PLUGIN_ROOTS, buildLocalPlugins, installWorkspace, pluginDirOf, pluginPackages } from "../../utils/local-plugins.mjs"
+import {
+  PLUGIN_ROOTS,
+  buildLocalPlugins,
+  installWorkspace,
+  pluginDirOf,
+  pluginPackages,
+  pruneGonePlugins,
+} from "../../utils/local-plugins.mjs"
 import { FIXTURE_PAPER_URL, fixturePaper } from "./source-host.mjs"
 
 const run = promisify(execFile)
@@ -52,7 +59,7 @@ const SCRATCH_PARENT = { fixture: testsRoot, site: path.dirname(core) }
 // that has to be built the way the real site is. Its local `source:` paths resolve against Core's root,
 // where the real site builds (VENDORED.md), so they are rebased onto the scratch roots made `at`
 // the given place. At `site`, that leaves a `../` path as it is. So is a plugin option that is a
-// relative path (`./…` or `../…`), such as cgc-og-image's `icon`, which a plugin resolves against
+// relative path (`./…` or `../…`), such as quartz-og-image's `icon`, which a plugin resolves against
 // the same root, and one inside a map of options, such as an icon collection's directory in
 // `iconCollections`. A map shared through a YAML anchor is rebased once, where it is anchored.
 //
@@ -304,8 +311,14 @@ async function withBuildLock(fn) {
   }
 }
 
+// Every build first removes the links a renamed plugin left in its root's `.quartz/plugins/`
+// (utils/local-plugins.mjs), which Quartz itself never prunes: a fixture root outlives the plugins
+// it was first built with.
+export { pruneGonePlugins }
+
 const quartzBuild = (root, args) =>
   withBuildLock((holds) => {
+    pruneGonePlugins(root)
     const build = run("node", [path.join(root, "quartz/bootstrap-cli.mjs"), "build", ...args], { cwd: root })
     holds(build.child.pid)
     return build
@@ -320,6 +333,7 @@ const quartzBuild = (root, args) =>
 const SERVE_TIMEOUT_MS = 2 * 60 * 1000
 const spawnServe = (root, args, holds) =>
   new Promise((resolve, reject) => {
+    pruneGonePlugins(root)
     const cli = path.join(root, "quartz/bootstrap-cli.mjs")
     const child = spawn("node", [cli, "build", "--serve", "--port", "0", "--wsPort", "0", ...args], { cwd: root })
     holds(child.pid)

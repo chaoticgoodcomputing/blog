@@ -61,7 +61,7 @@ test.describe("the generated DAG", () => {
     expect(of("cgc-styles").engines).toEqual([])
     expect(of("cgc-tags").libraries).toEqual(["tags-core"])
     // A plugin's `file:` devDependency, and a library's `workspace:` dependency on another.
-    expect(of("cgc-annotator").libraries).toEqual(["css-check", "island-runtime", "pipeline"])
+    expect(of("quartz-annotator").libraries).toEqual(["css-check", "declarations", "island-runtime", "pipeline"])
     expect(of("widgets").libraries).toEqual(["css-check", "icons"])
     // A plugin that is a package names the library its build emits declarations with (#93).
     expect(of("quartz-graph").libraries).toEqual(["css-check", "declarations", "icons", "tags-core"])

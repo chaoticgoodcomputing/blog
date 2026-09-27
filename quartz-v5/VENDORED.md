@@ -91,10 +91,10 @@ A plugin of ours that is a package is listed by its package name,
 `source: "@chaoticgoodcomputing/quartz-graph"`, a **package source**: Quartz imports it by name
 ([`config-loader.ts:441-442`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L441-L442)),
 and the site package (below, Dependencies) is where the name resolves. The rest are still local
-sources (#94–#96). Local `source:` entries are resolved with `path.resolve()` against cwd
+sources (#95, #96). Local `source:` entries are resolved with `path.resolve()` against cwd
 ([`gitLoader.ts:99`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L99)),
 which is Core's root. Local plugins are therefore `../plugins/cgc-tags`. A plugin option that names a
-file resolves the same way, so the site's icon is `icon: ../icon.png` on `cgc-og-image`.
+file resolves the same way, so the site's icon is `icon: ../icon.png` on `quartz-og-image`.
 
 ## Building the site
 
@@ -386,10 +386,20 @@ walk from there reaches `quartz-v5/node_modules` after Core's own, so Core's `pa
 upstream's. A new package is added there, in the same change that lists it in a config (#93). Its
 build emits a `.d.ts` beside each `dist/` entry through `@chaoticgoodcomputing/declarations`, since
 Quartz's generated plugin index (`install-plugins`) skips a package without `dist/index.d.ts`.
+A package the site lists twice, to place its component in two places, is its dependency twice: once
+by its own name, and once under an alias, the second entry's placement name
+(`"email-subscribe-sidebar": "workspace:@chaoticgoodcomputing/quartz-email-subscribe@*"`). The
+second entry is an object source, `{ repo: "<package>", name: "<placement name>" }`, and Quartz
+imports an object source whose repo is a package by its `name`
+([`gitLoader.ts:84-93`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L84-L93),
+[`config-loader.ts:441-442`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L441-L442)),
+which the alias resolves to the same directory (#94). Quartz never prunes `.quartz/plugins/`, so
+a plugin that became a package leaves a link to nowhere there; `site-v5:prebuild` and the e2e
+harness remove such links before every build (`pruneGonePlugins` in `utils/local-plugins.mjs`).
 
 **Nx infers targets from the workspace members' `package.json` scripts,** now that plugins and the
 e2e suite are members: a `typecheck` script on a package without a `typecheck` target in its
-`project.json` (`cgc-mdx`, `cgc-og-image`, `site-styles`) becomes one, and `site-v5-e2e` gets `test`
+`project.json` (`quartz-mdx`, `quartz-og-image`, `site-styles`) becomes one, and `site-v5-e2e` gets `test`
 from the suite's `test` script. So `nx run-many -t test` starts the whole e2e suite. A target in
 `project.json` wins over an inferred one of the same name. The e2e harness and
 `site-v5:prebuild` take the same two steps from one module, `utils/local-plugins.mjs`: the frozen

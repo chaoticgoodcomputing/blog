@@ -270,9 +270,36 @@ importers:
 
   quartz-v5:
     dependencies:
+      '@chaoticgoodcomputing/quartz-annotator':
+        specifier: workspace:*
+        version: link:plugins/quartz-annotator
+      '@chaoticgoodcomputing/quartz-email-subscribe':
+        specifier: workspace:*
+        version: link:plugins/quartz-email-subscribe
       '@chaoticgoodcomputing/quartz-graph':
         specifier: workspace:*
         version: link:plugins/quartz-graph
+      '@chaoticgoodcomputing/quartz-mdx':
+        specifier: workspace:*
+        version: link:plugins/quartz-mdx
+      '@chaoticgoodcomputing/quartz-og-image':
+        specifier: workspace:*
+        version: link:plugins/quartz-og-image
+      '@chaoticgoodcomputing/quartz-page-source':
+        specifier: workspace:*
+        version: link:plugins/quartz-page-source
+      '@chaoticgoodcomputing/quartz-posthog':
+        specifier: workspace:*
+        version: link:plugins/quartz-posthog
+      '@chaoticgoodcomputing/quartz-seo':
+        specifier: workspace:*
+        version: link:plugins/quartz-seo
+      '@chaoticgoodcomputing/quartz-social':
+        specifier: workspace:*
+        version: link:plugins/quartz-social
+      email-subscribe-sidebar:
+        specifier: workspace:@chaoticgoodcomputing/quartz-email-subscribe@*
+        version: link:plugins/quartz-email-subscribe
 
   quartz-v5/libs/css-check:
     dependencies:
@@ -390,39 +417,6 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  quartz-v5/plugins/cgc-annotator:
-    devDependencies:
-      '@chaoticgoodcomputing/css-check':
-        specifier: workspace:*
-        version: link:../../libs/css-check
-      '@chaoticgoodcomputing/island-runtime':
-        specifier: workspace:*
-        version: link:../../libs/island-runtime
-      '@chaoticgoodcomputing/pipeline':
-        specifier: workspace:*
-        version: link:../../libs/pipeline
-      approx-string-match:
-        specifier: ^2.0.0
-        version: 2.0.0
-      esbuild:
-        specifier: ^0.28.2
-        version: 0.28.2
-      hast-util-to-html:
-        specifier: ^9.0.5
-        version: 9.0.5
-      hast-util-to-string:
-        specifier: ^3.0.1
-        version: 3.0.1
-      pdfjs-dist:
-        specifier: 5.4.530
-        version: 5.4.530
-      postcss:
-        specifier: ^8.5.6
-        version: 8.5.28
-      postcss-selector-parser:
-        specifier: ^7.1.0
-        version: 7.1.6
-
   quartz-v5/plugins/cgc-backlinks:
     dependencies:
       '@iconify-json/mdi':
@@ -444,55 +438,6 @@ importers:
       '@chaoticgoodcomputing/tags-core':
         specifier: workspace:*
         version: link:../../libs/tags-core
-      esbuild:
-        specifier: ^0.28.2
-        version: 0.28.2
-
-  quartz-v5/plugins/cgc-email-subscribe:
-    devDependencies:
-      '@chaoticgoodcomputing/css-check':
-        specifier: workspace:*
-        version: link:../../libs/css-check
-      esbuild:
-        specifier: ^0.28.2
-        version: 0.28.2
-
-  quartz-v5/plugins/cgc-mdx:
-    dependencies:
-      esbuild:
-        specifier: ^0.28.2
-        version: 0.28.2
-    devDependencies:
-      '@chaoticgoodcomputing/island-runtime':
-        specifier: workspace:*
-        version: link:../../libs/island-runtime
-      '@chaoticgoodcomputing/pipeline':
-        specifier: workspace:*
-        version: link:../../libs/pipeline
-      hast-util-to-html:
-        specifier: ^9.0.5
-        version: 9.0.5
-      remark-mdx:
-        specifier: ^3.1.1
-        version: 3.1.1(supports-color@7.2.0)
-      unist-util-visit:
-        specifier: ^5.1.0
-        version: 5.1.0
-
-  quartz-v5/plugins/cgc-og-image:
-    devDependencies:
-      esbuild:
-        specifier: ^0.28.2
-        version: 0.28.2
-      reading-time:
-        specifier: ^1.5.0
-        version: 1.5.0
-
-  quartz-v5/plugins/cgc-page-source:
-    devDependencies:
-      '@chaoticgoodcomputing/css-check':
-        specifier: workspace:*
-        version: link:../../libs/css-check
       esbuild:
         specifier: ^0.28.2
         version: 0.28.2
@@ -524,39 +469,6 @@ importers:
       reading-time:
         specifier: ^1.5.0
         version: 1.5.0
-
-  quartz-v5/plugins/cgc-posthog:
-    devDependencies:
-      esbuild:
-        specifier: ^0.28.2
-        version: 0.28.2
-
-  quartz-v5/plugins/cgc-seo:
-    devDependencies:
-      '@chaoticgoodcomputing/tags-core':
-        specifier: workspace:*
-        version: link:../../libs/tags-core
-      esbuild:
-        specifier: ^0.28.2
-        version: 0.28.2
-      reading-time:
-        specifier: ^1.5.0
-        version: 1.5.0
-
-  quartz-v5/plugins/cgc-social:
-    devDependencies:
-      '@chaoticgoodcomputing/css-check':
-        specifier: workspace:*
-        version: link:../../libs/css-check
-      '@chaoticgoodcomputing/tags-core':
-        specifier: workspace:*
-        version: link:../../libs/tags-core
-      '@chaoticgoodcomputing/widgets':
-        specifier: workspace:*
-        version: link:../../libs/widgets
-      esbuild:
-        specifier: ^0.28.2
-        version: 0.28.2
 
   quartz-v5/plugins/cgc-styles:
     devDependencies:
@@ -629,6 +541,54 @@ importers:
         specifier: ^0.28.2
         version: 0.28.2
 
+  quartz-v5/plugins/quartz-annotator:
+    devDependencies:
+      '@chaoticgoodcomputing/css-check':
+        specifier: workspace:*
+        version: link:../../libs/css-check
+      '@chaoticgoodcomputing/declarations':
+        specifier: workspace:*
+        version: link:../../libs/declarations
+      '@chaoticgoodcomputing/island-runtime':
+        specifier: workspace:*
+        version: link:../../libs/island-runtime
+      '@chaoticgoodcomputing/pipeline':
+        specifier: workspace:*
+        version: link:../../libs/pipeline
+      approx-string-match:
+        specifier: ^2.0.0
+        version: 2.0.0
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+      hast-util-to-html:
+        specifier: ^9.0.5
+        version: 9.0.5
+      hast-util-to-string:
+        specifier: ^3.0.1
+        version: 3.0.1
+      pdfjs-dist:
+        specifier: 5.4.530
+        version: 5.4.530
+      postcss:
+        specifier: ^8.5.6
+        version: 8.5.28
+      postcss-selector-parser:
+        specifier: ^7.1.0
+        version: 7.1.6
+
+  quartz-v5/plugins/quartz-email-subscribe:
+    devDependencies:
+      '@chaoticgoodcomputing/css-check':
+        specifier: workspace:*
+        version: link:../../libs/css-check
+      '@chaoticgoodcomputing/declarations':
+        specifier: workspace:*
+        version: link:../../libs/declarations
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+
   quartz-v5/plugins/quartz-graph:
     dependencies:
       '@iconify-json/mdi':
@@ -680,6 +640,97 @@ importers:
       d3-zoom:
         specifier: ^3.0.0
         version: 3.0.0
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+
+  quartz-v5/plugins/quartz-mdx:
+    dependencies:
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+    devDependencies:
+      '@chaoticgoodcomputing/declarations':
+        specifier: workspace:*
+        version: link:../../libs/declarations
+      '@chaoticgoodcomputing/island-runtime':
+        specifier: workspace:*
+        version: link:../../libs/island-runtime
+      '@chaoticgoodcomputing/pipeline':
+        specifier: workspace:*
+        version: link:../../libs/pipeline
+      hast-util-to-html:
+        specifier: ^9.0.5
+        version: 9.0.5
+      remark-mdx:
+        specifier: ^3.1.1
+        version: 3.1.1(supports-color@7.2.0)
+      unist-util-visit:
+        specifier: ^5.1.0
+        version: 5.1.0
+
+  quartz-v5/plugins/quartz-og-image:
+    devDependencies:
+      '@chaoticgoodcomputing/declarations':
+        specifier: workspace:*
+        version: link:../../libs/declarations
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+      reading-time:
+        specifier: ^1.5.0
+        version: 1.5.0
+
+  quartz-v5/plugins/quartz-page-source:
+    devDependencies:
+      '@chaoticgoodcomputing/css-check':
+        specifier: workspace:*
+        version: link:../../libs/css-check
+      '@chaoticgoodcomputing/declarations':
+        specifier: workspace:*
+        version: link:../../libs/declarations
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+
+  quartz-v5/plugins/quartz-posthog:
+    devDependencies:
+      '@chaoticgoodcomputing/declarations':
+        specifier: workspace:*
+        version: link:../../libs/declarations
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+
+  quartz-v5/plugins/quartz-seo:
+    devDependencies:
+      '@chaoticgoodcomputing/declarations':
+        specifier: workspace:*
+        version: link:../../libs/declarations
+      '@chaoticgoodcomputing/tags-core':
+        specifier: workspace:*
+        version: link:../../libs/tags-core
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+      reading-time:
+        specifier: ^1.5.0
+        version: 1.5.0
+
+  quartz-v5/plugins/quartz-social:
+    devDependencies:
+      '@chaoticgoodcomputing/css-check':
+        specifier: workspace:*
+        version: link:../../libs/css-check
+      '@chaoticgoodcomputing/declarations':
+        specifier: workspace:*
+        version: link:../../libs/declarations
+      '@chaoticgoodcomputing/tags-core':
+        specifier: workspace:*
+        version: link:../../libs/tags-core
+      '@chaoticgoodcomputing/widgets':
+        specifier: workspace:*
+        version: link:../../libs/widgets
       esbuild:
         specifier: ^0.28.2
         version: 0.28.2
@@ -6957,7 +7008,7 @@ snapshots:
       mdast-util-to-hast: 13.2.1
       parse5: 7.3.0
       unist-util-position: 5.0.0
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
       vfile: 6.0.3
       web-namespaces: 2.0.1
       zwitch: 2.0.4
@@ -8393,7 +8444,7 @@ snapshots:
     dependencies:
       '@types/nlcst': 2.0.3
       nlcst-to-string: 4.0.0
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
 
   retext-stringify@4.0.0:
     dependencies:
@@ -8829,7 +8880,7 @@ snapshots:
   unist-util-remove-position@5.0.0:
     dependencies:
       '@types/unist': 3.0.3
-      unist-util-visit: 5.0.0
+      unist-util-visit: 5.1.0
 
   unist-util-stringify-position@4.0.0:
     dependencies:

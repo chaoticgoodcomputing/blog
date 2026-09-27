@@ -129,7 +129,7 @@ The graph takes one layout slot, the same on every page. This site's Quartz 4 la
 
 | Option | Default | |
 | --- | --- | --- |
-| `privateTags` | none | The tags that make a page private: a page carrying one, or a tag under one. `privateer` isn't under `private`. The same rule as the rest of the plugin family's, so give [cgc-seo](https://blog.chaoticgood.computer/plugins/cgc-seo), [cgc-backlinks](https://blog.chaoticgood.computer/plugins/cgc-backlinks) and [cgc-tag-explorer](https://blog.chaoticgood.computer/plugins/cgc-tag-explorer) the same tags, through a YAML anchor. |
+| `privateTags` | none | The tags that make a page private: a page carrying one, or a tag under one. `privateer` isn't under `private`. The same rule as the rest of the plugin family's, so give [quartz-seo](https://blog.chaoticgood.computer/plugins/quartz-seo), [cgc-backlinks](https://blog.chaoticgood.computer/plugins/cgc-backlinks) and [cgc-tag-explorer](https://blog.chaoticgood.computer/plugins/cgc-tag-explorer) the same tags, through a YAML anchor. |
 | `title` | `Graph View` | The heading above the local graph. |
 | `localGraph` | see below | The local graph's settings. |
 | `globalGraph` | see below | The global graph's settings. |

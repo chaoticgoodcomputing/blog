@@ -262,37 +262,37 @@ test("allows /widgets/README to go, and nothing else about it (#48)", async () =
   expect(changed.json.failing).toEqual([expect.objectContaining({ area: "head", url: "/widgets/README", field: "robots", added: ["noindex"] })])
 })
 
-test("allows what #48 decided: cgc-mdx's plugin note at /plugins/cgc-mdx, and its alias redirect at /widgets/readme", async () => {
+test("allows what #48 decided: quartz-mdx's plugin note at /plugins/quartz-mdx, and its alias redirect at /widgets/readme", async () => {
   // Plugin notes are published at /plugins/<pkg>, from the READMEs symlinked into the vault.
-  const vault = site("vault", { "plugins/cgc-mdx.md": "---\ntitle: cgc-mdx\naliases:\n  - widgets/README\n---\nWidgets.\n" })
+  const vault = site("vault", { "plugins/quartz-mdx.md": "---\ntitle: quartz-mdx\naliases:\n  - widgets/README\n---\nWidgets.\n" })
   const v4 = site("v4", {
     ...BASE,
     "widgets/README.html": page({ title: "Widgets", canonical: `${ORIGIN}/widgets/README` }),
     "sitemap.xml": sitemap(["/", "/content/articles/an-article", "/widgets/README"]),
   })
   // The note's `widgets/README` alias, lowercased by v5, as stock alias-redirects renders it.
-  const alias = (to) => page({ title: "plugins/cgc-mdx", canonical: to, robots: "noindex", refresh: to })
+  const alias = (to) => page({ title: "plugins/quartz-mdx", canonical: to, robots: "noindex", refresh: to })
   const decided = site("v5", {
     ...BASE,
-    "plugins/cgc-mdx.html": page({ title: "cgc-mdx", canonical: `${ORIGIN}/plugins/cgc-mdx` }),
-    "widgets/readme.html": alias("../plugins/cgc-mdx"),
-    "sitemap.xml": sitemap(["/", "/content/articles/an-article", "/plugins/cgc-mdx"]),
+    "plugins/quartz-mdx.html": page({ title: "quartz-mdx", canonical: `${ORIGIN}/plugins/quartz-mdx` }),
+    "widgets/readme.html": alias("../plugins/quartz-mdx"),
+    "sitemap.xml": sitemap(["/", "/content/articles/an-article", "/plugins/quartz-mdx"]),
   })
   // No case redirect was ever decided at /widgets/README, so none is waited for, on any filesystem.
   const result = await report(v4, decided, { vault })
   expect(result.code, result.stdout).toBe(0)
   expect(result.json.verdict).toBe("pass")
   expect(result.json.allowed.map((d) => [d.area, d.change ?? d.field, d.url, d.ticket]).sort()).toEqual([
-    ["head", "canonical", "/plugins/cgc-mdx", 48],
+    ["head", "canonical", "/plugins/quartz-mdx", 48],
     ["head", "refresh", "/widgets/README", 48],
-    ["sitemap", "added", "/plugins/cgc-mdx", 48],
+    ["sitemap", "added", "/plugins/quartz-mdx", 48],
     ["sitemap", "removed", "/widgets/README", 48],
-    ["url", "added", "/plugins/cgc-mdx", 48],
+    ["url", "added", "/plugins/quartz-mdx", 48],
     ["url", "moved", "/widgets/README", 48],
   ])
 
   // The alias sending readers anywhere but the plugin note is not what #48 decided.
-  const elsewhere = site("v5", { ...BASE, "plugins/cgc-mdx.html": page({ title: "cgc-mdx" }), "widgets/readme.html": alias("../plugins/cgc-other") })
+  const elsewhere = site("v5", { ...BASE, "plugins/quartz-mdx.html": page({ title: "quartz-mdx" }), "widgets/readme.html": alias("../plugins/cgc-other") })
   const misdirected = await report(v4, elsewhere, { vault })
   expect(misdirected.code, misdirected.stdout).toBe(1)
   expect(misdirected.json.failing).toEqual([
@@ -306,32 +306,32 @@ test("allows what #48 decided: cgc-mdx's plugin note at /plugins/cgc-mdx, and it
 
 test("compares the head of a page only v5 serves, and allows a plugin note's or tag description's only when it is indexed at its own URL (#48, #43)", async () => {
   const vault = site("vault", {
-    "plugins/cgc-mdx.md": "---\ntitle: cgc-mdx\n---\nWidgets.\n",
+    "plugins/quartz-mdx.md": "---\ntitle: quartz-mdx\n---\nWidgets.\n",
     "tags/described/index.md": "---\ntitle: Described\n---\nAbout the tag.\n",
   })
-  const note = (head) => page({ title: "cgc-mdx", ...head })
+  const note = (head) => page({ title: "quartz-mdx", ...head })
   const tag = (head) => page({ title: "Described", ...head })
 
   // Indexed at their own URLs, as v4's other notes and tag pages are: what the decisions expect.
   const decided = site("v5", {
     ...BASE,
-    "plugins/cgc-mdx.html": note({ canonical: `${ORIGIN}/plugins/cgc-mdx`, jsonld: { "@type": "Article", headline: "cgc-mdx" } }),
+    "plugins/quartz-mdx.html": note({ canonical: `${ORIGIN}/plugins/quartz-mdx`, jsonld: { "@type": "Article", headline: "quartz-mdx" } }),
     "tags/described/index.html": tag({ canonical: `${ORIGIN}/tags/described/` }),
   })
   const result = await report(site("v4", BASE), decided, { vault })
   expect(result.code, result.stdout).toBe(0)
   const heads = result.json.allowed.filter((d) => d.area === "head").map((d) => [d.url, d.field, d.added, d.ticket])
   expect(heads.sort()).toEqual([
-    ["/plugins/cgc-mdx", "canonical", [`${ORIGIN}/plugins/cgc-mdx`], 48],
-    ["/plugins/cgc-mdx", "jsonld.@type", ["Article"], 48],
-    ["/plugins/cgc-mdx", "jsonld.headline", ["cgc-mdx"], 48],
+    ["/plugins/quartz-mdx", "canonical", [`${ORIGIN}/plugins/quartz-mdx`], 48],
+    ["/plugins/quartz-mdx", "jsonld.@type", ["Article"], 48],
+    ["/plugins/quartz-mdx", "jsonld.headline", ["quartz-mdx"], 48],
     ["/tags/described/", "canonical", [`${ORIGIN}/tags/described/`], 43],
   ])
 
   // A plugin note kept out of search, or a tag page that sends crawlers elsewhere, is not.
   const hidden = site("v5", {
     ...BASE,
-    "plugins/cgc-mdx.html": note({ canonical: `${ORIGIN}/plugins/cgc-mdx`, robots: "noindex" }),
+    "plugins/quartz-mdx.html": note({ canonical: `${ORIGIN}/plugins/quartz-mdx`, robots: "noindex" }),
     "tags/described/index.html": tag({ canonical: `${ORIGIN}/tags/elsewhere` }),
   })
   const wrong = await report(site("v4", BASE), hidden, { vault })
@@ -339,7 +339,7 @@ test("compares the head of a page only v5 serves, and allows a plugin note's or 
   expect(wrong.json.failing).toHaveLength(2)
   expect(wrong.json.failing).toEqual(
     expect.arrayContaining([
-      expect.objectContaining({ area: "head", url: "/plugins/cgc-mdx", field: "robots", removed: [], added: ["noindex"] }),
+      expect.objectContaining({ area: "head", url: "/plugins/quartz-mdx", field: "robots", removed: [], added: ["noindex"] }),
       expect.objectContaining({ area: "head", url: "/tags/described/", field: "canonical", removed: [], added: [`${ORIGIN}/tags/elsewhere`] }),
     ]),
   )

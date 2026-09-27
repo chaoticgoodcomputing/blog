@@ -7,10 +7,11 @@
 // and on serve, that Quartz's generated plugin index takes it in, and that a TypeScript site can
 // read its types. Its own specs prove what it renders.
 //
-// Every plugin not yet converted still loads by local path, beside them (#94, #95).
+// Every plugin not yet converted still loads by local path, beside them (#95).
 import fs from "node:fs"
 import path from "node:path"
 import { execFile } from "node:child_process"
+import { createRequire } from "node:module"
 import { promisify } from "node:util"
 import { test, expect } from "../harness/test.mjs"
 import {
@@ -20,31 +21,42 @@ import {
   pluginSources,
   siteConfigFile,
   testsRoot,
+  withPlugins,
 } from "../harness/site.mjs"
 
 const run = promisify(execFile)
 const GRAPH = "@chaoticgoodcomputing/quartz-graph"
+// Every plugin that is a package so far (#93, #94), by package name.
+const PACKAGES = [
+  GRAPH,
+  ...["mdx", "annotator", "seo", "og-image", "page-source", "email-subscribe", "social", "posthog"].map(
+    (name) => `@chaoticgoodcomputing/quartz-${name}`,
+  ),
+]
+const dirName = (pkg) => pkg.split("/")[1]
 const HOME = { "index.md": "---\ntitle: Home\n---\nLinks to [[other]].\n", "other.md": "# Other\n" }
 
-test("the fixture and the real site list the graph by its package name", () => {
-  expect(pluginSources(fixtureConfig())).toContain(GRAPH)
-  expect(pluginSources(fs.readFileSync(siteConfigFile, "utf8"))).toContain(GRAPH)
-  // Nothing lists it by path any more, at either site.
+test("the fixture and the real site list every package by its package name", () => {
   for (const config of [fixtureConfig(), fs.readFileSync(siteConfigFile, "utf8")]) {
-    expect(
-      pluginSources(config).filter(
-        (source) => /graph$/.test(String(source)) && String(source).startsWith("."),
-      ),
-    ).toEqual([])
+    const sources = pluginSources(config)
+    expect(sources).toEqual(expect.arrayContaining(PACKAGES))
+    // Nothing lists one by path any more, by its old directory or its new one.
+    const paths = sources.map((source) => String(source?.repo ?? source)).filter((source) => source.startsWith("."))
+    for (const pkg of PACKAGES) {
+      const name = dirName(pkg).replace(/^quartz-/, "")
+      expect(paths.filter((source) => new RegExp(`/(cgc|quartz)-${name}$`).test(source)), pkg).toEqual([])
+    }
   }
 })
 
-test("the fixture site loads the graph by name: it is never put in .quartz/plugins/", async ({
+test("the fixture site loads every package by name: none is put in .quartz/plugins/", async ({
   page,
 }) => {
   const installed = fs.readdirSync(path.join(fixtureRoot("main"), ".quartz", "plugins"))
-  expect(installed).not.toContain("quartz-graph")
-  expect(installed).not.toContain("cgc-graph")
+  for (const pkg of PACKAGES) {
+    expect(installed).not.toContain(dirName(pkg))
+    expect(installed).not.toContain(dirName(pkg).replace(/^quartz-/, "cgc-"))
+  }
   // Every other plugin of ours is still a local source, which Quartz links in there.
   expect(installed).toContain("cgc-tags")
   await page.goto("/plain-note")
@@ -66,7 +78,7 @@ test("a serve run loads the graph by name", async ({ scratch }) => {
 // Quartz's own plugin install step (Core's `install-plugins` script) regenerates the plugin index,
 // `.quartz/plugins/index.ts`, from which a TypeScript layout override imports a plugin's exports. It
 // reads a package's exports from its `dist/index.d.ts` and skips a package without one.
-test("Quartz's generated plugin index takes the graph in", async ({ scratch }) => {
+test("Quartz's generated plugin index takes every package in", async ({ scratch }) => {
   const site = await scratch.site("package-index", HOME)
   expect(site.code, site.output).toBe(0)
   const root = path.dirname(site.public)
@@ -74,8 +86,11 @@ test("Quartz's generated plugin index takes the graph in", async ({ scratch }) =
   const { stdout, stderr } = await run(tsx, ["./quartz/plugins/loader/install-plugins.ts"], {
     cwd: root,
   })
-  expect(`${stdout}${stderr}`).not.toContain(`Skipping npm package ${GRAPH}`)
+  for (const pkg of PACKAGES) expect(`${stdout}${stderr}`).not.toContain(`Skipping npm package ${pkg}`)
   const index = fs.readFileSync(path.join(root, ".quartz", "plugins", "index.ts"), "utf8")
+  // Each package is in it: its options' types, and its named exports. A default export, the
+  // factory of most, is left out, as the index leaves out every package's.
+  for (const pkg of PACKAGES) expect(index, pkg).toMatch(new RegExp(`export (type )?\\{ [^}]+ \\} from "${pkg}"`))
   expect(index).toMatch(
     new RegExp(`export type \\{ [^}]*\\bGraphOptions\\b[^}]* \\} from "${GRAPH}"`),
   )
@@ -128,4 +143,38 @@ test("a TypeScript site reads the graph's types from its package", async () => {
   } finally {
     fs.rmSync(dir, { recursive: true, force: true })
   }
+})
+
+// From each package's real path, as Node loads it through the site package's link, Preact resolves
+// to Quartz Core's copy: one Preact per page (#89). A package's own node_modules holds none.
+test("every package resolves Preact to Quartz Core's copy", () => {
+  const corePreact = fs.realpathSync(createRequire(path.join(core, "package.json")).resolve("preact"))
+  for (const pkg of PACKAGES) {
+    const entry = fs.realpathSync(path.join(testsRoot, "..", "node_modules", pkg, "package.json"))
+    expect(fs.realpathSync(createRequire(entry).resolve("preact")), pkg).toBe(corePreact)
+    expect(fs.existsSync(path.join(path.dirname(entry), "node_modules", "preact")), pkg).toBe(false)
+  }
+})
+
+// Quartz places one component per entry, so a site that places a package's component twice lists
+// it again, as an object source named for the placement, which Quartz imports by that name: the
+// site package depends on the plugin under it too, an alias (VENDORED.md). The real site places the
+// subscribe box so, after the body and in the sidebar.
+test("a package listed a second time loads under its placement name", async ({ scratch }) => {
+  const SUBSCRIBE = "@chaoticgoodcomputing/quartz-email-subscribe"
+  const second = pluginSources(fs.readFileSync(siteConfigFile, "utf8")).find((source) => source?.repo === SUBSCRIBE)
+  expect(second?.name).toBe("email-subscribe-sidebar")
+  const config = withPlugins(fixtureConfig(), [
+    {
+      source: second,
+      enabled: true,
+      options: { buttondownUsername: "cgc-fixture" },
+      layout: { position: "right", priority: 30 },
+    },
+  ])
+  const site = await scratch.site("package-twice", HOME, { config })
+  expect(site.code, site.output).toBe(0)
+  const html = fs.readFileSync(path.join(site.public, "index.html"), "utf8")
+  expect(html.match(/<div class="cgc-email-subscribe"/g) ?? []).toHaveLength(2)
+  expect(fs.readdirSync(path.join(path.dirname(site.public), ".quartz", "plugins"))).not.toContain("email-subscribe-sidebar")
 })

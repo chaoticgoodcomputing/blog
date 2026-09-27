@@ -8,7 +8,7 @@ import os from "node:os"
 import path from "node:path"
 import { spawnSync } from "node:child_process"
 import { test, expect } from "../harness/test.mjs"
-import { BUILD_LOCK, buildScratchSite, serveScratchSite } from "../harness/site.mjs"
+import { BUILD_LOCK, VARIANTS, buildScratchSite, fixtureRoot, pruneGonePlugins, serveScratchSite } from "../harness/site.mjs"
 
 // A folder of content outside the site, reached through a link, as an .mdx page's `node_modules` is.
 let elsewhere
@@ -109,4 +109,37 @@ test("a serve run stopped once it is up holds the build lock until its server ha
   }
   expect(server.size, "the lock named the server").toBeGreaterThan(0)
   expect(aliveAtRelease, "server processes still up when the lock was let go").toEqual([])
+})
+
+// Quartz links a local plugin into `.quartz/plugins/<name>` and never prunes the directory, so a
+// plugin renamed or turned into a package (#93, #94) leaves a link to nowhere in every root built
+// before, which reads as the plugin still being installed there. Every build first removes such a
+// link, and leaves a live link, and a git install's real directory, alone.
+test("a build first removes the links in .quartz/plugins/ whose plugin has gone", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "cgc-scratch-prune-"))
+  try {
+    const plugins = path.join(root, ".quartz", "plugins")
+    fs.mkdirSync(path.join(plugins, "git-installed"), { recursive: true })
+    fs.symlinkSync(path.join(root, "gone"), path.join(plugins, "cgc-gone"))
+    fs.symlinkSync(elsewhere, path.join(plugins, "cgc-live"))
+    pruneGonePlugins(root)
+    expect(fs.readdirSync(plugins).sort()).toEqual(["cgc-live", "git-installed"])
+    expect(fs.existsSync(path.join(elsewhere, "note.md")), "a live link's target is left alone").toBe(true)
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true })
+  }
+  // A root with no plugins installed yet has nothing to prune.
+  expect(() => pruneGonePlugins(fs.mkdtempSync(path.join(os.tmpdir(), "cgc-scratch-prune-")))).not.toThrow()
+})
+
+test("the fixture roots, as global setup built them, hold no link to a plugin that has gone", () => {
+  for (const variant of VARIANTS) {
+    const plugins = path.join(fixtureRoot(variant), ".quartz", "plugins")
+    // The baseline turns every plugin of ours off, so Quartz may have installed nothing there.
+    if (!fs.existsSync(plugins)) continue
+    const gone = fs
+      .readdirSync(plugins)
+      .filter((name) => fs.lstatSync(path.join(plugins, name)).isSymbolicLink() && !fs.existsSync(path.join(plugins, name)))
+    expect(gone, `${variant}: links to nowhere`).toEqual([])
+  }
 })
