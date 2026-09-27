@@ -42,7 +42,7 @@ export const SCAFFOLDING = [
 
 /**
  * Pruned files: upstream files deliberately absent from Core (#89), kept out of every diff and
- * deleted after any tree replacement. Upstream's docs, CI, container and community files, its
+ * never brought back by an upgrade. Upstream's docs, CI, container and community files, its
  * default config (so a missing site config fails loudly rather than building upstream's defaults)
  * and its npm files (Core installs with pnpm, from `PNPM_FILES`).
  */

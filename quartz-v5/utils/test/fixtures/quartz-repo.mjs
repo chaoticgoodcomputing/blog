@@ -11,8 +11,10 @@
 // the pnpm store.
 //
 // Extension points (#100): `targetChanges` can change any upstream file at the target commit (the
-// default config, the schema, the `quartz.ts` template, `package.json`); `siteChanges` adds or
-// replaces files in the site repo outside Core, such as a plugin's `package.json` with a peer range.
+// default config, the schema, the `quartz.ts` template, `package.json`, the exported APIs);
+// `siteChanges` adds or replaces files in the site repo outside Core, such as a plugin's
+// `package.json` with a peer range. `upgrade()` passes `env` through, so a test can stand in for
+// `--verify`'s steps (`QUARTZ_VERIFY_STEPS`).
 import { execFileSync, spawnSync } from "node:child_process"
 import fs from "node:fs"
 import os from "node:os"
@@ -99,6 +101,68 @@ export const PNPM_WORKSPACE = lines(
   "autoInstallPeers: false",
 )
 
+/**
+ * Upstream's plugin config schema at the pinned commit: a small one in the shape of Quartz's, with
+ * the places the real schema's amendments (`site-config-schema.mjs`) apply to, so none is noted.
+ */
+export const SCHEMA = {
+  $schema: "http://json-schema.org/draft-07/schema#",
+  type: "object",
+  properties: {
+    configuration: {
+      type: "object",
+      properties: { pageTitle: { type: "string" }, enableSPA: { type: "boolean" } },
+    },
+    plugins: {
+      type: "array",
+      items: {
+        type: "object",
+        required: ["source"],
+        properties: {
+          source: { type: "string" },
+          enabled: { type: "boolean" },
+          options: { type: "object" },
+          layout: {
+            type: "object",
+            properties: { position: { type: "string", enum: ["left", "right"] } },
+          },
+        },
+      },
+    },
+    layout: {
+      type: "object",
+      properties: {
+        byPageType: {
+          type: "object",
+          additionalProperties: { type: "object", properties: {} },
+        },
+      },
+    },
+  },
+}
+
+/** Upstream's default config at the pinned commit (pruned from Core, so read from upstream). */
+export const DEFAULT_CONFIG = lines(
+  "configuration:",
+  "  pageTitle: Quartz",
+  "  enableSPA: true",
+  "  enablePopovers: false",
+  "plugins:",
+  '  - source: "@quartz-community/explorer"',
+  "    enabled: true",
+  "    options:",
+  "      folderDefaultState: collapsed",
+  "      useSavedState: true",
+  '  - source: "@quartz-community/search"',
+  "    enabled: true",
+  '  - source: "@quartz-community/darkmode"',
+  "    enabled: true",
+  "  - source: github:quartz-community/graph",
+  "    enabled: false",
+  "    options:",
+  "      depth: 1",
+)
+
 /** Upstream's tree at the pinned commit, by path. Every tier is represented. */
 export const PINNED = {
   // Core source
@@ -124,6 +188,49 @@ export const PINNED = {
     "export const slug = (s: string) => s",
     "export const join = (a: string, b: string) => a + b",
   ),
+  // Core source: the APIs the API-surface report (#100) reads, by category.
+  "quartz/plugins/quartz-plugins.schema.json": JSON.stringify(SCHEMA, null, 2) + "\n",
+  "quartz/plugins/loader/index.ts": lines(
+    'export * from "./conditions"',
+    'export { loadQuartzConfig, loadQuartzLayout } from "./config-loader"',
+  ),
+  "quartz/plugins/loader/config-loader.ts": lines(
+    "export async function loadQuartzConfig(): Promise<Config> {",
+    "  return {}",
+    "}",
+    "",
+    "export async function loadQuartzLayout(layoutOverrides?: {",
+    "  byPageType?: Record<string, string>",
+    "}): Promise<Layout> {",
+    "  return {}",
+    "}",
+  ),
+  "quartz/plugins/loader/conditions.ts": lines(
+    "export type ConditionPredicate = (props: Props) => boolean",
+    "",
+    "const builtinConditions: Record<string, ConditionPredicate> = {",
+    '  "not-index": (props) => props.slug !== "index",',
+    '  "has-tags": (props) => props.tags.length > 0,',
+    "}",
+    "",
+    "// Register a condition by name.",
+    "export function registerCondition(name: string, predicate: ConditionPredicate): void {",
+    "  custom.set(name, predicate)",
+    "}",
+  ),
+  "quartz/components/index.ts": lines('export { componentRegistry } from "./registry"'),
+  "quartz/components/frames/index.ts": lines(
+    'export type { PageFrame } from "./types"',
+    "",
+    "const builtinFrames: Record<string, PageFrame> = {",
+    "  default: DefaultFrame,",
+    "  minimal: MinimalFrame,",
+    "}",
+    "",
+    "export function resolveFrame(name: string | undefined): PageFrame {",
+    '  return builtinFrames[name ?? "default"]',
+    "}",
+  ),
   // Scaffolding
   "package.json": PACKAGE_JSON("5.0.0"),
   "tsconfig.json": lines("{", '  "compilerOptions": { "strict": true }', "}"),
@@ -140,7 +247,7 @@ export const PINNED = {
   ),
   // Pruned files
   "package-lock.json": PACKAGE_LOCK("5.0.0"),
-  "quartz.config.default.yaml": lines("configuration:", "  pageTitle: Quartz", "plugins: []"),
+  "quartz.config.default.yaml": DEFAULT_CONFIG,
   "README.md": lines("# Quartz"),
   "docs/index.md": lines("# Docs"),
   ".github/workflows/ci.yaml": lines("on: push"),
@@ -184,7 +291,10 @@ const GIT_ID = [
 const git = (cwd, ...args) =>
   execFileSync("git", [...GIT_ID, "-C", cwd, ...args], { encoding: "utf-8", stdio: "pipe" }).trim()
 
-/** Write `files` (path → content, or null to delete) under `dir`. */
+/**
+ * Write `files` (path → content, null to delete, or `{ symlink: <target> }` for a symbolic link)
+ * under `dir`.
+ */
 export function writeFiles(dir, files) {
   for (const [rel, content] of Object.entries(files)) {
     const at = path.join(dir, rel)
@@ -193,6 +303,11 @@ export function writeFiles(dir, files) {
       continue
     }
     fs.mkdirSync(path.dirname(at), { recursive: true })
+    if (typeof content === "object") {
+      fs.rmSync(at, { force: true })
+      fs.symlinkSync(content.symlink, at)
+      continue
+    }
     fs.writeFileSync(at, content)
     if (rel.endsWith(".mjs") && content.startsWith("#!")) fs.chmodSync(at, 0o755)
   }

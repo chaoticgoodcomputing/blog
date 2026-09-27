@@ -106,6 +106,9 @@ once, in `quartz-v5/utils/core-tiers.mjs`, which all of the tooling reads:
   Dockerfile, community files, default config and npm files. Kept out of every diff, and deleted
   after any tree replacement.
 
+  _Note, 2026-09-27 (#100): since #99 retired the tree replacement (`sync`) for the upgrade, which
+  plans Core in memory, this means pruned files are never brought back by an upgrade._
+
 Core's own pnpm files (`pnpm-workspace.yaml`, and `pnpm-lock.yaml`, imported from upstream's
 `package-lock.json` at the pinned ref) sit beside the tiers: ours, but never drift.
 

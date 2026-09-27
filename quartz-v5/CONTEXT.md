@@ -62,9 +62,19 @@ Moving Core to another upstream ref, one way, with `site-v5:upgrade --ref=<ref>`
 #99). It re-applies the vendored changes hunk by hunk, stopping on a conflict and reporting the hunks
 upstream has **absorbed**; takes the scaffolding; leaves the steering files alone; keeps the pruning;
 converts upstream's npm lock under the lock check; and records the new pinned ref only once all of
-that has succeeded. Not Quartz's own `npx quartz upgrade`, which merges from a git remote added to the
+that has succeeded. It prints the **API-surface report** first, and with `--verify` proves the result
+(#100). Not Quartz's own `npx quartz upgrade`, which merges from a git remote added to the
 enclosing repo and stays unusable here.
 _Avoid_: sync (its old name: it suggests a two-way exchange), update, pull, re-vendor
+
+**API-surface report**:
+What changed between the pinned ref and an upgrade's target in every upstream API the site depends
+on: the default config, the plugin config schema (with the site config validated against the
+target's), the `quartz.ts` template, the exported plugin, component, loader, condition and frame
+APIs, Core's dependencies and engines, and our packages' peer ranges the target's Core no longer
+satisfies (`utils/api-report.mjs`, #100). The upgrade prints it before touching the tree;
+`site-v5:upgrade-report` prints it alone.
+_Avoid_: changelog, API diff (it covers config and dependencies too)
 
 **Absorbed**:
 Of a vendored change's hunk: already present in the upgrade's target, because upstream has taken

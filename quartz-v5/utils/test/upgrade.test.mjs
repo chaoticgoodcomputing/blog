@@ -283,3 +283,68 @@ describe("an upgrade to the pinned ref", () => {
     assert.equal(fx.read(MANIFEST), fx.git("show", `HEAD:${MANIFEST}`) + "\n")
   })
 })
+
+describe("a frozen install into Core that fails", () => {
+  let fx, res, lock
+  // Core's node_modules is a regular file (gitignored, so the tree is clean), so the install after
+  // `write Core` cannot create it.
+  before(() => {
+    fx = makeFixture({
+      targetChanges: {
+        "quartz/build.ts": lines("// build", "export function build() {", "  return 2", "}"),
+        "package.json": PINNED["package.json"].replace('"version": "5.0.0"', '"version": "5.1.0"'),
+        "package-lock.json": PINNED["package-lock.json"].replaceAll(
+          '"version": "5.0.0"',
+          '"version": "5.1.0"',
+        ),
+      },
+    })
+    fs.writeFileSync(`${fx.root}/${CORE}/node_modules`, "not a directory\n")
+    lock = fx.read(`${CORE}/pnpm-lock.yaml`)
+    res = fx.upgrade([`--ref=${fx.target}`])
+  })
+  after(() => fx.cleanup())
+
+  test("stops the upgrade, saying Core is restored", () => {
+    assert.equal(res.code, 1)
+    assert.match(res.output, /frozen install into Core failed\. Core's files are restored/)
+  })
+
+  test("leaves Core, its lock and the pinned ref as they were", () => {
+    assert.equal(fx.status(), "")
+    assert.equal(fx.read(`${CORE}/quartz/build.ts`), PINNED["quartz/build.ts"])
+    assert.equal(fx.read(`${CORE}/package.json`), PINNED["package.json"])
+    assert.equal(fx.read(`${CORE}/pnpm-lock.yaml`), lock)
+    assert.equal(pinnedCommit(fx), fx.pinned)
+  })
+})
+
+describe("a symbolic link upstream", () => {
+  let fx, res
+  before(() => {
+    fx = makeFixture({
+      targetChanges: {
+        "quartz/static/icon.svg": lines("<svg/>"),
+        "quartz/static/favicon.svg": { symlink: "icon.svg" },
+      },
+    })
+    res = fx.upgrade([`--ref=${fx.target}`])
+  })
+  after(() => fx.cleanup())
+
+  test("is recreated in Core as a link, not written as a file holding its target", () => {
+    assert.equal(res.code, 0, res.output)
+    const at = `${fx.root}/${CORE}/quartz/static/favicon.svg`
+    assert.equal(fs.lstatSync(at).isSymbolicLink(), true)
+    assert.equal(fs.readlinkSync(at), "icon.svg")
+    assert.equal(fx.read(`${CORE}/quartz/static/favicon.svg`), lines("<svg/>"))
+  })
+
+  test("and an upgrade to the same ref leaves it alone", () => {
+    fx.git("add", "-A")
+    fx.git("-c", "user.name=t", "-c", "user.email=t@t", "commit", "--quiet", "-m", "upgrade")
+    const again = fx.upgrade([`--ref=${fx.target}`])
+    assert.equal(again.code, 0, again.output)
+    assert.match(again.output, /Core: 0 file\(s\) written, 0 removed/)
+  })
+})

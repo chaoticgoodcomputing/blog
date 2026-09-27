@@ -32,8 +32,9 @@ quartz-v5/
 ├── libs/                 our non-plugin packages (`@chaoticgoodcomputing/*`)
 ├── tests/                Playwright suite and `content-fixture/`
 ├── utils/                tooling for this context — `core-tiers.mjs`, `upstream.mjs`, `core-lock.mjs`,
-│                         `upgrade.mjs`, `upstream-cache.mjs`, `upstream-tree.mjs`, `core-drift.mjs`,
-│                         `site-config-schema.mjs`, `prebuild.mjs`, `postbuild.mjs`, `local-plugins.mjs`,
+│                         `upgrade.mjs`, `api-report.mjs`, `upstream-cache.mjs`, `upstream-tree.mjs`,
+│                         `core-drift.mjs`, `site-config-schema.mjs`, `prebuild.mjs`, `postbuild.mjs`,
+│                         `local-plugins.mjs`,
 │                         and `guards/`, the repo guards
 ├── .upstream-cache/      gitignored: the upgrade's bare git repo of the upstream commits it has fetched,
 │                         and `trees/<sha>/`, the repo guards' checkouts of the pinned ref
@@ -213,7 +214,9 @@ the steering files, the pruning and Core's pnpm settings.
 
 ```bash
 pnpm nx run site-v5:diff-latest                    # what would an upgrade to the tip of v5 pull in?
+pnpm nx run site-v5:upgrade-report --ref=<ref>     # the API-surface report alone; writes nothing
 pnpm nx run site-v5:upgrade --ref=<commit|branch|tag>
+pnpm nx run site-v5:upgrade --ref=<ref> --verify --v4=<a built v4 site>
 ```
 
 It is [`utils/upgrade.mjs`](./utils/upgrade.mjs) ([#99](https://github.com/chaoticgoodcomputing/blog/issues/99)),
@@ -225,6 +228,27 @@ and runs these steps in order, stopping at the first that fails:
    (gitignored, [`utils/upstream-cache.mjs`](./utils/upstream-cache.mjs)): a bare git repo that never
    fetches a commit twice. The fetch goes to exactly the URL `upstream.json` names; `--upstream=<url>`
    or `QUARTZ_UPSTREAM` fetches from another (the tests point it at a fixture).
+   - **The API-surface report** ([`utils/api-report.mjs`](./utils/api-report.mjs),
+   [#100](https://github.com/chaoticgoodcomputing/blog/issues/100)) prints next, before anything is
+   written: what changed between the pinned ref and the target in every upstream API the site
+   depends on. Each category says so when it has nothing to report:
+     - the default config (pruned from Core, so read from the upstream cache): plugins and option
+       keys added, removed or renamed (a rename is the same value under a new key, or the same
+       package under a new source), and plugins turned on or off by default;
+     - the plugin config schema: each constraint added, removed or changed, and **our site config
+       validated against the target's schema**, with every error listed (the `site-config` guard's
+       validator and schema amendments; an amendment the target no longer needs is noted);
+     - the `quartz.ts` template, as a diff;
+     - the exported plugin, component, loader, condition and frame APIs: each export added, removed,
+       moved or changed (a function by its signature, a type or interface by its declaration), the
+       built-in conditions and frames, and the state of `registerCondition`, `loadQuartzLayout` and
+       every name `quartz.ts` imports;
+     - Core's `package.json`: its version, dependencies and engines;
+     - **our packages' peer ranges** (every workspace package) that the version at the top of the
+       target's npm lock no longer satisfies, naming the package and the dependency.
+
+     The report never stops the upgrade. `site-v5:upgrade-report --ref=<ref>` runs the fetch and the
+     report alone (`--report-only`), writes nothing but the upstream cache, and needs no clean tree.
 3. **Re-apply the vendored changes.** Each Core source file's drift from the pinned ref is split into
    its hunks, and each hunk is applied to the target's version of the file. A hunk that is already
    there is reported as **absorbed**, so its ticket and upstream proposal can be retired. A hunk that
@@ -242,6 +266,13 @@ and runs these steps in order, stopping at the first that fails:
    package at the same version on both sides, or the upgrade stops. Only then is Core written, and the
    converted lock installed into it frozen. If that install fails, Core's files are restored from git.
 8. **Record** the target in `upstream.json`, last, so a failed upgrade never claims a ref.
+9. **`--verify`** then proves the result, running from the repo root, in order, stopping at the
+   first failure with a non-zero exit: the repo guards (`site-v5:guards`; guards added to it later
+   join them), the typechecks (`nx run-many -t typecheck`), the e2e suite (`site-v5-e2e:e2e`), the
+   real-site build (`site-v5:build`) and the acceptance report against it. The v4 build is not kept
+   working, so the acceptance report compares against a v4 site built earlier: `--v4=<dir>`
+   (default `dist/public`), which must exist before the upgrade starts. A failure here leaves the
+   upgrade written and recorded (the output says so), for fixing or undoing with git.
 
 Every step up to the lock check only plans, so a stop there leaves Core, its lock and `upstream.json`
 exactly as they were. Upgrading to the pinned ref changes nothing at all. After an upgrade, review
@@ -251,9 +282,14 @@ upstream absorbed, and commit.
 `npx quartz upgrade` is a different thing and does **not** work here: it runs
 `git remote add upstream …` against the enclosing repository, which is this blog, not Quartz.
 
+Upstream symbolic links are recreated as links in Core, and any other special git mode stops the
+upgrade.
+
 The upgrade is tested with Node's test runner at its command line, against a synthetic
-Quartz-shaped upstream and site repo made in a temp dir (`utils/test/upgrade.test.mjs`, run by
-`pnpm nx run site-v5:test-utils`), offline apart from the pnpm store.
+Quartz-shaped upstream and site repo made in a temp dir (`utils/test/upgrade*.test.mjs`, run by
+`pnpm nx run site-v5:test-utils`), offline apart from the pnpm store. `--verify`'s order and its
+stop at the first failure are tested with stand-in steps (`QUARTZ_VERIFY_STEPS`, a JSON file of
+`{ name, command }`), so the tests never run the real suite.
 
 ## Dependencies
 

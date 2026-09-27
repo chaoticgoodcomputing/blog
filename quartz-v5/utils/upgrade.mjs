@@ -2,12 +2,15 @@
 /**
  * The upgrade (#89, #99): move Quartz Core to another upstream commit, keeping what's ours.
  *
- *   pnpm nx run site-v5:upgrade --ref=<commit|branch|tag>
- *   node quartz-v5/utils/upgrade.mjs --ref=<ref> [--upstream=<url>]
+ *   pnpm nx run site-v5:upgrade --ref=<commit|branch|tag> [--verify [--v4=<dir>]]
+ *   pnpm nx run site-v5:upgrade-report --ref=<ref>
+ *   node quartz-v5/utils/upgrade.mjs --ref=<ref> [--upstream=<url>] [--report-only | --verify]
  *
  * In order, stopping at the first step that fails, before anything of Core's is written:
  *   1. refuse a dirty tree: uncommitted changes in Core or the pinned ref's record;
  *   2. fetch the pinned ref and the target into the upstream cache (`upstream-cache.mjs`);
+ *   -  print the API-surface report (`api-report.mjs`, #100): what changed between the two refs in
+ *      every upstream API the site depends on. `--report-only` stops here, having written nothing;
  *   3. re-apply our vendored changes, hunk by hunk, to the target's Core source: stop on a conflict
  *      and name its hunks, and report the hunks upstream has absorbed;
  *   4. take the scaffolding: `package.json` verbatim, the rest three-way merged;
@@ -15,7 +18,10 @@
  *   6. keep the pruning: no pruned file comes back;
  *   7. convert the lock: `pnpm import` of the target's npm lock under Core's pnpm settings, checked
  *      by the lock check (`core-lock.mjs`), then written to Core and installed frozen;
- *   8. record the new pinned ref in `upstream.json`, only once all of the above has succeeded.
+ *   8. record the new pinned ref in `upstream.json`, only once all of the above has succeeded;
+ *   -  with `--verify`, prove the result: the repo guards, the typechecks, the e2e suite, the
+ *      real-site build and the acceptance report against a built v4 site (`--v4=<dir>`, default
+ *      dist/public), stopping at the first that fails (`VERIFY_STEPS`).
  *
  * Upgrading to the pinned ref changes nothing. `npx quartz upgrade` is a different thing, and does
  * not work here (VENDORED.md).
@@ -28,6 +34,7 @@ import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
+import { apiReport, formatReport } from "./api-report.mjs"
 import { compareLocks, formatComparison } from "./core-lock.mjs"
 import { CORE_REL, MANIFEST_REL, REPO_ROOT, tierOf } from "./core-tiers.mjs"
 import { CACHE_REL, fetchRef, openCache, readBlob, treeFiles } from "./upstream-cache.mjs"
@@ -87,24 +94,45 @@ const coreFiles = (ctx) =>
     .split("\0")
     .filter(Boolean)
     .map((file) => file.slice(CORE_REL.length + 1))
-    .filter((rel) => fs.existsSync(path.join(ctx.coreDir, rel)))
+    .filter((rel) => {
+      try {
+        return Boolean(fs.lstatSync(path.join(ctx.coreDir, rel)))
+      } catch {
+        return false
+      }
+    })
+
+/**
+ * A symbolic link's mode, as git records it (120000). A link is carried as its target's path, and
+ * recreated as a link, never written as a regular file holding that path.
+ */
+const SYMLINK = 0o120000
 
 function readCore(ctx) {
   const files = new Map()
   for (const rel of coreFiles(ctx)) {
     const at = path.join(ctx.coreDir, rel)
-    files.set(rel, {
-      content: fs.readFileSync(at),
-      mode: fs.statSync(at).mode & 0o111 ? 0o755 : 0o644,
-    })
+    const stat = fs.lstatSync(at)
+    files.set(
+      rel,
+      stat.isSymbolicLink()
+        ? { content: Buffer.from(fs.readlinkSync(at)), mode: SYMLINK }
+        : { content: fs.readFileSync(at), mode: stat.mode & 0o111 ? 0o755 : 0o644 },
+    )
   }
   return files
 }
 
+const GIT_MODES = { 100644: 0o644, 100755: 0o755, 120000: SYMLINK }
+
 function readTree(cache, sha) {
   const files = new Map()
   for (const [rel, { mode, blob }] of treeFiles(cache, sha)) {
-    files.set(rel, { content: readBlob(cache, blob), mode: mode === "100755" ? 0o755 : 0o644 })
+    if (!(mode in GIT_MODES))
+      throw new Stop([
+        `Stopped: upstream's ${rel} has git mode ${mode}, which the upgrade cannot carry.`,
+      ])
+    files.set(rel, { content: readBlob(cache, blob), mode: GIT_MODES[mode] })
   }
   return files
 }
@@ -156,6 +184,24 @@ function fetch(ctx) {
   )
   if (ctx.pinned === ctx.target)
     say("The target is the pinned ref: the upgrade should change nothing.")
+}
+
+// --- The API-surface report (#100) ---------------------------------------------------------------
+
+// What changed between the pinned ref and the target in every upstream API the site depends on
+// (`api-report.mjs`). Informational: it never stops the upgrade, and it runs before anything is
+// written, so the owner reads it before trusting the result.
+function report(ctx) {
+  say(
+    `API-surface report: pinned ${ctx.pinned.slice(0, 12)} → target ${ctx.target.slice(0, 12)} (${ctx.ref})`,
+    "",
+  )
+  say(
+    ...formatReport(
+      apiReport({ base: ctx.base, next: ctx.next, ours: ctx.ours, siteRoot: ctx.root }),
+    ),
+  )
+  ctx.reported = true
 }
 
 // --- 3. Vendored changes ------------------------------------------------------------------------
@@ -417,6 +463,10 @@ function keepSteering(ctx) {
     const [base, next] = [contentOf(ctx.base, rel), contentOf(ctx.next, rel)]
     if (!same(base, next)) changed.push({ rel, diff: unifiedDiff(rel, base, next) })
   }
+  if (changed.length && ctx.reported && changed.every(({ rel }) => rel === "quartz.ts"))
+    return say(
+      "Steering files: left alone. Upstream's quartz.ts template changed: its diff is in the API-surface report above.",
+    )
   if (!changed.length)
     return say("Steering files: left alone. Upstream's templates of them have not changed.")
   say(
@@ -502,8 +552,12 @@ function writeCore(ctx) {
     if (now && same(now.content, content) && now.mode === mode) continue
     const at = path.join(ctx.coreDir, rel)
     fs.mkdirSync(path.dirname(at), { recursive: true })
-    fs.writeFileSync(at, content)
-    fs.chmodSync(at, mode)
+    if (mode === SYMLINK || now?.mode === SYMLINK) fs.rmSync(at, { force: true })
+    if (mode === SYMLINK) fs.symlinkSync(content.toString("utf-8"), at)
+    else {
+      fs.writeFileSync(at, content)
+      fs.chmodSync(at, mode)
+    }
     written++
   }
   ctx.wrote = written + removed > 0
@@ -543,6 +597,7 @@ function record(ctx) {
     vendoredOn: new Date().toISOString().slice(0, 10),
   }
   fs.writeFileSync(ctx.manifestFile, JSON.stringify(manifest, null, 2) + "\n")
+  ctx.recorded = true
   say(
     `Pinned ref recorded: ${ctx.target.slice(0, 12)} (v${version}) in ${MANIFEST_REL}.`,
     "",
@@ -551,16 +606,78 @@ function record(ctx) {
   )
 }
 
+// --- --verify (#100) ----------------------------------------------------------------------------
+
+/**
+ * `--verify`'s checks, in order: each a command run from the repo root, `{v4}` standing for the
+ * built v4 site the acceptance report compares against (`--v4=<dir>`; the v4 build is not kept
+ * working, so it is an input, not something `--verify` builds). The repo guards are one Nx target,
+ * so guards added later (#98's) join them there.
+ */
+export const VERIFY_STEPS = [
+  { name: "the repo guards", command: ["pnpm", "nx", "run", "site-v5:guards"] },
+  { name: "the typechecks", command: ["pnpm", "nx", "run-many", "-t", "typecheck"] },
+  { name: "the e2e suite", command: ["pnpm", "nx", "run", "site-v5-e2e:e2e"] },
+  { name: "the real-site build", command: ["pnpm", "nx", "run", "site-v5:build"] },
+  {
+    name: "the acceptance report",
+    command: [
+      "node",
+      "quartz-v5/tests/acceptance/report.mjs",
+      "--v5",
+      "quartz-v5/core/public",
+      "--v4",
+      "{v4}",
+    ],
+  },
+]
+
+/** The built v4 site `--verify`'s acceptance report reads by default, relative to the repo root. */
+const V4_DEFAULT = "dist/public"
+
+// The steps `--verify` runs: VERIFY_STEPS, or, for the tests, stand-ins from the JSON file
+// QUARTZ_VERIFY_STEPS names (the same shape).
+const verifySteps = () =>
+  process.env.QUARTZ_VERIFY_STEPS
+    ? JSON.parse(fs.readFileSync(process.env.QUARTZ_VERIFY_STEPS, "utf-8"))
+    : VERIFY_STEPS
+
+// Before anything else: --verify's acceptance report needs a v4 build to compare against.
+function checkVerifyInputs(ctx) {
+  ctx.v4 = path.resolve(ctx.root, ctx.v4 ?? V4_DEFAULT)
+  if (!fs.existsSync(ctx.v4))
+    throw new Stop([
+      `Refusing to start: --verify's acceptance report compares against a built v4 site, and ${ctx.v4} does not exist.`,
+      "Pass one with --v4=<dir>; the v4 build is not kept working, so keep a build from before.",
+    ])
+}
+
+function verify(ctx) {
+  const steps = verifySteps()
+  for (const [i, { name, command }] of steps.entries()) {
+    const argv = command.map((arg) => arg.replaceAll("{v4}", ctx.v4))
+    say(`[${i + 1}/${steps.length}] ${name}: ${argv.join(" ")}`)
+    const res = spawnSync(argv[0], argv.slice(1), { cwd: ctx.root, stdio: "inherit" })
+    if (res.status !== 0)
+      throw new Stop([
+        `Stopped: --verify failed at ${name} (exit ${res.status ?? res.signal ?? res.error?.message}).`,
+        "The upgrade itself is done and recorded, but not safe to commit. Fix what failed and rerun",
+        "the upgrade with --verify, or undo it all with git (git checkout and git clean on quartz-v5/core",
+        "and quartz-v5/upstream.json, then pnpm nx run site-v5:install).",
+      ])
+  }
+  say(`Verified: all ${steps.length} check(s) passed. The upgrade is safe to commit.`)
+}
+
 /**
  * The upgrade's steps, in order. Each takes the context and throws a `Stop` to end the upgrade. The
- * steps before `write Core` only plan, so a stop there leaves the repo as it was.
- *
- * #100 adds the API-surface report after `fetch`, before the tree is touched, and `--verify` after
- * `record`.
+ * steps before `write Core` only plan, so a stop there leaves the repo as it was. `--verify` adds
+ * `VERIFY` at the end, and `--report-only` runs `REPORT_ONLY` instead.
  */
 export const STEPS = [
   { name: "refuse a dirty tree", run: refuseDirty },
   { name: "fetch", run: fetch },
+  { name: "report the API surface", run: report },
   { name: "re-apply vendored changes", run: replaceSource },
   { name: "take the scaffolding", run: takeScaffolding },
   { name: "leave the steering files", run: keepSteering },
@@ -571,6 +688,15 @@ export const STEPS = [
   { name: "record the pinned ref", run: record },
 ]
 
+/** The report alone: it reads Core and the two refs, and writes nothing but the upstream cache. */
+export const REPORT_ONLY = [STEPS[1], STEPS[2]]
+
+/** `--verify`: checked before the upgrade starts, and run after it has succeeded. */
+export const VERIFY = {
+  before: { name: "check --verify's inputs", run: checkVerifyInputs },
+  after: { name: "verify", run: verify },
+}
+
 /** Run `steps` over the context. Returns an exit code: 0 on success, 1 when a step stops. */
 export function runUpgrade(ctx, steps = STEPS) {
   for (const step of steps) {
@@ -579,7 +705,13 @@ export function runUpgrade(ctx, steps = STEPS) {
       step.run(ctx)
     } catch (err) {
       if (!(err instanceof Stop)) throw err
-      say("", ...err.lines, "", `${MANIFEST_REL} is unchanged.`, "")
+      say(
+        "",
+        ...err.lines,
+        "",
+        ctx.recorded ? `${MANIFEST_REL} records the target.` : `${MANIFEST_REL} is unchanged.`,
+        "",
+      )
       return 1
     }
   }
@@ -589,16 +721,25 @@ export function runUpgrade(ctx, steps = STEPS) {
 
 function parseArgs(argv) {
   const flag = (name) => argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3)
+  const has = (name) => argv.includes(`--${name}`)
+  const reportOnly = has("report-only")
+  const verify = has("verify")
+  if (reportOnly && verify) throw new Stop(["--report-only and --verify do not go together."])
   return {
-    ref: flag("ref") ?? argv.find((a) => !a.startsWith("-")),
-    upstream: flag("upstream") ?? process.env.QUARTZ_UPSTREAM,
-    root: flag("root") ? path.resolve(flag("root")) : REPO_ROOT,
+    options: {
+      ref: flag("ref") ?? argv.find((a) => !a.startsWith("-")),
+      upstream: flag("upstream") ?? process.env.QUARTZ_UPSTREAM,
+      root: flag("root") ? path.resolve(flag("root")) : REPO_ROOT,
+    },
+    steps: reportOnly ? REPORT_ONLY : verify ? [VERIFY.before, ...STEPS, VERIFY.after] : STEPS,
+    v4: flag("v4"),
   }
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try {
-    process.exitCode = runUpgrade(context(parseArgs(process.argv.slice(2))))
+    const { options, steps, v4 } = parseArgs(process.argv.slice(2))
+    process.exitCode = runUpgrade({ ...context(options), v4 }, steps)
   } catch (err) {
     if (err instanceof Stop) say("", ...err.lines, "")
     else console.error(`\n  ${err.stack ?? err.message}\n`)
