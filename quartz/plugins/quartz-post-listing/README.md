@@ -5,137 +5,56 @@ tags:
   - engineering/frontend
 ---
 
-`@chaoticgoodcomputing/quartz-post-listing` is a [Quartz 5](https://quartz.jzhao.xyz/) plugin that lists a site's posts, newest first, under the home page and on every tag page. On a tag page it lists only that tag's posts. Each post shows its title, date, description and reading time, and its tags as badges, each with the tag's icon in a bubble, rimmed in the tag's colour. The colours and icons come from [quartz-tags](https://blog.chaoticgood.computer/plugins/quartz-tags), the plugin that holds the site's tag dictionary.
+Lists a site's posts, newest first, on the home page and on every tag page, where it lists only that tag's posts. Each post shows its title, date, description, reading time and tag badges.
 
-It is the `PostListing` component from this site's Quartz 4 days, carried over as a plugin. The tag colours and icons are now drawn when the site builds, where v4 drew them with a script after the page loaded, fetching every icon from a CDN.
+## Installation
 
-## What it renders
-
-```html
-<div class="cgc-post-listing">
-  <h3 class="cgc-post-listing__title">Recent Posts</h3>
-  <ul class="cgc-post-listing__list">
-    <li class="cgc-post-listing__post">
-      <h3 class="cgc-post-listing__heading">
-        <a class="cgc-post-listing__link" href="./content/notes/a-note">A note</a>
-      </h3>
-      <p class="cgc-post-listing__description">
-        <time class="cgc-post-listing__date" datetime="2024-02-01T00:00:00.000Z">Feb 01, 2024</time>
-        — What the note is about. (4 min read)
-      </p>
-      <ul class="cgc-post-listing__tags">
-        <li class="cgc-post-listing__tag" data-tag="engineering/ai">
-          <a class="internal cgc-post-listing__tag-link" href="./tags/engineering/ai">
-            <span class="cgc-tag-bubble" style="border-color: var(--cgc-tag-engineering--ai)" title="engineering/ai"
-              ><svg class="cgc-tag-bubble__icon" viewBox="0 0 24 24" aria-hidden="true" …><path fill="currentColor" d="…" /></svg
-            ></span>
-            <span class="cgc-post-listing__tag-name">#ai</span>
-          </a>
-        </li>
-      </ul>
-    </li>
-  </ul>
-  <details class="cgc-post-listing__more">
-    <summary class="cgc-post-listing__more-toggle">Show 56 more posts</summary>
-    <ul class="cgc-post-listing__list">…</ul>
-  </details>
-</div>
-```
-
-- **Order:** newest first, by the date Quartz gives each page (its `defaultDateType`). Posts of the same date are in A→Z order by title, and so are posts with no date, which come last.
-- **Which posts:** every page with a source file of its own, `.mdx` pages included, but tag pages and the page of every tag, pages marked unlisted, and pages under an excluded tag (`private`, by default, and its subtags). The pages Quartz makes up, which no file backs, are never posts: a folder page, a tag page, the 404 page.
-- **On a tag page:** only the posts under the tag, those under its subtags included. `/tags/engineering` lists `engineering/ai`'s posts too. A tag with nothing to list says "No posts found." A tag page is `tags/<tag>`, or `tags/<tag>/index`, a tag's description file in Quartz 4's layout; `tags` itself, the index of every tag, is none.
-- **The description line** holds the date, the page's `description` from its frontmatter, and the reading time. A post with no `description` in its frontmatter shows none of the three, as in Quartz 4.
-- **Badges:** each of the post's tags, in its frontmatter order, named by its last segment after a `#`, as one string: `#ai`. Each badge holds the same bubble as [quartz-tag-list](https://blog.chaoticgood.computer/plugins/quartz-tag-list)'s, from the `@chaoticgoodcomputing/tags-core` library: the tag's icon, drawn inline as SVG in the theme's `--dark`, on a circle of the theme's `--light` that stands out from the badge's `--lightgray`, in a rim of the tag's colour, through the property `quartz-tags` publishes for it. The tag's colour paints only the rim, never text. Icons work as in quartz-tag-list: a tag with no icon of its own gets its parent's, a tag with none in its lineage has an empty bubble, and an icon id that doesn't exist fails the build. With `showTagCounts`, the number of pages under the tag follows the name. The bubble, the name and the count are centred on one line, as in quartz-tag-list. The badge links to the tag's page, and it is an internal link, so it gets Quartz's page preview on hover. The post's own title link gets none.
-- **The toggle:** with `collapsedItemCount` set, the first posts show and the rest sit behind "Show N more posts".
-- **On a narrow screen**, 1000px or less, each badge shows only its bubble. Pressing and holding one expands it to show the tag's name, without following the link. A tap follows the link.
-
-### Where it renders
-
-The listing belongs on the pages that list things: the home page, and tag pages. Quartz 5 places a component with the `layout` of its config entry, and a `condition` could keep it to the home page, but Quartz 5 ships only `not-index`, and a plugin can't add an `is-index`. So the component keeps to its pages by itself:
-
-- **on a tag page**, always;
-- **on the pages `showOn` names**, by slug: `index` is the home page, and `404` the not-found page;
-- **nowhere else**, wherever the layout puts it.
-
-A site that edits its `quartz.ts` can keep the listing to its pages itself, as this site does. It sets `showOn: false`, and the listing then renders on every page the layout puts it on.
-
-So place it in a slot every page shares, such as `afterBody`. To keep it off tag pages, exclude it there with `layout.byPageType.tag.exclude: ["@chaoticgoodcomputing/quartz-post-listing"]`, the name Quartz gives a plugin listed by package name. The reasoning is in the package's [ADR-0001](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz/plugins/quartz-post-listing/docs/adr/0001-the-listing-keeps-to-its-own-pages.md).
-
-## Install
-
-The plugin is the npm package `@chaoticgoodcomputing/quartz-post-listing`, built, with its type declarations, and loaded by name, as Quartz's own `@quartz-community/*` plugins are. It needs [quartz-tags](https://blog.chaoticgood.computer/plugins/quartz-tags) and [quartz-styles](https://blog.chaoticgood.computer/plugins/quartz-styles). Install it into your Quartz site:
-
-```sh
+```bash
 npm install @chaoticgoodcomputing/quartz-post-listing
 ```
 
-and list it in `quartz.config.yaml` by its package name:
+Requires [quartz-tags](https://blog.chaoticgood.computer/plugins/quartz-tags) and [quartz-styles](https://blog.chaoticgood.computer/plugins/quartz-styles).
 
-```yaml
-plugins:
-  - source: "@chaoticgoodcomputing/quartz-post-listing"
-    enabled: true
-```
+## Usage
 
-Its peers, `@quartz-community/types`, `@quartz-community/utils` and Preact, are your site's own copies, so a page has one Preact. The package isn't on npm yet: it is published after this site moves to Quartz 5 ([#90](https://github.com/chaoticgoodcomputing/blog/issues/90)).
-
-The install also installs [Iconify](https://iconify.design/)'s packages, which draw the icons while the site builds, MDI's icons among them.
-
-## Configure
-
-```yaml
+```yaml title="quartz.config.yaml"
 plugins:
   - source: "@chaoticgoodcomputing/quartz-post-listing"
     enabled: true
     options:
       showOn: [index, "404"]
       collapsedItemCount: 5
-      iconCollections: *iconCollections # the one you gave quartz-tag-list
     layout:
       position: afterBody
       priority: 10
 ```
 
-| Option | Default | |
-| --- | --- | --- |
-| `showOn` | `["index"]` | The pages, besides tag pages, that get the listing, by slug. `false` for every page the layout puts it on. |
-| `title` | `"Recent Posts"` | The heading above the listing. `false` for none. |
-| `limit` | all | List at most this many posts. |
-| `collapsedItemCount` | all shown | Show this many posts, and the rest behind a toggle. |
-| `excludeTags` | `["private"]` | Leave out the posts under any of these tags, their subtags included. Give it the private tags you give [quartz-seo](https://blog.chaoticgood.computer/plugins/quartz-seo) and the rest of the plugin family, and no private page is listed. |
-| `filterToCurrentTag` | `true` | On a tag page, list only the posts under the tag. |
-| `includeSubtags` | `true` | On a tag page, list the posts under its subtags too. |
-| `excludeTagPages` | `true` | Leave out tag pages, such as a tag's description file, and the page of every tag. |
-| `showEmptyMessage` | `true` | Say so when there is nothing to list. |
-| `emptyMessage` | `"No posts found."` | What to say when there is nothing to list. |
-| `showTags` | `true` | Show each post's tag badges. |
-| `showDates` | `true` | Show each post's date in its description line. |
-| `showDescriptions` | `true` | Show each post's description line. |
-| `showTagCounts` | `false` | After each tag, the number of pages under it, its subtags' included. |
-| `iconCollections` | none | Your own icons: a prefix for each set, and the directory of SVG files that holds it, as for [quartz-tag-list](https://blog.chaoticgood.computer/plugins/quartz-tag-list). `mdi:` needs no entry. |
+Quartz 5 has no `is-index` layout condition, so the listing keeps to its own pages: tag pages, plus the slugs in `showOn`. Place it in a slot every page shares, such as `afterBody`.
 
-One plugin has one set of options for every page. Quartz 4 set them per layout, and only its tags layout turned on the tag filter, so here the tag filter and the subtags are on by default: only a tag page has a tag to filter by.
+## Configuration
 
-The dates are the ones Quartz's `created-modified-date` plugin gives each page. The strings are English. Quartz 4's `sort` and `filter` options took functions, which a YAML config can't hold, so they're gone.
+| Option               | Type                     | Default             | Description                                                                                              |
+| -------------------- | ------------------------ | ------------------- | -------------------------------------------------------------------------------------------------------- |
+| `showOn`             | `string[] \| false`      | `["index"]`         | Slugs, besides tag pages, that get the listing. `false` for every page.                                  |
+| `title`              | `string \| false`        | `"Recent Posts"`    | The heading. `false` for none.                                                                           |
+| `limit`              | `number`                 | all                 | List at most this many posts.                                                                            |
+| `collapsedItemCount` | `number`                 | all shown           | Show this many posts, and the rest behind a toggle.                                                      |
+| `excludeTags`        | `string[]`               | `["private"]`       | Leave out posts under these tags and their subtags.                                                      |
+| `filterToCurrentTag` | `boolean`                | `true`              | On a tag page, list only that tag's posts.                                                               |
+| `includeSubtags`     | `boolean`                | `true`              | On a tag page, include its subtags' posts.                                                               |
+| `excludeTagPages`    | `boolean`                | `true`              | Leave tag pages out of the listing.                                                                      |
+| `showEmptyMessage`   | `boolean`                | `true`              | Say so when there's nothing to list.                                                                     |
+| `emptyMessage`       | `string`                 | `"No posts found."` | The message when there's nothing to list.                                                                |
+| `showTags`           | `boolean`                | `true`              | Show each post's tag badges.                                                                             |
+| `showDates`          | `boolean`                | `true`              | Show each post's date.                                                                                   |
+| `showDescriptions`   | `boolean`                | `true`              | Show each post's description line.                                                                       |
+| `showTagCounts`      | `boolean`                | `false`             | Show the number of pages under each tag.                                                                 |
+| `iconCollections`    | `Record<string, string>` | none                | Your own icon sets, as for [quartz-tag-list](https://blog.chaoticgood.computer/plugins/quartz-tag-list). |
 
-## Styling
+## Documentation
 
-The CSS is library CSS, following [ADR-0003](https://github.com/chaoticgoodcomputing/blog/blob/main/docs/adr/0003-library-css-in-plugins-application-css-at-the-site.md):
+See [CONTEXT.md](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz/plugins/quartz-post-listing/CONTEXT.md) and the [decision records](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz/plugins/quartz-post-listing/docs/adr).
 
-- **Classes:** one BEM block, `.cgc-post-listing`, with the elements `__title`, `__list`, `__post`, `__heading`, `__link`, `__description`, `__date`, `__tags`, `__tag`, `__tag-link`, `__tag-name`, `__tag-count`, `__more`, `__more-toggle` and `__empty`, and the modifier `__tag-link--expanded` for a badge a long press has opened. Selectors are single classes, apart from the narrow-screen rules that hide a badge's name and count. The bubble is its own block, `.cgc-tag-bubble`, with the element `__icon`, from `@chaoticgoodcomputing/tags-core`; this plugin ships its stylesheet and never restyles it.
-- **Cascade layer:** the rules, the bubble's included, sit in the `cgc.post-listing` layer, above Quartz's own styles and themes, and below any unlayered site CSS.
-- **Colours:** the description line and the count are the theme's `--gray`, the badge's background is `--lightgray` (`--gray` on hover), and the toggle is `--secondary` (`--tertiary` on hover). Each bubble's rim is its tag's colour, its circle `--light` and its icon, 18px square, `--dark`.
+## License
 
-To change a tag's colour, change it in `quartz-tags`' dictionary, or override the tag's property, `--cgc-tag-…`, in your own CSS. The bubble takes it as its own inline `border-color`, as [quartz-tag-list](https://blog.chaoticgood.computer/plugins/quartz-tag-list)'s bubbles do.
-
-The build checks the stylesheet with `@chaoticgoodcomputing/css-check` and fails if a selector reaches outside the block, if it defines a custom property or other name outside the block, or if it sets a colour literal or a font family other than one of the theme's four, such as `var(--bodyFont)`.
-
-## Develop
-
-This package is the Nx project `quartz-post-listing`, in `quartz/plugins/quartz-post-listing/`. Its manifest name is still `cgc-post-listing`, which names its CSS, so the class names and properties above keep it. Its specs live in [`e2e/`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz/plugins/quartz-post-listing/e2e) and run against the shared fixture site, and against a site built from this site's own config ([ADR-0004](https://github.com/chaoticgoodcomputing/blog/blob/main/docs/adr/0004-playwright-e2e-as-the-plugin-tdd-loop.md)):
-
-```sh
-pnpm nx run quartz-post-listing:e2e
-pnpm nx run quartz-post-listing:typecheck
-```
+MIT

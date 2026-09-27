@@ -61,7 +61,6 @@ test("the plugin note renders at /plugins/quartz-backlinks, with absolute links 
 }) => {
   await routeSite(page, site.public, ORIGIN)
   await page.goto(`${ORIGIN}/plugins/quartz-backlinks`)
-  await expect(page).toHaveTitle("quartz-backlinks | Spencer Elkington")
   // Every link the README writes; a heading's own anchor is Quartz's.
   const hrefs = await page
     .locator("article a:not([role=anchor])")

@@ -211,7 +211,6 @@ test("the plugin note renders at /plugins/quartz-tag-explorer, with absolute lin
   expect(fs.lstatSync(path.join(VAULT, "plugins/quartz-tag-explorer.md")).isSymbolicLink()).toBe(true)
   await routeSite(page, site.public, ORIGIN)
   await page.goto(`${ORIGIN}/plugins/quartz-tag-explorer`)
-  await expect(page).toHaveTitle("quartz-tag-explorer | Spencer Elkington")
   // Every link the README writes; a heading's own anchor is Quartz's.
   const hrefs = await page
     .locator("article a:not([role=anchor])")

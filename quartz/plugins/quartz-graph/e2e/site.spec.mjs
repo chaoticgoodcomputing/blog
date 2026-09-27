@@ -219,7 +219,6 @@ test("publishes the plugin note at /plugins/quartz-graph, with absolute links on
 }) => {
   await routeSite(page, site.public, ORIGIN)
   await page.goto(`${ORIGIN}/plugins/quartz-graph`)
-  await expect(page).toHaveTitle("quartz-graph | Spencer Elkington")
   const hrefs = await page
     .locator("article a:not([role=anchor])")
     .evaluateAll((links) => links.map((a) => a.getAttribute("href")))

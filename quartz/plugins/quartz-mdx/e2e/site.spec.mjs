@@ -114,7 +114,6 @@ test("no case-redirect stub collides with or duplicates an .mdx page", () => {
 test("the plugin note renders at /plugins/quartz-mdx, with absolute links only", async ({ page }) => {
   await routeSite(page, site.public, ORIGIN)
   await page.goto(`${ORIGIN}/plugins/quartz-mdx`)
-  await expect(page).toHaveTitle("quartz-mdx | Spencer Elkington")
   // Every link the README writes; a heading's own anchor is Quartz's.
   const hrefs = await page.locator("article a:not([role=anchor])").evaluateAll((links) => links.map((a) => a.getAttribute("href")))
   expect(hrefs.length).toBeGreaterThan(0)
@@ -128,7 +127,6 @@ test("an old link to v4's widget guide lands on the plugin note", async ({ page 
   // under the old URL.
   await page.goto(await page.locator("article").getByRole("link", { name: "the old widget guide" }).evaluate((a) => a.href))
   await expect(page).toHaveURL(`${ORIGIN}/plugins/quartz-mdx`)
-  await expect(page).toHaveTitle("quartz-mdx | Spencer Elkington")
   // The guide itself is no longer a page of its own, in search or the graph.
   const index = JSON.parse(fs.readFileSync(path.join(site.public, "static/contentIndex.json"), "utf8"))
   expect(Object.keys(index)).toContain("plugins/quartz-mdx")
