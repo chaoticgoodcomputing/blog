@@ -13,7 +13,7 @@ const CONTENT = {
   "content/notes/a-note.md": "---\ntitle: A note\ntags: [topic]\n---\nA note in a folder with no index.\n",
   // v4 kept capitals in URLs; v5 lowercases them (#23). 89 vault pages are like this.
   "Mixed Case.md": "---\ntitle: Mixed case\n---\nA page whose file name has capitals and a space.\n",
-  // A tag's description file, in the shape the vault's files take at cutover (#43).
+  // A tag's description file, in the vault's shape (#43).
   "tags/topic.md": "---\ntitle: Topic\n---\nWhat the topic tag is about, as [[content/notes/a-note|a note on it]] shows.\n",
 }
 

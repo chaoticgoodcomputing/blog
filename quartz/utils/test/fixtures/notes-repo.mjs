@@ -8,7 +8,7 @@ import { generatedBlock, readPackages } from "../../plugin-dag.mjs"
 import { scratch, writeTree } from "../guard-helpers.mjs"
 
 export const TAG = "projects/site/plugins"
-export const NOTE = `content/public/tags/${TAG}/index.md`
+export const NOTE = `content/public/tags/${TAG}.md`
 const json = (value) => JSON.stringify(value, null, 2)
 const readme = (dir) => `---\ntitle: ${dir}\ntags:\n  - ${TAG}\n---\n# ${dir}\n`
 

@@ -1,9 +1,9 @@
-// One page per tag (#72). A tag's page is at `tags/<t>`, and three things would give a tag a second:
-// stock tag-page left on beside this plugin, which makes every tag's page again; stock folder-page,
-// which makes a page for every folder under `tags/` a nested description file sits in; and the
-// vault's description files in their old shape, `tags/<t>/index.md`, which stock doesn't recognise
-// as a tag's. The site refuses the first, disables the second (#43), and renames the third at
-// cutover (#43).
+// One page per tag (#72). A tag's page is at `tags/<t>`, and three things would give a tag a
+// second: stock tag-page left on beside this plugin, which makes every tag's page again; stock
+// folder-page, which makes a page for every folder under `tags/` a nested description file sits in;
+// and the vault's description files in their old shape, `tags/<t>/index.md`, which stock doesn't
+// recognise as a tag's. The site refuses the first, disables the second, and renamed the third
+// (#43).
 import fs from "node:fs"
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
 import {

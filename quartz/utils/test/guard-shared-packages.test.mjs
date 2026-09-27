@@ -51,7 +51,7 @@ test("a copy installed beside a plugin or a library fails, and so does a peer th
     "plugins/quartz-good/node_modules/vfile/package.json": "{}",
     // a library's own unified, which a plugin that inlines it would bundle
     "libs/lib-good/node_modules/unified/package.json": "{}",
-    // the v4 tree's Preact at the repo root, where a site plugin without its host link walks to
+    // a Preact at the repo root, where a site plugin without its host link walks to
     "../node_modules/preact/package.json": "{}",
   })
   fs.rmSync(path.join(v5, "site-plugins/node_modules"))

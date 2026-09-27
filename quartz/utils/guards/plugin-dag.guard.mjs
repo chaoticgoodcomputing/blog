@@ -1,7 +1,6 @@
 // Repo guard: the plugins' tag's description note carries the DAG the packages declare (#86).
 //
-// The note, `content/public/tags/projects/site/plugins/index.md` (or `…/plugins.md` once the cutover
-// rename, #43, moves it; never both), holds a Mermaid flowchart of how our packages depend on each
+// The note, `content/public/tags/projects/site/plugins.md` (#43), holds a Mermaid flowchart of how our packages depend on each
 // other, between two generated markers. The owner decided it is generated and guarded (review notes,
 // 2026-09-26): its block must be exactly what `utils/plugin-dag.mjs` writes from the packages'
 // manifests today, so a manifest change that moves the DAG fails here until the note is regenerated
@@ -23,15 +22,12 @@ const VAULT = "content/public"
 
 await guard(import.meta, "The plugins' tag's description note carries the DAG the packages declare", (argv) => {
   const repo = path.resolve(option(argv, "repo", REPO_ROOT))
-  const shapes = [`${VAULT}/tags/${TAG}/index.md`, `${VAULT}/tags/${TAG}.md`].filter((rel) => fs.existsSync(path.join(repo, rel)))
-  if (shapes.length === 0) throw new CannotCheck(`no description note for the plugins' tag under ${path.join(repo, VAULT)}`)
+  const note = `${VAULT}/tags/${TAG}.md`
+  if (!fs.existsSync(path.join(repo, note))) throw new CannotCheck(`no description note for the plugins' tag at ${path.join(repo, note)}`)
 
   const violations = []
-  if (shapes.length > 1) violations.push(`the plugins' tag's description note is in both shapes, ${shapes.join(" and ")}: keep one`)
-  // plugin-dag.mjs writes the renamed shape when it exists, so that is the one read.
-  const note = shapes.at(-1)
   const block = blockOf(fs.readFileSync(path.join(repo, note), "utf-8"))
-  if (block === null) return [...violations, `${note}: has no generated block between the plugin-dag markers`]
+  if (block === null) return [`${note}: has no generated block between the plugin-dag markers`]
 
   let wanted
   try {

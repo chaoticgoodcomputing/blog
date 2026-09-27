@@ -17,8 +17,8 @@ _Avoid_: public page, SEO page
 
 **Tag page**:
 The page for one tag, which crawlers are always given at `/tags/<t>` (#43). Quartz generates it as
-a listing, or the tag's description note supplies it: `tags/<t>.md`, or `tags/<t>/index.md`, the
-vault's shape until the cutover rename, which is served at `/tags/<t>/` until then. Listed once,
+a listing, or the tag's description note supplies it: `tags/<t>.md`, or `tags/<t>/index.md`, an
+older shape (this vault's until #43), served at `/tags/<t>/`. Listed once,
 dated by its description note if it has one.
 _Avoid_: tag listing (that is the generated kind only), tag index (that is quartz-tags'
 `static/cgcTags.json`)

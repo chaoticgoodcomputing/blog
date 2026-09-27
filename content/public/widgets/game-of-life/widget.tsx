@@ -1,7 +1,6 @@
 // Conway's Game of Life, as a cgc-mdx island: drawn at build time, run in the browser.
 //
-// Ported from v4's component.tsx and script.inline.ts beside this file, which Quartz 4 reads until
-// cutover. The simulation is the same; the canvas takes its colours from the theme (widget.css).
+// Ported from v4's widget (its component.tsx and script.inline.ts). The simulation is the same; the canvas takes its colours from the theme (widget.css).
 import { useEffect, useRef } from "preact/hooks"
 import { onSchemeChange, skin } from "../scheme"
 import "./widget.css"

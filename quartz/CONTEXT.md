@@ -9,8 +9,7 @@ plugins built on it.
 ### Quartz Core
 
 **Quartz Core**:
-Upstream Quartz's install root, vendored into this repo at `quartz/core/` (`quartz-v5/core/` until
-cutover) because Quartz ships no npm package. Split into four tiers, listed once, in
+Upstream Quartz's install root, vendored into this repo at `quartz/core/` because Quartz ships no npm package. Split into four tiers, listed once, in
 `utils/core-tiers.mjs`: **Core source**, **steering files**, **scaffolding** and **pruned files**,
 plus Core's own pnpm files, which `tierOf` classifies as "pnpm". A pnpm project of its own, outside
 the repo's workspace, installed from a lock imported from upstream's (VENDORED.md). "Core" for short.
@@ -182,7 +181,7 @@ One version shared by every package in `plugins/` and `libs/`, cut together when
 changes, and named by a `v<semver>` tag. Every package publishes to npm at the release's version, so
 a downstream site installs a package's npm version, which is the release's, never a branch, a git tag
 or a version of the package's own. Recorded in [ADR-0005](../docs/adr/0005-plugins-ship-as-npm-packages.md); the
-publishing ticket (#90) settles it after cutover. Nothing rewrites a package's metadata at a release:
+publishing ticket (#90) settles the rest. Nothing rewrites a package's metadata at a release:
 `pnpm publish` turns each `workspace:*` into the published version.
 _Avoid_: package version, plugin version
 
@@ -362,12 +361,3 @@ library of ours takes one only as a peer, never installs it beside itself, and n
 resolves to Core's copy here and the site's own downstream: one Preact per page. A plugin that inlines
 a library takes the library's shared packages as its own peers.
 _Avoid_: singleton (alone), host dependency, external
-
-### Distinguishing the two copies
-
-**`quartz/`** (repo root):
-The Quartz 4 copy that builds the live site. Nx project `site`.
-
-**`quartz/`**:
-This context — Quartz Core, its tooling, and our plugins. Nx project `site`.
-_Avoid_: referring to either as just "quartz" while both exist

@@ -100,13 +100,9 @@ export function blockOf(text) {
   return start < 0 || end < 0 ? null : text.slice(start, end + END.length)
 }
 
-/**
- * The tag's description note: `tags/projects/site/plugins.md` once the cutover rename (#43) has
- * moved it, and until then at the vault's current convention, `tags/projects/site/plugins/index.md`.
- */
+/** The tag's description note, `tags/projects/site/plugins.md` (#43). */
 export function notePath(vaultDir = vault) {
-  const renamed = path.join(vaultDir, "tags", `${TAG}.md`)
-  return fs.existsSync(renamed) ? renamed : path.join(vaultDir, "tags", TAG, "index.md")
+  return path.join(vaultDir, "tags", `${TAG}.md`)
 }
 
 function main(args) {

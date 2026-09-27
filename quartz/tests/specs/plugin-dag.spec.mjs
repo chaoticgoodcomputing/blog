@@ -18,9 +18,9 @@ const pluginDirs = () =>
     .filter((dir) => fs.existsSync(path.join(quartzRoot, "plugins", dir, "package.json")))
     .sort()
 
-// The tag's page on the site config, with the description note in the shape the cutover rename (#43)
-// gives it, `tags/projects/site/plugins.md`, so it is the tag's page itself, and the plugin notes as
-// the vault links them.
+// The tag's page on the site config, with the description note in the vault's shape (#43),
+// `tags/projects/site/plugins.md`, so it is the tag's page itself, and the plugin notes as the
+// vault links them.
 test.describe("on the site config", () => {
   test.describe.configure({ mode: "serial" })
 

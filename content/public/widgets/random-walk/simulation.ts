@@ -2,10 +2,9 @@
 // one weighted-random step at a time, and pan and zoom. Browser-only; the widget starts it once it
 // hydrates.
 //
-// Ported from v4's script.inline.ts beside this file, which Quartz 4 reads until cutover. What
-// changed: the widget, not this class, owns the controls and the step and node readouts, and every
-// colour, and the labels' font, comes from the palette the widget reads from the page, painted again
-// when it changes.
+// Ported from v4's widget (its script.inline.ts). What changed: the widget, not this class, owns
+// the controls and the step and node readouts, and every colour, and the labels' font, comes from
+// the palette the widget reads from the page, painted again when it changes.
 
 export interface NodeDefinition {
   /** Unique identifier for the node. */

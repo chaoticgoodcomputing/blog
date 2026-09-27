@@ -1,7 +1,7 @@
 // Dice expressions and the probability distributions they roll: the maths behind the
 // ProbabilityConvolutions widget, with no DOM, so it runs at build time as well as in the browser.
 //
-// Ported unchanged from v4's script.inline.ts beside this file, which Quartz 4 reads until cutover.
+// Ported unchanged from v4's widget (its script.inline.ts).
 
 // === Probability Distribution ===
 

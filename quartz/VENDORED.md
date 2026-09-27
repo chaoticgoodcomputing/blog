@@ -215,10 +215,10 @@ pnpm nx run site:vendored-log    # the commits that made it, and the tickets eac
 git doesn't ignore, with the files upstream tracks at the pinned ref, leaving out the tiers that are
 not drift. Its stdout is a patch that `git apply` accepts from the repo root, and the file count goes
 to stderr, so `> vendored.patch` captures it cleanly. `vendored-log` answers _why_. It lists every
-commit since the last upgrade (the last commit to touch `upstream.json`) that made drift in Core, with
+commit since the last upgrade (the commit that brought in the ref `upstream.json` pins) that made drift in Core, with
 the files and the `#<n>` tickets its message cites, flags any commit that cites none, and lists
 uncommitted drift, which has no commit to carry a ticket yet. Commits that only moved Core (#91 did,
-from its old path, and the cutover will), or only touched steering, pruned or pnpm files, are left
+from its old path, and the cutover did again), or only touched steering, pruned or pnpm files, are left
 out; the log follows Core's renames back through history. The rule is that every file
 `diff-upstream` names traces to a flagged-clean commit in `vendored-log`. The ticket itself carries
 the `quartz:vendored` label and the upstream proposal.
@@ -419,8 +419,8 @@ symlink to `../core/node_modules` that the e2e harness and `site:prebuild` creat
 from its real path under `plugins/`, where the site package's link leads. A git-installed plugin
 sits at `.quartz/plugins/<name>/` inside Core, so its bare `import "preact"` finds Quartz's copy, and
 that is what the loader's shared externals assume. A package of ours is loaded from its real path
-instead, from which Node would otherwise walk up to the v4 tree's `node_modules` at the repo root: a
-second, older Preact. The workspace install therefore
+instead, from which Node would otherwise walk up to the `node_modules` at the repo root, which is not
+Quartz's, and at worst a second Preact. The workspace install therefore
 never installs a peer beside a plugin (`autoInstallPeers: false`, below), and a plugin declares
 Quartz's shared packages (Preact, `vfile`, `unified`, `lightningcss`, `@quartz-community/*`) only
 as peers, never as devDependencies too, so its own `node_modules` never shadows a host singleton. A

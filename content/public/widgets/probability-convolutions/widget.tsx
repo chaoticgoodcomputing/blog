@@ -5,9 +5,9 @@
 // edit the expression, and, with `showThreshold`, drag a line across the chart to read off the odds
 // of rolling under it and at or over it.
 //
-// Ported from v4's component.tsx and script.inline.ts beside this file, which Quartz 4 reads until
-// cutover. The statistics now render at build time; the chart is drawn in the browser by Plotly,
-// which loads only once the widget hydrates, and takes its colours from the theme (widget.css).
+// Ported from v4's widget (its component.tsx and script.inline.ts). The statistics now render at
+// build time; the chart is drawn in the browser by Plotly, which loads only once the widget
+// hydrates, and takes its colours from the theme (widget.css).
 import { useEffect, useMemo, useRef, useState } from "preact/hooks"
 import { Distribution, parseExpression } from "./dice"
 import { onSchemeChange, skin } from "../scheme"

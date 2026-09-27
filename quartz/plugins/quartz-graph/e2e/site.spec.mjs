@@ -1,6 +1,6 @@
-// quartz-graph on the real site (#74), proven on a scratch site built from the site config, with pages in
-// the vault's shapes: v4's settings, tag pages with the graph (the fixture's layout clears their right
-// sidebar), a tag's description file in the vault's pre-cutover shape, and the plugin note.
+// quartz-graph on the real site (#74), proven on a scratch site built from the site config, with
+// pages in the vault's shapes: v4's settings, tag pages with the graph (the fixture's layout clears
+// their right sidebar), a tag's description file, and the plugin note.
 import fs from "node:fs"
 import path from "node:path"
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
@@ -34,7 +34,7 @@ const CONTENT = {
     ["private"],
     "A private stub, about [[/content/notes/a-note|a note]].",
   ),
-  // A tag's description file, as the vault has them since the cutover rename (#43).
+  // A tag's description file, in the vault's shape (#43).
   "tags/engineering.md": "---\ntitle: Engineering\n---\nWhat the engineering tag is about.\n",
   // The plugin note, as the vault has it (#48).
   "plugins/quartz-graph.md": fs.readFileSync(path.join(VAULT, "plugins/quartz-graph.md"), "utf8"),

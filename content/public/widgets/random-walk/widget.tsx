@@ -1,8 +1,8 @@
 // A random walk on a graph, as a cgc-mdx island: an ant steps from node to node, choosing each next
 // edge at random by weight, which is a Markov chain the reader can step through or play.
 //
-// Ported from v4's component.tsx and script.inline.ts beside this file, which Quartz 4 reads until
-// cutover. The controls and readouts render at build time; the canvas is drawn in the browser, in
+// Ported from v4's widget (its component.tsx and script.inline.ts). The controls and readouts
+// render at build time; the canvas is drawn in the browser, in
 // colours from the theme (widget.css), and a node's own `color` may be any colour value.
 import { useEffect, useRef, useState } from "preact/hooks"
 import { RandomWalkSimulation, type EdgeDefinition, type NodeDefinition, type Palette, type WalkConfig, type WalkState } from "./simulation"
