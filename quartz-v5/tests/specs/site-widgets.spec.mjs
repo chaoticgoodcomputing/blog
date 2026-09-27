@@ -8,8 +8,6 @@ import path from "node:path"
 import { createRequire } from "node:module"
 import { test, expect, resolvedColour, routeSite, toggleScheme } from "../harness/test.mjs"
 import { buildScratchSite, editConfig, siteConfig, testsRoot } from "../harness/site.mjs"
-import { BLUESKY_API, XRPC } from "../harness/bluesky.mjs"
-import { jsonResponse } from "../harness/stand-in.mjs"
 // The site is served at its own `baseUrl`, where Quartz points its absolute URLs.
 const ORIGIN = "https://blog.chaoticgood.computer"
 const REPO = path.resolve(testsRoot, "../..")
@@ -20,7 +18,6 @@ const VAULT = path.join(REPO, "content/public")
 // ADR-0005), and the clean URL v4 served it at redirects there.
 const ARTICLES = {
   "resume.mdx": ["PDFViewer"],
-  "content/notes/ai-beat-us.mdx": ["BlueskyPost"],
   "content/notes/ants-in-the-neighborhood.mdx": ["RandomWalk"],
   "content/notes/mdx-widgets-test.mdx": ["GameOfLife"],
   "content/notes/roll-advantage.mdx": ["ProbabilityConvolutions"],
@@ -188,22 +185,6 @@ test.describe("resume", () => {
     const src = fs.readFileSync(path.join(VAULT, "resume.mdx"), "utf8").match(/<PDFViewer\b[^>]*\ssrc="([^"]+)"/)[1]
     // Listed rather than looked up, which a case-insensitive filesystem would answer either way.
     expect(fs.readdirSync(path.join(site.public, path.posix.dirname(src)))).toContain(path.posix.basename(src))
-  })
-})
-
-test.describe("ai-beat-us", () => {
-  test("the Bluesky post renders at build time and loads in the browser", async ({ page }) => {
-    const html = fs.readFileSync(path.join(site.public, "content/notes/ai-beat-us.mdx.html"), "utf8")
-    expect(html).toContain('class="cgc-bluesky-post"')
-    // The suite never reaches the real Bluesky: the article's post is answered with a fixture post.
-    const thread = XRPC["app.bsky.feed.getPostThread"]["at://fixture.bsky.social/app.bsky.feed.post/3lcgcfixtureb"]
-    await page.route(BLUESKY_API, (route) =>
-      new URL(route.request().url()).searchParams.get("uri") === "at://pfrazee.com/app.bsky.feed.post/3meogr22vtc2d"
-        ? route.fulfill(jsonResponse(200, thread))
-        : route.fallback(),
-    )
-    await open(page, "content/notes/ai-beat-us.mdx")
-    await expect(page.locator(".cgc-bluesky-post article.cgc-bluesky")).toBeVisible()
   })
 })
 

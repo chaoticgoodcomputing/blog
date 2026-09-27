@@ -211,9 +211,9 @@ plugins:
           width: 184
           height: 184
       articleTypes:
-        - tag: writing/annotations,
-          type: ScholarlyArticle,
-          section: Annotations,
+        - tag: writing/annotations
+          type: ScholarlyArticle
+          section: Annotations
         - tag: writing/tutorials
           type: HowTo
           section: Tutorials

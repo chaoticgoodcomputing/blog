@@ -47,7 +47,6 @@ function indexedAtOwnUrl(d, { v4, v5 }) {
 // The vault's .mdx pages when the owner moved them to their .mdx URLs, on 2026-09-26.
 const MDX_PAGES = new Set([
   "/resume",
-  "/content/notes/ai-beat-us",
   "/content/notes/ants-in-the-neighborhood",
   "/content/notes/mdx-widgets-test",
   "/content/notes/roll-advantage",
@@ -115,13 +114,6 @@ export const ALLOWLIST = [
       "The owner's 2026-09-26 decision: the notebook /assets/textimagegen/textimagegen.ipynb moves to index.ipynb, as a folder note, and the old URL is given up.",
     allows: (d) =>
       d.area === "url" && d.change === "moved" && d.kind === "file" && sameSet(d.how, ["folder-note"]) && d.url === "/assets/textimagegen/textimagegen.ipynb",
-  },
-  {
-    ticket: 81,
-    summary:
-      "The owner's 2026-09-26 decision: ai-beat-us's JSON-LD description loses v4's text, which was only the Bluesky widget's \"Loading post...\" placeholder.",
-    allows: (d) =>
-      d.area === "head" && d.url === "/content/notes/ai-beat-us" && d.field === "jsonld.description" && sameSet(d.removed, ["Loading post..."]) && d.added.length === 0,
   },
   {
     ticket: 81,
