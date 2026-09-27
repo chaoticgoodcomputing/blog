@@ -42,16 +42,16 @@ plugins:
 - **Except a library whose dependencies can't be inlined.** Its consumers carry those packages as
   their own `dependencies`, at the library's exact versions, and keep them external. The first is
   `@chaoticgoodcomputing/icons`, whose Iconify packages load data files at run time:
-  [libs/icons ADR-0001](../../quartz-v5/libs/icons/docs/adr/0001-consumers-carry-iconify.md) (#71).
+  [libs/icons ADR-0001](../../quartz/libs/icons/docs/adr/0001-consumers-carry-iconify.md) (#71).
 - **Names.** The package, its directory and its Nx project are `quartz-<name>`. The manifest's
   `quartz.name` stays `cgc-<name>`, and a plugin's CSS block and family layer are named from it, so
   its published class names never change with its package name.
 - **No `requiresInstall`**, and no `private` flag. `version` is `0.0.0` on `main`.
-- **Repo guards hold these rules** (`site-v5:guards`, #98): the package contract, one copy of each
+- **Repo guards hold these rules** (`site:guards`, #98): the package contract, one copy of each
   shared package, package sources, and packs holding only `dist/`, README, LICENSE and
   `package.json`.
 - **One version for everything**, cut together and tagged `v<semver>` (the **Release** in
-  `quartz-v5/CONTEXT.md`), until the publishing ticket,
+  `quartz/CONTEXT.md`), until the publishing ticket,
   [#90](https://github.com/chaoticgoodcomputing/blog/issues/90), settles versioning after cutover.
 
 > Source links point at upstream Quartz at
@@ -87,7 +87,7 @@ by npm downstream, where a site's own Preact satisfies the peer. _Measured:_ fro
 path, Preact, `lightningcss` and `@quartz-community/types` resolve to Core's copies.
 
 **In this repo**, the site loads a package the way a downstream site does. The repo-only site package,
-`quartz-v5/package.json`, depends on each plugin by `workspace:*`, so its `node_modules` links to the
+`quartz/package.json`, depends on each plugin by `workspace:*`, so its `node_modules` links to the
 plugin's directory, and Quartz's `import(name)` from Core source reaches it by Node's upward walk.
 Quartz Core's own `package.json` stays upstream's (VENDORED.md). _Measured:_ the real-site build
 renders the graph by package name (#93), as does a fixture serve (`package-plugins.spec`). The real

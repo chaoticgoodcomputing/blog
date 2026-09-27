@@ -86,13 +86,13 @@ file it before we depend on the change rather than after.
 _2026-09-27, from [Spec: Quartz Core, a custom upgrade, and our plugins as npm packages](https://github.com/chaoticgoodcomputing/blog/issues/89),
 implemented on [#91](https://github.com/chaoticgoodcomputing/blog/issues/91)._
 
-The vendored copy is now **Quartz Core**, at `quartz-v5/core/` (`quartz/core/` after cutover). The
+The vendored copy is now **Quartz Core**, at `quartz/core/` (`quartz-v5/core/` until cutover). The
 rule above was written as if every file in it were equally protected. That was too strict in the
 wrong place: Quartz's own docs tell a site to edit `quartz.ts` (a TS layout override, and
 `registerCondition`) and `quartz.config.yaml`, and the site config sat outside the copy behind a
 symlink only because of that rule. Meanwhile the copy carried upstream's docs, CI and similar, which
 nothing here uses and which made every drift check noisier. So Core is split into four tiers, listed
-once, in `quartz-v5/utils/core-tiers.mjs`, which all of the tooling reads:
+once, in `quartz/utils/core-tiers.mjs`, which all of the tooling reads:
 
 - **Core source**: Core's `quartz/` tree. Everything this ADR says about "the vendored copy" now
   means this tier. It changes only through a vendored change, with its ticket and upstream proposal.
@@ -114,5 +114,5 @@ Core's own pnpm files (`pnpm-workspace.yaml`, and `pnpm-lock.yaml`, imported fro
 drift. `core-tiers.mjs` lists them too, and its `tierOf` classifies them as "pnpm".
 
 **Drift** is now any difference between Core and its pinned ref except in steering files, pruned
-files and Core's pnpm files (`site-v5:diff-upstream` shows only drift). The shareability test is
+files and Core's pnpm files (`site:diff-upstream` shows only drift). The shareability test is
 unchanged: a plugin that needs an edit to Core source to work fails it.

@@ -1,0 +1,18 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "name": "@chaoticgoodcomputing/island-runtime",
+  "root": "quartz/libs/island-runtime",
+  "sourceRoot": "quartz/libs/island-runtime/src",
+  "projectType": "library",
+  "tags": ["cgc", "cgc:lib"],
+  "targets": {
+    "e2e": {
+      "//": "This library's specs only, through the shared suite. No build target: plugins inline the source.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx playwright test ../libs/island-runtime",
+        "cwd": "{workspaceRoot}/quartz/tests"
+      }
+    }
+  }
+}

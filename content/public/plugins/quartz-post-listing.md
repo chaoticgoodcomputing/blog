@@ -1,1 +1,1 @@
-../../../quartz-v5/plugins/quartz-post-listing/README.md
+../../../quartz/plugins/quartz-post-listing/README.md

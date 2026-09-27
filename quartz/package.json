@@ -1,0 +1,31 @@
+{
+  "name": "site",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The real site built on Quartz Core: the workspace package the site loads its plugins through. Repo-only: never published (CONTEXT.md).",
+  "//dependencies": "Every plugin the site and the e2e fixture list by package name, linked from the workspace: the shareable plugins in plugins/, and the site plugins in site-plugins/, which are repo-only (#96). Quartz imports a package source by name from Core source, and Node's upward walk from quartz/core/quartz/ reaches this package's node_modules, so Core's own package.json stays upstream's (#89, #93, VENDORED.md). Only the fixture's own plugins, in tests/fixture-plugins/, load by local path. A package the site lists more than once, each entry placing a component somewhere else, is here again under an alias, that entry's placement name: Quartz loads an object source `{ repo, name }` whose repo is a package by importing its `name`. So `email-subscribe-sidebar` is @chaoticgoodcomputing/quartz-email-subscribe, and `site-page-title` and `site-footer` are @chaoticgoodcomputing/site-components (VENDORED.md).",
+  "dependencies": {
+    "@chaoticgoodcomputing/quartz-annotator": "workspace:*",
+    "@chaoticgoodcomputing/quartz-backlinks": "workspace:*",
+    "@chaoticgoodcomputing/quartz-email-subscribe": "workspace:*",
+    "@chaoticgoodcomputing/quartz-graph": "workspace:*",
+    "@chaoticgoodcomputing/quartz-mdx": "workspace:*",
+    "@chaoticgoodcomputing/quartz-og-image": "workspace:*",
+    "@chaoticgoodcomputing/quartz-page-source": "workspace:*",
+    "@chaoticgoodcomputing/quartz-post-listing": "workspace:*",
+    "@chaoticgoodcomputing/quartz-posthog": "workspace:*",
+    "@chaoticgoodcomputing/quartz-seo": "workspace:*",
+    "@chaoticgoodcomputing/quartz-social": "workspace:*",
+    "@chaoticgoodcomputing/quartz-styles": "workspace:*",
+    "@chaoticgoodcomputing/quartz-tag-explorer": "workspace:*",
+    "@chaoticgoodcomputing/quartz-tag-list": "workspace:*",
+    "@chaoticgoodcomputing/quartz-tag-page": "workspace:*",
+    "@chaoticgoodcomputing/quartz-tags": "workspace:*",
+    "@chaoticgoodcomputing/site-components": "workspace:*",
+    "@chaoticgoodcomputing/site-styles": "workspace:*",
+    "email-subscribe-sidebar": "workspace:@chaoticgoodcomputing/quartz-email-subscribe@*",
+    "site-footer": "workspace:@chaoticgoodcomputing/site-components@*",
+    "site-page-title": "workspace:@chaoticgoodcomputing/site-components@*"
+  }
+}

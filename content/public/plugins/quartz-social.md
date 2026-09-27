@@ -1,1 +1,1 @@
-../../../quartz-v5/plugins/quartz-social/README.md
+../../../quartz/plugins/quartz-social/README.md

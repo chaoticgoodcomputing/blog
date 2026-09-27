@@ -1,8 +1,0 @@
-{
-  "//": "Single source of truth for which upstream Quartz commit this copy is vendored from. Read by quartz-v5/utils/upstream.mjs; mirrored for humans in VENDORED.md.",
-  "repo": "https://github.com/jackyzha0/quartz.git",
-  "branch": "v5",
-  "commit": "97a2d05f80c4c50534959b1d0d41cc4b3895625e",
-  "version": "5.0.0",
-  "vendoredOn": "2026-09-24"
-}

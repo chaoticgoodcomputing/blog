@@ -21,7 +21,7 @@ writing **application CSS**: we own the whole cascade and can order it.
 
 > Source links point at upstream Quartz at
 > [`97a2d05`](https://github.com/jackyzha0/quartz/tree/97a2d05f80c4c50534959b1d0d41cc4b3895625e)
-> (v5.0.0), the ref `quartz-v5/upstream.json` pins, and at this repo at `9e48f89`.
+> (v5.0.0), the ref `quartz/upstream.json` pins, and at this repo at `9e48f89`.
 
 ## Why
 
@@ -145,7 +145,7 @@ The decision is assembled from established methodologies rather than invented:
 ## Amendment: the family layer
 
 _2026-09-24, from [Can the cgc family hold its own cascade layer?](https://github.com/chaoticgoodcomputing/blog/issues/30).
-Evidence: the local `prototype/cgc-layer` branch (commit `8cbf5e8`), at `quartz-v5/tests/proto-layer/PROTOTYPE.md`.
+Evidence: the local `prototype/cgc-layer` branch (commit `8cbf5e8`), at `quartz/tests/proto-layer/PROTOTYPE.md`.
 Stub plugins were built into the fixture site under 16 config permutations and read back in Chromium._
 
 The deferral's fear, that position would be "config-dependent" and so undefined, turned out
@@ -292,7 +292,7 @@ so writing to it is drift, even though upstream intends it as the user's file
 ([layout.md:245](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/docs/layout.md?plain=1#L245)).
 
 **Decided:** the site's application CSS ships from a **site plugin**, `site-styles`, at
-`quartz-v5/site-plugins/site-styles/`. A site plugin fails the shareability test on purpose, because
+`quartz/site-plugins/site-styles/`. A site plugin fails the shareability test on purpose, because
 it *is* this site. It is a CSS-only transformer (_extended by the self-hosted-fonts amendment
 below:_ and an emitter, for the site's font files) that emits, from `externalResources()`:
 
@@ -397,7 +397,7 @@ This **replaces** two earlier rules:
   tag colour paint "marks (the badge ring, the icon glyph, the graph node)". It now paints a bubble's
   rim and nothing else of the bubble, and still never text;
 - #71's icon in the tag colour, which cgc-tag-list's
-  [ADR-0001](../../quartz-v5/plugins/quartz-tag-list/docs/adr/0001-the-ring-carries-the-tag-colour.md)
+  [ADR-0001](../../quartz/plugins/quartz-tag-list/docs/adr/0001-the-ring-carries-the-tag-colour.md)
   had follow from the ring's inline `color`. The rim now takes the tag colour as an inline
   `border-color`, and the icon's `currentColor` is the bubble's `--dark`.
 
@@ -424,7 +424,7 @@ lint holds the stylesheet to.
 So a canvas, which CSS can't reach, paints a bubble from the same three through the colour resolver,
 and re-resolves them on `themechange` as the scheme amendment above requires. The graph's nodes
 become bubbles that way, in their own change
-([cgc-graph's ADR-0004, bubble amendment](../../quartz-v5/plugins/quartz-graph/docs/adr/0004-nodes-are-painted-with-their-tag.md#amendment-a-node-with-a-tag-is-its-tags-bubble), #83).
+([cgc-graph's ADR-0004, bubble amendment](../../quartz/plugins/quartz-graph/docs/adr/0004-nodes-are-painted-with-their-tag.md#amendment-a-node-with-a-tag-is-its-tags-bubble), #83).
 
 **Rejected:**
 

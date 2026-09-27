@@ -1,0 +1,61 @@
+{
+  "name": "@chaoticgoodcomputing/quartz-tag-page",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Quartz 5 tag pages: stock tag-page, with the tag's description article as each page's only body. See README.md and CONTEXT.md.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chaoticgoodcomputing/blog.git",
+    "directory": "quartz/plugins/quartz-tag-page"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "//exports": "Every entry has its type declarations beside it, which build.mjs emits: Quartz's generated plugin index skips a package without dist/index.d.ts, and a TypeScript site imports the types from them. ./package.json is how Quartz reads the manifest (import.meta.resolve).",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "../node_modules/.bin/tsc -p ."
+  },
+  "//peerDependencies": "The host Quartz's own copies, never bundled or installed here. Stock tag-page is the plugin this one wraps; every stock Quartz carries it, and @quartz-community/* is a shared scope the loader expects to find beside a plugin, never inside it. The body's vnodes must be the host's Preact's. The types are imported for types only.",
+  "peerDependencies": {
+    "@quartz-community/tag-page": "^1.0.0",
+    "@quartz-community/types": "*",
+    "@quartz-community/utils": "*",
+    "preact": "^10.29.0"
+  },
+  "//devDependencies": "The build tools, so the build never borrows the host's toolchain (ADR-0005): esbuild, and @chaoticgoodcomputing/declarations, which writes the .d.ts beside each entry, a `workspace:*` spec that `pnpm publish` rewrites to the published version.",
+  "devDependencies": {
+    "@chaoticgoodcomputing/declarations": "workspace:*",
+    "esbuild": "^0.28.2"
+  },
+  "quartz": {
+    "name": "cgc-tag-page",
+    "displayName": "Tag page",
+    "description": "Stock tag-page, with the tag's description article as each tag page's only body.",
+    "category": "pageType",
+    "version": "0.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 50,
+    "defaultEnabled": true,
+    "defaultOptions": {},
+    "optionSchema": {
+      "prefixTags": {
+        "type": "boolean"
+      }
+    }
+  }
+}

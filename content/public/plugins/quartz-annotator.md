@@ -1,1 +1,1 @@
-../../../quartz-v5/plugins/quartz-annotator/README.md
+../../../quartz/plugins/quartz-annotator/README.md

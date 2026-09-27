@@ -1,0 +1,53 @@
+{
+  "name": "@chaoticgoodcomputing/quartz-styles",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Quartz 5 engine that fixes the cgc family layer's place in the cascade: emits `@layer cgc;` and nothing else. See README.md, CONTEXT.md and docs/adr/.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chaoticgoodcomputing/blog.git",
+    "directory": "quartz/plugins/quartz-styles"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "//exports": "Every entry has its type declarations beside it, which build.mjs emits: Quartz's generated plugin index skips a package without dist/index.d.ts, and a TypeScript site imports the types from them. ./package.json is how Quartz reads the manifest (import.meta.resolve).",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "../node_modules/.bin/tsc -p ."
+  },
+  "//peerDependencies": "The host Quartz's own copy, never installed here: only its types are used, and esbuild erases them.",
+  "peerDependencies": {
+    "@quartz-community/types": "*"
+  },
+  "//devDependencies": "Build-time only: esbuild compiles src/ to dist/, and @chaoticgoodcomputing/declarations writes the .d.ts beside it (build.mjs). The library is a `workspace:*` spec, which `pnpm publish` rewrites to the published version (ADR-0005).",
+  "devDependencies": {
+    "@chaoticgoodcomputing/declarations": "workspace:*",
+    "esbuild": "^0.28.2"
+  },
+  "quartz": {
+    "name": "cgc-styles",
+    "displayName": "cgc styles",
+    "description": "Fixes the cgc family layer's place in the cascade: above core and themes. Every cgc-* plugin that emits CSS depends on it.",
+    "category": "transformer",
+    "version": "0.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 15,
+    "defaultEnabled": true,
+    "defaultOptions": {}
+  }
+}

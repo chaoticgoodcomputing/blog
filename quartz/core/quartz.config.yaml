@@ -1,0 +1,583 @@
+# The real site's Quartz 5 config (#54): upstream's default, set to the site's own configuration.
+#
+# A steering file (#91): tracked here, inside Quartz Core, where Quartz reads it from its cwd, and
+# edited as Quartz's docs intend (see VENDORED.md). Upstream's default config is pruned, so Quartz
+# has nothing to fall back on: `site:prebuild` refuses to build without this file. Every plugin
+# of ours is listed by its package name, `@chaoticgoodcomputing/quartz-<name>`, and the site plugins
+# by theirs, `@chaoticgoodcomputing/site-<name>`, repo-only (#96): nothing here is a local path. A
+# plugin option that names a file, such as quartz-og-image's `icon`, still resolves against Core's
+# root, `quartz/core/`. Proven by `tests/specs/site-config.spec.mjs`.
+#
+# Kept in upstream's plugin order, so it diffs cleanly against upstream's default config,
+# `quartz.config.default.yaml` at the ref `quartz/upstream.json` pins (pruned from Core, so read
+# it upstream).
+# Where a setting departs from stock, the comment says why, citing the decision (map: #18). Plugins
+# that replace a stock one (tags, graph, post listing, SEO...) arrive with their own tickets.
+#
+# Breakpoints (1000/1300, #22) are not here: core compiles them into Sass, so the site re-declares
+# its grid in its own CSS, in the `site-styles` site plugin (#64).
+
+# yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
+configuration:
+  pageTitle: Chaotic Good Computing
+  # v4's " | Spencer Elkington", stock and unconditional: v4's 70-character guard needs core (#42).
+  pageTitleSuffix: " | Spencer Elkington"
+  enableSPA: true
+  enablePopovers: true
+  # None in core: PostHog, with v4's privacy options, comes from the quartz-posthog plugin (#61).
+  analytics: null
+  locale: en-US
+  baseUrl: blog.chaoticgood.computer
+  ignorePatterns:
+    - private
+    - templates
+    - .obsidian
+    # v4's widget guide, a symlink into the v4 copy until cutover (#48). quartz-mdx's plugin note
+    # absorbs it and takes its URL, `/widgets/readme`, as an alias.
+    - widgets/README.md
+  theme:
+    # Self-hosted by the site-styles site plugin, which fetches the fonts at its own build and
+    # declares them at root-relative URLs (#84). `local` keeps core from fetching them itself: it
+    # writes absolute production URLs, which 404 on any other host (FORK-LEDGER, "Fonts"). CDN
+    # caching only matters to `googleFonts`. v4's typography: the names below are what core and
+    # quartz-fonts set the font properties to, and site-styles ships exactly these families.
+    fontOrigin: local
+    cdnCaching: false
+    typography:
+      header: &headerFont Inter
+      body: &bodyFont Inter
+      code: &codeFont IBM Plex Mono
+    # Both schemes, stock palettes (#41). v4's palette is the stock darkMode one.
+    colors:
+      lightMode:
+        light: "#faf8f8"
+        lightgray: "#e5e5e5"
+        gray: "#b8b8b8"
+        darkgray: "#4e4e4e"
+        dark: "#2b2b2b"
+        secondary: "#284b63"
+        tertiary: "#84a59d"
+        highlight: rgba(143, 159, 169, 0.15)
+        textHighlight: "#fff23688"
+      darkMode:
+        light: "#161618"
+        lightgray: "#393639"
+        gray: "#646464"
+        darkgray: "#d4d4d4"
+        dark: "#ebebec"
+        secondary: "#7b97aa"
+        tertiary: "#84a59d"
+        highlight: rgba(143, 159, 169, 0.15)
+        textHighlight: "#b3aa0288"
+plugins:
+  - source: "@quartz-community/created-modified-date"
+    enabled: true
+    options:
+      defaultDateType: modified
+      priority:
+        - frontmatter
+        - git
+        - filesystem
+    order: 10
+  - source: "@quartz-community/syntax-highlighting"
+    enabled: true
+    options:
+      theme:
+        light: github-light
+        dark: github-dark
+      keepBackground: false
+    order: 20
+  - source: "@quartz-community/obsidian-flavored-markdown"
+    enabled: true
+    options:
+      enableInHtmlEmbed: false
+      enableCheckbox: true
+      # v4: an inline `#word` is text, not a tag.
+      parseTags: false
+    order: 30
+  - source: "@quartz-community/github-flavored-markdown"
+    enabled: true
+    order: 40
+  - source: "@quartz-community/table-of-contents"
+    enabled: true
+    order: 50
+    layout:
+      position: right
+      priority: 30
+      # v4: desktop only, and not on the index.
+      display: desktop-only
+      condition: not-index
+  - source: "@quartz-community/crawl-links"
+    enabled: true
+    options:
+      # v4's absolute link resolution (FORK-LEDGER util/path.ts), and external links in a new tab.
+      markdownLinkResolution: absolute
+      openLinksInNewTab: true
+    order: 60
+  - source: "@quartz-community/description"
+    enabled: true
+    order: 70
+  - source: "@quartz-community/latex"
+    enabled: true
+    options:
+      renderEngine: katex
+    order: 80
+  - source: "@quartz-community/quartz-fonts"
+    enabled: true
+    options:
+      # site-styles self-hosts the fonts (above, #84). This plugin's own default links Google Fonts
+      # from every page, and falls back to upstream's typography, so it gets the site's and loads
+      # nothing.
+      fontOrigin: local
+      header: *headerFont
+      body: *bodyFont
+      code: *codeFont
+  - source: "@chaoticgoodcomputing/site-styles"
+    enabled: true
+  - source: "@chaoticgoodcomputing/quartz-styles"
+    enabled: true
+  - source: "@chaoticgoodcomputing/quartz-tags"
+    enabled: true
+    options:
+      tags:
+        economics: { color: "light-dark(#b35f00, #de8200)", icon: mdi:earth }
+        economics/finance: { icon: mdi:currency-usd }
+        economics/markets: { icon: mdi:handshake }
+        economics/policy: { icon: mdi:script }
+        economics/strategy: { icon: mdi:arrow-decision }
+        engineering: { color: "light-dark(#0070cc, #008CFF)", icon: mdi:wrench }
+        engineering/ai: { icon: mdi:robot }
+        engineering/bio: { icon: mdi:dna }
+        engineering/data: { icon: mdi:pulse }
+        engineering/devops: { icon: mdi:cloud }
+        engineering/frontend: { icon: mdi:palette }
+        engineering/languages: { icon: mdi:code-braces }
+        engineering/languages/csharp: { icon: mdi:language-csharp }
+        engineering/languages/lua: { icon: mdi:language-lua }
+        engineering/languages/python: { icon: mdi:language-python }
+        engineering/languages/scratch: { icon: mdi:cat }
+        engineering/languages/typescript: { icon: mdi:language-typescript }
+        horticulture:
+          { color: "light-dark(#1a8a1a, #00FF00)", icon: mdi:flower }
+        horticulture/seasons: { icon: mdi:weather-sunny }
+        horticulture/seasons/rhythm: { icon: mdi:music-note }
+        horticulture/seasons/systems: { icon: mdi:connection }
+        private: { color: &red "light-dark(#cc0000, #FF0000)", icon: mdi:lock }
+        projects: { color: *red, icon: mdi:source-branch }
+        projects/dayjob: { icon: mdi:vote }
+        projects/flowthru: { icon: mdi:graph-outline }
+        projects/games: { icon: custom:d20 }
+        projects/games/magic-atlas: { icon: mdi:cards-outline }
+        projects/games/roblox: { icon: custom:roblox }
+        projects/games/the-neighborhood: { icon: mdi:city }
+        projects/homelab: { icon: mdi:home-sound-out }
+        projects/site: { icon: custom:quartz-filled }
+        projects/teaching: { icon: mdi:school }
+        projects/undergrad: { icon: custom:uofu }
+        writing: { color: "light-dark(#9a7400, #FFD637)", icon: mdi:pencil }
+        writing/annotations: { icon: mdi:chat-plus }
+        writing/annotations/a-pattern-language: { icon: mdi:home-city }
+        writing/annotations/meetings: { icon: mdi:account-group }
+        writing/articles: { icon: mdi:file-edit }
+        writing/highlights: { icon: mdi:star }
+        writing/tutorials: { icon: mdi:map }
+  - source: "@quartz-community/remove-draft"
+    enabled: true
+  - source: "@quartz-community/alias-redirects"
+    enabled: true
+    options:
+      enableCaseRedirects: true
+  - source: "@quartz-community/content-index"
+    enabled: true
+    options:
+      enableSiteMap: false
+      enableRSS: false
+  - source: "@chaoticgoodcomputing/quartz-seo"
+    enabled: true
+    options:
+      noindexTags: &privateTags
+        - private
+      articleFolders:
+        - content
+      defaultAuthor:
+        type: Person
+        name: &author Spencer Elkington
+        url: https://blog.chaoticgood.computer/about
+      publisher:
+        type: Organization
+        name: Chaotic Good Computing
+        url: https://blog.chaoticgood.computer/about
+        logo:
+          width: 184
+          height: 184
+      articleTypes:
+        - tag: writing/annotations
+          type: ScholarlyArticle
+          section: Annotations
+        - tag: writing/tutorials
+          type: HowTo
+          section: Tutorials
+        - tag: writing/articles
+          type: Article
+          section: Articles
+        - tag: engineering
+          type: TechArticle
+          section: Engineering
+        - tag: economics
+          type: Article
+          section: Economics
+        - tag: horticulture
+          type: BlogPosting
+          section: Digital Garden
+        - tag: projects
+          type: Report
+          section: Projects
+      defaultArticleType: Article
+      rssLimit: 40
+  - source: "@quartz-community/favicon"
+    enabled: true
+  - source: "@chaoticgoodcomputing/quartz-og-image"
+    enabled: true
+    options:
+      colorScheme: darkMode
+      icon: ../icon.png
+  - source: "@quartz-community/cname"
+    enabled: true
+  - source: "@chaoticgoodcomputing/quartz-posthog"
+    enabled: true
+    options:
+      apiKey: phc_BviHJVml66FIB1RFmgeAzZpKRWA0nntGdIOo47hTA3X
+      apiHost: https://app.posthog.com
+      navigationSources:
+        ".cgc-tag-explorer": tag-explorer
+        ".cgc-tag-list": tag-badge
+        ".cgc-post-listing__tags": tag-badge
+        ".tag-link": tag-badge
+        "a.internal": inline-link
+  - source: "@quartz-community/canvas-page"
+    enabled: true
+  - source: "@quartz-community/content-page"
+    enabled: true
+  - source: "@chaoticgoodcomputing/quartz-annotator"
+    enabled: true
+    options:
+      mirrorDir: assets/annotated-documents
+  - source: "@chaoticgoodcomputing/quartz-mdx"
+    enabled: true
+  - source: "@chaoticgoodcomputing/quartz-tag-page"
+    enabled: true
+    options:
+      prefixTags: true
+  - source: "@chaoticgoodcomputing/quartz-graph"
+    enabled: true
+    options:
+      privateTags: *privateTags
+      iconCollections: &iconCollections
+        custom: ../icons
+      localGraph:
+        scale: 1
+        repelForce: 3
+        centerForce: 1.75
+        linkDistance:
+          tagTag: 50
+          tagPost: 50
+          postPost: 50
+        linkStrength:
+          tagTag: 0.3
+          tagPost: 0.3
+          postPost: 0.3
+        edgeOpacity:
+          tagTag:
+            min: 1
+            max: 1
+          tagPost:
+            min: 0.75
+            max: 1
+          postPost:
+            min: 0.5
+            max: 1
+        baseSize:
+          tags: 10
+          posts: 10
+        sizeScaling: &sizeScaling
+          tags: 1.2
+          posts: 1
+        linkStyle: &linkStyle
+          tagTag: solid
+          tagPost: solid
+          postPost: dotted
+        privatePostSizeMultiplier: 0.8
+        removeTags: &removeTags
+          - private
+        expandSelectedSize: 1.4
+        expandSelectedOscillationTime: 2
+      globalGraph:
+        scale: 1
+        repelForce: 2
+        centerForce: 1
+        linkDistance:
+          tagTag: 0
+          tagPost: 0
+          postPost: 0
+        linkStrength:
+          tagTag: 1
+          tagPost: 0.5
+          postPost: 0.05
+        edgeOpacity:
+          tagTag:
+            min: 1
+            max: 1
+          tagPost:
+            min: 0.1
+            max: 1
+          postPost:
+            min: 0.1
+            max: 0.5
+        baseSize:
+          tags: 20
+          posts: 10
+        sizeScaling: *sizeScaling
+        linkStyle: *linkStyle
+        privatePostSizeMultiplier: 0.8
+        removeTags: *removeTags
+        defaultFilterState:
+          timePeriod: month
+          includePrivate: false
+          adaptiveTimePeriod:
+            minPosts: 3
+        expandSelectedSize: 1.4
+        expandSelectedOscillationTime: 2
+        graphStyle: pseudo-shell
+        pseudoShellConfig:
+          radiusBase: 90
+          radiusScale: 40
+          circumferentialRepulsion: 4
+          zoomMargin: 80
+          pinnedTags:
+            - engineering
+            - writing
+            - horticulture
+            - projects
+            - economics
+          showShell: true
+          shellStyle:
+            opacity: 0.5
+            lineStyle: dotted
+            lineWidth: 2
+    layout:
+      position: right
+      priority: 10
+  - source: "@quartz-community/search"
+    enabled: true
+    layout:
+      position: left
+      priority: 20
+      group: toolbar
+      groupOptions:
+        grow: true
+  - source: "@chaoticgoodcomputing/quartz-backlinks"
+    enabled: true
+    options:
+      privateTags: *privateTags
+      excludePrivate: true
+    layout:
+      position: right
+      priority: 50
+      # v4's index has no backlinks.
+      condition: not-index
+  - source: "@quartz-community/article-title"
+    enabled: true
+    layout:
+      position: beforeBody
+      priority: 10
+  - source: "@quartz-community/content-meta"
+    enabled: true
+    layout:
+      position: beforeBody
+      priority: 20
+      condition: not-index
+  - source: "@chaoticgoodcomputing/quartz-tag-list"
+    enabled: true
+    options:
+      showSubtags: true
+      showParentTag: true
+      iconCollections: *iconCollections
+    layout:
+      position: beforeBody
+      priority: 30
+  - source: "@chaoticgoodcomputing/quartz-post-listing"
+    enabled: true
+    options:
+      # v4 left private pages out of the listing.
+      excludeTags: *privateTags
+      showOn: false
+      collapsedItemCount: 5
+      iconCollections: *iconCollections
+    layout:
+      position: afterBody
+      priority: 10
+  - source:
+      repo: "@chaoticgoodcomputing/site-components"
+      name: site-page-title
+    enabled: true
+    options:
+      author: *author
+    layout:
+      position: left
+      priority: 10
+  - source: "@quartz-community/darkmode"
+    enabled: true
+    layout:
+      position: left
+      priority: 30
+      group: toolbar
+  - source: "@chaoticgoodcomputing/quartz-tag-explorer"
+    enabled: true
+    options:
+      privateTags: *privateTags
+      excludePrivate: true
+      iconCollections: *iconCollections
+      drawerBreakpoint: 1000
+    layout:
+      position: left
+      priority: 50
+  # v4's subscribe box under a note (#42, #44), with v4's note-page wording. Not on tag pages or the
+  # index, which have the sidebar box below instead.
+  - source: "@chaoticgoodcomputing/quartz-email-subscribe"
+    enabled: true
+    options:
+      buttondownUsername: &buttondownUsername chaoticgoodcomputing
+      title: Subscribe for more!
+      description: Be notified weekly about any fresh notes or articles!
+    layout:
+      position: afterBody
+      priority: 20
+      condition: not-index
+  - source:
+      repo: "@chaoticgoodcomputing/quartz-email-subscribe"
+      name: email-subscribe-sidebar
+    enabled: true
+    options:
+      buttondownUsername: *buttondownUsername
+    layout:
+      position: right
+      priority: 30
+  - source: "@chaoticgoodcomputing/quartz-page-source"
+    enabled: true
+    options:
+      repoUrl: https://github.com/chaoticgoodcomputing/blog/blob/main
+      contentPath: content/public
+    layout:
+      position: afterBody
+      priority: 30
+      condition: not-index
+  # v4's social cards in the home page's right sidebar, on desktop only (#42, #44, #80): GitHub
+  # activity above the Bluesky feed, fetched in the reader's browser. `quartz.ts` keeps them to the
+  # index (#70), so they have no page filter of their own.
+  - source: "@chaoticgoodcomputing/quartz-social"
+    enabled: true
+    options:
+      showOn: false
+      github:
+        username: spelkington
+        title: GitHub Activity
+        # v4's `theme: default`, GitHub's greens, as the dark half; GitHub's own light greens as the
+        # light half.
+        levelColors:
+          - "light-dark(#ebedf0, #161b22)"
+          - "light-dark(#9be9a8, #0e4429)"
+          - "light-dark(#40c463, #006d32)"
+          - "light-dark(#30a14e, #26a641)"
+          - "light-dark(#216e39, #39d353)"
+      bluesky:
+        handle: speen.us
+        postLimit: 5
+        title: ATProto Feed
+        showMetrics: false
+    layout:
+      position: right
+      priority: 40
+      display: desktop-only
+  - source:
+      repo: "@chaoticgoodcomputing/site-components"
+      name: site-footer
+    enabled: true
+    options:
+      # v4's footer links.
+      links:
+        Contact: https://blog.chaoticgood.computer/contact
+        GitHub: https://github.com/spelkington
+        LinkedIn: https://www.linkedin.com/in/spelkington
+        Privacy Policy: https://chaoticgood.computer/privacy
+        AI Policy: https://chaoticgood.computer/ai-policy
+      copyright:
+        Spencer Elkington: https://chaoticgood.computer/contact
+        Chaotic Good Computing: https://github.com/chaoticgoodcomputing
+    layout:
+      position: afterBody
+      priority: 50
+  - source: "@quartz-community/spacer"
+    enabled: true
+    options: {}
+    order: 25
+    layout:
+      position: left
+      priority: 25
+      display: mobile-only
+  - source: "@quartz-community/bases-page"
+    enabled: true
+    options: {}
+    order: 50
+  # Parses every page's frontmatter, so it stays on. v4 shows no properties table.
+  - source: "@quartz-community/note-properties"
+    enabled: true
+    options:
+      includeAll: false
+      includedProperties:
+        - description
+        - tags
+        - aliases
+      excludedProperties: []
+      hidePropertiesView: true
+      delimiters: ---
+      language: yaml
+    order: 5
+    layout:
+      position: beforeBody
+      priority: 15
+      display: all
+  - source: "@quartz-community/unlisted-pages"
+    enabled: true
+    options: {}
+    order: 45
+  - source: "@quartz-community/encrypted-pages"
+    enabled: true
+    options:
+      iterations: 600000
+      passwordField: password
+      unlistWhenEncrypted: false
+      outputPath: static/encryptedContentIndex.json
+    order: 900
+
+layout:
+  groups:
+    toolbar:
+      priority: 35
+      direction: row
+      gap: 0.5rem
+  byPageType:
+    "404":
+      exclude:
+        - "@chaoticgoodcomputing/quartz-email-subscribe"
+      positions:
+        beforeBody: []
+        right: []
+    annotation:
+      exclude:
+        - "@chaoticgoodcomputing/quartz-page-source"
+        - "@chaoticgoodcomputing/quartz-tag-explorer"
+        - "@quartz-community/table-of-contents"
+    tag:
+      exclude:
+        - "@chaoticgoodcomputing/quartz-page-source"
+        - "@chaoticgoodcomputing/quartz-email-subscribe"

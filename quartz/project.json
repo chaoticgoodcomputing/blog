@@ -1,0 +1,239 @@
+{
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "name": "site",
+  "root": "quartz",
+  "sourceRoot": "quartz/core",
+  "projectType": "application",
+  "targets": {
+    "diff-upstream": {
+      "//": "Print the complete unified diff of Quartz Core against its pinned upstream commit: every vendored change, generated from the tree, never hand-maintained. Steering files, pruned files and Core's pnpm files are not drift and never appear (utils/core-tiers.mjs). stdout is a patch (`git apply`-able from the repo root); the file count goes to stderr. Save with: pnpm nx run site:diff-upstream > vendored.patch",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "node quartz/utils/upstream.mjs diff"
+        ],
+        "cwd": "{workspaceRoot}",
+        "parallel": false
+      }
+    },
+    "vendored-log": {
+      "//": "List every commit that has changed Quartz Core (quartz/core) since the last upgrade, with the drift it made and the tickets it cites, and flag any that cite none. Commits that only moved Core, or changed only its steering, pruned or pnpm files, are left out. Uncommitted drift is listed too. Informational: the tracker for ADR-0001's one-ticket-per-vendored-change rule.",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "node quartz/utils/upstream.mjs log"
+        ],
+        "cwd": "{workspaceRoot}",
+        "parallel": false
+      }
+    },
+    "diff-latest": {
+      "//": "Informational: what an upgrade to the tip of the tracked branch would pull in, leaving out steering, pruned and pnpm files.",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "node quartz/utils/upstream.mjs diff --latest"
+        ],
+        "cwd": "{workspaceRoot}",
+        "parallel": false
+      }
+    },
+    "upgrade": {
+      "//": "Move Quartz Core to another upstream ref, keeping what's ours (utils/upgrade.mjs, VENDORED.md). Refuses a dirty working tree (anything uncommitted but in content/private, the private vault); fetches both refs into the upstream cache (quartz/.upstream-cache); re-applies the vendored changes hunk by hunk, stopping on a conflict and reporting hunks upstream absorbed; takes package.json verbatim and three-way merges the other scaffolding; leaves the steering files alone and shows upstream's template changes; keeps the pruning; converts the target's npm lock with pnpm import and the lock check, then installs it frozen; records the new pinned ref last. Upgrading to the pinned ref changes nothing. Before touching the tree it prints the API-surface report (see upgrade-report). With --verify it then proves the result: the repo guards, the typechecks, the e2e suite, the real-site build and the acceptance report against a built v4 site (--v4=<dir>, default dist/public), stopping at the first failure. Usage: pnpm nx run site:upgrade --ref=<commit|branch|tag> [--verify --v4=<dir>]",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node quartz/utils/upgrade.mjs",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "upgrade-report": {
+      "//": "The upgrade's API-surface report alone, writing nothing (utils/api-report.mjs): what changed between the pinned ref and another upstream ref in the default config (read from the upstream cache, since Core prunes it), the plugin config schema (with the site config validated against the target's, every error listed), the quartz.ts template, the exported plugin, component, loader, condition and frame APIs (and which the steering files use), Core's package.json dependencies and engines, and our packages' peer ranges the target's Core no longer satisfies. Each category says so when it has nothing to report. Usage: pnpm nx run site:upgrade-report --ref=<commit|branch|tag>",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node quartz/utils/upgrade.mjs --report-only",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "install": {
+      "//": "Install Quartz Core's dependencies, frozen, from its lock: exactly the versions upstream's package-lock.json pins at the pinned ref (core-lock checks it). Core is a pnpm 11 project of its own (core/pnpm-workspace.yaml), outside the repo's workspace, so this runs pnpm 11 by exact version through npx whatever pnpm the repo root pins.",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npx --yes pnpm@11.27.1 install --frozen-lockfile"
+        ],
+        "cwd": "{workspaceRoot}/quartz/core",
+        "parallel": false
+      }
+    },
+    "typecheck": {
+      "//": "Typecheck Quartz Core's TypeScript with Core's own tsc and tsconfig: Core source (its quartz/ tree, the vendored changes included) and the site's steering file quartz.ts, which reaches into Core's internals. The build transpiles with esbuild, which strips types, so this is the only check that sees a type-level break in either; the upgrade's --verify runs it among the typechecks (nx run-many -t typecheck). Needs site:install.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./node_modules/.bin/tsc --noEmit -p tsconfig.json",
+        "cwd": "{workspaceRoot}/quartz/core"
+      }
+    },
+    "core-lock": {
+      "//": "The lock check: Core's pnpm lock holds exactly the packages of the pinned ref's package-lock.json, each at the same version, with nothing on either side the other lacks. Reads that file from the upstream cache's checkout of the pinned ref (utils/upstream-tree.mjs), fetched once; compare a local npm lock instead with --args=\"--npm-lock <file>\". Exits 1 on any difference.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node quartz/utils/core-lock.mjs",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "test-utils": {
+      "//": "The node --test suites of this project's tooling (utils/test/): the lock check, against small synthetic locks; the upgrade, its API-surface report and --verify (with stand-in steps), against a synthetic Quartz-shaped upstream and site repo (offline apart from the pnpm store); each repo guard, against a scratch copy or fixture that breaks its rule and against the real repo; the plugin DAG script (utils/plugin-dag.mjs); pruneGonePlugins (utils/plugin-packages.mjs); and prebuild's refusal to build without a site config.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node --test \"quartz/utils/test/*.test.mjs\"",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "guards": {
+      "//": "The repo guards (utils/guards/): fast, lint-style checks of the repo's architecture, no browser. Each checks one rule, lists every violation, and fails the target on any. Quartz Core's (#97): no drift beyond the recorded vendored changes, pruned files absent, package.json and pnpm lock upstream's at the pinned ref, and the site config valid against Core's plugin config schema. The packages' (#98): every plugin and site plugin meets the package contract, one copy of each of Quartz's shared packages (Core's), every source of ours a package name the workspace has and the site package depends on, every publishable package packing only dist/, README, LICENSE and package.json with no repo-only one published, and Quartz's generated plugin index taking in every plugin. The plugin notes' (#86): the plugins' tag's note carrying the DAG the packages declare, and every plugin's README its tagged plugin note. Four of those read built output, so the target depends on every package's build (the site package's dependencies, ^build), which Nx takes from its cache when nothing changed. Cached itself: the inputs are every file a guard reads, and the builds' outputs. The pinned ref's tree is fetched once into quartz/.upstream-cache/trees/. One guard alone: node quartz/utils/guards/run.mjs <name>, or node quartz/utils/guards/<name>.guard.mjs.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node quartz/utils/guards/run.mjs",
+        "cwd": "{workspaceRoot}"
+      },
+      "dependsOn": ["^build"],
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/utils/guards/**/*",
+        "{projectRoot}/utils/*.mjs",
+        "{projectRoot}/core/**/*",
+        "{projectRoot}/upstream.json",
+        "{projectRoot}/VENDORED.md",
+        "{projectRoot}/package.json",
+        "{workspaceRoot}/quartz/plugins/**/*",
+        "{workspaceRoot}/quartz/site-plugins/**/*",
+        "{workspaceRoot}/quartz/libs/*/package.json",
+        "{workspaceRoot}/quartz/tests/quartz.config.yaml",
+        "{workspaceRoot}/quartz/tests/fixture-plugins/*/package.json",
+        "{workspaceRoot}/content/public/tags/projects/site/plugins.md",
+        "{workspaceRoot}/content/public/tags/projects/site/plugins/**/*",
+        "{workspaceRoot}/content/public/plugins/*",
+        "{workspaceRoot}/pnpm-workspace.yaml",
+        "{workspaceRoot}/pnpm-lock.yaml",
+        "{workspaceRoot}/package.json",
+        "{workspaceRoot}/.gitignore",
+        { "dependentTasksOutputFiles": "**/*" },
+        { "runtime": "node --version" }
+      ]
+    },
+    "plugin-dag": {
+      "//": "Rewrite the dependency DAG on the plugins' tag page, the Mermaid block between the generated markers in content/public/tags/projects/site/plugins/index.md, from every package's manifest: engine edges from `quartz.dependencies`, library edges from the libraries a package builds with (#86). The plugin-dag repo guard fails while the note has drifted. Check without writing: node quartz/utils/plugin-dag.mjs --check",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node quartz/utils/plugin-dag.mjs",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "prebuild": {
+      "//": "Prepare Quartz Core to build the real site: refuse to go on without the site config, core/quartz.config.yaml (a steering file; upstream's default is pruned, so there is nothing to fall back on), link host node_modules beside our plugins, and build every plugin of ours the site config enables, each a package listed by name. See VENDORED.md.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node quartz/utils/prebuild.mjs",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "build": {
+      "//": "Build the real site: content/public, with the site config, into quartz/core/public, then finish it with utils/postbuild.mjs: the site's own root-level files (robots.txt, BingSiteAuth.xml, the IndexNow key file) and the site's icon over stock's (static/icon.png, favicon.ico). Extra flags go to `quartz build`, e.g. --concurrency=4.",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          { "command": "npx quartz build -d ../../content/public --output public", "forwardAllArgs": true },
+          { "command": "node ../utils/postbuild.mjs public", "forwardAllArgs": false }
+        ],
+        "cwd": "{workspaceRoot}/quartz/core",
+        "parallel": false
+      },
+      "dependsOn": ["prebuild"],
+      "outputs": [
+        "{workspaceRoot}/quartz/core/public"
+      ]
+    },
+    "serve": {
+      "//": "Build the real site and serve it with Quartz's dev server, rebuilding on content changes. Mixed-case redirects are only emitted on a case-sensitive filesystem, so a macOS serve shows none. The output, quartz/.serve-public, is outside Core on purpose: serve's source watcher watches every .ts and .tsx under it, and would take the vault's widget sources, which the build copies into its output, for Quartz's own and restart the whole build over and over (quartz-mdx's watch spec).",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx quartz build --serve -d ../../content/public --output ../.serve-public",
+        "cwd": "{workspaceRoot}/quartz/core"
+      },
+      "dependsOn": ["prebuild"],
+      "continuous": true
+    },
+    "_serve-static": {
+      "//": "Helper: serve the real site's build, quartz/core/public, on port 8080 for the Lighthouse targets. Ported from v4's `site` project (FORK-LEDGER, #42: keep).",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx serve quartz/core/public -l 8080",
+        "cwd": "{workspaceRoot}"
+      },
+      "continuous": true
+    },
+    "eval": {
+      "//": "Lighthouse audit of the built site's home page, served by _serve-static, then its actionable insights (utils/lighthouse).",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "sleep 5",
+          "lighthouse http://localhost:8080 --only-categories=performance,accessibility,best-practices,seo --output=html,json --output-path=./utils/lighthouse/raw/lighthouse-report.html",
+          "node utils/lighthouse/extract-insights.mjs lighthouse-report"
+        ],
+        "parallel": false,
+        "cwd": "{workspaceRoot}"
+      },
+      "outputs": ["{workspaceRoot}/utils/lighthouse/assets/lighthouse-insights.json"],
+      "dependsOn": ["build", "_serve-static"]
+    },
+    "eval:live": {
+      "//": "Lighthouse audit of the live site, then its actionable insights (utils/lighthouse).",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "lighthouse https://blog.chaoticgood.computer --only-categories=performance,accessibility,best-practices,seo --output=html,json --output-path=./utils/lighthouse/raw/lighthouse-report-live.html",
+          "node utils/lighthouse/extract-insights.mjs lighthouse-report-live"
+        ],
+        "parallel": false,
+        "cwd": "{workspaceRoot}"
+      },
+      "outputs": ["{workspaceRoot}/utils/lighthouse/assets/lighthouse-insights-live.json"]
+    },
+    "eval:multi": {
+      "//": "Lighthouse CI over the first public pages of the built site's sitemap, served by _serve-static, then the aggregated insights. generate-urls-from-sitemap.mjs writes the lighthouserc.cjs autorun reads.",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "sleep 5",
+          "node utils/lighthouse/generate-urls-from-sitemap.mjs",
+          "npx @lhci/cli@0.15.x autorun --config=utils/lighthouse/lighthouserc.cjs",
+          "node utils/lighthouse/aggregate-multi-results.mjs"
+        ],
+        "parallel": false,
+        "cwd": "{workspaceRoot}",
+        "env": {
+          "LHCI_SITEMAP": "quartz/core/public/sitemap.xml",
+          "LHCI_MAX_URLS": "20",
+          "LHCI_RUNS": "3"
+        }
+      },
+      "outputs": ["{workspaceRoot}/utils/lighthouse/assets/lighthouse-insights-multi.json"],
+      "dependsOn": ["build", "_serve-static"]
+    },
+    "clean": {
+      "//": "Remove build output and caches from Quartz Core: Quartz's transpile cache is core/quartz/.quartz-cache (cli/constants.js cacheFile), and core/.quartz-cache holds only its content cache, which `quartz sync` uses.",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "rm -rf quartz/core/public",
+          "rm -rf quartz/.serve-public",
+          "rm -rf quartz/core/quartz/.quartz-cache",
+          "rm -rf quartz/core/.quartz-cache"
+        ],
+        "cwd": "{workspaceRoot}",
+        "parallel": true
+      }
+    }
+  }
+}

@@ -17,15 +17,15 @@ dist
 .claude
 .agents
 
-# Quartz Core, Quartz 5 (see quartz-v5/VENDORED.md)
-quartz-v5/core/public
-# site-v5:serve's output, outside Core (quartz-v5/project.json)
-quartz-v5/.serve-public
-# the upstream cache: the upgrade's bare git repo of the upstream commits it has fetched (quartz-v5/utils/upstream-cache.mjs),
-# and trees/<sha>/, the repo guards' checkouts of the pinned ref (quartz-v5/utils/upstream-tree.mjs)
-quartz-v5/.upstream-cache/
-quartz-v5/core/.quartz/
+# Quartz Core, Quartz 5 (see quartz/VENDORED.md)
+quartz/core/public
+# site:serve's output, outside Core (quartz/project.json)
+quartz/.serve-public
+# the upstream cache: the upgrade's bare git repo of the upstream commits it has fetched (quartz/utils/upstream-cache.mjs),
+# and trees/<sha>/, the repo guards' checkouts of the pinned ref (quartz/utils/upstream-tree.mjs)
+quartz/.upstream-cache/
+quartz/core/.quartz/
 # leftovers of the e2e scratch "site" location, retired in #96; the harness no longer makes these
-quartz-v5/.site-scratch-*/
+quartz/.site-scratch-*/
 
 .op

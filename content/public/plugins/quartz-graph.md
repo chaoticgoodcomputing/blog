@@ -1,1 +1,1 @@
-../../../quartz-v5/plugins/quartz-graph/README.md
+../../../quartz/plugins/quartz-graph/README.md

@@ -1,1 +1,1 @@
-../../../quartz-v5/plugins/quartz-email-subscribe/README.md
+../../../quartz/plugins/quartz-email-subscribe/README.md

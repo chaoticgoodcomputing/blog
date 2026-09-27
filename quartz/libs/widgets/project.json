@@ -1,0 +1,18 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "name": "@chaoticgoodcomputing/widgets",
+  "root": "quartz/libs/widgets",
+  "sourceRoot": "quartz/libs/widgets/src",
+  "projectType": "library",
+  "tags": ["cgc", "cgc:lib"],
+  "targets": {
+    "e2e": {
+      "//": "This library's specs only, through the shared suite: fixture .mdx pages import each widget through quartz-mdx. No build target: the page's bundler compiles the source.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx playwright test ../libs/widgets",
+        "cwd": "{workspaceRoot}/quartz/tests"
+      }
+    }
+  }
+}

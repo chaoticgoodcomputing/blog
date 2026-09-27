@@ -6,7 +6,7 @@ date: 2026-09-24
 # Playwright e2e as the plugin TDD loop
 
 Every `cgc-*` plugin is written test-first against a real, built Quartz site. The suite is the
-Nx project **`site-v5-e2e`** at `quartz-v5/tests/`. Each run builds our plugins and a small
+Nx project **`site-e2e`** at `quartz/tests/`. Each run builds our plugins and a small
 **content fixture** into a site, then drives it with Playwright. It asserts on the rendered page and
 on emitted files. A plugin's own specs live beside the plugin. One standing spec, **no-bleed**,
 checks ADR-0003's rule 2 at the rendered page, where a collision actually shows up. One spec runs
@@ -18,7 +18,7 @@ package's own `test` target. This suite is e2e only, because what it proves need
 
 > Source links point at upstream Quartz at
 > [`97a2d05`](https://github.com/jackyzha0/quartz/tree/97a2d05f80c4c50534959b1d0d41cc4b3895625e)
-> (v5.0.0), the ref `quartz-v5/upstream.json` pins. `nx run site-v5:diff-upstream` proves the
+> (v5.0.0), the ref `quartz/upstream.json` pins. `nx run site:diff-upstream` proves the
 > vendored copy is byte-identical to it. Every claim below marked _measured_ was run on the throwaway
 > `prototype/playwright-loop` branch, which also holds a stub plugin and a spec made to fail.
 
@@ -48,7 +48,7 @@ holds its own config, written from `tests/quartz.config.yaml`. This makes no ven
 ([gitLoader.ts:435-482](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L435-L482)).
 Only a git source gets `npm install` and `npm run build`
 ([:547](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L547)).
-The harness therefore builds every package under `quartz-v5/plugins/` before it builds a site
+The harness therefore builds every package under `quartz/plugins/` before it builds a site
 (_Amended below_: every plugin is now a package source, which Quartz imports by name and builds no
 more than a local one). This corrects the trap recorded on
 [Plugin packaging and shared SCSS tokens](https://github.com/chaoticgoodcomputing/blog/issues/22):
@@ -68,19 +68,19 @@ turned it red, and the failure named every affected element and `normal → 2px`
 1. **Specs assert on the rendered page and on emitted files.** Both are available through the
    **harness** (`harness/test.mjs`). It re-exports `test` and `expect` with an `emitted` fixture
    (the built site on disk) and a `baselinePage` fixture.
-2. **A plugin's specs live beside it**, in `quartz-v5/plugins/<pkg>/e2e/*.spec.mjs`, and import
+2. **A plugin's specs live beside it**, in `quartz/plugins/<pkg>/e2e/*.spec.mjs`, and import
    from the harness by relative path. They cannot import `@playwright/test` directly, because the
    suite's `node_modules` isn't on their resolution path. That is deliberate: it gives one copy of
    Playwright and one set of fixtures. Cross-plugin specs, such as no-bleed and composition between
-   an engine and its consumers, live centrally in `quartz-v5/tests/specs/`.
+   an engine and its consumers, live centrally in `quartz/tests/specs/`.
 3. **The no-bleed spec is standing.** It isn't opt-in and it isn't CI-only. It costs a second site
    build, which runs after the first: builds run one at a time (_Amended below_, one site build at a
    time).
 4. **The content fixture grows one page at a time**, when a plugin needs a case. It stays small,
    because its build time is the loop's floor.
-5. **The loop:** `nx run site-v5-e2e:e2e`, or narrowed with
+5. **The loop:** `nx run site-e2e:e2e`, or narrowed with
    `--args="../plugins/<pkg> -g <name>"`. For a faster turn, run `npx playwright test ...` from
-   `quartz-v5/tests/`. Every run rebuilds all plugins and both sites. There is no watch mode, and
+   `quartz/tests/`. Every run rebuilds all plugins and both sites. There is no watch mode, and
    Playwright's UI mode runs global setup only once, so it does not see plugin rebuilds.
 6. **The suite gates CI.** The workflow itself is deferred to the deployment work, alongside
    [Per-package Nx projects break the deploy gate's affected check](https://github.com/chaoticgoodcomputing/blog/issues/33).
@@ -100,8 +100,8 @@ turned it red, and the failure named every affected element and `normal → 2px`
   and a bleed is between stylesheets.
 - **Naming the project `tests`.** Rejected. The name is workspace-global and generic. The
   directory == project-name rule on #22 exists because the plugin loader keys on basename, and this
-  project isn't a plugin. `site-v5-e2e` follows Nx's `<app>-e2e` convention, and the cutover
-  find-and-replace `site-v5` → `site` renames it for free.
+  project isn't a plugin. `site-e2e` follows Nx's `<app>-e2e` convention, and the cutover
+  find-and-replace `site-v5` → `site` renamed it for free.
 
 ## Consequences
 
@@ -166,7 +166,7 @@ What that costs:
   build now.
 - **Scratch sites queue.** A spec that builds one waits for every other worker's build to finish, so
   more workers don't make scratch-heavy runs faster: those runs are as slow as their builds in a row.
-- **The lock covers the harness only.** The acceptance report and `site-v5:build` share the same
+- **The lock covers the harness only.** The acceptance report and `site:build` share the same
   transpile file and take no lock, so neither runs beside the suite in the same checkout.
 
 A private copy of `quartz/` per root would let builds overlap again, at the price of copying the
@@ -198,7 +198,7 @@ Only the content changes. The first build holds the build lock, and the rebuilds
 because they re-run what the process has already imported. That holds only while Quartz doesn't
 re-transpile itself, so the output goes outside the Quartz root: serve's source watcher watches
 every `.ts` and `.tsx` under that root, and would take a widget's source, which Quartz copies into
-the output, for its own. The site's own serve (`site-v5:serve`) writes outside the root for the same
+the output, for its own. The site's own serve (`site:serve`) writes outside the root for the same
 reason, so a serve run left up is laid out as the site's serve is.
 
 
@@ -213,7 +213,7 @@ install, a no-op when nothing has moved. Its second is an Nx build of every plug
 through their `build` targets, which are cacheable, so a plugin whose sources, libraries and
 dependencies are unchanged is restored from Nx's cache rather than rebuilt. "Every run rebuilds all
 plugins" (rule 5) now means every run brings all plugins up to date. The site builds are still cold.
-Plugins still load by local path; `quartz-v5/VENDORED.md` has the workspace's settings. (_Amended
+Plugins still load by local path; `quartz/VENDORED.md` has the workspace's settings. (_Amended
 below_: they no longer do.)
 
 ## Amendment: plugins load by package name, and local sources are retired
@@ -228,8 +228,8 @@ through the site package's `node_modules`
 ([config-loader.ts:441-442](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L441-L442)),
 and neither links it into `.quartz/plugins/` nor builds it. So "Quartz does not build our plugins"
 holds as before, and the harness still builds every package first, through the workspace install
-and the Nx builds of the amendment above (`quartz-v5/utils/plugin-packages.mjs`). What goes is every
-code path for a local source: neither the harness nor `site-v5:prebuild` resolves, builds or rewrites
+and the Nx builds of the amendment above (`quartz/utils/plugin-packages.mjs`). What goes is every
+code path for a local source: neither the harness nor `site:prebuild` resolves, builds or rewrites
 one. The harness's `siteConfig()` leaves the site config's sources as they are, since a package name
 resolves the same from any root, and still rebases a plugin option that is a relative path, such as
 `quartz-og-image`'s `icon`. Its second place for scratch roots, beside Quartz Core, which existed so
@@ -238,6 +238,6 @@ made beside the fixture roots. Every build first removes the links a plugin left
 while it was a local source.
 
 The fixture's own plugins (`tests/fixture-plugins/`) are the one exception, written down in
-`quartz-v5/tests/CONTEXT.md`: they stay local sources. They exist only for the suite, so making them
+`quartz/tests/CONTEXT.md`: they stay local sources. They exist only for the suite, so making them
 packages would list them among the real site's dependencies, where Quartz resolves a package source;
 and they are plain ESM with no build, so keeping them local brings back no build or rewrite path.

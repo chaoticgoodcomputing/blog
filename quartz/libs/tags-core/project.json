@@ -1,0 +1,27 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "name": "@chaoticgoodcomputing/tags-core",
+  "root": "quartz/libs/tags-core",
+  "sourceRoot": "quartz/libs/tags-core/src",
+  "projectType": "library",
+  "tags": ["cgc", "cgc:lib"],
+  "targets": {
+    "lint": {
+      "//": "The library-CSS check on the bubble's stylesheet, and that it paints with the palette ./bubble publishes. See lint-css.mjs.",
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run lint", "cwd": "{projectRoot}" }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run typecheck", "cwd": "{projectRoot}" }
+    },
+    "e2e": {
+      "//": "This library's specs only, through the shared suite. No build target: plugins inline the source.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx playwright test ../libs/tags-core",
+        "cwd": "{workspaceRoot}/quartz/tests"
+      }
+    }
+  }
+}

@@ -17,8 +17,8 @@ the engine and read those artifacts. No plugin knows anything about another plug
 
 > Source links below point at **upstream Quartz** at
 > [`97a2d05`](https://github.com/jackyzha0/quartz/tree/97a2d05f80c4c50534959b1d0d41cc4b3895625e)
-> (v5.0.0) — the ref `quartz-v5/upstream.json` pins our vendored copy to. `nx run
-site-v5:diff-upstream` reports that copy byte-identical to it, so the line numbers hold for
+> (v5.0.0) — the ref `quartz/upstream.json` pins our vendored copy to. `nx run
+site:diff-upstream` reports that copy byte-identical to it, so the line numbers hold for
 > both.
 
 ## Why
@@ -159,7 +159,7 @@ _2026-09-25, from [Widget library: name, home and shape for `pdf-viewer` and `bl
 
 Libraries are published under **`@chaoticgoodcomputing/`**, the npm scope we own, not `@cgc/`.
 The worked example's `@cgc/tags-core` is `@chaoticgoodcomputing/tags-core`. Each library lives
-at `quartz-v5/libs/<name>`, and its Nx project name is its npm name. Plugins keep unscoped
+at `quartz/libs/<name>`, and its Nx project name is its npm name. Plugins keep unscoped
 `cgc-*` names, because for a local source the loader takes a plugin's identity from its directory.
 
 ## Amendment: consumers declare an engine by its plugin name

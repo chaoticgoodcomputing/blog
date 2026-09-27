@@ -1,1 +1,1 @@
-../../../quartz-v5/plugins/quartz-tags/README.md
+../../../quartz/plugins/quartz-tags/README.md

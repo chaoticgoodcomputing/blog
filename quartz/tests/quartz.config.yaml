@@ -1,0 +1,459 @@
+# The fixture site's config: upstream's default, plus our plugins under test.
+# A plugin under test is listed by its package name, as a downstream site lists it, e.g.
+#   - source: "@chaoticgoodcomputing/quartz-graph"
+# The one exception is the fixture's own plugins, which exist only for the suite and are listed by a
+# local source, resolved against the fixture root (tests/CONTEXT.md, "Fixture plugin"; #96):
+#   - source: ../fixture-plugins/fixture-consumer
+# See quartz/tests/harness/site.mjs and docs/adr/0004.
+# Site plugins (`site-plugins/`) are never listed: the fixture stays stock (#39), and their specs
+# build scratch sites that load them.
+
+# yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
+configuration:
+  pageTitle: cgc fixture
+  pageTitleSuffix: ""
+  enableSPA: true
+  enablePopovers: true
+  analytics:
+    provider: plausible
+  locale: en-US
+  baseUrl: localhost
+  ignorePatterns:
+    - private
+    - templates
+    - .obsidian
+  theme:
+    fontOrigin: googleFonts
+    cdnCaching: true
+    typography:
+      header: Schibsted Grotesk
+      body: Source Sans Pro
+      code: IBM Plex Mono
+    colors:
+      lightMode:
+        light: "#faf8f8"
+        lightgray: "#e5e5e5"
+        gray: "#b8b8b8"
+        darkgray: "#4e4e4e"
+        dark: "#2b2b2b"
+        secondary: "#284b63"
+        tertiary: "#84a59d"
+        highlight: rgba(143, 159, 169, 0.15)
+        textHighlight: "#fff23688"
+      darkMode:
+        light: "#161618"
+        lightgray: "#393639"
+        gray: "#646464"
+        darkgray: "#d4d4d4"
+        dark: "#ebebec"
+        secondary: "#7b97aa"
+        tertiary: "#84a59d"
+        highlight: rgba(143, 159, 169, 0.15)
+        textHighlight: "#b3aa0288"
+plugins:
+  - source: "@quartz-community/created-modified-date"
+    enabled: true
+    options:
+      defaultDateType: modified
+      priority:
+        - frontmatter
+        - git
+        - filesystem
+    order: 10
+  - source: "@quartz-community/syntax-highlighting"
+    enabled: true
+    options:
+      theme:
+        light: github-light
+        dark: github-dark
+      keepBackground: false
+    order: 20
+  - source: "@quartz-community/obsidian-flavored-markdown"
+    enabled: true
+    options:
+      enableInHtmlEmbed: false
+      enableCheckbox: true
+    order: 30
+  - source: "@quartz-community/github-flavored-markdown"
+    enabled: true
+    order: 40
+  - source: "@quartz-community/table-of-contents"
+    enabled: true
+    order: 50
+    layout:
+      position: right
+      priority: 30
+  - source: "@quartz-community/crawl-links"
+    enabled: true
+    options:
+      markdownLinkResolution: shortest
+    order: 60
+  - source: "@quartz-community/description"
+    enabled: true
+    order: 70
+  - source: "@quartz-community/latex"
+    enabled: true
+    options:
+      renderEngine: katex
+    order: 80
+  - source: "@quartz-community/citations"
+    enabled: false
+    order: 85
+  - source: "@quartz-community/hard-line-breaks"
+    enabled: false
+    order: 90
+  - source: "@quartz-community/ox-hugo"
+    enabled: false
+    order: 91
+  - source: "@quartz-community/roam"
+    enabled: false
+    order: 92
+  - source: "@quartz-community/quartz-fonts"
+    enabled: true
+  - source: "@quartz-themes/core"
+    enabled: false
+    options:
+      theme: tokyo-night
+      mode: both
+  # The family layer's position, above core and themes (#63).
+  - source: "@chaoticgoodcomputing/quartz-styles"
+    enabled: true
+  # A consumer of the styles engine that declares it by its package name (#63, #95). Exists only in the fixture.
+  - source: ../fixture-plugins/fixture-consumer
+    enabled: true
+  # The tag engine (#69): one dictionary of tag colours and icon ids. Its colours are in each form a
+  # site can write, a hex, a theme variable and a light-dark() pair, and every other tag inherits.
+  - source: "@chaoticgoodcomputing/quartz-tags"
+    enabled: true
+    options:
+      tags:
+        fixture: { color: "#0a7d32" }
+        writing: { color: "var(--secondary)", icon: "mdi:pencil" }
+        writing/essays: { icon: "mdi:feather" }
+        markdown: { color: "light-dark(#b35f00, #de8200)" }
+        # An icon from the fixture's own collection (#71), on a tag with no colour of its own.
+        mdtwin: { icon: "custom:diamond" }
+  # A reader of the engine's per-page artifact, which no real consumer shows yet (#69). Fixture only.
+  - source: ../fixture-plugins/fixture-tag-reader
+    enabled: true
+  # The page's tag badges, painted from the engine's colours (#69), in stock tag-list's slot, with
+  # the real site's options.
+  - source: "@chaoticgoodcomputing/quartz-tag-list"
+    enabled: true
+    options:
+      showSubtags: true
+      showParentTag: true
+      # The fixture's own icon collection (#71), `custom:`, resolved against the fixture root as a
+      # local `source:` is. Every plugin that draws icons takes it, through the anchor.
+      iconCollections: &iconCollections
+        custom: ../fixture-icons
+    layout:
+      position: beforeBody
+      priority: 30
+  # The site's posts, newest first, each with its tags' badges and bubbles (#73, #82): on the
+  # index, and on tag pages filtered to the tag, the first five shown, as on the real site. The
+  # fixture's 404 page has stock's bare frame, with no slot after the body, so the real site's
+  # `showOn: [index, "404"]` is proven on a scratch site built from the site config instead.
+  - source: "@chaoticgoodcomputing/quartz-post-listing"
+    enabled: true
+    options:
+      collapsedItemCount: 5
+      # The real site shows none. On here, so the badges' counts are proven in both plugins (#82).
+      showTagCounts: true
+      iconCollections: *iconCollections
+    layout:
+      position: afterBody
+      priority: 10
+  - source: "@quartz-community/remove-draft"
+    enabled: true
+  - source: "@quartz-community/explicit-publish"
+    enabled: false
+  - source: "@quartz-community/alias-redirects"
+    enabled: true
+  # quartz-seo writes the sitemap and feed instead, leaving private pages out (#28, #67). This still
+  # writes contentIndex.json, which lists them for search and the graph.
+  - source: "@quartz-community/content-index"
+    enabled: true
+    options:
+      enableSiteMap: false
+      enableRSS: false
+  - source: "@chaoticgoodcomputing/quartz-seo"
+    enabled: true
+    options:
+      noindexTags:
+        - private
+      defaultAuthor:
+        type: Person
+        name: Fixture Author
+        url: https://localhost/about
+      # Fewer than the fixture's articles, so the feed is cut to its newest (#67).
+      rssLimit: 5
+  - source: "@quartz-community/favicon"
+    enabled: true
+  # quartz-og-image replaces stock og-image, which it wraps.
+  - source: "@quartz-community/og-image"
+    enabled: false
+  - source: "@chaoticgoodcomputing/quartz-og-image"
+    enabled: true
+    options:
+      # Resolved against the fixture root, as `source:` is.
+      icon: ../../plugins/quartz-og-image/e2e/icon.png
+  - source: "@quartz-community/cname"
+    enabled: true
+  # PostHog at a reserved host that never resolves, which the harness answers (harness/analytics.mjs).
+  # A navigation is labelled by the first selector its link matches, in this order.
+  - source: "@chaoticgoodcomputing/quartz-posthog"
+    enabled: true
+    options:
+      apiKey: phc_fixture
+      apiHost: https://posthog.invalid
+      navigationSources:
+        ".left.sidebar": left-sidebar
+        ".callout": callout
+        "article p a.internal": inline-link
+  - source: "@quartz-community/canvas-page"
+    enabled: true
+  - source: "@quartz-community/content-page"
+    enabled: true
+  - source: "@chaoticgoodcomputing/quartz-mdx"
+    enabled: true
+  - source: "@chaoticgoodcomputing/quartz-annotator"
+    enabled: true
+    options:
+      # Resolved against the fixture root, which is gitignored. The default would pin through the
+      # root's `node_modules` symlink into the real site's cache.
+      cacheDir: .cache/cgc-annotator
+  - source: "@quartz-community/folder-page"
+    enabled: true
+  # quartz-tag-page replaces stock tag-page, which it wraps (#72). The baseline turns stock back on.
+  - source: "@quartz-community/tag-page"
+    enabled: false
+  - source: "@chaoticgoodcomputing/quartz-tag-page"
+    enabled: true
+  - source: "@quartz-community/explorer"
+    enabled: true
+    layout:
+      position: left
+      priority: 50
+  # v4's TagExplorer (#76): the tag hierarchy, each tag in its colour with its icon, and the pages
+  # under it; a drawer on a narrow screen, at the plugin's default width, core's. Beside stock
+  # explorer, which the fixture keeps. `secret` is a second private tag, so a private page can sit
+  # under a public tag (`explorer`) without changing what other specs count under `private`.
+  - source: "@chaoticgoodcomputing/quartz-tag-explorer"
+    enabled: true
+    options:
+      excludeTags:
+        - private
+        - secret
+      privateTags:
+        - private
+        - secret
+      iconCollections: *iconCollections
+    layout:
+      position: left
+      priority: 55
+  # Replaced by quartz-graph, in the same slot.
+  - source: "@quartz-community/graph"
+    enabled: false
+    layout:
+      position: right
+      priority: 10
+  # v4's graph (#74), drawn from its own index. Pages under `private` are private: drawn in the
+  # graph, and hidden by the global graph's private toggle.
+  - source: "@chaoticgoodcomputing/quartz-graph"
+    enabled: true
+    options:
+      privateTags:
+        - private
+      # The real site's node sizes in the local graph, big enough to show each node's colour round
+      # its icon (#77).
+      localGraph:
+        baseSize: { tags: 10, posts: 10 }
+      # The fixture's icon collection, for the icons its tags are drawn with (#77).
+      iconCollections: *iconCollections
+    layout:
+      position: right
+      priority: 10
+  - source: "@quartz-community/search"
+    enabled: true
+    layout:
+      position: left
+      priority: 20
+      group: toolbar
+      groupOptions:
+        grow: true
+  # Replaced by quartz-backlinks, in the same slot.
+  - source: "@quartz-community/backlinks"
+    enabled: false
+    layout:
+      position: right
+      priority: 50
+  # Backlinks with private pages marked (#78), with the site's private tag, as quartz-seo takes it.
+  - source: "@chaoticgoodcomputing/quartz-backlinks"
+    enabled: true
+    options:
+      privateTags:
+        - private
+    layout:
+      position: right
+      priority: 50
+  - source: "@quartz-community/article-title"
+    enabled: true
+    layout:
+      position: beforeBody
+      priority: 10
+  - source: "@quartz-community/content-meta"
+    enabled: true
+    layout:
+      position: beforeBody
+      priority: 20
+  - source: "@quartz-community/tag-list"
+    enabled: false
+    layout:
+      position: beforeBody
+      priority: 30
+  - source: "@quartz-community/page-title"
+    enabled: true
+    layout:
+      position: left
+      priority: 10
+  - source: "@quartz-community/darkmode"
+    enabled: true
+    layout:
+      position: left
+      priority: 30
+      group: toolbar
+  - source: "@quartz-community/reader-mode"
+    enabled: true
+    layout:
+      position: left
+      priority: 35
+      group: toolbar
+  - source: "@quartz-community/breadcrumbs"
+    enabled: true
+    layout:
+      position: beforeBody
+      priority: 5
+      condition: not-index
+  - source: "@quartz-community/comments"
+    enabled: false
+    options:
+      provider: giscus
+      options: {}
+    layout:
+      position: afterBody
+      priority: 10
+  - source: "@chaoticgoodcomputing/quartz-email-subscribe"
+    enabled: true
+    options:
+      buttondownUsername: cgc-fixture
+    layout:
+      position: afterBody
+      priority: 20
+  # Points at the fixture's own files in this repo, so a spec can check the link reaches a real file.
+  - source: "@chaoticgoodcomputing/quartz-page-source"
+    enabled: true
+    options:
+      repoUrl: https://github.com/chaoticgoodcomputing/blog/blob/main
+      contentPath: quartz/tests/content-fixture
+    layout:
+      position: afterBody
+      priority: 30
+  # v4's social cards (#80), in the home page's right sidebar, with their default options: a GitHub
+  # user's contributions and a Bluesky account's posts, from the suite's stand-ins
+  # (harness/github.mjs, harness/bluesky.mjs), which hold these two accounts. Not `desktop-only`, as
+  # on the real site: stock's wrapper for it is a `div` on every page, which renders nothing where
+  # the cards don't, but shifts no-bleed's keys for the sidebar. The site spec proves it instead.
+  - source: "@chaoticgoodcomputing/quartz-social"
+    enabled: true
+    options:
+      github:
+        username: fixture-octo
+      bluesky:
+        handle: fixture.bsky.social
+    layout:
+      position: right
+      priority: 40
+  - source: "@quartz-community/footer"
+    enabled: true
+    options:
+      links:
+        GitHub: https://github.com/jackyzha0/quartz
+        Discord Community: https://discord.gg/cRFFHYye7t
+    layout:
+      position: footer
+      priority: 50
+  - source: "@quartz-community/recent-notes"
+    enabled: false
+  - source: "@quartz-community/spacer"
+    enabled: true
+    options: {}
+    order: 25
+    layout:
+      position: left
+      priority: 25
+      display: mobile-only
+  - source: "@quartz-community/bases-page"
+    enabled: true
+    options: {}
+    order: 50
+  - source: "@quartz-community/note-properties"
+    enabled: true
+    options:
+      includeAll: false
+      includedProperties:
+        - description
+        - tags
+        - aliases
+      excludedProperties: []
+      hidePropertiesView: false
+      delimiters: ---
+      language: yaml
+    order: 5
+    layout:
+      position: beforeBody
+      priority: 15
+      display: all
+  - source: "@quartz-community/unlisted-pages"
+    enabled: true
+    options: {}
+    order: 45
+  - source: "@quartz-community/encrypted-pages"
+    enabled: true
+    options:
+      iterations: 600000
+      passwordField: password
+      unlistWhenEncrypted: false
+      outputPath: static/encryptedContentIndex.json
+    order: 900
+  - source: "@quartz-community/stacked-pages"
+    enabled: false
+    layout:
+      position: afterBody
+      priority: 50
+      display: all
+layout:
+  groups:
+    toolbar:
+      priority: 35
+      direction: row
+      gap: 0.5rem
+  byPageType:
+    "404":
+      positions:
+        beforeBody: []
+        left: []
+        right: []
+    content: {}
+    folder:
+      exclude:
+        - reader-mode
+      positions:
+        right: []
+    tag:
+      exclude:
+        - reader-mode
+      positions:
+        right: []
+    canvas: {}
+    bases: {}
