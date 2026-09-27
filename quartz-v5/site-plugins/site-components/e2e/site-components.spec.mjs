@@ -6,7 +6,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { createRequire } from "node:module"
 import { test, expect, resolvedColour, routeSite } from "../../../tests/harness/test.mjs"
-import { buildScratchSite, fixtureConfig, pluginSources, siteConfig, siteConfigFile, core } from "../../../tests/harness/site.mjs"
+import { buildScratchSite, siteConfig, siteConfigFile, core } from "../../../tests/harness/site.mjs"
 
 const YAML = createRequire(path.join(core, "package.json"))("yaml")
 
@@ -137,9 +137,4 @@ test("styles the footer as v4 did: centred, dimmed, its links in one centred row
     "list-style-type": "none",
   })
   await expectStyles(footer.locator("> p").first(), { "margin-top": "16px", "margin-bottom": "16px" })
-})
-
-test("is left out of every fixture config", () => {
-  const sources = pluginSources(fixtureConfig()).map((source) => JSON.stringify(source))
-  expect(sources.filter((source) => source.includes("site-components"))).toEqual([])
 })

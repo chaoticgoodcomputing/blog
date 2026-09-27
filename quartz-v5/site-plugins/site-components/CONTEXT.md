@@ -63,7 +63,16 @@ plugin no reference to it. The owner decided on #70 that the site adds no `is-in
 through `registerCondition`, a vendored change or an index page type.
 
 So this plugin registers no condition. The site's steering file `quartz-v5/core/quartz.ts` keeps
-those components to their pages instead, through Quartz's TS layout override. Every root the e2e
-harness builds shares that file, so its rule applies only to a config that loads this plugin: loading
-it is what marks a config as the site's own, and no fixture config does (`e2e/site-components.spec.mjs`
-checks that). `tests/specs/site-index-only.spec.mjs` proves the placement on the site config.
+those components to their pages instead. It doesn't use `loadQuartzLayout`'s `layoutOverrides`,
+the TS layout override #70 named: that override replaces a slot's whole array rather than merging
+into it, and Core never reads `quartz.ts`'s `layout` export. So, for one extra layout build,
+`quartz.ts` marks the components through Core's component registry, wraps the outermost one in an
+index-only `ConditionalRender` on the page types not named for it, and replaces Core's
+`PageTypeDispatcher` emitter with one built from that layout. What it relies on in Core, how it
+fails the build if that changes, and what an upgrade must re-check are in
+[`quartz-v5/VENDORED.md`](../../VENDORED.md), "The site's `quartz.ts`". Every root the e2e harness
+builds shares that file, so its rule applies only to a config that loads this plugin: loading it is
+what marks a config as the site's own, and no fixture config does
+(`quartz-v5/utils/test/site-home-page.test.mjs` checks that).
+`tests/specs/site-index-only.spec.mjs` proves the placement on the site config, on each page type
+the site renders, and `tests/specs/site-annotations.spec.mjs` on annotation pages.

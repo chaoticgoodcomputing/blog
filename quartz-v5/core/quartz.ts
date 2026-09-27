@@ -38,7 +38,8 @@ export const layout = await loadQuartzLayout()
 
 type Slot = "header" | "beforeBody" | "afterBody" | "left" | "right" | "footer"
 const SLOTS: Slot[] = ["header", "beforeBody", "afterBody", "left", "right", "footer"]
-const TAG = "site-home-page:"
+// Prefixes the `displayName` of each home page component built for the marked layout.
+const MARKER = "site-home-page:"
 
 const onIndex = (component: QuartzComponent) =>
   ConditionalRender({ component, condition: ({ fileData }) => fileData.slug === "index" })
@@ -49,20 +50,31 @@ const pascal = (name: string) =>
     .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
     .join("")
 
-function readSiteConfig(): { plugins?: { source: unknown; enabled?: boolean }[] } {
+type Source = string | { repo?: string; name?: string }
+
+function readSiteConfig(): { plugins?: { source: Source; enabled?: boolean }[] } {
   // A root without quartz.config.yaml builds from Core's fallbacks, which never load the site layer.
   const file = path.join(process.cwd(), "quartz.config.yaml")
   if (!fs.existsSync(file)) return {}
   return YAML.parse(fs.readFileSync(file, "utf8")) ?? {}
 }
 
-const loadsSiteLayer = (readSiteConfig().plugins ?? []).some(
-  ({ source, enabled }) =>
-    enabled &&
-    (source === SITE_LAYER ||
-      (typeof source === "object" && (source as { repo?: string })?.repo === SITE_LAYER)),
+// An entry's name as Core's loader and `byPageType.exclude` give it: an object source's `name`,
+// else its `repo`; a package source's whole package name.
+const entryName = (source: Source) =>
+  typeof source === "object" && source !== null ? (source.name ?? source.repo) : source
+
+const enabledEntries = (readSiteConfig().plugins ?? []).filter(({ enabled }) => enabled)
+const loadsSiteLayer = enabledEntries.some(
+  ({ source }) =>
+    source === SITE_LAYER || (typeof source === "object" && source?.repo === SITE_LAYER),
 )
 
+// Not through `loadQuartzLayout`'s own override (`layoutOverrides`, with `byPageType`): it replaces
+// a slot's whole array rather than merging into it, and Core never reads this file's `layout`
+// export. So this file finds the YAML-placed components itself and rebuilds Core's dispatcher. It
+// leans on Core internals an upgrade must re-check (VENDORED.md, "The site's quartz.ts"), and fails
+// the build, rather than placing a component on every page, when one of them changes.
 if (loadsSiteLayer) {
   // Quartz builds each placed component from the constructor it registered for the entry, and
   // wraps it for the entry's `display` and `condition`. Each home page component's constructor is
@@ -75,12 +87,22 @@ if (loadsSiteLayer) {
   const placing = new Set<string>()
   for (const name of Object.keys(HOME_PAGE)) {
     const key = [name, pascal(name)].find((k) => componentRegistry.get(k))
-    if (!key) continue // not enabled in this config: nothing to place
+    if (!key) {
+      // Not enabled in this config: nothing to place. Enabled, Core would place it where this file
+      // can't mark it, on every page, so the build stops.
+      if (enabledEntries.some(({ source }) => entryName(source) === name))
+        throw new Error(
+          `quartz.ts: "${name}" is enabled but Core's component registry has it under neither ` +
+            `"${name}" nor "${pascal(name)}", so it can't be kept to its pages. ` +
+            "Re-check quartz.ts against Core's registry (VENDORED.md, \"The site's quartz.ts\").",
+        )
+      continue
+    }
     const registered = componentRegistry.get(key)!
     const ctor = registered.component as QuartzComponentConstructor
     const marking: QuartzComponentConstructor = (opts) => {
       const marked = ConditionalRender({ component: ctor(opts), condition: () => true })
-      marked.displayName = TAG + name
+      marked.displayName = MARKER + name
       return marked
     }
     componentRegistry.register(key, marking, registered.source, registered.manifest)
@@ -94,7 +116,9 @@ if (loadsSiteLayer) {
 
   const found = new Set<string>()
   const nameOf = (component: QuartzComponent) =>
-    component.displayName?.startsWith(TAG) ? component.displayName.slice(TAG.length) : undefined
+    component.displayName?.startsWith(MARKER)
+      ? component.displayName.slice(MARKER.length)
+      : undefined
   for (const slots of [marked.defaults, ...Object.values(marked.byPageType)])
     for (const slot of SLOTS) for (const c of slots[slot] ?? []) found.add(nameOf(c) ?? "")
   for (const name of placing)
@@ -122,9 +146,8 @@ if (loadsSiteLayer) {
 
   // Every page type gets its layout spelled out, so each is placed by its own name, not by the
   // defaults a page type without an override of its own would fall back to.
-  const pageTypes = (config.plugins.pageTypes as unknown as { layout: string }[]).map(
-    (pt) => pt.layout,
-  )
+  if (!config.plugins.pageTypes?.length) throw new Error("quartz.ts: Core loaded no page types")
+  const pageTypes = config.plugins.pageTypes.map((pt) => pt.layout)
   layout.defaults = place(marked.defaults, null)
   layout.byPageType = Object.fromEntries(
     pageTypes.map((pt) => [pt, place(marked.byPageType[pt] ?? marked.defaults, pt)]),

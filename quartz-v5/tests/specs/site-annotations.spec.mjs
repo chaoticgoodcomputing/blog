@@ -106,10 +106,14 @@ test("an annotation page keeps the site's page title, toggle and search, and the
   await expect(backlinks.getByRole("link", { name: "A reader" })).toBeVisible()
   for (const after of [graph, backlinks]) expect((await after.boundingBox()).y).toBeGreaterThanOrEqual(box.y + box.height)
 
-  // Nothing v4's annotation pages didn't have: no tag explorer, contents or social cards.
+  // Nothing v4's annotation pages didn't have: no tag explorer, contents or social cards, and none
+  // of the home page's other components, which quartz.ts keeps to their pages (#70): no post
+  // listing, and no "Newsletter" box among the right-hand components after the Viewer.
   await expect(page.locator(".cgc-tag-explorer")).toHaveCount(0)
   await expect(page.locator(".toc")).toHaveCount(0)
   await expect(page.locator(".cgc-social")).toHaveCount(0)
+  await expect(page.locator(".cgc-post-listing")).toHaveCount(0)
+  await expect(page.locator(".cgc-email-subscribe__title", { hasText: "Newsletter" })).toHaveCount(0)
 })
 
 // The owner's review (#87): an annotation page's header (its title, date and reading time, and its

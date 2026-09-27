@@ -58,7 +58,7 @@ upgrade read (and the repo guards will).
 | Tier | Files | Rule |
 | ---- | ----- | ---- |
 | **Core source** | `quartz/` | Protected. Changes only through a vendored change, with its ticket. Its name stays `quartz/`, because Quartz's own `bin` and imports point at it. |
-| **Steering files** | `quartz.ts`, `quartz.config.yaml` | Edited as Quartz's docs intend: a TS layout override and `registerCondition` in `quartz.ts`, the site's own configuration in `quartz.config.yaml`. Never drift; an upgrade never overwrites one. |
+| **Steering files** | `quartz.ts`, `quartz.config.yaml` | Edited as Quartz's docs intend: a TS layout override and `registerCondition` in `quartz.ts`, the site's own configuration in `quartz.config.yaml`. The site's `quartz.ts` goes further, into Core internals (see The site's `quartz.ts`). Never drift; an upgrade never overwrites one. |
 | **Scaffolding** | `package.json`, `tsconfig.json`, `globals.d.ts`, `index.d.ts`, `.gitignore`, `.prettierignore`, `.prettierrc`, `LICENSE.txt` | Upstream's toolchain, taken from upstream on each upgrade. `package.json` is exactly upstream's: nothing of ours is in it. Upstream's MIT LICENSE stays with its code. |
 | **Pruned files** | `docs/`, `.github/`, `README.md`, `CODE_OF_CONDUCT.md`, `Dockerfile`, `.gitattributes`, `content/.gitkeep`, `.node-version`, `quartz.config.default.yaml`, `package-lock.json`, `.npmrc` | Deliberately absent (pruned on 1792aba3, the npm lock on #91). Never counted as drift, and never brought back by an upgrade. |
 
@@ -69,8 +69,13 @@ ours and which `tierOf` classifies as "pnpm". They are not drift either (see Dep
 
 `core/quartz.ts` is upstream's template plus one rule of the site's (#70): v4's home page components,
 the post listing, the "Newsletter" subscribe box and the social cards, are kept to the index and the
-page types named for each, through Quartz's TS layout override. Quartz 5 ships no `is-index`
-condition, and the owner decided the site adds none (#70). Two things about Core shape the file:
+page types named for each. Quartz 5 ships no `is-index` condition, and the owner decided the site
+adds none (#70). The rule doesn't go through the TS layout override upstream's docs describe,
+`loadQuartzLayout`'s `layoutOverrides` with `byPageType`, which #70 named: that override replaces a
+slot's whole array rather than merging into it
+([`config-loader.ts:712-720`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L712-L720)),
+and nothing reads what it builds, as the first point below says. Two things about Core shape the
+file:
 
 - Core builds its page dispatcher from the YAML layout inside `loadQuartzConfig`
   ([`config-loader.ts:510-518`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L510-L518)), and only the default
@@ -80,6 +85,38 @@ condition, and the owner decided the site adds none (#70). Two things about Core
 - Quartz bundles `quartz.ts` from Core's own path, so every root the e2e harness builds, fixture
   roots included, runs the site's file. Its rule applies only to a config that loads
   `site-components`, which no fixture config does, so a fixture site stays a stock one.
+
+So the file works on Core's own layout build, and leans on three things about Core that no API
+promises:
+
+- **The component registry.** For one extra `loadQuartzLayout()` build, `quartz.ts` swaps each home
+  page component's constructor in `componentRegistry` for one that marks what it builds by its
+  `displayName`, then puts the constructor back. It finds the entry under its plain name or its
+  name in PascalCase, two of the keys Core's loader looks it up by (the third,
+  `<source>/<name>`, it doesn't try)
+  ([`config-loader.ts:751-771`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L751-L771)).
+- **Display wrappers copy `displayName`.** A component placed `desktop-only` or `mobile-only` is
+  wrapped, and the wrapper copies the inner component's `displayName`
+  ([`DesktopOnly.tsx:13`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/components/DesktopOnly.tsx#L13),
+  [`MobileOnly.tsx:13`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/components/MobileOnly.tsx#L13)), so the
+  outermost component in a slot still says which entry it is. `quartz.ts` wraps that outermost
+  component in an index-only `ConditionalRender` on every other page type, so no empty wrapper is
+  left behind. A `condition` wrapper copies no `displayName`, so a home page component takes no
+  `condition` in the site config.
+- **The dispatcher emitter.** `quartz.ts` replaces the emitter named `PageTypeDispatcher` in
+  `config.plugins.emitters` with one built from its own layout, placing each page type by its
+  `layout` name.
+
+A change to any of the three fails the build loudly, rather than letting the components render on
+every page: an enabled home page component the registry holds under neither key, one found in no
+slot marked (a wrapper that stopped copying `displayName` loses the mark), no `PageTypeDispatcher`
+emitter, and no page types all throw at build time, naming `quartz.ts`. A change in how the
+dispatcher picks a page type's layout would throw nothing. The API-surface report catches only a
+removed or renamed import, not a change in how these behave, so an upgrade must re-check them:
+build the site and run
+`tests/specs/site-index-only.spec.mjs` and `tests/specs/site-annotations.spec.mjs`.
+`utils/test/site-home-page.test.mjs` checks the configs' side: the site config leaves these
+components' pages to `quartz.ts`, and no fixture config loads `site-components`.
 
 The upgrade never overwrites the file, and reports upstream's template changes for a manual merge.
 
