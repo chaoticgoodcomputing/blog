@@ -24,7 +24,7 @@ export default ((userOpts?: Partial<SocialMediaOptions>) => {
   // The page as built holds each card's loading state; the browser script (src/client/) fetches what
   // the card shows and draws it in the card's body.
   const SocialMedia: QuartzComponent = ({ fileData, displayClass }: QuartzComponentProps) => {
-    if (!showOn.includes(fileData.slug as string)) return null
+    if (showOn && !showOn.includes(fileData.slug as string)) return null
     return (
       <div class={["cgc-social", displayClass].filter(Boolean).join(" ")}>
         {github && (

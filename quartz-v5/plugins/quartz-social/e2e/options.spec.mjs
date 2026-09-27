@@ -8,7 +8,10 @@ const LAYOUT = { position: "right", priority: 40 }
 const ORIGIN = "https://social.example"
 
 const buildWith = (name, options, { keep = false } = {}) =>
-  buildScratchSite(name, { "index.md": "---\ntitle: Home\n---\nHome.\n" }, {
+  buildScratchSite(name, {
+    "index.md": "---\ntitle: Home\n---\nHome.\n",
+    "a-note.md": "---\ntitle: A note\n---\nA note.\n",
+  }, {
     config: withPlugins(fixtureConfig(), [{ source: SOURCE, enabled: true, options, layout: LAYOUT }]),
     keep,
   })
@@ -85,4 +88,30 @@ test("leaves out the headings, the profile and the total when a site turns them 
   } finally {
     site.remove()
   }
+})
+
+// For a site that places the cards itself, through the TS layout override in its `quartz.ts`:
+// `showOn: false` leaves the component no page filter of its own (the real site's, #70).
+test("renders the cards on every page the layout puts them on when showOn is false", async ({ page }) => {
+  const site = await buildWith(
+    "social-show-on-false",
+    { showOn: false, bluesky: { handle: "fixture.bsky.social" } },
+    { keep: true },
+  )
+  try {
+    expect(site.code, site.output).toBe(0)
+    await routeSite(page, site.public, ORIGIN)
+    for (const url of ["/", "/a-note"]) {
+      await page.goto(`${ORIGIN}${url}`)
+      await expect(page.locator(".cgc-social"), url).toHaveCount(1)
+    }
+  } finally {
+    site.remove()
+  }
+})
+
+test("fails the build when showOn is neither a list of slugs nor false", async () => {
+  const { code, output } = await buildWith("social-show-on-true", { showOn: true, bluesky: { handle: "fixture.bsky.social" } })
+  expect(code).not.toBe(0)
+  expect(output).toContain('"showOn"')
 })

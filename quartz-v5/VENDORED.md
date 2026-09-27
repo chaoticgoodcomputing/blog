@@ -64,6 +64,24 @@ upgrade read (and the repo guards will).
 Core's pnpm files, `pnpm-workspace.yaml` and `pnpm-lock.yaml`, are ours and sit outside the tiers.
 They are not drift either (see Dependencies).
 
+## The site's `quartz.ts`
+
+`core/quartz.ts` is upstream's template plus one rule of the site's (#70): v4's home page components,
+the post listing, the "Newsletter" subscribe box and the social cards, are kept to the index and the
+page types named for each, through Quartz's TS layout override. Quartz 5 ships no `is-index`
+condition, and the owner decided the site adds none (#70). Two things about Core shape the file:
+
+- Core builds its page dispatcher from the YAML layout inside `loadQuartzConfig`
+  ([`config-loader.ts:517-525`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L517-L525)), and only the default
+  export of `quartz.ts` is read
+  ([`build.ts:11`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/build.ts#L11)), so the `layout` export upstream's docs describe
+  changes nothing by itself. The site's `quartz.ts` rebuilds the dispatcher from its layout.
+- Quartz bundles `quartz.ts` from Core's own path, so every root the e2e harness builds, fixture
+  roots included, runs the site's file. Its rule applies only to a config that loads
+  `site-components`, which no fixture config does, so a fixture site stays a stock one.
+
+The upgrade never overwrites the file, and reports upstream's template changes for a manual merge.
+
 ## The site config
 
 The site config, `core/quartz.config.yaml`, is a steering file, tracked where Quartz reads it. Source

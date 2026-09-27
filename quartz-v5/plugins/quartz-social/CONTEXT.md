@@ -60,7 +60,8 @@ _Avoid_: error state, placeholder
   `@chaoticgoodcomputing/tags-core/colour-value`, handed the host's lightningcss, as `quartz-tags` and
   `cgc-graph` use it (`src/colour.ts`).
 - **It keeps to its pages by `showOn`**, as `quartz-post-listing` does (its ADR-0001): no plugin can add
-  an `is-index` condition (#70).
+  an `is-index` condition (#70). `showOn: false` turns the filter off, for a site that keeps the
+  cards to their pages itself in its `quartz.ts`, as this site does (#70).
 - **Its stylesheet holds the post card's**, from the Bluesky renderer the script inlines, in the same
   `cgc.social` layer. It never selects the post card's classes itself: the compact size is the
   library's `cgc-bluesky--compact` modifier.

@@ -53,30 +53,17 @@ icon from inside Quartz Core. The site's build target puts the site's own in its
 the build (`quartz-v5/utils/postbuild.mjs`), so this plugin only links to it.
 _Avoid_: logo, favicon (the post-build step also writes that from the site icon)
 
-## The is-index condition
+## No is-index condition
 
-#44 gave this plugin a third job: register an `is-index` layout condition through `registerCondition`,
-because v5 ships only `not-index`, and v4's index had components no other page has (the post listing
-and the social cards, #73 and #80). **No plugin can do this on stock Quartz 5.0.0.** Here is why:
+#44 gave this plugin a third job: register an `is-index` layout condition through
+`registerCondition`, because v5 ships only `not-index`, and v4's index had components no other page
+has (the post listing, the "Newsletter" subscribe box and the social cards, #73 and #80). No plugin
+can: the loader's condition registry is bundled into Quartz's own transpiled build, which hands a
+plugin no reference to it. The owner decided on #70 that the site adds no `is-index` at all, whether
+through `registerCondition`, a vendored change or an index page type.
 
-- `registerCondition` lives in the loader's `conditions.ts`. The Quartz CLI bundles the loader,
-  with the rest of Quartz, into one transpiled file, `quartz/.quartz-cache/transpiled-build.mjs`.
-  That file exports only its build function, and since nothing inside it calls `registerCondition`,
-  esbuild drops the function from the bundle altogether.
-- A plugin is loaded at run time with `import()` of its own `dist/`. So the only registry the
-  loader consults is one the plugin has no reference to. The `@jackyzha0/quartz` specifier the loader
-  treats as shared is not installed anywhere a plugin could resolve it.
-- The ecosystem registers conditions in `quartz.ts`, which the bundle does include. In this repo that
-  file was upstream's, inside the vendored copy, so editing it was drift. Since #91 it is a
-  **steering file** of Quartz Core, which the site may edit, and #70 places the index-only
-  components through it.
-
-The loader warns `Unknown condition "is-index"` and renders the component on every page.
-`e2e/site-components.spec.mjs` holds this as a `test.fail`. The index half passes, and the other-pages
-half is expected to fail until the host lets a plugin register a condition. The way forward needs a
-human decision between two options:
-
-- a third vendored change, with its ticket and upstream proposal, such as the loader registering a
-  plugin module's exported conditions;
-- the index as a page type of its own. #44's question offered this, but `byPageType` can only remove
-  components, so every other page type would have to exclude each index-only one.
+So this plugin registers no condition. The site's steering file `quartz-v5/core/quartz.ts` keeps
+those components to their pages instead, through Quartz's TS layout override. Every root the e2e
+harness builds shares that file, so its rule applies only to a config that loads this plugin: loading
+it is what marks a config as the site's own, and no fixture config does (`e2e/site-components.spec.mjs`
+checks that). `tests/specs/site-index-only.spec.mjs` proves the placement on the site config.

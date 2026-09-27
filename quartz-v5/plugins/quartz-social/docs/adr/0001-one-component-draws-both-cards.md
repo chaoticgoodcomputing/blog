@@ -59,4 +59,6 @@ leaves one out to have only the other. So one plain `source:` entry places the p
 - **One `display` and one `condition` cover both.** On the real site, `display: desktop-only` wraps
   the pair, as v4 wrapped each.
 - **The cards keep to their pages by `showOn`**, as `cgc-post-listing` does (its ADR-0001), since no
-  plugin can add an `is-index` condition (#70).
+  plugin can add an `is-index` condition (#70). Amended by #70 (2026-09-27): `showOn: false` turns
+  the filter off, for a site that keeps the cards to their pages in its `quartz.ts`, as this site
+  now does; the `["index"]` default stays for sites on stock Quartz.

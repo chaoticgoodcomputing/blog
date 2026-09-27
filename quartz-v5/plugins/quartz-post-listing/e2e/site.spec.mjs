@@ -1,5 +1,6 @@
-// cgc-post-listing on the real site (#73): the site config places it after the body of the index,
-// the 404 page and every tag page, as v4's layouts did (FORK-LEDGER components/PostListing.tsx).
+// cgc-post-listing on the real site (#73): the site config places it after the body, and the site's
+// `quartz.ts` keeps it to the index, the 404 page and every tag page (#70), as v4's layouts did
+// (FORK-LEDGER components/PostListing.tsx).
 // Proven on a scratch site built from the site config, with a few pages in the vault's shapes.
 // Built offline: nothing here depends on the typeface, and site-config.spec proves the fonts.
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
@@ -58,8 +59,8 @@ test("lists the index's posts after its body, newest first and same-date A→Z, 
   // Pages with a source file, and no others: not the folder pages, `content/` and `content/notes/`,
   // nor the 404 page, which v4 never listed.
   expect([...all].sort()).toEqual(["Alder", "Birch", "Cedar", "Home"])
-  // Before the subscribe box.
-  await expect(page.locator(".cgc-post-listing + .cgc-email-subscribe")).toHaveCount(1)
+  // Alone after the body: the index's subscribe box is in its right sidebar, as in v4 (#70).
+  await expect(page.locator(".page-footer > *")).toHaveCount(1)
 })
 
 test("lists a tag page's posts, its subtags' included", async ({ page }) => {

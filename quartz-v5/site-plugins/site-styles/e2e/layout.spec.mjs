@@ -126,9 +126,11 @@ test("centres the footer under the article", async ({ page }) => {
 })
 
 test("sizes the sidebars to the page, so a short page's footer shows on the first screen", async ({ page }) => {
-  // Core makes each sidebar a full viewport tall, which pushes the footer of a short page, like the
-  // index, a screen down. v4's sidebars were only ever as tall as the page, up to a screenful.
-  await openAt(page, 1440, "/")
+  // Core makes each sidebar a full viewport tall, which pushes the footer of a short page, like a
+  // short note, a screen down. v4's sidebars were only ever as tall as the page, up to a screenful.
+  // Not the index: its right sidebar holds v4's subscribe box and social cards too (#70), which
+  // fill a screen by themselves.
+  await openAt(page, 1440, "/content/notes/other")
   await expect(page.locator(".page > #quartz-body > footer")).toBeInViewport()
 })
 

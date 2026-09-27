@@ -476,16 +476,14 @@ plugins:
       priority: 30
   # v4's PostListing (#42, #44, #73): every post, newest first with same-date posts A→Z, each with its
   # tags' badges (#82), the first five shown. v4 put it after the body of the index, the 404 page and
-  # the tags layout, where it lists the tag's posts. Quartz 5 has no `is-index` condition a plugin can
-  # add (#70), so the listing keeps to the pages `showOn` names, and to tag pages, by itself.
+  # the tags layout, where it lists the tag's posts. `quartz.ts` keeps it to those pages (#70), so it
+  # has no page filter of its own.
   - source: "@chaoticgoodcomputing/quartz-post-listing"
     enabled: true
     options:
       # v4 left private pages out of the listing.
       excludeTags: *privateTags
-      showOn:
-        - index
-        - "404"
+      showOn: false
       collapsedItemCount: 5
       iconCollections: *iconCollections
     layout:
@@ -555,8 +553,8 @@ plugins:
     layout:
       position: afterBody
       priority: 10
-  # v4's subscribe box under a note (#42, #44), with v4's note-page wording. Not on tag pages, which
-  # have the sidebar box below instead.
+  # v4's subscribe box under a note (#42, #44), with v4's note-page wording. Not on tag pages or the
+  # index, which have the sidebar box below instead.
   - source: "@chaoticgoodcomputing/quartz-email-subscribe"
     enabled: true
     options:
@@ -566,11 +564,11 @@ plugins:
     layout:
       position: afterBody
       priority: 20
+      condition: not-index
   # v4's other subscribe box, "Newsletter" (the plugin's defaults), in the right sidebar of the tag
   # and index pages, above the backlinks (#42, #44). The loader places one component per entry, so
-  # the plugin is listed again under a placement name of its own, which `byPageType` keeps to tag
-  # pages. The index keeps the box above, after its body, until the site can place a component on
-  # the index alone (is-index, #70). Both entries link the plugin's one stylesheet, the same file.
+  # the plugin is listed again under a placement name of its own, which `quartz.ts` keeps to the
+  # index and tag pages (#70). Both entries link the plugin's one stylesheet, the same file.
   # Quartz imports an object source whose repo is a package by its `name`, so the site package
   # also depends on the plugin under that name, an alias (quartz-v5/package.json, VENDORED.md).
   - source:
@@ -594,12 +592,12 @@ plugins:
       priority: 30
       condition: not-index
   # v4's social cards in the home page's right sidebar, on desktop only (#42, #44, #80): GitHub
-  # activity above the Bluesky feed, fetched in the reader's browser. Quartz 5 has no `is-index`
-  # condition a plugin can add (#70), so the cards keep to the home page by themselves (`showOn`,
-  # whose default is `[index]`).
+  # activity above the Bluesky feed, fetched in the reader's browser. `quartz.ts` keeps them to the
+  # index (#70), so they have no page filter of their own.
   - source: "@chaoticgoodcomputing/quartz-social"
     enabled: true
     options:
+      showOn: false
       github:
         username: spelkington
         title: GitHub Activity
@@ -700,7 +698,8 @@ layout:
       direction: row
       gap: 0.5rem
   # `exclude` names an entry by its plugin name: a package source's whole package name, or an object
-  # source's `name`.
+  # source's `name`. The home page's own components (the post listing, the sidebar subscribe box and
+  # the social cards) are kept to their pages by `quartz.ts` (#70), not here.
   byPageType:
     # v4's 404 is in the site's shell, keeping the left navigation, with nothing before the body and
     # nothing on the right. Stock gives it the bare `minimal` frame.
@@ -712,35 +711,23 @@ layout:
       positions:
         beforeBody: []
         right: []
-    # The sidebar subscribe box is v4's tags and index layouts' alone.
-    content:
-      exclude:
-        - email-subscribe-sidebar
     # Full width for the Viewer (#37), in site-components' frame, which keeps the page title and the
     # toolbar (left) in a bar above it and the graph and backlinks (right) after it, as v4 had them.
     # The page header (title, meta, tags) goes to the top of the annotations panel (#87).
     # Core's `full-width` drops both sidebars. v4's annotation pages had no source link, which would
-    # show Annotator's JSON (#68), and no tag explorer, contents or social cards. They keep the
-    # subscribe box after the body, as v4 had it, and not the sidebar one. v4's second box, inside
-    # the Viewer's own sidebar, is not reproduced: the Viewer is quartz-annotator's markup (#68), with no
-    # slot a layout entry can fill.
+    # show Annotator's JSON (#68), and no tag explorer, contents or social cards (which, with the
+    # sidebar box, `quartz.ts` keeps to their own pages). They keep the subscribe box after the body,
+    # as v4 had it. v4's second box, inside the Viewer's own sidebar, is not reproduced: the Viewer is
+    # quartz-annotator's markup (#68), with no slot a layout entry can fill.
     annotation:
       template: site-full-width
       exclude:
         - "@chaoticgoodcomputing/quartz-page-source"
         - "@chaoticgoodcomputing/quartz-tag-explorer"
         - "@quartz-community/table-of-contents"
-        - "@chaoticgoodcomputing/quartz-social"
-        - email-subscribe-sidebar
     # v4's tag pages had no source link, and their subscribe box was in the right sidebar. A tag page
     # drawn from a description file would get a source link.
     tag:
       exclude:
         - "@chaoticgoodcomputing/quartz-page-source"
         - "@chaoticgoodcomputing/quartz-email-subscribe"
-    canvas:
-      exclude:
-        - email-subscribe-sidebar
-    bases:
-      exclude:
-        - email-subscribe-sidebar

@@ -34,10 +34,12 @@ export interface BlueskyCardOptions {
 export interface SocialMediaOptions {
   /**
    * The pages that carry the cards, by slug: `index` is the site's home page. Every other page
-   * renders nothing, so the component can sit in a layout slot every page shares. Quartz 5 lets no
-   * plugin add an `is-index` layout condition (cgc-post-listing's docs/adr/0001). Default: `["index"]`.
+   * renders nothing, so the component can sit in a layout slot every page shares: Quartz 5 ships no
+   * `is-index` layout condition (cgc-post-listing's docs/adr/0001). `false` for no filter of its own,
+   * for a site that keeps the cards to their pages itself, in its `quartz.ts`: they render wherever
+   * the layout puts them. Default: `["index"]`.
    */
-  showOn?: string[]
+  showOn?: string[] | false
   /** The GitHub card. Leave it out for no GitHub card. */
   github?: GitHubCardOptions
   /** The Bluesky card, below the GitHub card. Leave it out for no Bluesky card. */
@@ -48,7 +50,7 @@ export type GitHubCard = Required<Omit<GitHubCardOptions, "levelColors">> &
   Pick<GitHubCardOptions, "levelColors">
 export type BlueskyCard = Required<BlueskyCardOptions>
 export interface SocialMedia {
-  showOn: string[]
+  showOn: string[] | false
   github?: GitHubCard
   bluesky?: BlueskyCard
 }
@@ -70,8 +72,11 @@ export function resolveOptions(opts?: Partial<SocialMediaOptions>): SocialMedia 
     fail(`set "github" (with a "username"), "bluesky" (with a "handle"), or both, to show a card`)
   }
   const showOn = opts?.showOn ?? ["index"]
-  if (!Array.isArray(showOn) || !showOn.every((slug) => typeof slug === "string")) {
-    fail(`"showOn" is a list of page slugs, such as [index]`)
+  if (
+    showOn !== false &&
+    (!Array.isArray(showOn) || !showOn.every((slug) => typeof slug === "string"))
+  ) {
+    fail(`"showOn" is a list of page slugs, such as [index], or false`)
   }
   return { showOn, github: github(opts?.github), bluesky: bluesky(opts?.bluesky) }
 }
@@ -83,7 +88,9 @@ function github(opts: Partial<GitHubCardOptions> | undefined): GitHubCard | unde
   const card = { ...GITHUB_DEFAULTS, ...opts, username } as GitHubCard
   if (card.levelColors !== undefined) {
     if (!Array.isArray(card.levelColors) || card.levelColors.length !== LEVELS) {
-      fail(`"github.levelColors" is a list of ${LEVELS} colour values, from no contributions to the most`)
+      fail(
+        `"github.levelColors" is a list of ${LEVELS} colour values, from no contributions to the most`,
+      )
     }
     for (const value of card.levelColors) {
       if (!isColourValue(value)) {
@@ -100,7 +107,9 @@ function bluesky(opts: Partial<BlueskyCardOptions> | undefined): BlueskyCard | u
   if (!handle) fail(`set "bluesky.handle" to the Bluesky account whose posts to show`)
   const card = { ...BLUESKY_DEFAULTS, ...opts, handle } as BlueskyCard
   if (!Number.isInteger(card.postLimit) || card.postLimit < 1 || card.postLimit > 100) {
-    fail(`"bluesky.postLimit" is a whole number from 1 to 100, not ${JSON.stringify(card.postLimit)}`)
+    fail(
+      `"bluesky.postLimit" is a whole number from 1 to 100, not ${JSON.stringify(card.postLimit)}`,
+    )
   }
   return card
 }

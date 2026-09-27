@@ -66,3 +66,14 @@ which Quartz doesn't pass a component, so its slug stands in.
 - **The 404 page's links start from the site's base path.** Quartz serves the 404 page at whatever
   depth was asked for, so a relative link from it would resolve against the wrong folder. Quartz's own
   head does the same for the 404 page.
+
+## Amendment (2026-09-27, #70): `showOn: false`
+
+The owner decided that the site adds no `is-index` condition, whether through `registerCondition`, a
+vendored change or an index page type. Since #91, `quartz.ts` is a steering file the site edits, and
+the site keeps the listing to the index, the 404 page and tag pages there, through Quartz's TS layout
+override. So `showOn` also takes `false`: no page filter of the component's own, and it renders on
+every page the layout puts it on. The real site sets it.
+
+`showOn` itself stays, with its `["index"]` default: a downstream site on stock Quartz, which doesn't
+edit its `quartz.ts`, still gets the listing on its home page from config alone, as **Why** says.

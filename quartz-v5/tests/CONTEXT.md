@@ -26,7 +26,9 @@ _Avoid_: control, vanilla site, stock site
 The directory a fixture site is built from — Quartz Core symlinked in, with the suite's own
 config beside it. One per variant. It outlives the plugins it was first built with, and Quartz never prunes
 `.quartz/plugins/`, so every build first removes the links there to a plugin that has gone, renamed
-or now a package (`pruneGonePlugins`, #94).
+or now a package (`pruneGonePlugins`, #94). Quartz bundles `quartz.ts` from Core's own path, so every
+fixture and scratch root runs the site's steering file; its one rule (the home page's components, #70)
+applies only to a config that loads `site-components`, so a fixture site stays a stock one.
 _Avoid_: shadow root (collides with the DOM's), sandbox, workspace
 
 **Fixture icon collection**:

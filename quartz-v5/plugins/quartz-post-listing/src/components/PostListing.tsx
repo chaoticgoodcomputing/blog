@@ -18,10 +18,11 @@ export interface PostListingOptions {
   /**
    * The pages, besides tag pages, that carry the listing, by slug: `index` is the site's home page
    * and `404` its not-found page. Every other page renders nothing, so the component can sit in a
-   * layout slot every page shares. Quartz 5 lets no plugin add the `is-index` layout condition this
-   * would otherwise be (docs/adr/0001). Default: `["index"]`.
+   * layout slot every page shares: Quartz 5 ships no `is-index` layout condition (docs/adr/0001).
+   * `false` for no filter of its own, for a site that keeps the listing to its pages itself, in its
+   * `quartz.ts`: it renders wherever the layout puts it. Default: `["index"]`.
    */
-  showOn?: string[]
+  showOn?: string[] | false
   /** The heading above the listing. Default: "Recent Posts". `false` for none. */
   title?: string | false
   /** List at most this many posts. Default: all of them. */
@@ -147,7 +148,7 @@ export default ((userOpts?: PostListingOptions) => {
   }: QuartzComponentProps) => {
     const slug = fileData.slug as string
     const iconOf = iconsOf(allFiles, icons, drawn)
-    if (tagOfPage(slug) === null && !opts.showOn.includes(slug)) return null
+    if (opts.showOn && tagOfPage(slug) === null && !opts.showOn.includes(slug)) return null
 
     const strings = i18n(cfg.locale)
     const href = linkFrom(slug, cfg.baseUrl)

@@ -24,7 +24,9 @@ _Avoid_: article, note (for what the listing lists), entry
 **Listing page**:
 A page that gets the listing: a tag page, or a page whose slug `showOn` names, such as `index` or
 `404`. On any other page the component renders nothing, wherever the layout puts it
-([ADR-0001](./docs/adr/0001-the-listing-keeps-to-its-own-pages.md)).
+([ADR-0001](./docs/adr/0001-the-listing-keeps-to-its-own-pages.md)). With `showOn: false`, every
+page the layout puts it on is a listing page: the site keeps it to its pages itself, through its
+`quartz.ts`, as this site does (#70).
 _Avoid_: index page (that is one listing page), listing layout
 
 **Tag page**:

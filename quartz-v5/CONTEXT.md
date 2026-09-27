@@ -23,7 +23,8 @@ _Avoid_: core (alone, while Core is meant), Quartz source
 
 **Steering file**:
 A Core file Quartz's docs tell a site to edit: today `quartz.ts` and the **site config**. Edits to one
-are configuration, never drift, and an upgrade never overwrites one.
+are configuration, never drift, and an upgrade never overwrites one. The site's `quartz.ts` keeps
+the home page's own components to their pages (#70, VENDORED.md).
 _Avoid_: config file (the site config is one of two), override
 
 **Scaffolding**:

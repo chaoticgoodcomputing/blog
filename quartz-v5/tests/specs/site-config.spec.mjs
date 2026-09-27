@@ -93,9 +93,10 @@ test("closes a note with v4's subscribe box and a link to its source", async ({ 
   await expect(sidebar.locator("form")).toHaveAttribute("action", "https://buttondown.com/api/emails/embed-subscribe/chaoticgoodcomputing")
   await expect(page.locator(".page-footer .cgc-email-subscribe")).toHaveCount(0)
   await expect(page.locator(".cgc-page-source")).toHaveCount(0)
-  // The index keeps the box after the body until the site can place a component on the index alone
-  // (is-index, #70): v4 had it in the index's right sidebar. No source link, as in v4.
+  // The index has v4's "Newsletter" box in its right sidebar, and none after the body (#70; the
+  // index-only placement is site-index-only.spec's). No source link, as in v4.
   await page.goto(`${ORIGIN}/`)
+  await expect(page.locator(".right.sidebar .cgc-email-subscribe .cgc-email-subscribe__title")).toHaveText("Newsletter")
   await expect(page.locator(".cgc-email-subscribe")).toHaveCount(1)
   await expect(page.locator(".cgc-page-source")).toHaveCount(0)
 })

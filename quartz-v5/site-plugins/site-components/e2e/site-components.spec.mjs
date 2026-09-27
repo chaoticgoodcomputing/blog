@@ -6,7 +6,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { createRequire } from "node:module"
 import { test, expect, resolvedColour, routeSite } from "../../../tests/harness/test.mjs"
-import { buildScratchSite, fixtureConfig, pluginSources, siteConfig, siteConfigFile, core, withPlugins } from "../../../tests/harness/site.mjs"
+import { buildScratchSite, fixtureConfig, pluginSources, siteConfig, siteConfigFile, core } from "../../../tests/harness/site.mjs"
 
 const YAML = createRequire(path.join(core, "package.json"))("yaml")
 
@@ -29,17 +29,9 @@ const LINKS = [
 // One build per colour-scheme project, shared by that project's tests.
 test.describe.configure({ mode: "serial" })
 
-// The site config, plus one component gated on `is-index`, for the condition's tests at the end.
-const GATED = {
-  source: "@quartz-community/recent-notes",
-  enabled: true,
-  layout: { position: "right", priority: 40, condition: "is-index" },
-}
-
 let site
 test.beforeAll(async () => {
-  const config = withPlugins(siteConfig({ offline: true }), [GATED])
-  site = await buildScratchSite("site-components", CONTENT, { config, keep: true })
+  site = await buildScratchSite("site-components", CONTENT, { config: siteConfig({ offline: true }), keep: true })
   expect(site.code, site.output).toBe(0)
 })
 test.afterAll(() => site?.remove())
@@ -150,24 +142,4 @@ test("styles the footer as v4 did: centred, dimmed, its links in one centred row
 test("is left out of every fixture config", () => {
   const sources = pluginSources(fixtureConfig()).map((source) => JSON.stringify(source))
   expect(sources.filter((source) => source.includes("site-components"))).toEqual([])
-})
-
-// v4's index has components no other page has (the post listing and the social cards, #73, #80),
-// which v5 gates with a layout `condition`. v5 ships only `not-index`, so #44 had site-components
-// register `is-index` through `registerCondition`. No plugin can. The loader's condition registry is
-// bundled into Quartz's own transpiled build, which exports only its build function. The build even
-// drops `registerCondition`, since nothing in it calls the function. And the loader hands a plugin no
-// registry. So the loader warns `Unknown condition "is-index"` and renders the component on every
-// page. Expected to fail until the host lets a plugin register a condition (CONTEXT.md, "The is-index
-// condition").
-test("shows a component gated on is-index on the index page", async ({ page }) => {
-  await open(page, "/")
-  await expect(page.locator(".recent-notes")).toHaveCount(1)
-})
-
-test.fail("shows a component gated on is-index on no other page", async ({ page }) => {
-  for (const url of ["/content/notes/a-note", "/tags/topic", "/content/notes/no-such-page"]) {
-    await open(page, url)
-    await expect(page.locator(".recent-notes"), url).toHaveCount(0, { timeout: 1000 })
-  }
 })
