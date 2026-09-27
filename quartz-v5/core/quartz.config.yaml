@@ -122,18 +122,6 @@ plugins:
     options:
       renderEngine: katex
     order: 80
-  - source: "@quartz-community/citations"
-    enabled: false
-    order: 85
-  - source: "@quartz-community/hard-line-breaks"
-    enabled: false
-    order: 90
-  - source: "@quartz-community/ox-hugo"
-    enabled: false
-    order: 91
-  - source: "@quartz-community/roam"
-    enabled: false
-    order: 92
   - source: "@quartz-community/quartz-fonts"
     enabled: true
     options:
@@ -144,30 +132,10 @@ plugins:
       header: *headerFont
       body: *bodyFont
       code: *codeFont
-  - source: "@quartz-themes/core"
-    enabled: false
-    options:
-      theme: tokyo-night
-      mode: both
-  # The site's own CSS (#64, ADR-0003's site-plugin amendment): the stack declaration, then v4's
-  # five ITCSS tiers under `site`, with the 1000/1300 breakpoints. It runs first (`defaultOrder:
-  # -1000`), and its stack names only the layers this config loads: enabling a theme means adding
-  # the theme's layers to it (site-plugins/site-styles/src/styles/site.scss). It also ships the
-  # site's fonts, Inter and IBM Plex Mono, fetched at its own build, under `static/site-styles/` (#84).
   - source: "@chaoticgoodcomputing/site-styles"
     enabled: true
-  # The family layer, `cgc`, above core and themes (#30, #63): every plugin of ours that emits CSS
-  # declares it by its package name, `dependencies: ["@chaoticgoodcomputing/quartz-styles"]` (#95),
-  # and the loader holds them to its order
-  # (tests/specs/family-layer-consumers.spec.mjs fails on one that doesn't).
   - source: "@chaoticgoodcomputing/quartz-styles"
     enabled: true
-  # The tag engine (#20, #31, #69): the site's one tag dictionary, v4's `tags:` block. Colour and icon
-  # are both inherited from the nearest ancestor that has one, so only tags that differ from their
-  # parent are listed; v4 inherited colours only, and matched icons exactly. Each colour is a
-  # light-dark() pair: v4's hex is the dark half, and the light half is a deeper shade of it, at 3:1
-  # or more against the light scheme's page and badge. Tags with neither get `var(--darkgray)`, where
-  # v4 had #888888. The engine publishes icon ids; quartz-tag-list draws them (#71).
   - source: "@chaoticgoodcomputing/quartz-tags"
     enabled: true
     options:
@@ -215,37 +183,22 @@ plugins:
         writing/tutorials: { icon: mdi:map }
   - source: "@quartz-community/remove-draft"
     enabled: true
-  - source: "@quartz-community/explicit-publish"
-    enabled: false
   - source: "@quartz-community/alias-redirects"
     enabled: true
     options:
-      # On permanently (#23): v4's mixed-case URLs (89 in the vault today) redirect to their
-      # lowercase pages. Emitted only where the output filesystem is case-sensitive, as CI's is.
       enableCaseRedirects: true
-  # quartz-seo writes the sitemap and feed in its place, leaving private pages out (#28, #67). Stock
-  # `unlisted` would do that too, but also drop them from contentIndex.json, which search and the graph
-  # read, so this still writes that.
   - source: "@quartz-community/content-index"
     enabled: true
     options:
       enableSiteMap: false
       enableRSS: false
-  # What search engines and feed readers see (#28): `noindex` on private pages, which stay listed on
-  # the site; the canonical URL, `article:*` meta and JSON-LD of v4's Head fork; and v4's sitemap and
-  # RSS feed, without private pages, with every tag's page once at /tags/<t> (#43, #67).
   - source: "@chaoticgoodcomputing/quartz-seo"
     enabled: true
     options:
-      # The site's private tags, named once: every plugin that treats private pages differently takes
-      # them through the anchor (quartz-backlinks, quartz-graph, quartz-tag-explorer, quartz-post-listing), so they
-      # agree on which pages are private (tags-core's **private page**).
       noindexTags: &privateTags
         - private
-      # v4 gave article metadata to `content/` pages only.
       articleFolders:
         - content
-      # v4's `structuredData`. The author's name is the page title's too (#44), shared as `*author`.
       defaultAuthor:
         type: Person
         name: &author Spencer Elkington
@@ -254,55 +207,50 @@ plugins:
         type: Organization
         name: Chaotic Good Computing
         url: https://blog.chaoticgood.computer/about
-        # The site icon, which is 184px square (#70 copies it into the build).
         logo:
           width: 184
           height: 184
       articleTypes:
-        - {
-            tag: writing/annotations,
-            type: ScholarlyArticle,
-            section: Annotations,
-          }
-        - { tag: writing/tutorials, type: HowTo, section: Tutorials }
-        - { tag: writing/articles, type: Article, section: Articles }
-        - { tag: engineering, type: TechArticle, section: Engineering }
-        - { tag: economics, type: Article, section: Economics }
-        - { tag: horticulture, type: BlogPosting, section: Digital Garden }
-        - { tag: projects, type: Report, section: Projects }
+        - tag: writing/annotations,
+          type: ScholarlyArticle,
+          section: Annotations,
+        - tag: writing/tutorials
+          type: HowTo
+          section: Tutorials
+        - tag: writing/articles
+          type: Article
+          section: Articles
+        - tag: engineering
+          type: TechArticle
+          section: Engineering
+        - tag: economics
+          type: Article
+          section: Economics
+        - tag: horticulture
+          type: BlogPosting
+          section: Digital Garden
+        - tag: projects
+          type: Report
+          section: Projects
       defaultArticleType: Article
-      # v4's feed: the 40 newest articles, which are the notes under `content/` (articleFolders).
       rssLimit: 40
   - source: "@quartz-community/favicon"
     enabled: true
-  # Replaced by quartz-og-image, which wraps it (#58).
-  - source: "@quartz-community/og-image"
-    enabled: false
-  # v4's cards: last-segment tag chips, the site's icon, and none drawn under `serve` (#42, #44).
   - source: "@chaoticgoodcomputing/quartz-og-image"
     enabled: true
     options:
-      # v4's OG images are dark (FORK-LEDGER ogImage.tsx).
       colorScheme: darkMode
-      # The site's own icon, `quartz-v5/icon.png`, resolved against Core's root.
       icon: ../icon.png
   - source: "@quartz-community/cname"
     enabled: true
-  # v4's PostHog (#42, #44, #61), in place of core `analytics`: nothing loads under Do Not Track, no
-  # session recording, and a `navigation` event per followed link, labelled as v4 labelled it. v4's
-  # graph label arrives with its place: quartz-graph sends it itself (FORK-LEDGER graph rows).
   - source: "@chaoticgoodcomputing/quartz-posthog"
     enabled: true
     options:
       apiKey: phc_BviHJVml66FIB1RFmgeAzZpKRWA0nntGdIOo47hTA3X
       apiHost: https://app.posthog.com
       navigationSources:
-        # v4 labelled a link anywhere in the tag explorer so, ahead of the tag badges (#76).
         ".cgc-tag-explorer": tag-explorer
-        # v4 labelled a link in the tag list, or any tag link, a tag badge: quartz-tag-list's badges
-        # (#69), and the `.tag-link`s of page listings and inline #tags.
         ".cgc-tag-list": tag-badge
-        # The post listing's badges (#73). A post's title in the listing is `other`, as in v4.
         ".cgc-post-listing__tags": tag-badge
         ".tag-link": tag-badge
         "a.internal": inline-link
@@ -310,64 +258,20 @@ plugins:
     enabled: true
   - source: "@quartz-community/content-page"
     enabled: true
-  # Annotation pages (#37): a note with an `annotation-target` gets the full-width frame, and the
-  # Viewer beside its annotations (#68). Each annotation page's source document is mirrored into the
-  # site, pinned in the default cache, `node_modules/.cache/cgc-annotator/` (#59). The site's
-  # `robots.txt` keeps the mirrors out of search. Notes are rendered with the default denylist: #37
-  # swapped v4's hand-picked list, which left out maths, for the site's whole pipeline. Its default
-  # order, 75, puts it after crawl-links and description, whose `links` and `text` it adds to.
   - source: "@chaoticgoodcomputing/quartz-annotator"
     enabled: true
     options:
       mirrorDir: assets/annotated-documents
-  # `.mdx` pages at their `.mdx` URLs, with widgets as islands (#19, #24). Each page's clean URL
-  # redirects there, through alias-redirects (the owner's 2026-09-26 decision, quartz-mdx ADR-0005).
   - source: "@chaoticgoodcomputing/quartz-mdx"
     enabled: true
-  # Folder pages are dropped (#42, #43): never in the sitemap or linked, and the tag description
-  # files (`tags/<t>/index.md`) would render as folder pages.
-  - source: "@quartz-community/folder-page"
-    enabled: false
-  # Replaced by quartz-tag-page, which wraps it (#72).
-  - source: "@quartz-community/tag-page"
-    enabled: false
-  # Stock's tag pages, with the tag's description article as their only body (#20, #43, #72). Stock
-  # uses a tag's description file only at `tags/<t>.md`. The vault's are still at `tags/<t>/index.md`
-  # until cutover renames them (#43), so each described tag has a second page there until then.
   - source: "@chaoticgoodcomputing/quartz-tag-page"
     enabled: true
     options:
-      # v4 titled a tag with no description file "Tag: <tag>".
       prefixTags: true
-  # A file explorer is in no v4 layout (#42). The tag explorer, with its own drawer, is
-  # quartz-tag-explorer, under the page title and toolbar (#76).
-  - source: "@quartz-community/explorer"
-    enabled: false
-    layout:
-      position: left
-      priority: 50
-  # Replaced by quartz-graph, in the same slot.
-  - source: "@quartz-community/graph"
-    enabled: false
-    layout:
-      position: right
-      priority: 10
-  # v4's graph (#74), drawn from its own index, which carries each page's date (#21), with v4's
-  # settings (layouts/conf/graph.layout.ts): the local graph on every page, and the global graph in
-  # v4's pseudo-shell, its top-level tags pinned to a ring, filtered to the last month, or wider until
-  # three pages show. Private pages are hidden from the global graph as it opens, and the `private`
-  # tag hub is left out. v4 put the graph in the body of the index and tag pages; a plugin takes one
-  # layout slot, so they have it in the right sidebar too. Each node with a tag is its tag's bubble,
-  # as the badges draw it: rimmed in the tag's colour, with its icon (#77, #83). v4's red for private
-  # pages is the `private` tag's own colour now, so no `nodeColors` paints over it.
   - source: "@chaoticgoodcomputing/quartz-graph"
     enabled: true
     options:
       privateTags: *privateTags
-      # The site's own icon collection (#29, #71): `custom:` is quartz-v5/icons/, v4's five SVGs, as
-      # the site wrote them. They're turned into currentColor icons when the site builds. Every
-      # plugin that draws `custom:` icons takes it, through the anchor, which the first of them in
-      # this file carries. Resolved against Core's root.
       iconCollections: &iconCollections
         custom: ../icons
       localGraph:
@@ -409,28 +313,28 @@ plugins:
         expandSelectedOscillationTime: 2
       globalGraph:
         scale: 1
-        repelForce: 3
-        centerForce: 1.75
+        repelForce: 2
+        centerForce: 1
         linkDistance:
-          tagTag: 50
-          tagPost: 10
-          postPost: 10
+          tagTag: 0
+          tagPost: 0
+          postPost: 0
         linkStrength:
           tagTag: 1
           tagPost: 0.5
           postPost: 0.05
         edgeOpacity:
           tagTag:
-            min: 0.8
+            min: 1
             max: 1
           tagPost:
-            min: 0.2
+            min: 0.1
             max: 1
           postPost:
-            min: 0.2
-            max: 1
+            min: 0.1
+            max: 0.5
         baseSize:
-          tags: 15
+          tags: 20
           posts: 10
         sizeScaling: *sizeScaling
         linkStyle: *linkStyle
@@ -471,16 +375,6 @@ plugins:
       group: toolbar
       groupOptions:
         grow: true
-  # Replaced by quartz-backlinks, below.
-  - source: "@quartz-community/backlinks"
-    enabled: false
-    layout:
-      position: right
-      priority: 50
-      condition: not-index
-  # v4's Backlinks (#44, #78): public pages first, then newest first. The private tags are the ones
-  # quartz-seo's `noindexTags` names, descendants included, and private pages are left out, where v4
-  # marked them with a lock (the owner's review notes, #85).
   - source: "@chaoticgoodcomputing/quartz-backlinks"
     enabled: true
     options:
@@ -501,31 +395,16 @@ plugins:
     layout:
       position: beforeBody
       priority: 20
-      # v4's index shows no date or reading time.
       condition: not-index
-  # Replaced by quartz-tag-list, in the same slot.
-  - source: "@quartz-community/tag-list"
-    enabled: false
-    layout:
-      position: beforeBody
-      priority: 30
-  # v4's TagList under a page's title (#69): badges, each holding its tag's bubble, the icon rimmed in
-  # the tag's colour (#71, #82), and the count of pages under it. A tag page lists its parent and subtags
-  # instead, as v4's tags layout did.
   - source: "@chaoticgoodcomputing/quartz-tag-list"
     enabled: true
     options:
       showSubtags: true
       showParentTag: true
-      # The site's own icon collection (#71), anchored on quartz-graph's entry above.
       iconCollections: *iconCollections
     layout:
       position: beforeBody
       priority: 30
-  # v4's PostListing (#42, #44, #73): every post, newest first with same-date posts A→Z, each with its
-  # tags' badges (#82), the first five shown. v4 put it after the body of the index, the 404 page and
-  # the tags layout, where it lists the tag's posts. `quartz.ts` keeps it to those pages (#70), so it
-  # has no page filter of its own.
   - source: "@chaoticgoodcomputing/quartz-post-listing"
     enabled: true
     options:
@@ -537,38 +416,21 @@ plugins:
     layout:
       position: afterBody
       priority: 10
-  # Replaced by site-components' page title, below (#44, #70).
-  - source: "@quartz-community/page-title"
-    enabled: false
-  # v4's page title: the site's icon, the title and "by <author>" (#44, #70). The loader places one
-  # component per entry, found by the entry's name in PascalCase, so site-components is listed once
-  # per component, each entry named for it (site-plugins/site-components/CONTEXT.md, "Placement").
-  # Quartz imports an object source whose repo is a package by its `name`, so the site package also
-  # depends on site-components under each placement name, an alias (quartz-v5/package.json).
   - source:
       repo: "@chaoticgoodcomputing/site-components"
       name: site-page-title
     enabled: true
     options:
-      # Fixed for the site, and the one quartz-seo credits: one anchor, set once (#44).
       author: *author
     layout:
       position: left
       priority: 10
-  # Both schemes (#41): the stock toggle in its stock slot. Its script follows the OS scheme on first
-  # load and falls back to dark when the browser reports none.
   - source: "@quartz-community/darkmode"
     enabled: true
     layout:
       position: left
       priority: 30
       group: toolbar
-  # v4's TagExplorer (#42, #44, #76), under the page title and toolbar as in v4: the tag hierarchy,
-  # each tag in its colour with its icon, most pages first, and the pages under each, newest first.
-  # Private pages are left out altogether, from every count and listing, and the private tags with
-  # them, where v4 kept only `private` out of the tree and listed its pages under their other tags
-  # with a lock (the owner's review notes, #85). Below the site's 1000px breakpoint it is a drawer of
-  # its own, v4's MobileSidebarMenu being gone (#42).
   - source: "@chaoticgoodcomputing/quartz-tag-explorer"
     enabled: true
     options:
@@ -579,28 +441,6 @@ plugins:
     layout:
       position: left
       priority: 50
-  # In no v4 layout.
-  - source: "@quartz-community/reader-mode"
-    enabled: false
-    layout:
-      position: left
-      priority: 35
-      group: toolbar
-  # In no v4 layout.
-  - source: "@quartz-community/breadcrumbs"
-    enabled: false
-    layout:
-      position: beforeBody
-      priority: 5
-      condition: not-index
-  - source: "@quartz-community/comments"
-    enabled: false
-    options:
-      provider: giscus
-      options: {}
-    layout:
-      position: afterBody
-      priority: 10
   # v4's subscribe box under a note (#42, #44), with v4's note-page wording. Not on tag pages or the
   # index, which have the sidebar box below instead.
   - source: "@chaoticgoodcomputing/quartz-email-subscribe"
@@ -613,12 +453,6 @@ plugins:
       position: afterBody
       priority: 20
       condition: not-index
-  # v4's other subscribe box, "Newsletter" (the plugin's defaults), in the right sidebar of the tag
-  # and index pages, above the backlinks (#42, #44). The loader places one component per entry, so
-  # the plugin is listed again under a placement name of its own, which `quartz.ts` keeps to the
-  # index and tag pages (#70). Both entries link the plugin's one stylesheet, the same file.
-  # Quartz imports an object source whose repo is a package by its `name`, so the site package
-  # also depends on the plugin under that name, an alias (quartz-v5/package.json, VENDORED.md).
   - source:
       repo: "@chaoticgoodcomputing/quartz-email-subscribe"
       name: email-subscribe-sidebar
@@ -628,8 +462,6 @@ plugins:
     layout:
       position: right
       priority: 30
-  # v4's "View source on GitHub", under the subscribe box on notes; not on the index (#42, #44). v4
-  # linked the repo's old name, which no longer resolves.
   - source: "@chaoticgoodcomputing/quartz-page-source"
     enabled: true
     options:
@@ -666,11 +498,6 @@ plugins:
       position: right
       priority: 40
       display: desktop-only
-  # Replaced by site-components' footer, below: stock's takes links only (#44, #70).
-  - source: "@quartz-community/footer"
-    enabled: false
-  # v4's footer: its links, the copyright line, then the Quartz credit (#44, #70). site-components'
-  # second entry, named for its component (see the page title's entry).
   - source:
       repo: "@chaoticgoodcomputing/site-components"
       name: site-footer
@@ -687,10 +514,8 @@ plugins:
         Spencer Elkington: https://chaoticgood.computer/contact
         Chaotic Good Computing: https://github.com/chaoticgoodcomputing
     layout:
-      position: footer
+      position: afterBody
       priority: 50
-  - source: "@quartz-community/recent-notes"
-    enabled: false
   - source: "@quartz-community/spacer"
     enabled: true
     options: {}
@@ -733,48 +558,25 @@ plugins:
       unlistWhenEncrypted: false
       outputPath: static/encryptedContentIndex.json
     order: 900
-  - source: "@quartz-community/stacked-pages"
-    enabled: false
-    layout:
-      position: afterBody
-      priority: 50
-      display: all
+
 layout:
   groups:
     toolbar:
       priority: 35
       direction: row
       gap: 0.5rem
-  # `exclude` names an entry by its plugin name: a package source's whole package name, or an object
-  # source's `name`. The home page's own components (the post listing, the sidebar subscribe box and
-  # the social cards) are kept to their pages by `quartz.ts` (#70), not here.
   byPageType:
-    # v4's 404 is in the site's shell, keeping the left navigation, with nothing before the body and
-    # nothing on the right. Stock gives it the bare `minimal` frame.
     "404":
-      template: default
-      # Nor a subscribe box, which v4's 404 did not have.
       exclude:
         - "@chaoticgoodcomputing/quartz-email-subscribe"
       positions:
         beforeBody: []
         right: []
-    # Full width for the Viewer (#37), in site-components' frame, which keeps the page title and the
-    # toolbar (left) in a bar above it and the graph and backlinks (right) after it, as v4 had them.
-    # The page header (title, meta, tags) goes to the top of the annotations panel (#87).
-    # Core's `full-width` drops both sidebars. v4's annotation pages had no source link, which would
-    # show Annotator's JSON (#68), and no tag explorer, contents or social cards (which, with the
-    # sidebar box, `quartz.ts` keeps to their own pages). They keep the subscribe box after the body,
-    # as v4 had it. v4's second box, inside the Viewer's own sidebar, is not reproduced: the Viewer is
-    # quartz-annotator's markup (#68), with no slot a layout entry can fill.
     annotation:
-      template: site-full-width
       exclude:
         - "@chaoticgoodcomputing/quartz-page-source"
         - "@chaoticgoodcomputing/quartz-tag-explorer"
         - "@quartz-community/table-of-contents"
-    # v4's tag pages had no source link, and their subscribe box was in the right sidebar. A tag page
-    # drawn from a description file would get a source link.
     tag:
       exclude:
         - "@chaoticgoodcomputing/quartz-page-source"
