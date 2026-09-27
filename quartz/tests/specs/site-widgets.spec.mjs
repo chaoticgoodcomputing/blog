@@ -162,9 +162,8 @@ test.describe("resume", () => {
   test("the PDF viewer renders at build time and draws the resume", async ({ page }) => {
     const html = fs.readFileSync(path.join(site.public, "resume.mdx.html"), "utf8")
     expect(html).toMatch(/class="cgc-mdx-island"[^>]*>\s*<div class="cgc-pdf-viewer"/)
-    // Where the asset is served is #26's decision (v5 lowercases asset URLs); the widget fetches the
-    // URL the article gives it.
-    await page.route(`${ORIGIN}/${RESUME_PDF}`, (route) =>
+    // The widget fetches the URL the article gives it, the PDF's lowercase URL (#26).
+    await page.route(`${ORIGIN}/${RESUME_PDF.toLowerCase()}`, (route) =>
       route.fulfill({ contentType: "application/pdf", path: path.join(VAULT, RESUME_PDF) }),
     )
     await open(page, "resume.mdx")
@@ -172,14 +171,12 @@ test.describe("resume", () => {
     await expect(page.locator(".cgc-pdf-viewer__page").first()).toBeVisible()
   })
 
-  // The gap the test above steps around, kept in sight. v5 lowercases an asset's URL, and the
-  // article's `src` is a widget prop, which no build re-resolves, so on a case-sensitive host the
-  // viewer's fetch finds nothing. Where the asset lives at cutover is #26's decision (a redirect page
-  // won't do: the viewer fetches the PDF directly). Expected to fail until then; once the build
-  // serves the PDF at the article's URL, it passes, and `test.fail` comes off.
-  test.fail("the build serves the resume at the URL the article gives the viewer (#26)", () => {
+  // v5 lowercases an asset's URL, and the article's `src` is a widget prop, which no build
+  // re-resolves, so the article names the lowercase URL itself (#26: the owner's decision, no
+  // redirect, which the viewer's fetch couldn't follow anyway). Checked on a listing, not a lookup,
+  // which a case-insensitive filesystem would answer either way.
+  test("the build serves the resume at the URL the article gives the viewer (#26)", () => {
     const src = fs.readFileSync(path.join(VAULT, "resume.mdx"), "utf8").match(/<PDFViewer\b[^>]*\ssrc="([^"]+)"/)[1]
-    // Listed rather than looked up, which a case-insensitive filesystem would answer either way.
     expect(fs.readdirSync(path.join(site.public, path.posix.dirname(src)))).toContain(path.posix.basename(src))
   })
 })
