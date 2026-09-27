@@ -94,8 +94,21 @@ test("rims a visited page's bubble in tertiary, as a visited link reads, and rin
   await page.goto("/plain-note")
   const graph = localGraph(page)
   await expectBubble(page, "Plain Note", FIXTURE[colorScheme])
-  await expect.poll(() => marksNear(graph, "Plain Note", SECONDARY[colorScheme], 26)).toBe(0)
+  // A ring would be hundreds of pixels; a few anti-aliased edge pixels can land near `secondary`.
+  await expect
+    .poll(() => marksNear(graph, "Plain Note", SECONDARY[colorScheme], 26))
+    .toBeLessThan(20)
   // Plain Note links to the .mdx article: there, it is a page the reader has visited.
   await page.goto("/mdx-article.mdx")
   await expectBubble(page, "Plain Note", TERTIARY[colorScheme])
+})
+
+test("keeps a visited tag's node in its tag's colour: only notes take the visited rim", async ({
+  page,
+  colorScheme,
+}) => {
+  // The owner's decision of 2026-09-26: a tag page always keeps its rim colour, visited or not.
+  await page.goto("/tags/fixture")
+  await page.goto("/plain-note")
+  await expectBubble(page, "#fixture", FIXTURE[colorScheme])
 })

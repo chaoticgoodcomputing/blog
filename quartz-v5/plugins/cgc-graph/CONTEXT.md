@@ -53,8 +53,8 @@ _Avoid_: node colour, node tag, category
 
 **Visited rim**:
 A bubble's rim in the theme's `tertiary`, in place of its tag's colour, for a page the reader has
-visited: the graph's version of a visited link. The reader's own page is exempt, and is marked by its
-swelling instead. No node is ringed outside its rim (docs/adr/0004, visited-rim amendment).
+visited, as a note: the graph's version of a visited link. A tag's node is exempt, and always keeps its
+tag's colour; so is the reader's own page, which its swelling marks instead. No node is ringed outside its rim (docs/adr/0004, visited-rim amendment).
 _Avoid_: history ring (its replaced form), halo, highlight, selection ring
 
 **Edge**:

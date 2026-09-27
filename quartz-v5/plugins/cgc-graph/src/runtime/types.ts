@@ -96,7 +96,7 @@ export type NodePaint =
   | {
       kind: "bubble"
       /**
-       * Its rim: its tag's colour, or the site's `nodeColors` in its place, or `tertiary` for a page
+       * Its rim: its tag's colour, or the site's `nodeColors` in its place, or `tertiary` for a note
        * the reader has visited, as a visited link is set apart from an unvisited one.
        */
       rim: NodeColour

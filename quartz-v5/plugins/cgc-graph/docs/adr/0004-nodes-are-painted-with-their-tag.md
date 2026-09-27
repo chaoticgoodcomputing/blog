@@ -168,6 +168,9 @@ place of its tag's colour (and of the site's `nodeColors`, which is theming, whe
 reader's own cue). Its circle and icon are unchanged, so the tag's icon still says what it is.
 
 - **No node is ringed.** The history ring is gone for visited pages and for the current page alike.
+- **Only notes take the visited rim.** A tag's node always keeps its tag's colour, visited or not
+  (the owner's refinement, the same day): a tag isn't read the way a note is, and its colour is what
+  identifies it.
 - **The reader's own page keeps its tag's colour.** It is recorded as visited as soon as it loads, so
   it is exempt; its swelling (`expandSelectedSize`, v4's) marks it, as the owner noted it already did.
 - **A page with no tags is unchanged:** v4's disc, filled `secondary` for the current page,
@@ -181,4 +184,4 @@ reader's own cue). Its circle and icon are unchanged, so the tag's icon still sa
 
 Proven by `e2e/colours.spec.mjs`: the current page's bubble keeps its tag's rim with no `secondary`
 around it, and a page the reader has visited is rimmed in `tertiary`, in both schemes. It went red on
-the ring first.
+the ring first. The same spec proves a visited tag's node keeps its tag's colour, red first too.
