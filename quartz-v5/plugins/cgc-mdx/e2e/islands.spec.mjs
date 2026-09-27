@@ -52,7 +52,9 @@ test("navigating away unmounts the island and stops its timer", async ({ page })
 
   await page.goto("/lab/life.mdx")
   await expect(page.locator(".cgc-mdx-island")).toHaveAttribute("data-cgc-hydrated", "")
-  expect(await page.evaluate(() => window.__liveIntervals())).toBe(idle + 1)
+  // Preact runs the widget's effect, which starts the timer, after paint, so it can trail the
+  // hydration marker by a frame.
+  await expect.poll(() => page.evaluate(() => window.__liveIntervals())).toBe(idle + 1)
 
   await page.locator("article a.internal", { hasText: "plain-note" }).click()
   await expect(page).toHaveURL(/\/plain-note$/)
