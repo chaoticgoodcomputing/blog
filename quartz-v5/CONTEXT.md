@@ -35,7 +35,7 @@ _Avoid_: boilerplate, root files
 **Pruned file**:
 An upstream file deliberately absent from Core, listed once in `utils/core-tiers.mjs`: upstream's
 docs, CI workflows, Dockerfile, community files, default config and npm files. Never counted as
-drift, and deleted again after any tree replacement.
+drift, and never brought back by an upgrade.
 _Avoid_: deleted file, removed file
 
 **Fork**:
@@ -57,10 +57,25 @@ An edit to Core source, permitted only as a last resort and only with a ticket r
 plugin route existed and how it will be proposed upstream. Labelled `quartz:vendored`.
 _Avoid_: patch, core change, hack
 
-**Sync**:
-Re-vendoring Core at a newer upstream ref (`site-v5:sync`), until the upgrade (#99) replaces it. It
-keeps the steering files and Core's pnpm files, and deletes the pruned files again.
-_Avoid_: upgrade, update, pull — `npx quartz upgrade` is a different, unusable thing here
+**Upgrade**:
+Moving Core to another upstream ref, one way, with `site-v5:upgrade --ref=<ref>` (`utils/upgrade.mjs`,
+#99). It re-applies the vendored changes hunk by hunk, stopping on a conflict and reporting the hunks
+upstream has **absorbed**; takes the scaffolding; leaves the steering files alone; keeps the pruning;
+converts upstream's npm lock under the lock check; and records the new pinned ref only once all of
+that has succeeded. Not Quartz's own `npx quartz upgrade`, which merges from a git remote added to the
+enclosing repo and stays unusable here.
+_Avoid_: sync (its old name: it suggests a two-way exchange), update, pull, re-vendor
+
+**Absorbed**:
+Of a vendored change's hunk: already present in the upgrade's target, because upstream has taken
+it. The upgrade reports each one, so its ticket and **upstream proposal** can be retired.
+_Avoid_: merged, upstreamed (that is the proposal's outcome, not what the upgrade observes)
+
+**Upstream cache**:
+The upgrade's bare git repo of the upstream commits it has fetched, `quartz-v5/.upstream-cache/`
+(gitignored). Upstream files Core prunes, such as the default config and the npm lock, are read
+from it.
+_Avoid_: upstream clone, mirror
 
 **Lock check**:
 The proof that Core's pnpm lock holds exactly the packages of the npm lock it was imported from,

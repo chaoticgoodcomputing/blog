@@ -31,7 +31,9 @@ quartz-v5/
 ├── libs/                 our non-plugin packages (`@chaoticgoodcomputing/*`)
 ├── tests/                Playwright suite and `content-fixture/`
 ├── utils/                tooling for this context — `core-tiers.mjs`, `upstream.mjs`, `core-lock.mjs`,
-│                         `prebuild.mjs`, `postbuild.mjs`, `local-plugins.mjs`
+│                         `upgrade.mjs`, `upstream-cache.mjs`, `prebuild.mjs`, `postbuild.mjs`,
+│                         `local-plugins.mjs`
+├── .upstream-cache/      gitignored: the upgrade's bare git repo of the upstream commits it has fetched
 └── core/                 Quartz Core: upstream's install root, in four tiers
     ├── quartz/               Core source — protected
     ├── quartz.ts             steering file
@@ -44,15 +46,15 @@ quartz-v5/
 ## The tiers
 
 Every file upstream ships at the pinned ref, and every file in `core/`, falls in one tier. The lists
-live in one place, [`utils/core-tiers.mjs`](./utils/core-tiers.mjs), which the upstream tooling reads
-(and the repo guards and the upgrade will).
+live in one place, [`utils/core-tiers.mjs`](./utils/core-tiers.mjs), which the upstream tooling and the
+upgrade read (and the repo guards will).
 
 | Tier | Files | Rule |
 | ---- | ----- | ---- |
 | **Core source** | `quartz/` | Protected. Changes only through a vendored change, with its ticket. Its name stays `quartz/`, because Quartz's own `bin` and imports point at it. |
 | **Steering files** | `quartz.ts`, `quartz.config.yaml` | Edited as Quartz's docs intend: a TS layout override and `registerCondition` in `quartz.ts`, the site's own configuration in `quartz.config.yaml`. Never drift; an upgrade never overwrites one. |
 | **Scaffolding** | `package.json`, `tsconfig.json`, `globals.d.ts`, `index.d.ts`, `.gitignore`, `.prettierignore`, `.prettierrc`, `LICENSE.txt` | Upstream's toolchain, taken from upstream on each upgrade. `package.json` is exactly upstream's: nothing of ours is in it. Upstream's MIT LICENSE stays with its code. |
-| **Pruned files** | `docs/`, `.github/`, `README.md`, `CODE_OF_CONDUCT.md`, `Dockerfile`, `.gitattributes`, `content/.gitkeep`, `.node-version`, `quartz.config.default.yaml`, `package-lock.json`, `.npmrc` | Deliberately absent (pruned on 1792aba3, the npm lock on #91). Never counted as drift, and deleted again after any tree replacement. |
+| **Pruned files** | `docs/`, `.github/`, `README.md`, `CODE_OF_CONDUCT.md`, `Dockerfile`, `.gitattributes`, `content/.gitkeep`, `.node-version`, `quartz.config.default.yaml`, `package-lock.json`, `.npmrc` | Deliberately absent (pruned on 1792aba3, the npm lock on #91). Never counted as drift, and never brought back by an upgrade. |
 
 Core's pnpm files, `pnpm-workspace.yaml` and `pnpm-lock.yaml`, are ours and sit outside the tiers.
 They are not drift either (see Dependencies).
@@ -142,7 +144,7 @@ pnpm nx run site-v5:vendored-log    # the commits that made it, and the tickets 
 git doesn't ignore, with the files upstream tracks at the pinned ref, leaving out the tiers that are
 not drift. Its stdout is a patch that `git apply` accepts from the repo root, and the file count goes
 to stderr, so `> vendored.patch` captures it cleanly. `vendored-log` answers _why_. It lists every
-commit since the last sync (the last commit to touch `upstream.json`) that made drift in Core, with
+commit since the last upgrade (the last commit to touch `upstream.json`) that made drift in Core, with
 the files and the `#<n>` tickets its message cites, flags any commit that cites none, and lists
 uncommitted drift, which has no commit to carry a ticket yet. Commits that only moved Core (#91 did,
 from its old path, and the cutover will), or only touched steering, pruned or pnpm files, are left
@@ -173,29 +175,52 @@ Core deliberately, so our own files under `quartz-v5/` are still formatted.
 
 ## Upgrading
 
-`npx quartz upgrade` does **not** work here: it runs `git remote add upstream …` against the
-enclosing repository, which is this blog, not Quartz. Use the targets instead.
+**The upgrade** moves Core to another upstream commit and keeps what's ours: the vendored changes,
+the steering files, the pruning and Core's pnpm settings.
 
 ```bash
-pnpm nx run site-v5:diff-latest                    # what would an upgrade pull in?
-pnpm nx run site-v5:sync --args="--ref=<commit>"   # re-vendor at that ref
+pnpm nx run site-v5:diff-latest                    # what would an upgrade to the tip of v5 pull in?
+pnpm nx run site-v5:upgrade --ref=<commit|branch|tag>
 ```
 
-`sync` replaces the tree, keeping the steering files and Core's pnpm files and deleting the pruned
-files again. It refuses while Core carries vendored changes, and they are never silently discarded.
-To upgrade anyway, save them, sync with `--force`, and re-apply whatever upstream has not taken in
-the meantime:
+It is [`utils/upgrade.mjs`](./utils/upgrade.mjs) ([#99](https://github.com/chaoticgoodcomputing/blog/issues/99)),
+and runs these steps in order, stopping at the first that fails:
 
-```bash
-pnpm -s nx run site-v5:diff-upstream > vendored.patch
-node quartz-v5/utils/upstream.mjs sync <ref> --force
-git apply vendored.patch      # drop hunks upstream now has; commit what remains with its ticket
-```
+1. **Refuse a dirty tree.** Any uncommitted change in `core/` or `upstream.json` stops it, so an
+   upgrade never mixes with work in progress and can always be undone with git.
+2. **Fetch** the pinned ref and the target into the upstream cache, `quartz-v5/.upstream-cache/`
+   (gitignored, [`utils/upstream-cache.mjs`](./utils/upstream-cache.mjs)): a bare git repo that never
+   fetches a commit twice. The fetch goes to exactly the URL `upstream.json` names; `--upstream=<url>`
+   or `QUARTZ_UPSTREAM` fetches from another (the tests point it at a fixture).
+3. **Re-apply the vendored changes.** Each Core source file's drift from the pinned ref is split into
+   its hunks, and each hunk is applied to the target's version of the file. A hunk that is already
+   there is reported as **absorbed**, so its ticket and upstream proposal can be retired. A hunk that
+   neither applies nor is already there is a conflict: the upgrade stops, names the file and the hunk,
+   and writes nothing. Resolve it by hand, as a vendored change with its ticket.
+4. **Take the scaffolding.** `package.json` is taken verbatim. The other scaffolding files are
+   three-way merged (ours, the pinned ref's, the target's), stopping on a conflict. A file upstream
+   adds at Core's root in no tier is taken and named, to be added to `core-tiers.mjs`.
+5. **Leave the steering files alone.** Upstream's template changes to them (between the pinned
+   ref and the target) are printed as a diff to merge by hand.
+6. **Keep the pruning.** No pruned file comes back, even one upstream has changed or added.
+7. **Convert the lock.** The target's `package.json` and `package-lock.json` (taken from the
+   fetched ref, never from Core, which has no npm lock) go into a temporary project with Core's
+   `pnpm-workspace.yaml`, where `pnpm import` converts the lock. The lock check must then find every
+   package at the same version on both sides, or the upgrade stops. Only then is Core written, and the
+   converted lock installed into it frozen. If that install fails, Core's files are restored from git.
+8. **Record** the target in `upstream.json`, last, so a failed upgrade never claims a ref.
 
-Then re-seed the lock from the new ref's `package-lock.json` (see Dependencies), update the
-Provenance table above, and remove any row from the vendored-changes table whose change upstream has
-taken. The upgrade ([#99](https://github.com/chaoticgoodcomputing/blog/issues/99)) replaces all of
-this with one target.
+Every step up to the lock check only plans, so a stop there leaves Core, its lock and `upstream.json`
+exactly as they were. Upgrading to the pinned ref changes nothing at all. After an upgrade, review
+the changes, update the Provenance table above, remove from the vendored-changes table any change
+upstream absorbed, and commit.
+
+`npx quartz upgrade` is a different thing and does **not** work here: it runs
+`git remote add upstream …` against the enclosing repository, which is this blog, not Quartz.
+
+The upgrade is tested with Node's test runner at its command line, against a synthetic
+Quartz-shaped upstream and site repo made in a temp dir (`utils/test/upgrade.test.mjs`, run by
+`pnpm nx run site-v5:test-utils`), offline apart from the pnpm store.
 
 ## Dependencies
 
@@ -232,9 +257,8 @@ node quartz-v5/utils/core-lock.mjs --npm-lock <file>   # against a local npm loc
 
 At 97a2d05 it reads 415 of 415 packages matching. The hoisted layout places two packages
 differently from npm (the top-level `picomatch` and `string-width` are another of the versions the
-lock holds), which no code of ours imports. To re-seed the lock at a new ref, copy that ref's
-`package.json` and `package-lock.json` into Core with `pnpm-workspace.yaml`, run
-`npx --yes pnpm@11.27.1 import`, delete the npm lock again, and run the lock check.
+lock holds), which no code of ours imports. The upgrade converts the lock at a new ref, from that
+ref's own `package-lock.json` (see Upgrading).
 
 **Local plugins resolve the host's dependencies through `plugins/node_modules`,** a gitignored
 symlink to `../core/node_modules` that the e2e harness and `site-v5:prebuild` create. A git-installed

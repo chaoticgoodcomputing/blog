@@ -4,8 +4,9 @@
  *
  *   node quartz-v5/utils/upstream.mjs diff          full unified diff of Core's drift from its pinned ref
  *   node quartz-v5/utils/upstream.mjs diff --latest files that differ from the tip of the tracked branch
- *   node quartz-v5/utils/upstream.mjs log           commits that changed Core since the last sync
- *   node quartz-v5/utils/upstream.mjs sync <ref>    re-vendor at <ref> (commit, tag, or branch)
+ *   node quartz-v5/utils/upstream.mjs log           commits that changed Core since the last upgrade
+ *
+ * Moving Core to another ref is the upgrade's job (`upgrade.mjs`, `site-v5:upgrade`).
  *
  * Core matches its pinned upstream commit except for vendored changes, each of which carries a
  * ticket (ADR-0001, quartz-v5/VENDORED.md). Only drift counts: steering files, pruned files and
@@ -14,9 +15,9 @@
  * commits that made them, flagging any that cite no ticket.
  */
 import { execFileSync } from "node:child_process"
-import { existsSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs"
+import { existsSync, readFileSync, rmSync } from "node:fs"
 import { join } from "node:path"
-import { CORE_DIR, CORE_REL, MANIFEST_REL, PNPM_FILES, PRUNED, REPO_ROOT, STEERING, countsAsDrift, tierOf } from "./core-tiers.mjs"
+import { CORE_DIR, CORE_REL, MANIFEST_REL, REPO_ROOT, countsAsDrift, tierOf } from "./core-tiers.mjs"
 import { cloneUpstream, readManifest, resolveLatest, sh } from "./upstream-git.mjs"
 
 // The files a tree holds: what git tracks there, and any new file git doesn't ignore. Installed
@@ -81,7 +82,7 @@ function cmdDiff({ latest }) {
           : `\n  ${files.length} difference(s) vs tip of ${m.branch} (pinned at ${m.commit.slice(0, 12)}):\n`,
       )
       files.forEach(({ rel, kind }) => console.log(`    ${kind.padEnd(13)} ${rel}`))
-      if (files.length) console.log(`\n  To take them:  pnpm nx run site-v5:sync --args="--ref=${ref}"\n`)
+      if (files.length) console.log(`\n  To take them:  pnpm nx run site-v5:upgrade --ref=${ref}\n`)
       return 0
     }
     // The whole of our vendored changes, generated from the tree. stdout is a patch that applies
@@ -99,16 +100,16 @@ function cmdDiff({ latest }) {
   }
 }
 
-// Every commit that changed Core since it was last synced, oldest first, and the drift each made. A
-// sync is the most recent commit to touch upstream.json; every commit after it that changed Core is
+// Every commit that changed Core since it was last upgraded, oldest first, and the drift each made. An
+// upgrade is the most recent commit to touch upstream.json; every commit after it that changed Core is
 // ours and must cite a ticket (`#<n>` anywhere in the message). A commit that only moved Core's files,
 // or only changed files that are not drift, is left out. Core has moved before (into
 // `quartz-v5/core/`, #91) and will again at cutover (#81), so the walk follows its renames back
 // through history rather than naming its old paths. Uncommitted drift is listed too.
 function cmdLog() {
   const git = (...args) => sh("git", ["-C", REPO_ROOT, ...args]).trim()
-  const lastSync = git("log", "-1", "--format=%H", "--", MANIFEST_REL)
-  const range = lastSync ? `${lastSync}..HEAD` : "HEAD"
+  const lastUpgrade = git("log", "-1", "--format=%H", "--", MANIFEST_REL)
+  const range = lastUpgrade ? `${lastUpgrade}..HEAD` : "HEAD"
   const shas = git("log", "--format=%H", range).split("\n").filter(Boolean) // newest first
 
   // Where Core lived as of each commit, newest first: a rename of Core source into one of its
@@ -149,7 +150,7 @@ function cmdLog() {
     if (files.length) commits.unshift({ sha, files })
   }
 
-  if (lastSync) console.log(`\n  Last sync: ${git("log", "-1", "--format=%h %ad %s", "--date=short", lastSync)}`)
+  if (lastUpgrade) console.log(`\n  Last upgrade: ${git("log", "-1", "--format=%h %ad %s", "--date=short", lastUpgrade)}`)
   console.log(`\n  ${commits.length} commit(s) have changed Quartz Core (${CORE_REL}/) since:\n`)
   let untracked = 0
   for (const { sha, files } of commits) {
@@ -169,74 +170,14 @@ function cmdLog() {
   return 0
 }
 
-// Re-vendor at `ref`, replacing the tree. Kept as it was until the upgrade (#99) replaces it, except
-// that it keeps what the tiers say an upgrade keeps: the steering files and Core's pnpm files are
-// carried across the swap, and the pruned files are deleted after it.
-function cmdSync(ref, { force }) {
-  const m = readManifest()
-  if (!ref) throw new Error('sync needs a ref: --args="--ref=<commit|tag|branch>"')
-
-  const current = (() => {
-    const d = cloneUpstream(m.repo, m.commit)
-    try {
-      return drift(d)
-    } finally {
-      rmSync(d, { recursive: true, force: true })
-    }
-  })()
-  if (current.length && !force) {
-    console.error(`\n  REFUSING TO SYNC — Quartz Core differs from its pinned ref in ${current.length} file(s).`)
-    console.error(`  Syncing replaces the tree, so these vendored changes would be discarded:\n`)
-    current.forEach(({ rel, kind }) => console.error(`    ${kind.padEnd(13)} ${rel}`))
-    console.error(
-      `\n  Save them first:  node quartz-v5/utils/upstream.mjs diff > vendored.patch` +
-        `\n  then sync with --force, and re-apply what upstream has not taken:  git apply vendored.patch\n`,
-    )
-    return 1
-  }
-
-  const resolved = /^[0-9a-f]{40}$/.test(ref) ? ref : resolveLatest(m.repo, ref)
-  const dir = cloneUpstream(m.repo, resolved)
-  try {
-    // Keep installed deps, the steering files and Core's pnpm files across the swap.
-    const kept = ["node_modules", ...STEERING, ...PNPM_FILES].filter((rel) => existsSync(join(CORE_DIR, rel)))
-    for (const rel of kept) renameSync(join(CORE_DIR, rel), join(dir, `${rel}.kept`))
-
-    rmSync(join(dir, ".git"), { recursive: true, force: true })
-    for (const rel of PRUNED) rmSync(join(dir, rel), { recursive: true, force: true })
-    for (const rel of kept) {
-      rmSync(join(dir, rel), { recursive: true, force: true })
-      renameSync(join(dir, `${rel}.kept`), join(dir, rel))
-    }
-    rmSync(CORE_DIR, { recursive: true, force: true })
-    renameSync(dir, CORE_DIR)
-
-    const version = JSON.parse(readFileSync(join(CORE_DIR, "package.json"), "utf-8")).version
-    writeFileSync(
-      join(REPO_ROOT, MANIFEST_REL),
-      JSON.stringify({ ...m, commit: resolved, version, vendoredOn: new Date().toISOString().slice(0, 10) }, null, 2) + "\n",
-    )
-    console.log(`\n  Synced to ${resolved.slice(0, 12)} (v${version}).`)
-    console.log(`  Next: update the Provenance table in quartz-v5/VENDORED.md, re-apply any vendored changes,`)
-    console.log(`        re-import Core's lock from the new package-lock.json, then pnpm nx run site-v5:install\n`)
-    return 0
-  } catch (err) {
-    rmSync(dir, { recursive: true, force: true })
-    throw err
-  }
-}
-
 const [cmd, ...rest] = process.argv.slice(2)
-const refArg = rest.find((a) => a.startsWith("--ref="))?.slice("--ref=".length)
 try {
   const code =
     cmd === "diff"
       ? cmdDiff({ latest: rest.includes("--latest") })
       : cmd === "log"
         ? cmdLog()
-        : cmd === "sync"
-          ? cmdSync(refArg ?? rest.find((a) => !a.startsWith("-")), { force: rest.includes("--force") })
-          : (console.error("usage: upstream.mjs diff [--latest] | log | sync --ref=<ref> [--force]"), 2)
+        : (console.error("usage: upstream.mjs diff [--latest] | log   (to move Core to another ref: pnpm nx run site-v5:upgrade --ref=<ref>)"), 2)
   process.exit(code)
 } catch (err) {
   console.error(`\n  ${err.message}\n`)

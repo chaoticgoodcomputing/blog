@@ -17,7 +17,7 @@
       }
     },
     "vendored-log": {
-      "//": "List every commit that has changed Quartz Core (quartz-v5/core) since the last sync, with the drift it made and the tickets it cites, and flag any that cite none. Commits that only moved Core, or changed only its steering, pruned or pnpm files, are left out. Uncommitted drift is listed too. Informational: the tracker for ADR-0001's one-ticket-per-vendored-change rule.",
+      "//": "List every commit that has changed Quartz Core (quartz-v5/core) since the last upgrade, with the drift it made and the tickets it cites, and flag any that cite none. Commits that only moved Core, or changed only its steering, pruned or pnpm files, are left out. Uncommitted drift is listed too. Informational: the tracker for ADR-0001's one-ticket-per-vendored-change rule.",
       "executor": "nx:run-commands",
       "options": {
         "commands": [
@@ -38,15 +38,12 @@
         "parallel": false
       }
     },
-    "sync": {
-      "//": "Re-vendor at a new upstream ref, keeping the steering files and Core's pnpm files and deleting the pruned ones. Refuses while Core carries vendored changes, since syncing replaces the tree: save them with diff-upstream first, then run upstream.mjs sync <ref> --force and re-apply. Usage: nx run site-v5:sync --args=\"--ref=<commit|branch>\"",
+    "upgrade": {
+      "//": "Move Quartz Core to another upstream ref, keeping what's ours (utils/upgrade.mjs, VENDORED.md). Refuses a dirty Core; fetches both refs into the upstream cache (quartz-v5/.upstream-cache); re-applies the vendored changes hunk by hunk, stopping on a conflict and reporting hunks upstream absorbed; takes package.json verbatim and three-way merges the other scaffolding; leaves the steering files alone and shows upstream's template changes; keeps the pruning; converts the target's npm lock with pnpm import and the lock check, then installs it frozen; records the new pinned ref last. Upgrading to the pinned ref changes nothing. Usage: pnpm nx run site-v5:upgrade --ref=<commit|branch|tag>",
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "node quartz-v5/utils/upstream.mjs sync {args.ref}"
-        ],
-        "cwd": "{workspaceRoot}",
-        "parallel": false
+        "command": "node quartz-v5/utils/upgrade.mjs",
+        "cwd": "{workspaceRoot}"
       }
     },
     "install": {
@@ -69,7 +66,7 @@
       }
     },
     "test-utils": {
-      "//": "The node --test suites of this project's tooling (utils/test/): the lock check, run against small synthetic locks.",
+      "//": "The node --test suites of this project's tooling (utils/test/): the lock check, against small synthetic locks, and the upgrade, against a synthetic Quartz-shaped upstream and site repo (offline apart from the pnpm store).",
       "executor": "nx:run-commands",
       "options": {
         "command": "node --test \"quartz-v5/utils/test/*.test.mjs\"",
@@ -177,12 +174,13 @@
       "dependsOn": ["build", "_serve-static"]
     },
     "clean": {
-      "//": "Remove build output and caches from Quartz Core.",
+      "//": "Remove build output and caches from Quartz Core: Quartz's transpile cache is core/quartz/.quartz-cache (cli/constants.js cacheFile), and core/.quartz-cache holds only its content cache, which `quartz sync` uses.",
       "executor": "nx:run-commands",
       "options": {
         "commands": [
           "rm -rf quartz-v5/core/public",
           "rm -rf quartz-v5/.serve-public",
+          "rm -rf quartz-v5/core/quartz/.quartz-cache",
           "rm -rf quartz-v5/core/.quartz-cache"
         ],
         "cwd": "{workspaceRoot}",
