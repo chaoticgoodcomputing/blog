@@ -58,7 +58,7 @@ The listing belongs on the pages that list things: the home page, and tag pages.
 - **on the pages `showOn` names**, by slug: `index` is the home page, and `404` the not-found page;
 - **nowhere else**, wherever the layout puts it.
 
-A site that edits its `quartz.ts` can keep the listing to its pages itself, with Quartz's TS layout override, as this site does. It sets `showOn: false`, and the listing then renders on every page the layout puts it on.
+A site that edits its `quartz.ts` can keep the listing to its pages itself, as this site does. It sets `showOn: false`, and the listing then renders on every page the layout puts it on.
 
 So place it in a slot every page shares, such as `afterBody`. To keep it off tag pages, exclude it there with `layout.byPageType.tag.exclude: ["@chaoticgoodcomputing/quartz-post-listing"]`, the name Quartz gives a plugin listed by package name. The reasoning is in the package's [ADR-0001](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz-v5/plugins/quartz-post-listing/docs/adr/0001-the-listing-keeps-to-its-own-pages.md).
 

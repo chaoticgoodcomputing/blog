@@ -85,7 +85,8 @@ _Avoid_: merged, upstreamed (that is the proposal's outcome, not what the upgrad
 **Upstream cache**:
 The upgrade's bare git repo of the upstream commits it has fetched, `quartz-v5/.upstream-cache/`
 (gitignored). Upstream files Core prunes, such as the default config and the npm lock, are read
-from it. The repo guards keep their checkouts of the pinned ref beside it, in `trees/<sha>/`.
+from it. Depth-1 checkouts of the refs the tooling reads sit beside it, in `trees/<sha>/`: the pinned
+ref for the repo guards, `diff-upstream` and the lock check, and each tip `diff-latest` sees.
 _Avoid_: upstream clone, mirror
 
 **Lock check**:

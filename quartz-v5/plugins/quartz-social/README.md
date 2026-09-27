@@ -55,7 +55,7 @@ The profile comes from GitHub's API, `api.github.com/users/<username>`, and the 
 
 The cards belong on the home page. Quartz 5 places a component with the `layout` of its config entry, and a `condition` could keep it to the home page, but Quartz 5 ships only `not-index`, and a plugin can't add an `is-index`. So the cards keep to their pages by themselves, as [quartz-post-listing](https://blog.chaoticgood.computer/plugins/quartz-post-listing) does: they render on the pages whose slugs `showOn` names, `index` (the home page) by default, and nowhere else, wherever the layout puts them. Place them in a sidebar, and add `display: desktop-only` to keep them off narrow screens.
 
-A site that edits its `quartz.ts` can keep the cards to their pages itself, with Quartz's TS layout override, as this site does. It sets `showOn: false`, and the cards then render on every page the layout puts them on.
+A site that edits its `quartz.ts` can keep the cards to their pages itself, as this site does. It sets `showOn: false`, and the cards then render on every page the layout puts them on.
 
 Both cards are one component, so they sit in one place in the layout, the GitHub card above the Bluesky card. The reasoning is in the package's [ADR-0001](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz-v5/plugins/quartz-social/docs/adr/0001-one-component-draws-both-cards.md).
 

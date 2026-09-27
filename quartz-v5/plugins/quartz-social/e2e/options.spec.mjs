@@ -90,7 +90,7 @@ test("leaves out the headings, the profile and the total when a site turns them 
   }
 })
 
-// For a site that places the cards itself, through the TS layout override in its `quartz.ts`:
+// For a site that places the cards itself, in its `quartz.ts`:
 // `showOn: false` leaves the component no page filter of its own (the real site's, #70).
 test("renders the cards on every page the layout puts them on when showOn is false", async ({ page }) => {
   const site = await buildWith(
