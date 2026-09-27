@@ -1,9 +1,9 @@
-// cgc-post-listing draws each badge's tag icon in its bubble, as v4's PostListing did (#53 story 8,
-// #73, #82): the icon id the cgc-tags engine publishes, drawn when the site builds by
+// quartz-post-listing draws each badge's tag icon in its bubble, as v4's PostListing did (#53 story 8,
+// #73, #82): the icon id the quartz-tags engine publishes, drawn when the site builds by
 // @chaoticgoodcomputing/icons, as inline SVG in tags-core's tag bubble, painted in the theme's
 // `--dark`. v4 drew them with a script
 // after the page loaded. The fixture's tag dictionary and icon collection are in
-// tests/quartz.config.yaml, and cgc-tag-list's e2e/icons.spec.mjs proves the drawing itself.
+// tests/quartz.config.yaml, and quartz-tag-list's e2e/icons.spec.mjs proves the drawing itself.
 import fs from "node:fs"
 import path from "node:path"
 import { test, expect, toggleScheme } from "../../../tests/harness/test.mjs"
@@ -85,7 +85,7 @@ test("draws a custom: icon from the site's own SVG files, in currentColor, at th
   await page.goto("/tags/mdtwin")
   const svg = bubble(page, "mdtwin").locator("svg.cgc-tag-bubble__icon")
   await expect(svg).toHaveCount(1)
-  // v4's 18px icon, as cgc-tag-list draws it.
+  // v4's 18px icon, as quartz-tag-list draws it.
   await expect(svg).toHaveCSS("width", "18px")
   await expect(svg).toHaveCSS("height", "18px")
   const colour = await bubble(page, "mdtwin").evaluate((bubble) => getComputedStyle(bubble).color)

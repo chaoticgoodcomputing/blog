@@ -4,7 +4,7 @@
 import { test, expect, layerOrder, resolvedColour, routeSite } from "../../../tests/harness/test.mjs"
 import { fixtureConfig, othersOff, withPlugins } from "../../../tests/harness/site.mjs"
 
-// Every cgc-mdx asset the page fetches from here on.
+// Every quartz-mdx asset the page fetches from here on.
 function recordWidgetRequests(page) {
   const seen = []
   page.on("request", (req) => {
@@ -25,7 +25,7 @@ async function hydrateIslands(page) {
   await page.waitForLoadState("networkidle")
 }
 
-// Every cgc-mdx asset a page fetches, once its islands are hydrated.
+// Every quartz-mdx asset a page fetches, once its islands are hydrated.
 async function widgetRequests(page, url) {
   const seen = recordWidgetRequests(page)
   await page.goto(url)
@@ -200,10 +200,10 @@ test("a widget rule beats a core rule of higher specificity", async ({ page }) =
   await expect(page.locator(".cascade strong")).toHaveCSS("color", dark)
 })
 
-// cgc-mdx takes no cgc-styles dependency (its ADR-0003), so on a site without that engine nothing
+// quartz-mdx takes no quartz-styles dependency (its ADR-0003), so on a site without that engine nothing
 // positions `cgc` but the widget link itself. The link arrives through `additionalHead`, after every
 // plugin's stylesheet, a theme's included, so the widget layer still ranks above the theme's layers.
-// The theme is stood in for as cgc-styles' layer spec does: its layer statement, at its own order.
+// The theme is stood in for as quartz-styles' layer spec does: its layer statement, at its own order.
 const THEME = "../fixture-plugins/fixture-theme"
 const THEME_LAYERS = ["obsidian-theme", "quartz-themes-base", "obsidian-theme-overrides"]
 

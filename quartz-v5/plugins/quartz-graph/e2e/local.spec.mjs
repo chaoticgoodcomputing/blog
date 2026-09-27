@@ -1,4 +1,4 @@
-// cgc-graph's local graph (#74): the pages around the current one, drawn on a canvas in the right
+// quartz-graph's local graph (#74): the pages around the current one, drawn on a canvas in the right
 // sidebar, as v4's graph drew them. Read through the text alternative the plugin writes inside the
 // canvas (docs/adr/0002), which names every node and edge it draws.
 import { test, expect } from "../../../tests/harness/test.mjs"

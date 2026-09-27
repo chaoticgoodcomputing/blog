@@ -1,4 +1,4 @@
-// cgc-mdx: a page type that serves `.mdx` pages through Quartz's configured pipeline, and an
+// quartz-mdx: a page type that serves `.mdx` pages through Quartz's configured pipeline, and an
 // emitter that writes the widget chunks those pages load. Both halves share one compile per build.
 // A transformer points links written without the extension at the pages.
 // Contract: docs/adr/0001 (widgets are real imports, the body stays Quartz's), 0002 (islands) and

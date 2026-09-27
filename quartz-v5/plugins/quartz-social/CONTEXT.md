@@ -58,7 +58,7 @@ _Avoid_: error state, placeholder
   checked at build time. The CSS paints them, so a scheme switch repaints them with no script.
 - **The colour-value check is the family's one check**, `colourValueCheck` from
   `@chaoticgoodcomputing/tags-core/colour-value`, handed the host's lightningcss, as `quartz-tags` and
-  `cgc-graph` use it (`src/colour.ts`).
+  `quartz-graph` use it (`src/colour.ts`).
 - **It keeps to its pages by `showOn`**, as `quartz-post-listing` does (its ADR-0001): no plugin can add
   an `is-index` condition (#70). `showOn: false` turns the filter off, for a site that keeps the
   cards to their pages itself in its `quartz.ts`, as this site does (#70).

@@ -13,10 +13,10 @@ export interface GraphEntry {
   title: string
   /** The pages it links to, as Quartz resolves links: simple slugs, `/` for the site's index. */
   links: string[]
-  /** Its tags, as the `cgc-tags` engine publishes them: normalised, in frontmatter order. */
+  /** Its tags, as the `quartz-tags` engine publishes them: normalised, in frontmatter order. */
   tags: string[]
   /**
-   * Its primary tag, as the `cgc-tags` engine resolves it: the tag that paints its node. Absent for a
+   * Its primary tag, as the `quartz-tags` engine resolves it: the tag that paints its node. Absent for a
    * page with no tags.
    */
   primary?: string

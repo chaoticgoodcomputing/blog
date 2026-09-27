@@ -2,7 +2,7 @@
 
 `@chaoticgoodcomputing/quartz-annotator`, manifest name `cgc-annotator`, loaded by package name (#89, #94): the Quartz 5 plugin that displays annotations written with the Obsidian
 [Annotator](https://github.com/elias-sundqvist/obsidian-annotator) plugin. It is that plugin's
-Quartz sibling, mapping one to one: Annotator writes annotations in the vault, and `cgc-annotator`
+Quartz sibling, mapping one to one: Annotator writes annotations in the vault, and `quartz-annotator`
 shows them on the site. Inherits the family vocabulary in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md).
 One package with three halves (#37): a transformer, a page type and an emitter. Its notes run
 through [`@chaoticgoodcomputing/pipeline`](../../libs/pipeline/CONTEXT.md), and its Viewer is an

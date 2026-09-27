@@ -1,4 +1,4 @@
-// cgc-seo's options, as the site config gives them. Every one is optional.
+// quartz-seo's options, as the site config gives them. Every one is optional.
 
 /** A person or organization credited in JSON-LD and `article:author`. A bare string is a Person's name. */
 export type AuthorOption = string | { name: string; url?: string; type?: "Person" | "Organization" }

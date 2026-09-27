@@ -1,4 +1,4 @@
-// The README's first widget (#79), v4's `initialization` widget as cgc-mdx's hello-world, built as
+// The README's first widget (#79), v4's `initialization` widget as quartz-mdx's hello-world, built as
 // the README writes it. Each file it shows is a code block titled with the file's path, which the
 // site's syntax highlighting draws as the block's caption and GitHub ignores.
 import fs from "node:fs"

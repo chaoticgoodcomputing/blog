@@ -1,4 +1,4 @@
-// cgc-page-source: v4's "View source on GitHub" link (ShowPageSource, #42/#44), at parity.
+// quartz-page-source: v4's "View source on GitHub" link (ShowPageSource, #42/#44), at parity.
 // The fixture points `repoUrl` + `contentPath` at the fixture's own files in this repo, so a link
 // can be checked against the file it names.
 import fs from "node:fs"

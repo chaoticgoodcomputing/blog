@@ -1,6 +1,6 @@
 // `/bluesky`, the widget library's non-widget export: Bluesky's public API and a renderer for its
 // posts, which the `bluesky-post` widget is built on and which a plugin takes without the widget
-// (#36, #75). cgc-social inlines it (#80), and its specs prove the feed there: the requests, who
+// (#36, #75). quartz-social inlines it (#80), and its specs prove the feed there: the requests, who
 // reposted and what replies, the counts and the failures (plugins/quartz-social/e2e/bluesky.spec.mjs).
 // What that consumer doesn't show is kept here, with a probe standing in for a plugin's build: that
 // the bundle carries no widget, Preact or icons library and only the `cgc-bluesky` block's CSS, the
@@ -88,7 +88,7 @@ test("a feed drawn with it marks who reposted and what replies with MDI's icons,
     document.querySelector("article").append(list)
   })
 
-  // The feed is a repost, a reply and a post (cgc-social's spec checks what each says).
+  // The feed is a repost, a reply and a post (quartz-social's spec checks what each says).
   const posts = page.locator(".cgc-probe-feed .cgc-bluesky")
   await expect(posts).toHaveCount(3)
   const [repost, reply] = [posts.nth(0), posts.nth(1)]
@@ -97,7 +97,7 @@ test("a feed drawn with it marks who reposted and what replies with MDI's icons,
   expect(await glyph(repost)).toBe(mdiPath("repeat-variant"))
   expect(await glyph(reply)).toBe(mdiPath("reply"))
   // Styled by its own stylesheet: the card's skin is Quartz's colour properties, and without
-  // `compact` it is drawn at the post widget's size (cgc-social's compact card has 4px corners).
+  // `compact` it is drawn at the post widget's size (quartz-social's compact card has 4px corners).
   const skin = await repost.evaluate((el) => ({
     border: getComputedStyle(el).borderTopColor,
     radius: getComputedStyle(el).borderTopLeftRadius,

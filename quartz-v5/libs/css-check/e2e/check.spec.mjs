@@ -88,7 +88,7 @@ for (const { name, block } of styled) {
 }
 
 // Rules 5 and 6: skin comes from the theme, fonts from its four font families. Planted in
-// cgc-page-source, the smallest styled plugin.
+// quartz-page-source, the smallest styled plugin.
 const SKIN = [
   ["a named colour in a shorthand", ".cgc-page-source { border: 1px solid black; }", "black"],
   [
@@ -279,7 +279,7 @@ test("theme references, the block's own siblings and the block's names build", a
   expect(build.dist).toBe(true)
 })
 
-// cgc-annotator styles markup PDF.js writes inside its own elements, so its selectors may reach
+// quartz-annotator styles markup PDF.js writes inside its own elements, so its selectors may reach
 // anything inside an element of its blocks, but nothing beside or above one.
 test("the annotator reaches inside its blocks, never beside or above them", async () => {
   const annotator = plugin("quartz-annotator")
@@ -304,7 +304,7 @@ test("the annotator reaches inside its blocks, never beside or above them", asyn
   expect(inside.output).not.toMatch(/breaks ADR-0003/)
 })
 
-// cgc-tag-explorer pins its one media query, the drawer's, which its plugin rewrites.
+// quartz-tag-explorer pins its one media query, the drawer's, which its plugin rewrites.
 test("the tag explorer's pinned media query still holds", async () => {
   const build = await buildWith(
     plugin("quartz-tag-explorer"),

@@ -89,8 +89,13 @@ path, Preact, `lightningcss` and `@quartz-community/types` resolve to Core's cop
 **In this repo**, the site loads a package the way a downstream site does. The repo-only site package,
 `quartz-v5/package.json`, depends on each plugin by `workspace:*`, so its `node_modules` links to the
 plugin's directory, and Quartz's `import(name)` from Core source reaches it by Node's upward walk.
-Quartz Core's own `package.json` stays upstream's (VENDORED.md). _Measured:_ the real-site build and
-serve render the graph by package name, and it never appears in `.quartz/plugins/`.
+Quartz Core's own `package.json` stays upstream's (VENDORED.md). _Measured:_ the real-site build
+renders the graph by package name (#93), as does a fixture serve (`package-plugins.spec`). The real
+site's serve was measured on the spike, and again on 2026-09-27 at `main` `26e5d077`, after every #89
+ticket had merged: `quartz build --serve` over the real site config served `/`,
+`/plugins/quartz-graph`, `/tags/projects/site/plugins` and `/resume.mdx` with the graph's markup, and
+Core's `.quartz/plugins/` held no entry, so every plugin of ours, site plugins included, came by
+package name.
 
 **A plugin's CSS is named from its manifest.** A scoped package name isn't a CSS identifier, and the
 **library-CSS check** would reject every selector in a block named `@chaoticgoodcomputing/quartz-…`.

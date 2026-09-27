@@ -166,7 +166,7 @@ Quartz copies a widget's source from the content folder into the output. When th
 
 ## Coming from this site's Quartz 4 widgets
 
-This site ran its widgets on its own fork of Quartz 4 before `cgc-mdx`, and old links to that system's guide land here.
+This site ran its widgets on its own fork of Quartz 4 before `quartz-mdx`, and old links to that system's guide land here.
 
 - **One component instead of four files and a registry.** A widget was a build-time `component.tsx`, a `script.inline.ts` that found the component's element by a selector and read its settings from `data-config`, a `style.inline.scss` and an `index.ts`, all registered in a `registry.ts` and imported through `@widgets/…` or `@content/widgets/…`. Now it's one Preact component and a plain `.css` file, imported by its path or its package's name. The component's props arrive in the browser as they were at build time, and what the script did goes in `useEffect`.
 - **Namespaced classes instead of `contain`.** A widget kept its styles to itself with a `.widget-<name>` root and `contain: layout style`. Now it names its classes after itself, as above, and its CSS sits in the widget layer, below the site's own.
@@ -174,6 +174,6 @@ This site ran its widgets on its own fork of Quartz 4 before `cgc-mdx`, and old 
 
 ## Notes
 
-- Quartz copies every file in the content folder that isn't a page into the site, so a vault's widget sources are published too. Add their folders to `ignorePatterns` to keep them out. `cgc-mdx` reads widgets from disk, so they still build, but `serve` no longer watches them.
+- Quartz copies every file in the content folder that isn't a page into the site, so a vault's widget sources are published too. Add their folders to `ignorePatterns` to keep them out. The plugin reads widgets from disk, so they still build, but `serve` no longer watches them.
 - Widget scripts and styles are written to `static/cgc-mdx/`, with shared code in chunks every page reuses.
 - The rationale for each part of the design is in the plugin's [decision records](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/plugins/quartz-mdx/docs/adr), and its terms (widget, island, directive, widget layer) are defined in [CONTEXT.md](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz-v5/plugins/quartz-mdx/CONTEXT.md).

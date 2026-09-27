@@ -6,7 +6,7 @@ date: 2026-09-25
 # The check ships as JavaScript that a build imports
 
 Every other library in the family ships as TypeScript source that a consuming plugin's esbuild
-inlines into its `dist/` (ADR-0005's *libraries inlined by a plugin* amendment). This one is not
+inlines into its `dist/` (ADR-0005: *our libraries are inlined*). This one is not
 inlined into anything. A plugin's `build.mjs` runs it while the package builds, and the widgets
 library's `lint` target runs it as a script, both straight under Node, with no bundler in between.
 
@@ -45,3 +45,16 @@ as a `devDependency`, since it is needed only while the consumer builds.
   compiling.
 - **A copy of the check in each package**, as before this library. The copies drifted: by the time
   there were nine, they and the widgets lint enforced ADR-0003 in six different ways (ADR-0002).
+
+## Amendment: workspace links, and no downstream build
+
+_2026-09-27, from [#92](https://github.com/chaoticgoodcomputing/blog/issues/92) and
+[#93](https://github.com/chaoticgoodcomputing/blog/issues/93)._
+
+The premise above describes npm and the git route. Since #92, pnpm links a library as a `workspace:*`
+dependency, not npm as a `file:` one, and Node still resolves its real path outside `node_modules`, so
+a TypeScript check would still run on `main`. Since #93, a site installs a plugin from npm with its
+built `dist/` ([ADR-0005](../../../../../docs/adr/0005-plugins-ship-as-npm-packages.md)),
+and no plugin build runs downstream, so the failure this ADR guards against no longer has a place to
+happen. The decision stands: JavaScript needs no stripping wherever the check runs, and changing it
+back would buy nothing.

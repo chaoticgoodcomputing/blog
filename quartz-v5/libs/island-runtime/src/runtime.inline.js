@@ -2,7 +2,7 @@
 // a call with one plugin's marker selector, and the plugin ships the result as a component's
 // `afterDOMLoaded`, so it runs once per document on every page. Plain browser script — `serve`
 // wraps it in a function, so no static import/export and no top-level await. Lifecycle hooks per
-// the SPA research (#34) and cgc-mdx's ADR-0002:
+// the SPA research (#34) and quartz-mdx's ADR-0002:
 //   nav     → hydrate every island not yet mounted (also fires once on first load)
 //   render  → the same scan; nothing is cleaned up first, so it must be idempotent
 //   prenav  → unmount everything, which runs effect cleanups before the morph

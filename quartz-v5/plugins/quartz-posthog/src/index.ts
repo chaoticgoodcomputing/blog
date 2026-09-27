@@ -1,4 +1,4 @@
-// cgc-posthog: PostHog analytics, as this site ran them on Quartz 4 (#42, #44): honours Do Not
+// quartz-posthog: PostHog analytics, as this site ran them on Quartz 4 (#42, #44): honours Do Not
 // Track, keeps v4's privacy options, and sends a `navigation` event, labelled by where the reader
 // clicked, for every link the SPA router follows. Replaces Quartz core's `analytics`, which has no
 // privacy options and no navigation events, so a site sets that to `null`.

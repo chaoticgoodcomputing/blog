@@ -1,4 +1,4 @@
-// cgc-posthog: v4's PostHog analytics (#42, #44), with its privacy options and its `navigation`
+// quartz-posthog: v4's PostHog analytics (#42, #44), with its privacy options and its `navigation`
 // events. PostHog is never reached: the fixture's `apiHost` is a reserved host that never resolves,
 // and each spec puts a stand-in for PostHog's library there (tests/harness/analytics.mjs), which
 // records what the page asks of PostHog. The fixture labels navigations with

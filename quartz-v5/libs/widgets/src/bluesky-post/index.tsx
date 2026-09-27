@@ -1,4 +1,4 @@
-// bluesky-post: one Bluesky post, fetched in the browser. An island (cgc-mdx ADR-0002): the
+// bluesky-post: one Bluesky post, fetched in the browser. An island (quartz-mdx ADR-0002): the
 // build-time HTML is a loading state and a link to the post, and hydration fetches the post from
 // Bluesky's public API and draws it with /bluesky's renderer. The build never touches the network
 // (#36). v4's props are kept. The export is spelled as the rest of the package spells Bluesky

@@ -1,5 +1,5 @@
 // Which posts a page lists, and in what order. Pure functions of the pages Quartz hands every
-// component, reading tags only from what the cgc-tags engine publishes on each page (ADR-0002).
+// component, reading tags only from what the quartz-tags engine publishes on each page (ADR-0002).
 import type { QuartzPluginData } from "@quartz-community/types"
 import { isAllTagsPage, tagOfPage, type TagsData } from "@chaoticgoodcomputing/tags-core"
 import { getDate } from "@quartz-community/utils/sort"
@@ -34,7 +34,7 @@ export function postsFor(
     .filter((file) => {
       const fileSlug = file.slug ?? ""
       // A virtual page, which no source file backs, is no post: a folder page, a tag page, the
-      // 404 page. Quartz sets `filePath` on every page it parses, and cgc-mdx on its .mdx pages.
+      // 404 page. Quartz sets `filePath` on every page it parses, and quartz-mdx on its .mdx pages.
       if (!file.filePath) return false
       if (file.unlisted === true) return false
       // Which pages are tag pages, and which is the page of every tag, are tags-core's rules.

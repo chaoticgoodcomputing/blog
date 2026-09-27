@@ -1,5 +1,5 @@
-// cgc-tag-list: a page's tags as badges, each with its tag bubble (v4's TagList, #69, #82). A
-// consumer of the cgc-tags engine: it reads the tags the engine publishes on each page's `fileData`,
+// quartz-tag-list: a page's tags as badges, each with its tag bubble (v4's TagList, #69, #82). A
+// consumer of the quartz-tags engine: it reads the tags the engine publishes on each page's `fileData`,
 // and paints with the engine's `--cgc-tag-*` properties. The component is in ./components; this is
 // the plugin's transformer half, which exists to ship the component's stylesheet.
 //

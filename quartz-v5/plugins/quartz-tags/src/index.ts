@@ -1,4 +1,4 @@
-// cgc-tags: the tag engine (ADR-0002's worked example, #20, #31). It owns the site's one tag
+// quartz-tags: the tag engine (ADR-0002's worked example, #20, #31). It owns the site's one tag
 // dictionary and publishes it resolved, through the two channels ADR-0002 allows:
 //
 // - per page, on `fileData.cgcTags`: the page's own tags, its primary tag and its expanded ancestor

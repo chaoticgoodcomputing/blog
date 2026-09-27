@@ -1,4 +1,4 @@
-// What cgc-tags publishes is a contract other plugins build on (ADR-0002, #20, #31), so its shape is
+// What quartz-tags publishes is a contract other plugins build on (ADR-0002, #20, #31), so its shape is
 // pinned here, as a consumer or a downstream site sees it:
 //
 // - `static/cgcTags.json`: every tag in the corpus, each ancestor of one included, mapped to

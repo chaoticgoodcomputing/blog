@@ -1,4 +1,4 @@
-// cgc-tag-explorer's stylesheet is library CSS (ADR-0003): in its own sublayer of the family layer, and
+// quartz-tag-explorer's stylesheet is library CSS (ADR-0003): in its own sublayer of the family layer, and
 // refused at build time if a selector reaches outside the package's BEM block.
 import fs from "node:fs"
 import path from "node:path"

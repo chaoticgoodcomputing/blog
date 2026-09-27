@@ -53,7 +53,7 @@ test("the browser's back button redraws the graph of the page it returns to", as
 })
 
 // v4's graph told PostHog where a navigation came from, as the site's other links do through
-// cgc-posthog. The fixture's PostHog host never resolves, so a stand-in answers it.
+// quartz-posthog. The fixture's PostHog host never resolves, so a stand-in answers it.
 test("tells PostHog a navigation came from the graph", async ({ page }) => {
   const posthog = await postHogStandIn(page, "https://posthog.invalid")
   await page.goto("/links/from-md")

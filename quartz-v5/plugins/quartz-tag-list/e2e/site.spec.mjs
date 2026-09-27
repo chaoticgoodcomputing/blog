@@ -1,4 +1,4 @@
-// cgc-tag-list on the real site (#69, #71), proven on a scratch site built from the site config, with
+// quartz-tag-list on the real site (#69, #71), proven on a scratch site built from the site config, with
 // pages carrying the vault's tags. The site's own icon collection, `custom:`, is its five SVG files in
 // quartz-v5/icons/, which the site config names once and shares through a YAML anchor.
 import { test, expect, resolvedColour, routeSite } from "../../../tests/harness/test.mjs"

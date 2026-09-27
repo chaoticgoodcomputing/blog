@@ -1,4 +1,4 @@
-// cgc-backlinks' own build: its stylesheet is library CSS (ADR-0003), in its own sublayer of the
+// quartz-backlinks' own build: its stylesheet is library CSS (ADR-0003), in its own sublayer of the
 // family layer and refused if a selector reaches outside the package's BEM block, and it carries the
 // icons library's dependencies itself (libs/icons/docs/adr/0001).
 import fs from "node:fs"

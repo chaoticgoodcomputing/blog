@@ -1,4 +1,4 @@
-// What a crawler gets from a page's `og:image`: the card cgc-og-image draws in place of
+// What a crawler gets from a page's `og:image`: the card quartz-og-image draws in place of
 // stock og-image's. Cards are compared as files, so a spec never has to read text out of an image:
 // two pages that differ only in something the card must not show get byte-identical cards.
 import fs from "node:fs"

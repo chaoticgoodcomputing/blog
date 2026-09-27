@@ -1,4 +1,4 @@
-// cgc-graph: v4's graph view as a plugin (#74; FORK-LEDGER components/Graph.tsx and
+// quartz-graph: v4's graph view as a plugin (#74; FORK-LEDGER components/Graph.tsx and
 // components/scripts/graph/**). The local graph draws the pages around the current one on a canvas,
 // and the global graph draws every page, in a dialog with a date filter and a private filter. It is
 // ours to ship because stock `@quartz-community/graph` reads only core's `contentIndex.json`, which
@@ -9,7 +9,7 @@
 // ships the stylesheet in the family layer, `@layer cgc.graph` (ADR-0003 rule 11). The component is
 // in ./components, and the script that draws in ./runtime.
 //
-// A consumer of the `cgc-tags` engine (ADR-0002): a page's tags and its primary tag in the index are
+// A consumer of the `quartz-tags` engine (ADR-0002): a page's tags and its primary tag in the index are
 // the ones the engine publishes on its `fileData`, normalised, and the icons are the ones it names
 // there, drawn here with @chaoticgoodcomputing/icons, since the engine draws nothing (#29).
 import fs from "node:fs/promises"

@@ -1,5 +1,5 @@
 // What the graph draws from, fetched once per page load: its own index (docs/adr/0001) and the
-// cgc-tags engine's tag index (docs/adr/0004). Node ids, and the pages this reader has visited (v4
+// quartz-tags engine's tag index (docs/adr/0004). Node ids, and the pages this reader has visited (v4
 // core/contentIndex.ts, core/tagIndex.ts, adapters/visited.ts).
 import { tagOfPage, type TagProperties } from "@chaoticgoodcomputing/tags-core"
 import { GRAPH_INDEX, type GraphIndex } from "../graph-index"
@@ -7,7 +7,7 @@ import { IconImages } from "./icons"
 import type { NodeId, Pages, Sources, Tags } from "./types"
 
 /**
- * The cgc-tags engine's tag index, relative to the site's output: every tag in the site, with the
+ * The quartz-tags engine's tag index, relative to the site's output: every tag in the site, with the
  * name of its colour property and its icon id. The engine's published contract (its README).
  */
 const TAGS_INDEX = "static/cgcTags.json"

@@ -13,7 +13,7 @@ It is the tag page from this site's Quartz 4 days, carried over as a plugin. On 
 
 Stock `tag-page` gives every tag a page at `/tags/<tag>`: each tag a page carries, and each of its ancestors. A tag with a description file gets that file's page instead of a made-up one. This plugin keeps all of that. It also keeps stock's page at `/tags`, but that page no longer lists every tag: like any tag page, it shows only its own description (a `tags/index.md`, if there is one).
 
-It adds one thing to them. Stock counts only the Markdown pages Quartz parses, so a tag that only `.mdx` pages carry gets no page. Here, tags on pages that another page type makes, such as [quartz-mdx](https://blog.chaoticgood.computer/plugins/quartz-mdx)'s, get tag pages too. That page type has to outrank `tag-page`'s priority of 10, as cgc-mdx's 25 does.
+It adds one thing to them. Stock counts only the Markdown pages Quartz parses, so a tag that only `.mdx` pages carry gets no page. Here, tags on pages that another page type makes, such as [quartz-mdx](https://blog.chaoticgood.computer/plugins/quartz-mdx)'s, get tag pages too. That page type has to outrank `tag-page`'s priority of 10, as quartz-mdx's 25 does.
 
 The main change is the page's body. Stock shows the description, then a count and a list of the tag's pages. This plugin shows the description alone:
 

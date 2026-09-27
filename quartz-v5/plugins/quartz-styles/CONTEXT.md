@@ -23,6 +23,6 @@ _Avoid_: layer declaration. The site's statement that names every layer on the p
 A package of the family that emits CSS from `externalResources()`, into its own `cgc.<package>`
 sublayer, and so lists this engine in `manifest.dependencies` by its plugin name, the package name
 `@chaoticgoodcomputing/quartz-styles` (#95). A package whose CSS arrives
-only through `additionalHead`, like `cgc-mdx`'s widget CSS, renders after every
+only through `additionalHead`, like `quartz-mdx`'s widget CSS, renders after every
 `externalResources()` sheet, can't move the family, and isn't one.
 _Avoid_: styled package, dependent

@@ -1,4 +1,4 @@
-// cgc-graph's browser script (v4 main.inline.ts, adapters/lifecycle.ts). It runs once per page load,
+// quartz-graph's browser script (v4 main.inline.ts, adapters/lifecycle.ts). It runs once per page load,
 // before Quartz's router dispatches the first `nav`, and draws on every `nav` after:
 //
 // - each local graph, around the page navigated to;

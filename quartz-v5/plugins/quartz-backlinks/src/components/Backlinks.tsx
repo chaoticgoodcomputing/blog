@@ -13,7 +13,7 @@ export interface BacklinksOptions {
   /**
    * The private tags: a **private page** (tags-core) carries one of them, or a descendant of one
    * (`private/work` under `private`), and its backlink is a private backlink. A tag that only starts
-   * with one (`privateer`) is not a descendant. Default: `["private"]`, as cgc-seo's `noindexTags`.
+   * with one (`privateer`) is not a descendant. Default: `["private"]`, as quartz-seo's `noindexTags`.
    */
   privateTags?: string[]
   /**

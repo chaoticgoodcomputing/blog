@@ -1,4 +1,4 @@
-// cgc-tag-explorer: browse the site by tag (v4's TagExplorer, #76). A consumer of the cgc-tags
+// quartz-tag-explorer: browse the site by tag (v4's TagExplorer, #76). A consumer of the quartz-tags
 // engine: it reads the tags the engine publishes on each page's `fileData`, and paints with the
 // engine's `--cgc-tag-*` properties. The component is in ./components; this is the plugin's emitter
 // half, which does two things:

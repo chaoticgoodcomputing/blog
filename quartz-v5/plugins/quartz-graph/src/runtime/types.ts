@@ -17,14 +17,14 @@ export interface Page {
   title: string
   links: NodeId[]
   tags: string[]
-  /** Its primary tag, as cgc-tags resolves it, or null for a page with no tags. */
+  /** Its primary tag, as quartz-tags resolves it, or null for a page with no tags. */
   primary: string | null
   date: Date | null
 }
 
 export type Pages = Map<NodeId, Page>
 
-/** The cgc-tags engine's tag index: each tag's colour property and icon id, by tag. */
+/** The quartz-tags engine's tag index: each tag's colour property and icon id, by tag. */
 export type Tags = Map<string, TagProperties>
 
 /** What every graph on a page is drawn from: the graph index's pages and icons, and the tag index. */

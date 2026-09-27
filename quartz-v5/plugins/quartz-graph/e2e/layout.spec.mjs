@@ -1,4 +1,4 @@
-// cgc-graph in the page's layout (#74): the local graph's box is square, but never taller than the
+// quartz-graph in the page's layout (#74): the local graph's box is square, but never taller than the
 // layout lets its block be. The block sets its own display to do that, which must not stop a layout's
 // `display: desktop-only` from hiding it: Quartz wraps the block in an element of its own for that.
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"

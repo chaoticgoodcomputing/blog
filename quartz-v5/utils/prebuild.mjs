@@ -14,9 +14,10 @@
 //    cacheable Nx `build` target, after a frozen install of the repo's pnpm workspace (VENDORED.md).
 //    `plugin-packages.mjs` holds those steps, and the e2e harness takes them from it for the fixture
 //    (`tests/harness/site.mjs`). The site config lists no local source.
-// 4. Quartz never prunes `.quartz/plugins/`, so a plugin renamed or turned into a package leaves a
-//    link to nowhere there. Prebuild removes such links before Quartz runs, as the harness does
-//    before each fixture or scratch build.
+// 4. Quartz never prunes `.quartz/plugins/`, so a plugin renamed or turned into a package leaves its
+//    old link there, live or pointing nowhere. Prebuild removes every link to nowhere, and every link
+//    into `plugins/` or `site-plugins/`, before Quartz runs, as the harness does before each fixture
+//    or scratch build (`pruneGonePlugins`).
 import fs from "node:fs"
 import path from "node:path"
 import { execFileSync } from "node:child_process"

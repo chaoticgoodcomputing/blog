@@ -7,7 +7,7 @@
 // `cgc-bluesky-post`'s namespace is never `cgc-bluesky`'s, though one block's name is a prefix of
 // the other's. A selector starts at an element of the block and may reach anything inside one
 // (PDF.js writes the text layer's markup), never beside or above it. The stylesheet declares no
-// layer: whoever bundles the widget places it (cgc-mdx in `cgc.mdx.widgets`, cgc-social in its own).
+// layer: whoever bundles the widget places it (quartz-mdx in `cgc.mdx.widgets`, quartz-social in its own).
 // CSS the check can't see fails too: an @import, or a source file importing a stylesheet from
 // outside src/ (say, PDF.js's own), which the page's bundler would otherwise inline.
 //

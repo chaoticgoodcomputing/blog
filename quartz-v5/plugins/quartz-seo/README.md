@@ -91,7 +91,7 @@ author: Ada Lovelace # a name
 
 It's a name, credited as a Person. A list or a `{ name, url, type }` object there isn't read, and the page keeps `defaultAuthor`.
 
-cgc-seo doesn't touch `<meta name="description">`. Quartz core writes it from the page's `socialDescription` or `description` frontmatter, uncut. Stock `description`'s `descriptionLength` and `maxDescriptionLength` only bound a description it derives from the page body. So a long description is no longer cut to 160 characters there, as this site's Quartz 4 fork cut it. A plugin can't change core's tag.
+The plugin doesn't touch `<meta name="description">`. Quartz Core writes it from the page's `socialDescription` or `description` frontmatter, uncut. Stock `description`'s `descriptionLength` and `maxDescriptionLength` only bound a description it derives from the page body. So a long description is no longer cut to 160 characters there, as this site's Quartz 4 fork cut it. A plugin can't change Core source's tag.
 
 Without a `baseUrl`, the plugin can't build absolute URLs, so it adds only the `noindex` tag, and writes no sitemap or feed.
 

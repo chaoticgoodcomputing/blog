@@ -8,7 +8,7 @@ import { testsRoot } from "../../../tests/harness/site.mjs"
 const isRedirect = (html) => /<meta http-equiv="refresh"/.test(html)
 
 test("an .mdx page is served at its .mdx URL, as stock page types serve theirs", async ({ emitted }) => {
-  // The owner's 2026-09-26 decision (cgc-mdx ADR-0005): `slugifyFilePath` keeps the extension, as
+  // The owner's 2026-09-26 decision (quartz-mdx ADR-0005): `slugifyFilePath` keeps the extension, as
   // for canvas-page's `foo.canvas`.
   expect(emitted.exists("mdx-article.mdx.html")).toBe(true)
   expect(isRedirect(emitted.read("mdx-article.mdx.html"))).toBe(false)

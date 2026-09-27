@@ -1,6 +1,6 @@
 # Plugin e2e suite
 
-The end-to-end suite every `cgc-*` plugin is developed against: a small fixture vault, built into a
+The end-to-end suite every `quartz-*` plugin is developed against: a small fixture vault, built into a
 real Quartz site and driven by a browser. It also holds the migration's second seam, which compares
 the real vault built under v4 and v5. Inherits the family glossary in
 [`quartz-v5/CONTEXT.md`](../CONTEXT.md); the decision is [ADR-0004](../../docs/adr/0004-playwright-e2e-as-the-plugin-tdd-loop.md).
@@ -162,7 +162,7 @@ _Avoid_: change, regression (it may be intended)
 **Move**:
 A v4 URL whose page or file v5 serves at another URL: lowercased, a tag page without its trailing
 slash, a folder note collapsed to its folder, or an `.mdx` page at its `.mdx` URL, with its OG image
-(the owner's 2026-09-26 decision, `cgc-mdx` ADR-0005). A redirect is what may still serve the old URL
+(the owner's 2026-09-26 decision, `quartz-mdx` ADR-0005). A redirect is what may still serve the old URL
 after a move.
 _Avoid_: rename, redirect
 

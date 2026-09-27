@@ -21,7 +21,7 @@ const CLICK_MS = 500
 
 /**
  * Follows a node to its page. Where the site loads PostHog, it also tells PostHog the navigation came
- * from the graph, with v4's labels, as cgc-posthog does for links. A site without PostHog sends nothing.
+ * from the graph, with v4's labels, as quartz-posthog does for links. A site without PostHog sends nothing.
  */
 export function follow(node: NodeData, source: "graph-click" | "graph-drag-click") {
   const url = new URL(node.href, window.location.toString())

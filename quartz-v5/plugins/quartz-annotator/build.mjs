@@ -134,7 +134,6 @@ for (const file of fs.readdirSync(path.join(pdfjs, "wasm"))) {
 // 3. The plugin --------------------------------------------------------------------------------
 
 const entryPoints = { index: "src/index.ts" }
-const external = peers
 await esbuild.build({
   entryPoints,
   outdir: "dist",
@@ -144,7 +143,7 @@ await esbuild.build({
   target: "node22",
   jsx: "automatic",
   jsxImportSource: "preact",
-  external: [...external, ...peers.map((p) => `${p}/*`)],
+  external: [...peers, ...peers.map((p) => `${p}/*`)],
   define: {
     __CGC_ANNOTATOR_CSS__: JSON.stringify(stylesheet),
     __CGC_ANNOTATOR_ENTRY__: JSON.stringify(path.basename(entry)),
@@ -165,4 +164,4 @@ await esbuild.build({
 // Its type declarations, a `.d.ts` beside each entry (@chaoticgoodcomputing/declarations): Quartz's
 // generated plugin index skips a package without `dist/index.d.ts`, and a TypeScript site reads the
 // plugin's options from them. The peers stay imports there too.
-await emitDeclarations({ entries: entryPoints, external })
+await emitDeclarations({ entries: entryPoints, external: peers })

@@ -1,4 +1,4 @@
-// cgc-email-subscribe: a newsletter subscribe box that posts to Buttondown (v4's EmailSubscribe).
+// quartz-email-subscribe: a newsletter subscribe box that posts to Buttondown (v4's EmailSubscribe).
 // The component is in ./components; this is the plugin's transformer half, which exists to ship the
 // component's stylesheet.
 //

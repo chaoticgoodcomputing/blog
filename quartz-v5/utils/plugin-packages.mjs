@@ -64,13 +64,13 @@ export async function buildPackages(dirs, run) {
   await run(nx, ["run-many", "-t", "build", "-p", projects.join(","), "--outputStyle=static"], { cwd: repo })
 }
 
-// Quartz links a local plugin into `<root>/.quartz/plugins/<name>` and never prunes the directory, so
-// a plugin that was once local and is now a package (#93–#96), or renamed, leaves its link in every
-// root built before: it reads as the plugin still being installed there, and a link to a plugin that
-// has gone points nowhere. Every plugin of ours loads by package name now, so any link into
-// `plugins/` or `site-plugins/` is one of those. Called before each build, it removes them and every
-// link to nowhere, and leaves every other link (a fixture plugin's), and a git install's real
-// directory, alone.
+// Quartz links a plugin listed by a local source into `<root>/.quartz/plugins/<name>` and never prunes
+// the directory, so a plugin once listed by a local source and now by package name (#93–#96), or
+// renamed, leaves its link in every root built before: it reads as the plugin still being installed
+// there, and a link to a plugin that has gone points nowhere. Every plugin of ours loads by package
+// name now, so any link into `plugins/` or `site-plugins/` is one of those. Called before each build,
+// it removes them and every link to nowhere, and leaves every other link (a fixture plugin's), and a
+// git install's real directory, alone.
 export function pruneGonePlugins(root) {
   const plugins = path.join(root, ".quartz", "plugins")
   if (!fs.existsSync(plugins)) return

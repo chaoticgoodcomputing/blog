@@ -1,7 +1,7 @@
 # @chaoticgoodcomputing/pipeline
 
 A library that rebuilds a Quartz 5 site's configured pipeline for content Quartz doesn't parse
-itself. `cgc-mdx` runs `.mdx` page bodies through it, and `cgc-annotator` runs each annotation's note
+itself. `quartz-mdx` runs `.mdx` page bodies through it, and `quartz-annotator` runs each annotation's note
 through it, minus a denylist. It ships as TypeScript source, and a consuming plugin's build inlines
 it (ADR-0005). Inherits the family vocabulary in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md).
 
@@ -42,5 +42,5 @@ _Avoid_: blocklist, exclude list, filter
   build leaves them external and the pipeline runs on the host's copies (the `shared-packages` repo
   guard, #98). The typecheck reads Core's through `tsconfig.json`'s `paths`.
 - **Tested through a probe plugin**, `e2e/probe/`, built from source into a scratch site by
-  `tests/harness/probe.mjs`, and through its consumers. `cgc-annotator`'s specs prove a denylist on
+  `tests/harness/probe.mjs`, and through its consumers. `quartz-annotator`'s specs prove a denylist on
   a real plugin: its default and a site's own.

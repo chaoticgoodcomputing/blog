@@ -1,4 +1,4 @@
-// cgc-annotator: shows annotations written with Obsidian's Annotator plugin (CONTEXT.md). One
+// quartz-annotator: shows annotations written with Obsidian's Annotator plugin (CONTEXT.md). One
 // package, three halves, as #37 settled:
 //   - the transformer takes each annotation page's annotations out of its markdown and renders
 //     their notes through the site's pipeline (./transformer);
@@ -8,7 +8,7 @@
 //     Viewer's browser files. Mirrors are pinned on first fetch, and a document that can't be
 //     fetched costs a warning, never the build (docs/adr/0001).
 //
-// Two factories, one per shape, as cgc-mdx and cgc-tags export theirs: the loader picks the one
+// Two factories, one per shape, as quartz-mdx and quartz-tags export theirs: the loader picks the one
 // whose instance fits each category the manifest declares, and calls it with the same options.
 // `CgcAnnotatorTransformer` is the transformer, and ships the stylesheet; `CgcAnnotator` is the page
 // type and the emitter. One object for every role would have Quartz collect the stylesheet twice, as

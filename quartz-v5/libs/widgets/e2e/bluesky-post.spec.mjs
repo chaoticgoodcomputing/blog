@@ -1,4 +1,4 @@
-// `bluesky-post`, proven through `cgc-mdx`: the fixture page /lab/bluesky.mdx imports it as a package
+// `bluesky-post`, proven through `quartz-mdx`: the fixture page /lab/bluesky.mdx imports it as a package
 // (`@chaoticgoodcomputing/widgets/bluesky-post`) and shows three posts, fetched in the browser after
 // hydration (#36, #75). Bluesky itself is the suite's stand-in (tests/harness/bluesky.mjs), which
 // answers from tests/fixture-bluesky/xrpc.json.
@@ -249,7 +249,7 @@ for (const [when, answer, says] of FAILURES) {
   })
 }
 
-// cgc-mdx's island runtime unmounts islands before an SPA navigation and hydrates them after one.
+// quartz-mdx's island runtime unmounts islands before an SPA navigation and hydrates them after one.
 test("it survives SPA navigation away and back, drawing each post once", async ({ page }) => {
   let asked = 0
   page.on("request", (req) => {
@@ -366,7 +366,7 @@ test("a hostile post is shown as text, and its script URLs lead nowhere", async 
 })
 
 // A post URL is written by hand, so a typo is caught where the author can fix it: the widget throws
-// while rendering at build time, which fails the build and names the page (cgc-mdx ADR-0001). A
+// while rendering at build time, which fails the build and names the page (quartz-mdx ADR-0001). A
 // scratch site's content sits outside the repo, so it imports the widget by its source path.
 test("a URL that isn't a Bluesky post's fails the build, naming the page and the URL", async () => {
   const widget = path.resolve(

@@ -1,4 +1,4 @@
-// cgc-social's browser script: fills each card on the page with what its account shows. Plain
+// quartz-social's browser script: fills each card on the page with what its account shows. Plain
 // script, run once per page load; Quartz dispatches `nav` on the first load and after every SPA
 // navigation, so each page's cards are drawn once, and a card that navigation brings back is drawn
 // again. Leaving a page aborts its requests.

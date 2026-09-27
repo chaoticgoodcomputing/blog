@@ -1,4 +1,4 @@
-// cgc-tag-explorer's browser script: v4's TagExplorer script, less the tree, which the component now
+// quartz-tag-explorer's browser script: v4's TagExplorer script, less the tree, which the component now
 // renders into the page, and with v4's MobileSidebarMenu's drawer, which is now the explorer's own.
 //
 // - A tag opens and closes from its fold button. As one opens, its pages are filled in from the

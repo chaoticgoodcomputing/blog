@@ -1,4 +1,4 @@
-// What a page's own frontmatter can and can't ask of cgc-seo, on a scratch site built from the fixture
+// What a page's own frontmatter can and can't ask of quartz-seo, on a scratch site built from the fixture
 // config, since the content fixture carries none of these pages: `unlisted: true` keeps an **unlisted
 // page** (CONTEXT.md) out of the sitemap and the feed; a description with `]]>` in it reaches a feed
 // reader whole, though the feed wraps it in CDATA, which `]]>` ends; and `author` is a name (#57), so a

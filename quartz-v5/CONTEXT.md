@@ -11,9 +11,9 @@ plugins built on it.
 **Quartz Core**:
 Upstream Quartz's install root, vendored into this repo at `quartz-v5/core/` (`quartz/core/` after
 cutover) because Quartz ships no npm package. Split into four tiers, listed once, in
-`utils/core-tiers.mjs`: **Core source**, **steering files**, **scaffolding** and **pruned files**.
-A pnpm project of its own, outside the repo's workspace, installed from a lock imported from
-upstream's (VENDORED.md). "Core" for short.
+`utils/core-tiers.mjs`: **Core source**, **steering files**, **scaffolding** and **pruned files**,
+plus Core's own pnpm files, which `tierOf` classifies as "pnpm". A pnpm project of its own, outside
+the repo's workspace, installed from a lock imported from upstream's (VENDORED.md). "Core" for short.
 _Avoid_: vendored copy (its old name), fork, our Quartz, vendor branch, engine (that is a plugin role)
 
 **Core source**:
@@ -110,7 +110,7 @@ _Avoid_: portable, standalone
 
 **Site plugin**:
 A plugin that fails the shareability test on purpose, because it carries this site's own
-application layer rather than something for others to install. The opposite of a `cgc-*` plugin,
+application layer rather than something for others to install. The opposite of a `quartz-*` plugin,
 which fails the test only by accident. Each is a **repo-only** package,
 `@chaoticgoodcomputing/site-<name>`, in `site-plugins/<name>` under its manifest name `site-<name>`,
 listed in the site config by package name like every other plugin of ours (#96).
@@ -124,6 +124,15 @@ workspace publish leaves one out; a single package's `pnpm publish --dry-run` st
 which only a real publish reaches. Not npm's
 "private package", a restricted package on the registry, which nothing here means.
 _Avoid_: private (alone), internal, unpublished
+
+**Site package**:
+`quartz-v5/package.json`, named `site-v5`: the repo-only pnpm workspace member (#92) the site loads its
+plugins through. It depends on every plugin and site plugin of ours by a `workspace:` spec, and, for a
+package listed more than once, again under an alias named for each extra placement (**package
+source**), so its `node_modules` is where Core source's
+`import(name)` resolves a package source, by Node's upward walk. Not Core, whose own `package.json`
+stays upstream's; not the Nx project `site-v5`, which is this whole context; and not a site plugin.
+_Avoid_: root package, site-v5 package, Core package
 
 **Site config**:
 The real site's Quartz configuration, `quartz-v5/core/quartz.config.yaml`: which plugins the site
@@ -169,8 +178,9 @@ change is supposed to have one.
 
 **Release**:
 One version shared by every package in `plugins/` and `libs/`, cut together whenever any of them
-changes, and named by a `v<semver>` tag. A downstream site pins a release, never a package's own
-version or a branch. Recorded in [ADR-0005](../docs/adr/0005-plugins-ship-as-npm-packages.md); the
+changes, and named by a `v<semver>` tag. Every package publishes to npm at the release's version, so
+a downstream site installs a package's npm version, which is the release's, never a branch, a git tag
+or a version of the package's own. Recorded in [ADR-0005](../docs/adr/0005-plugins-ship-as-npm-packages.md); the
 publishing ticket (#90) settles it after cutover. Nothing rewrites a package's metadata at a release:
 `pnpm publish` turns each `workspace:*` into the published version.
 _Avoid_: package version, plugin version

@@ -1,4 +1,4 @@
-// cgc-tag-list draws each tag's icon in its bubble (#29, #71, #82): the icon id the cgc-tags engine
+// quartz-tag-list draws each tag's icon in its bubble (#29, #71, #82): the icon id the quartz-tags engine
 // publishes, drawn when the site builds by @chaoticgoodcomputing/icons, as inline SVG painted in the
 // theme's `--dark`, as tags-core's bubble paints every icon. The fixture's tag dictionary and icon collection are in tests/quartz.config.yaml.
 import fs from "node:fs"
@@ -133,7 +133,7 @@ test("paints the glyph dark and the rim in the tag's colour, and repaints both w
 })
 
 // A misspelt icon id fails the build, where v4 logged a warning in the reader's console (#29, #53
-// story 34). cgc-tags checks only that an id is `prefix:name`; the plugin drawing it knows whether it
+// story 34). quartz-tags checks only that an id is `prefix:name`; the plugin drawing it knows whether it
 // exists. Scratch sites: the content fixture must build.
 const HOME = { "index.md": "---\ntitle: Home\ntags: [fixture]\n---\nHome.\n" }
 const TAG_LIST = {
@@ -141,7 +141,7 @@ const TAG_LIST = {
   enabled: true,
   layout: { position: "beforeBody", priority: 30 },
 }
-// Every other plugin of ours is off in these builds. Another that draws icons (cgc-tag-explorer,
+// Every other plugin of ours is off in these builds. Another that draws icons (quartz-tag-explorer,
 // #76) would otherwise fail the build first, in its own words, and an entry that aliases the
 // fixture's `&iconCollections` anchor would lose it when the entry below replaces this one.
 const OTHERS = othersOff(fixtureConfig(), ["quartz-styles", "quartz-tags", "quartz-tag-list"])

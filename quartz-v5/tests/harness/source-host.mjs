@@ -1,4 +1,4 @@
-// Remote content a site build fetches, such as cgc-annotator's source documents, served from a
+// Remote content a site build fetches, such as quartz-annotator's source documents, served from a
 // local host instead of the network. Each host listens on a port of the OS's choosing, so any
 // number of specs and suite copies can run at once.
 import http from "node:http"

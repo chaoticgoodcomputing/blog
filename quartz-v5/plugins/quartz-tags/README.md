@@ -114,7 +114,7 @@ The reasoning is in the package's [ADR-0001](https://github.com/chaoticgoodcompu
 
 A plugin that uses tag colours or icons is a consumer of `quartz-tags`:
 
-1. It declares the engine by **plugin name** in its `package.json`, with an `order` of 20 or more: `"quartz": { "dependencies": ["quartz-tags"] }`. The same warning applies as above.
+1. It declares the engine by its full **package name** in its `package.json`, with an `order` of 20 or more: `"quartz": { "dependencies": ["@chaoticgoodcomputing/quartz-tags"] }`. Quartz matches a dependency against the whole package name, so `quartz-tags` alone, or the manifest name `cgc-tags`, finds nothing.
 2. It reads `fileData.cgcTags` on the server, or `static/cgcTags.json` in the browser, and never the dictionary. The types, and the resolution rule, are in the library [`@chaoticgoodcomputing/tags-core`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/libs/tags-core).
 3. It paints with the tag's property, `var(--cgc-tag-…)`, so the colour follows the scheme with no script. A canvas can't use CSS, so it resolves the property with the library's `resolveTagColour()` and resolves it again on `themechange`.
 

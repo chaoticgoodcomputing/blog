@@ -7,7 +7,7 @@ draws (#82), the one colour resolver for code that paints on a canvas, and the o
 option is a colour value. The engine resolves with it, so the rule lives in one place; its
 consumers import the types, a badge the bubble, a canvas the resolver and the bubble's palette, and
 a plugin with colour options the check. A plugin that needs a rule but not the engine inlines the
-library alone, as `cgc-seo` and `quartz-backlinks` do for **private pages**: a library is no plugin,
+library alone, as `quartz-seo` and `quartz-backlinks` do for **private pages**: a library is no plugin,
 so they stay free of any engine (ADR-0002 rule 4, #57, #78). It ships as TypeScript source, and
 the plugin's build inlines it (ADR-0005). Inherits the family vocabulary in
 [`quartz-v5/CONTEXT.md`](../../CONTEXT.md), where **Tag colour**, **Colour value**, **Icon id**
@@ -75,15 +75,15 @@ _Avoid_: tag listing, tag index (that is quartz-tags' `static/cgcTags.json`)
 
 **Private tag**:
 One of the tags a site names as private, in the option each plugin that treats private pages
-differently takes them by: `cgc-seo`'s `noindexTags`, and `privateTags` in `quartz-backlinks`,
+differently takes them by: `quartz-seo`'s `noindexTags`, and `privateTags` in `quartz-backlinks`,
 `quartz-graph` and `quartz-tag-explorer`. A site names them once and gives every such plugin the same list.
-_Avoid_: noindex tag (that is cgc-seo's option), hidden tag
+_Avoid_: noindex tag (that is quartz-seo's option), hidden tag
 
 **Private page**:
 A page that carries a **private tag**, or a tag under one: `privatePageTest()`, from the page's own
 tags or its expanded ancestor set, which give the same answer. One function, so every plugin that
 treats a private page differently (a `noindex`, a lock, a filter) agrees on which pages those are. A
-private tag's own tag page is not one by this rule; `cgc-seo` keeps it out of search as well.
+private tag's own tag page is not one by this rule; `quartz-seo` keeps it out of search as well.
 _Avoid_: hidden page, unlisted page (stock Quartz's stronger state), draft
 
 **Bubble palette**:
@@ -131,7 +131,7 @@ _Avoid_: colour validator, colour parser
   caller rather than importing one, which could disagree with the host's, and `normaliseTag()`
   takes the host's `slugTag` for the same reason.
 - **Tested through the plugins that inline it.** The rule and the shapes through `quartz-tags`' specs; the
-  colour-value check through `quartz-tags`', `quartz-graph`'s and `cgc-social`'s option specs; the
+  colour-value check through `quartz-tags`', `quartz-graph`'s and `quartz-social`'s option specs; the
   colour resolver through `quartz-graph`'s colour and scheme specs, which paint the theme's colours
   and every tag's with it (#74, #77), and its options spec, which rims private pages in a
   `color()` whose computed value isn't `rgb()` (the paint the reader sees, not the resolver's

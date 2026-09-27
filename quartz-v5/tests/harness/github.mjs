@@ -1,4 +1,4 @@
-// GitHub in the suite. No spec reaches the real GitHub: a page that fetches from it, as cgc-social's
+// GitHub in the suite. No spec reaches the real GitHub: a page that fetches from it, as quartz-social's
 // GitHub card does in the browser, has its requests answered here instead.
 //
 // - `githubStandIn(context)` answers every request to the hosts the card reads (`GITHUB_HOSTS`):

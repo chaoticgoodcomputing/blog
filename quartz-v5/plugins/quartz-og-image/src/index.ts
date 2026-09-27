@@ -1,4 +1,4 @@
-// cgc-og-image: stock og-image, wrapped. Stock does the work (fonts, satori, sharp, the `og:image`
+// quartz-og-image: stock og-image, wrapped. Stock does the work (fonts, satori, sharp, the `og:image`
 // head tags); this plugin supplies the card it draws, which stock only accepts from TypeScript
 // (`imageStructure` is left out of its YAML options).
 //

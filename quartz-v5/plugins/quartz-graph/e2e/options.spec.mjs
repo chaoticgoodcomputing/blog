@@ -1,4 +1,4 @@
-// cgc-graph's options are checked when the site builds, and a mistake fails the build (ADR-0003's
+// quartz-graph's options are checked when the site builds, and a mistake fails the build (ADR-0003's
 // colour-value amendment): a colour option must be a CSS colour, whether a hex, a theme reference or
 // a `light-dark()` pair, and an option must be one the plugin has.
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
@@ -13,7 +13,7 @@ const CONTENT = {
   "secret.md": "---\ntitle: Secret\ntags: [private]\n---\nA private page.\n",
 }
 
-// The fixture's config, with cgc-graph's options replaced.
+// The fixture's config, with quartz-graph's options replaced.
 const withOptions = (options) =>
   editConfig(fixtureConfig(), (doc, entry) => entry("@chaoticgoodcomputing/quartz-graph").set("options", doc.createNode(options)))
 

@@ -8,10 +8,10 @@ test("a tag page whose tag ends in \"index\" is that tag's page, in every consum
   page,
 }) => {
   await page.goto("/tags/reindex")
-  // cgc-post-listing lists the tag's posts, its subtags' included.
+  // quartz-post-listing lists the tag's posts, its subtags' included.
   const listing = page.locator(".cgc-post-listing")
   await expect(listing.locator(".cgc-post-listing__link")).toHaveText(["Index Suffix"])
-  // cgc-tag-list lists the tag's subtags.
+  // quartz-tag-list lists the tag's subtags.
   const subtags = page.locator(".cgc-tag-list .cgc-tag-list__item")
   await expect(subtags).toHaveCount(1)
   await expect(subtags).toHaveAttribute("data-tag", "reindex/deep")

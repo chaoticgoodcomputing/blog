@@ -1,4 +1,4 @@
-// cgc-graph's own content index, `static/cgcGraph.json` (#21, #74, docs/adr/0001): what the graph is
+// quartz-graph's own content index, `static/cgcGraph.json` (#21, #74, docs/adr/0001): what the graph is
 // drawn from. Stock content-index drops each page's date, which the global graph's time filter reads,
 // so the plugin publishes its own. It carries the icons the graph draws, too, so a page fetches none
 // (#77, docs/adr/0004). Its shape is the plugin's published contract.
@@ -45,7 +45,7 @@ test("lists every page by its slug, with its title, links and tags", async ({ em
     links: ["mdx-article.mdx"],
     tags: ["fixture", "markdown"],
   })
-  // Tags as the cgc-tags engine publishes them, in frontmatter order.
+  // Tags as the quartz-tags engine publishes them, in frontmatter order.
   expect(pages["tag-engine/most-specific"].tags).toEqual(["fixture", "writing/essays"])
 })
 
@@ -66,7 +66,7 @@ test("lists .mdx pages and private pages like any other", async ({ emitted }) =>
   )
   expect(pages["mdx-article.mdx"].tags).toEqual(["fixture", "mdx"])
   expect(pages["seo/private-note"].tags).toEqual(["private"])
-  // Its second tag, `backstage`, is one only a private page carries (cgc-seo's sitemap, #67).
+  // Its second tag, `backstage`, is one only a private page carries (quartz-seo's sitemap, #67).
   expect(pages["seo/private-descendant"].tags).toEqual(["private/work", "backstage"])
 })
 

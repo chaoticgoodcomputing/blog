@@ -1,10 +1,10 @@
 # @chaoticgoodcomputing/island-runtime
 
 A library for shipping Preact islands from a Quartz 5 plugin. A Preact component renders to HTML at
-build time and hydrates in the browser, and it survives Quartz's SPA navigation. `cgc-mdx` uses it
-for widgets, and `cgc-annotator` for its Viewer. It ships as TypeScript source, and a consuming
+build time and hydrates in the browser, and it survives Quartz's SPA navigation. `quartz-mdx` uses it
+for widgets, and `quartz-annotator` for its Viewer. It ships as TypeScript source, and a consuming
 plugin's build inlines it (ADR-0005). Inherits the family vocabulary in
-[`quartz-v5/CONTEXT.md`](../../CONTEXT.md). The lifecycle was decided in `cgc-mdx`'s
+[`quartz-v5/CONTEXT.md`](../../CONTEXT.md). The lifecycle was decided in `quartz-mdx`'s
 [ADR-0002](../../plugins/quartz-mdx/docs/adr/0002-widgets-are-islands.md), before this library was
 extracted from it.
 
@@ -37,7 +37,7 @@ _Avoid_: loader, hydrator, widget script
 
 **Directive**:
 When an island hydrates: `load` (the default), as soon as its page is shown, or `visible`, once it
-scrolls into view. Islands inside a popover never hydrate. `cgc-mdx` spells it `client:load` or
+scrolls into view. Islands inside a popover never hydrate. `quartz-mdx` spells it `client:load` or
 `client:visible` on a widget's element.
 _Avoid_: hydration mode, strategy
 

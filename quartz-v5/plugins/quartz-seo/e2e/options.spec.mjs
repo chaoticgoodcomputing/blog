@@ -1,7 +1,7 @@
-// What cgc-seo writes when a site turns its files off or gives it no baseUrl, and what stock
+// What quartz-seo writes when a site turns its files off or gives it no baseUrl, and what stock
 // content-index writes beside it, on scratch sites, since the content fixture keeps the defaults.
 // content-index would write a sitemap and feed of its own to the same two files, at the same time as
-// cgc-seo (#67), so both site configs turn its two off, and it still writes contentIndex.json, which
+// quartz-seo (#67), so both site configs turn its two off, and it still writes contentIndex.json, which
 // lists private pages for search and the graph.
 import fs from "node:fs"
 import path from "node:path"
@@ -50,7 +50,7 @@ test("with enableSiteMap and enableRSS off, it writes neither file and links no 
 
 test("on the real site, content-index writes no sitemap or feed, and still lists private pages", async ({ scratch }) => {
   test.setTimeout(180_000)
-  // cgc-seo off, so whatever is written is content-index's.
+  // quartz-seo off, so whatever is written is content-index's.
   const config = withPlugins(siteConfig({ offline: true }), [{ source: "@chaoticgoodcomputing/quartz-seo", enabled: false }])
   const site = await scratch.site("seo-site-content-index", CONTENT, { config })
   expect(site.code, site.output).toBe(0)

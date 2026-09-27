@@ -1,4 +1,4 @@
-// cgc-seo: what search engines and feed readers see of the site. Each page's head, through
+// quartz-seo: what search engines and feed readers see of the site. Each page's head, through
 // `additionalHead`'s per-page form: `noindex` on private pages, and the canonical URL, `article:*`
 // meta and JSON-LD ported from the v4 `Head` fork. And the files crawlers read, ported from v4's
 // `ContentIndex` fork: the sitemap and the RSS feed, which leave out every page that isn't

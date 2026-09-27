@@ -1,4 +1,4 @@
-// cgc-backlinks lists the pages that link to a page, and marks the private ones (#44, #78). The
+// quartz-backlinks lists the pages that link to a page, and marks the private ones (#44, #78). The
 // fixture config gives it `privateTags: [private]`, as the site does. `backlinks/target` is linked
 // from three public pages under `backlinks/`, one of them `.mdx`, and from the two private pages
 // under `seo/`, one tagged `private` and one `private/work`.

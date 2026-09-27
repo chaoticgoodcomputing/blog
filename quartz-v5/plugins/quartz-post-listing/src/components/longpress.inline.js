@@ -1,4 +1,4 @@
-// cgc-post-listing's one script, v4's PostListing long press, as cgc-tag-list carries v4's TagList
+// quartz-post-listing's one script, v4's PostListing long press, as quartz-tag-list carries v4's TagList
 // one. On a narrow screen a post's tag badge shows only its bubble. Pressing and holding one expands
 // it to show the tag's name, and the press doesn't follow the link; a tap still does. Tapping anywhere
 // else, leaving the badge or navigating collapses it again.

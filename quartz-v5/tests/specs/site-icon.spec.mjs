@@ -1,5 +1,5 @@
 // The site's own icon (#44, #70), `quartz-v5/icon.png`. Quartz reads the icon from inside
-// Quartz Core (`quartz/static/icon.png`): core's Head links it, the Static emitter copies it and the
+// Quartz Core (`quartz/static/icon.png`): Core source's Head links it, the Static emitter copies it and the
 // favicon plugin draws `favicon.ico` from it. So the site's build target finishes with a post-build
 // step that puts the site's icon in their place, after every emitter has run (a site emitter would
 // race the Static one). Proven on a scratch site built from the site config and finished the way

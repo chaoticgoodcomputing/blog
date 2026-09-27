@@ -15,10 +15,10 @@ icon**, `#` and the **tag name**, and, with `showTagCounts`, quartz-tag-list's *
 **Post**:
 Any page the listing may list: every page with a source file of its own, except tag pages and the
 page of every tag, unlisted pages and pages under an **excluded tag**. Not only `content/` notes: v4 listed the home page and
-the privacy policy too. The .mdx pages cgc-mdx builds are posts. Quartz's virtual pages, which no
+the privacy policy too. The .mdx pages quartz-mdx builds are posts. Quartz's virtual pages, which no
 source file backs, never are, though Quartz hands them to components too: a folder page, a tag
 page, the 404 page. "Has a source file" is `fileData.filePath`, which Quartz sets on every page it
-parses and cgc-mdx on each of its pages.
+parses and quartz-mdx on each of its pages.
 _Avoid_: article, note (for what the listing lists), entry
 
 **Listing page**:

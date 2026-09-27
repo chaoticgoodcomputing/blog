@@ -1,4 +1,4 @@
-// cgc-social on the real site (#80): the site config puts v4's two cards in the home page's right
+// quartz-social on the real site (#80): the site config puts v4's two cards in the home page's right
 // sidebar, on desktop only, with v4's options: GitHub activity in GitHub's greens, and the ATProto
 // feed without counts (FORK-LEDGER layouts/index.layout.ts). Proven on a scratch site built from the
 // site config. The site's own accounts are answered with the stand-ins' (harness/github.mjs,

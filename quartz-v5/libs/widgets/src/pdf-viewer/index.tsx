@@ -1,5 +1,5 @@
 // pdf-viewer: a PDF drawn page by page with PDF.js, bundled rather than fetched from a CDN. An
-// island (cgc-mdx ADR-0002): the build-time HTML is the toolbar, a download link and a way to open
+// island (quartz-mdx ADR-0002): the build-time HTML is the toolbar, a download link and a way to open
 // the PDF, and hydration draws the pages. v4's props are kept, except `dpi`, which nothing read.
 import { useEffect, useRef, useState } from "preact/hooks"
 import "./pdf-viewer.css"

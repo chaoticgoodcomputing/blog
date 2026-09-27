@@ -28,7 +28,6 @@ if (problems.length) {
 }
 
 const entryPoints = { index: "src/index.ts", "components/index": "src/components/index.ts" }
-const external = peers
 await esbuild.build({
   entryPoints,
   outdir: "dist",
@@ -38,7 +37,7 @@ await esbuild.build({
   target: "node22",
   jsx: "automatic",
   jsxImportSource: "preact",
-  external: [...external, ...peers.map((p) => `${p}/*`)],
+  external: [...peers, ...peers.map((p) => `${p}/*`)],
   // The stylesheet ships as text, which the transformer hands to Quartz from externalResources().
   // Quartz writes it to its own file under static/, minified by lightningcss.
   loader: { ".css": "text" },
@@ -48,4 +47,4 @@ await esbuild.build({
 // Its type declarations, a `.d.ts` beside each entry (@chaoticgoodcomputing/declarations): Quartz's
 // generated plugin index skips a package without `dist/index.d.ts`, and a TypeScript site reads the
 // plugin's options from them. The peers stay imports there too.
-await emitDeclarations({ entries: entryPoints, external })
+await emitDeclarations({ entries: entryPoints, external: peers })

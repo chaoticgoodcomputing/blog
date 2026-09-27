@@ -3,7 +3,7 @@
 // - Root-level files. v5's Static emitter writes only under `/static/`, and a file at the site root
 //   that no plugin owns is the site's (FORK-LEDGER, "Root-level files").
 // - The site's icon (#44, #70). Quartz reads the icon from inside Quartz Core,
-//   `quartz/static/icon.png`: the Static emitter copies it, core's Head links it and the favicon
+//   `quartz/static/icon.png`: the Static emitter copies it, Core source's Head links it and the favicon
 //   plugin draws `favicon.ico` from it. The site's own replaces both outputs here. A site emitter
 //   could not: full builds run emitters at once, so it would race the Static emitter's copy.
 //
@@ -18,7 +18,7 @@ const sharp = createRequire(path.join(root, "core", "package.json"))("sharp")
 
 // Each file of the site's, relative to `quartz-v5/`, and where it goes in the built site.
 const SITE_FILES = [
-  // Hand-written. Keeps cgc-annotator's mirrors out of search (#37).
+  // Hand-written. Keeps quartz-annotator's mirrors out of search (#37).
   { from: "robots.txt", to: "robots.txt" },
   // Bing Webmaster's check that the site is ours.
   { from: "BingSiteAuth.xml", to: "BingSiteAuth.xml" },

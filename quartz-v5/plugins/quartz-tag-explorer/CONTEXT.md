@@ -50,7 +50,7 @@ _Avoid_: files, posts, children
 `static/cgcTagExplorer.json`, which the plugin's emitter writes and its script reads to fill a tag's
 pages in: every listed page once, and each tag's pages in order. It belongs to this plugin, and it is
 not a published artifact.
-_Avoid_: content index (stock's, or cgc-graph's), tag index
+_Avoid_: content index (stock's, or quartz-graph's), tag index
 
 **Private page**:
 tags-core's: a page carrying one of the `privateTags`, or a tag under one. It is listed after a

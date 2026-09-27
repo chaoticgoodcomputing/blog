@@ -1,4 +1,4 @@
-// cgc-page-source: a link from each page to its source file in the site's repository (v4's
+// quartz-page-source: a link from each page to its source file in the site's repository (v4's
 // ShowPageSource). The component is in ./components; this is the plugin's transformer half, which
 // exists to ship the component's stylesheet.
 //

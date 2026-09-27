@@ -1,4 +1,4 @@
-// v4 parity: the site config's cgc-seo gives the same canonical URL, feed link, `article:*` meta and
+// v4 parity: the site config's quartz-seo gives the same canonical URL, feed link, `article:*` meta and
 // JSON-LD as the v4 `Head` fork did for the same pages, and the same sitemap and RSS feed as v4's
 // `ContentIndex` fork. `v4-parity/v4-head.json` and `v4-parity/v4-feeds.json` are v4's output for the
 // pages in `v4-parity/content.mjs`; here they are built again under v5 from the site config and read

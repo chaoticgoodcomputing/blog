@@ -110,7 +110,8 @@ once, in `quartz-v5/utils/core-tiers.mjs`, which all of the tooling reads:
   plans Core in memory, this means pruned files are never brought back by an upgrade._
 
 Core's own pnpm files (`pnpm-workspace.yaml`, and `pnpm-lock.yaml`, imported from upstream's
-`package-lock.json` at the pinned ref) sit beside the tiers: ours, but never drift.
+`package-lock.json` at the pinned ref) are the one class beside the four tiers: ours, but never
+drift. `core-tiers.mjs` lists them too, and its `tierOf` classifies them as "pnpm".
 
 **Drift** is now any difference between Core and its pinned ref except in steering files, pruned
 files and Core's pnpm files (`site-v5:diff-upstream` shows only drift). The shareability test is

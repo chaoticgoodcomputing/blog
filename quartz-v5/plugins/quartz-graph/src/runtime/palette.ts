@@ -2,7 +2,7 @@
 // site's colour options (v4 ui/styles.ts), and each tag's (#77). Each is resolved through the family's
 // one resolver (tags-core's `resolveColour`), which turns any colour value, `light-dark()` and `var()`
 // chains included, into the `rgba()` the page shows in its current scheme (ADR-0003's colour-value
-// amendment). A tag's colour is its colour property, `--cgc-tag-…`, which the cgc-tags engine names
+// amendment). A tag's colour is its colour property, `--cgc-tag-…`, which the quartz-tags engine names
 // in its tag index and defines in its stylesheet, inherited through the cascade. The scheme can change
 // under a loaded page, so the graph makes a new palette on `themechange` (ADR-0003's *the scheme
 // changes under a loaded page* amendment).

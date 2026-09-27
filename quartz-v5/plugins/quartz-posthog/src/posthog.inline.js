@@ -1,4 +1,4 @@
-// cgc-posthog's browser script. Shipped as text: index.ts wraps this function in a call with the
+// quartz-posthog's browser script. Shipped as text: index.ts wraps this function in a call with the
 // site's settings, and core extracts the result into a script at the end of every page's body, so it
 // runs once per document, before Quartz's router dispatches the first `nav`. Plain browser script:
 // no import or export, and nothing it needs from outside but its one argument.

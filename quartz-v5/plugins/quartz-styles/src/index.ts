@@ -1,4 +1,4 @@
-// cgc-styles: the engine that owns the family layer's position (ADR-0003's family-layer amendment,
+// quartz-styles: the engine that owns the family layer's position (ADR-0003's family-layer amendment,
 // #30). Its published artifact is the family position, and all it emits is the statement that fixes
 // it: `@layer cgc;`, with no rules.
 //

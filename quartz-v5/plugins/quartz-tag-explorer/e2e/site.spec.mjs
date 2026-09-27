@@ -1,4 +1,4 @@
-// cgc-tag-explorer on the real site (#76), proven on a scratch site built from the site config, with
+// quartz-tag-explorer on the real site (#76), proven on a scratch site built from the site config, with
 // pages carrying the vault's tags: v4's left-sidebar navigation, private pages and `private` left out
 // altogether (the owner's review notes, #85), the site's own icons, a drawer at the site's
 // 1000px breakpoint that leaves a phone's header alone, the 404 page at any depth, v4's PostHog label

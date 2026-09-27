@@ -1,6 +1,6 @@
 // Under `quartz build --serve`, Quartz re-parses only the `.md` files that changed, which left open
 // whether an `.mdx` edit rebuilds at all (#65). It does: every rebuild runs each page type's
-// `generate` again, and cgc-mdx compiles its pages afresh for every build. Proven on a serve run
+// `generate` again, and quartz-mdx compiles its pages afresh for every build. Proven on a serve run
 // kept up while its content changes under it.
 import fs from "node:fs"
 import path from "node:path"

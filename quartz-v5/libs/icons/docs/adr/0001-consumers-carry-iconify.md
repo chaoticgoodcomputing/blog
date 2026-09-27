@@ -7,7 +7,7 @@ date: 2026-09-25
 
 The library draws icons while the site builds, with three of Iconify's packages: `@iconify/utils`
 to draw, `@iconify-json/mdi` for MDI, and `@iconify/tools` to normalise a site collection's SVG
-files (#29). ADR-0005's amendment has a plugin inline our libraries and list them as
+files (#29). ADR-0005 has a plugin inline our libraries (*our libraries are inlined*) and list them as
 `devDependencies`, with each library's third-party dependencies installed only for that build,
 because the loader installs, builds, then prunes dev dependencies
 ([gitLoader.ts:389-410](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L389-L410)).
@@ -78,3 +78,14 @@ into a committed module that its `lint` target checks against what this library 
 ([`widgets`' ADR-0002](../../../widgets/docs/adr/0002-browser-icons-are-drawn-ahead.md)). The first
 consequence above no longer names it: the plugins that inline this library still repeat its
 dependencies, and a widget carries none of them.
+
+## Amendment: one workspace lockfile
+
+_2026-09-27, from [#92](https://github.com/chaoticgoodcomputing/blog/issues/92)._
+
+Plugins no longer carry a `package-lock.json` of their own, and a library is a `workspace:*` link that
+pnpm makes, not a `file:` one that npm makes. The workspace's one lock, the root `pnpm-lock.yaml`, pins
+the library's Iconify packages and each consumer's copy alike, so "pinned twice over" above is now one
+pin, in that lockfile. The last considered alternative argues from npm's `file:` link, which describes
+the setup before #92. The decision is unchanged: consumers still carry Iconify's packages as their own
+`dependencies`, at the library's exact versions, and their builds still check it.

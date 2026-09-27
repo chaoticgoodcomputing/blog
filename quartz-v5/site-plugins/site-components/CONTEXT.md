@@ -33,7 +33,7 @@ _Avoid_: instance, alias, plugin name (for a placement's)
 **Site frame**:
 `site-full-width`, the frame this plugin registers: the page's width for the body, like core's
 `full-width`, with the `left` components in a bar at the top of the page header and the `right`
-ones after the body, where core's drops both. A body that takes the page header, as cgc-annotator's
+ones after the body, where core's drops both. A body that takes the page header, as quartz-annotator's
 does (`takesPageHeader`), is handed the before-body components as its children, to place itself:
 an annotation page's header is in its annotations panel (#87). A page type gets it through
 `template` under `layout.byPageType`; the site gives it to annotation pages (#37). Styled by
@@ -42,10 +42,10 @@ _Avoid_: layout, template (that is the config key naming it), full-width frame (
 
 **Site author**:
 The person the page title's byline names: its `author` option, fixed for the whole site. The site
-config writes it once, as the `&author` anchor on cgc-seo's `defaultAuthor.name`. The page title's
+config writes it once, as the `&author` anchor on quartz-seo's `defaultAuthor.name`. The page title's
 option is an alias of that anchor, so the byline and the pages' JSON-LD always name the same person
 (#44).
-_Avoid_: page author (that is cgc-seo's per-page frontmatter override), byline (for the option)
+_Avoid_: page author (that is quartz-seo's per-page frontmatter override), byline (for the option)
 
 **Site icon**:
 `quartz-v5/icon.png`, which the page title shows as `/static/icon.png`. Quartz serves stock's

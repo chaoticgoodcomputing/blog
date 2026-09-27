@@ -75,7 +75,7 @@ export const URLS = [
   "/no-such-page",
 ]
 
-// Runs in the page: what a crawler reads from the head that cgc-seo owns.
+// Runs in the page: what a crawler reads from the head that quartz-seo owns.
 export function extractHead() {
   const attrs = (selector, attr) => [...document.head.querySelectorAll(selector)].map((el) => el.getAttribute(attr))
   return {

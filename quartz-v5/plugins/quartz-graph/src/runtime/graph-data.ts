@@ -1,6 +1,6 @@
 // What a graph shows: its nodes and edges, and the global graph's filters (v4 core/graphData.ts,
 // core/tagIndex.ts, ui/filters.ts, ui/filterLogic.ts). The tag hierarchy comes from the tags pages
-// carry, as the cgc-tags engine publishes them: a tag's parent is its path's prefix, and a tag is
+// carry, as the quartz-tags engine publishes them: a tag's parent is its path's prefix, and a tag is
 // under another, or a page private, by tags-core's rules.
 import { lineageOf, parentOf, privatePageTest, underAny } from "@chaoticgoodcomputing/tags-core"
 import type { TimePeriod } from "../options"

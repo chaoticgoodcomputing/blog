@@ -1,5 +1,5 @@
 // Each node carries its tag's icon (#29, #77): a page its primary tag's, a tag node its own, inherited
-// from the nearest ancestor that has one, as the cgc-tags engine names it. The icons were drawn when
+// from the nearest ancestor that has one, as the quartz-tags engine names it. The icons were drawn when
 // the site built, into the graph's own index, so a page fetches none of them, where v4 fetched each
 // from a CDN. A node with a tag is its tag's bubble (#83, tags-core's `./bubble`), and its icon is
 // drawn in the bubble's `--dark`, black in the light scheme and white in the dark, on the bubble's

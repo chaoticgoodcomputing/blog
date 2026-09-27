@@ -1,4 +1,4 @@
-// cgc-graph's options: v4's graph options (FORK-LEDGER components/Graph.tsx, layouts/conf/graph.layout.ts),
+// quartz-graph's options: v4's graph options (FORK-LEDGER components/Graph.tsx, layouts/conf/graph.layout.ts),
 // with every colour a colour value (ADR-0003's colour-value amendment). Shared by the emitter, which
 // checks them, the component, which hands each graph its settings, and the browser runtime, which
 // reads them. Types and plain data only: the runtime imports this file too.

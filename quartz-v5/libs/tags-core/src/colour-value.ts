@@ -1,7 +1,7 @@
 // Whether a string is a colour value (ADR-0003's colour-value amendment, #31): anything CSS accepts
 // as a colour. Every colour-valued option on a family plugin is checked with this at build time, and
 // a value that fails fails the build: the tag dictionary's colours in `quartz-tags`, the graph's colour
-// options in `cgc-graph`, the calendar's `levelColors` in `cgc-social`. Server only.
+// options in `quartz-graph`, the calendar's `levelColors` in `quartz-social`. Server only.
 //
 // It parses with lightningcss, the parser Quartz itself runs every stylesheet through, so a value
 // passes exactly when Quartz's own CSS pipeline would read it as a colour. The plugin hands in the

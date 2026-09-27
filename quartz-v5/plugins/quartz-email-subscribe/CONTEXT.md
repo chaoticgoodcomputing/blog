@@ -9,7 +9,7 @@
 
 **Subscribe box**:
 What this plugin renders: a heading, and a panel holding a line of text and the subscribe form.
-_Avoid_: widget (reserved for what an MDX page imports, in `cgc-mdx`), newsletter form, signup
+_Avoid_: widget (reserved for what an MDX page imports, in `quartz-mdx`), newsletter form, signup
 
 **Newsletter**:
 The Buttondown newsletter a reader subscribes to, named by the `buttondownUsername` option. Always

@@ -1,4 +1,4 @@
-// Reads the two files cgc-seo writes for crawlers and feed readers as they read them: the sitemap's
+// Reads the two files quartz-seo writes for crawlers and feed readers as they read them: the sitemap's
 // entries, and the RSS feed's channel and items. Regular expressions, not an XML parser: both files
 // are flat, the specs check well-formedness separately in the browser, and the site's IndexNow script
 // reads the sitemap the same way. Used by the specs and by `v4-parity/capture.mjs`.

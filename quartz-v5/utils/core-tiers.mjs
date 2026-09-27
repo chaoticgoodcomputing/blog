@@ -66,7 +66,7 @@ export const PRUNED = [
  */
 export const PNPM_FILES = ["pnpm-workspace.yaml", "pnpm-lock.yaml"]
 
-/** The tiers by name, in the order `tierOf` tries them. */
+/** The four tiers, and Core's pnpm files as "pnpm", by name, in the order `tierOf` tries them. */
 export const TIERS = { source: SOURCE, steering: STEERING, scaffolding: SCAFFOLDING, pruned: PRUNED, pnpm: PNPM_FILES }
 
 const matches = (rel, entry) => (entry.endsWith("/") ? rel.startsWith(entry) : rel === entry)

@@ -2,7 +2,7 @@
 // (ADR-0005, the owner's 2026-09-26 decision), and the rest of the site has to find it there: links
 // in each form a vault writes them, backlinks, popovers and the graph's edges. A link written with
 // the extension reaches it through Quartz alone. One written without it, `[[life]]`, names the old
-// clean URL, which is now only a redirect, so cgc-mdx points it at the page itself.
+// clean URL, which is now only a redirect, so quartz-mdx points it at the page itself.
 import { test, expect } from "../../../tests/harness/test.mjs"
 
 // The same links, written once in a .md page and once in an .mdx page.

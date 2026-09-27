@@ -35,7 +35,7 @@ export interface SocialMediaOptions {
   /**
    * The pages that carry the cards, by slug: `index` is the site's home page. Every other page
    * renders nothing, so the component can sit in a layout slot every page shares: Quartz 5 ships no
-   * `is-index` layout condition (cgc-post-listing's docs/adr/0001). `false` for no filter of its own,
+   * `is-index` layout condition (quartz-post-listing's docs/adr/0001). `false` for no filter of its own,
    * for a site that keeps the cards to their pages itself, in its `quartz.ts`: they render wherever
    * the layout puts them. Default: `["index"]`.
    */

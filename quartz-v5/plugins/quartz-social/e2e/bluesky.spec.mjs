@@ -1,4 +1,4 @@
-// cgc-social's Bluesky card: v4's SocialMediaBlueSky (#42, #44, #80), on the fixture's home page
+// quartz-social's Bluesky card: v4's SocialMediaBlueSky (#42, #44, #80), on the fixture's home page
 // below the GitHub card. It reads the account's latest posts in the browser through the widget
 // library's `/bluesky` client and draws them with its renderer, from the suite's Bluesky stand-in
 // (tests/harness/bluesky.mjs): `fixture.bsky.social`, whose feed is a repost, a reply and a post.

@@ -3,7 +3,7 @@
 // the theme's `--dark`. The owner's review notes of 2026-09-26 asked for one bubble "shared across
 // both the list/badges as well as on graph nodes" (ADR-0003's tag bubble amendment), in place of the
 // node filled with its tag colour (#77). The tag is a page's primary tag, or a tag node's own, its
-// colour inherited from the nearest ancestor that has one, as the cgc-tags engine resolves it. The
+// colour inherited from the nearest ancestor that has one, as the quartz-tags engine resolves it. The
 // graph reads each tag's colour property from the engine's `static/cgcTags.json` and resolves it
 // through tags-core's resolver, in the scheme the page is showing. The fixture's tag dictionary is in
 // tests/quartz.config.yaml.

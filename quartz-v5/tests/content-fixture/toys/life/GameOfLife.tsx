@@ -1,4 +1,4 @@
-// Conway's Game of Life as a cgc-mdx island: plain Preact on both sides, no Quartz events.
+// Conway's Game of Life as a quartz-mdx island: plain Preact on both sides, no Quartz events.
 // Ported from content/public/widgets/game-of-life, which split the same logic across a build-time
 // component and an imperative `.inline.ts` script that found its element by selector.
 import { useEffect, useRef } from "preact/hooks"

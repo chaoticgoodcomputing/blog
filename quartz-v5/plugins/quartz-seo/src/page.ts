@@ -1,7 +1,7 @@
-// What cgc-seo reads of a page: Quartz's per-file data, as the stock transformers leave it, and the
+// What quartz-seo reads of a page: Quartz's per-file data, as the stock transformers leave it, and the
 // rules the head, the sitemap and the feed share about it. The terms are CONTEXT.md's. Which pages are
 // private, and which tag a tag page is for, are tags-core's rules, which the plugin inlines: a
-// library, not the cgc-tags engine, which this plugin doesn't depend on (#28).
+// library, not the quartz-tags engine, which this plugin doesn't depend on (#28).
 import { simplifySlug, slugTag, stripSlashes } from "@quartz-community/utils/path"
 import {
   isAllTagsPage,

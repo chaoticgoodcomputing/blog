@@ -5,7 +5,7 @@
 // circle is `--light` instead, so it stands out from the badge (the owner's decision of the same
 // day, recorded in the same amendment). A badge is the bubble and `#name`, with a count where the
 // plugin shows one, all centred on one line. Proven through the two plugins that draw badges,
-// cgc-tag-list and cgc-post-listing, on a tag page that shows both: `/tags/writing` lists the tag's
+// quartz-tag-list and quartz-post-listing, on a tag page that shows both: `/tags/writing` lists the tag's
 // subtags, `writing/articles` among them, and its posts, og/tag-nested among them, tagged
 // `writing/articles`. The fixture gives `writing` the colour `var(--secondary)` and the icon
 // `mdi:pencil`, which `writing/articles` inherits (tests/quartz.config.yaml).

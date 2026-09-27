@@ -8,7 +8,7 @@ import type { PageFrame, PageFrameProps, QuartzComponent, QuartzComponentProps }
 const draw = (components: QuartzComponent[], props: QuartzComponentProps) =>
   components.map((component) => h(component as FunctionComponent<QuartzComponentProps>, props))
 
-// Whether a page body places the page header itself: cgc-annotator's says so with `takesPageHeader`
+// Whether a page body places the page header itself: quartz-annotator's says so with `takesPageHeader`
 // (its docs/adr/0003).
 const takesPageHeader = (body: QuartzComponent) => (body as { takesPageHeader?: unknown }).takesPageHeader === true
 
@@ -18,7 +18,7 @@ const takesPageHeader = (body: QuartzComponent) => (body as { takesPageHeader?: 
  * so this one keeps both, out of the body's way. The left components (the page title and the
  * toolbar) are a bar at the top of the page header, and the right ones (the graph and the backlinks)
  * come after the body, before the after-body components, as v4's annotation layout had them.
- * A body that takes the page header (the before-body components), as cgc-annotator's does, is handed
+ * A body that takes the page header (the before-body components), as quartz-annotator's does, is handed
  * it as its children, to place itself: an annotation page's is in its annotations panel (docs/adr/0002's
  * amendment). Any other body gets it in the page header, as core's frames draw it.
  * The site styles it (site-styles, objects tier).

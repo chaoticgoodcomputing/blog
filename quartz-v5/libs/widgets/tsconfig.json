@@ -11,7 +11,7 @@
     "jsxImportSource": "preact",
     "types": [],
     // Preact is a peer, never installed here: type-check against the host Quartz's copy, the one
-    // cgc-mdx pins every widget to.
+    // quartz-mdx pins every widget to.
     "paths": {
       "preact": ["../../core/node_modules/preact"],
       "preact/*": ["../../core/node_modules/preact/*"]

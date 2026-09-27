@@ -3,10 +3,10 @@
 Preact widgets that an `.mdx` page imports like any npm package, one subpath export per widget:
 `/pdf-viewer` and `/bluesky-post`, beside `/bluesky`, the non-widget Bluesky client the second is
 built on. There is no root export. The package ships as TypeScript source, and the page's bundler
-compiles it: [`cgc-mdx`](../../plugins/quartz-mdx/CONTEXT.md) makes each use of a widget an island. It
+compiles it: [`quartz-mdx`](../../plugins/quartz-mdx/CONTEXT.md) makes each use of a widget an island. It
 is a **Library**, not a plugin, so it has no Quartz hooks and no place in a site's config. Inherits
 the family vocabulary in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md), and uses **Widget**,
-**Island** and **Widget layer** as `cgc-mdx` defines them. Decided on
+**Island** and **Widget layer** as `quartz-mdx` defines them. Decided on
 [#36](https://github.com/chaoticgoodcomputing/blog/issues/36).
 
 ## Language
@@ -14,7 +14,7 @@ the family vocabulary in [`quartz-v5/CONTEXT.md`](../../CONTEXT.md), and uses **
 **Subpath export**:
 `@chaoticgoodcomputing/widgets/<name>`, the only way into the package, one per widget, plus
 `/bluesky`, which is not a widget. With no root export, one import can't pull in two widgets.
-_Avoid_: entry point (cgc-mdx's **Entry** is the browser module it writes), module
+_Avoid_: entry point (quartz-mdx's **Entry** is the browser module it writes), module
 
 **Block**:
 The BEM block a subpath's CSS lives in: `cgc-<name>`, named after its directory under `src/`,
@@ -37,7 +37,7 @@ _Avoid_: stylelint, prefixing pass (that one transforms)
 **Icon module**:
 A subpath's `icons.ts` (today only `/bluesky`'s): the icons it shows in the browser, as **drawn
 icons** (the icons library's term) that `@chaoticgoodcomputing/icons` drew from the ids in the
-`icons.json` beside it (`npm run icons`). Committed, since its browser code can't run the library,
+`icons.json` beside it (`pnpm run icons`). Committed, since its browser code can't run the library,
 and checked by the `lint` target
 against what the library draws ([ADR-0002](./docs/adr/0002-browser-icons-are-drawn-ahead.md)).
 _Avoid_: icon sprite, icon cache, generated icons (in prose)
@@ -63,15 +63,15 @@ _Avoid_: embed (a post's own images, link card or quote), tweet, post widget
   (`workspace:*`), so the vault and the e2e fixture reach it by Node's upward walk (#36). A
   downstream site installs it from npm. The widget's own dependencies (`pdfjs-dist`) install
   beside it.
-- **A plugin that inlines part of it**, such as `cgc-social` with `/bluesky`, lists it as a
-  `workspace:*` devDependency, like any library (ADR-0005). `cgc-social` bundles
+- **A plugin that inlines part of it**, such as `quartz-social` with `/bluesky`, lists it as a
+  `workspace:*` devDependency, like any library (ADR-0005). `quartz-social` bundles
   `/bluesky` into its sidebar script and draws its feed as compact **post cards**.
   `/bluesky` brings its stylesheet with it, so the plugin's bundle has a CSS output to place in its
   own layer.
 
 ## Constraints
 
-- **Preact is a peer.** `cgc-mdx` pins every widget's `preact` imports to the host Quartz's copy.
+- **Preact is a peer.** `quartz-mdx` pins every widget's `preact` imports to the host Quartz's copy.
   It is only a peer, never a devDependency too, so no copy installs beside the library; the
   typecheck reads Quartz Core's through `tsconfig.json`'s `paths` (#92).
   `/bluesky` doesn't use Preact: its renderer returns HTML strings, so a plain script can draw posts.
@@ -85,7 +85,7 @@ _Avoid_: embed (a post's own images, link card or quote), tweet, post widget
 - **Stylesheets are side effects.** A module imports its own stylesheet only for its side effect,
   so `package.json` lists the CSS files in `sideEffects`. A bundler that honours the field, like
   webpack, would otherwise drop them under `false`. esbuild keeps CSS either way.
-- **Widget CSS lands in `cgc.mdx.widgets`**, which `cgc-mdx` wraps around it when it emits it. Rule 9's
+- **Widget CSS lands in `cgc.mdx.widgets`**, which `quartz-mdx` wraps around it when it emits it. Rule 9's
   vendor layer can't reach a widget, so third-party CSS goes into the block by hand.
 - **How `pdf-viewer` carries PDF.js** is [ADR-0001](./docs/adr/0001-pdf-js-rides-in-the-widget-chunk.md).
 - **How a subpath's browser icons are drawn** is [ADR-0002](./docs/adr/0002-browser-icons-are-drawn-ahead.md).

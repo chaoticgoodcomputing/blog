@@ -180,7 +180,7 @@ test("a package listed a second time loads under its placement name", async ({ s
   expect(fs.readdirSync(path.join(path.dirname(site.public), ".quartz", "plugins"))).not.toContain("email-subscribe-sidebar")
 })
 
-// The tag family and the styles engine (#95): the two engines, `cgc-styles` and `cgc-tags`, and the
+// The tag family and the styles engine (#95): the two engines, `quartz-styles` and `quartz-tags`, and the
 // plugins that consume them, each a package under its `quartz-<name>` name that keeps its manifest
 // name, `cgc-<name>`, for its CSS.
 const FAMILY = {
@@ -289,10 +289,10 @@ test("the site plugins are repo-only packages the site lists by name", () => {
   }
 })
 
-// pnpm refuses to publish a private package: a workspace publish, the way every package would be
+// pnpm refuses to publish a repo-only package (`"private": true`): a workspace publish, the way every package would be
 // published (#90), leaves each site plugin out, where a publishable package would be packed and
 // listed. (A single-package `pnpm publish --dry-run` stops before the check, which lives in the
-// registry step, so it cannot show the refusal.) Nothing here reaches the registry: a private
+// registry step, so it cannot show the refusal.) Nothing here reaches the registry: a repo-only
 // package is dropped before pnpm asks whether it is already published.
 test("a workspace publish leaves the site plugins out", async () => {
   const repo = path.resolve(testsRoot, "..", "..")

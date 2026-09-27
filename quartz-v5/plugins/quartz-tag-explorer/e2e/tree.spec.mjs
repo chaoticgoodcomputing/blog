@@ -1,4 +1,4 @@
-// cgc-tag-explorer lists the site's tags as a tree in the left sidebar (v4's TagExplorer, #76): each
+// quartz-tag-explorer lists the site's tags as a tree in the left sidebar (v4's TagExplorer, #76): each
 // tag with its icon in its tag colour, the number of pages under it and a link to its tag page, and,
 // opened, its subtags and then its pages. The fixture's tag dictionary, icon collection and the
 // explorer's options are in tests/quartz.config.yaml; the pages under `explorer` are

@@ -1,4 +1,4 @@
-// cgc-social's GitHub card: v4's SocialMediaGitHub (#42, #44, #80), on the fixture's home page in
+// quartz-social's GitHub card: v4's SocialMediaGitHub (#42, #44, #80), on the fixture's home page in
 // the right sidebar. It reads the user's profile and their year of contributions in the browser,
 // from the suite's GitHub stand-in (tests/harness/github.mjs), which holds one user, `fixture-octo`.
 import { test, expect, resolvedColour, toggleScheme } from "../../../tests/harness/test.mjs"

@@ -46,7 +46,7 @@ _Avoid_: sort, ranking
 ## Constraints
 
 - **No engine.** It depends on `quartz-styles` for its cascade position only, and on no tag engine: the
-  private tags are its own option, as they are cgc-seo's, so a site gives both the same list. Which
+  private tags are its own option, as they are quartz-seo's, so a site gives both the same list. Which
   pages are private is tags-core's rule, which it inlines as a library (ADR-0002 rule 4), reading
   each page's frontmatter tags.
 - **It draws the lock itself,** with `@chaoticgoodcomputing/icons`, from MDI, which installs with the

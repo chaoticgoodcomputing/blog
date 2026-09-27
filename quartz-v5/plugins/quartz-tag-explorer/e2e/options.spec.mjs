@@ -1,4 +1,4 @@
-// cgc-tag-explorer's options other than the ones the fixture sets (#76), on scratch sites: the order
+// quartz-tag-explorer's options other than the ones the fixture sets (#76), on scratch sites: the order
 // of each level of tags (`tagSort`), tags that start open (`defaultState`), no counts (`showCount`),
 // state kept for the visit only (`useSavedState`), pages with no date, and private pages left out
 // (`excludePrivate`, #85). The content fixture keeps the defaults, which tree.spec.mjs and

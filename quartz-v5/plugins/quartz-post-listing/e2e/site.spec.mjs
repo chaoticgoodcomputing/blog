@@ -1,4 +1,4 @@
-// cgc-post-listing on the real site (#73): the site config places it after the body, and the site's
+// quartz-post-listing on the real site (#73): the site config places it after the body, and the site's
 // `quartz.ts` keeps it to the index, the 404 page and every tag page (#70), as v4's layouts did
 // (FORK-LEDGER components/PostListing.tsx).
 // Proven on a scratch site built from the site config, with a few pages in the vault's shapes.

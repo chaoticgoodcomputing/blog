@@ -1,5 +1,5 @@
-// cgc-backlinks' options, on scratch sites: the content fixture keeps the site's own settings. The
-// private tags are the plugin's own option, as cgc-seo's are, so it needs no tag engine (#44, #53
+// quartz-backlinks' options, on scratch sites: the content fixture keeps the site's own settings. The
+// private tags are the plugin's own option, as quartz-seo's are, so it needs no tag engine (#44, #53
 // story 39). Private pages are listed and marked unless `excludePrivate` leaves them out (#85).
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, fixtureConfig, withPlugins } from "../../../tests/harness/site.mjs"

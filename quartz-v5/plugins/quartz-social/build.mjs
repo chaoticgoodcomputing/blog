@@ -54,7 +54,6 @@ const bundled = output(".css").trim()
 const css = `${bundled ? `@layer ${layer} {\n${bundled}\n}\n` : ""}${own}`
 
 const entryPoints = { index: "src/index.ts", "components/index": "src/components/index.ts" }
-const external = peers
 await esbuild.build({
   entryPoints,
   outdir: "dist",
@@ -64,7 +63,7 @@ await esbuild.build({
   target: "node22",
   jsx: "automatic",
   jsxImportSource: "preact",
-  external: [...external, ...peers.map((p) => `${p}/*`)],
+  external: [...peers, ...peers.map((p) => `${p}/*`)],
   plugins: [
     {
       name: "cgc-social-client",
@@ -86,4 +85,4 @@ await esbuild.build({
 // Its type declarations, a `.d.ts` beside each entry (@chaoticgoodcomputing/declarations): Quartz's
 // generated plugin index skips a package without `dist/index.d.ts`, and a TypeScript site reads the
 // plugin's options from them. The peers stay imports there too.
-await emitDeclarations({ entries: entryPoints, external })
+await emitDeclarations({ entries: entryPoints, external: peers })

@@ -1,4 +1,4 @@
-// cgc-email-subscribe: v4's Buttondown subscribe box (EmailSubscribe, #42/#44), at parity.
+// quartz-email-subscribe: v4's Buttondown subscribe box (EmailSubscribe, #42/#44), at parity.
 // Buttondown itself is never reached: every request to it is intercepted.
 import fs from "node:fs"
 import path from "node:path"

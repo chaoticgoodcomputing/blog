@@ -1,4 +1,4 @@
-// cgc-backlinks on the real site (#78), proven on a scratch site built from the site config, with pages
+// quartz-backlinks on the real site (#78), proven on a scratch site built from the site config, with pages
 // in the vault's shapes: its private stubs, tagged `private` or a descendant of it, link to public
 // notes as the vault's do, and the site leaves them out of backlinks (the owner's review notes,
 // #85). The site resolves links absolutely, as v4 did. The plugin note is the vault's own file.

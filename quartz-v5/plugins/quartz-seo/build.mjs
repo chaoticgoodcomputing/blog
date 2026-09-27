@@ -8,7 +8,6 @@ const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"))
 const peers = Object.keys(pkg.peerDependencies)
 
 const entryPoints = { index: "src/index.tsx" }
-const external = peers
 await esbuild.build({
   entryPoints,
   outdir: "dist",
@@ -18,11 +17,11 @@ await esbuild.build({
   target: "node22",
   jsx: "automatic",
   jsxImportSource: "preact",
-  external: [...external, ...peers.map((p) => `${p}/*`)],
+  external: [...peers, ...peers.map((p) => `${p}/*`)],
   logLevel: "warning",
 })
 
 // Its type declarations, a `.d.ts` beside each entry (@chaoticgoodcomputing/declarations): Quartz's
 // generated plugin index skips a package without `dist/index.d.ts`, and a TypeScript site reads the
 // plugin's options from them. The peers stay imports there too.
-await emitDeclarations({ entries: entryPoints, external })
+await emitDeclarations({ entries: entryPoints, external: peers })

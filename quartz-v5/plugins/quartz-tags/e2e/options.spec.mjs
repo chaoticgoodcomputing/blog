@@ -1,4 +1,4 @@
-// cgc-tags checks the site's tag dictionary when it builds, and a mistake fails the build, so a typo
+// quartz-tags checks the site's tag dictionary when it builds, and a mistake fails the build, so a typo
 // never ships (#31, #53 story 34). Each case is a scratch site: the content fixture must build.
 import { test, expect } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, fixtureConfig, withPlugins } from "../../../tests/harness/site.mjs"

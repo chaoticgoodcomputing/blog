@@ -1,4 +1,4 @@
-// cgc-social: sidebar cards for a GitHub user's year of contributions and a Bluesky account's latest
+// quartz-social: sidebar cards for a GitHub user's year of contributions and a Bluesky account's latest
 // posts (v4's SocialMediaGitHub and SocialMediaBlueSky, #42, #44, #80). The component is in
 // ./components; this is the plugin's transformer half, which exists to ship the stylesheet.
 //

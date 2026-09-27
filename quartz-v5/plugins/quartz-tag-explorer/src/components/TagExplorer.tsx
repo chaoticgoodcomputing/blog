@@ -56,7 +56,7 @@ function corpusOf(
 // The way back to the site's root from the page being rendered, with no trailing slash, which every
 // link the explorer writes, and its script fills in, starts from. Relative, as Quartz's own links
 // are, except from the 404 page: that is served at whatever depth the missing address has, so its
-// links start from the site's base path, as core's head takes it (cgc-post-listing does the same).
+// links start from the site's base path, as Core source's Head takes it (quartz-post-listing does the same).
 function rootFrom(slug: string, baseUrl: string | undefined): string {
   if (slug !== "404") return pathToRoot(slug as never)
   return new URL(`https://${baseUrl ?? "example.com"}`).pathname.replace(/\/$/, "")

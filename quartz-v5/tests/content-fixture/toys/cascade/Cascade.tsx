@@ -1,4 +1,4 @@
-// A widget whose stylesheet exercises the widget layer (cgc-mdx ADR-0002): its own nested layer,
+// A widget whose stylesheet exercises the widget layer (quartz-mdx ADR-0002): its own nested layer,
 // remote imports, and a rule that has to beat a more specific core rule. Static markup.
 import "./cascade.css"
 

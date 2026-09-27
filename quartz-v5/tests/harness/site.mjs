@@ -61,8 +61,8 @@ const SCRATCH_PARENT = testsRoot
 // options, such as an icon collection's directory in `iconCollections`. A map shared through a YAML
 // anchor is rebased once, where it is anchored.
 //
-// `offline` once switched off core's download of the site's Google Fonts. The site config now has
-// core fetch nothing (`fontOrigin: local`), and site-styles ships the fonts from its own build (#84),
+// `offline` once switched off Core's download of the site's Google Fonts. The site config now has
+// Core fetch nothing (`fontOrigin: local`), and site-styles ships the fonts from its own build (#84),
 // so a build of it makes no font fetch either way and `offline` changes nothing.
 export const siteConfigFile = path.join(core, "quartz.config.yaml")
 export function siteConfig({ offline = false } = {}) {
@@ -169,7 +169,7 @@ const STANDS_IN_FOR = { "@chaoticgoodcomputing/quartz-tag-page": "@quartz-commun
 
 // The fixture cache: what a fixture build would otherwise fetch from the network, pinned into a
 // fixture root's `.cache/` before every build, so the fixture needs no network. Written out by the
-// harness, since no PDF is tracked in git (#59): cgc-annotator's source document for the fixture's
+// harness, since no PDF is tracked in git (#59): quartz-annotator's source document for the fixture's
 // annotation page, under its mirror name (the first 16 hex digits of the SHA-256 of its URL).
 const FIXTURE_CACHE = {
   [`cgc-annotator/${createHash("sha256").update(new URL(FIXTURE_PAPER_URL).href).digest("hex").slice(0, 16)}`]: fixturePaper,

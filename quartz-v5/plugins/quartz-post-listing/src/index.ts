@@ -1,5 +1,5 @@
-// cgc-post-listing: the site's posts, newest first, each with its tags as badges (v4's
-// PostListing, #42, #44, #73). A consumer of the cgc-tags engine: it reads the tags the engine
+// quartz-post-listing: the site's posts, newest first, each with its tags as badges (v4's
+// PostListing, #42, #44, #73). A consumer of the quartz-tags engine: it reads the tags the engine
 // publishes on each page's `fileData`, and paints with the engine's `--cgc-tag-*` properties. The
 // component is in ./components; this is the plugin's transformer half, which exists to ship the
 // component's stylesheet.

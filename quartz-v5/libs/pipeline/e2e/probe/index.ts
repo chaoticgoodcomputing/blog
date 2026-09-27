@@ -1,7 +1,7 @@
 // A probe plugin for this library's specs (see tests/harness/probe.mjs): an emitter that runs the
 // content's `probe.md` through the site's configured pipeline twice, whole and minus its `skip`
 // option, and writes both results as HTML. It tests the library apart from any consumer;
-// cgc-annotator is the plugin that skips transformers for real.
+// quartz-annotator is the plugin that skips transformers for real.
 import fs from "node:fs"
 import path from "node:path"
 import { toHtml } from "hast-util-to-html"

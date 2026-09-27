@@ -1,4 +1,4 @@
-// cgc-backlinks' one script: stock's overflow list, which v4's Backlinks used too. Core scrolls a
+// quartz-backlinks' one script: stock's overflow list, which v4's Backlinks used too. Core scrolls a
 // `ul.overflow` in its own box and fades its bottom out while it carries `gradient-active`; this puts
 // that class on each list of backlinks while its last item is out of view.
 //

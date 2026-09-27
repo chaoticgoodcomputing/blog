@@ -2,8 +2,8 @@
   "name": "@chaoticgoodcomputing/widgets",
   "version": "0.0.0",
   "type": "module",
-  "description": "Preact widgets for cgc-mdx pages, one subpath export each (`/pdf-viewer`, `/bluesky-post`), and `/bluesky`, the Bluesky client and renderer the second is built on. See CONTEXT.md.",
-  "//exports": "Source only: no build and no dist; the page's bundler (cgc-mdx) compiles it (ADR-0005). One subpath per widget, plus the non-widget `/bluesky`, and no root export, so one import never pulls in another widget (#36).",
+  "description": "Preact widgets for quartz-mdx pages, one subpath export each (`/pdf-viewer`, `/bluesky-post`), and `/bluesky`, the Bluesky client and renderer the second is built on. See CONTEXT.md.",
+  "//exports": "Source only: no build and no dist; the page's bundler (quartz-mdx) compiles it (ADR-0005). One subpath per widget, plus the non-widget `/bluesky`, and no root export, so one import never pulls in another widget (#36).",
   "exports": {
     "./pdf-viewer": "./src/pdf-viewer/index.tsx",
     "./bluesky-post": "./src/bluesky-post/index.tsx",
@@ -26,7 +26,7 @@
   "dependencies": {
     "pdfjs-dist": "5.4.530"
   },
-  "//peerDependencies": "The host's Preact: cgc-mdx pins every widget's preact imports to the host Quartz's copy, so one Preact per page. A peer only, never a devDependency too, so no second copy installs here; the typecheck reads Quartz Core's (tsconfig.json).",
+  "//peerDependencies": "The host's Preact: quartz-mdx pins every widget's preact imports to the host Quartz's copy, so one Preact per page. A peer only, never a devDependency too, so no second copy installs here; the typecheck reads Quartz Core's (tsconfig.json).",
   "peerDependencies": {
     "preact": "^10.0.0"
   },

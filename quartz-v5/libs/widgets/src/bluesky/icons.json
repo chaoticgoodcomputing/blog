@@ -1,5 +1,5 @@
 {
-  "//": "The icons renderPost() draws, by name: v4's MDI ids for its context lines. `npm run icons` draws them into icons.ts. The counts keep v4's emoji, which the stylesheet draws.",
+  "//": "The icons renderPost() draws, by name: v4's MDI ids for its context lines. `pnpm run icons` draws them into icons.ts. The counts keep v4's emoji, which the stylesheet draws.",
   "reposted": "mdi:repeat-variant",
   "replied": "mdi:reply"
 }

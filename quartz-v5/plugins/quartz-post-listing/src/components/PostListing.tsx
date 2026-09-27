@@ -92,12 +92,12 @@ function countsOf(allFiles: PageData[]): Map<string, number> {
   return counts
 }
 
-// The icon in a bubble, drawn for tags-core's bubble, which paints it, as cgc-tag-list draws it.
+// The icon in a bubble, drawn for tags-core's bubble, which paints it, as quartz-tag-list draws it.
 const ICON = { class: TAG_BUBBLE.icon }
 
 // Each tag's icon, drawn, for every tag in the corpus that has one, built once per build. Every tag's
 // is drawn on the first page rendered, whether that page shows the listing or not, so an icon id no
-// collection has fails the build every time, as cgc-tag-list's does.
+// collection has fails the build every time, as quartz-tag-list's does.
 function iconsOf(
   allFiles: PageData[],
   icons: Icons,

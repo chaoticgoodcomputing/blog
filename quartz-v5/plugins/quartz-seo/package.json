@@ -35,7 +35,7 @@
     "@quartz-community/utils": "*",
     "preact": "^10.29.0"
   },
-  "//devDependencies": "Build-time only, and inlined into dist by build.mjs (tags-core, our library, and reading-time, v4's reading-time counter): the loader prunes them after `npm run build`. tags-core is a `workspace:*` spec, which `pnpm publish` rewrites to the published version (ADR-0005). It is a library, not the quartz-tags engine, so inlining it adds no plugin dependency. @chaoticgoodcomputing/declarations writes the .d.ts beside each entry (build.mjs).",
+  "//devDependencies": "Build-time only: esbuild inlines tags-core (our library) and reading-time (v4's reading-time counter) into dist (build.mjs), so the published package, which ships only dist/, needs none of them. tags-core is a `workspace:*` spec, which `pnpm publish` rewrites to the published version (ADR-0005). It is a library, not the quartz-tags engine, so inlining it adds no plugin dependency. @chaoticgoodcomputing/declarations writes the .d.ts beside each entry (build.mjs).",
   "devDependencies": {
     "@chaoticgoodcomputing/declarations": "workspace:*",
     "@chaoticgoodcomputing/tags-core": "workspace:*",

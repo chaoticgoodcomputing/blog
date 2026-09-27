@@ -1,4 +1,4 @@
-// `pdf-viewer`, proven through `cgc-mdx`: the fixture page /lab/pdf.mdx imports it as a package
+// `pdf-viewer`, proven through `quartz-mdx`: the fixture page /lab/pdf.mdx imports it as a package
 // (`@chaoticgoodcomputing/widgets/pdf-viewer`) and shows /lab/fixture.pdf, a two-page PDF with a
 // link on page one. PDF.js is bundled, so nothing is fetched from a CDN (#36, #66).
 import { test, expect, resolvedColour, toggleScheme } from "../../../tests/harness/test.mjs"
@@ -63,7 +63,7 @@ test("it hydrates and draws every page, with selectable text", async ({ page }) 
   await expect(page.locator("body > canvas")).toHaveCount(0)
 })
 
-// cgc-mdx's island runtime unmounts islands before an SPA navigation and hydrates them after one.
+// quartz-mdx's island runtime unmounts islands before an SPA navigation and hydrates them after one.
 test("it survives SPA navigation away and back, and lets go of PDF.js in between", async ({
   page,
 }) => {

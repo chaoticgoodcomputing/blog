@@ -7,7 +7,7 @@ tags:
 
 `@chaoticgoodcomputing/quartz-annotator` is a [Quartz 5](https://quartz.jzhao.xyz) plugin that puts annotations written with Obsidian's
 [Annotator](https://github.com/elias-sundqvist/obsidian-annotator) plugin on your site. Annotator
-writes the annotations in your vault; `cgc-annotator` shows them, next to the document they were
+writes the annotations in your vault; this plugin shows them, next to the document they were
 written against.
 
 An **annotation page** is a note whose frontmatter names that document, its **source document**, by

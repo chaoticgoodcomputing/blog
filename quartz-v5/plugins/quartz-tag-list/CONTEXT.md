@@ -13,7 +13,7 @@ draws the bubble, and the icon vocabulary of [`icons`](../../libs/icons/CONTEXT.
 **Badge**:
 One tag in the list, `.cgc-tag-list__item`: a **tag badge** that links to the tag's page, with its
 **count** after the name.
-_Avoid_: pill, chip (that is cgc-og-image's), tag link
+_Avoid_: pill, chip (that is quartz-og-image's), tag link
 
 **Count**:
 How many pages are under a tag: those carrying it or any of its subtags, each once.

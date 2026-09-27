@@ -1,4 +1,4 @@
-// cgc-post-listing: v4's PostListing, as a consumer of the cgc-tags engine (#42, #44, #73). The
+// quartz-post-listing: v4's PostListing, as a consumer of the quartz-tags engine (#42, #44, #73). The
 // index lists every post, newest first with same-date posts A→Z, and a tag page lists that tag's.
 // The fixture's own pages are under content-fixture/post-listing/, tagged `listing`:
 //   Newest   2024-05-01  listing, markdown
@@ -57,7 +57,7 @@ test("leaves private pages and tag pages out of the index", async ({ page }) => 
 })
 
 // Quartz hands components its virtual pages too: stock folder-page's one per folder, and the 404.
-// None is a post. The .mdx pages cgc-mdx builds are, since each has a source file of its own.
+// None is a post. The .mdx pages quartz-mdx builds are, since each has a source file of its own.
 test("lists only pages with a source file: no folder page, no 404 page", async ({ page }) => {
   await page.goto("/")
   const paths = await listing(page)

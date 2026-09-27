@@ -10,11 +10,12 @@
 // Two kinds of edge, drawn apart:
 // - an engine edge, solid, from a plugin to each plugin its `quartz.dependencies` names. Those are
 //   plugin names (ADR-0002's plugin-name amendment), matched as Quartz matches them: by package name,
-//   `@chaoticgoodcomputing/quartz-<name>` for a plugin that is a package (#89, #93-#95), or a local
-//   plugin's directory, which is also its package name. A package's manifest name, `quartz.name`,
-//   names its CSS, not the plugin: a dependency on it finds nothing, here or at a site;
+//   `@chaoticgoodcomputing/quartz-<name>` for a plugin that is a package (#89, #93-#95), or, for a
+//   plugin listed by a local source, its directory, which is also its package name. A package's
+//   manifest name, `quartz.name`, names its CSS, not the plugin: a dependency on it finds nothing,
+//   here or at a site;
 // - a library edge, dotted, from a package to each of our libraries it builds with: a plugin's
-//   `workspace:` devDependency (ADR-0005's inlined-library amendment; `file:` before #92), or a
+//   `workspace:` devDependency (ADR-0005's *our libraries are inlined*; `file:` before #92), or a
 //   library's `workspace:` dependency on another.
 // Packages come in three groups, each drawn apart: the shareable plugins in plugins/ as boxes, the
 // libraries in libs/ as stadiums, and the site plugins in site-plugins/ as hexagons in a subgraph of

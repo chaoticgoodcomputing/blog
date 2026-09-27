@@ -1,4 +1,4 @@
-// cgc-tag-page: stock tag-page, with the tag's description article as each tag page's only body
+// quartz-tag-page: stock tag-page, with the tag's description article as each tag page's only body
 // (#72). Stock does the work that makes the pages: every tag a page carries, and each of its
 // ancestors, gets one at `tags/<t>`, and a tag with a description file at `tags/<t>.md` gets that
 // file's page instead of a made-up one. The body is ours, and so is one addition: the pages other
@@ -33,7 +33,7 @@ function refuseStockBeside(ctx: BuildCtx, stockName: string) {
   }
 }
 
-// The pages other page types have made so far in this pass, such as cgc-mdx's `.mdx` pages. Quartz
+// The pages other page types have made so far in this pass, such as quartz-mdx's `.mdx` pages. Quartz
 // resets the list before each pass and generates in priority order, so it holds the pages of every
 // page type generated before this one: a higher priority than stock's 10, or the same priority and
 // earlier in the config. Stock counts only the Markdown Quartz parsed, so a tag that

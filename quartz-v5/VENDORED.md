@@ -39,7 +39,7 @@ quartz-v5/
 │                         and `guards/`, the repo guards
 ├── .upstream-cache/      gitignored: the upgrade's bare git repo of the upstream commits it has fetched,
 │                         and `trees/<sha>/`, the repo guards' checkouts of the pinned ref
-└── core/                 Quartz Core: upstream's install root, in four tiers
+└── core/                 Quartz Core: upstream's install root, in four tiers plus its pnpm files
     ├── quartz/               Core source — protected
     ├── quartz.ts             steering file
     ├── quartz.config.yaml    steering file: the site config
@@ -50,7 +50,8 @@ quartz-v5/
 
 ## The tiers
 
-Every file upstream ships at the pinned ref, and every file in `core/`, falls in one tier. The lists
+Every file upstream ships at the pinned ref, and every file in `core/`, falls in one of four tiers,
+except Core's own pnpm files, which `tierOf` classifies as a fifth class, "pnpm". The lists
 live in one place, [`utils/core-tiers.mjs`](./utils/core-tiers.mjs), which the upstream tooling and the
 upgrade read (and the repo guards will).
 
@@ -61,8 +62,8 @@ upgrade read (and the repo guards will).
 | **Scaffolding** | `package.json`, `tsconfig.json`, `globals.d.ts`, `index.d.ts`, `.gitignore`, `.prettierignore`, `.prettierrc`, `LICENSE.txt` | Upstream's toolchain, taken from upstream on each upgrade. `package.json` is exactly upstream's: nothing of ours is in it. Upstream's MIT LICENSE stays with its code. |
 | **Pruned files** | `docs/`, `.github/`, `README.md`, `CODE_OF_CONDUCT.md`, `Dockerfile`, `.gitattributes`, `content/.gitkeep`, `.node-version`, `quartz.config.default.yaml`, `package-lock.json`, `.npmrc` | Deliberately absent (pruned on 1792aba3, the npm lock on #91). Never counted as drift, and never brought back by an upgrade. |
 
-Core's pnpm files, `pnpm-workspace.yaml` and `pnpm-lock.yaml`, are ours and sit outside the tiers.
-They are not drift either (see Dependencies).
+Beside the four tiers are Core's own pnpm files, `pnpm-workspace.yaml` and `pnpm-lock.yaml`, which are
+ours and which `tierOf` classifies as "pnpm". They are not drift either (see Dependencies).
 
 ## The site's `quartz.ts`
 
@@ -72,7 +73,7 @@ page types named for each, through Quartz's TS layout override. Quartz 5 ships n
 condition, and the owner decided the site adds none (#70). Two things about Core shape the file:
 
 - Core builds its page dispatcher from the YAML layout inside `loadQuartzConfig`
-  ([`config-loader.ts:517-525`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L517-L525)), and only the default
+  ([`config-loader.ts:510-518`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L510-L518)), and only the default
   export of `quartz.ts` is read
   ([`build.ts:11`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/build.ts#L11)), so the `layout` export upstream's docs describe
   changes nothing by itself. The site's `quartz.ts` rebuilds the dispatcher from its layout.
@@ -193,8 +194,8 @@ Current vendored changes:
 
 | Files | Why | Upstream proposal |
 | ----- | --- | ----------------- |
-| `quartz/plugins/types.ts`, `quartz/plugins/pageTypes/dispatcher.ts` | [#19](https://github.com/chaoticgoodcomputing/blog/issues/19): four default transformers are async, so a page type cannot run the pipeline from a synchronous `generate`. Makes `generate` awaitable. Needed by `cgc-mdx`. | [#25](https://github.com/chaoticgoodcomputing/blog/issues/25), filed after cutover |
-| `quartz/plugins/loader/config-loader.ts` | [#40](https://github.com/chaoticgoodcomputing/blog/issues/40): the loader matches `manifest.dependencies` only against exact `source:` strings, and a local source differs by site root, so no one dependency string holds at the real site, the e2e fixture and a downstream install. `validateDependencies` now resolves each dependency by exact source, then by plugin name, and its presence, order and cycle checks all use the resolved entry. Additive: a dependency that matches a source exactly behaves as before. Landed with `cgc-styles` on [#63](https://github.com/chaoticgoodcomputing/blog/issues/63), proven by `tests/specs/dependencies-by-name.spec.mjs`. Since [#95](https://github.com/chaoticgoodcomputing/blog/issues/95) every consumer names its engine by package name, which is the engine's `source:` at every site and so matches exactly, as on stock Quartz; the change is needed only by a dependency on a plugin listed by a local source. Since [#96](https://github.com/chaoticgoodcomputing/blog/issues/96) neither config has one: only the fixture's own plugins are local sources, and nothing depends on them. The change is exercised only by the spec's scratch cases now; retiring it is a vendored change of its own (ADR-0001), not yet taken. | [#47](https://github.com/chaoticgoodcomputing/blog/issues/47), filed after cutover |
+| `quartz/plugins/types.ts`, `quartz/plugins/pageTypes/dispatcher.ts` | [#19](https://github.com/chaoticgoodcomputing/blog/issues/19): four default transformers are async, so a page type cannot run the pipeline from a synchronous `generate`. Makes `generate` awaitable. Needed by `quartz-mdx`. | [#25](https://github.com/chaoticgoodcomputing/blog/issues/25), filed after cutover |
+| `quartz/plugins/loader/config-loader.ts` | [#40](https://github.com/chaoticgoodcomputing/blog/issues/40): the loader matches `manifest.dependencies` only against exact `source:` strings, and a local source differs by site root, so no one dependency string holds at the real site, the e2e fixture and a downstream install. `validateDependencies` now resolves each dependency by exact source, then by plugin name, and its presence, order and cycle checks all use the resolved entry. Additive: a dependency that matches a source exactly behaves as before. Landed with `quartz-styles` on [#63](https://github.com/chaoticgoodcomputing/blog/issues/63), proven by `tests/specs/dependencies-by-name.spec.mjs`. Since [#95](https://github.com/chaoticgoodcomputing/blog/issues/95) every consumer names its engine by package name, which is the engine's `source:` at every site and so matches exactly, as on stock Quartz; the change is needed only by a dependency on a plugin listed by a local source. Since [#96](https://github.com/chaoticgoodcomputing/blog/issues/96) neither config has one: only the fixture's own plugins are local sources, and nothing depends on them. The change is exercised only by the spec's scratch cases now; retiring it is a vendored change of its own (ADR-0001), not yet taken. | [#47](https://github.com/chaoticgoodcomputing/blog/issues/47), filed after cutover |
 
 The `core-drift` repo guard (below) reads the first column of this table: every file drift is
 allowed in, as a code span, one row per vendored change. Adding a vendored change means adding its
@@ -441,7 +442,7 @@ every link into `plugins/` or `site-plugins/`, before every build (`pruneGonePlu
 `utils/plugin-packages.mjs`).
 
 **Nx infers targets from the workspace members' `package.json` scripts,** now that plugins and the
-e2e suite are members: a `typecheck` script on a package without a `typecheck` target in its
+e2e suite are members (#92): a `typecheck` script on a package without a `typecheck` target in its
 `project.json` (`quartz-mdx`, `quartz-og-image`, `site-styles`) becomes one, and `site-v5-e2e` gets `test`
 from the suite's `test` script. So `nx run-many -t test` starts the whole e2e suite. A target in
 `project.json` wins over an inferred one of the same name. The e2e harness and

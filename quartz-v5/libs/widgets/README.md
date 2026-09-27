@@ -2,7 +2,7 @@
 
 Preact widgets for [Quartz 5](https://github.com/jackyzha0/quartz) pages written in MDX, rendered
 at build time and hydrated in the browser by
-[`cgc-mdx`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/plugins/quartz-mdx).
+[`quartz-mdx`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/plugins/quartz-mdx).
 Each widget is its own subpath export, and the package has no root export. Import a widget in an
 `.mdx` page like any other package:
 
@@ -13,7 +13,7 @@ import { PDFViewer } from "@chaoticgoodcomputing/widgets/pdf-viewer"
 ```
 
 The package ships as TypeScript source, which the page's bundler compiles. Preact is a peer
-dependency: `cgc-mdx` gives every widget the host Quartz's copy.
+dependency: `quartz-mdx` gives every widget the host Quartz's copy.
 
 ## `/pdf-viewer`
 
@@ -81,7 +81,7 @@ list.innerHTML = feed.map((item) => renderPost(item)).join("")
   that it replies, beside MDI's icons. The icons are drawn by
   [`@chaoticgoodcomputing/icons`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz-v5/libs/icons)
   and carried in the package, so nothing is fetched for them.
-  `compact`, `false` by default, draws it smaller, for a sidebar, as `cgc-social`'s feed does.
+  `compact`, `false` by default, draws it smaller, for a sidebar, as `quartz-social`'s feed does.
   Everything the post carries is escaped, and only `http(s)` URLs become links or images.
 - `escapeHtml`, `relativeTime` and `postUrl` are the renderer's helpers.
 
@@ -94,6 +94,6 @@ that takes the renderer takes its CSS too. Its size is a scale of custom propert
 
 Every subpath's CSS is one BEM block, `cgc-<name>`, and never selects anything outside it. Its
 colours and fonts come from the theme's properties. The package's `lint` script checks this
-(`npm run lint`) with `@chaoticgoodcomputing/css-check`, the check the family's plugins run in their
+(`pnpm run lint`) with `@chaoticgoodcomputing/css-check`, the check the family's plugins run in their
 builds, along with the icons a widget carries, which must be exactly what the icons library draws
-(`npm run icons` redraws them).
+(`pnpm run icons` redraws them).

@@ -5,7 +5,7 @@ import { siteRoot } from "../root"
 export interface SitePageTitleOptions {
   /**
    * The site's author, shown under the title as "by <author>". Fixed for the whole site: it never
-   * changes per page. The site config shares it with cgc-seo's `defaultAuthor` through one YAML
+   * changes per page. The site config shares it with quartz-seo's `defaultAuthor` through one YAML
    * anchor (#44). No byline when unset.
    */
   author?: string

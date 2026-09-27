@@ -1,4 +1,4 @@
-// What the explorer shows, worked out from what the cgc-tags engine publishes on every page's
+// What the explorer shows, worked out from what the quartz-tags engine publishes on every page's
 // `fileData.cgcTags` (ADR-0002): the tree of tags, which the component renders into every page, and
 // the pages under each tag, which the emitter writes for the browser to fill in as tags open
 // (docs/adr/0001).

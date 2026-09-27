@@ -1,5 +1,5 @@
 // What a feed reader reads from the fixture site's RSS feed, index.xml: its newest indexable articles,
-// newest first, in v4's shape. The fixture config gives cgc-seo `rssLimit: 5` and no article folders,
+// newest first, in v4's shape. The fixture config gives quartz-seo `rssLimit: 5` and no article folders,
 // so every page built from a file of its own is an article; its content-index writes no feed of its
 // own. The newest pages in the fixture are a private page and an external page (seo/), then the
 // newest indexable article, seo/feed-article. They are dated 2999 so that nothing else overtakes them:

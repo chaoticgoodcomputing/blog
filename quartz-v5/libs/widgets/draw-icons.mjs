@@ -16,7 +16,7 @@ const root = path.resolve(args.find((a) => !a.startsWith("--")) ?? "src")
 const icons = createIcons()
 
 const HEADER = `// Drawn by @chaoticgoodcomputing/icons from icons.json, beside this file. Don't edit it:
-// \`npm run icons\` redraws it, and \`npm run lint\` fails when it differs from what the library draws.
+// \`pnpm run icons\` redraws it, and \`pnpm run lint\` fails when it differs from what the library draws.
 `
 
 // A string literal quoted as Prettier quotes it: in whichever quote needs fewer escapes.
@@ -60,7 +60,7 @@ for (const name of fs.readdirSync(root).sort()) {
 }
 
 if (problems.length) {
-  console.error(`${problems.join("\n")}\n\nRun \`npm run icons\` to redraw.`)
+  console.error(`${problems.join("\n")}\n\nRun \`pnpm run icons\` to redraw.`)
   process.exit(1)
 }
 const subpaths = `${count} subpath${count === 1 ? "" : "s"}`

@@ -1,4 +1,4 @@
-// cgc-post-listing's `showOn: false`: for a site that places the listing itself, through the TS
+// quartz-post-listing's `showOn: false`: for a site that places the listing itself, through the TS
 // layout override in its `quartz.ts`, the component renders on every page its layout puts it on,
 // with no page filter of its own (docs/adr/0001's addendum). The real site does this (#70).
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"

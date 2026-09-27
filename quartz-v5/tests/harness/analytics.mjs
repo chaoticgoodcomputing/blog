@@ -1,5 +1,5 @@
 // Analytics in the suite. No spec reaches a real analytics service: a built page that would load
-// PostHog, as every page does once cgc-posthog is on, has its requests answered here instead.
+// PostHog, as every page does once quartz-posthog is on, has its requests answered here instead.
 //
 // - `quietAnalytics(context)` answers every request to PostHog, empty. The harness applies it to
 //   every browser context it hands a spec, so a spec that never thinks about analytics sends none,

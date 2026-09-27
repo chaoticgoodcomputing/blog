@@ -1,5 +1,5 @@
 // What a crawler reads from the head of each fixture page: whether it may index the page, the page's
-// canonical URL, who wrote it, and where the site's feed is. The fixture config gives cgc-seo `noindexTags: [private]` and a
+// canonical URL, who wrote it, and where the site's feed is. The fixture config gives quartz-seo `noindexTags: [private]` and a
 // default author; its baseUrl is `localhost`. v4 parity itself is v4-parity.spec.mjs.
 import { test, expect } from "../../../tests/harness/test.mjs"
 

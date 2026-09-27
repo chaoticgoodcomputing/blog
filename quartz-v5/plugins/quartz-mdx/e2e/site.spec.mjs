@@ -1,4 +1,4 @@
-// cgc-mdx on the real site (#65, and the owner's 2026-09-26 decision), proven on a scratch site
+// quartz-mdx on the real site (#65, and the owner's 2026-09-26 decision), proven on a scratch site
 // built from the site config, with pages in the vault's shapes. The site resolves links absolutely,
 // as v4 did, where the fixture uses Quartz's default, `shortest`, so links take other paths here.
 // The plugin note is the vault's own file.

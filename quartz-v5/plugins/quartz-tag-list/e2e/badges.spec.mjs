@@ -1,4 +1,4 @@
-// cgc-tag-list: v4's TagList, as a consumer of the cgc-tags engine (#20, #31, #69). Each of a page's
+// quartz-tag-list: v4's TagList, as a consumer of the quartz-tags engine (#20, #31, #69). Each of a page's
 // tags is a badge whose bubble's rim is painted in the tag's colour, read from the engine's
 // `--cgc-tag-*` custom properties (#82). tags-core's e2e/bubble.spec.mjs proves the rest of the
 // bubble, and the badge's one-string name and alignment. The fixture's tag dictionary is in

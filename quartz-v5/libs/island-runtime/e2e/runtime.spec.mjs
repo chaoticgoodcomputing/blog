@@ -1,4 +1,4 @@
-// The island runtime, as cgc-mdx ships it on the fixture site. cgc-mdx's own specs prove the
+// The island runtime, as quartz-mdx ships it on the fixture site. quartz-mdx's own specs prove the
 // lifecycle (hydrate on `nav` and `render`, unmount on `prenav`, drop an overtaken hydration).
 // This proves what lets a second plugin ship a runtime of its own beside it: each runtime
 // hydrates only the markers of the plugin that shipped it.

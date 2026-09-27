@@ -1,4 +1,4 @@
-// cgc-social's stylesheet is library CSS (ADR-0003): in its own sublayer of the family layer, the
+// quartz-social's stylesheet is library CSS (ADR-0003): in its own sublayer of the family layer, the
 // post card's rules included, and refused at build time if a selector reaches outside the package's
 // BEM block.
 import fs from "node:fs"

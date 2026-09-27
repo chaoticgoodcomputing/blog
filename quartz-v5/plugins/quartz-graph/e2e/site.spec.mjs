@@ -1,4 +1,4 @@
-// cgc-graph on the real site (#74), proven on a scratch site built from the site config, with pages in
+// quartz-graph on the real site (#74), proven on a scratch site built from the site config, with pages in
 // the vault's shapes: v4's settings, tag pages with the graph (the fixture's layout clears their right
 // sidebar), a tag's description file in the vault's pre-cutover shape, and the plugin note.
 import fs from "node:fs"
