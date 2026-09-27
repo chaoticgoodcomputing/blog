@@ -112,8 +112,19 @@ test.describe("on a narrow screen", () => {
     await expect(link.locator(".cgc-tag-list__name")).toBeHidden()
     await expect(link.locator(".cgc-tag-bubble")).toBeVisible()
 
+    // Core's explorer covers the badge for a moment after load, until its script collapses it on a
+    // narrow screen. Press only once the badge is what a finger at its centre would touch.
     const box = await link.boundingBox()
-    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2)
+    const centre = [box.x + box.width / 2, box.y + box.height / 2]
+    await expect
+      .poll(() =>
+        page.evaluate(
+          ([x, y]) => !!document.elementFromPoint(x, y)?.closest(".cgc-tag-list__link"),
+          centre,
+        ),
+      )
+      .toBe(true)
+    await page.mouse.move(...centre)
     await page.mouse.down()
     await page.waitForTimeout(700)
     await page.mouse.up()
