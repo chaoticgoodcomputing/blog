@@ -1,18 +1,22 @@
 # The real site's Quartz 5 config (#54): upstream's default, set to the site's own configuration.
 #
-# Tracked here and reached through the gitignored symlink `quartz/quartz.config.yaml`, which the
-# `site-v5` targets create (see VENDORED.md). Local `source:` paths resolve against the vendored
-# root, `quartz-v5/quartz/`, so our plugins are `../plugins/<name>` and site plugins
-# `../site-plugins/<name>`. Proven by `tests/specs/site-config.spec.mjs`.
+# A steering file (#91): tracked here, inside Quartz Core, where Quartz reads it from its cwd, and
+# edited as Quartz's docs intend (see VENDORED.md). Upstream's default config is pruned, so Quartz
+# has nothing to fall back on: `site-v5:prebuild` refuses to build without this file. Local
+# `source:` paths resolve against Core's root, `quartz-v5/core/`, so our plugins are
+# `../plugins/<name>` and site plugins `../site-plugins/<name>`. Proven by
+# `tests/specs/site-config.spec.mjs`.
 #
-# Kept in upstream's plugin order, so it diffs cleanly against `quartz/quartz.config.default.yaml`.
+# Kept in upstream's plugin order, so it diffs cleanly against upstream's default config,
+# `quartz.config.default.yaml` at the ref `quartz-v5/upstream.json` pins (pruned from Core, so read
+# it upstream).
 # Where a setting departs from stock, the comment says why, citing the decision (map: #18). Plugins
 # that replace a stock one (tags, graph, post listing, SEO...) arrive with their own tickets.
 #
 # Breakpoints (1000/1300, #22) are not here: core compiles them into Sass, so the site re-declares
 # its grid in its own CSS, in the `site-styles` site plugin (#64).
 
-# yaml-language-server: $schema=./quartz/quartz/plugins/quartz-plugins.schema.json
+# yaml-language-server: $schema=./quartz/plugins/quartz-plugins.schema.json
 configuration:
   pageTitle: Chaotic Good Computing
   # v4's " | Spencer Elkington", stock and unconditional: v4's 70-character guard needs core (#42).
@@ -273,7 +277,7 @@ plugins:
     options:
       # v4's OG images are dark (FORK-LEDGER ogImage.tsx).
       colorScheme: darkMode
-      # The site's own icon, `quartz-v5/icon.png`, resolved against the vendored root.
+      # The site's own icon, `quartz-v5/icon.png`, resolved against Core's root.
       icon: ../icon.png
   - source: "@quartz-community/cname"
     enabled: true
@@ -356,7 +360,7 @@ plugins:
       # The site's own icon collection (#29, #71): `custom:` is quartz-v5/icons/, v4's five SVGs, as
       # the site wrote them. They're turned into currentColor icons when the site builds. Every
       # plugin that draws `custom:` icons takes it, through the anchor, which the first of them in
-      # this file carries. Resolved against the vendored root.
+      # this file carries. Resolved against Core's root.
       iconCollections: &iconCollections
         custom: ../icons
       localGraph:

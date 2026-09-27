@@ -2,8 +2,9 @@ public
 node_modules
 .quartz-cache
 
-# Vendored Quartz v5 must stay byte-identical to upstream (quartz-v5/VENDORED.md).
-# Without this, `nx run site:format` rewrites upstream files and silently creates
-# undocumented vendored changes. Scoped to the vendored tree so our own files
-# (project.json, CONTEXT.md, VENDORED.md, upstream.json) are still formatted.
-quartz-v5/quartz
+# Quartz Core must stay byte-identical to upstream outside its steering files
+# (quartz-v5/VENDORED.md). Without this, `nx run site:format` rewrites upstream files
+# and silently creates undocumented vendored changes. Its steering files follow
+# upstream's formatting too. Scoped to Core so our own files (project.json,
+# CONTEXT.md, VENDORED.md, upstream.json) are still formatted.
+quartz-v5/core

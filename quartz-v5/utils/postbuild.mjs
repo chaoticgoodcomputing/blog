@@ -2,19 +2,19 @@
 // target after `quartz build`, as v4's `_postbuild` did, so it runs after every emitter has finished.
 // - Root-level files. v5's Static emitter writes only under `/static/`, and a file at the site root
 //   that no plugin owns is the site's (FORK-LEDGER, "Root-level files").
-// - The site's icon (#44, #70). Quartz reads the icon from inside the vendored copy,
+// - The site's icon (#44, #70). Quartz reads the icon from inside Quartz Core,
 //   `quartz/static/icon.png`: the Static emitter copies it, core's Head links it and the favicon
 //   plugin draws `favicon.ico` from it. The site's own replaces both outputs here. A site emitter
 //   could not: full builds run emitters at once, so it would race the Static emitter's copy.
 //
-// Usage: node quartz-v5/utils/postbuild.mjs [output directory, default quartz-v5/quartz/public]
+// Usage: node quartz-v5/utils/postbuild.mjs [output directory, default quartz-v5/core/public]
 import fs from "node:fs"
 import path from "node:path"
 import { createRequire } from "node:module"
 import { fileURLToPath } from "node:url"
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
-const sharp = createRequire(path.join(root, "quartz", "package.json"))("sharp")
+const sharp = createRequire(path.join(root, "core", "package.json"))("sharp")
 
 // Each file of the site's, relative to `quartz-v5/`, and where it goes in the built site.
 const SITE_FILES = [
@@ -43,6 +43,6 @@ export async function postbuild(output) {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const output = path.resolve(process.argv[2] ?? path.join(root, "quartz", "public"))
+  const output = path.resolve(process.argv[2] ?? path.join(root, "core", "public"))
   console.log(`wrote ${(await postbuild(output)).join(", ")} into ${path.relative(process.cwd(), output) || "."}`)
 }

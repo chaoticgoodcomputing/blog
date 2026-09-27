@@ -53,8 +53,8 @@ test("the consumers receive the engine's artifacts at the fixture root", async (
 // the dark half. `engineering/ai` has no colour of its own.
 const ENGINEERING = { light: "rgb(0, 112, 204)", dark: "rgb(0, 140, 255)" }
 
-// The real site runs from the vendored root, `quartz-v5/quartz/`. A scratch root made beside the
-// vendored copy resolves the site config's sources exactly as the real site does.
+// The real site runs from Quartz Core's root, `quartz-v5/core/`. A scratch root made beside
+// Core resolves the site config's sources exactly as the real site does.
 test("the consumers receive the engine's artifacts at the real site root", async ({
   page,
   colorScheme,

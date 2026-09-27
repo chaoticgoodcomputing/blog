@@ -46,7 +46,7 @@ _Avoid_: page author (that is cgc-seo's per-page frontmatter override), byline (
 
 **Site icon**:
 `quartz-v5/icon.png`, which the page title shows as `/static/icon.png`. Quartz serves stock's
-icon from inside the vendored copy. The site's build target puts the site's own in its place after
+icon from inside Quartz Core. The site's build target puts the site's own in its place after
 the build (`quartz-v5/utils/postbuild.mjs`), so this plugin only links to it.
 _Avoid_: logo, favicon (the post-build step also writes that from the site icon)
 
@@ -64,7 +64,9 @@ and the social cards, #73 and #80). **No plugin can do this on stock Quartz 5.0.
   loader consults is one the plugin has no reference to. The `@jackyzha0/quartz` specifier the loader
   treats as shared is not installed anywhere a plugin could resolve it.
 - The ecosystem registers conditions in `quartz.ts`, which the bundle does include. In this repo that
-  file is upstream's, inside the vendored copy, so editing it is drift.
+  file was upstream's, inside the vendored copy, so editing it was drift. Since #91 it is a
+  **steering file** of Quartz Core, which the site may edit, and #70 places the index-only
+  components through it.
 
 The loader warns `Unknown condition "is-index"` and renders the component on every page.
 `e2e/site-components.spec.mjs` holds this as a `test.fail`. The index half passes, and the other-pages

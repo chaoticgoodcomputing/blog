@@ -7,7 +7,7 @@
   "implicitDependencies": ["site-v5"],
   "targets": {
     "install": {
-      "//": "Isolated npm install, like the vendored copy, plus the one browser the suite uses.",
+      "//": "Isolated npm install, plus the one browser the suite uses.",
       "executor": "nx:run-commands",
       "options": {
         "commands": ["npm install --no-audit --no-fund", "npx playwright install chromium"],
@@ -24,7 +24,7 @@
       }
     },
     "acceptance": {
-      "//": "The real-site acceptance report, the suite's second seam (CONTEXT.md): build content/public under v4 (dist/public) and v5 (quartz-v5/quartz/public), then print every difference in URLs, sitemap and RSS membership and head metadata, plus site-styles' cascade-layer guard on the v5 build (needs the install target's Chromium). Exits 1 while any difference is off the allowlist (acceptance/allowlist.mjs), 2 when it cannot run, and 3 when it would pass but the case redirects went unchecked on a case-insensitive filesystem (pass --allow-unverified-redirects on a local macOS run). Writes dist/acceptance/report.{txt,json}. Compare existing builds with --skip-build, or others with --v4/--v5/--vault <dir> (relative paths are read from the repo root, like the defaults); print every difference with --full. Never run it beside the e2e suite in the same checkout: they share the vendored transpile cache.",
+      "//": "The real-site acceptance report, the suite's second seam (CONTEXT.md): build content/public under v4 (dist/public) and v5 (quartz-v5/core/public), then print every difference in URLs, sitemap and RSS membership and head metadata, plus site-styles' cascade-layer guard on the v5 build (needs the install target's Chromium). Exits 1 while any difference is off the allowlist (acceptance/allowlist.mjs), 2 when it cannot run, and 3 when it would pass but the case redirects went unchecked on a case-insensitive filesystem (pass --allow-unverified-redirects on a local macOS run). Writes dist/acceptance/report.{txt,json}. Compare existing builds with --skip-build, or others with --v4/--v5/--vault <dir> (relative paths are read from the repo root, like the defaults); print every difference with --full. Never run it beside the e2e suite in the same checkout: they share Quartz Core's transpile cache.",
       "executor": "nx:run-commands",
       "options": {
         "command": "node acceptance/report.mjs",

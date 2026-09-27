@@ -5,7 +5,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { execFileSync } from "node:child_process"
 import { test, expect, routeSite } from "../harness/test.mjs"
-import { editConfig, pluginEntries, siteConfig, siteConfigFile, testsRoot, vendored } from "../harness/site.mjs"
+import { editConfig, pluginEntries, siteConfig, siteConfigFile, testsRoot, core } from "../harness/site.mjs"
 import { pdf, sourceHost } from "../harness/source-host.mjs"
 import { postbuild } from "../../utils/postbuild.mjs"
 
@@ -76,10 +76,10 @@ test("the site's robots.txt disallows the mirror path", async ({ page, scratch }
 test("the real site's mirrors and their cache stay out of git", () => {
   const annotator = pluginEntries(fs.readFileSync(siteConfigFile, "utf8")).find(({ source }) => String(source).endsWith("plugins/cgc-annotator"))
   const options = annotator?.options ?? {}
-  // Where the real site build pins and emits them: `site-v5:build` runs Quartz from the vendored root
+  // Where the real site build pins and emits them: `site-v5:build` runs Quartz from Core's root
   // into `public/`. The defaults are cgc-annotator's own.
-  const cache = path.resolve(vendored, options.cacheDir ?? "node_modules/.cache/cgc-annotator")
-  const mirrors = path.join(vendored, "public", options.mirrorDir ?? "mirrors")
+  const cache = path.resolve(core, options.cacheDir ?? "node_modules/.cache/cgc-annotator")
+  const mirrors = path.join(core, "public", options.mirrorDir ?? "mirrors")
   const repo = path.resolve(testsRoot, "../..")
   for (const dir of [cache, mirrors]) {
     const probe = path.relative(repo, path.join(dir, "0123456789abcdef"))

@@ -6,9 +6,9 @@ import fs from "node:fs"
 import path from "node:path"
 import { createRequire } from "node:module"
 import { test, expect, resolvedColour, routeSite } from "../../../tests/harness/test.mjs"
-import { buildScratchSite, fixtureConfig, pluginSources, siteConfig, siteConfigFile, vendored, withPlugins } from "../../../tests/harness/site.mjs"
+import { buildScratchSite, fixtureConfig, pluginSources, siteConfig, siteConfigFile, core, withPlugins } from "../../../tests/harness/site.mjs"
 
-const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
+const YAML = createRequire(path.join(core, "package.json"))("yaml")
 
 const CONTENT = {
   "index.md": "---\ntitle: Home\n---\nWelcome.\n",

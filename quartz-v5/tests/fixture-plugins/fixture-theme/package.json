@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "//": "A stand-in for @quartz-themes/core, which must never run in a fixture: it runs `npm install` at build time, into the vendored copy (#30). Emits the real theme's layer statement (its dist/index.js:6101), as an inline stylesheet, at its default order. Plain ESM, so there is nothing to build.",
+  "//": "A stand-in for @quartz-themes/core, which must never run in a fixture: it runs `npm install` at build time, into Quartz Core (#30). Emits the real theme's layer statement (its dist/index.js:6101), as an inline stylesheet, at its default order. Plain ESM, so there is nothing to build.",
   "exports": { ".": "./index.js", "./package.json": "./package.json" },
   "main": "./index.js",
   "quartz": {

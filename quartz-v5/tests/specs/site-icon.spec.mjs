@@ -1,5 +1,5 @@
-// The site's own icon (#44, #70), `quartz-v5/icon.png`. Quartz reads the icon from inside the
-// vendored copy (`quartz/static/icon.png`): core's Head links it, the Static emitter copies it and the
+// The site's own icon (#44, #70), `quartz-v5/icon.png`. Quartz reads the icon from inside
+// Quartz Core (`quartz/static/icon.png`): core's Head links it, the Static emitter copies it and the
 // favicon plugin draws `favicon.ico` from it. So the site's build target finishes with a post-build
 // step that puts the site's icon in their place, after every emitter has run (a site emitter would
 // race the Static one). Proven on a scratch site built from the site config and finished the way
@@ -8,13 +8,13 @@ import fs from "node:fs"
 import path from "node:path"
 import { createRequire } from "node:module"
 import { test, expect, routeSite } from "../harness/test.mjs"
-import { buildScratchSite, fileFor, siteConfig, testsRoot, vendored } from "../harness/site.mjs"
+import { buildScratchSite, fileFor, siteConfig, testsRoot, core } from "../harness/site.mjs"
 import { postbuild } from "../../utils/postbuild.mjs"
 
-const sharp = createRequire(path.join(vendored, "package.json"))("sharp")
+const sharp = createRequire(path.join(core, "package.json"))("sharp")
 const ORIGIN = "https://blog.chaoticgood.computer"
 const SITE_ICON = path.resolve(testsRoot, "../icon.png")
-const STOCK_ICON = path.join(vendored, "quartz/static/icon.png")
+const STOCK_ICON = path.join(core, "quartz/static/icon.png")
 
 // An image's size and RGBA pixels, to compare what a browser would draw rather than file bytes.
 async function pixels(input) {

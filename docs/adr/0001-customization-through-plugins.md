@@ -80,3 +80,35 @@ file it before we depend on the change rather than after.
 - An upstream proposal may be rejected or stall, leaving us carrying a change indefinitely and a
   plugin we cannot share. That is a known and accepted outcome, and a further reason to prefer
   small, general, upstreamable changes.
+
+## Amendment: Quartz Core and its tiers
+
+_2026-09-27, from [Spec: Quartz Core, a custom upgrade, and our plugins as npm packages](https://github.com/chaoticgoodcomputing/blog/issues/89),
+implemented on [#91](https://github.com/chaoticgoodcomputing/blog/issues/91)._
+
+The vendored copy is now **Quartz Core**, at `quartz-v5/core/` (`quartz/core/` after cutover). The
+rule above was written as if every file in it were equally protected. That was too strict in the
+wrong place: Quartz's own docs tell a site to edit `quartz.ts` (a TS layout override, and
+`registerCondition`) and `quartz.config.yaml`, and the site config sat outside the copy behind a
+symlink only because of that rule. Meanwhile the copy carried upstream's docs, CI and similar, which
+nothing here uses and which made every drift check noisier. So Core is split into four tiers, listed
+once, in `quartz-v5/utils/core-tiers.mjs`, which all of the tooling reads:
+
+- **Core source**: Core's `quartz/` tree. Everything this ADR says about "the vendored copy" now
+  means this tier. It changes only through a vendored change, with its ticket and upstream proposal.
+- **Steering files**: the Core files Quartz's docs tell a site to edit, today `quartz.ts` and the site
+  config, `quartz.config.yaml`. Editing them is configuration, not a vendored change, and needs no
+  ticket of this kind. An upgrade never overwrites them.
+- **Scaffolding**: upstream's toolchain files at Core's root: `package.json`, `tsconfig.json`, the
+  root `.d.ts` files, the ignore and formatter files, and the LICENSE. Taken from upstream on each
+  upgrade; `package.json` stays exactly upstream's.
+- **Pruned files**: upstream files deliberately absent from Core: its docs, CI workflows,
+  Dockerfile, community files, default config and npm files. Kept out of every diff, and deleted
+  after any tree replacement.
+
+Core's own pnpm files (`pnpm-workspace.yaml`, and `pnpm-lock.yaml`, imported from upstream's
+`package-lock.json` at the pinned ref) sit beside the tiers: ours, but never drift.
+
+**Drift** is now any difference between Core and its pinned ref except in steering files, pruned
+files and Core's pnpm files (`site-v5:diff-upstream` shows only drift). The shareability test is
+unchanged: a plugin that needs an edit to Core source to work fails it.

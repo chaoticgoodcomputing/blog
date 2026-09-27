@@ -1,8 +1,8 @@
 // Builds the fixture site for the suite.
 //
 // Quartz reads `process.cwd()/quartz.config.yaml` and nothing else, so the fixture cannot share
-// the vendored root with the real site. Each variant gets a fixture root: a directory that
-// symlinks every entry of the vendored copy except the config, which is written fresh from
+// Quartz Core's root with the real site. Each variant gets a fixture root: a directory that
+// symlinks every entry of Core it needs except the config, which is written fresh from
 // `tests/quartz.config.yaml`. Plugin installs (`.quartz/plugins/`) are cwd-relative, so they stay
 // isolated too. See docs/adr/0004.
 import fs from "node:fs"
@@ -19,13 +19,13 @@ import { FIXTURE_PAPER_URL, fixturePaper } from "./source-host.mjs"
 const run = promisify(execFile)
 const here = path.dirname(fileURLToPath(import.meta.url))
 export const testsRoot = path.resolve(here, "..")
-export const vendored = path.resolve(testsRoot, "../quartz")
+export const core = path.resolve(testsRoot, "../core")
 const pluginsRoot = path.resolve(testsRoot, "../plugins")
 // Site plugins (VENDORED.md layout): no fixture config lists one, but scratch sites built from the
 // site config do, so they are built and linked alongside our plugins.
 const sitePluginsRoot = path.resolve(testsRoot, "../site-plugins")
 const PLUGIN_ROOTS = [pluginsRoot, sitePluginsRoot]
-const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
+const YAML = createRequire(path.join(core, "package.json"))("yaml")
 
 // "main" is the fixture site as configured. "baseline" is the same site with every one of our
 // plugins disabled; the no-bleed spec compares the two.
@@ -43,13 +43,13 @@ export function fileFor(root, pathname) {
 }
 
 // Where a scratch root is made. `fixture`, the default, is beside the fixture roots, where the
-// fixture config's `../../plugins/<name>` sources resolve. `site` is beside the vendored copy, at the
+// fixture config's `../../plugins/<name>` sources resolve. `site` is beside Core, at the
 // real site root's depth, where the site config's `../plugins/<name>` sources resolve unchanged: for
 // a spec about the source strings themselves, such as a dependency declared by plugin name (#40).
-const SCRATCH_PARENT = { fixture: testsRoot, site: path.dirname(vendored) }
+const SCRATCH_PARENT = { fixture: testsRoot, site: path.dirname(core) }
 
-// The real site's config, tracked at `quartz-v5/quartz.config.yaml`, for a scratch site that has to
-// be built the way the real site is. Its local `source:` paths resolve against the vendored root,
+// The real site's config, the steering file `quartz-v5/core/quartz.config.yaml`, for a scratch site
+// that has to be built the way the real site is. Its local `source:` paths resolve against Core's root,
 // where the real site builds (VENDORED.md), so they are rebased onto the scratch roots made `at`
 // the given place. At `site`, that leaves a `../` path as it is. So is a plugin option that is a
 // relative path (`./…` or `../…`), such as cgc-og-image's `icon`, which a plugin resolves against
@@ -59,12 +59,12 @@ const SCRATCH_PARENT = { fixture: testsRoot, site: path.dirname(vendored) }
 // `offline` once switched off core's download of the site's Google Fonts. The site config now has
 // core fetch nothing (`fontOrigin: local`), and site-styles ships the fonts from its own build (#84),
 // so a build of it makes no font fetch either way and `offline` changes nothing.
-export const siteConfigFile = path.resolve(testsRoot, "../quartz.config.yaml")
+export const siteConfigFile = path.join(core, "quartz.config.yaml")
 export function siteConfig({ at = "fixture", offline = false } = {}) {
   const config = YAML.parseDocument(fs.readFileSync(siteConfigFile, "utf8"))
   if (offline) config.setIn(["configuration", "theme", "fontOrigin"], "local")
   const scratchRoot = path.join(SCRATCH_PARENT[at], ".site-scratch")
-  const rebase = (local) => path.relative(scratchRoot, path.resolve(vendored, local))
+  const rebase = (local) => path.relative(scratchRoot, path.resolve(core, local))
   for (const entry of config.get("plugins").items) {
     const source = entry.get("source")
     if (typeof source === "string" && source.startsWith(".")) {
@@ -161,18 +161,25 @@ const FIXTURE_CACHE = {
   [`cgc-annotator/${createHash("sha256").update(new URL(FIXTURE_PAPER_URL).href).digest("hex").slice(0, 16)}`]: fixturePaper,
 }
 
-// Links a fixture or scratch root to the vendored copy: everything but the config it holds itself.
-function linkVendored(root) {
-  for (const entry of LINKED) {
-    const link = path.join(root, entry)
-    if (!fs.existsSync(link)) fs.symlinkSync(path.join(vendored, entry), link)
-  }
+// Links a fixture or scratch root to Quartz Core: everything but the config it holds itself. A link
+// left pointing somewhere else, such as Core's old path from before it moved (#91), is replaced.
+function linkCore(root) {
+  for (const entry of LINKED) relink(path.join(root, entry), path.join(core, entry))
+}
+
+// Make `at` a symlink to `target`, replacing a symlink to anywhere else but never a real file.
+function relink(at, target) {
+  const stat = fs.lstatSync(at, { throwIfNoEntry: false })
+  if (stat?.isSymbolicLink() && fs.readlinkSync(at) === target) return
+  if (stat && !stat.isSymbolicLink()) throw new Error(`${at} is not a symlink: move it aside`)
+  fs.rmSync(at, { force: true })
+  fs.symlinkSync(target, at)
 }
 
 function writeFixtureRoot(variant) {
   const root = fixtureRoot(variant)
   fs.mkdirSync(root, { recursive: true })
-  linkVendored(root)
+  linkCore(root)
   for (const [rel, contents] of Object.entries(FIXTURE_CACHE)) {
     const file = path.join(root, ".cache", rel)
     fs.mkdirSync(path.dirname(file), { recursive: true })
@@ -242,11 +249,11 @@ export async function buildPluginCopy(name, edit) {
 function linkHostModules() {
   for (const root of PLUGIN_ROOTS) {
     const link = path.join(root, "node_modules")
-    if (fs.existsSync(root) && !fs.existsSync(link)) fs.symlinkSync(path.join("..", "quartz", "node_modules"), link)
+    if (fs.existsSync(root)) relink(link, path.join("..", "core", "node_modules"))
   }
 }
 
-// Every fixture root symlinks the vendored `quartz/` source directory, and the Quartz CLI
+// Every fixture root symlinks Core's `quartz/` source directory, and the Quartz CLI
 // transpiles itself to `quartz/.quartz-cache/transpiled-build.mjs` before importing it. So all
 // builds share that one file, and two at once can import it half-written ("buildQuartz is not a
 // function"). One build at a time, across every worker process: a directory lock, since mkdir is
@@ -372,7 +379,7 @@ function makeScratchRoot(name, files, { config = fixtureConfig(), at = "fixture"
   }
   try {
     for (const [rel, text] of Object.entries(files)) put(rel, text)
-    linkVendored(root)
+    linkCore(root)
     fs.writeFileSync(path.join(root, "quartz.config.yaml"), config)
   } catch (err) {
     remove()

@@ -11,10 +11,10 @@
 import path from "node:path"
 import { createRequire } from "node:module"
 import { test, expect, routeSite } from "../harness/test.mjs"
-import { buildScratchSite, siteConfig, vendored } from "../harness/site.mjs"
+import { buildScratchSite, siteConfig, core } from "../harness/site.mjs"
 import { drawnGraph, localGraph } from "../../plugins/cgc-graph/e2e/graph.mjs"
 
-const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
+const YAML = createRequire(path.join(core, "package.json"))("yaml")
 
 // The site's config, with the private tags it anchors once replaced by `tags`.
 function withPrivateTags(tags) {

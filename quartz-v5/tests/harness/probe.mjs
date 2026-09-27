@@ -6,9 +6,9 @@ import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
 import { createRequire } from "node:module"
-import { vendored } from "./site.mjs"
+import { core } from "./site.mjs"
 
-const require = createRequire(path.join(vendored, "package.json"))
+const require = createRequire(path.join(core, "package.json"))
 const esbuild = require("esbuild")
 
 // Bundles `<source>/index.ts` into a fresh plugin directory called `name` (the plugin's identity,

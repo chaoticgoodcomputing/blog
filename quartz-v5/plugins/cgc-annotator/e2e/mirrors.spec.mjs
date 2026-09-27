@@ -7,7 +7,7 @@ import path from "node:path"
 import { execFileSync } from "node:child_process"
 import { createHash } from "node:crypto"
 import { test, expect } from "../../../tests/harness/test.mjs"
-import { editConfig, fixtureConfig, fixtureRoot, pluginEntries, serveScratchSite, testsRoot, vendored } from "../../../tests/harness/site.mjs"
+import { editConfig, fixtureConfig, fixtureRoot, pluginEntries, serveScratchSite, testsRoot, core } from "../../../tests/harness/site.mjs"
 import { HANG, closedPort, pdf, sourceHost } from "../../../tests/harness/source-host.mjs"
 
 const ANNOTATOR = "../../plugins/cgc-annotator"
@@ -184,7 +184,7 @@ test("under serve, a page added or changed is mirrored only if it is published, 
 })
 
 test("the fixture site pins into a cache of its own, never the real site's", () => {
-  // A fixture root symlinks the vendored install's `node_modules`, so the default cache directory
+  // A fixture root symlinks Quartz Core's `node_modules`, so the default cache directory
   // there is the one the real site builds pin into.
   const { options = {} } = pluginEntries(fixtureConfig()).find(({ source }) => source === ANNOTATOR)
   const cache = path.resolve(fixtureRoot("main"), options.cacheDir ?? "node_modules/.cache/cgc-annotator")
@@ -192,7 +192,7 @@ test("the fixture site pins into a cache of its own, never the real site's", () 
   let existing = cache
   while (!fs.existsSync(existing)) existing = path.dirname(existing)
   const lands = path.join(fs.realpathSync(existing), path.relative(existing, cache))
-  expect(path.relative(fs.realpathSync(vendored), lands).startsWith(".."), lands).toBe(true)
+  expect(path.relative(fs.realpathSync(core), lands).startsWith(".."), lands).toBe(true)
   const repo = path.resolve(testsRoot, "../..")
   const probe = path.relative(repo, path.join(lands, "0123456789abcdef"))
   expect(() => execFileSync("git", ["check-ignore", "-q", probe], { cwd: repo }), `${probe} is ignored`).not.toThrow()

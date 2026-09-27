@@ -30,7 +30,7 @@ export async function checkCascade(site) {
   if (!sets.size) return { summary, differences }
 
   // Loaded only when there is a cascade to check: the browser, and the suite's URL resolver (which
-  // reads the vendored copy's dependencies).
+  // reads Quartz Core's dependencies).
   const { fileFor } = await import("../harness/site.mjs")
   let browser
   try {

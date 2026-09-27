@@ -8,14 +8,14 @@
 // the export for the browser with esbuild, as a plugin's build bundles its client script, and runs
 // it on a fixture page. Bluesky is the suite's stand-in (tests/harness/bluesky.mjs).
 import { test, expect, resolvedColour } from "../../../tests/harness/test.mjs"
-import { testsRoot, vendored } from "../../../tests/harness/site.mjs"
+import { testsRoot, core } from "../../../tests/harness/site.mjs"
 import { createRequire } from "node:module"
 import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 
-const esbuild = createRequire(path.join(vendored, "package.json"))("esbuild")
+const esbuild = createRequire(path.join(core, "package.json"))("esbuild")
 const pkg = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 
 // MDI as installed, read beside the icons library rather than through it.

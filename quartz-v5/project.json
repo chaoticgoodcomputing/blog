@@ -2,11 +2,11 @@
   "$schema": "../node_modules/nx/schemas/project-schema.json",
   "name": "site-v5",
   "root": "quartz-v5",
-  "sourceRoot": "quartz-v5/quartz",
+  "sourceRoot": "quartz-v5/core",
   "projectType": "application",
   "targets": {
     "diff-upstream": {
-      "//": "Print the complete unified diff of the vendored copy against its pinned upstream commit: every vendored change, generated from the tree, never hand-maintained. stdout is a patch (`git apply`-able from the repo root); the file count goes to stderr. Save with: pnpm nx run site-v5:diff-upstream > vendored.patch",
+      "//": "Print the complete unified diff of Quartz Core against its pinned upstream commit: every vendored change, generated from the tree, never hand-maintained. Steering files, pruned files and Core's pnpm files are not drift and never appear (utils/core-tiers.mjs). stdout is a patch (`git apply`-able from the repo root); the file count goes to stderr. Save with: pnpm nx run site-v5:diff-upstream > vendored.patch",
       "executor": "nx:run-commands",
       "options": {
         "commands": [
@@ -17,7 +17,7 @@
       }
     },
     "vendored-log": {
-      "//": "List every commit that has changed quartz-v5/quartz since the last sync, with the tickets each cites, and flag any that cite none. Uncommitted edits are listed too. Informational: the tracker for ADR-0001's one-ticket-per-vendored-change rule.",
+      "//": "List every commit that has changed Quartz Core (quartz-v5/core) since the last sync, with the drift it made and the tickets it cites, and flag any that cite none. Commits that only moved Core, or changed only its steering, pruned or pnpm files, are left out. Uncommitted drift is listed too. Informational: the tracker for ADR-0001's one-ticket-per-vendored-change rule.",
       "executor": "nx:run-commands",
       "options": {
         "commands": [
@@ -28,7 +28,7 @@
       }
     },
     "diff-latest": {
-      "//": "Informational: what an upgrade to the tip of the tracked branch would pull in.",
+      "//": "Informational: what an upgrade to the tip of the tracked branch would pull in, leaving out steering, pruned and pnpm files.",
       "executor": "nx:run-commands",
       "options": {
         "commands": [
@@ -39,7 +39,7 @@
       }
     },
     "sync": {
-      "//": "Re-vendor at a new upstream ref. Refuses while the copy carries vendored changes, since syncing replaces the tree: save them with diff-upstream first, then run upstream.mjs sync <ref> --force and re-apply. Usage: nx run site-v5:sync --args=\"--ref=<commit|branch>\"",
+      "//": "Re-vendor at a new upstream ref, keeping the steering files and Core's pnpm files and deleting the pruned ones. Refuses while Core carries vendored changes, since syncing replaces the tree: save them with diff-upstream first, then run upstream.mjs sync <ref> --force and re-apply. Usage: nx run site-v5:sync --args=\"--ref=<commit|branch>\"",
       "executor": "nx:run-commands",
       "options": {
         "commands": [
@@ -50,14 +50,30 @@
       }
     },
     "install": {
-      "//": "Install the vendored copy's own dependencies. Upstream uses npm, and its versions conflict with the v4 tree at the repo root, so this is deliberately isolated from the root pnpm install.",
+      "//": "Install Quartz Core's dependencies, frozen, from its lock: exactly the versions upstream's package-lock.json pins at the pinned ref (core-lock checks it). Core is a pnpm 11 project of its own (core/pnpm-workspace.yaml), outside the repo's workspace, so this runs pnpm 11 by exact version through npx whatever pnpm the repo root pins.",
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "npm install --no-audit --no-fund"
+          "npx --yes pnpm@11.27.1 install --frozen-lockfile"
         ],
-        "cwd": "{workspaceRoot}/quartz-v5/quartz",
+        "cwd": "{workspaceRoot}/quartz-v5/core",
         "parallel": false
+      }
+    },
+    "core-lock": {
+      "//": "The lock check: Core's pnpm lock holds exactly the packages of the pinned ref's package-lock.json, each at the same version, with nothing on either side the other lacks. Fetches that one file from upstream; compare a local npm lock instead with --args=\"--npm-lock <file>\". Exits 1 on any difference.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node quartz-v5/utils/core-lock.mjs",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "test-utils": {
+      "//": "The node --test suites of this project's tooling (utils/test/): the lock check, run against small synthetic locks.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node --test \"quartz-v5/utils/test/*.test.mjs\"",
+        "cwd": "{workspaceRoot}"
       }
     },
     "plugin-dag": {
@@ -69,7 +85,7 @@
       }
     },
     "prebuild": {
-      "//": "Prepare the vendored copy to build the real site: symlink the tracked quartz-v5/quartz.config.yaml into it, link host node_modules beside local plugins, and build every local plugin the site config enables. See VENDORED.md.",
+      "//": "Prepare Quartz Core to build the real site: refuse to go on without the site config, core/quartz.config.yaml (a steering file; upstream's default is pruned, so there is nothing to fall back on), link host node_modules beside local plugins, and build every local plugin the site config enables. See VENDORED.md.",
       "executor": "nx:run-commands",
       "options": {
         "command": "node quartz-v5/utils/prebuild.mjs",
@@ -77,36 +93,36 @@
       }
     },
     "build": {
-      "//": "Build the real site: content/public, with the tracked config, into quartz-v5/quartz/public, then finish it with utils/postbuild.mjs: the site's own root-level files (robots.txt, BingSiteAuth.xml, the IndexNow key file) and the site's icon over stock's (static/icon.png, favicon.ico). Extra flags go to `quartz build`, e.g. --concurrency=4.",
+      "//": "Build the real site: content/public, with the site config, into quartz-v5/core/public, then finish it with utils/postbuild.mjs: the site's own root-level files (robots.txt, BingSiteAuth.xml, the IndexNow key file) and the site's icon over stock's (static/icon.png, favicon.ico). Extra flags go to `quartz build`, e.g. --concurrency=4.",
       "executor": "nx:run-commands",
       "options": {
         "commands": [
           { "command": "npx quartz build -d ../../content/public --output public", "forwardAllArgs": true },
           { "command": "node ../utils/postbuild.mjs public", "forwardAllArgs": false }
         ],
-        "cwd": "{workspaceRoot}/quartz-v5/quartz",
+        "cwd": "{workspaceRoot}/quartz-v5/core",
         "parallel": false
       },
       "dependsOn": ["prebuild"],
       "outputs": [
-        "{workspaceRoot}/quartz-v5/quartz/public"
+        "{workspaceRoot}/quartz-v5/core/public"
       ]
     },
     "serve": {
-      "//": "Build the real site and serve it with Quartz's dev server, rebuilding on content changes. Mixed-case redirects are only emitted on a case-sensitive filesystem, so a macOS serve shows none. The output, quartz-v5/.serve-public, is outside the vendored copy on purpose: serve's source watcher watches every .ts and .tsx under it, and would take the vault's widget sources, which the build copies into its output, for Quartz's own and restart the whole build over and over (cgc-mdx's watch spec).",
+      "//": "Build the real site and serve it with Quartz's dev server, rebuilding on content changes. Mixed-case redirects are only emitted on a case-sensitive filesystem, so a macOS serve shows none. The output, quartz-v5/.serve-public, is outside Core on purpose: serve's source watcher watches every .ts and .tsx under it, and would take the vault's widget sources, which the build copies into its output, for Quartz's own and restart the whole build over and over (cgc-mdx's watch spec).",
       "executor": "nx:run-commands",
       "options": {
         "command": "npx quartz build --serve -d ../../content/public --output ../.serve-public",
-        "cwd": "{workspaceRoot}/quartz-v5/quartz"
+        "cwd": "{workspaceRoot}/quartz-v5/core"
       },
       "dependsOn": ["prebuild"],
       "continuous": true
     },
     "_serve-static": {
-      "//": "Helper: serve the real site's build, quartz-v5/quartz/public, on port 8080 for the Lighthouse targets. Ported from v4's `site` project (FORK-LEDGER, #42: keep).",
+      "//": "Helper: serve the real site's build, quartz-v5/core/public, on port 8080 for the Lighthouse targets. Ported from v4's `site` project (FORK-LEDGER, #42: keep).",
       "executor": "nx:run-commands",
       "options": {
-        "command": "npx serve quartz-v5/quartz/public -l 8080",
+        "command": "npx serve quartz-v5/core/public -l 8080",
         "cwd": "{workspaceRoot}"
       },
       "continuous": true
@@ -152,7 +168,7 @@
         "parallel": false,
         "cwd": "{workspaceRoot}",
         "env": {
-          "LHCI_SITEMAP": "quartz-v5/quartz/public/sitemap.xml",
+          "LHCI_SITEMAP": "quartz-v5/core/public/sitemap.xml",
           "LHCI_MAX_URLS": "20",
           "LHCI_RUNS": "3"
         }
@@ -161,13 +177,13 @@
       "dependsOn": ["build", "_serve-static"]
     },
     "clean": {
-      "//": "Remove build output and caches from the vendored copy.",
+      "//": "Remove build output and caches from Quartz Core.",
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "rm -rf quartz-v5/quartz/public",
+          "rm -rf quartz-v5/core/public",
           "rm -rf quartz-v5/.serve-public",
-          "rm -rf quartz-v5/quartz/.quartz-cache"
+          "rm -rf quartz-v5/core/.quartz-cache"
         ],
         "cwd": "{workspaceRoot}",
         "parallel": true

@@ -15,9 +15,9 @@ import path from "node:path"
 import { createRequire } from "node:module"
 import { test, expect, routeSite } from "../harness/test.mjs"
 import { layerOrder } from "../harness/layers.mjs"
-import { buildScratchSite, fixtureConfig, siteConfig, testsRoot, vendored } from "../harness/site.mjs"
+import { buildScratchSite, fixtureConfig, siteConfig, testsRoot, core } from "../harness/site.mjs"
 
-const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
+const YAML = createRequire(path.join(core, "package.json"))("yaml")
 const ENGINE = "cgc-styles"
 const HOME = { "index.md": "---\ntitle: Home\n---\nHome.\n" }
 

@@ -23,7 +23,7 @@ one is on in its place (`STANDS_IN_FOR` in `harness/site.mjs`): stock tag-page, 
 _Avoid_: control, vanilla site, stock site
 
 **Fixture root**:
-The directory a fixture site is built from — the vendored copy symlinked in, with the suite's own
+The directory a fixture site is built from — Quartz Core symlinked in, with the suite's own
 config beside it. One per variant.
 _Avoid_: shadow root (collides with the DOM's), sandbox, workspace
 

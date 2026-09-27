@@ -17,13 +17,11 @@ dist
 .claude
 .agents
 
-# Vendored Quartz v5 (see quartz-v5/VENDORED.md)
-quartz-v5/quartz/public
-# site-v5:serve's output, outside the vendored copy (quartz-v5/project.json)
+# Quartz Core, Quartz 5 (see quartz-v5/VENDORED.md)
+quartz-v5/core/public
+# site-v5:serve's output, outside Core (quartz-v5/project.json)
 quartz-v5/.serve-public
-quartz-v5/quartz/.quartz/
-# generated: symlink to ../quartz.config.yaml, created by site-v5 prebuild
-quartz-v5/quartz/quartz.config.yaml
+quartz-v5/core/.quartz/
 # e2e scratch sites made at the real site root's depth (quartz-v5/tests/harness/site.mjs)
 quartz-v5/.site-scratch-*/
 

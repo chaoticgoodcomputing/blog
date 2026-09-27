@@ -5,9 +5,9 @@
 import fs from "node:fs"
 import path from "node:path"
 import { createRequire } from "node:module"
-import { testsRoot, vendored } from "./site.mjs"
+import { testsRoot, core } from "./site.mjs"
 
-const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
+const YAML = createRequire(path.join(core, "package.json"))("yaml")
 const { colors } = YAML.parse(fs.readFileSync(path.join(testsRoot, "quartz.config.yaml"), "utf8"))
   .configuration.theme
 

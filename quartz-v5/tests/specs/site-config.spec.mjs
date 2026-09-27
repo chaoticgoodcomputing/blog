@@ -1,10 +1,10 @@
-// The real site's configuration, `quartz-v5/quartz.config.yaml`, proven on a scratch site built
+// The real site's configuration, `quartz-v5/core/quartz.config.yaml`, proven on a scratch site built
 // from it. The content is a few pages in the real vault's shapes, not the vault itself, so this runs
 // in the standing suite. Building `content/public` is the `site-v5:build` target's job.
 import fs from "node:fs"
 import path from "node:path"
 import { test, expect, layerOrder, routeSite, schemeOf, stackDeclaration, toggleScheme } from "../harness/test.mjs"
-import { buildScratchSite, siteConfig, vendored } from "../harness/site.mjs"
+import { buildScratchSite, siteConfig, core } from "../harness/site.mjs"
 import { postHogStandIn } from "../harness/analytics.mjs"
 
 const CONTENT = {
@@ -217,8 +217,8 @@ test("draws each card in the dark palette, with the site's icon", async ({ page 
   await routeSite(page, site.public, ORIGIN)
   await page.goto(`${ORIGIN}/content/notes/a-note`)
   const card = fs.readFileSync(path.join(site.public, "content/notes/a-note-og-image.webp"))
-  // The site config's `icon`, which resolves against the vendored root, and the one stock draws.
-  const icons = [path.resolve(vendored, "../icon.png"), path.join(vendored, "quartz/static/icon.png")]
+  // The site config's `icon`, which resolves against Core's root, and the one stock draws.
+  const icons = [path.resolve(core, "../icon.png"), path.join(core, "quartz/static/icon.png")]
   const { corner, distances } = await readCard(page, card, icons.map((icon) => fs.readFileSync(icon)))
   // The dark palette's `light`, give or take lossy WebP.
   const dark = BACKGROUND.dark.match(/\d+/g).map(Number)

@@ -35,7 +35,7 @@ test("the family layer ranks above core's quartz-base", async ({ page }) => {
 })
 
 // A theme ranks wherever its `order` puts its first layer statement. The fixture carries no theme,
-// and the real `@quartz-themes/core` must never run in one (it installs into the vendored copy), so
+// and the real `@quartz-themes/core` must never run in one (it installs into Quartz Core), so
 // a stand-in emits the real theme's statement at the real theme's default order, 10. It is listed
 // after cgc-styles in the YAML, which changes nothing: position follows `order`.
 const THEME = "../fixture-plugins/fixture-theme"

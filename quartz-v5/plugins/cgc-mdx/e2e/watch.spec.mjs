@@ -5,7 +5,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import { test, expect } from "../../../tests/harness/test.mjs"
-import { serveScratchSite, testsRoot, vendored } from "../../../tests/harness/site.mjs"
+import { serveScratchSite, testsRoot, core } from "../../../tests/harness/site.mjs"
 
 const note = (title, body) => `---\ntitle: ${title}\n---\n\n${body}\n`
 const withWidget = (text) => note("Page", `import Hello from './Hello'\n\n${text}\n\n<Hello />`)
@@ -43,8 +43,8 @@ test("an .mdx page rebuilds under serve when it, or a widget it imports, changes
 test("the site's serve writes outside the Quartz root, as the serve run does", () => {
   const { serve } = JSON.parse(fs.readFileSync(path.join(testsRoot, "../project.json"), "utf8")).targets
   const cwd = serve.options.cwd.replace("{workspaceRoot}", path.resolve(testsRoot, "../.."))
-  expect(cwd).toBe(vendored)
+  expect(cwd).toBe(core)
   const output = serve.options.command.match(/--output\s+(\S+)/)?.[1]
   expect(output).toBeTruthy()
-  expect(path.relative(vendored, path.resolve(cwd, output)).startsWith("..")).toBe(true)
+  expect(path.relative(core, path.resolve(cwd, output)).startsWith("..")).toBe(true)
 })

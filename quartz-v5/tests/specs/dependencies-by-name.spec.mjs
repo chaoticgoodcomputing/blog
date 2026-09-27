@@ -30,8 +30,8 @@ test("the consumer's dependency resolves by name at the fixture root", async ({ 
   expect((await layerOrder(page)).cgc).toContain("fixture-consumer")
 })
 
-// The real site runs from the vendored root, `quartz-v5/quartz/`, so its config names the engine
-// `../plugins/cgc-styles`. A scratch root made beside the vendored copy resolves the site config's
+// The real site runs from Quartz Core's root, `quartz-v5/core/`, so its config names the engine
+// `../plugins/cgc-styles`. A scratch root made beside Core resolves the site config's
 // sources exactly as the real site does, and the consumer is added to it there.
 test("the consumer's dependency resolves by name at the real site root", async ({ page }) => {
   const config = siteConfig({ at: "site" })

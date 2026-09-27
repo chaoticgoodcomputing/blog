@@ -1,15 +1,16 @@
-# Vendored copy of Quartz 5
+# Quartz Core
 
-`quartz-v5/quartz/` is an **unmodified copy of upstream Quartz**, vendored for the v4 → v5
-migration ([#18](https://github.com/chaoticgoodcomputing/blog/issues/18)).
+`quartz-v5/core/` is **Quartz Core**: upstream Quartz's install root, vendored for the v4 → v5
+migration ([#18](https://github.com/chaoticgoodcomputing/blog/issues/18)) and given its name and tiers
+on [#89](https://github.com/chaoticgoodcomputing/blog/issues/89).
 
 Quartz 5 has no npm package — it is `private: true` and unpublished, and its own upgrade path
 (`npx quartz upgrade`) works by adding a git remote and merging. Vendoring is the supported way
 to consume it, not a workaround.
 
-**Read [ADR-0001](../docs/adr/0001-customization-through-plugins.md) before changing anything in
-`quartz/`.** Customization belongs in plugins. Edits to the vendored tree are a last resort, and
-each one needs a ticket plus a strategy for proposing it upstream, tracked under the
+**Read [ADR-0001](../docs/adr/0001-customization-through-plugins.md), with its tiers amendment,
+before changing anything in `core/`.** Customization belongs in plugins. Edits to Core source are a
+last resort, and each one needs a ticket plus a strategy for proposing it upstream, tracked under the
 `quartz:vendored` label.
 
 ## Layout
@@ -20,7 +21,6 @@ quartz-v5/
 ├── CONTEXT.md            glossary for this context
 ├── VENDORED.md           this file
 ├── upstream.json         the pinned upstream ref — machine-readable source of truth
-├── quartz.config.yaml    our Quartz 5 configuration — tracked here, symlinked into quartz/
 ├── robots.txt            the site's own robots.txt — copied into the build by postbuild.mjs
 ├── BingSiteAuth.xml      Bing Webmaster's verification file — copied to the site root by postbuild.mjs
 ├── a6e41ab6-….txt        the IndexNow key file — copied to the site root by postbuild.mjs
@@ -30,41 +30,68 @@ quartz-v5/
 ├── site-plugins/         this site's own plugins, which fail the shareability test on purpose
 ├── libs/                 our non-plugin packages (`@chaoticgoodcomputing/*`)
 ├── tests/                Playwright suite and `content-fixture/`
-├── utils/                tooling for this context — `upstream.mjs`, `prebuild.mjs`, `postbuild.mjs`, `local-plugins.mjs`
-└── quartz/               the vendored copy: upstream's repo root, verbatim
+├── utils/                tooling for this context — `core-tiers.mjs`, `upstream.mjs`, `core-lock.mjs`,
+│                         `prebuild.mjs`, `postbuild.mjs`, `local-plugins.mjs`
+└── core/                 Quartz Core: upstream's install root, in four tiers
+    ├── quartz/               Core source — protected
+    ├── quartz.ts             steering file
+    ├── quartz.config.yaml    steering file: the site config
+    ├── package.json, …       scaffolding — upstream's, verbatim
+    └── pnpm-workspace.yaml,  Core's own pnpm project and its lock, imported from upstream's
+        pnpm-lock.yaml
 ```
 
-Every file of ours that is _tracked_ lives _outside_ `quartz/`. That is what makes the invariant
-below meaningful rather than "identical except for a few files of ours".
+## The tiers
 
-## The one file of ours that has to sit inside
+Every file upstream ships at the pinned ref, and every file in `core/`, falls in one tier. The lists
+live in one place, [`utils/core-tiers.mjs`](./utils/core-tiers.mjs), which the upstream tooling reads
+(and the repo guards and the upgrade will).
 
-`quartz.config.yaml` is the exception, and it is forced rather than chosen. Source links below
-point at upstream at [`97a2d05`](https://github.com/jackyzha0/quartz/tree/97a2d05f80c4c50534959b1d0d41cc4b3895625e) (v5.0.0), the ref
-[`upstream.json`](./upstream.json) pins:
+| Tier | Files | Rule |
+| ---- | ----- | ---- |
+| **Core source** | `quartz/` | Protected. Changes only through a vendored change, with its ticket. Its name stays `quartz/`, because Quartz's own `bin` and imports point at it. |
+| **Steering files** | `quartz.ts`, `quartz.config.yaml` | Edited as Quartz's docs intend: a TS layout override and `registerCondition` in `quartz.ts`, the site's own configuration in `quartz.config.yaml`. Never drift; an upgrade never overwrites one. |
+| **Scaffolding** | `package.json`, `tsconfig.json`, `globals.d.ts`, `index.d.ts`, `.gitignore`, `.prettierignore`, `.prettierrc`, `LICENSE.txt` | Upstream's toolchain, taken from upstream on each upgrade. `package.json` is exactly upstream's: nothing of ours is in it. Upstream's MIT LICENSE stays with its code. |
+| **Pruned files** | `docs/`, `.github/`, `README.md`, `CODE_OF_CONDUCT.md`, `Dockerfile`, `.gitattributes`, `content/.gitkeep`, `.node-version`, `quartz.config.default.yaml`, `package-lock.json`, `.npmrc` | Deliberately absent (pruned on 1792aba3, the npm lock on #91). Never counted as drift, and deleted again after any tree replacement. |
 
-- [`config-loader.ts:35`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L35) reads `path.join(process.cwd(), "quartz.config.yaml")`.
-- cwd cannot be moved up to `quartz-v5/`. [`constants.js:15`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/cli/constants.js#L15) does
-  `readFileSync("./package.json")` at module load and [`:14`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/cli/constants.js#L14)
-  sets `fp = "./quartz/build.ts"`, both
-  relative to cwd — so cwd must be the directory holding upstream's `package.json` and its `quartz/`
-  source dir, which is `quartz-v5/quartz/`.
+Core's pnpm files, `pnpm-workspace.yaml` and `pnpm-lock.yaml`, are ours and sit outside the tiers.
+They are not drift either (see Dependencies).
+
+## The site config
+
+The site config, `core/quartz.config.yaml`, is a steering file, tracked where Quartz reads it. Source
+links below point at upstream at
+[`97a2d05`](https://github.com/jackyzha0/quartz/tree/97a2d05f80c4c50534959b1d0d41cc4b3895625e)
+(v5.0.0), the ref [`upstream.json`](./upstream.json) pins:
+
+- [`config-loader.ts:35`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L35)
+  reads `path.join(process.cwd(), "quartz.config.yaml")`, and cwd has to be Core's root:
+  [`constants.js:15`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/cli/constants.js#L15)
+  does `readFileSync("./package.json")` at module load and
+  [`:14`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/cli/constants.js#L14)
+  sets `fp = "./quartz/build.ts"`, both relative to cwd.
 - There is no `--config` flag ([`args.js`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/cli/args.js)) and no environment override.
 
-So the tracked file is `quartz-v5/quartz.config.yaml`, and `quartz-v5/quartz/quartz.config.yaml`
-is a symlink to it, created by the `site-v5:prebuild` target (`utils/prebuild.mjs`), which `build`
-and `serve` depend on. The symlink is gitignored and excluded from the drift check; `sync` destroys
-it along with the rest of the tree, and prebuild recreates it. Prebuild refuses to replace a real
-file at that path. Never leave an empty `quartz.config.yaml` there:
-[`resolveConfigPath`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/install-plugins.ts#L14-L17)
-prefers it over `quartz.config.default.yaml`, so an empty one silently disables every default
-plugin.
+Upstream's default config, `quartz.config.default.yaml`, is pruned, so there is nothing for
+[`resolveConfigPath`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/config-loader.ts#L40-L46)
+to fall back on. Quartz itself then fails the build, but only with a `TypeError` from its config
+loader under a dump of its usage, so `site-v5:prebuild` (`utils/prebuild.mjs`), which `build` and
+`serve` depend on, refuses first and says why when the site config is missing, empty, or has no
+`plugins` list. The e2e harness writes each fixture root's own config and links everything else of
+Core's into it.
 
-`site-v5:build` builds the real vault, `content/public`, into `quartz/public`, then finishes it with
+`source:` entries inside that config are resolved with `path.resolve()` against cwd
+([`gitLoader.ts:99`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L99)),
+which is Core's root. Local plugins are therefore `../plugins/cgc-tags`. A plugin option that names a
+file resolves the same way, so the site's icon is `icon: ../icon.png` on `cgc-og-image`.
+
+## Building the site
+
+`site-v5:build` builds the real vault, `content/public`, into `core/public`, then finishes it with
 `utils/postbuild.mjs`: it copies in the site's own root-level files (`robots.txt`, Bing Webmaster's
 verification file `BingSiteAuth.xml` and the IndexNow key file), since v5's Static emitter writes only
 under `/static/`, and puts the site's icon over stock's, `static/icon.png` and
-`favicon.ico` (#44, #70). Quartz reads the icon from `quartz/static/icon.png` in this copy, so there
+`favicon.ico` (#44, #70). Quartz reads the icon from `quartz/static/icon.png` in Core source, so there
 is no other way to swap it without drift, and a site emitter would race the Static emitter's copy.
 Extra flags go to `quartz build`, e.g.
 `pnpm nx run site-v5:build --concurrency=4`. The e2e suite proves the site config itself on a
@@ -72,16 +99,9 @@ scratch site built from it (`tests/specs/site-config.spec.mjs`, through the harn
 `siteConfig()`).
 
 The Lighthouse targets sit beside it, ported from v4's `site` project and run with the repo's
-`utils/lighthouse/` tooling. `site-v5:eval` builds the site, serves `quartz/public` on port 8080
+`utils/lighthouse/` tooling. `site-v5:eval` builds the site, serves `core/public` on port 8080
 (`_serve-static`) and audits its home page. `site-v5:eval:multi` audits the first public pages of
 that build's sitemap, and `site-v5:eval:live` audits the live site.
-
-One consequence to remember: `source:` entries inside that config are resolved with
-`path.resolve()` against cwd ([`gitLoader.ts:99`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/plugins/loader/gitLoader.ts#L99)), which is the
-vendored root —
-**not** the directory the tracked file lives in. Local plugins are therefore `../plugins/cgc-tags`,
-not `./plugins/cgc-tags`. A plugin option that names a file resolves the same way, so the site's
-icon is `icon: ../icon.png` on `cgc-og-image`.
 
 `site-v5:plugin-dag` writes the **plugin DAG** (`utils/plugin-dag.mjs`, #86): the Mermaid flowchart of
 how every package under `plugins/`, `libs/` and `site-plugins/` depends on the others, between the
@@ -106,24 +126,33 @@ readers. If they disagree, `upstream.json` wins — it is what the tooling reads
 
 ## The invariant
 
-`quartz-v5/quartz/` is **byte-identical to the pinned commit across every tracked file, except for
-vendored changes — and every vendored change is made in a commit that cites its ticket.**
+**Quartz Core has no drift but its vendored changes, and every vendored change is made in a commit
+that cites its ticket.** Drift is any difference between Core and its pinned ref except in steering
+files, pruned files and Core's pnpm files.
 
 Vendored changes are never stored separately. Two targets generate everything there is to know
 about them from the tree and its history:
 
 ```bash
-pnpm nx run site-v5:diff-upstream   # the complete unified diff against the pinned commit
+pnpm nx run site-v5:diff-upstream   # the complete unified diff of Core's drift from the pinned commit
 pnpm nx run site-v5:vendored-log    # the commits that made it, and the tickets each cites
 ```
 
-`diff-upstream` answers _what_ differs. Its stdout is a patch that `git apply` accepts from the
-repo root, and the file count goes to stderr, so `> vendored.patch` captures it cleanly.
-`vendored-log` answers _why_. It lists every commit since the last sync (the last commit to touch
-`upstream.json`) that changed the vendored copy, with the `#<n>` tickets its message cites, flags any
-commit that cites none, and lists uncommitted edits, which have no commit to carry a ticket yet.
-The rule is that every file `diff-upstream` names traces to a flagged-clean commit in
-`vendored-log`. The ticket itself carries the `quartz:vendored` label and the upstream proposal.
+`diff-upstream` answers _what_ differs. It compares the files git tracks in Core, plus any new file
+git doesn't ignore, with the files upstream tracks at the pinned ref, leaving out the tiers that are
+not drift. Its stdout is a patch that `git apply` accepts from the repo root, and the file count goes
+to stderr, so `> vendored.patch` captures it cleanly. `vendored-log` answers _why_. It lists every
+commit since the last sync (the last commit to touch `upstream.json`) that made drift in Core, with
+the files and the `#<n>` tickets its message cites, flags any commit that cites none, and lists
+uncommitted drift, which has no commit to carry a ticket yet. Commits that only moved Core (#91 did,
+from its old path, and the cutover will), or only touched steering, pruned or pnpm files, are left
+out; the log follows Core's renames back through history. The rule is that every file
+`diff-upstream` names traces to a flagged-clean commit in `vendored-log`. The ticket itself carries
+the `quartz:vendored` label and the upstream proposal.
+
+Both, and `diff-latest`, fetch upstream from exactly the URL `upstream.json` names, whatever
+`url.<base>.insteadOf` rewrite a user's git config has (upstream is public, so no credentials are
+needed).
 
 Current vendored changes:
 
@@ -132,16 +161,15 @@ Current vendored changes:
 | `quartz/plugins/types.ts`, `quartz/plugins/pageTypes/dispatcher.ts` | [#19](https://github.com/chaoticgoodcomputing/blog/issues/19): four default transformers are async, so a page type cannot run the pipeline from a synchronous `generate`. Makes `generate` awaitable. Needed by `cgc-mdx`. | [#25](https://github.com/chaoticgoodcomputing/blog/issues/25), filed after cutover |
 | `quartz/plugins/loader/config-loader.ts` | [#40](https://github.com/chaoticgoodcomputing/blog/issues/40): the loader matches `manifest.dependencies` only against exact `source:` strings, and a local source differs by site root, so no one dependency string holds at the real site, the e2e fixture and a downstream install. `validateDependencies` now resolves each dependency by exact source, then by plugin name, and its presence, order and cycle checks all use the resolved entry. Additive: a dependency that matches a source exactly behaves as before. Needed by every consumer of `cgc-styles`; landed with it on [#63](https://github.com/chaoticgoodcomputing/blog/issues/63), proven by `tests/specs/dependencies-by-name.spec.mjs`. | [#47](https://github.com/chaoticgoodcomputing/blog/issues/47), filed after cutover |
 
-The only things permitted inside it are generated and gitignored, and they are an explicit
-allowlist rather than a judgement call — `EXCLUDES` in `quartz-v5/utils/upstream.mjs`:
-`node_modules/`, `.quartz/`, `.quartz-cache/`, `public/`, `tsconfig.tsbuildinfo`, and
-`quartz.config.yaml` (see above). **Nothing else, ever, and nothing of ours committed.** Adding to
-that list is a decision about the invariant itself, not a convenience.
+Generated and installed files inside Core (`node_modules/`, `.quartz/`, `.quartz-cache/`,
+`public/`, `tsconfig.tsbuildinfo`) are gitignored, by upstream's own `.gitignore` and the repo's, and
+so never compared. **Nothing else of ours is committed there** but the steering files and the pnpm
+files. Adding to the tiers is a decision about the invariant itself, not a convenience.
 
 This matters because it is easy to violate by accident. `nx run site:format` runs
 `prettier . --write` from the repo root and _will_ rewrite upstream files unless
-`quartz-v5/quartz` is excluded in `.prettierignore` — which is why it is. The ignore is scoped to
-the vendored subtree deliberately, so our own files under `quartz-v5/` are still formatted.
+`quartz-v5/core` is excluded in `.prettierignore` — which is why it is. The ignore is scoped to
+Core deliberately, so our own files under `quartz-v5/` are still formatted.
 
 ## Upgrading
 
@@ -151,12 +179,12 @@ enclosing repository, which is this blog, not Quartz. Use the targets instead.
 ```bash
 pnpm nx run site-v5:diff-latest                    # what would an upgrade pull in?
 pnpm nx run site-v5:sync --args="--ref=<commit>"   # re-vendor at that ref
-pnpm nx run site-v5:install                        # refresh dependencies
 ```
 
-`sync` replaces the whole tree, so it refuses while the copy carries vendored changes, and they are
-never silently discarded. To upgrade anyway, save them, sync with `--force`, and re-apply whatever
-upstream has not taken in the meantime:
+`sync` replaces the tree, keeping the steering files and Core's pnpm files and deleting the pruned
+files again. It refuses while Core carries vendored changes, and they are never silently discarded.
+To upgrade anyway, save them, sync with `--force`, and re-apply whatever upstream has not taken in
+the meantime:
 
 ```bash
 pnpm -s nx run site-v5:diff-upstream > vendored.patch
@@ -164,33 +192,73 @@ node quartz-v5/utils/upstream.mjs sync <ref> --force
 git apply vendored.patch      # drop hunks upstream now has; commit what remains with its ticket
 ```
 
-After syncing, update the Provenance table above, and remove any row from the vendored-changes table
-whose change upstream has taken.
+Then re-seed the lock from the new ref's `package-lock.json` (see Dependencies), update the
+Provenance table above, and remove any row from the vendored-changes table whose change upstream has
+taken. The upgrade ([#99](https://github.com/chaoticgoodcomputing/blog/issues/99)) replaces all of
+this with one target.
 
 ## Dependencies
 
-Self-contained in `quartz/node_modules`.
+**Core is a pnpm project of its own**, installed by `pnpm nx run site-v5:install`: a frozen install
+of `core/pnpm-lock.yaml` into `core/node_modules`. Its `core/pnpm-workspace.yaml` makes it a
+workspace of its own, and pnpm stops at the nearest workspace file, so the repo's root install never
+reaches it:
+
+```yaml
+packages:
+  - "."
+nodeLinker: hoisted        # a flat, npm-shaped node_modules, which plugins resolve Core's packages from
+autoInstallPeers: false
+allowBuilds:               # pnpm 11 fails an install on any other dependency's build script
+  "@parcel/watcher": true
+  esbuild: true
+  sharp: true
+```
+
+`allowBuilds` is pnpm 11's, so `site-v5:install` runs pnpm 11 by exact version through `npx`
+(`npx --yes pnpm@11.27.1`), whatever pnpm the repo root pins. Inside `core/` the nearest workspace
+root is Core's, whose `package.json` names no `packageManager`, so pnpm never switches versions there.
+
+**The lock is upstream's, converted.** `core/pnpm-lock.yaml` is `pnpm import` of upstream's
+`package-lock.json` at the pinned ref, so Core installs exactly the versions upstream shipped and
+tested. Letting pnpm resolve Core's `package.json` fresh would move 62 of its packages instead,
+`@quartz-community/remark-obsidian` 1.0.0 → 1.1.0 among them. The **lock check** proves the
+conversion held, every package at the same version and nothing on either side the other lacks:
+
+```bash
+pnpm nx run site-v5:core-lock     # against the pinned ref's package-lock.json, fetched from upstream
+node quartz-v5/utils/core-lock.mjs --npm-lock <file>   # against a local npm lock
+```
+
+At 97a2d05 it reads 415 of 415 packages matching. The hoisted layout places two packages
+differently from npm (the top-level `picomatch` and `string-width` are another of the versions the
+lock holds), which no code of ours imports. To re-seed the lock at a new ref, copy that ref's
+`package.json` and `package-lock.json` into Core with `pnpm-workspace.yaml`, run
+`npx --yes pnpm@11.27.1 import`, delete the npm lock again, and run the lock check.
 
 **Local plugins resolve the host's dependencies through `plugins/node_modules`,** a gitignored
-symlink to `../quartz/node_modules` that the e2e harness and `site-v5:prebuild` create. A git-installed plugin sits at
-`.quartz/plugins/<name>/` inside the Quartz root, so its bare `import "preact"` finds Quartz's copy,
-and that is what the loader's shared externals assume. A local plugin is only symlinked there, and
-Node resolves from the symlink's target under `plugins/`, which would otherwise walk up to the v4
+symlink to `../core/node_modules` that the e2e harness and `site-v5:prebuild` create. A git-installed
+plugin sits at `.quartz/plugins/<name>/` inside Core, so its bare `import "preact"` finds Quartz's
+copy, and that is what the loader's shared externals assume. A local plugin is only symlinked there,
+and Node resolves from the symlink's target under `plugins/`, which would otherwise walk up to the v4
 tree's `node_modules` at the repo root: a second, older Preact. A plugin's own install therefore
-omits peers (`npm ci --omit=peer`), so its local `node_modules` never shadows a host singleton. `site-plugins/` needs the same link, `site-plugins/node_modules`, for the same reason. It's
-decided on [#39](https://github.com/chaoticgoodcomputing/blog/issues/39) and wired on [#64](https://github.com/chaoticgoodcomputing/blog/issues/64): `site-v5:prebuild` makes it for the real site once the site config enables a site plugin, and the e2e harness makes it beside `plugins/node_modules`, building every site plugin too, because scratch sites built from the site config load them. No fixture config lists a site plugin. Upstream uses **npm** with its own `package-lock.json`,
-and its versions conflict with the v4 tree at the repo root (preact, unified, shiki). This
-directory is deliberately _not_ a pnpm workspace package, so the root `pnpm install` ignores it.
+omits peers (`npm ci --omit=peer`), so its local `node_modules` never shadows a host singleton.
+`site-plugins/` needs the same link, `site-plugins/node_modules`, for the same reason. It's decided on
+[#39](https://github.com/chaoticgoodcomputing/blog/issues/39) and wired on
+[#64](https://github.com/chaoticgoodcomputing/blog/issues/64): `site-v5:prebuild` makes it for the
+real site once the site config enables a site plugin, and the e2e harness makes it beside
+`plugins/node_modules`, building every site plugin too, because scratch sites built from the site
+config load them. No fixture config lists a site plugin. Both replace a link left pointing anywhere
+else, such as Core's old path.
 
-**Our libraries are the one thing here that is a pnpm workspace package.** `pnpm-workspace.yaml`
-at the repo root lists `quartz-v5/libs/*` and nothing else, so the root `pnpm install` installs each
-library's own dependencies beside its source. A plugin names a library it inlines, or one its
-build runs (`@chaoticgoodcomputing/css-check`), as a `file:../../libs/<name>` devDependency
-(ADR-0005), which npm only links: whatever the library imports resolves from the library's own
-install, never the plugin's. The e2e harness and `site-v5:prebuild` run
-`pnpm install --frozen-lockfile` when a library has none, and build each local plugin after an
-install of its own dependencies whenever its lockfile has moved on. Both take these steps from one
-module, `utils/local-plugins.mjs`.
+**Our libraries are a pnpm workspace package of the repo's.** `pnpm-workspace.yaml` at the repo root
+lists `quartz-v5/libs/*`, so the root `pnpm install` installs each library's own dependencies beside
+its source. A plugin names a library it inlines, or one its build runs
+(`@chaoticgoodcomputing/css-check`), as a `file:../../libs/<name>` devDependency (ADR-0005), which npm
+only links: whatever the library imports resolves from the library's own install, never the
+plugin's. The e2e harness and `site-v5:prebuild` run `pnpm install --frozen-lockfile` when a library
+has none, and build each local plugin after an install of its own dependencies whenever its lockfile
+has moved on. Both take these steps from one module, `utils/local-plugins.mjs`.
 Content reaches a library the same way: the root `package.json` depends on
 `@chaoticgoodcomputing/widgets` by `workspace:*`, so an `.mdx` page in the vault or the e2e fixture
 resolves `@chaoticgoodcomputing/widgets/<widget>` by Node's upward walk to the root `node_modules` (#36).
@@ -198,4 +266,5 @@ resolves `@chaoticgoodcomputing/widgets/<widget>` by Node's upward walk to the r
 ## Relationship to `quartz/` at the repo root
 
 The root `quartz/` is the **Quartz 4 copy that builds the live site**, untouched by any of this.
-Both exist in parallel for the duration of the migration; the v4 copy goes away only at cutover.
+Both exist in parallel for the duration of the migration; the v4 copy goes away only at cutover,
+when `quartz-v5/` becomes `quartz/` and Core sits at `quartz/core/` (#81).

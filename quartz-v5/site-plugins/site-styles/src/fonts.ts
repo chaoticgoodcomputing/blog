@@ -46,7 +46,7 @@ export function fontFaces(ctx: Ctx): string {
 
 /**
  * Copies the fonts into the site. Nothing else writes under `static/site-styles/`, so this never
- * races the stock Static emitter, which copies only the vendored copy's own `static/` and runs at
+ * races the stock Static emitter, which copies only Quartz Core's own `static/` and runs at
  * the same time (full builds run every emitter at once).
  */
 export async function emitFonts(ctx: Ctx): Promise<string[]> {

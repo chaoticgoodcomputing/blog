@@ -16,7 +16,7 @@
 // Run it through Nx: `pnpm nx run site-v5-e2e:acceptance`. Options:
 //   --skip-build     compare the sites already built at the default locations
 //   --v4 <dir>       compare this built v4 site instead (implies --skip-build); default dist/public
-//   --v5 <dir>       compare this built v5 site instead (implies --skip-build); default quartz-v5/quartz/public
+//   --v5 <dir>       compare this built v5 site instead (implies --skip-build); default quartz-v5/core/public
 //   --vault <dir>    the content both sites were built from, which some allowlist entries consult;
 //                    default content/public
 //   --origin <url>   the site's origin; default https:// + the site config's baseUrl
@@ -40,7 +40,7 @@ import { ALLOWLIST, PENDING, checkAllowlist } from "./allowlist.mjs"
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const repoRoot = path.resolve(here, "../../..")
-const siteConfigFile = path.join(repoRoot, "quartz-v5/quartz.config.yaml")
+const siteConfigFile = path.join(repoRoot, "quartz-v5/core/quartz.config.yaml")
 const EXAMPLES = 5
 
 function parseArgs(argv) {
@@ -61,7 +61,7 @@ function parseArgs(argv) {
     else throw new Error(`unknown option ${arg}`)
   }
   options.v4 ??= path.join(repoRoot, "dist/public")
-  options.v5 ??= path.join(repoRoot, "quartz-v5/quartz/public")
+  options.v5 ??= path.join(repoRoot, "quartz-v5/core/public")
   options.out ??= path.join(repoRoot, "dist/acceptance")
   options.vault ??= path.join(repoRoot, "content/public")
   if (!fs.existsSync(options.vault)) throw new Error(`no vault at ${options.vault}`)
@@ -86,7 +86,7 @@ const BUILDS = [
   },
   { label: "v4: copy its root files (site:_postbuild)", command: ["pnpm", "nx", "run", "site:_postbuild"] },
   {
-    label: "v5: build the vault into quartz-v5/quartz/public (site-v5:build)",
+    label: "v5: build the vault into quartz-v5/core/public (site-v5:build)",
     command: ["pnpm", "nx", "run", "site-v5:build", "--concurrency=4"],
     clock: "v5",
   },

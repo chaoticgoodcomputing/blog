@@ -1,37 +1,72 @@
-# Vendored Quartz 5
+# Quartz 5 and its Core
 
-The copy of upstream Quartz 5 this repo builds against during the v4 → v5 migration, together
-with the tooling that keeps it honest about how far it has drifted from upstream.
+Quartz Core, the copy of upstream Quartz 5 this repo builds against during the v4 → v5 migration,
+together with the tooling that keeps it honest about how far it has drifted from upstream, and the
+plugins built on it.
 
 ## Language
 
-### The copy
+### Quartz Core
 
-**Vendored copy**:
-Upstream Quartz's source, committed into this repo at `quartz-v5/quartz/` because Quartz ships
-no npm package.
-_Avoid_: fork, our Quartz, vendor branch
+**Quartz Core**:
+Upstream Quartz's install root, vendored into this repo at `quartz-v5/core/` (`quartz/core/` after
+cutover) because Quartz ships no npm package. Split into four tiers, listed once, in
+`utils/core-tiers.mjs`: **Core source**, **steering files**, **scaffolding** and **pruned files**.
+A pnpm project of its own, outside the repo's workspace, installed from a lock imported from
+upstream's (VENDORED.md). "Core" for short.
+_Avoid_: vendored copy (its old name), fork, our Quartz, vendor branch, engine (that is a plugin role)
+
+**Core source**:
+Core's `quartz/` tree, the one protected tier. It changes only through a **vendored change**. It
+keeps its directory name because Quartz's own `bin` and imports point at it.
+_Avoid_: core (alone, while Core is meant), Quartz source
+
+**Steering file**:
+A Core file Quartz's docs tell a site to edit: today `quartz.ts` and the **site config**. Edits to one
+are configuration, never drift, and an upgrade never overwrites one.
+_Avoid_: config file (the site config is one of two), override
+
+**Scaffolding**:
+Upstream's toolchain files at Core's root: `package.json`, `tsconfig.json`, the root `.d.ts` files,
+the ignore and formatter files, and the LICENSE. Taken from upstream on each upgrade; `package.json`
+stays exactly upstream's.
+_Avoid_: boilerplate, root files
+
+**Pruned file**:
+An upstream file deliberately absent from Core, listed once in `utils/core-tiers.mjs`: upstream's
+docs, CI workflows, Dockerfile, community files, default config and npm files. Never counted as
+drift, and deleted again after any tree replacement.
+_Avoid_: deleted file, removed file
 
 **Fork**:
-Reserved for a copy we own and intend to diverge. The vendored copy is deliberately _not_ this,
-and calling it a fork invites the ownership assumption [ADR-0001](../docs/adr/0001-customization-through-plugins.md) exists to prevent.
+Reserved for a copy we own and intend to diverge. Quartz Core is deliberately _not_ this, and
+calling it a fork invites the ownership assumption [ADR-0001](../docs/adr/0001-customization-through-plugins.md) exists to prevent.
 
 **Pinned ref**:
-The exact upstream commit the vendored copy is claimed to match, recorded in `upstream.json`.
+The exact upstream commit Quartz Core is claimed to match, recorded in `upstream.json`.
 _Avoid_: version, upstream version
 
 **Drift**:
-Any difference between the vendored copy and its pinned ref. Drift is either a tracked vendored
-change or a mistake; there is no third kind.
+Any difference between Quartz Core and its pinned ref except in steering files, pruned files and
+Core's pnpm files (`pnpm-workspace.yaml`, `pnpm-lock.yaml`). Drift is either a tracked vendored
+change or a mistake; there is no third kind. `site-v5:diff-upstream` prints all of it.
+_Avoid_: diff (the command's output), divergence
 
 **Vendored change**:
-An edit to the vendored copy, permitted only as a last resort and only with a ticket recording
-why no plugin route existed and how it will be proposed upstream. Labelled `quartz:vendored`.
+An edit to Core source, permitted only as a last resort and only with a ticket recording why no
+plugin route existed and how it will be proposed upstream. Labelled `quartz:vendored`.
 _Avoid_: patch, core change, hack
 
 **Sync**:
-Re-vendoring the copy at a newer upstream ref.
+Re-vendoring Core at a newer upstream ref (`site-v5:sync`), until the upgrade (#99) replaces it. It
+keeps the steering files and Core's pnpm files, and deletes the pruned files again.
 _Avoid_: upgrade, update, pull — `npx quartz upgrade` is a different, unusable thing here
+
+**Lock check**:
+The proof that Core's pnpm lock holds exactly the packages of the npm lock it was imported from,
+each at the same version, with nothing on either side the other lacks (`utils/core-lock.mjs`,
+`site-v5:core-lock`).
+_Avoid_: lock diff, lockfile lint
 
 ### Customization
 
@@ -54,10 +89,11 @@ which fails the test only by accident.
 _Avoid_: customization (that is the whole category), local plugin, private plugin
 
 **Site config**:
-The real site's Quartz configuration, `quartz-v5/quartz.config.yaml`: which plugins the site runs
-and with what options, its layout, theme and fonts. Tracked outside the vendored copy and reached
-through a gitignored symlink inside it. A plugin is _on the real site_ once the site config enables
-it. The e2e fixture has a config of its own, which is not this.
+The real site's Quartz configuration, `quartz-v5/core/quartz.config.yaml`: which plugins the site
+runs and with what options, its layout, theme and fonts. A **steering file**, tracked inside Core,
+where Quartz reads it. There is no default to fall back on, so a build without it is refused. A
+plugin is _on the real site_ once the site config enables it. The e2e fixture has a config of its
+own, which is not this.
 _Avoid_: real config, production config, the config (while the fixture's exists too)
 
 **Plugin note**:
@@ -234,5 +270,5 @@ _Avoid_: icon provider, icon pack, icon library
 The Quartz 4 copy that builds the live site. Nx project `site`.
 
 **`quartz-v5/`**:
-This context — the Quartz 5 vendored copy and its tooling. Nx project `site-v5`.
+This context — Quartz Core, its tooling, and our plugins. Nx project `site-v5`.
 _Avoid_: referring to either as just "quartz" while both exist

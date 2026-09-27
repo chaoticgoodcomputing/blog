@@ -8,7 +8,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { createRequire } from "node:module"
 import { test, expect, routeSite } from "../harness/test.mjs"
-import { buildScratchSite, siteConfig, vendored } from "../harness/site.mjs"
+import { buildScratchSite, siteConfig, core } from "../harness/site.mjs"
 import {
   blockOf,
   flowchart,
@@ -19,7 +19,7 @@ import {
   vault,
 } from "../../utils/plugin-dag.mjs"
 
-const YAML = createRequire(path.join(vendored, "package.json"))("yaml")
+const YAML = createRequire(path.join(core, "package.json"))("yaml")
 const TAG = "projects/site/plugins"
 const pluginDirs = () =>
   fs
