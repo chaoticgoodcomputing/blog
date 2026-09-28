@@ -76,6 +76,13 @@ edge half way down, opens its **panel** from the left over a backdrop. The panel
 (its close button), and the page behind the backdrop holds still, as v4's did. The panel's close
 button, the backdrop, Escape or following a link close it again, and give the focus back to the
 toggle. It replaces v4's MobileSidebarMenu, which slid out the whole left sidebar.
+Never inside a **host drawer**.
+
+**Host drawer**:
+A drawer of another package's that the explorer is placed in, which declares itself the family's
+`cgc-drawer` container, as quartz-annotator's ☰ drawer does. In one, the explorer keeps its tree
+at every width and has no drawer of its own (docs/adr/0002).
+_Avoid_: nested drawer, parent drawer
 _Avoid_: mobile menu, sidebar menu, off-canvas
 
 **Saved state**:

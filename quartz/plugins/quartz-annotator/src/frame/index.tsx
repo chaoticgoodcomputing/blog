@@ -214,7 +214,9 @@ export const AnnotationFrame = {
           home={pathToRoot(fileData.slug)}
           count={data?.annotations.length ?? 0}
         />
-        {/* The ☰ drawer: never open by default. */}
+        {/* The ☰ drawer: never open by default. A host drawer, the family's `cgc-drawer` container
+            (frame.css): a component that would be a drawer of its own on a narrow screen, as
+            quartz-tag-explorer is, keeps its sidebar form in here. */}
         <div class={`${FRAME}__scrim`} data-for={MENU} />
         <nav class={`${FRAME}__menu`} id={MENU} aria-label="Menu" data-open="false">
           <button

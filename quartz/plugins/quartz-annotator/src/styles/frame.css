@@ -138,6 +138,9 @@
   bottom: 0;
   left: calc(-1 * var(--cgc-annotator-frame-menu-width) - 1rem);
   z-index: 31;
+  /* A host drawer: the family's `cgc-drawer` container, in which a component that would be a drawer
+     of its own on a narrow screen, as quartz-tag-explorer is, keeps its sidebar form. */
+  container: cgc-drawer / inline-size;
   /* A grid, not a flex column: a site's flexible spacer between components, as a sidebar has, has
      nothing to grow into here, so the components stay together at the top. */
   display: grid;

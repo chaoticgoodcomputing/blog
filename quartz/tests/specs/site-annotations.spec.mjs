@@ -97,9 +97,8 @@ test("an annotation page is in the annotator's frame: the header on top, the gra
   await expect(bottom.locator(".cgc-email-subscribe__title", { hasText: "Subscribe for more!" })).toBeVisible()
   for (const after of [graph, backlinks]) expect((await after.boundingBox()).y).toBeGreaterThanOrEqual(cards.y + cards.height)
 
-  // Nothing v4's annotation pages didn't have: no tag explorer, contents or social cards, no post
-  // listing, and no sidebar "Newsletter" box, which the bottom section's subscribe box stands for.
-  await expect(page.locator(".cgc-tag-explorer")).toHaveCount(0)
+  // No contents or social cards, no post listing, and no sidebar "Newsletter" box, which the bottom
+  // section's subscribe box stands for.
   await expect(page.locator(".toc")).toHaveCount(0)
   await expect(page.locator(".cgc-social")).toHaveCount(0)
   await expect(page.locator(".cgc-post-listing")).toHaveCount(0)
@@ -120,11 +119,18 @@ for (const width of [390, 1000, 1440]) {
     await expect(title.getByRole("link").first()).toHaveAttribute("href", /^(\/|https:\/\/blog\.chaoticgood\.computer\/?|\.\.\/\.\.)$/)
     await expect(menu.locator(".search")).toBeVisible()
     await expect(menu.locator(".darkmode")).toBeVisible()
+    // The tag explorer, in its tree at every width: the ☰ drawer is a drawer already, so it's never
+    // one of its own here, and its caret never shows on the page.
+    const explorer = menu.locator(".cgc-tag-explorer")
+    await expect(explorer.locator(".cgc-tag-explorer__title")).toBeVisible()
+    await expect(explorer.locator('.cgc-tag-explorer__tag[data-tag="writing"]').first()).toBeVisible()
+    await expect(explorer.locator(".cgc-tag-explorer__toggle")).toBeHidden()
     // Together at the top: the site's mobile spacer between them has nothing to grow into here.
     const [titleBox, searchBox] = [await title.boundingBox(), await menu.locator(".search").boundingBox()]
     expect(searchBox.y - (titleBox.y + titleBox.height)).toBeLessThan(80)
     await page.keyboard.press("Escape")
     await expect(menu).not.toBeInViewport()
+    await expect(page.locator(".cgc-tag-explorer__toggle")).toBeHidden()
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
   })
 }

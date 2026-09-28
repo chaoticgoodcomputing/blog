@@ -564,12 +564,12 @@ layout:
       positions:
         beforeBody: []
         right: []
-    # quartz-annotator's page type declares its own frame, `cgc-annotation`. The bottom section has
-    # the subscribe box already, so not the sidebar's, nor the home page's social cards.
+    # quartz-annotator's page type declares its own frame, `cgc-annotation`, whose ☰ drawer holds the
+    # left components, the tag explorer among them. The bottom section has the subscribe box
+    # already, so not the sidebar's, nor the home page's social cards.
     annotation:
       exclude:
         - "@chaoticgoodcomputing/quartz-page-source"
-        - "@chaoticgoodcomputing/quartz-tag-explorer"
         - "@quartz-community/table-of-contents"
         - "@chaoticgoodcomputing/quartz-social"
         - email-subscribe-sidebar

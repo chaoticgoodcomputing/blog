@@ -326,5 +326,33 @@
       background-color: var(--light);
       opacity: 0.75;
     }
+
+    /* In a host drawer, a container named `cgc-drawer` (docs/adr/0002), which is a drawer already:
+       the explorer as it sits in a sidebar, its title and tree in the flow, and no drawer of its
+       own. A container query, so it holds before any script runs. */
+    @container cgc-drawer (min-width: 0px) {
+      .cgc-tag-explorer__title {
+        display: revert-layer;
+      }
+
+      .cgc-tag-explorer__toggle,
+      .cgc-tag-explorer__bar,
+      .cgc-tag-explorer__backdrop {
+        display: none;
+      }
+
+      .cgc-tag-explorer__panel {
+        position: static;
+        z-index: auto;
+        width: auto;
+        height: auto;
+        padding: 0;
+        border: none;
+        background-color: transparent;
+        transform: none;
+        visibility: visible;
+        transition: none;
+      }
+    }
   }
 }

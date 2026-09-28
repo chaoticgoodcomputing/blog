@@ -54,6 +54,12 @@ components with `layout.byPageType.annotation` as usual:
 This site excludes `quartz-social` and the sidebar subscribe box there, as the bottom section has the
 subscribe box already.
 
+The ☰ drawer is a **host drawer**: it declares the family's `cgc-drawer` container, and a component
+that would be a drawer of its own on a narrow screen keeps its sidebar form inside it, as
+quartz-tag-explorer does (its ADR-0002). The contract is the container's name alone, so the frame
+knows nothing of the components it holds. build.mjs's check counts `cgc-drawer` among the names the
+frame's stylesheet may declare.
+
 ## The contract between the frame and the body
 
 The frame renders what surrounds the document, and the body renders the document and the cards.

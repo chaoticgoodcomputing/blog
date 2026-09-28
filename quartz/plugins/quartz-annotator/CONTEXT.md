@@ -73,6 +73,12 @@ The text-width columns above and below the document: the page header, where the 
 comes from and the preface; then the epilogue and the site's `right` and `afterBody` components.
 _Avoid_: header, footer (both are layout slots)
 
+**☰ drawer**:
+The drawer from the left that holds the site's `header` and `left` components at every width. A
+host drawer, the family's `cgc-drawer` container, in which a component that would be a drawer of
+its own on a narrow screen, as quartz-tag-explorer is, keeps its sidebar form.
+_Avoid_: menu (in prose), sidebar
+
 **Tab**:
 The small handle on the right edge that opens the drawer, tapped or dragged. The only place a swipe
 towards the drawer starts.

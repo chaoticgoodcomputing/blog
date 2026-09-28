@@ -65,6 +65,8 @@ for (const width of WIDTHS) {
     await page.goto(PAPER)
     // Never open to begin with.
     await expect(menu(page)).not.toBeInViewport()
+    // Nor anything of it on the page: no tag explorer's caret at the window's edge.
+    await expect(page.locator(".cgc-tag-explorer__toggle")).toBeHidden()
     await expect(menuButton(page)).toHaveAttribute("aria-expanded", "false")
     // `left`: search and the scheme toggle.
     await expect(menu(page).locator(".search")).toHaveCount(1)
@@ -73,6 +75,11 @@ for (const width of WIDTHS) {
     await menuButton(page).click()
     await expect(menu(page)).toBeInViewport()
     await expect(menuButton(page)).toHaveAttribute("aria-expanded", "true")
+    // The tag explorer keeps its tree in here at every width, with no drawer or caret of its own.
+    const explorer = menu(page).locator(".cgc-tag-explorer")
+    await expect(explorer.locator(".cgc-tag-explorer__title")).toBeVisible()
+    await expect(explorer.locator(".cgc-tag-explorer__tree")).toBeVisible()
+    await expect(explorer.locator(".cgc-tag-explorer__toggle")).toBeHidden()
     await page.keyboard.press("Escape")
     await expect(menu(page)).not.toBeInViewport()
 

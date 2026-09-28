@@ -89,7 +89,8 @@ const asChecked = (css) => FRAME_ROOTS.reduce((out, [root, stand]) => out.replac
 // it. Every block is this plugin's, and a selector may reach anything inside an element of one,
 // since PDF.js writes the text layer's markup, and the frame places the site's components.
 const problems = sheets.flatMap(([file, css]) =>
-  checkStylesheet(asChecked(css), { from: file, block: ["cgc-annotator", "cgc-annotator-viewer", "cgc-annotator-frame"], reach: "inside" }),
+  // `cgc-drawer` is the family's host-drawer container, which the frame's ☰ drawer declares.
+  checkStylesheet(asChecked(css), { from: file, block: ["cgc-annotator", "cgc-annotator-viewer", "cgc-annotator-frame", "cgc-drawer"], reach: "inside" }),
 )
 if (problems.length) {
   console.error(`cgc-annotator's stylesheet breaks ADR-0003's library-CSS rules:\n${problems.map((p) => `  ${p}`).join("\n")}`)
