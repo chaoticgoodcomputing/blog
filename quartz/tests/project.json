@@ -7,7 +7,7 @@
   "implicitDependencies": ["site"],
   "targets": {
     "install": {
-      "//": "The repo's pnpm workspace install, which the suite is a member of, plus the one browser the suite uses. Quartz Core installs separately (site:install).",
+      "//": "The repo's pnpm workspace install, which the suite is a member of, plus the one browser the suite uses. Its postinstall installs Quartz Core too (site:postinstall).",
       "executor": "nx:run-commands",
       "options": {
         "commands": ["pnpm install --frozen-lockfile", "npx playwright install chromium"],

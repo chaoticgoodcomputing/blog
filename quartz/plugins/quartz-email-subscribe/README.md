@@ -1,10 +1,14 @@
 ---
-title: quartz-email-subscribe
+title: Quartz Buttondown Subscriptions
 tags:
   - projects/site/plugins
+  - engineering/languages/typescript
+  - engineering/frontend
+date: 2026-09-27
+description: Installation & configuration for a Quartz 5 plugin offering Buttondown Subscription integration.
 ---
 
-Adds a newsletter subscribe box that posts the reader's address to [Buttondown](https://buttondown.com/). It's a plain HTML form, so it works without JavaScript.
+Adds a newsletter subscribe box that posts the reader's address to [Buttondown](https://buttondown.com/). It's a plain HTML form, so it works without any additional JS.
 
 ## Installation
 
@@ -12,7 +16,7 @@ Adds a newsletter subscribe box that posts the reader's address to [Buttondown](
 npm install @chaoticgoodcomputing/quartz-email-subscribe
 ```
 
-Requires [quartz-styles](https://blog.chaoticgood.computer/plugins/quartz-styles).
+Requires [[public/plugins/quartz-styles|Quartz Styles]]
 
 ## Usage
 

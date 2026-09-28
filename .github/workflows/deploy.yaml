@@ -42,12 +42,10 @@ jobs:
             pnpm-lock.yaml
             quartz/core/pnpm-lock.yaml
 
-      # The workspace (our libraries, plugins and site package), then Quartz Core, a pnpm project of
-      # its own that site:build does not install.
+      # The workspace (our libraries, plugins and site package), and through its postinstall Quartz
+      # Core, a pnpm project of its own (site:postinstall).
       - name: Install dependencies
-        run: |
-          pnpm install --frozen-lockfile
-          pnpm nx run site:install
+        run: pnpm install --frozen-lockfile
 
       - name: Build site
         run: pnpm nx run site:build

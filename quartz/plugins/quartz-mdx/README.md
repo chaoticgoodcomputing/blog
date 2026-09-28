@@ -1,22 +1,45 @@
 ---
 title: Quartz MDX
 tags:
+  - writing/highlights
   - projects/site/plugins
   - engineering/languages/typescript
   - engineering/frontend
 aliases:
   - widgets/README
+description: A Quartz v5 plugin for MDX content with Preact components on site pages
+date: 2026-09-27
 ---
+A Quartz content pipeline plugin that allows users to make use of MDX (`.mdx`) files in their vaults and inline Preact components in their content.
 
-Publishes `.mdx` pages: Markdown that imports interactive Preact **widgets**. Each widget is rendered to HTML at build time, then hydrates in the browser, and a page loads only the widget code it uses. An `.mdx` page otherwise goes through the same transformers as any `.md` page.
+import { GameOfLife } from "../widgets/game-of-life/widget"
+
+<GameOfLife 
+  initialState={[
+    [0,0,1,1,1,0,0,0,1,1,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [1,0,0,0,0,1,0,1,0,0,0,0,1],
+    [1,0,0,0,0,1,0,1,0,0,0,0,1],
+    [1,0,0,0,0,1,0,1,0,0,0,0,1],
+    [0,0,1,1,1,0,0,0,1,1,1,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,1,1,1,0,0,0,1,1,1,0,0],
+    [1,0,0,0,0,1,0,1,0,0,0,0,1],
+    [1,0,0,0,0,1,0,1,0,0,0,0,1],
+    [1,0,0,0,0,1,0,1,0,0,0,0,1],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,1,1,1,0,0,0,1,1,1,0,0]
+  ]}
+  verticalPadding={3}
+  height={300}
+  secondsPerFrame={0.3}
+/>
 
 ## Installation
 
 ```bash
 npm install @chaoticgoodcomputing/quartz-mdx
 ```
-
-Requires a Quartz 5 whose page-type `generate` is awaitable ([#25](https://github.com/chaoticgoodcomputing/blog/issues/25)). On stock Quartz 5 the build fails with `virtualPages is not iterable`.
 
 ## Usage
 
@@ -26,9 +49,19 @@ plugins:
     enabled: true
 ```
 
-Keep its `order` below `crawl-links`' (the default, 45, is). `notes/dice.mdx` is published at `/notes/dice.mdx`, and `/notes/dice` redirects there if the site runs `alias-redirects`.
+Keep its `order` below `crawl-links`' (the default, 45, is).
 
 ### A first widget
+
+Start simple:
+
+```
+content/
+  hello.mdx
+  widgets/
+     initialization.tsx
+     initialization.css
+```
 
 ```mdx title="hello.mdx"
 ---
@@ -50,7 +83,7 @@ export function Initialization() {
   useEffect(() => setReady(true), [])
   return (
     <p class={ready ? "initialization initialization--ready" : "initialization"}>
-      {ready ? "Widgets initialized" : "Initializing widgets…"}
+      {ready ? "Widgets initialized!" : "Initializing widgets…"}
     </p>
   )
 }
@@ -71,7 +104,7 @@ export function Initialization() {
 }
 ```
 
-The page arrives reading "Initializing widgets…", written at build time, and switches to "Widgets initialized" once the widget hydrates.
+The page arrives reading `Initializing widgets…`, written at build time, and switches to `Widgets initialized!` once the widget hydrates.
 
 ### Rules of thumb
 
@@ -82,17 +115,11 @@ The page arrives reading "Initializing widgets…", written at build time, and s
 - **CSS** is imported as plain `.css` and lands in the `cgc.mdx.widgets` layer. Namespace classes after the widget and use the theme's custom properties.
 - **Broken widgets fail the build**, naming the page.
 
-Reusable widgets live in [`@chaoticgoodcomputing/widgets`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz/libs/widgets).
-
 ## Configuration
 
 | Option            | Type      | Default | Description                                                                                      |
 | ----------------- | --------- | ------- | ------------------------------------------------------------------------------------------------ |
 | `cleanUrlAliases` | `boolean` | `true`  | Add each page's extensionless URL to its aliases, so `alias-redirects` redirects it to the page. |
-
-## Documentation
-
-See [CONTEXT.md](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz/plugins/quartz-mdx/CONTEXT.md) and the [decision records](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz/plugins/quartz-mdx/docs/adr).
 
 ## License
 

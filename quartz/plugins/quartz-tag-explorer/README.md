@@ -1,11 +1,14 @@
 ---
-title: quartz-tag-explorer
+title: Quartz Tag Explorer
 tags:
   - projects/site/plugins
+  - engineering/languages/typescript
   - engineering/frontend
+description: Tag-based exploration component for Quartz 5 sites
+date: 2026-09-27
 ---
 
-Lets readers browse a site by tag: a tree of tags in the sidebar, each with its icon and colour, and under each tag the pages that carry it. On narrow screens it becomes a drawer opened from the window's left edge.
+Lets readers browse a site by tag: a tree of tags in the sidebar, each with its icon and color, and under each tag the pages that carry it. On narrow screens it becomes a drawer opened from the window's left edge.
 
 ## Installation
 
@@ -13,7 +16,7 @@ Lets readers browse a site by tag: a tree of tags in the sidebar, each with its 
 npm install @chaoticgoodcomputing/quartz-tag-explorer
 ```
 
-Requires [quartz-tags](https://blog.chaoticgood.computer/plugins/quartz-tags) and [quartz-styles](https://blog.chaoticgood.computer/plugins/quartz-styles).
+Requires [[public/plugins/quartz-tags|Quartz Tags]] and [[public/plugins/quartz-styles|Quartz Styles]]
 
 ## Usage
 
@@ -44,10 +47,6 @@ plugins:
 | `showCount`        | `boolean`                | `true`           | Show the number of pages under each tag.                                                   |
 | `iconCollections`  | `Record<string, string>` | none             | Your own icon sets: a prefix and the folder of SVGs behind it. `mdi:` icons need no entry. |
 | `drawerBreakpoint` | `number`                 | `800`            | The viewport width, in pixels, at or below which the explorer becomes a drawer.            |
-
-## Documentation
-
-See [CONTEXT.md](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz/plugins/quartz-tag-explorer/CONTEXT.md) and the [decision records](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz/plugins/quartz-tag-explorer/docs/adr).
 
 ## License
 

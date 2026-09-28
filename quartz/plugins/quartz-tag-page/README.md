@@ -1,8 +1,11 @@
 ---
-title: quartz-tag-page
+title: Quartz Streamlined Tag Page
 tags:
   - projects/site/plugins
+  - engineering/languages/typescript
   - engineering/frontend
+description: An improved tag page for Quartz 5 sites
+date: 2026-09-27
 ---
 
 Runs stock [`tag-page`](https://github.com/quartz-community/tag-page) but shows only the tag's description on each tag page, dropping stock's list of pages. It also gives tag pages to tags that only non-Markdown pages carry, such as `.mdx` pages.
@@ -37,10 +40,6 @@ A tag's description lives at `tags/<tag>.md`, for example `tags/engineering/ai.m
 | Option       | Type      | Default | Description                                                           |
 | ------------ | --------- | ------- | --------------------------------------------------------------------- |
 | `prefixTags` | `boolean` | `false` | Title a tag with no description file `Tag: <tag>` instead of `<tag>`. |
-
-## Documentation
-
-See [CONTEXT.md](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz/plugins/quartz-tag-page/CONTEXT.md) and the [decision records](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz/plugins/quartz-tag-page/docs/adr).
 
 ## License
 

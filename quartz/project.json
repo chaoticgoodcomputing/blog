@@ -65,6 +65,12 @@
         "parallel": false
       }
     },
+    "postinstall": {
+      "//": "Run by the repo root's pnpm postinstall (nx run-many -t postinstall), so a root `pnpm install` installs Quartz Core too: site:install, which the root workspace never reaches. Uncached: its result is Core's node_modules, which Nx does not restore.",
+      "executor": "nx:noop",
+      "dependsOn": ["install"],
+      "cache": false
+    },
     "typecheck": {
       "//": "Typecheck Quartz Core's TypeScript with Core's own tsc and tsconfig: Core source (its quartz/ tree, the vendored changes included) and the site's steering file quartz.ts, which reaches into Core's internals. The build transpiles with esbuild, which strips types, so this is the only check that sees a type-level break in either; the upgrade's --verify runs it among the typechecks (nx run-many -t typecheck). Needs site:install.",
       "executor": "nx:run-commands",

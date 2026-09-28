@@ -1,19 +1,23 @@
 ---
-title: quartz-og-image
+title: Quartz Enhanced OG Images
 tags:
   - projects/site/plugins
   - engineering/languages/typescript
+  - engineering/frontend
+date: 2026-09-27
+description: A plugin for richer, stylized OG images on Quartz 5 sites.
 ---
 
 Runs stock [`og-image`](https://github.com/quartz-community/og-image) with its own card: tag chips show the tag's last segment, the corner carries your site's icon, the title has no site suffix, and no cards are drawn under `quartz build --serve`.
+
+![[public/assets/Pasted image 20260927203318.png]]
+*Example from [[public/content/annotations/evolutions-revolutions|Evolution and Revolution as Organizations Grow]]*
 
 ## Installation
 
 ```bash
 npm install @chaoticgoodcomputing/quartz-og-image
 ```
-
-Disable `@quartz-community/og-image` but leave it installed: this plugin runs its code. With both enabled, the build fails.
 
 ## Usage
 
@@ -39,10 +43,6 @@ plugins:
 | `excludeRoot`        | `boolean`                   | `false`                     | Stock's option, passed through.                                           |
 | `defaultTitle`       | `string`                    | `"Untitled"`                | The title for a page without one.                                         |
 | `defaultDescription` | `string`                    | `"No description provided"` | The description for a page without one.                                   |
-
-## Documentation
-
-See [CONTEXT.md](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz/plugins/quartz-og-image/CONTEXT.md) and the [decision records](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz/plugins/quartz-og-image/docs/adr).
 
 ## License
 

@@ -1,11 +1,15 @@
 ---
-title: quartz-social
+title: Quartz Social Cards
 tags:
   - projects/site/plugins
+  - engineering/languages/typescript
   - engineering/frontend
+description: Odds-and-ends social media cards for Quartz 5 sites
+date: 2026-09-27
 ---
+Adds two social cards: Bluesky and GitHub. See [[public/index|the homepage]] for examples.
 
-Shows two sidebar cards: a GitHub user's contribution calendar and a Bluesky account's latest posts. The reader's browser fetches both on page load, so the build never touches the network and the cards are always current.
+![[public/assets/Pasted image 20260927204202.png]]
 
 ## Installation
 
@@ -35,7 +39,6 @@ plugins:
       display: desktop-only
 ```
 
-Configure at least one card; the build fails otherwise. Quartz 5 has no `is-index` layout condition, so the cards render only on the slugs in `showOn`.
 
 A site with a Content Security Policy must allow `api.github.com`, `github-contributions-api.jogruber.de` and `public.api.bsky.app` in `connect-src`, and `avatars.githubusercontent.com` and `cdn.bsky.app` in `img-src`.
 
@@ -53,10 +56,6 @@ A site with a Content Security Policy must allow `api.github.com`, `github-contr
 | `bluesky.postLimit`   | `number`            | `5`                      | How many posts to show, 1–100.                                              |
 | `bluesky.title`       | `string \| false`   | `"Bluesky Feed"`         | The card's heading.                                                         |
 | `bluesky.showMetrics` | `boolean`           | `true`                   | Show reply, repost and like counts.                                         |
-
-## Documentation
-
-See [CONTEXT.md](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz/plugins/quartz-social/CONTEXT.md) and the [decision records](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz/plugins/quartz-social/docs/adr).
 
 ## License
 

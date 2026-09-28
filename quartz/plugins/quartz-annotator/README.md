@@ -1,18 +1,25 @@
 ---
-title: quartz-annotator
+title: Quartz Annotator
 tags:
+  - writing/highlights
   - projects/site/plugins
   - writing/annotations
+  - engineering/languages/typescript
+  - engineering/frontend
+date: 2026-09-27
+description: How to install Quartz Annotator, a plugin for displaying highlights and annotations of PDF documents
 ---
-
 Publishes notes written with Obsidian's [Annotator](https://github.com/elias-sundqvist/obsidian-annotator) plugin as annotation pages: the source PDF, with each annotated passage highlighted, beside the annotations.
+
+![[public/assets/Pasted image 20260927191003.png]]
+*Screencap of [[public/content/annotations/valve-handbook|"Working with Valves"]]*
 
 A note becomes an annotation page when its frontmatter names the document it annotates:
 
 ```yaml
 ---
-title: Programming as theory building
-annotation-target: https://pablo.rauzy.name/dev/naur1985programming.pdf
+title: 'Working with Valves: Understanding the Structure of "Flat" Organizations'
+annotation-target: https://media.steampowered.com/apps/valve/Valve_Handbook_LowRes.pdf
 ---
 ```
 
@@ -24,7 +31,7 @@ At build time the plugin fetches each target PDF once and serves its own copy, a
 npm install @chaoticgoodcomputing/quartz-annotator
 ```
 
-Requires [quartz-styles](https://blog.chaoticgood.computer/plugins/quartz-styles).
+Requires [[public/plugins/quartz-styles|Quartz Styles]].
 
 ## Usage
 

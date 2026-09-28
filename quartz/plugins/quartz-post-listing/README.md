@@ -1,11 +1,13 @@
 ---
-title: quartz-post-listing
+title: Quartz Enhanced Post Listings
 tags:
   - projects/site/plugins
+  - engineering/languages/typescript
   - engineering/frontend
+date: 2026-09-27
+description: An enhanced post listing component for Quartz 5 sites
 ---
-
-Lists a site's posts, newest first, on the home page and on every tag page, where it lists only that tag's posts. Each post shows its title, date, description, reading time and tag badges.
+An alternative to the community Post Listing plugin, allowing for more filtering options and tagging sugar to post listings.
 
 ## Installation
 
@@ -13,7 +15,7 @@ Lists a site's posts, newest first, on the home page and on every tag page, wher
 npm install @chaoticgoodcomputing/quartz-post-listing
 ```
 
-Requires [quartz-tags](https://blog.chaoticgood.computer/plugins/quartz-tags) and [quartz-styles](https://blog.chaoticgood.computer/plugins/quartz-styles).
+Requires [[public/plugins/quartz-tags|Quartz Tags]] and [[public/plugins/quartz-styles|Quartz Styles]]
 
 ## Usage
 
@@ -28,8 +30,6 @@ plugins:
       position: afterBody
       priority: 10
 ```
-
-Quartz 5 has no `is-index` layout condition, so the listing keeps to its own pages: tag pages, plus the slugs in `showOn`. Place it in a slot every page shares, such as `afterBody`.
 
 ## Configuration
 
@@ -50,10 +50,6 @@ Quartz 5 has no `is-index` layout condition, so the listing keeps to its own pag
 | `showDescriptions`   | `boolean`                | `true`              | Show each post's description line.                                                                       |
 | `showTagCounts`      | `boolean`                | `false`             | Show the number of pages under each tag.                                                                 |
 | `iconCollections`    | `Record<string, string>` | none                | Your own icon sets, as for [quartz-tag-list](https://blog.chaoticgood.computer/plugins/quartz-tag-list). |
-
-## Documentation
-
-See [CONTEXT.md](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz/plugins/quartz-post-listing/CONTEXT.md) and the [decision records](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz/plugins/quartz-post-listing/docs/adr).
 
 ## License
 

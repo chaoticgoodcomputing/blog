@@ -15,6 +15,11 @@ packages:
 # Installing them beside a plugin would shadow Core's: a second Preact on the page.
 autoInstallPeers: false
 
+# Every install runs the root postinstall, which installs Quartz Core (site:postinstall). pnpm's
+# repeat-install shortcut checks only this workspace's lock and manifests, so it would skip that
+# when only Core's side is stale: its node_modules missing, or its lock moved by an upgrade.
+optimisticRepeatInstall: false
+
 # pnpm 11 fails an install on any dependency build script nobody has reviewed. These are the ones
 # the install runs; a new one needs a decision here.
 allowBuilds:

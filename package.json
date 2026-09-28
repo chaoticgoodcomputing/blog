@@ -5,6 +5,10 @@
   "version": "4.5.2",
   "type": "module",
   "packageManager": "pnpm@11.27.1",
+  "//scripts": "postinstall runs every Nx `postinstall` target after the workspace install, so one `pnpm install` prepares the whole repo, Quartz Core's separate install among them (site:postinstall, quartz/VENDORED.md). A project's post-install step is a project.json target, never a package.json script: pnpm would run the script itself, and Nx would infer it as a target and run it again.",
+  "scripts": {
+    "postinstall": "nx run-many -t postinstall --outputStyle=static"
+  },
   "dependencies": {
     "@chaoticgoodcomputing/widgets": "workspace:*",
     "globby": "^16.0.0",

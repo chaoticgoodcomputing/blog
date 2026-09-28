@@ -1,11 +1,16 @@
 ---
-title: quartz-graph
+title: Quartz Graph Explorer
 tags:
   - projects/site/plugins
+  - engineering/languages/typescript
   - engineering/frontend
+  - engineering/data
+date: 2026-09-27
+description: An enhanced graph explorer for Quartz 5 sites
 ---
+![[public/assets/Pasted image 20260927192127.png]]
 
-Draws the graph view: a local graph of the pages and tags around the current page, and a global graph of the whole site with filters for how recently a page changed and whether private pages show. Each node is drawn as its tag's bubble, in the tag's colour and with its icon. A replacement for `@quartz-community/graph`.
+A customizable alternative to the default Quartz graph plugin that allows for tags, coloring, and many other config options.
 
 ## Installation
 
@@ -13,7 +18,7 @@ Draws the graph view: a local graph of the pages and tags around the current pag
 npm install @chaoticgoodcomputing/quartz-graph
 ```
 
-Requires [quartz-tags](https://blog.chaoticgood.computer/plugins/quartz-tags) and [quartz-styles](https://blog.chaoticgood.computer/plugins/quartz-styles). Disable `@quartz-community/graph`.
+Requires [[public/plugins/quartz-tags|Quartz Tags]] and [[public/plugins/quartz-styles|Quartz Styles]]
 
 ## Usage
 

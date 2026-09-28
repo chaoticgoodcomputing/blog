@@ -267,7 +267,7 @@ packages (#86):
 | `clean-packs` | `pnpm pack --dry-run` of every publishable package (each plugin not repo-only) lists only `dist/`, README, LICENSE and `package.json`, and has each; and a workspace publish (`pnpm -r --filter … publish --dry-run`) leaves out every site plugin and the site package. Publishable means the plugins only: the libraries are not repo-only, but are left out on purpose, as whether they are published at all is [#90](https://github.com/chaoticgoodcomputing/blog/issues/90)'s to decide. |
 | `plugin-index` | Core's own `install-plugins` step, run in a scratch root on a config listing every plugin and site plugin by package name, skips none of them, and its generated plugin index (`.quartz/plugins/index.ts`, what a TypeScript site imports from) exports from every plugin. |
 | `plugin-dag` | The plugins' tag's description note is in one shape, and carries exactly the DAG `utils/plugin-dag.mjs` generates from the packages' manifests. |
-| `plugin-notes` | Every shareable plugin's README carries the plugins' tag and is linked into the vault as its plugin note, `content/public/plugins/<dir>.md`. |
+| `plugin-notes` | Every shareable plugin's README carries the plugins' tag and is linked into the vault as its plugin note: a symlink to it in `content/public/plugins/`, under any name and extension. |
 
 Each lists every violation and exits 1 on any. The target is cached on the files the guards read and
 the package builds' outputs, so a second run with nothing changed is a cache hit. `package-contract`,
@@ -378,7 +378,13 @@ stop at the first failure are tested with stand-in steps (`QUARTZ_VERIFY_STEPS`,
 **Core is a pnpm project of its own**, installed by `pnpm nx run site:install`: a frozen install
 of `core/pnpm-lock.yaml` into `core/node_modules`. Its `core/pnpm-workspace.yaml` makes it a
 workspace of its own, and pnpm stops at the nearest workspace file, so the repo's root install never
-reaches it:
+reaches it itself. The root install runs it anyway, from its `postinstall` script,
+`nx run-many -t postinstall`, which runs `site:postinstall`, which depends on `site:install`: one
+`pnpm install` at the root prepares everything. The root workspace sets
+`optimisticRepeatInstall: false`, because pnpm's repeat-install shortcut checks only the root lock and
+manifests, and would skip the postinstall when only Core is stale. Any project may add a `postinstall`
+target to run after the install. It goes in `project.json`, never as a `package.json` script, which
+pnpm would run itself and Nx would infer as a target and run again. Core's own settings:
 
 ```yaml
 packages:
@@ -449,6 +455,7 @@ workspace settings:
 
 ```yaml
 autoInstallPeers: false    # a plugin's peers are Core's copies, reached through the host links above
+optimisticRepeatInstall: false  # always run the postinstall, which installs Core (above)
 allowBuilds:               # pnpm 11 fails an install on any other dependency's build script
   "@parcel/watcher": true
   esbuild: true

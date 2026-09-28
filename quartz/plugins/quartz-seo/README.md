@@ -1,10 +1,13 @@
 ---
-title: quartz-seo
+title: Quartz SEO Customizations
 tags:
   - projects/site/plugins
   - engineering/languages/typescript
+  - engineering/frontend
+  - engineering/data
+description: A Quartz 5 plugin for additional SEO optimization options
+date: 2026-09-27
 ---
-
 Controls what search engines and feed readers see of a site:
 
 - Keeps **private pages** (and their tags' pages) out of search with `noindex`, out of the sitemap and out of the RSS feed, while leaving them on the site.
@@ -59,12 +62,6 @@ Without a `baseUrl`, only the `noindex` tags are added. A page can override the 
 | `rssLimit`            | `number`                        | `10`                   | The most articles in the feed. `0` for all.                                    |
 | `rssLastFewNotesText` | `string`                        | `"Last {count} notes"` | The feed's description when it has a limit.                                    |
 | `rssRecentNotesText`  | `string`                        | `"Recent notes"`       | The feed's description when `rssLimit` is `0`.                                 |
-
-Give [quartz-backlinks](https://blog.chaoticgood.computer/plugins/quartz-backlinks), [quartz-graph](https://blog.chaoticgood.computer/plugins/quartz-graph) and [quartz-tag-explorer](https://blog.chaoticgood.computer/plugins/quartz-tag-explorer) the same private tags.
-
-## Documentation
-
-See [CONTEXT.md](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz/plugins/quartz-seo/CONTEXT.md).
 
 ## License
 

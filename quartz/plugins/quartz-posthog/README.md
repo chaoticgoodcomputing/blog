@@ -1,9 +1,13 @@
 ---
-title: quartz-posthog
+title: Quartz Posthog Analytics
 tags:
   - projects/site/plugins
+  - engineering/languages/typescript
+  - engineering/frontend
+  - engineering/data
+description: A Quartz 5 plugin for privacy-conscious PostHog analytics
+date: 2026-09-27
 ---
-
 Adds [PostHog](https://posthog.com/) analytics, set up to respect readers' privacy:
 
 - If the browser sends Do Not Track, PostHog isn't loaded at all.
@@ -45,10 +49,6 @@ plugins:
 | `apiKey`            | `string`                 | required                     | Your PostHog project's API key. The build fails without it.                                                  |
 | `apiHost`           | `string`                 | `"https://us.i.posthog.com"` | Your PostHog instance, or a reverse-proxy path such as `/ingest`.                                            |
 | `navigationSources` | `Record<string, string>` | `{}`                         | CSS selectors mapped to the `source` label of a `navigation` event. The first match wins; otherwise `other`. |
-
-## Documentation
-
-See [CONTEXT.md](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz/plugins/quartz-posthog/CONTEXT.md).
 
 ## License
 

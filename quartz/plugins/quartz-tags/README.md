@@ -1,17 +1,19 @@
 ---
-title: quartz-tags
+title: Quartz Tag Metadata Library
 tags:
   - projects/site/plugins
+  - engineering/languages/typescript
   - engineering/frontend
+  - engineering/data
+description: A Quartz 5 library plugin for rich tag metadata cross site components
+date: 2026-09-27
 ---
 
-Holds a site's dictionary of tag colours and icons, and publishes it for other plugins to draw with. It renders nothing itself. A tag you don't list inherits from its nearest listed ancestor.
+A tag utility library for Quartz websites that enhance tags in a few ways:
 
-It publishes:
-
-- `fileData.cgcTags` on each page: its tags, its primary tag and every tag it's under.
-- `static/cgcTags.json`, every tag's colour property and icon, for the browser.
-- `static/cgcTags.css`, one custom property per tag, such as `--cgc-tag-engineering--ai`. Override one in your own CSS and its subtags follow.
+1. Allows for nested tags. For example, [[public/tags/engineering|`engineering`]] and [[public/tags/engineering/languages|`engineering/languages`]]
+2. Ability to assign tags a color and icon
+3. Creates a shared asset that other plugins can use to display richer tag components across your site.
 
 ## Installation
 
@@ -19,7 +21,7 @@ It publishes:
 npm install @chaoticgoodcomputing/quartz-tags
 ```
 
-Requires [quartz-styles](https://blog.chaoticgood.computer/plugins/quartz-styles).
+Requires [[public/plugins/quartz-styles|Quartz Styles]].
 
 ## Usage
 
@@ -34,20 +36,12 @@ plugins:
         writing: { color: "var(--secondary)", icon: mdi:pencil }
 ```
 
-A page's primary tag is its deepest tag. Name another with `primaryTag:` in its frontmatter.
-
 ## Configuration
 
 | Option         | Type                                | Default           | Description                                                           |
 | -------------- | ----------------------------------- | ----------------- | --------------------------------------------------------------------- |
 | `tags`         | `Record<string, { color?, icon? }>` | `{}`              | The dictionary. A colour is any CSS colour; an icon is `prefix:name`. |
 | `defaultColor` | `string`                            | `var(--darkgray)` | The colour of a tag with no colour in its lineage.                    |
-
-Mistakes in the dictionary fail the build. `light-dark()` colours need a `color-scheme` on the page, which Quartz's darkmode plugin sets.
-
-## Documentation
-
-See [CONTEXT.md](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz/plugins/quartz-tags/CONTEXT.md), the [decision records](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz/plugins/quartz-tags/docs/adr) and [`@chaoticgoodcomputing/tags-core`](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz/libs/tags-core) for the published types.
 
 ## License
 

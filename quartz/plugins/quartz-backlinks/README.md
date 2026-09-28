@@ -1,8 +1,11 @@
 ---
-title: quartz-backlinks
+title: Quartz Improved Backlinks
 tags:
   - projects/site/plugins
+  - engineering/languages/typescript
   - engineering/frontend
+date: 2026-09-27
+description: A light Quartz v5 plugin that allows for more customization of the site's Backlinks feature
 ---
 
 Lists the pages that link to the current page, with public pages first and private pages marked with a lock or left out. A replacement for `@quartz-community/backlinks`.
@@ -13,7 +16,7 @@ Lists the pages that link to the current page, with public pages first and priva
 npm install @chaoticgoodcomputing/quartz-backlinks
 ```
 
-Requires [quartz-styles](https://blog.chaoticgood.computer/plugins/quartz-styles). Disable `@quartz-community/backlinks`.
+Requires [[public/plugins/quartz-styles|Quartz Styles]]
 
 ## Usage
 

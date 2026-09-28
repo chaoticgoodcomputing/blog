@@ -1,8 +1,9 @@
 // Repo guard: every shareable plugin's README is its plugin note (#86).
 //
 // A plugin's README is its note in the vault: it carries the plugins' tag, `projects/site/plugins`, in
-// its frontmatter, so the tag's page lists it, and the vault links it in as
-// `content/public/plugins/<dir>.md`, a symlink to the README, which the DAG's nodes link to.
+// its frontmatter, so the tag's page lists it, and the vault links it in: a symlink to the README in
+// `content/public/plugins/`, which the DAG's nodes link to. The link's name and extension are the
+// vault's to choose (`quartz-mdx.mdx`, say), so any symlink there that resolves to the README counts.
 //
 //   node quartz/utils/guards/plugin-notes.guard.mjs [--repo <dir>]
 //
@@ -24,6 +25,15 @@ await guard(import.meta, "Every shareable plugin's README is its plugin note, ta
   if (!fs.existsSync(root)) throw new CannotCheck(`no plugins under ${repo}`)
   const plugins = fs.readdirSync(root).filter((dir) => fs.existsSync(path.join(root, dir, "package.json"))).sort()
 
+  // Every symlink in the vault's plugins folder, by the real path it resolves to. One pointing nowhere
+  // is no plugin's note.
+  const notes = path.join(repo, NOTES)
+  const linked = new Set(
+    (fs.existsSync(notes) ? fs.readdirSync(notes, { withFileTypes: true }) : [])
+      .filter((entry) => entry.isSymbolicLink() && fs.existsSync(path.join(notes, entry.name)))
+      .map((entry) => fs.realpathSync(path.join(notes, entry.name))),
+  )
+
   const violations = []
   for (const dir of plugins) {
     const rel = `${SITE_REL}/${KINDS.plugin}/${dir}`
@@ -34,10 +44,7 @@ await guard(import.meta, "Every shareable plugin's README is its plugin note, ta
     }
     const { tags } = frontmatterOf(fs.readFileSync(readme, "utf-8"))
     if (!(Array.isArray(tags) && tags.includes(TAG))) violations.push(`${rel}/README.md: its tags leave out ${TAG}`)
-    const note = path.join(repo, NOTES, `${dir}.md`)
-    if (!(fs.existsSync(note) && fs.lstatSync(note).isSymbolicLink() && fs.realpathSync(note) === fs.realpathSync(readme))) {
-      violations.push(`${rel}: no plugin note ${NOTES}/${dir}.md links to its README`)
-    }
+    if (!linked.has(fs.realpathSync(readme))) violations.push(`${rel}: no plugin note in ${NOTES}/ links to its README`)
   }
   return violations
 })
