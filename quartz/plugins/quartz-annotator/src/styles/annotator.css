@@ -155,3 +155,103 @@
   outline: 2px solid var(--secondary);
 }
 
+
+/* The document's layouts, which the reader (src/viewer/reader.ts) puts the frame in once the
+   document has opened: the document is as wide as the reader sets it, and pans sideways in its
+   column when it's wider. */
+.cgc-annotator-frame[data-layout="margin"] .cgc-annotator,
+.cgc-annotator-frame[data-layout="drawer"] .cgc-annotator {
+  max-width: none;
+}
+
+.cgc-annotator-frame[data-layout="margin"] .cgc-annotator__viewer,
+.cgc-annotator-frame[data-layout="drawer"] .cgc-annotator__viewer {
+  display: block;
+  min-width: 0;
+}
+
+.cgc-annotator-frame[data-layout="margin"] .cgc-annotator-viewer__pages,
+.cgc-annotator-frame[data-layout="drawer"] .cgc-annotator-viewer__pages {
+  width: var(--cgc-annotator-document-width);
+  margin: 0 auto;
+}
+
+/* The margin: the document, then a column of cards, each level with its passage. */
+.cgc-annotator-frame[data-layout="margin"] .cgc-annotator {
+  display: grid;
+  grid-template-columns: var(--cgc-annotator-document-width) var(--cgc-annotator-margin-width);
+  align-items: start;
+  justify-content: center;
+  column-gap: 3rem;
+  padding: 0 2rem;
+}
+
+.cgc-annotator-frame[data-layout="margin"][data-margin="hidden"] .cgc-annotator {
+  grid-template-columns: var(--cgc-annotator-document-width);
+}
+
+.cgc-annotator-frame[data-layout="margin"][data-margin="hidden"] .cgc-annotator__annotations {
+  display: none;
+}
+
+.cgc-annotator-frame[data-layout="margin"] .cgc-annotator__annotations {
+  position: relative;
+}
+
+.cgc-annotator-frame[data-layout="margin"] .cgc-annotator__heading {
+  display: none;
+}
+
+.cgc-annotator-frame[data-layout="margin"] .cgc-annotator__annotation,
+.cgc-annotator-frame[data-layout="margin"] .cgc-annotator__unplaced {
+  position: absolute;
+  right: 0;
+  left: 0;
+  margin: 0;
+  transition: top 0.2s ease;
+}
+
+.cgc-annotator-frame[data-layout="margin"] .cgc-annotator__annotation {
+  padding: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.cgc-annotator__unplaced {
+  margin: 1.5rem 0 1rem;
+  color: var(--darkgray);
+  font-size: 1rem;
+}
+
+/* Every card but the selected one is shortened: two lines of its passage, about four of its note,
+   faded where it's cut. */
+.cgc-annotator-frame[data-layout="margin"] .cgc-annotator__annotation:not(.cgc-annotator__annotation--active) .cgc-annotator__quote {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.cgc-annotator-frame[data-layout="margin"] .cgc-annotator__annotation:not(.cgc-annotator__annotation--active) .cgc-annotator__note {
+  max-height: 6.4em;
+  overflow: hidden;
+}
+
+.cgc-annotator-frame[data-layout="margin"] .cgc-annotator__annotation:not(.cgc-annotator__annotation--active) .cgc-annotator__note--clipped {
+  mask-image: linear-gradient(to bottom, var(--dark) 55%, transparent);
+}
+
+.cgc-annotator-frame[data-layout="margin"] .cgc-annotator__annotation:not(.cgc-annotator__annotation--active) .cgc-annotator__note > :first-child {
+  margin-top: 0;
+}
+
+/* A card being hovered tints its highlights. */
+.cgc-annotator-viewer__highlight--hover {
+  box-shadow: inset 0 0 0 100vmax color-mix(in srgb, var(--tertiary) 35%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cgc-annotator-frame[data-layout="margin"] .cgc-annotator__annotation,
+  .cgc-annotator-frame[data-layout="margin"] .cgc-annotator__unplaced {
+    transition: none;
+  }
+}

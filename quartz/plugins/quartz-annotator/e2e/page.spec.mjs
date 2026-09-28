@@ -141,17 +141,27 @@ test("a page with prose and no markers shows it all as its preface", async ({ sc
 
 // The frame's widths are the plugin's options (docs/adr/0004): `px` or `rem` lengths, set on the page
 // as the frame's custom properties. Anything else costs a warning, and the default.
-test("the text's width is an option: a px or rem length, and anything else warns and falls back", async ({ scratch }) => {
+test("the page's widths are options: px or rem lengths, and anything else warns and falls back", async ({ scratch }) => {
   const page = { "annotated.md": annotationPage(TARGET, "A note.") }
   const style = (html) => html.match(/<div class="cgc-annotator-frame"[^>]*style="([^"]*)"/)?.[1] ?? ""
 
-  const set = await build(scratch, "text-width", page, { textWidth: "42rem" })
-  expect(style(set.read("annotated.html"))).toContain("--cgc-annotator-text-width: 42rem")
-  expect(set.output).not.toContain("textWidth")
+  const set = await build(scratch, "widths", page, { textWidth: "42rem", marginWidth: "300px", minDocumentWidth: "30rem" })
+  const setStyle = style(set.read("annotated.html"))
+  expect(setStyle).toContain("--cgc-annotator-text-width: 42rem")
+  expect(setStyle).toContain("--cgc-annotator-margin-width: 300px")
+  expect(setStyle).toContain("--cgc-annotator-min-document-width: 30rem")
+  // The Viewer is given them too.
+  expect(set.read("annotated.html")).toContain("&quot;marginWidth&quot;:&quot;300px&quot;")
+  expect(set.output).not.toMatch(/textWidth|marginWidth|minDocumentWidth/)
 
-  const bad = await build(scratch, "text-width-bad", page, { textWidth: "60%" })
-  expect(style(bad.read("annotated.html"))).toContain("--cgc-annotator-text-width: 800px")
-  const warnings = bad.output.split("\n").filter((line) => line.includes("cgc-annotator") && line.includes("textWidth"))
-  expect(warnings).toHaveLength(1)
-  expect(warnings[0]).toContain('"60%"')
+  const bad = await build(scratch, "widths-bad", page, { textWidth: "60%", marginWidth: "wide", minDocumentWidth: 500 })
+  const badStyle = style(bad.read("annotated.html"))
+  expect(badStyle).toContain("--cgc-annotator-text-width: 800px")
+  expect(badStyle).toContain("--cgc-annotator-margin-width: 20rem")
+  expect(badStyle).toContain("--cgc-annotator-min-document-width: 36rem")
+  for (const [option, value] of [["textWidth", '"60%"'], ["marginWidth", '"wide"'], ["minDocumentWidth", "500"]]) {
+    const warnings = bad.output.split("\n").filter((line) => line.includes("cgc-annotator") && line.includes(option))
+    expect(warnings, option).toHaveLength(1)
+    expect(warnings[0]).toContain(value)
+  }
 })

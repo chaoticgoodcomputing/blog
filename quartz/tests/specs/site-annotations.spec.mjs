@@ -56,8 +56,7 @@ test.afterAll(async () => {
   site?.remove()
 })
 
-// `fixme` until the margin (ticket 05) switches the page to the document's layout.
-test.fixme("an annotation page shows its document from the site's mirror path, highlighted", async ({ page }) => {
+test("an annotation page shows its document from the site's mirror path, highlighted", async ({ page }) => {
   await routeSite(page, site.public, ORIGIN)
   const mirrors = []
   page.on("request", (req) => {

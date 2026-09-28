@@ -22,13 +22,16 @@ const viewerOf = (page) => page.locator(".cgc-annotator-viewer")
 const annotation = (page, id) => page.locator(`.cgc-annotator__annotation[data-annotation="${id}"]`)
 const highlights = (page, id) => page.locator(`.cgc-annotator-viewer__highlight[data-annotation="${id}"]`)
 
-// The paper's Viewer once its island has hydrated, PDF.js has drawn both pages and every anchored
-// passage is highlighted.
+// The paper's Viewer once its island has hydrated, PDF.js has laid out both pages and every anchored
+// passage is highlighted. A page is drawn only as it comes near the screen, so the document is
+// scrolled through first, and back.
 async function shown(page) {
   const viewer = viewerOf(page)
   await expect(viewer).toHaveAttribute("data-cgc-hydrated", "")
   await expect(viewer.locator(".cgc-annotator-viewer__page")).toHaveCount(2)
+  await viewer.locator('.cgc-annotator-viewer__page[data-page="2"]').scrollIntoViewIfNeeded()
   for (const id of ANCHORED) await expect(highlights(page, id).first()).toBeAttached()
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }))
   return viewer
 }
 
@@ -46,14 +49,11 @@ const inked = (canvas) =>
 const drawnWidth = (viewer) =>
   viewer.evaluate((v) => v.querySelector(".cgc-annotator-viewer__page")?.getBoundingClientRect().width ?? Infinity)
 
-// Tests marked \`fixme\` need the document on screen, which the static layout doesn't show: the
-// margin (ticket 05) switches the page to the document's layout.
-
 // Marks the loaded document, so a spec can tell an SPA navigation (the mark survives) from a load.
 const mark = (page) => page.evaluate(() => (window.cgcSpaMark = true))
 const marked = (page) => page.evaluate(() => window.cgcSpaMark === true)
 
-test.fixme("an annotation page renders in its own frame, its source document drawn page by page", async ({ page }) => {
+test("an annotation page renders in its own frame, its source document drawn page by page", async ({ page }) => {
   await page.goto(PAPER)
   await expect(page.locator(".page")).toHaveAttribute("data-frame", "cgc-annotation")
   const viewer = await shown(page)
@@ -66,7 +66,7 @@ test.fixme("an annotation page renders in its own frame, its source document dra
   await expect(page.locator(`a[href$="${MIRROR}"]`)).toHaveCount(0)
 })
 
-test.fixme("each passage an annotation quotes is highlighted where it is in the document, and no other", async ({ page }) => {
+test("each passage an annotation quotes is highlighted where it is in the document, and no other", async ({ page }) => {
   await page.goto(PAPER)
   await shown(page)
   await expect(highlights(page, "orphan")).toHaveCount(0)
@@ -85,6 +85,8 @@ test.fixme("each passage an annotation quotes is highlighted where it is in the 
 })
 
 test("the annotations are cards in document order, each with the passage it quotes", async ({ page }) => {
+  // As sent, before the document opens: the margin puts what it can't place last (margin.spec.mjs).
+  await page.route("**/mirrors/**", () => {})
   await page.goto(PAPER)
   const list = page.locator(".cgc-annotator__annotations")
   await expect(list.locator(".cgc-annotator__annotation")).toHaveCount(IN_ORDER.length)
@@ -102,7 +104,7 @@ test("the annotations are cards in document order, each with the passage it quot
   await expect(annotation(page, "quoteonly").locator(".cgc-annotator__note")).toHaveCount(0)
 })
 
-test.fixme("choosing an annotation scrolls the document to its passage, and choosing a highlight picks its annotation", async ({ page }) => {
+test("choosing an annotation scrolls the document to its passage, and choosing a highlight picks its annotation", async ({ page }) => {
   await page.goto(PAPER)
   await shown(page)
   const passage = highlights(page, "lastpage").first()
@@ -123,7 +125,7 @@ test.fixme("choosing an annotation scrolls the document to its passage, and choo
 
 // The two SPA bugs the v4 annotation page carried (#34, #37): its viewer CSS went missing on the
 // second visit, and an unfinished load kept drawing after the reader had left.
-test.fixme("navigating away and back keeps the Viewer's CSS, and the document is drawn once", async ({ page }) => {
+test("navigating away and back keeps the Viewer's CSS, and the document is drawn once", async ({ page }) => {
   await page.goto(PAPER)
   await shown(page)
   await mark(page)
@@ -144,7 +146,7 @@ test.fixme("navigating away and back keeps the Viewer's CSS, and the document is
   await expect.poll(() => page.workers().length).toBe(1)
 })
 
-test.fixme("leaving while the document loads stops the load: nothing is drawn after the reader has gone", async ({ page }) => {
+test("leaving while the document loads stops the load: nothing is drawn after the reader has gone", async ({ page }) => {
   // PDF.js's worker rejects the work it still had pending as it's shut down. That is its own
   // teardown, in a thread that is ending, not an error in the page.
   const errors = []
@@ -179,7 +181,7 @@ test.fixme("leaving while the document loads stops the load: nothing is drawn af
   expect(errors).toEqual([])
 })
 
-test.fixme("moving between two annotation pages shows each its own document", async ({ page }) => {
+test("moving between two annotation pages shows each its own document", async ({ page }) => {
   await page.goto(PAPER)
   await shown(page)
   await mark(page)
@@ -223,7 +225,7 @@ test("a mirror that fails to load in the browser degrades the same way", async (
 // The stock fixture makes off-site requests of its own on every page (Google Fonts, the graph's d3
 // and pixi from jsDelivr, Plausible), so the annotation page is held to an ordinary page. No off-site
 // request reaches the network: each is recorded and refused.
-test.fixme("PDF.js, its worker and its wasm come from the site: no CDN request", async ({ page, baseURL }) => {
+test("PDF.js, its worker and its wasm come from the site: no CDN request", async ({ page, baseURL }) => {
   const site = new URL(baseURL).host
   let offsite = []
   const local = []
@@ -252,7 +254,7 @@ test.fixme("PDF.js, its worker and its wasm come from the site: no CDN request",
   expect(local).toContain("/static/cgc-annotator/wasm/qcms_bg.wasm")
 })
 
-test.fixme("the highlights' colour is the scheme's text highlight", async ({ page }) => {
+test("the highlights' colour is the scheme's text highlight", async ({ page }) => {
   await page.goto(PAPER)
   await shown(page)
   const actual = await highlights(page, "highlights")
@@ -305,7 +307,7 @@ async function expectLaidOnOnce(page) {
   }
 }
 
-test.fixme("each passage is highlighted once: one box a line, after load, a redraw, and a return", async ({ page }) => {
+test("each passage is highlighted once: one box a line, after load, a redraw, and a return", async ({ page }) => {
   await page.goto(PAPER)
   await shown(page)
   await expectLaidOnOnce(page)

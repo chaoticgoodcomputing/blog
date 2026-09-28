@@ -13,7 +13,6 @@ const PAGES = 40
 const BOOK = fixtureBook(PAGES - 1)
 
 const viewerOf = (page) => page.locator(".cgc-annotator-viewer")
-// `fixme` until the margin (ticket 05) shows the document.
 const highlights = (page, id) => page.locator(`.cgc-annotator-viewer__highlight[data-annotation="${id}"]`)
 
 // The paper, showing the book: every page's box laid out.
@@ -30,19 +29,15 @@ async function openBook(page) {
 const live = (page) =>
   page.evaluate(() => [...document.querySelectorAll(".cgc-annotator-viewer canvas")].filter((c) => c.width > 0).map((c) => Number(c.closest("[data-page]").dataset.page)))
 
-// Scrolls whatever the document scrolls in, the page or a box of its own, so that the top of page
-// `n` is at the top of the screen.
+// Scrolls the page, at once, so that the top of page `n` is at the top of the screen. The site
+// scrolls smoothly, which a relative scroll would add to.
 const scrollToPage = (page, n) =>
   page.evaluate((n) => {
     const el = document.querySelector(`.cgc-annotator-viewer__page[data-page="${n}"]`)
-    let box = el.parentElement
-    while (box && !(box.scrollHeight > box.clientHeight + 1 && /auto|scroll/.test(getComputedStyle(box).overflowY))) box = box.parentElement
-    const scroller = box ?? document.scrollingElement
-    const top = el.getBoundingClientRect().top - (box ? box.getBoundingClientRect().top : 0)
-    scroller.scrollBy(0, top)
+    window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY, behavior: "instant" })
   }, n)
 
-test.fixme("only the pages near the screen are drawn: a handful of canvases alive, wherever the reader is", async ({ page }) => {
+test("only the pages near the screen are drawn: a handful of canvases alive, wherever the reader is", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 })
   await openBook(page)
   // The first page, and not the whole document.
@@ -66,7 +61,7 @@ test.fixme("only the pages near the screen are drawn: a handful of canvases aliv
   await expect(highlights(page, "highlights")).toHaveCount(0)
 })
 
-test.fixme("every page's box is laid out at once: the column is as wide as the widest page, narrower ones centred", async ({ page }) => {
+test("every page's box is laid out at once: the column is as wide as the widest page, narrower ones centred", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 })
   const viewer = await openBook(page)
   const boxes = await viewer.locator(".cgc-annotator-viewer__page").evaluateAll((els) => els.map((el) => el.getBoundingClientRect().toJSON()))
@@ -78,7 +73,7 @@ test.fixme("every page's box is laid out at once: the column is as wide as the w
   expect(boxes[0].x + boxes[0].width / 2).toBeCloseTo(boxes[1].x + boxes[1].width / 2, 0)
 })
 
-test.fixme("a passage on a page not yet drawn can be chosen: the document goes to it, and it's highlighted once drawn", async ({ page }) => {
+test("a passage on a page not yet drawn can be chosen: the document goes to it, and it's highlighted once drawn", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 })
   await openBook(page)
   await expect.poll(() => live(page)).toContain(1)
@@ -90,7 +85,7 @@ test.fixme("a passage on a page not yet drawn can be chosen: the document goes t
   await expect(passage).toHaveClass(/cgc-annotator-viewer__highlight--active/)
 })
 
-test.fixme("a resize resizes every page's box, and draws again only the pages in view", async ({ page }) => {
+test("a resize resizes every page's box, and draws again only the pages in view", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 })
   const viewer = await openBook(page)
   await scrollToPage(page, 10)
@@ -108,7 +103,7 @@ test.fixme("a resize resizes every page's box, and draws again only the pages in
   expect(await live(page)).toContain(10)
 })
 
-test.fixme("a page's canvas is never drawn at more than twice its size, however dense the screen", async ({ browser, colorScheme }) => {
+test("a page's canvas is never drawn at more than twice its size, however dense the screen", async ({ browser, colorScheme }) => {
   const context = await browser.newContext({ baseURL: test.info().project.use.baseURL, colorScheme, deviceScaleFactor: 3, viewport: { width: 1440, height: 900 } })
   const page = await context.newPage()
   try {

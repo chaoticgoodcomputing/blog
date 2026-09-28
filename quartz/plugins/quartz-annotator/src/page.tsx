@@ -85,6 +85,10 @@ export function Body(mirrorDir: string) {
               )}
             </article>
           ))}
+          {/* Where the Viewer finds no place for some, they go last, under this. */}
+          <h3 class="cgc-annotator__unplaced" hidden>
+            Not found in the document
+          </h3>
         </section>
       </div>
     )

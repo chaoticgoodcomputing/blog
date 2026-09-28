@@ -29,7 +29,7 @@ const CLASS = "cgc-annotator-viewer"
 // A path from the site root, as a URL: the island runtime addresses its entries the same way.
 const siteUrl = (path: string) => new URL(`${document.body.dataset.basepath ?? ""}/${path}`.replace(/^\/+/, "/"), location.href).href
 
-export default function Viewer({ mirror, source, linkable, passages }: ViewerProps) {
+export default function Viewer({ mirror, source, linkable, passages, marginWidth, minDocumentWidth }: ViewerProps) {
   const documentRef = useRef<HTMLDivElement>(null)
   const pagesRef = useRef<HTMLDivElement>(null)
   const [status, setStatus] = useState<Status>(mirror ? "loading" : "failed")
@@ -40,7 +40,7 @@ export default function Viewer({ mirror, source, linkable, passages }: ViewerPro
   // the time the island says it's hydrated.
   useLayoutEffect(() => {
     const island = documentRef.current!.closest<HTMLElement>(`.${CLASS}`)!
-    const reader = mountReader(island)
+    const reader = mountReader(island, { marginWidth, minDocumentWidth })
     let unmounted = false
     let shown: { destroy(): void } | undefined
     if (mirror) {
