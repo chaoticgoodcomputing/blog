@@ -42,6 +42,8 @@ export interface Geometry {
   pages: PageSize[]
   /** Where each passage the Viewer found starts, by annotation id. */
   places: Map<string, Place>
+  /** The widest page's width at scale 1, which the document's width fits. */
+  widest: number
 }
 
 export interface Callbacks {
@@ -62,9 +64,9 @@ const CLASS = "cgc-annotator-viewer"
 // Drawn at the screen's pixel density up to this, so a page's canvas is never more than twice its
 // CSS size each way: at a density of 3, a long document's canvases outgrow what a phone allows.
 const MAX_RATIO = 2
-// A page is drawn once it is within a screen of the viewport, and let go once it is three away.
+// A page is drawn once it is within a screen of the viewport, and let go once it is two away.
 const NEAR = "100% 0px"
-const FAR = "300% 0px"
+const FAR = "200% 0px"
 
 // One page's box and what is drawn in it.
 interface PageState {
@@ -162,9 +164,7 @@ export function show(url: string, into: HTMLElement, passages: Passage[], on: Ca
     page.task?.cancel()
     page.task = undefined
     page.drawnAt = page.drawingAt = 0
-    // A canvas sized to nothing gives its memory back at once, where a removed one waits for GC.
-    for (const canvas of page.el.querySelectorAll("canvas")) canvas.width = canvas.height = 0
-    page.el.replaceChildren()
+    empty(page.el)
   }
 
   // Draws a page at the current width, unless it is drawn or being drawn at it already. The new
@@ -187,8 +187,7 @@ export function show(url: string, into: HTMLElement, passages: Passage[], on: Ca
     page.task = undefined
     page.drawingAt = 0
     page.drawnAt = width
-    for (const canvas of page.el.querySelectorAll("canvas")) canvas.width = canvas.height = 0
-    page.el.replaceChildren(...el.childNodes)
+    empty(page.el, el.childNodes)
     for (const [id, found] of anchors) if (found.page === n - 1) highlight(page.el, texts[n - 1], found, id)
     on.drawn(n)
   }
@@ -225,7 +224,7 @@ export function show(url: string, into: HTMLElement, passages: Passage[], on: Ca
         pages.push({ el, size: { width: viewport.width, height: viewport.height }, drawnAt: 0, drawingAt: 0, generation: 0 })
         into.append(el)
       })
-      on.opened({ pages: pages.map((p) => p.size), places })
+      on.opened({ pages: pages.map((p) => p.size), places, widest })
       layout()
       resizeObserver.observe(into)
       for (const page of pages) {
@@ -248,6 +247,13 @@ export function show(url: string, into: HTMLElement, passages: Passage[], on: Ca
     },
   }
   return shown
+}
+
+// Lets go of a page's drawing, and puts `into` it what replaces it. A canvas sized to nothing gives
+// its memory back at once, where a removed one waits for the garbage collector.
+function empty(page: HTMLElement, into: Iterable<Node> = []) {
+  for (const canvas of page.querySelectorAll("canvas")) canvas.width = canvas.height = 0
+  page.replaceChildren(...into)
 }
 
 // A page's text as the passages' offsets count it: its text items, end to end.

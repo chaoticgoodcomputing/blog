@@ -43,14 +43,17 @@ export const gutters = (m: Measures) => (2 * GUTTER + GAP) * m.rem
  * What fits the page at `zoom`. 100% is the fitted width: the width the margin leaves the document,
  * up to the cap, where the margin fits beside `minDocument` at 100%, and the page's width otherwise.
  * At zoom `z` the document is `z` times that, and once the zoomed document and the margin no longer
- * fit, the annotations go to the drawer. A hidden margin gives the document the page's width.
+ * fit, the annotations go to the drawer, where the document takes at least the page's width. A
+ * hidden margin gives the document the page's width.
  */
 export function fit(m: Measures, zoom: number, marginHidden: boolean): Fit {
   const mobile = m.margin > m.available / 2
   const desktop = m.minDocument + m.margin + gutters(m) <= m.available
   if (desktop && !marginHidden) {
     const width = zoom * Math.min(CAP * m.rem, m.available - m.margin - gutters(m))
-    return { layout: width + m.margin + gutters(m) <= m.available ? "margin" : "drawer", documentWidth: width, mobile }
+    if (width + m.margin + gutters(m) <= m.available) return { layout: "margin", documentWidth: width, mobile }
+    // Zoomed out of the margin: the drawer's document takes the page's width, or more.
+    return { layout: "drawer", documentWidth: Math.max(width, m.available - 2 * EDGE * m.rem), mobile }
   }
   const edge = desktop ? GUTTER : EDGE
   return { layout: desktop ? "margin" : "drawer", documentWidth: zoom * (m.available - 2 * edge * m.rem), mobile }

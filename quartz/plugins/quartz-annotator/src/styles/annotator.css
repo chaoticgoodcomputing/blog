@@ -227,25 +227,25 @@
   font-size: 1rem;
 }
 
-/* Every card but the selected one is shortened: two lines of its passage, about four of its note,
-   faded where it's cut. */
-.cgc-annotator-frame[data-layout="margin"] .cgc-annotator__annotation:not(.cgc-annotator__annotation--active) .cgc-annotator__quote {
+/* With the document, every card but the selected one is shortened (the reader marks them): two
+   lines of its passage, about four of its note, faded where it's cut. */
+.cgc-annotator__annotation--short .cgc-annotator__quote {
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
 
-.cgc-annotator-frame[data-layout="margin"] .cgc-annotator__annotation:not(.cgc-annotator__annotation--active) .cgc-annotator__note {
+.cgc-annotator__annotation--short .cgc-annotator__note {
   max-height: 6.4em;
   overflow: hidden;
 }
 
-.cgc-annotator-frame[data-layout="margin"] .cgc-annotator__annotation:not(.cgc-annotator__annotation--active) .cgc-annotator__note--clipped {
+.cgc-annotator__annotation--short .cgc-annotator__note--clipped {
   mask-image: linear-gradient(to bottom, var(--dark) 55%, transparent);
 }
 
-.cgc-annotator-frame[data-layout="margin"] .cgc-annotator__annotation:not(.cgc-annotator__annotation--active) .cgc-annotator__note > :first-child {
+.cgc-annotator__annotation--short .cgc-annotator__note > :first-child {
   margin-top: 0;
 }
 

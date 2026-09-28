@@ -57,6 +57,27 @@ defines it. By default the ones that act on a whole page. This plugin's own tran
 left out.
 _Avoid_: blocklist, excluded plugins
 
+**Static layout**:
+The annotation page as it's sent: the top section, the cards in one column in document order, the
+bottom section. What a reader without JavaScript keeps, and a page whose mirror is missing; the
+Viewer switches the page to the margin or the drawer once the document opens (docs/adr/0004).
+_Avoid_: mobile layout, fallback
+
+**Bar**:
+The strip at the top of an annotation page at every width: ☰, the site's name (the page's title once
+the top section's has scrolled away), zoom, and the annotations' toggle with their count.
+_Avoid_: header (that is a layout slot), toolbar
+
+**Top section** and **bottom section**:
+The text-width columns above and below the document: the page header, where the source document
+comes from and the preface; then the epilogue and the site's `right` and `afterBody` components.
+_Avoid_: header, footer (both are layout slots)
+
+**Tab**:
+The small handle on the right edge that opens the drawer, tapped or dragged. The only place a swipe
+towards the drawer starts.
+_Avoid_: handle, grip, button
+
 **Card**:
 One annotation as the page shows it: the passage it quotes and the note written on it. Without a
 document, the cards are the page, in one column.

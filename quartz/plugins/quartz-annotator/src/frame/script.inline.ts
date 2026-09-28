@@ -52,6 +52,8 @@ function setUp() {
     if (event.key === "Escape" && isOpen()) {
       // A search opened from the drawer takes its own Esc first.
       if (document.querySelector(".search-container.active")) return
+      // Handled: the page behind the drawer doesn't hear it too.
+      event.preventDefault()
       shut(true)
     }
   })

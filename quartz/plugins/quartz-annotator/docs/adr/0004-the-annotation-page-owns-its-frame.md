@@ -88,7 +88,7 @@ In site-components the frame would be this site's alone, and the plugin is publi
 ## No media queries decide the layout
 
 Core's widths are compile-time SCSS only (`$pageWidth: 800px`, breakpoints 800 and 1200px, in
-`quartz/styles/variables.scss`), and neither core nor site-styles defines a width custom property, so
+[`quartz/styles/variables.scss`](https://github.com/jackyzha0/quartz/blob/97a2d05f80c4c50534959b1d0d41cc4b3895625e/quartz/styles/variables.scss)), and neither core nor site-styles defines a width custom property, so
 there is nothing for a plugin to read. The page as rendered, and as a reader without JavaScript or a
 page whose mirror is missing keeps it, is the **static layout**: the annotations are the page, in one
 column, at every width, and needs no breakpoint. Whether the document then takes a margin or a drawer

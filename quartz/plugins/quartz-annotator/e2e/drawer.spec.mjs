@@ -180,3 +180,22 @@ test.describe("by touch", () => {
     expect(await selected(page)).toEqual([])
   })
 })
+
+test("in the drawer, every card but the selected one is shortened", async ({ page }) => {
+  await open(page, 1000)
+  const short = (id) => card(page, id).evaluate((el) => getComputedStyle(el.querySelector(".cgc-annotator__quote")).webkitLineClamp === "2")
+  for (const id of ["highlights", "spanning", "lastpage"]) expect(await short(id), id).toBe(true)
+  await highlight(page, "highlights").click()
+  await expect.poll(() => short("highlights")).toBe(false)
+  expect(await short("spanning")).toBe(true)
+})
+
+test("behind the open ☰ drawer, j, k and Esc leave the selection alone", async ({ page }) => {
+  await open(page, 390, `${PAPER}#spanning`)
+  await expect.poll(() => selected(page)).toEqual(["spanning"])
+  await page.locator(".cgc-annotator-frame__menu-button").click()
+  await page.keyboard.press("j")
+  await page.keyboard.press("Escape")
+  await expect(page.locator(".cgc-annotator-frame__menu")).not.toBeInViewport()
+  expect(await selected(page)).toEqual(["spanning"])
+})

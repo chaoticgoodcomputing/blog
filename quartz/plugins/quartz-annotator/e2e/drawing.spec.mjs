@@ -61,6 +61,26 @@ test("only the pages near the screen are drawn: a handful of canvases alive, whe
   await expect(highlights(page, "highlights")).toHaveCount(0)
 })
 
+test("on a phone, at 390px, a handful of canvases are alive wherever the reader is, and the end is drawn", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await openBook(page)
+  await expect.poll(() => live(page)).toContain(1)
+  // What matters on a phone is canvas memory: never more than a few screens' worth of pixels.
+  const pixels = () => page.evaluate(() => [...document.querySelectorAll(".cgc-annotator-viewer canvas")].reduce((sum, c) => sum + c.width * c.height, 0))
+  const screen = await page.evaluate(() => innerWidth * innerHeight * Math.min(2, devicePixelRatio) ** 2)
+  let most = 0
+  for (let n = 1; n <= PAGES; n += 4) {
+    await scrollToPage(page, n)
+    await expect.poll(() => live(page), `page ${n}`).toContain(n)
+    most = Math.max(most, (await pixels()) / screen)
+  }
+  expect(most).toBeLessThanOrEqual(6)
+  await scrollToPage(page, PAGES)
+  await expect.poll(() => live(page)).toContain(PAGES)
+  await expect(highlights(page, "lastpage")).toHaveCount(1)
+  expect(await live(page)).not.toContain(1)
+})
+
 test("every page's box is laid out at once: the column is as wide as the widest page, narrower ones centred", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 })
   const viewer = await openBook(page)

@@ -30,12 +30,14 @@
 // canvas-page pinches its canvas: the drawn pages are scaled live around the fingers' midpoint, and
 // on release drawn again at the new width, with the point under the fingers kept under them.
 import type { Geometry } from "./pdf"
+import type { Widths } from "../widths"
 import { fit, stack, toPx, type Fit, type Layout } from "./layout"
 
 const PAGE = "cgc-annotator"
 const VIEWER = "cgc-annotator-viewer"
 const FRAME = "cgc-annotator-frame"
 const ACTIVE_CARD = `${PAGE}__annotation--active`
+const SHORT_CARD = `${PAGE}__annotation--short`
 const ACTIVE_HIGHLIGHT = `${VIEWER}__highlight--active`
 const HOVER_HIGHLIGHT = `${VIEWER}__highlight--hover`
 const CLIPPED = `${PAGE}__note--clipped`
@@ -50,11 +52,8 @@ const STORE = { marginHidden: "cgc-annotator:margin-hidden", zoom: "cgc-annotato
 export const ZOOMS = [0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3]
 const clampZoom = (z: number) => Math.min(ZOOMS[ZOOMS.length - 1], Math.max(ZOOMS[0], Number.isFinite(z) ? z : 1))
 
-export interface ReaderOptions {
-  /** A card's width, and the narrowest the document may be beside the cards: `px` or `rem`. */
-  marginWidth: string
-  minDocumentWidth: string
-}
+/** The widths the reader lays the page out by: a card's, and the narrowest the document may be beside the cards. */
+export type ReaderOptions = Pick<Widths, "marginWidth" | "minDocumentWidth">
 
 export interface Reader {
   /** The document opened: every page's box is laid out in `pages`. */
@@ -73,7 +72,9 @@ export interface Reader {
 const typing = (event: KeyboardEvent) => {
   if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return true
   const target = event.target as HTMLElement | null
-  return !!target?.closest?.("input, textarea, select, [contenteditable]:not([contenteditable='false'])") || !!document.querySelector(".search-container.active")
+  if (target?.closest?.("input, textarea, select, [contenteditable]:not([contenteditable='false'])")) return true
+  // Search's own overlay, or the frame's ☰ drawer, is in front of the page.
+  return !!document.querySelector(`.search-container.active, .${FRAME}__menu[data-open="true"]`)
 }
 
 // The page's memory, which a private window or blocked storage can take away.
@@ -133,10 +134,12 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
     return box.top + place.top * box.height
   }
 
+  // Where the frame's bar ends, down the viewport: nothing of the page above it can be seen.
+  const barBottom = () => frame?.querySelector(`.${FRAME}__bar`)?.getBoundingClientRect().bottom ?? 0
+
   // Scrolls the page so that a point `y` pixels down the viewport sits a little below the bar.
   function reveal(y: number, smooth = true) {
-    const bar = frame?.querySelector(`.${FRAME}__bar`)?.getBoundingClientRect().bottom ?? 0
-    window.scrollTo({ top: Math.max(0, window.scrollY + y - bar - 32), behavior: smooth ? "smooth" : "instant" })
+    window.scrollTo({ top: Math.max(0, window.scrollY + y - barBottom() - 32), behavior: smooth ? "smooth" : "instant" })
   }
 
   // Whether the document is on screen: once the page has taken the document's layout.
@@ -148,6 +151,7 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
     for (const el of cards()) {
       const on = el.dataset.annotation === selected
       el.classList.toggle(ACTIVE_CARD, on)
+      el.classList.toggle(SHORT_CARD, !on && layout !== "static")
       if (on) el.setAttribute("aria-current", "true")
       else el.removeAttribute("aria-current")
     }
@@ -192,6 +196,7 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
     else delete frame.dataset.drawer
     body.style.setProperty("--cgc-annotator-document-width", `${next.documentWidth}px`)
     tab?.setAttribute("tabindex", layout === "drawer" ? "0" : "-1")
+    mark()
     if (zoomLevel) zoomLevel.textContent = `${Math.round(zoom * 100)}%`
     showToggle()
     place()
@@ -216,15 +221,14 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
     const box = hold.page.getBoundingClientRect()
     window.scrollBy({ top: box.top + hold.fy * box.height - hold.y, behavior: "instant" })
     if (scroller) scroller.scrollLeft += box.left + hold.fx * box.width - hold.x
-    const widest = Math.max(...geometry.pages.map((p) => p.width))
-    const sized = Math.abs(box.width - (current.documentWidth * hold.size.width) / widest) < 1
+    const sized = Math.abs(box.width - (current.documentWidth * hold.size.width) / geometry.widest) < 1
     if (sized || performance.now() > hold.until) hold = undefined
   }
 
   function zoomTo(z: number, around?: { x: number; y: number }) {
     const next = clampZoom(z)
     if (Math.abs(next - zoom) < 0.001 || layout === "static") return
-    const bar = frame?.querySelector(`.${FRAME}__bar`)?.getBoundingClientRect().bottom ?? 0
+    const bar = barBottom()
     holdAt(around?.x ?? window.innerWidth / 2, around?.y ?? bar + (window.innerHeight - bar) / 2)
     zoom = next
     remember(STORE.zoom, Math.abs(zoom - 1) < 0.001 ? null : String(Math.round(zoom * 1000) / 1000))
@@ -564,7 +568,7 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
       cleanups.splice(0).forEach((fn) => fn())
       section.style.transform = ""
       for (const el of cards()) {
-        el.classList.remove(ACTIVE_CARD)
+        el.classList.remove(ACTIVE_CARD, SHORT_CARD)
         el.removeAttribute("aria-current")
       }
     },

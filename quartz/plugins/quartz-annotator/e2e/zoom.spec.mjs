@@ -36,7 +36,9 @@ test("at 1440px, zooming in past the margin's fit switches to the drawer, and zo
   await zoomIn(page).click()
   await expect(level(page)).toHaveText("110%")
   await expect(frame(page)).toHaveAttribute("data-layout", "drawer")
-  await expect.poll(async () => (await firstPage(page).boundingBox()).width).toBeCloseTo(before * 1.1, 0)
+  // In the drawer the document takes the page's width, less its gutters, or more.
+  await expect.poll(async () => (await firstPage(page).boundingBox()).width).toBeGreaterThan(1440 - 40)
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(1440)
   await zoomOut(page).click()
   await expect(level(page)).toHaveText("100%")
   await expect(frame(page)).toHaveAttribute("data-layout", "margin")
