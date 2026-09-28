@@ -2,7 +2,7 @@
 //
 // A plugin's README is its note in the vault: it carries the plugins' tag, `projects/site/plugins`, in
 // its frontmatter, so the tag's page lists it, and the vault links it in: a symlink to the README in
-// `content/public/plugins/`, which the DAG's nodes link to. The link's name and extension are the
+// `content/public/plugins/`. The link's name and extension are the
 // vault's to choose (`quartz-mdx.mdx`, say), so any symlink there that resolves to the README counts.
 //
 //   node quartz/utils/guards/plugin-notes.guard.mjs [--repo <dir>]

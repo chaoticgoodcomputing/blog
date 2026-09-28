@@ -16,7 +16,7 @@ Lets readers browse a site by tag: a tree of tags in the sidebar, each with its 
 npm install @chaoticgoodcomputing/quartz-tag-explorer
 ```
 
-Requires [[public/plugins/quartz-tags|Quartz Tags]] and [[public/plugins/quartz-styles|Quartz Styles]]
+Requires [[/plugins/quartz-tags|Quartz Tags]] and [[/plugins/quartz-styles|Quartz Styles]]
 
 ## Usage
 

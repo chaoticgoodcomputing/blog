@@ -16,7 +16,7 @@ Adds a newsletter subscribe box that posts the reader's address to [Buttondown](
 npm install @chaoticgoodcomputing/quartz-email-subscribe
 ```
 
-Requires [[public/plugins/quartz-styles|Quartz Styles]]
+Requires [[/plugins/quartz-styles|Quartz Styles]]
 
 ## Usage
 

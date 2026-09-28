@@ -1,14 +1,11 @@
-// A small repo shaped like ours for the plugin-note guards' tests (`plugin-dag`, `plugin-notes`):
-// two plugins with their READMEs, a library, and the vault (`content/public/`) holding each plugin's
-// note, linked to its README, and the plugins' tag's description note with the generated DAG. As made,
-// it keeps both guards' rules; each test breaks one or more of them in its own copy.
+// A small repo shaped like ours for the `plugin-notes` guard's tests: two plugins with their READMEs,
+// and the vault (`content/public/`) holding each plugin's note, linked to its README. As made, it keeps
+// the guard's rule; each test breaks it in its own copy.
 import fs from "node:fs"
 import path from "node:path"
-import { generatedBlock, readPackages } from "../../plugin-dag.mjs"
 import { scratch, writeTree } from "../guard-helpers.mjs"
 
 export const TAG = "projects/site/plugins"
-export const NOTE = `content/public/tags/${TAG}.md`
 const json = (value) => JSON.stringify(value, null, 2)
 const readme = (dir) => `---\ntitle: ${dir}\ntags:\n  - ${TAG}\n---\n# ${dir}\n`
 
@@ -16,21 +13,11 @@ const readme = (dir) => `---\ntitle: ${dir}\ntags:\n  - ${TAG}\n---\n# ${dir}\n`
 export function makeNotesRepo(files = {}) {
   const repo = scratch("notes-guards-")
   writeTree(repo, {
-    "quartz/plugins/quartz-engine/package.json": json({
-      name: "@chaoticgoodcomputing/quartz-engine",
-      quartz: { name: "cgc-engine", dependencies: [] },
-    }),
+    "quartz/plugins/quartz-engine/package.json": json({ name: "@chaoticgoodcomputing/quartz-engine" }),
     "quartz/plugins/quartz-engine/README.md": readme("quartz-engine"),
-    "quartz/plugins/quartz-reader/package.json": json({
-      name: "@chaoticgoodcomputing/quartz-reader",
-      quartz: { name: "cgc-reader", dependencies: ["@chaoticgoodcomputing/quartz-engine"] },
-      devDependencies: { "@chaoticgoodcomputing/lib": "workspace:*" },
-    }),
+    "quartz/plugins/quartz-reader/package.json": json({ name: "@chaoticgoodcomputing/quartz-reader" }),
     "quartz/plugins/quartz-reader/README.md": readme("quartz-reader"),
-    "quartz/libs/lib/package.json": json({ name: "@chaoticgoodcomputing/lib" }),
   })
-  const block = generatedBlock(readPackages(path.join(repo, "quartz")))
-  writeTree(repo, { [NOTE]: `---\ntitle: Plugins\n---\nThe plugins this site is built with.\n\n${block}\n` })
   fs.mkdirSync(path.join(repo, "content/public/plugins"), { recursive: true })
   for (const dir of ["quartz-engine", "quartz-reader"]) {
     fs.symlinkSync(`../../../quartz/plugins/${dir}/README.md`, path.join(repo, "content/public/plugins", `${dir}.md`))

@@ -80,7 +80,8 @@ The `debugPanel` option's controls, beside the global graph in the **dialog**, o
 setting but `defaultFilterState`, with a switch between the global graph's settings and the local
 graph's. The dialog draws whichever graph the switch picks, and draws it afresh on every change. It
 shows both graphs' settings as YAML, where they differ from the plugin's defaults, to paste into the
-site config. A tuning aid, not for readers.
+site config. A tuning aid, not for readers: with `debugPanel: serve`, only when the site is served,
+never in a build to publish.
 _Avoid_: settings panel, config editor, dev tools
 
 **Text alternative**:

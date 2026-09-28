@@ -161,16 +161,8 @@ A shareable plugin's README, published on this site as a content note at `/plugi
 the package's directory (`/plugins/quartz-graph`), through a symlink in the vault's `plugins/`. The
 same file is the plugin's documentation on GitHub and its page on the site. Libraries and site
 plugins have none. Every plugin note carries the tag `projects/site/plugins`, so that tag's page
-lists them all, under the **plugin DAG**.
+lists them all.
 _Avoid_: plugin page, docs page
-
-**Plugin DAG**:
-The flowchart of how every package here depends on the others, on the description note of the tag
-`projects/site/plugins`: a solid edge from a plugin to each plugin its manifest's `dependencies`
-names, and a dotted one from a package to each **library** it builds with, with the site plugins
-drawn apart. Generated from the manifests by `site:plugin-dag` (#86), never edited by hand, and
-guarded by the `plugin-dag` repo guard, which fails when the note drifts from the packages.
-_Avoid_: dependency graph (the graph is quartz-graph's), plugin map (the FORK-LEDGER's is the v4 → v5 map)
 
 **Upstream proposal**:
 The pull request that retires a vendored change by getting it accepted upstream. Every vendored
@@ -339,7 +331,7 @@ changes**), `core-pruned`, `core-lock` (the **lock check**, plus a fresh `pnpm i
 package**, Core's), `package-sources` (every source of ours a **package source** the workspace has and
 the site package depends on), `clean-packs` (and no **repo-only** package published). #89's:
 `plugin-index` (Quartz's generated plugin index takes in every plugin). The plugin
-notes' (#86): `plugin-dag` (the **plugin DAG** as generated) and `plugin-notes`. Those that read
+notes' (#86): `plugin-notes`. Those that read
 built output depend on the package builds, which Nx takes from its cache.
 _Avoid_: lint (the formatters and linters are something else), check (alone), test (the e2e suite and
 the `node --test` suites are tests; a guard checks the repo itself)

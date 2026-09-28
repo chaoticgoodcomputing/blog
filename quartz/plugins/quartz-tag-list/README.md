@@ -15,7 +15,7 @@ Lists a page's tags under its title as badges, each with the tag's icon in a bub
 npm install @chaoticgoodcomputing/quartz-tag-list
 ```
 
-Requires [[public/plugins/quartz-tags|Quartz Tags]] and [[public/plugins/quartz-styles|Quartz Styles]]. Disable `@quartz-community/tag-list`.
+Requires [[/plugins/quartz-tags|Quartz Tags]] and [[/plugins/quartz-styles|Quartz Styles]]. Disable `@quartz-community/tag-list`.
 
 ## Usage
 

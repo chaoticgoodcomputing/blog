@@ -1,6 +1,8 @@
 // The debug panel (the `debugPanel` option): every graph setting as a control beside the global graph,
 // a switch between the global and local graphs' settings, each change drawn at once, and the result
-// as YAML for the site config. Off unless the site asks for it.
+// as YAML for the site config. Off unless the site asks for it, and with `serve`, only when served.
+import fs from "node:fs"
+import path from "node:path"
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, editConfig, fixtureConfig } from "../../../tests/harness/site.mjs"
 import { drawnGraph, globalGraph, localGraph, nodePosition } from "./graph.mjs"
@@ -64,13 +66,36 @@ test("shows no debug panel unless the site asks for one", async ({ page }) => {
   await expect(page.locator(".cgc-graph__debug")).toHaveCount(0)
 })
 
-test("fails the build on a debugPanel that isn't true or false", async () => {
+test("fails the build on a debugPanel that isn't true, false or serve", async () => {
   const { code, output } = await buildScratchSite("graph-bad-debug", CONTENT, {
     config: withOptions({ debugPanel: "yes" }),
   })
   expect(code).not.toBe(0)
-  expect(output).toContain("cgc-graph: debugPanel must be true or false")
+  expect(output).toContain('cgc-graph: debugPanel must be true, false or "serve": "yes"')
 })
+
+// `debugPanel: serve` marks the dialog for the panel when the site is served, and never in a build to
+// publish: the same config, built both ways, read from the page each writes.
+for (const [how, serve, marked] of [
+  ["served", true, true],
+  ["built to publish", false, false],
+]) {
+  test(`with debugPanel: serve, ${marked ? "shows" : "leaves out"} the panel when the site is ${how}`, async () => {
+    const site = await buildScratchSite(`graph-debug-${serve ? "serve" : "build"}`, CONTENT, {
+      config: withOptions({ debugPanel: "serve" }),
+      serve,
+      keep: true,
+    })
+    try {
+      expect(site.code, site.output).toBe(0)
+      const html = fs.readFileSync(path.join(site.public, "index.html"), "utf8")
+      expect(html).toContain("cgc-graph__dialog")
+      expect(html.includes("cgc-graph__dialog--debug")).toBe(marked)
+    } finally {
+      site.remove()
+    }
+  })
+}
 
 test.describe("with debugPanel", () => {
   const ORIGIN = "https://localhost"

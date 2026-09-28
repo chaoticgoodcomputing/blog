@@ -118,9 +118,10 @@ export interface GraphOptions {
   /**
    * Whether the global graph's dialog shows the debug panel: every graph setting as a control, for
    * trying settings on the page, with a switch between the global and local graphs and the result as
-   * YAML to paste into the site config. For tuning, not for readers. Default: `false`.
+   * YAML to paste into the site config. For tuning, not for readers: `serve` shows it only when the
+   * site is served (`quartz build --serve`), never in a build to publish. Default: `false`.
    */
-  debugPanel?: boolean
+  debugPanel?: boolean | "serve"
 }
 
 /** What one graph's container carries to the browser, in `data-cfg`. */

@@ -11,7 +11,7 @@ date: 2026-09-27
 
 A tag utility library for Quartz websites that enhance tags in a few ways:
 
-1. Allows for nested tags. For example, [[public/tags/engineering|`engineering`]] and [[public/tags/engineering/languages|`engineering/languages`]]
+1. Allows for nested tags. For example, [[/tags/engineering|`engineering`]] and [[/tags/engineering/languages|`engineering/languages`]]
 2. Ability to assign tags a color and icon
 3. Creates a shared asset that other plugins can use to display richer tag components across your site.
 
@@ -21,7 +21,7 @@ A tag utility library for Quartz websites that enhance tags in a few ways:
 npm install @chaoticgoodcomputing/quartz-tags
 ```
 
-Requires [[public/plugins/quartz-styles|Quartz Styles]].
+Requires [[/plugins/quartz-styles|Quartz Styles]].
 
 ## Usage
 

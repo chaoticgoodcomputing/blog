@@ -1,7 +1,7 @@
 // Our packages (#89, #98): every plugin, site plugin and library in a repo shaped like this one, with
 // its manifest, the e2e fixture's plugins, the site package and the workspace's members. The one walk
-// of our package directories: the package guards, the plugin steps (plugin-packages.mjs), the
-// plugin DAG and the upgrade's report all read packages through it. Pure reads of the files on disk,
+// of our package directories: the package guards, the plugin steps (plugin-packages.mjs) and the
+// upgrade's report all read packages through it. Pure reads of the files on disk,
 // no install needed, so each guard can point it at a scratch repo instead of the real one.
 import fs from "node:fs"
 import path from "node:path"

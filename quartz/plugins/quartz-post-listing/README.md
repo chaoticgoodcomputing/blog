@@ -15,7 +15,7 @@ An alternative to the community Post Listing plugin, allowing for more filtering
 npm install @chaoticgoodcomputing/quartz-post-listing
 ```
 
-Requires [[public/plugins/quartz-tags|Quartz Tags]] and [[public/plugins/quartz-styles|Quartz Styles]]
+Requires [[/plugins/quartz-tags|Quartz Tags]] and [[/plugins/quartz-styles|Quartz Styles]]
 
 ## Usage
 

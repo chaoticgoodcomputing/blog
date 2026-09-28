@@ -11,7 +11,7 @@ description: A plugin for richer, stylized OG images on Quartz 5 sites.
 Runs stock [`og-image`](https://github.com/quartz-community/og-image) with its own card: tag chips show the tag's last segment, the corner carries your site's icon, the title has no site suffix, and no cards are drawn under `quartz build --serve`.
 
 ![[public/assets/Pasted image 20260927203318.png]]
-*Example from [[public/content/annotations/evolutions-revolutions|Evolution and Revolution as Organizations Grow]]*
+*Example from [[/content/annotations/evolutions-revolutions|Evolution and Revolution as Organizations Grow]]*
 
 ## Installation
 

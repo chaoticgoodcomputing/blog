@@ -32,7 +32,7 @@ At build time the plugin fetches each target PDF once and serves its own copy, a
 npm install @chaoticgoodcomputing/quartz-annotator
 ```
 
-Requires [[public/plugins/quartz-styles|Quartz Styles]].
+Requires [[/plugins/quartz-styles|Quartz Styles]].
 
 ## Usage
 

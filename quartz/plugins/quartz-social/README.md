@@ -7,7 +7,7 @@ tags:
 description: Odds-and-ends social media cards for Quartz 5 sites
 date: 2026-09-27
 ---
-Adds two social cards: Bluesky and GitHub. See [[public/index|the homepage]] for examples.
+Adds two social cards: Bluesky and GitHub. See [[/index|the homepage]] for examples.
 
 ![[public/assets/Pasted image 20260927204202.png]]
 

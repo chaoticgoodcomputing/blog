@@ -10,7 +10,7 @@ date: 2026-09-27
 
 Gives the `@chaoticgoodcomputing` plugin family its own cascade layer, `cgc`, ranked above Quartz's core styles and themes but below any unlayered site CSS. It emits one line, `@layer cgc;`, and every family plugin that ships CSS depends on it.
 
-A general prerequisite to most of the other [[public/tags/projects/site/plugins|CGC plugins]]
+A general prerequisite to most of the other [[/tags/projects/site/plugins|CGC plugins]]
 
 ## Installation
 

@@ -16,7 +16,7 @@ Lists the pages that link to the current page, with public pages first and priva
 npm install @chaoticgoodcomputing/quartz-backlinks
 ```
 
-Requires [[public/plugins/quartz-styles|Quartz Styles]]
+Requires [[/plugins/quartz-styles|Quartz Styles]]
 
 ## Usage
 

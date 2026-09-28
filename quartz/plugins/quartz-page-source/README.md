@@ -15,7 +15,7 @@ Adds a "View source on GitHub" link to each page, pointing at the file the page 
 npm install @chaoticgoodcomputing/quartz-page-source
 ```
 
-Requires [[public/plugins/quartz-styles|Quartz Styles]]
+Requires [[/plugins/quartz-styles|Quartz Styles]]
 
 ## Usage
 

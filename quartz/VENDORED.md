@@ -176,14 +176,6 @@ The Lighthouse targets sit beside it, ported from v4's `site` project and run wi
 (`_serve-static`) and audits its home page. `site:eval:multi` audits the first public pages of
 that build's sitemap, and `site:eval:live` audits the live site.
 
-`site:plugin-dag` writes the **plugin DAG** (`utils/plugin-dag.mjs`, #86): the Mermaid flowchart of
-how every package under `plugins/`, `libs/` and `site-plugins/` depends on the others, between the
-generated markers in the description note of the plugins' tag, the vault's
-`tags/projects/site/plugins/index.md`. It reads only the packages' manifests, so run
-it after changing a manifest's `quartz.dependencies` or a library dependency, or adding a package.
-The `plugin-dag` repo guard fails while the note has drifted, and `node
-utils/plugin-dag.mjs --check` says so without writing.
-
 ## Provenance
 
 |          |                                            |
@@ -266,7 +258,6 @@ packages (#86):
 | `package-sources` | Every source of ours in the site config and the fixture config is a package name, but the fixture's own plugins (`../fixture-plugins/<name>`, which must exist); each names a workspace package; every manifest dependency (plugins, site plugins, fixture plugins) names a workspace package; every plugin of ours either config enables is a dependency of the site package, under the name Quartz imports it by (an object source's `name` as an alias of its `repo`), and one under its own name is `workspace:*`; and both configs list every plugin, and the site config every site plugin. |
 | `clean-packs` | `pnpm pack --dry-run` of every publishable package (each plugin not repo-only) lists only `dist/`, README, LICENSE and `package.json`, and has each; and a workspace publish (`pnpm -r --filter … publish --dry-run`) leaves out every site plugin and the site package. Publishable means the plugins only: the libraries are not repo-only, but are left out on purpose, as whether they are published at all is [#90](https://github.com/chaoticgoodcomputing/blog/issues/90)'s to decide. |
 | `plugin-index` | Core's own `install-plugins` step, run in a scratch root on a config listing every plugin and site plugin by package name, skips none of them, and its generated plugin index (`.quartz/plugins/index.ts`, what a TypeScript site imports from) exports from every plugin. |
-| `plugin-dag` | The plugins' tag's description note is in one shape, and carries exactly the DAG `utils/plugin-dag.mjs` generates from the packages' manifests. |
 | `plugin-notes` | Every shareable plugin's README carries the plugins' tag and is linked into the vault as its plugin note: a symlink to it in `content/public/plugins/`, under any name and extension. |
 
 Each lists every violation and exits 1 on any. The target is cached on the files the guards read and

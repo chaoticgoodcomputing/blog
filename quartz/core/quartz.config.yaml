@@ -269,8 +269,9 @@ plugins:
     enabled: true
     options:
       privateTags: *privateTags
-      # The global graph's settings panel, for tuning the graph live (quartz-graph's README).
-      debugPanel: true
+      # The global graph's settings panel, for tuning the graph live (quartz-graph's README): under
+      # site:serve only, never in site:build, so it can't ship.
+      debugPanel: serve
       iconCollections: &iconCollections
         custom: ../icons
       localGraph:
