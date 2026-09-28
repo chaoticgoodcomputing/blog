@@ -213,7 +213,8 @@ since a repeated name is a no-op.
 
 - **lightningcss 1.33.0 silently inverts sublayer order** when one file names a sublayer both dotted
   (`cgc.tags`) and nested (`@layer cgc { @layer tags {} }`). Use one spelling per file. Dotted is simpler.
-- **Still outranking the family:** everything unlayered. That's `custom.scss`'s plain rules, frame CSS,
+- **Still outranking the family:** everything unlayered. That's `custom.scss`'s plain rules, frame CSS
+  (core's own, and a third-party frame's such as canvas-page's; _see the frame amendment below_),
   syntax-highlighting's button rules, and `quartz-fonts`' `h1,…,h6 { font-family }`. The last beats
   any heading font a `cgc-*` component sets on its own headings.
 - **A CSS-only transformer needs a no-op hook** (`htmlPlugins: () => []`). Otherwise the loader skips it
@@ -492,3 +493,30 @@ Where the two conflict, this amendment wins.
 - **Linking Google Fonts from every page** (`cdnCaching: true`). Every page view would then ask a
   third party for the fonts, which v4 never did either.
 - **Committing the woff2 files**, as v4 did. The fetch is cheap, cached, and keeps binaries out of git.
+
+## Amendment: packages that ship a frame
+
+_2026-09-28, from the annotation page's rework ("the annotation page, document first"), recorded in
+quartz-annotator's
+[ADR-0004](../../quartz/plugins/quartz-annotator/docs/adr/0004-the-annotation-page-owns-its-frame.md)._
+
+A plugin can register a page frame from its manifest's `quartz.frames`, and a page type can declare
+it. quartz-annotator now ships one, `cgc-annotation`. Rule 2 read as "never select what you do not
+own" left no room for the one thing a frame must do: undo core's page grid, which core lays over
+every frame's `#quartz-body`, whatever its name.
+
+**Decided:** a package that ships a frame **owns the markup that frame renders**, as it owns any
+component's. Its selectors may reach `.page[data-frame="<name>"]`, core's page under the frame's own
+name, and that page's `#quartz-body`, the two elements core puts around every frame, and nothing
+else outside the package's blocks. Rule 2 still binds everything the frame places: the site's
+components in its slots are theirs, not the frame's.
+
+- **The frame's CSS goes in the family layer** (rule 11), from `externalResources()` with the rest of
+  the package. Core's `frame.css`, which it puts on the page unlayered, stays empty, so the frame
+  ranks with the family and the site can restyle it.
+- **Rule 3 holds**: the package's check accepts exactly those two selectors, and holds every other
+  name to the package's blocks. quartz-annotator's `build.mjs` does it by checking the two as
+  elements of the frame's block.
+- **Third-party frames are not ours to layer.** canvas-page's frame CSS is unlayered, so it outranks
+  the family, beside the rest of what this ADR's family-layer amendment lists as outranking it.
+

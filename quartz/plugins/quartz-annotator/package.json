@@ -21,6 +21,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./frames": {
+      "types": "./dist/frames/index.d.ts",
+      "import": "./dist/frames/index.js"
+    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
@@ -64,6 +68,12 @@
     ],
     "defaultOrder": 75,
     "defaultEnabled": true,
-    "defaultOptions": {}
+    "defaultOptions": {},
+    "//frames": "Registered under the frame's own name, `cgc-annotation`, which the page type declares (docs/adr/0004).",
+    "frames": {
+      "AnnotationFrame": {
+        "displayName": "Annotation page"
+      }
+    }
   }
 }

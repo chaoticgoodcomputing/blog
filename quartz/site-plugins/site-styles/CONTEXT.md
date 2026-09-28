@@ -60,10 +60,10 @@ _Avoid_: component title, widget header
 - **The site's own components are styled here.** site-components' page title and footer (#70)
   ship no CSS of their own. Their v4 rules are in the components tier, on v4's class names
   (`.page-title…`, `.site-footer`).
-- **The grid is the default frame's, and the site frame's.** The objects tier's grid selects
-  `.page[data-frame="default"]`, and site-components' `site-full-width` frame, v4's `full-width`
-  layout variant (FORK-LEDGER `styles/_objects.scss`), has its own rules beside it. Core's
-  full-width and minimal frames, and any other frame a plugin registers, keep their own layout.
+- **The grid is the default frame's.** The objects tier's grid selects
+  `.page[data-frame="default"]` (FORK-LEDGER `styles/_objects.scss`). Core's full-width and minimal
+  frames keep core's layout, and a frame a plugin registers lays out its own, as quartz-annotator's
+  `cgc-annotation` does.
 - **The site outranks the family.** A rule in any tier beats every `cgc.*` rule, whatever its
   specificity. So a bare-element rule here, like `img`, restyles images inside family plugins too.
 - **The stack names only what the config loads.** A theme enabled in the site config adds its

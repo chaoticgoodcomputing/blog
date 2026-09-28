@@ -17,6 +17,9 @@ export interface ViewerProps {
   linkable: boolean
   /** The passages to highlight. */
   passages: Passage[]
+  /** A card's width, and the narrowest the document may be beside them: `px` or `rem` lengths. */
+  marginWidth: string
+  minDocumentWidth: string
 }
 
 type Status = "loading" | "open" | "failed"
@@ -26,16 +29,14 @@ const CLASS = "cgc-annotator-viewer"
 const PAGE = "cgc-annotator"
 const ACTIVE = `${CLASS}__highlight--active`
 const ACTIVE_ANNOTATION = `${PAGE}__annotation--active`
-// How far the reader can move the divider, as the document's share of the width (v4's limits).
-const SHARE = { min: 30, max: 70 }
 
 // A path from the site root, as a URL: the island runtime addresses its entries the same way.
 const siteUrl = (path: string) => new URL(`${document.body.dataset.basepath ?? ""}/${path}`.replace(/^\/+/, "/"), location.href).href
 
-// Scrolls `container`, and only it, so that a point `y` pixels down the viewport sits near its top.
-function reveal(container: HTMLElement, y: number) {
-  const top = y - container.getBoundingClientRect().top + container.scrollTop
-  container.scrollTo({ top: Math.max(0, top - 16), behavior: "smooth" })
+// Scrolls the page so that a point `y` pixels down the viewport sits a little below the frame's bar.
+function reveal(y: number) {
+  const bar = document.querySelector(".cgc-annotator-frame__bar")?.getBoundingClientRect().bottom ?? 0
+  window.scrollTo({ top: Math.max(0, window.scrollY + y - bar - 16), behavior: "smooth" })
 }
 
 export default function Viewer({ mirror, source, linkable, passages }: ViewerProps) {
@@ -63,7 +64,7 @@ export default function Viewer({ mirror, source, linkable, passages }: ViewerPro
           },
           drawn: () => select(active.current),
           failed: () => setStatus("failed"),
-        }, documentRef.current)
+        })
       })
       .catch(() => !unmounted && setStatus("failed"))
     return () => {
@@ -72,7 +73,7 @@ export default function Viewer({ mirror, source, linkable, passages }: ViewerPro
     }
   }, [mirror])
 
-  // The page's annotations, and the page itself, for choosing one and for the divider.
+  // The page's annotations, and the page itself, for choosing one.
   const page = () => documentRef.current?.closest<HTMLElement>(`.${PAGE}`) ?? null
   const annotations = () => [...(page()?.querySelectorAll<HTMLElement>(`.${PAGE}__annotation`) ?? [])]
 
@@ -99,11 +100,10 @@ export default function Viewer({ mirror, source, linkable, passages }: ViewerPro
     for (const el of annotations()) el.classList.toggle(ACTIVE_ANNOTATION, el.dataset.annotation === id)
     if (side === "document") {
       const y = passageY(id!)
-      if (y !== undefined) reveal(container, y)
+      if (y !== undefined) reveal(y)
     } else if (side === "annotation") {
       const item = annotations().find((el) => el.dataset.annotation === id)
-      const list = item?.closest<HTMLElement>(`.${PAGE}__annotations`)
-      if (item && list) reveal(list, item.getBoundingClientRect().top)
+      if (item) reveal(item.getBoundingClientRect().top)
     }
   }
 
@@ -127,31 +127,6 @@ export default function Viewer({ mirror, source, linkable, passages }: ViewerPro
     if (box) select(box.dataset.annotation, "annotation")
   }
 
-  // Dragging the divider sets the document's share of the width; the document redraws to fit.
-  const onPointerDown = (event: PointerEvent) => {
-    const handle = event.currentTarget as HTMLElement
-    const split = handle.closest<HTMLElement>(`.${PAGE}__split`)
-    const root = page()
-    if (!split || !root) return
-    event.preventDefault()
-    handle.setPointerCapture(event.pointerId)
-    handle.classList.add(`${CLASS}__handle--dragging`)
-    const move = (e: PointerEvent) => {
-      const box = split.getBoundingClientRect()
-      const share = Math.round(((e.clientX - box.left) / box.width) * 100)
-      root.style.setProperty("--cgc-annotator-viewer-share", String(Math.max(SHARE.min, Math.min(SHARE.max, share))))
-    }
-    const up = () => {
-      handle.classList.remove(`${CLASS}__handle--dragging`)
-      handle.removeEventListener("pointermove", move)
-      handle.removeEventListener("pointerup", up)
-      handle.removeEventListener("pointercancel", up)
-    }
-    handle.addEventListener("pointermove", move)
-    handle.addEventListener("pointerup", up)
-    handle.addEventListener("pointercancel", up)
-  }
-
   const where = linkable ? (
     <a class={`${CLASS}__source`} href={source} target="_blank" rel="noopener noreferrer">
       {source}
@@ -172,16 +147,6 @@ export default function Viewer({ mirror, source, linkable, passages }: ViewerPro
         {/* Drawn into by PDF.js, outside Preact's reach: its vnode never has children. */}
         <div class={`${CLASS}__pages`} ref={pagesRef} />
       </div>
-      {status !== "failed" && (
-        <div
-          class={`${CLASS}__handle`}
-          role="separator"
-          aria-orientation="vertical"
-          aria-label="Resize the document"
-          title="Drag to resize"
-          onPointerDown={onPointerDown}
-        />
-      )}
     </>
   )
 }

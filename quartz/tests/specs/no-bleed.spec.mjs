@@ -2,7 +2,9 @@
 //
 // The PostCSS pass polices one plugin's stylesheet; it cannot see two stylesheets interact. So
 // every fixture page is rendered with our plugins on and off, and every element they do not own
-// must compute identically. An element is owned if it, or an ancestor, carries a `cgc-` class.
+// must compute identically. An element is owned if it, or an ancestor, carries a `cgc-` class. A
+// frame one of ours ships owns core's page body around it too (ADR-0003's frame amendment): its CSS
+// may undo core's grid there.
 import { test, expect } from "../harness/test.mjs"
 
 const PAGES = ["/", "/plain-note", "/md-twin", "/mdx-article.mdx", "/lab/cascade.mdx", "/lab/pdf.mdx", "/lab/bluesky.mdx", "/links/from-md", "/links/from-mdx.mdx", "/nested/deep-note", "/tags/fixture", "/tags/articles", "/tags/writing", "/tags/listing", "/tag-engine/deeper-later", "/tag-engine/first-tag", "/seo/private-note", "/seo/private-descendant", "/seo/authored", "/seo/external-stub", "/seo/feed-article", "/backlinks/target", "/og/tag-nested", "/linked-note", "/posthog/navigation", "/annotations/fixture-paper", "/annotations/withdrawn", "/graph/old-note", "/tag-explorer/alpha"]
@@ -11,13 +13,14 @@ const PAGES = ["/", "/plain-note", "/md-twin", "/mdx-article.mdx", "/lab/cascade
 // marks the current page `.active`, which is then a different link on each side, so it is skipped.
 const BASELINE_OF = { "/mdx-article.mdx": "/md-twin", "/lab/cascade.mdx": "/lab/cascade-twin", "/lab/pdf.mdx": "/lab/pdf-twin", "/lab/bluesky.mdx": "/lab/bluesky-twin", "/links/from-mdx.mdx": "/links/from-md" }
 const TWIN_SKIP = ".explorer .active"
+const OUR_FRAMES = ["cgc-annotation"]
 const PROPS = ["color", "background-color", "font-family", "font-size", "font-weight", "letter-spacing", "line-height", "margin-top", "margin-bottom", "padding-left", "display", "text-decoration-line"]
 
 // Runs in the page. Keys each unowned element by its path through unowned ancestors, so an
 // inserted plugin element does not shift the keys of its siblings. A list item is keyed by its
 // label rather than its position, because a plugin that adds pages (cgc-mdx) grows the explorer.
-const snapshot = ([props, skip]) => {
-  const owned = (el) => el.closest('[class*="cgc-"]') !== null
+const snapshot = ([props, skip, frames]) => {
+  const owned = (el) => el.closest('[class*="cgc-"]') !== null || (el.id === "quartz-body" && frames.includes(el.parentElement?.dataset.frame))
   const key = (el) => {
     const parts = []
     for (let node = el; node && node !== document.body; node = node.parentElement) {
@@ -28,7 +31,7 @@ const snapshot = ([props, skip]) => {
         continue
       }
       // A frame's slots (sidebars, center) are keyed by name, so a page a plugin puts in another
-      // frame (cgc-annotator's, full-width) lines up with its baseline wherever the frames agree.
+      // frame (cgc-annotator's, cgc-annotation) lines up with its baseline wherever the frames agree.
       if (node.parentElement.id === "quartz-body" && node.classList.length) {
         parts.unshift(`${node.tagName.toLowerCase()}.${node.classList[0]}`)
         continue
@@ -65,7 +68,7 @@ for (const url of PAGES) {
     await page.goto(url)
     await baselinePage.goto(BASELINE_OF[url] ?? url)
     const skip = BASELINE_OF[url] ? TWIN_SKIP : null
-    const [withPlugins, baseline] = await Promise.all([page.evaluate(snapshot, [PROPS, skip]), baselinePage.evaluate(snapshot, [PROPS, skip])])
+    const [withPlugins, baseline] = await Promise.all([page.evaluate(snapshot, [PROPS, skip, OUR_FRAMES]), baselinePage.evaluate(snapshot, [PROPS, skip, OUR_FRAMES])])
     const bled = Object.entries(withPlugins)
       .filter(([key]) => baseline[key])
       .flatMap(([key, props]) =>

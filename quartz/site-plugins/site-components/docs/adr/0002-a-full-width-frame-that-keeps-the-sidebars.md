@@ -1,9 +1,15 @@
 ---
-status: accepted
+status: superseded by quartz-annotator's 0004
 date: 2026-09-26
 ---
 
 # A full-width frame that keeps the sidebars' components
+
+_Superseded on 2026-09-28, amendment and all, by quartz-annotator's
+[ADR-0004](../../../../plugins/quartz-annotator/docs/adr/0004-the-annotation-page-owns-its-frame.md):
+the annotation page owns its frame. `site-full-width` was only ever the annotation layout's, so it
+is deleted, with `takesPageHeader` and site-styles' rules for it. The site config names no template
+for annotation pages, whose page type declares its own._
 
 [#37](https://github.com/chaoticgoodcomputing/blog/issues/37) gave annotation pages the full-width
 frame, so the Viewer has the page's width, and said the site config would compose the rest: the

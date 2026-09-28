@@ -14,6 +14,7 @@ import { styleText } from "node:util"
 import { findAnnotations, type Annotation, type RenderedAnnotation } from "./annotations"
 import { annotationTarget } from "./mirror"
 import { cut } from "./sections"
+import type { Widths } from "./widths"
 
 /** The name this plugin's transformer carries, which its own pipeline always leaves out. */
 export const NAME = "cgc-annotator"
@@ -35,6 +36,8 @@ export const DEFAULT_DENYLIST = [
 /** What an annotation page carries on its `fileData`, as `cgcAnnotator`, for the page type to render. */
 export interface AnnotatorData {
   annotations: RenderedAnnotation[]
+  /** The site's widths for the page, from the plugin's options, for the frame and the Viewer. */
+  widths: Widths
 }
 
 /** Every warning this plugin prints, in one format. It never fails the build. */
@@ -49,7 +52,7 @@ export interface Position {
   end?: { offset?: number }
 }
 
-export function Transformer(denylist: string[]) {
+export function Transformer(denylist: string[], widths: Widths) {
   // One pipeline per build context, built on first use: the site's transformers are loaded by then.
   const pipelines = new WeakMap<object, Pipeline>()
   const pipelineFor = (ctx: PipelineContext) => {
@@ -74,7 +77,7 @@ export function Transformer(denylist: string[]) {
         const page = file.data.relativePath
         if (sections.stray) warn(`${page}: the prose under "# Annotations" isn't an annotation, so it's left out. Move it under "# Preface" or "# Epilogue".`)
         for (const name of sections.repeated) warn(`${page}: "# ${name}" appears more than once, so the text under each joins the first.`)
-        file.data.cgcAnnotator = { annotations: found.annotations }
+        file.data.cgcAnnotator = { annotations: found.annotations, widths } satisfies AnnotatorData
       },
     ],
     // Renders each note, and adds what the notes link to and say to the page's own.

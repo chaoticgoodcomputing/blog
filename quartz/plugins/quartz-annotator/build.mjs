@@ -4,11 +4,13 @@
 //
 //   1. The stylesheet, from src/styles/: PDF.js's text-layer CSS is prefixed into the Viewer's block,
 //      everything is checked against ADR-0003's library-CSS rules (@chaoticgoodcomputing/css-check),
-//      and it goes in the family layer.
+//      and it goes in the family layer. The frame's CSS is in it too (docs/adr/0004).
 //   2. The Viewer's browser files, into dist/client/, which the emitter copies to the site: its island
 //      entry and chunks (PDF.js among them, fetched only when a Viewer hydrates), and PDF.js's worker
 //      and wasm, copied out of pdfjs-dist (#37).
-//   3. The plugin itself, dist/index.js, with the stylesheet and the entry's file name written in.
+//   3. The plugin itself, dist/index.js, with the stylesheet, the entry's file name and the frame's
+//      script written in, and its frame, dist/frames/index.js, which Quartz's loader imports from
+//      the package's `./frames`.
 import esbuild from "esbuild"
 import fs from "node:fs"
 import path from "node:path"
@@ -70,12 +72,24 @@ function prefixTextLayer(css, from) {
 const sheets = [
   ["src/styles/pdfjs-text-layer.css", (css, from) => prefixTextLayer(css, from)],
   ["src/styles/annotator.css", (css) => css],
+  ["src/styles/frame.css", (css) => css],
 ].map(([file, transform]) => [file, transform(fs.readFileSync(file, "utf8"), file)])
+
+// A package that ships a frame owns the markup the frame renders (the repo's ADR-0003, "packages
+// that ship a frame"), and may reach core's two elements around it: the page, under the frame's
+// name, and its body. The check sees them as elements of the frame's block; everything else a
+// selector names is still held to it.
+const FRAME_ROOTS = [
+  ['.page[data-frame="cgc-annotation"] > #quartz-body', ".cgc-annotator-frame__quartz-body"],
+  ['.page[data-frame="cgc-annotation"]', ".cgc-annotator-frame__quartz-page"],
+]
+const asChecked = (css) => FRAME_ROOTS.reduce((out, [root, stand]) => out.replaceAll(root, stand), css)
+
 // ADR-0003's library-CSS rules, checked on the CSS as it will ship, with no layer yet: this build adds
-// it. Both blocks are this plugin's, and a selector may reach anything inside an element of one,
-// since PDF.js writes the text layer's markup.
+// it. Every block is this plugin's, and a selector may reach anything inside an element of one,
+// since PDF.js writes the text layer's markup, and the frame places the site's components.
 const problems = sheets.flatMap(([file, css]) =>
-  checkStylesheet(css, { from: file, block: ["cgc-annotator", "cgc-annotator-viewer"], reach: "inside" }),
+  checkStylesheet(asChecked(css), { from: file, block: ["cgc-annotator", "cgc-annotator-viewer", "cgc-annotator-frame"], reach: "inside" }),
 )
 if (problems.length) {
   console.error(`cgc-annotator's stylesheet breaks ADR-0003's library-CSS rules:\n${problems.map((p) => `  ${p}`).join("\n")}`)
@@ -133,7 +147,19 @@ for (const file of fs.readdirSync(path.join(pdfjs, "wasm"))) {
 
 // 3. The plugin --------------------------------------------------------------------------------
 
-const entryPoints = { index: "src/index.ts" }
+// The frame's script, shipped with the page body's `afterDOMLoaded`: one browser script, no imports.
+const frameScript = await esbuild.build({
+  entryPoints: ["src/frame/script.inline.ts"],
+  bundle: true,
+  format: "iife",
+  platform: "browser",
+  target: "es2022",
+  minify: true,
+  write: false,
+  logLevel: "warning",
+})
+
+const entryPoints = { index: "src/index.ts", "frames/index": "src/frame/index.tsx" }
 await esbuild.build({
   entryPoints,
   outdir: "dist",
@@ -147,6 +173,7 @@ await esbuild.build({
   define: {
     __CGC_ANNOTATOR_CSS__: JSON.stringify(stylesheet),
     __CGC_ANNOTATOR_ENTRY__: JSON.stringify(path.basename(entry)),
+    __CGC_ANNOTATOR_FRAME_SCRIPT__: JSON.stringify(frameScript.outputFiles[0].text),
   },
   plugins: [
     {

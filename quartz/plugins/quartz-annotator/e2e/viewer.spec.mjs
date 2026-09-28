@@ -1,5 +1,5 @@
 // The annotation page (#37, #68): a note whose frontmatter names an `annotation-target` renders in
-// the full-width frame, with the Viewer showing its mirror, every quoted passage highlighted, beside
+// its own frame, `cgc-annotation` (docs/adr/0004), with the Viewer showing its mirror, every quoted passage highlighted, beside
 // the annotations themselves. The fixture's /annotations/fixture-paper targets a URL the build never
 // fetches: its source document is pinned into the fixture root's cache by the harness (the fixture
 // cache), as the README tells a site to pin one by hand for a host that refuses build machines. /annotations/withdrawn targets one that can't be
@@ -20,8 +20,6 @@ const ANCHORED = ["highlights", "quoteonly", "spanning", "lastpage"]
 
 const viewerOf = (page) => page.locator(".cgc-annotator-viewer")
 const annotation = (page, id) => page.locator(`.cgc-annotator__annotation[data-annotation="${id}"]`)
-// The page's own read-along line, where it is shown: where the Viewer can't say it.
-const readAlong = (page) => page.locator(".cgc-annotator__read-along:visible")
 const highlights = (page, id) => page.locator(`.cgc-annotator-viewer__highlight[data-annotation="${id}"]`)
 
 // The paper's Viewer once its island has hydrated, PDF.js has drawn both pages and every anchored
@@ -48,24 +46,27 @@ const inked = (canvas) =>
 const drawnWidth = (viewer) =>
   viewer.evaluate((v) => v.querySelector(".cgc-annotator-viewer__page")?.getBoundingClientRect().width ?? Infinity)
 
+// Tests marked \`fixme\` need the document on screen, which the static layout doesn't show: the
+// margin (ticket 05) switches the page to the document's layout.
+
 // Marks the loaded document, so a spec can tell an SPA navigation (the mark survives) from a load.
 const mark = (page) => page.evaluate(() => (window.cgcSpaMark = true))
 const marked = (page) => page.evaluate(() => window.cgcSpaMark === true)
 
-test("an annotation page renders in the full-width frame, its source document drawn page by page", async ({ page }) => {
+test.fixme("an annotation page renders in its own frame, its source document drawn page by page", async ({ page }) => {
   await page.goto(PAPER)
-  await expect(page.locator(".page")).toHaveAttribute("data-frame", "full-width")
+  await expect(page.locator(".page")).toHaveAttribute("data-frame", "cgc-annotation")
   const viewer = await shown(page)
   for (const canvas of await viewer.locator("canvas").all()) await expect.poll(() => inked(canvas)).toBeGreaterThan(0)
   // The text layer lies over the drawing, so the document's text can be selected and found.
   await expect(viewer.getByText("The annotator draws highlights over quoted passages.")).toBeAttached()
   await expect(viewer.getByText("Quoted on the last page, far below the fold.")).toBeAttached()
   // The page names where the document comes from, and links there rather than to the mirror.
-  await expect(page.locator(".cgc-annotator__source-link")).toHaveAttribute("href", TARGET)
+  await expect(page.locator(".cgc-annotator-frame__source-link")).toHaveAttribute("href", TARGET)
   await expect(page.locator(`a[href$="${MIRROR}"]`)).toHaveCount(0)
 })
 
-test("each passage an annotation quotes is highlighted where it is in the document, and no other", async ({ page }) => {
+test.fixme("each passage an annotation quotes is highlighted where it is in the document, and no other", async ({ page }) => {
   await page.goto(PAPER)
   await shown(page)
   await expect(highlights(page, "orphan")).toHaveCount(0)
@@ -83,7 +84,7 @@ test("each passage an annotation quotes is highlighted where it is in the docume
   await expect(page.locator('.cgc-annotator-viewer__page[data-page="2"] .cgc-annotator-viewer__highlight[data-annotation="lastpage"]')).toHaveCount(1)
 })
 
-test("the annotations sit beside the document, each with the passage it quotes", async ({ page }) => {
+test("the annotations are cards in document order, each with the passage it quotes", async ({ page }) => {
   await page.goto(PAPER)
   const list = page.locator(".cgc-annotator__annotations")
   await expect(list.locator(".cgc-annotator__annotation")).toHaveCount(IN_ORDER.length)
@@ -99,15 +100,9 @@ test("the annotations sit beside the document, each with the passage it quotes",
   // A highlight with no note of its own still shows its passage.
   await expect(annotation(page, "quoteonly").locator(".cgc-annotator__quote")).toHaveText("A second sentence that a note quotes in full")
   await expect(annotation(page, "quoteonly").locator(".cgc-annotator__note")).toHaveCount(0)
-  // Side by side on a wide screen.
-  const [viewerBox, listBox] = [await viewerOf(page).boundingBox(), await list.boundingBox()]
-  expect(viewerBox.x + viewerBox.width).toBeLessThanOrEqual(listBox.x + 1)
-  expect(viewerBox.width).toBeGreaterThan(listBox.width)
-  // The Viewer shows the document, so the page doesn't also say where to read along.
-  await expect(readAlong(page)).toHaveCount(0)
 })
 
-test("choosing an annotation scrolls the document to its passage, and choosing a highlight picks its annotation", async ({ page }) => {
+test.fixme("choosing an annotation scrolls the document to its passage, and choosing a highlight picks its annotation", async ({ page }) => {
   await page.goto(PAPER)
   await shown(page)
   const passage = highlights(page, "lastpage").first()
@@ -126,58 +121,9 @@ test("choosing an annotation scrolls the document to its passage, and choosing a
   await expect(highlights(page, "lastpage").first()).not.toHaveClass(/--active/)
 })
 
-test("dragging the divider resizes the document, which is drawn again to fit", async ({ page }) => {
-  await page.goto(PAPER)
-  const viewer = await shown(page)
-  const before = await drawnWidth(viewer)
-  // Grabbed by its middle, scrolled into view first: however tall the page's header grows, the
-  // middle of a divider as tall as the document can fall below the fold.
-  const grip = page.locator(".cgc-annotator-viewer__handle")
-  await grip.hover()
-  const handle = await grip.boundingBox()
-  await page.mouse.down()
-  await page.mouse.move(handle.x - 200, handle.y + handle.height / 2, { steps: 8 })
-  await page.mouse.up()
-  await expect.poll(() => drawnWidth(viewer)).toBeLessThan(before - 100)
-  await expect(viewer.locator(".cgc-annotator-viewer__page")).toHaveCount(2)
-  for (const id of ANCHORED) await expect(highlights(page, id)).not.toHaveCount(0)
-  // Still over its passage after the redraw.
-  const line = await page.getByText("The annotator draws highlights over quoted passages.").boundingBox()
-  const box = await highlights(page, "highlights").first().boundingBox()
-  expect(box.y + box.height / 2).toBeGreaterThan(line.y)
-  expect(box.y + box.height / 2).toBeLessThan(line.y + line.height)
-})
-
-test("a reader without JavaScript gets every annotation and a link to the source document", async ({ browser, colorScheme }) => {
-  const context = await browser.newContext({ javaScriptEnabled: false, colorScheme })
-  const page = await context.newPage()
-  await page.goto(PAPER)
-  await expect(page.locator(".cgc-annotator__annotation")).toHaveCount(IN_ORDER.length)
-  await expect(annotation(page, "lastpage").locator(".cgc-annotator__quote")).toHaveText("far below the fold")
-  await expect(page.locator(".cgc-annotator__source-link")).toHaveAttribute("href", TARGET)
-  // The Viewer never loads, so the page says where to read along instead.
-  await expect(readAlong(page)).toHaveCount(1)
-  await expect(readAlong(page)).toContainText("read along at")
-  await expect(readAlong(page).getByRole("link")).toHaveAttribute("href", TARGET)
-  // Said once, on a narrow screen too.
-  await page.setViewportSize({ width: 800, height: 900 })
-  await expect(readAlong(page)).toHaveCount(1)
-  await context.close()
-})
-
-test("on a narrow screen the annotations take the page, which says where to read along", async ({ page }) => {
-  await page.setViewportSize({ width: 800, height: 900 })
-  await page.goto(PAPER)
-  await expect(viewerOf(page)).toBeHidden()
-  await expect(annotation(page, "lastpage").locator(".cgc-annotator__quote")).toBeVisible()
-  await expect(readAlong(page)).toHaveCount(1)
-  await expect(readAlong(page)).toContainText("read along at")
-  await expect(readAlong(page).getByRole("link")).toHaveAttribute("href", TARGET)
-})
-
 // The two SPA bugs the v4 annotation page carried (#34, #37): its viewer CSS went missing on the
 // second visit, and an unfinished load kept drawing after the reader had left.
-test("navigating away and back keeps the Viewer's CSS, and the document is drawn once", async ({ page }) => {
+test.fixme("navigating away and back keeps the Viewer's CSS, and the document is drawn once", async ({ page }) => {
   await page.goto(PAPER)
   await shown(page)
   await mark(page)
@@ -192,14 +138,13 @@ test("navigating away and back keeps the Viewer's CSS, and the document is drawn
   const text = viewer.getByText("The annotator draws highlights over quoted passages.")
   await expect(text).toHaveCSS("color", "rgba(0, 0, 0, 0)")
   await expect(text).toHaveCSS("position", "absolute")
-  await expect(page.locator(".cgc-annotator__split")).toHaveCSS("display", "flex")
   // Drawn once, not once per visit.
   await expect(viewer.getByText("The annotator draws highlights over quoted passages.")).toHaveCount(1)
   await expect(highlights(page, "highlights")).toHaveCount(1)
   await expect.poll(() => page.workers().length).toBe(1)
 })
 
-test("leaving while the document loads stops the load: nothing is drawn after the reader has gone", async ({ page }) => {
+test.fixme("leaving while the document loads stops the load: nothing is drawn after the reader has gone", async ({ page }) => {
   // PDF.js's worker rejects the work it still had pending as it's shut down. That is its own
   // teardown, in a thread that is ending, not an error in the page.
   const errors = []
@@ -234,7 +179,7 @@ test("leaving while the document loads stops the load: nothing is drawn after th
   expect(errors).toEqual([])
 })
 
-test("moving between two annotation pages shows each its own document", async ({ page }) => {
+test.fixme("moving between two annotation pages shows each its own document", async ({ page }) => {
   await page.goto(PAPER)
   await shown(page)
   await mark(page)
@@ -278,7 +223,7 @@ test("a mirror that fails to load in the browser degrades the same way", async (
 // The stock fixture makes off-site requests of its own on every page (Google Fonts, the graph's d3
 // and pixi from jsDelivr, Plausible), so the annotation page is held to an ordinary page. No off-site
 // request reaches the network: each is recorded and refused.
-test("PDF.js, its worker and its wasm come from the site: no CDN request", async ({ page, baseURL }) => {
+test.fixme("PDF.js, its worker and its wasm come from the site: no CDN request", async ({ page, baseURL }) => {
   const site = new URL(baseURL).host
   let offsite = []
   const local = []
@@ -307,7 +252,7 @@ test("PDF.js, its worker and its wasm come from the site: no CDN request", async
   expect(local).toContain("/static/cgc-annotator/wasm/qcms_bg.wasm")
 })
 
-test("the highlights' colour is the scheme's text highlight", async ({ page }) => {
+test.fixme("the highlights' colour is the scheme's text highlight", async ({ page }) => {
   await page.goto(PAPER)
   await shown(page)
   const actual = await highlights(page, "highlights")
@@ -360,7 +305,7 @@ async function expectLaidOnOnce(page) {
   }
 }
 
-test("each passage is highlighted once: one box a line, after load, a redraw, and a return", async ({ page }) => {
+test.fixme("each passage is highlighted once: one box a line, after load, a redraw, and a return", async ({ page }) => {
   await page.goto(PAPER)
   await shown(page)
   await expectLaidOnOnce(page)

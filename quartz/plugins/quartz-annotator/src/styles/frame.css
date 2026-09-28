@@ -1,0 +1,213 @@
+/* cgc-annotator's frame, `cgc-annotation` (docs/adr/0004): library CSS in the family layer, like the
+   rest of the package (ADR-0003 rule 11), and nothing in core's unlayered frame stylesheet. One BEM
+   block, `cgc-annotator-frame`, the structure the frame renders; besides it, only core's two elements
+   around every frame, `.page[data-frame="cgc-annotation"]` and its `#quartz-body`, which build.mjs's
+   check allows here and nowhere else.
+
+   This is the page before any script: the bar, the top section, the annotations in one column, the
+   bottom section. No media query decides the layout; the Viewer does, in script, from the page's
+   width (docs/adr/0004). */
+
+/* Core lays out every frame's body as its three-column grid, with a gutter below its desktop
+   breakpoint. This frame lays out its own. */
+.page[data-frame="cgc-annotation"] > #quartz-body {
+  display: block;
+  padding: 0;
+}
+
+.cgc-annotator-frame {
+  --cgc-annotator-frame-bar-height: 3rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* The bar, at the top of the screen at every width: ☰, the site's name or the page's title, the
+   annotations' toggle. */
+.cgc-annotator-frame__bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-sizing: border-box;
+  height: var(--cgc-annotator-frame-bar-height);
+  padding: 0 0.5rem;
+  border-bottom: 1px solid var(--lightgray);
+  background: var(--light);
+}
+
+.cgc-annotator-frame__button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding: 0 0.5rem;
+  border: 0;
+  border-radius: 0.375rem;
+  background: transparent;
+  color: var(--darkgray);
+  font-size: inherit;
+  font-family: var(--bodyFont);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.cgc-annotator-frame__button:hover,
+.cgc-annotator-frame__button[aria-expanded="true"],
+.cgc-annotator-frame__button[aria-pressed="true"] {
+  background: var(--highlight);
+  color: var(--dark);
+}
+
+.cgc-annotator-frame__icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cgc-annotator-frame__count {
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The site's name, until the top section's title is gone under the bar; then the page's title. */
+.cgc-annotator-frame__title {
+  display: grid;
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--dark);
+  font-family: var(--headerFont);
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+}
+
+.cgc-annotator-frame__site-name,
+.cgc-annotator-frame__page-title {
+  grid-area: 1 / 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: opacity 0.15s ease;
+}
+
+.cgc-annotator-frame__page-title,
+.cgc-annotator-frame__bar[data-title="page"] .cgc-annotator-frame__site-name {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.cgc-annotator-frame__bar[data-title="page"] .cgc-annotator-frame__page-title {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* The ☰ drawer, from the left, holding `header` then `left`. Moved by `left`, never a transform:
+   a transformed drawer would hold a fixed search overlay inside it. */
+.cgc-annotator-frame__menu {
+  --cgc-annotator-frame-menu-width: min(20rem, 85vw);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: calc(-1 * var(--cgc-annotator-frame-menu-width) - 1rem);
+  z-index: 31;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-sizing: border-box;
+  width: var(--cgc-annotator-frame-menu-width);
+  padding: 0.5rem 1rem 1rem;
+  overflow-y: auto;
+  border-right: 1px solid var(--lightgray);
+  background: var(--light);
+  transition: left 0.2s ease;
+}
+
+.cgc-annotator-frame__menu[data-open="true"] {
+  left: 0;
+}
+
+.cgc-annotator-frame__menu-close {
+  align-self: flex-start;
+}
+
+.cgc-annotator-frame__scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: var(--dark);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.cgc-annotator-frame__scrim[data-open="true"] {
+  opacity: 0.35;
+  pointer-events: auto;
+}
+
+.cgc-annotator-frame__main {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+}
+
+/* The top and bottom sections: the text's width, centred. */
+.cgc-annotator-frame__top,
+.cgc-annotator-frame__bottom {
+  box-sizing: content-box;
+  width: auto;
+  max-width: var(--cgc-annotator-text-width);
+  margin: 0 auto;
+  padding: 0 1rem;
+  overflow-wrap: anywhere;
+}
+
+.cgc-annotator-frame__top {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.cgc-annotator-frame__bottom {
+  flex: 1 0 auto;
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+}
+
+.cgc-annotator-frame__source,
+.cgc-annotator-frame__read-along {
+  margin: 0.5rem 0 0;
+  color: var(--darkgray);
+  font-size: 0.9rem;
+}
+
+.cgc-annotator-frame__source-link,
+.cgc-annotator-frame__read-along-link {
+  color: var(--secondary);
+  font-weight: 500;
+}
+
+.cgc-annotator-frame__preface,
+.cgc-annotator-frame__epilogue {
+  margin: 1.5rem 0 0;
+}
+
+.cgc-annotator-frame__epilogue {
+  margin: 0 0 2rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cgc-annotator-frame__menu,
+  .cgc-annotator-frame__scrim {
+    transition: none;
+  }
+}

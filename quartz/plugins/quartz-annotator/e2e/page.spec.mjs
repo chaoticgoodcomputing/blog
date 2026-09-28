@@ -104,8 +104,8 @@ test("an author's prose is cut into a preface before the annotations and an epil
   ].join("\n")
   const site = await build(scratch, "sections", { "annotated.md": page, "other.md": "# other\n", "third.md": "# third\n" })
   const html = site.read("annotated.html")
-  const preface = html.match(/<article class="cgc-annotator__preface">([\s\S]*?)<\/article>/)?.[1] ?? ""
-  const epilogue = html.match(/<article class="cgc-annotator__epilogue">([\s\S]*?)<\/article>/)?.[1] ?? ""
+  const preface = html.match(/<article class="cgc-annotator-frame__preface">([\s\S]*?)<\/article>/)?.[1] ?? ""
+  const epilogue = html.match(/<article class="cgc-annotator-frame__epilogue">([\s\S]*?)<\/article>/)?.[1] ?? ""
   // Text before any marker, under "# Preface", and under the repeated marker, in the preface.
   for (const said of ["Before any marker", "Why I read it", "Still the preface", "More preface"]) expect(preface).toContain(said)
   expect(preface).toMatch(/<h2[^>]*>.*A heading of the preface/)
@@ -134,7 +134,24 @@ test("a page with prose and no markers shows it all as its preface", async ({ sc
   const page = `---\ntitle: Annotated\nannotation-target: ${TARGET}\n---\n\nNotes on the paper, with no headings.\n\n${block("only", "a passage")}`
   const site = await build(scratch, "no-markers", { "annotated.md": page })
   const html = site.read("annotated.html")
-  expect(html).toMatch(/<article class="cgc-annotator__preface">\s*<p>Notes on the paper, with no headings\.<\/p>/)
-  expect(html).not.toContain("cgc-annotator__epilogue")
+  expect(html).toMatch(/<article class="cgc-annotator-frame__preface">\s*<p>Notes on the paper, with no headings\.<\/p>/)
+  expect(html).not.toContain("cgc-annotator-frame__epilogue")
   expect(site.output.split("\n").filter((line) => line.includes("cgc-annotator") && !line.includes("could not mirror"))).toEqual([])
+})
+
+// The frame's widths are the plugin's options (docs/adr/0004): `px` or `rem` lengths, set on the page
+// as the frame's custom properties. Anything else costs a warning, and the default.
+test("the text's width is an option: a px or rem length, and anything else warns and falls back", async ({ scratch }) => {
+  const page = { "annotated.md": annotationPage(TARGET, "A note.") }
+  const style = (html) => html.match(/<div class="cgc-annotator-frame"[^>]*style="([^"]*)"/)?.[1] ?? ""
+
+  const set = await build(scratch, "text-width", page, { textWidth: "42rem" })
+  expect(style(set.read("annotated.html"))).toContain("--cgc-annotator-text-width: 42rem")
+  expect(set.output).not.toContain("textWidth")
+
+  const bad = await build(scratch, "text-width-bad", page, { textWidth: "60%" })
+  expect(style(bad.read("annotated.html"))).toContain("--cgc-annotator-text-width: 800px")
+  const warnings = bad.output.split("\n").filter((line) => line.includes("cgc-annotator") && line.includes("textWidth"))
+  expect(warnings).toHaveLength(1)
+  expect(warnings[0]).toContain('"60%"')
 })

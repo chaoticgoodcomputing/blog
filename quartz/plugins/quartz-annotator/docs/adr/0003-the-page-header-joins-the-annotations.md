@@ -1,9 +1,14 @@
 ---
-status: accepted
+status: superseded by 0004
 date: 2026-09-26
 ---
 
 # The page header joins the annotations: the body takes it, and the frame hands it over
+
+_Superseded on 2026-09-28 by [ADR-0004](./0004-the-annotation-page-owns-its-frame.md): the annotation
+page owns its frame, which places the page header at the top of the page, above the document, and
+`takesPageHeader` is gone. Kept for why the header was moved, and why a frame of this plugin's own
+was first turned down._
 
 An annotation page's header (its title, its date and reading time, its tags: the layout's
 before-body components) sits at the top of the annotations panel, beside the Viewer, and not above

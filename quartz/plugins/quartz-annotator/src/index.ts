@@ -2,8 +2,8 @@
 // package, three halves, as #37 settled:
 //   - the transformer takes each annotation page's annotations out of its markdown and renders
 //     their notes through the site's pipeline (./transformer);
-//   - the page type gives an annotation page the full-width frame, and a body of the Viewer beside
-//     the annotations (./page);
+//   - the page type gives an annotation page this plugin's own frame, `cgc-annotation` (./frame,
+//     docs/adr/0004), and a body of the Viewer and the annotations (./page);
 //   - the emitter mirrors every annotation page's source document into the site, and emits the
 //     Viewer's browser files. Mirrors are pinned on first fetch, and a document that can't be
 //     fetched costs a warning, never the build (docs/adr/0001).
@@ -19,11 +19,12 @@ import { fileURLToPath } from "node:url"
 import { annotationTarget, cacheEntry, mirrorName, pinned, sourceUrl, Unmirrorable } from "./mirror"
 import { Body, STATIC_DIR } from "./page"
 import { DEFAULT_DENYLIST, NAME, Transformer, warn } from "./transformer"
+import { widths, type Widths } from "./widths"
 
 // Written in by build.mjs: the plugin's stylesheet, already in its family layer (ADR-0003).
 declare const __CGC_ANNOTATOR_CSS__: string
 
-export interface Options {
+export interface Options extends Widths {
   /** Where mirrors are served from, relative to the site root. Keep it out of search in `robots.txt`. */
   mirrorDir: string
   /** Where source documents are pinned between builds: relative to the Quartz root, or absolute. */
@@ -37,7 +38,7 @@ export interface Options {
   denylist: string[]
 }
 
-const defaults: Options = {
+const defaults: Omit<Options, keyof Widths> = {
   mirrorDir: "mirrors",
   cacheDir: "node_modules/.cache/cgc-annotator",
   fetchTimeout: 60_000,
@@ -65,9 +66,11 @@ const CLIENT_DIR = fileURLToPath(new URL("./client/", import.meta.url))
 /** The transformer: each annotation page's annotations, with their notes rendered. */
 export function CgcAnnotatorTransformer(userOpts?: Partial<Options>) {
   const opts = { ...defaults, ...userOpts }
+  // Checked here, and only here, so a site hears of a bad width once: the page type reads them from
+  // each page's data.
   return {
     name: NAME,
-    ...Transformer(opts.denylist),
+    ...Transformer(opts.denylist, widths(opts, warn)),
     // ADR-0003 rule 11: the stylesheet goes in the family layer, `cgc.annotator`, from here. It is
     // global, like every plugin stylesheet in Quartz 5, so SPA navigation never drops it.
     externalResources: () => ({ css: [{ content: __CGC_ANNOTATOR_CSS__, inline: true }] }),
@@ -141,7 +144,7 @@ export function CgcAnnotator(userOpts?: Partial<Options>) {
     priority: 30,
     match: ({ fileData }: { fileData: File["data"] }) => annotationTarget(fileData?.frontmatter) !== undefined,
     layout: "annotation",
-    frame: "full-width",
+    frame: "cgc-annotation",
     body: () => body,
 
     // Emitter.

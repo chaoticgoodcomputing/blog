@@ -13,16 +13,15 @@ libraries are inlined into this plugin's build.
 
 **Annotation page**:
 A note whose frontmatter names an `annotation-target`. It shows its annotations next to the
-source document they were written against, in the `full-width` frame, under the layout key
-`annotation`.
+source document they were written against, in this plugin's own frame, `cgc-annotation`
+(docs/adr/0004), under the layout key `annotation`.
 _Avoid_: annotated note, PDF page
 
 **Page header**:
-The annotation page's own header: its title, date and reading time, and tags, which the layout
-places before the body. A frame that sees the body's `takesPageHeader` hands it to the body as
-children, and the body puts it at the top of the annotations panel, over where the source document
-comes from (docs/adr/0003). Under any other frame it stays above the page.
-_Avoid_: title block, heading (that is the panel's "Annotations")
+The annotation page's own header: its title, date and reading time, and tags, the layout's
+before-body components. It heads the top section, above where the source document comes from and
+the preface.
+_Avoid_: title block, heading
 
 **Preface**:
 The author's prose before the source document, from the annotation page's own markdown: whatever
@@ -57,6 +56,20 @@ The transformers a note is rendered without, by transformer name, as `@chaoticgo
 defines it. By default the ones that act on a whole page. This plugin's own transformer is always
 left out.
 _Avoid_: blocklist, excluded plugins
+
+**Card**:
+One annotation as the page shows it: the passage it quotes and the note written on it. Without a
+document, the cards are the page, in one column.
+_Avoid_: comment, annotation (that is the thing the card shows)
+
+**Margin**:
+The desktop column beside the document where cards sit anchored to their highlights.
+_Avoid_: sidebar, panel
+
+**Drawer**:
+The annotations when the margin doesn't fit, coming in from the right. (The ☰ drawer, from the left,
+holds the site's own components.)
+_Avoid_: sidebar, sheet
 
 **Mirror**:
 Our pinned copy of a source document, served from the site. Taken once and then kept, because

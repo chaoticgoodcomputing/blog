@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "This site's own layout components: the page title, with the site's icon and author, the footer, with its copyright line, and a full-width frame that keeps the sidebars' components. A site plugin: a repo-only package, never published (private), loaded by package name like every other plugin of ours. See CONTEXT.md.",
+  "description": "This site's own layout components: the page title, with the site's icon and author, and the footer, with its copyright line. A site plugin: a repo-only package, never published (private), loaded by package name like every other plugin of ours. See CONTEXT.md.",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -27,10 +27,6 @@
       "types": "./dist/components/index.d.ts",
       "import": "./dist/components/index.js"
     },
-    "./frames": {
-      "types": "./dist/frames/index.d.ts",
-      "import": "./dist/frames/index.js"
-    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
@@ -52,7 +48,7 @@
   "quartz": {
     "name": "site-components",
     "displayName": "Site components",
-    "description": "This site's page title, footer and full-width frame.",
+    "description": "This site's page title and footer.",
     "category": "component",
     "version": "0.0.0",
     "quartzVersion": ">=5.0.0",
@@ -71,12 +67,6 @@
         "displayName": "Footer",
         "defaultPosition": "footer",
         "defaultPriority": 50
-      }
-    },
-    "//frames": "Registered under each frame's own name, which a page type's layout names as its `template` (docs/adr/0002).",
-    "frames": {
-      "SiteFullWidthFrame": {
-        "displayName": "Full width, with the site's chrome"
       }
     }
   }
