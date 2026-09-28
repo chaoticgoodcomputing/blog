@@ -42,9 +42,8 @@ colour properties; icons are inherited here.
 _Avoid_: fallback, lookup
 
 **Primary tag**:
-The one tag that stands for a page: its most specific tag, the deepest one, where the first in
-frontmatter order breaks a tie. A page's `primaryTag` frontmatter overrides both, and must name
-one of its tags.
+The one tag that stands for a page: the first in its `tags` frontmatter, however deep the others,
+as in v4. Nothing overrides it: there is no `primaryTag` frontmatter.
 _Avoid_: main tag, page tag, category
 
 **Normalised tag**:

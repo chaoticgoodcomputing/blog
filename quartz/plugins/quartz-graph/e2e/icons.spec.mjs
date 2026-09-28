@@ -28,13 +28,14 @@ test("draws each node's icon on it: its own tag's, or the one it inherits", asyn
   page,
   colorScheme,
 }) => {
-  // `writing/essays: { icon: "mdi:feather" }`, which stands for most-specific.
-  await page.goto("/tag-engine/most-specific")
+  // `writing/essays: { icon: "mdi:feather" }`, deeper-later's second tag.
+  await page.goto("/tag-engine/deeper-later")
   const graph = localGraph(page)
   await expect.poll(() => marksNear(graph, "#essays", DARK[colorScheme])).toBeGreaterThan(5)
-  await expect.poll(() => marksNear(graph, "Most Specific", DARK[colorScheme])).toBeGreaterThan(5)
-  // `fixture` has no icon, and no ancestor to inherit one from.
-  expect(await showsNoIcon(page, "/tag-engine/most-specific", "#fixture", colorScheme)).toBe(true)
+  // `fixture` has no icon, and no ancestor to inherit one from. It is deeper-later's first tag, so
+  // the page takes its lack of one, not `writing/essays`'s.
+  expect(await showsNoIcon(page, "/tag-engine/deeper-later", "#fixture", colorScheme)).toBe(true)
+  expect(await showsNoIcon(page, "/tag-engine/deeper-later", "Deeper Later", colorScheme)).toBe(true)
   // `writing/annotations` has none of its own, and takes `writing: { icon: "mdi:pencil" }`'s.
   await page.goto("/tag-engine/annotated")
   await expect.poll(() => marksNear(graph, "#annotations", DARK[colorScheme])).toBeGreaterThan(5)
@@ -53,7 +54,7 @@ test("draws an icon from the site's own collection", async ({ page, colorScheme 
 test("fetches no icon: they come with the graph's index", async ({ page, colorScheme }) => {
   const requests = []
   page.on("request", (request) => requests.push(request.url()))
-  await page.goto("/tag-engine/most-specific")
+  await page.goto("/tag-engine/deeper-later")
   await expect
     .poll(() => marksNear(localGraph(page), "#essays", DARK[colorScheme]))
     .toBeGreaterThan(5)
@@ -71,7 +72,7 @@ test("repaints each icon, and the circle under it, when the reader switches sche
   page,
   colorScheme,
 }) => {
-  await page.goto("/tag-engine/most-specific")
+  await page.goto("/tag-engine/deeper-later")
   const graph = localGraph(page)
   await expect.poll(() => marksNear(graph, "#essays", DARK[colorScheme])).toBeGreaterThan(5)
   const other = await toggleScheme(page)

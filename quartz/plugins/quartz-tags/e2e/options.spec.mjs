@@ -63,17 +63,6 @@ test("fails the build on a field a tag doesn't have", async () => {
   )
 })
 
-test("fails the build on a primaryTag that isn't one of the page's tags", async () => {
-  const files = {
-    "index.md": "---\ntitle: Home\ntags: [fixture, markdown]\nprimaryTag: writing\n---\nHome.\n",
-  }
-  const { code, output } = await build("tags-bad-primary", { tags: {} }, files)
-  expect(code).not.toBe(0)
-  expect(output).toContain(
-    `cgc-tags: index.md: primaryTag "writing" is not one of the page's tags (fixture, markdown)`,
-  )
-})
-
 // Two keys the engine would read as one tag, once each is normalised.
 test("fails the build on two keys that are the same tag", async () => {
   const { code, output } = await build("tags-same-tag", { tags: { "a b": {}, "a-b": {} } })

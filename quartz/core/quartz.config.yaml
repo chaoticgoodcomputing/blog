@@ -310,16 +310,16 @@ plugins:
         expandSelectedOscillationTime: 2
       globalGraph:
         scale: 1
-        repelForce: 2
-        centerForce: 1
+        repelForce: 1
+        centerForce: 2
         linkDistance:
           tagTag: 0
           tagPost: 0
           postPost: 0
         linkStrength:
-          tagTag: 1
-          tagPost: 0.5
-          postPost: 0.05
+          tagTag: 0.25
+          tagPost: 0.05
+          postPost: 0.01
         edgeOpacity:
           tagTag:
             min: 1

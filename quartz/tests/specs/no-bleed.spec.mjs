@@ -5,7 +5,7 @@
 // must compute identically. An element is owned if it, or an ancestor, carries a `cgc-` class.
 import { test, expect } from "../harness/test.mjs"
 
-const PAGES = ["/", "/plain-note", "/md-twin", "/mdx-article.mdx", "/lab/cascade.mdx", "/lab/pdf.mdx", "/lab/bluesky.mdx", "/links/from-md", "/links/from-mdx.mdx", "/nested/deep-note", "/tags/fixture", "/tags/articles", "/tags/writing", "/tags/listing", "/tag-engine/most-specific", "/tag-engine/primary-override", "/tag-engine/first-tag", "/seo/private-note", "/seo/private-descendant", "/seo/authored", "/seo/external-stub", "/seo/feed-article", "/backlinks/target", "/og/tag-nested", "/linked-note", "/posthog/navigation", "/annotations/fixture-paper", "/annotations/withdrawn", "/graph/old-note", "/tag-explorer/alpha"]
+const PAGES = ["/", "/plain-note", "/md-twin", "/mdx-article.mdx", "/lab/cascade.mdx", "/lab/pdf.mdx", "/lab/bluesky.mdx", "/links/from-md", "/links/from-mdx.mdx", "/nested/deep-note", "/tags/fixture", "/tags/articles", "/tags/writing", "/tags/listing", "/tag-engine/deeper-later", "/tag-engine/first-tag", "/seo/private-note", "/seo/private-descendant", "/seo/authored", "/seo/external-stub", "/seo/feed-article", "/backlinks/target", "/og/tag-nested", "/linked-note", "/posthog/navigation", "/annotations/fixture-paper", "/annotations/withdrawn", "/graph/old-note", "/tag-explorer/alpha"]
 // A page one of our plugins creates has no baseline of its own, so it is compared against the
 // stock page it stands in for: the .mdx article against its byte-identical .md twin. The explorer
 // marks the current page `.active`, which is then a different link on each side, so it is skipped.

@@ -94,7 +94,7 @@ test("lists a tag page's parent and subtags", async ({ page }) => {
   await page.goto("/tags/writing")
   const list = page.locator(".cgc-tag-list")
   expect(await tagsOf(list)).toEqual(["writing/annotations", "writing/articles", "writing/essays"])
-  // og/tag-nested, og/tag-sibling, tag-engine/annotated and tag-engine/most-specific
+  // og/tag-nested, og/tag-sibling, tag-engine/annotated and tag-engine/deeper-later
   await page.goto("/tags/writing/essays")
   expect(await tagsOf(list)).toEqual(["writing"])
   await expect(list.locator(".cgc-tag-list__count")).toHaveText("(4)")

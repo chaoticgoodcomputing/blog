@@ -35,27 +35,31 @@ test("draws each page as its primary tag's bubble: rimmed in the tag colour, on 
   page,
   colorScheme,
 }) => {
-  // `writing/essays` stands for most-specific, with an icon of its own, `mdi:feather`, and
-  // `writing`'s colour, `var(--secondary)`.
-  await page.goto("/tag-engine/most-specific")
+  // `writing/annotations` stands for annotated, with `writing`'s icon, `mdi:pencil`, and its colour,
+  // `var(--secondary)`.
+  await page.goto("/tag-engine/annotated")
   const theme = await bubbleTheme(page)
   // Three different colours, so a bubble that swapped two of them fails.
   expect(new Set([SECONDARY[colorScheme], theme.circle, theme.icon].map(String)).size).toBe(3)
-  await expectBubble(page, "Most Specific", SECONDARY[colorScheme])
+  await expectBubble(page, "Annotated", SECONDARY[colorScheme])
   await expect
-    .poll(() => marksNear(localGraph(page), "Most Specific", theme.icon))
+    .poll(() => marksNear(localGraph(page), "Annotated", theme.icon))
     .toBeGreaterThan(5)
 })
 
 test("rims each page in its primary tag's colour", async ({ page, colorScheme }) => {
-  // plain-note is tagged `fixture` then `markdown`, equally specific: the first stands for it.
-  // primary-override, which links to it, has the same tags, and `primaryTag: markdown`.
+  // plain-note is tagged `fixture` then `markdown`: the first stands for it.
   await page.goto("/plain-note")
   await expectBubble(page, "Plain Note", FIXTURE[colorScheme])
-  await expectBubble(page, "Primary Override", MARKDOWN[colorScheme])
   // seo/private-note is tagged `private`, which has no colour: private pages are drawn as any
   // other, where the site sets no `nodeColors.private`.
   await expectBubble(page, "Private Note", DARKGRAY[colorScheme])
+  // first-tag is tagged `markdown` then `fixture`, and deeper-later `fixture` then `writing/essays`:
+  // the first stands for each, not the first A→Z or the deepest.
+  await page.goto("/tag-engine/first-tag")
+  await expectBubble(page, "First Tag", MARKDOWN[colorScheme])
+  await page.goto("/tag-engine/deeper-later")
+  await expectBubble(page, "Deeper Later", FIXTURE[colorScheme])
 })
 
 test("rims each tag node in its tag's colour", async ({ page, colorScheme }) => {
@@ -66,7 +70,7 @@ test("rims each tag node in its tag's colour", async ({ page, colorScheme }) => 
 
 test("rims a page and a tag in the colour they inherit", async ({ page, colorScheme }) => {
   // `writing/essays` has an icon of its own and no colour: it takes `writing`'s.
-  await page.goto("/tag-engine/most-specific")
+  await page.goto("/tag-engine/deeper-later")
   await expectBubble(page, "#essays", SECONDARY[colorScheme])
   // `reindex/deep`, and `reindex` above it, have none: down the chain to the default.
   await page.goto("/tag-engine/index-suffix")

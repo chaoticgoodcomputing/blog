@@ -43,14 +43,14 @@ test("repaints each bubble's rim in its tag's colour when the reader switches sc
   colorScheme,
 }) => {
   // The page, and its tag node, rimmed in `markdown`'s colour, which is a pair: one for each scheme.
-  await page.goto("/tag-engine/primary-override")
+  await page.goto("/tag-engine/first-tag")
   const graph = localGraph(page)
   const canvas = graph.locator(".cgc-graph__canvas")
   const rim = async (label) => (await bubblePaint(graph, label)).rim
-  await expect.poll(() => rim("Primary Override")).toEqual(MARKDOWN[colorScheme])
+  await expect.poll(() => rim("First Tag")).toEqual(MARKDOWN[colorScheme])
   await expect.poll(() => rim("#markdown")).toEqual(MARKDOWN[colorScheme])
   const other = await toggleScheme(page)
-  await expect.poll(() => rim("Primary Override")).toEqual(MARKDOWN[other])
+  await expect.poll(() => rim("First Tag")).toEqual(MARKDOWN[other])
   await expect.poll(() => rim("#markdown")).toEqual(MARKDOWN[other])
   expect(await pixels(canvas, MARKDOWN[colorScheme])).toBe(0)
 })
@@ -60,7 +60,7 @@ test("repaints a bubble whole, rim, circle and icon, in the other scheme's colou
   colorScheme,
 }) => {
   // `writing/essays` inherits `writing: { color: "var(--secondary)" }`, and has its own icon.
-  await page.goto("/tag-engine/most-specific")
+  await page.goto("/tag-engine/deeper-later")
   const graph = localGraph(page)
   const bubble = async () => {
     const { circle, icon } = await bubbleTheme(page)
@@ -75,5 +75,5 @@ test("repaints a bubble whole, rim, circle and icon, in the other scheme's colou
   expect(other).not.toBe(colorScheme)
   const after = await bubble()
   expect(after).not.toEqual(before)
-  expect((await bubblePaint(graph, "Most Specific")).rim).toEqual(SECONDARY[other])
+  expect((await bubblePaint(graph, "#essays")).rim).toEqual(SECONDARY[other])
 })

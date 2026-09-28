@@ -142,9 +142,6 @@ export function tagOfPage(slug: string | undefined): string | null {
 export const isAllTagsPage = (slug: string | undefined): boolean =>
   slug === "tags" || slug === "tags/index"
 
-/** How deep a tag sits: 0 for a top-level tag, one more for each `/`. */
-export const depthOf = (tag: string): number => tag.split("/").length - 1
-
 // A character a CSS identifier can't hold unescaped. Tags are slugified, so this is rare.
 const escapeIdent = (segment: string) =>
   segment.replace(/[^a-zA-Z0-9_\-\u0080-￿]/g, (ch) => `\\${ch}`)
@@ -177,25 +174,17 @@ export function propertiesOf(tag: string, dictionary: TagDictionary): TagPropert
 }
 
 /**
- * The tag that stands for a page: the most specific of its tags, the deepest one, where the first
- * in frontmatter order breaks a tie. A page's `primaryTag` frontmatter overrides both; the engine
- * checks it is one of the page's tags before it gets here.
+ * The tag that stands for a page: the first in frontmatter order, as v4's graph took it, however
+ * deep the others. Nothing overrides it.
  */
-export function primaryTagOf(tags: readonly string[], override?: string): string | null {
-  if (override !== undefined) return override
-  let primary: string | null = null
-  for (const tag of tags) if (primary === null || depthOf(tag) > depthOf(primary)) primary = tag
-  return primary
+export function primaryTagOf(tags: readonly string[]): string | null {
+  return tags[0] ?? null
 }
 
 /** Everything the engine publishes on one page's `fileData`. */
-export function tagsDataOf(
-  tags: readonly string[],
-  dictionary: TagDictionary,
-  primaryOverride?: string,
-): TagsData {
+export function tagsDataOf(tags: readonly string[], dictionary: TagDictionary): TagsData {
   const own = Object.fromEntries(tags.map((tag) => [tag, propertiesOf(tag, dictionary)]))
-  const primary = primaryTagOf(tags, primaryOverride)
+  const primary = primaryTagOf(tags)
   return {
     tags: own,
     primary: primary === null ? null : { tag: primary, ...propertiesOf(primary, dictionary) },

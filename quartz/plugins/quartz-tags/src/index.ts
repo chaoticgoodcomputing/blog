@@ -149,17 +149,7 @@ function pageTags(data: Record<string, any>): string[] {
 }
 
 function publish(data: Record<string, any>, dictionary: TagDictionary): TagsData {
-  const tags = pageTags(data)
-  const primaryTag = data.frontmatter?.primaryTag
-  if (primaryTag === undefined || primaryTag === null) return tagsDataOf(tags, dictionary)
-  const primary = typeof primaryTag === "string" ? normalise(primaryTag) : ""
-  if (!tags.includes(primary)) {
-    const page = data.relativePath ?? data.slug
-    throw new CgcTagsError(
-      `${page}: primaryTag ${JSON.stringify(primaryTag)} is not one of the page's tags (${tags.join(", ") || "none"})`,
-    )
-  }
-  return tagsDataOf(tags, dictionary, primary)
+  return tagsDataOf(pageTags(data), dictionary)
 }
 
 /** The transformer: publishes each page's tags on `fileData.cgcTags`. */

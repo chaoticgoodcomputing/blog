@@ -47,7 +47,7 @@ test("the consumers receive the engine's artifacts at the fixture root", async (
   expect(received["plain-note"].primary.tag).toBe("fixture")
   // quartz-graph's index carries each page's tags as the engine published them.
   const graph = JSON.parse(emitted.read("static/cgcGraph.json"))
-  expect(graph.pages["tag-engine/most-specific"].tags).toEqual(["fixture", "writing/essays"])
+  expect(graph.pages["tag-engine/deeper-later"].tags).toEqual(["fixture", "writing/essays"])
 })
 
 // The real site's tag table, where `engineering` is `light-dark(#0070cc, #008CFF)`: v4's blue as

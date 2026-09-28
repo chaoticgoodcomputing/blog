@@ -46,15 +46,15 @@ test("lists every page by its slug, with its title, links and tags", async ({ em
     tags: ["fixture", "markdown"],
   })
   // Tags as the quartz-tags engine publishes them, in frontmatter order.
-  expect(pages["tag-engine/most-specific"].tags).toEqual(["fixture", "writing/essays"])
+  expect(pages["tag-engine/deeper-later"].tags).toEqual(["fixture", "writing/essays"])
 })
 
 test("carries each page's primary tag, as cgc-tags resolves it", async ({ emitted }) => {
   const pages = pagesOf(emitted)
-  // The most specific tag; the first of equally specific ones; the one `primaryTag` names.
-  expect(pages["tag-engine/most-specific"].primary).toBe("writing/essays")
+  // The first tag in frontmatter order, however deep the others, and not A→Z.
+  expect(pages["tag-engine/deeper-later"].primary).toBe("fixture")
   expect(pages["plain-note"].primary).toBe("fixture")
-  expect(pages["tag-engine/primary-override"].primary).toBe("markdown")
+  expect(pages["tag-engine/first-tag"].primary).toBe("markdown")
   // A page with no tags has none.
   expect(pages["linked-note"]).not.toHaveProperty("primary")
 })
