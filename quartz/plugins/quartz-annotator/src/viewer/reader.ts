@@ -22,6 +22,11 @@
 //   and modal. It opens from its tab on the right edge, tapped or dragged, the bar's toggle, or a
 //   tapped highlight, which opens it at its card. A swipe only ever starts from the tab or the
 //   drawer, never the document. It always starts closed.
+//
+// Zoom is the Viewer's, not the browser's: the bar's control, and `+`, `-` and `0`. 100% is the
+// fitted width, and at zoom `z` the document is `z` times as wide, so zooming in far enough on a
+// desktop turns the margin into the drawer. The reading position holds, and the page remembers
+// the zoom, never in the URL.
 import type { Geometry } from "./pdf"
 import { fit, stack, toPx, type Fit, type Layout } from "./layout"
 
@@ -38,7 +43,10 @@ const SWIPE = 40
 /** Space between two cards in the margin, in pixels. */
 const CARD_GAP = 12
 /** Where the page remembers the reader's choices. */
-const STORE = { marginHidden: "cgc-annotator:margin-hidden" }
+const STORE = { marginHidden: "cgc-annotator:margin-hidden", zoom: "cgc-annotator:zoom" }
+/** The bar's zoom steps; a pinch may land between them. */
+export const ZOOMS = [0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3]
+const clampZoom = (z: number) => Math.min(ZOOMS[ZOOMS.length - 1], Math.max(ZOOMS[0], Number.isFinite(z) ? z : 1))
 
 export interface ReaderOptions {
   /** A card's width, and the narrowest the document may be beside the cards: `px` or `rem`. */
@@ -51,6 +59,10 @@ export interface Reader {
   opened(geometry: Geometry, pages: HTMLElement): void
   /** A page was drawn afresh, with its highlights. */
   drawn(page: number): void
+  /** The zoom now. */
+  zoom(): number
+  /** Zooms to `z`, keeping the point of the document at viewport point `around` (the screen's middle by default) where it is. */
+  zoomTo(z: number, around?: { x: number; y: number }): void
   /** Takes back everything the reader set up. */
   destroy(): void
 }
@@ -101,6 +113,9 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
   // An annotation the URL named before the document opened, to go to once it has.
   let pending: string | undefined
   let drawerOpen = false
+  let zoom = clampZoom(parseFloat(recall(STORE.zoom) ?? "1"))
+  const zoomLevel = frame?.querySelector<HTMLElement>(`.${FRAME}__zoom-level`) ?? null
+  const scroller = viewer.querySelector<HTMLElement>(`.${VIEWER}__document`)
 
   const cards = () => [...section.querySelectorAll<HTMLElement>(`.${PAGE}__annotation`)]
   const card = (id: string) => cards().find((el) => el.dataset.annotation === id)
@@ -163,7 +178,7 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
     const r = rem()
     const next = fit(
       { available: frame.clientWidth, margin: toPx(options.marginWidth, r), minDocument: toPx(options.minDocumentWidth, r), rem: r },
-      1,
+      zoom,
       marginHidden,
     )
     current = next
@@ -175,9 +190,45 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
     else delete frame.dataset.drawer
     body.style.setProperty("--cgc-annotator-document-width", `${next.documentWidth}px`)
     tab?.setAttribute("tabindex", layout === "drawer" ? "0" : "-1")
+    if (zoomLevel) zoomLevel.textContent = `${Math.round(zoom * 100)}%`
     showToggle()
     place()
+    restore()
   }
+
+  // --- Zoom ------------------------------------------------------------------------------------
+
+  // The point of the document to keep in place across a zoom: a page, where on it, and where on the
+  // screen it was. Held until the pages have their new size, or a moment has passed.
+  let hold: { page: HTMLElement; size: { width: number }; fx: number; fy: number; x: number; y: number; until: number } | undefined
+  function holdAt(x: number, y: number) {
+    const boxes = [...(pages?.querySelectorAll<HTMLElement>(`.${VIEWER}__page`) ?? [])]
+    if (!boxes.length || !geometry) return
+    const page = boxes.find((el) => el.getBoundingClientRect().bottom >= y) ?? boxes[boxes.length - 1]
+    const box = page.getBoundingClientRect()
+    const size = geometry.pages[Number(page.dataset.page) - 1]
+    hold = { page, size, fx: (x - box.left) / box.width, fy: (y - box.top) / box.height, x, y, until: performance.now() + 1500 }
+  }
+  function restore() {
+    if (!hold || !current || !geometry) return
+    const box = hold.page.getBoundingClientRect()
+    window.scrollBy({ top: box.top + hold.fy * box.height - hold.y, behavior: "instant" })
+    if (scroller) scroller.scrollLeft += box.left + hold.fx * box.width - hold.x
+    const widest = Math.max(...geometry.pages.map((p) => p.width))
+    const sized = Math.abs(box.width - (current.documentWidth * hold.size.width) / widest) < 1
+    if (sized || performance.now() > hold.until) hold = undefined
+  }
+
+  function zoomTo(z: number, around?: { x: number; y: number }) {
+    const next = clampZoom(z)
+    if (Math.abs(next - zoom) < 0.001 || layout === "static") return
+    const bar = frame?.querySelector(`.${FRAME}__bar`)?.getBoundingClientRect().bottom ?? 0
+    holdAt(around?.x ?? window.innerWidth / 2, around?.y ?? bar + (window.innerHeight - bar) / 2)
+    zoom = next
+    remember(STORE.zoom, Math.abs(zoom - 1) < 0.001 ? null : String(Math.round(zoom * 1000) / 1000))
+    apply()
+  }
+  const step = (by: 1 | -1) => zoomTo(by > 0 ? (ZOOMS.find((z) => z > zoom + 0.001) ?? zoom) : ([...ZOOMS].reverse().find((z) => z < zoom - 0.001) ?? zoom))
 
   // The bar's toggle says what it does now: nothing of its own before the document, since it's a link
   // to the annotations; then whether the margin is shown, or the drawer open.
@@ -390,6 +441,12 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
       else if (selected) select(undefined, false)
       return
     }
+    if (layout !== "static" && (event.key === "+" || event.key === "=" || event.key === "-" || event.key === "0")) {
+      event.preventDefault()
+      if (event.key === "0") zoomTo(1)
+      else step(event.key === "-" ? -1 : 1)
+      return
+    }
     if (event.key !== "j" && event.key !== "k") return
     const order = cards().map((el) => el.dataset.annotation!)
     const at = selected ? order.indexOf(selected) : -1
@@ -398,6 +455,15 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
     event.preventDefault()
     select(order[next], true)
   })
+
+  // The bar's zoom: out, the level (back to 100%), in.
+  const zoomButton = (name: string, fn: () => void) => {
+    const button = frame?.querySelector(`.${FRAME}__zoom-${name}`)
+    if (button) on(button, "click", fn)
+  }
+  zoomButton("out", () => step(-1))
+  zoomButton("level", () => zoomTo(1))
+  zoomButton("in", () => step(1))
 
   // Tab and Shift-Tab go round the drawer's own links and cards while a phone's drawer is open.
   function trapTab(event: KeyboardEvent) {
@@ -449,6 +515,8 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
     drawn() {
       mark()
     },
+    zoom: () => zoom,
+    zoomTo,
     destroy() {
       cleanups.splice(0).forEach((fn) => fn())
       section.style.transform = ""

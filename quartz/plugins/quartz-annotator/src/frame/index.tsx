@@ -2,9 +2,10 @@
 // width, the document first. Quartz's loader imports this module from the package's `./frames` and
 // registers each frame the manifest's `quartz.frames` names under the frame's own `name`.
 //
-// From top to bottom: the bar, fixed; the top section (`beforeBody`, where the document comes from,
-// the preface); the page body (the Viewer and the annotations); the bottom section (the epilogue,
-// `right`, `afterBody`); then `footer`. `header` and `left` go in the ☰ drawer, from the left.
+// From top to bottom: the bar, fixed (☰, the title, zoom, the annotations' toggle); the top
+// section (`beforeBody`, where the document comes from, the preface); the page body (the Viewer and
+// the annotations); the bottom section (the epilogue, `right`, `afterBody`); then `footer`.
+// `header` and `left` go in the ☰ drawer, from the left.
 //
 // This is the page before any script runs, and for good where there's no document to show: the
 // annotations are the page. The page's script (./script.inline) works the bar and the ☰ drawer; the
@@ -154,6 +155,18 @@ function Bar({
           {pageTitle}
         </span>
       </a>
+      {/* The document's zoom: out of sight until there's a document. */}
+      <div class={`${FRAME}__zoom`} role="group" aria-label="Zoom">
+        <button class={`${FRAME}__button ${FRAME}__zoom-out`} type="button" aria-label="Zoom out">
+          −
+        </button>
+        <button class={`${FRAME}__button ${FRAME}__zoom-level`} type="button" aria-label="Reset the zoom" title="Reset the zoom">
+          100%
+        </button>
+        <button class={`${FRAME}__button ${FRAME}__zoom-in`} type="button" aria-label="Zoom in">
+          +
+        </button>
+      </div>
       {/* Without script, a link to the annotations; the Viewer makes it a toggle. */}
       <a
         class={`${FRAME}__button ${FRAME}__toggle`}

@@ -79,6 +79,24 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Zoom: out, the level, which resets it, and in. Only once there's a document to zoom. */
+.cgc-annotator-frame__zoom {
+  display: none;
+  flex: 0 0 auto;
+  align-items: center;
+}
+
+.cgc-annotator-frame[data-layout="margin"] .cgc-annotator-frame__zoom,
+.cgc-annotator-frame[data-layout="drawer"] .cgc-annotator-frame__zoom {
+  display: flex;
+}
+
+.cgc-annotator-frame__zoom-level {
+  min-width: 3.5rem;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
 /* The site's name, until the top section's title is gone under the bar; then the page's title. */
 .cgc-annotator-frame__title {
   display: grid;
@@ -164,9 +182,9 @@
 /* The top and bottom sections: the text's width, centred. */
 .cgc-annotator-frame__top,
 .cgc-annotator-frame__bottom {
-  box-sizing: content-box;
-  width: auto;
-  max-width: var(--cgc-annotator-text-width);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: calc(var(--cgc-annotator-text-width) + 2rem);
   margin: 0 auto;
   padding: 0 1rem;
   overflow-wrap: anywhere;

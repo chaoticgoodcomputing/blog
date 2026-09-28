@@ -8,8 +8,11 @@
    there's no document to show, the annotations are the page: one column, the text's width, centred.
    The Viewer is out of sight until it has a document to show, or a notice saying it can't. */
 .cgc-annotator {
-  box-sizing: content-box;
-  max-width: var(--cgc-annotator-text-width, 800px);
+  /* A definite width: centred by auto margins in the frame's column, it would otherwise take its
+     content's, and a zoomed document would widen the page rather than pan in its column. */
+  box-sizing: border-box;
+  width: 100%;
+  max-width: calc(var(--cgc-annotator-text-width, 800px) + 2rem);
   margin: 0 auto;
   padding: 0 1rem;
 }
