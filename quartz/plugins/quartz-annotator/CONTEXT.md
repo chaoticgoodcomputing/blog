@@ -24,6 +24,18 @@ children, and the body puts it at the top of the annotations panel, over where t
 comes from (docs/adr/0003). Under any other frame it stays above the page.
 _Avoid_: title block, heading (that is the panel's "Annotations")
 
+**Preface**:
+The author's prose before the source document, from the annotation page's own markdown: whatever
+comes before any marker, and under an H1 `Preface` (docs/adr/0005). Rendered by the site's
+pipeline as the page's body, and counted in the page's links and text.
+_Avoid_: intro, summary, description (the page's `description` is something else)
+
+**Epilogue**:
+The author's prose after the source document, from the annotation page's own markdown under an H1
+`Epilogue` (docs/adr/0005), which comes before `# Annotations` in the file, since Annotator appends
+new annotations at its end.
+_Avoid_: conclusion, outro, afterword
+
 **Source document**:
 The file at an annotation page's `annotation-target` URL. Owned by someone else, and always
 addressed by URL, even when it is our own work.

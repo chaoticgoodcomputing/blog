@@ -4,9 +4,11 @@
 // site's too, but the body takes it: a frame that hands it over as the body's children has it placed
 // at the top of the annotations panel (docs/adr/0003).
 import type { ComponentChildren } from "preact"
+import { toHtml } from "hast-util-to-html"
 import { islandAttributes, islandRuntime } from "@chaoticgoodcomputing/island-runtime"
 import type { AnnotatorData } from "./transformer"
 import { annotationTarget, mirrorName, sourceUrl, Unmirrorable } from "./mirror"
+import { hasContent, split } from "./sections"
 import type { Passage } from "./viewer/anchor"
 import Viewer, { type ViewerProps } from "./viewer/Viewer"
 
@@ -29,12 +31,14 @@ const formatDate = (iso: string, locale: string) => {
 export interface BodyProps {
   fileData: { frontmatter?: Record<string, unknown>; cgcAnnotator?: AnnotatorData }
   cfg: { locale?: string }
+  /** The page's rendered tree: its preface and epilogue, the annotations taken out. */
+  tree?: Parameters<typeof split>[0]
   /** The page header, when the frame hands it to the body (docs/adr/0003). */
   children?: ComponentChildren
 }
 
 export function Body(mirrorDir: string) {
-  const AnnotationPage = ({ fileData, cfg, children }: BodyProps) => {
+  const AnnotationPage = ({ fileData, cfg, tree, children }: BodyProps) => {
     const target = annotationTarget(fileData.frontmatter) ?? ""
     const url = sourceUrl(target)
     const linkable = !(url instanceof Unmirrorable)
@@ -60,8 +64,15 @@ export function Body(mirrorDir: string) {
           .
         </p>
       )
+    // The page's own prose around the annotations (docs/adr/0005), as the site's pipeline rendered it.
+    const { preface, epilogue } = split(tree)
+    const prose = (nodes: typeof preface, part: string) =>
+      hasContent(nodes) && (
+        <article class={`cgc-annotator__${part}`} dangerouslySetInnerHTML={{ __html: toHtml({ type: "root", children: nodes } as any, { allowDangerousHtml: true }) }} />
+      )
     return (
       <div class="cgc-annotator" itemscope itemtype="https://schema.org/DigitalDocument">
+        {prose(preface, "preface")}
         <div class="cgc-annotator__split">
           {/* The Viewer's island. It hydrates only once it's on screen, so where a narrow screen hides it,
               PDF.js is never fetched. */}
@@ -110,6 +121,7 @@ export function Body(mirrorDir: string) {
             ))}
           </section>
         </div>
+        {prose(epilogue, "epilogue")}
       </div>
     )
   }

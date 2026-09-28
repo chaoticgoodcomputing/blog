@@ -266,3 +266,9 @@
     cursor: auto;
   }
 }
+
+/* The author's own prose around the annotations: the preface and the epilogue (docs/adr/0005). */
+.cgc-annotator__preface,
+.cgc-annotator__epilogue {
+  margin: 0 0 1.5rem;
+}

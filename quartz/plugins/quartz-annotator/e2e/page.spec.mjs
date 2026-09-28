@@ -80,3 +80,61 @@ test("a site with no annotation page ships none of the Viewer", async ({ scratch
   expect(site.exists("note.html")).toBe(true)
   expect(site.exists("static/cgc-annotator")).toBe(false)
 })
+
+// The page's own prose, around its annotations (docs/adr/0005): cut by H1 markers into a preface and
+// an epilogue, which render through the site's pipeline and count in the page's links and text.
+const block = (id, exact) => {
+  const json = JSON.stringify({ text: `On ${exact}.`, target: [{ source: TARGET, selector: [{ type: "TextQuoteSelector", exact }] }] })
+  return `>%%\n>\`\`\`annotation-json\n>${json}\n>\`\`\`\n>%%\n>*%%HIGHLIGHT%% ==${exact}==*\n>%%COMMENT%%\n>On ${exact}.\n>%%TAGS%%\n>\n^${id}\n`
+}
+
+const between = (html, from, to) => html.indexOf(from) !== -1 && html.indexOf(from) < html.indexOf(to)
+
+test("an author's prose is cut into a preface before the annotations and an epilogue after them", async ({ scratch }) => {
+  const page = [
+    `---\ntitle: Annotated\nannotation-target: ${TARGET}\n---\n`,
+    "Before any marker, which is the preface too.\n",
+    "# Preface\n\nWhy I read it, beside [[other]].\n\n## A heading of the preface\n\nStill the preface.\n",
+    "# Epilogue\n\nWhat I took from it, and [[third]].\n",
+    "# Annotations\n",
+    block("first", "the first passage"),
+    "\nStray prose, under the annotations.\n\n",
+    block("second", "the second passage"),
+    "\n# preface\n\nMore preface, under a repeated marker.\n",
+  ].join("\n")
+  const site = await build(scratch, "sections", { "annotated.md": page, "other.md": "# other\n", "third.md": "# third\n" })
+  const html = site.read("annotated.html")
+  const preface = html.match(/<article class="cgc-annotator__preface">([\s\S]*?)<\/article>/)?.[1] ?? ""
+  const epilogue = html.match(/<article class="cgc-annotator__epilogue">([\s\S]*?)<\/article>/)?.[1] ?? ""
+  // Text before any marker, under "# Preface", and under the repeated marker, in the preface.
+  for (const said of ["Before any marker", "Why I read it", "Still the preface", "More preface"]) expect(preface).toContain(said)
+  expect(preface).toMatch(/<h2[^>]*>.*A heading of the preface/)
+  expect(preface).toMatch(/<a href="[^"]*other"[^>]*class="[^"]*internal/)
+  expect(epilogue).toContain("What I took from it")
+  // The preface before the annotations, the epilogue after them.
+  expect(between(html, "Why I read it", 'data-annotation="first"')).toBe(true)
+  expect(between(html, 'data-annotation="second"', "What I took from it")).toBe(true)
+  // The markers aren't rendered, and the stray prose is left out.
+  expect(html).not.toMatch(/<h1[^>]*>\s*(Preface|Epilogue|Annotations)\s*</i)
+  expect(html).not.toContain("Stray prose")
+  // One warning each, naming the page; the build passes.
+  const warnings = site.output.split("\n").filter((line) => line.includes("cgc-annotator") && line.includes("annotated.md") && !line.includes("could not mirror"))
+  expect(warnings.filter((line) => /"# Annotations" isn't an annotation/.test(line))).toHaveLength(1)
+  expect(warnings.filter((line) => /"# Preface" appears more than once/.test(line))).toHaveLength(1)
+  expect(warnings).toHaveLength(2)
+  // What the preface and epilogue link to and say counts in the page's links and text.
+  const entry = JSON.parse(site.read("static/contentIndex.json"))["annotated"]
+  expect(entry.links).toEqual(expect.arrayContaining(["other", "third"]))
+  expect(entry.content).toContain("Why I read it")
+  expect(entry.content).toContain("What I took from it")
+  expect(entry.content).not.toContain("Stray prose")
+})
+
+test("a page with prose and no markers shows it all as its preface", async ({ scratch }) => {
+  const page = `---\ntitle: Annotated\nannotation-target: ${TARGET}\n---\n\nNotes on the paper, with no headings.\n\n${block("only", "a passage")}`
+  const site = await build(scratch, "no-markers", { "annotated.md": page })
+  const html = site.read("annotated.html")
+  expect(html).toMatch(/<article class="cgc-annotator__preface">\s*<p>Notes on the paper, with no headings\.<\/p>/)
+  expect(html).not.toContain("cgc-annotator__epilogue")
+  expect(site.output.split("\n").filter((line) => line.includes("cgc-annotator") && !line.includes("could not mirror"))).toEqual([])
+})

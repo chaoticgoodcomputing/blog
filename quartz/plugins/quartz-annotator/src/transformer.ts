@@ -1,6 +1,7 @@
 // The transformer half: it takes an annotation page's annotations out of its markdown, renders each
 // note through the site's own pipeline minus a denylist (docs/adr/0002), and publishes what they
-// link to and say to the page's `links` and `text`, as a note's body would.
+// link to and say to the page's `links` and `text`, as a note's body would. What's left of the page's
+// markdown is its preface and epilogue (./sections, docs/adr/0005), which stay in the page's tree.
 //
 // It runs after `crawl-links` and `description` (defaultOrder 75, above their 60 and 70), because
 // those set the page's `links` and `text` outright, and the annotations are added to what they set.
@@ -12,6 +13,7 @@ import { toString } from "hast-util-to-string"
 import { styleText } from "node:util"
 import { findAnnotations, type Annotation, type RenderedAnnotation } from "./annotations"
 import { annotationTarget } from "./mirror"
+import { cut } from "./sections"
 
 /** The name this plugin's transformer carries, which its own pipeline always leaves out. */
 export const NAME = "cgc-annotator"
@@ -67,7 +69,11 @@ export function Transformer(denylist: string[]) {
           const end = node.position?.end?.offset
           return start !== undefined && end !== undefined && found.spans.some(([from, to]) => start >= from && end <= to)
         }
-        tree.children = tree.children.filter((node) => !inBlock(node))
+        const sections = cut(tree.children.filter((node) => !inBlock(node)) as Parameters<typeof cut>[0])
+        tree.children = sections.children as typeof tree.children
+        const page = file.data.relativePath
+        if (sections.stray) warn(`${page}: the prose under "# Annotations" isn't an annotation, so it's left out. Move it under "# Preface" or "# Epilogue".`)
+        for (const name of sections.repeated) warn(`${page}: "# ${name}" appears more than once, so the text under each joins the first.`)
         file.data.cgcAnnotator = { annotations: found.annotations }
       },
     ],
