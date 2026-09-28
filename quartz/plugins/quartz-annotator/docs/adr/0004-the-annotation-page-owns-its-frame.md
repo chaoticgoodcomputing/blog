@@ -94,6 +94,18 @@ page whose mirror is missing keeps it, is the **static layout**: the annotations
 column, at every width, and needs no breakpoint. Whether the document then takes a margin or a drawer
 is decided in script, from the measured width and the zoom. That keeps the repo's ADR-0003 rule 8.
 
+## The numbers, to tune live
+
+The structure is settled; these are starting values, in `src/widths.ts` and `src/viewer/layout.ts`:
+
+- the options' defaults: `marginWidth` 20rem, `minDocumentWidth` 36rem, `textWidth` 800px;
+- the gutters beside the margin: 2rem each side of the page and 3rem between the document and the
+  margin, so at the defaults the drawer takes over below about 1008px at 100% zoom;
+- the document's cap beside the margin, 60rem, not an option;
+- a phone's drawer: when a `marginWidth` drawer would cover more than half the screen, it's 85% of it;
+- a shortened card: two lines of its passage, about four of its note;
+- zoom from 50% to 300%, in the bar's steps, or anywhere between by pinch.
+
 ## Consequences
 
 - `site-full-width`, its registration and site-styles' rules for it are deleted, as are

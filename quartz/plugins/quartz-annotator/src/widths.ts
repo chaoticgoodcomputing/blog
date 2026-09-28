@@ -4,11 +4,11 @@
 
 /** The widths the annotation page is laid out by. */
 export interface Widths {
-  /** A card's width: the desktop margin's, and the tablet drawer's. */
+  /** A card's width: the desktop margin's, and the tablet drawer's. `px` or `rem`; `20rem` by default. */
   marginWidth: string
-  /** The narrowest the document may be at 100% before the annotations go to the drawer. */
+  /** The narrowest the document may be at 100% before the annotations go to the drawer. `px` or `rem`; `36rem` by default. */
   minDocumentWidth: string
-  /** The top and bottom sections' width: core's `$pageWidth`. */
+  /** The top and bottom sections' width, core's `$pageWidth`. `px` or `rem`; `800px` by default. */
   textWidth: string
 }
 
