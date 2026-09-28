@@ -6,6 +6,7 @@
 // they are static HTML that the Viewer only reaches into, to link each one to its highlight.
 import { useEffect, useRef, useState } from "preact/hooks"
 import type { Passage } from "./anchor"
+import type { Geometry } from "./pdf"
 
 export interface ViewerProps {
   /** The mirror's path from the site root (`<mirrorDir>/<name>`), or none for a target no mirror can be made of. */
@@ -31,9 +32,9 @@ const SHARE = { min: 30, max: 70 }
 // A path from the site root, as a URL: the island runtime addresses its entries the same way.
 const siteUrl = (path: string) => new URL(`${document.body.dataset.basepath ?? ""}/${path}`.replace(/^\/+/, "/"), location.href).href
 
-// Scrolls `container`, and only it, so that `el` sits near its top.
-function reveal(container: HTMLElement, el: Element) {
-  const top = el.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop
+// Scrolls `container`, and only it, so that a point `y` pixels down the viewport sits near its top.
+function reveal(container: HTMLElement, y: number) {
+  const top = y - container.getBoundingClientRect().top + container.scrollTop
   container.scrollTo({ top: Math.max(0, top - 16), behavior: "smooth" })
 }
 
@@ -43,6 +44,8 @@ export default function Viewer({ mirror, source, linkable, passages }: ViewerPro
   const [status, setStatus] = useState<Status>(mirror ? "loading" : "failed")
   // The annotation the reader last chose, which a redraw keeps highlighted.
   const active = useRef<string>()
+  // Where each passage is, from the document's text: known before its page is drawn.
+  const geometry = useRef<Geometry>()
 
   // Shows the mirror. Runs only in the browser, after hydration; the cleanup runs when the island
   // unmounts, which the island runtime does before every SPA navigation, and ends the load.
@@ -54,10 +57,13 @@ export default function Viewer({ mirror, source, linkable, passages }: ViewerPro
       .then(({ show }) => {
         if (unmounted) return
         shown = show(siteUrl(mirror), pagesRef.current!, passages, {
-          opened: () => setStatus("open"),
+          opened: (found) => {
+            geometry.current = found
+            setStatus("open")
+          },
           drawn: () => select(active.current),
           failed: () => setStatus("failed"),
-        })
+        }, documentRef.current)
       })
       .catch(() => !unmounted && setStatus("failed"))
     return () => {
@@ -70,6 +76,19 @@ export default function Viewer({ mirror, source, linkable, passages }: ViewerPro
   const page = () => documentRef.current?.closest<HTMLElement>(`.${PAGE}`) ?? null
   const annotations = () => [...(page()?.querySelectorAll<HTMLElement>(`.${PAGE}__annotation`) ?? [])]
 
+  // Where a passage starts, in viewport pixels: its first highlight once its page is drawn, and
+  // until then where the document's text puts it on its page's box.
+  function passageY(id: string): number | undefined {
+    const container = documentRef.current
+    const first = container?.querySelector(`.${CLASS}__highlight[data-annotation="${CSS.escape(id)}"]`)
+    if (first) return first.getBoundingClientRect().top
+    const place = geometry.current?.places.get(id)
+    const page = place && pagesRef.current?.querySelector(`.${CLASS}__page[data-page="${place.page + 1}"]`)
+    if (!place || !page) return undefined
+    const box = page.getBoundingClientRect()
+    return box.top + place.top * box.height
+  }
+
   // Marks one annotation and its highlights as chosen, and scrolls whichever side the reader didn't
   // click to it.
   function select(id: string | undefined, side?: "document" | "annotation") {
@@ -79,12 +98,12 @@ export default function Viewer({ mirror, source, linkable, passages }: ViewerPro
     for (const el of container.querySelectorAll<HTMLElement>(`.${CLASS}__highlight`)) el.classList.toggle(ACTIVE, el.dataset.annotation === id)
     for (const el of annotations()) el.classList.toggle(ACTIVE_ANNOTATION, el.dataset.annotation === id)
     if (side === "document") {
-      const first = container.querySelector(`.${CLASS}__highlight[data-annotation="${CSS.escape(id!)}"]`)
-      if (first) reveal(container, first)
+      const y = passageY(id!)
+      if (y !== undefined) reveal(container, y)
     } else if (side === "annotation") {
       const item = annotations().find((el) => el.dataset.annotation === id)
       const list = item?.closest<HTMLElement>(`.${PAGE}__annotations`)
-      if (item && list) reveal(list, item)
+      if (item && list) reveal(list, item.getBoundingClientRect().top)
     }
   }
 

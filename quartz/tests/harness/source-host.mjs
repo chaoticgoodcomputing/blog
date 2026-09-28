@@ -54,31 +54,79 @@ export const FIXTURE_PAPER_URL = "https://cgc-fixture.invalid/paper.pdf"
  * its cross-reference table is counted as it is written.
  */
 export function fixturePaper() {
+  return writePdf("cgc-annotator fixture paper", [
+    {
+      lines: [
+        "BT /F1 24 Tf 72 700 Td (Fixture paper, page one) Tj ET",
+        "BT /F1 14 Tf 72 660 Td (The annotator draws highlights over quoted passages.) Tj ET",
+        "BT /F1 14 Tf 72 630 Td (A second sentence that a note quotes in full.) Tj ET",
+        "0 0 0 1 k BT /F1 14 Tf 72 600 Td (Printed in process black, to wake the colour engine.) Tj ET",
+      ],
+    },
+    {
+      lines: [
+        "BT /F1 24 Tf 72 700 Td (Fixture paper, page two) Tj ET",
+        // A line a passage covers whole, from the line before it into the line after (#87).
+        "BT /F1 14 Tf 72 500 Td (A line quoted whole, inside a longer passage.) Tj ET",
+        "BT /F1 14 Tf 72 300 Td (Quoted on the last page, far below the fold.) Tj ET",
+      ],
+    },
+  ])
+}
+
+/**
+ * A long document, shaped like a scanned handbook: a portrait cover, then `spreads` landscape pages
+ * twice its width. It carries the fixture paper's passages, the first ones on the cover and the last
+ * on the last page, so a spec can route the paper's mirror to it and see the paper's annotations
+ * anchored across a document far longer than a screen.
+ */
+export function fixtureBook(spreads = 39) {
+  const pages = [
+    {
+      lines: [
+        "BT /F1 24 Tf 72 700 Td (Fixture paper, page one) Tj ET",
+        "BT /F1 14 Tf 72 660 Td (The annotator draws highlights over quoted passages.) Tj ET",
+        "BT /F1 14 Tf 72 630 Td (A second sentence that a note quotes in full.) Tj ET",
+      ],
+    },
+  ]
+  for (let n = 2; n <= spreads + 1; n++) {
+    const last = n === spreads + 1
+    pages.push({
+      size: [1224, 792],
+      lines: last
+        ? [
+            "BT /F1 24 Tf 72 700 Td (Fixture paper, page two) Tj ET",
+            "BT /F1 14 Tf 72 500 Td (A line quoted whole, inside a longer passage.) Tj ET",
+            "BT /F1 14 Tf 72 300 Td (Quoted on the last page, far below the fold.) Tj ET",
+          ]
+        : [`BT /F1 24 Tf 72 700 Td (Spread ${n}) Tj ET`, `BT /F1 14 Tf 72 400 Td (Nothing on page ${n} is quoted.) Tj ET`],
+    })
+  }
+  return writePdf("cgc-annotator fixture book", pages)
+}
+
+// A PDF of `pages`, each a list of content-stream lines in Helvetica on a page of `size` points
+// (US Letter by default), with every offset in its cross-reference table counted as it's written.
+function writePdf(title, pages) {
   const stream = (lines) => {
     const body = lines.join("\n")
     return `<< /Length ${Buffer.byteLength(body)} >>\nstream\n${body}\nendstream`
   }
-  const page = (contents) => `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents ${contents} 0 R >>`
+  // Objects 1-3 are the catalog, the page tree and the font; each page is its contents, then itself.
+  const pageRef = (i) => 5 + i * 2
   const objects = [
     "<< /Type /Catalog /Pages 2 0 R >>",
-    "<< /Type /Pages /Kids [5 0 R 7 0 R] /Count 2 >>",
+    `<< /Type /Pages /Kids [${pages.map((_, i) => `${pageRef(i)} 0 R`).join(" ")}] /Count ${pages.length} >>`,
     "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>",
-    stream([
-      "BT /F1 24 Tf 72 700 Td (Fixture paper, page one) Tj ET",
-      "BT /F1 14 Tf 72 660 Td (The annotator draws highlights over quoted passages.) Tj ET",
-      "BT /F1 14 Tf 72 630 Td (A second sentence that a note quotes in full.) Tj ET",
-      "0 0 0 1 k BT /F1 14 Tf 72 600 Td (Printed in process black, to wake the colour engine.) Tj ET",
-    ]),
-    page(4),
-    stream([
-      "BT /F1 24 Tf 72 700 Td (Fixture paper, page two) Tj ET",
-      // A line a passage covers whole, from the line before it into the line after (#87).
-      "BT /F1 14 Tf 72 500 Td (A line quoted whole, inside a longer passage.) Tj ET",
-      "BT /F1 14 Tf 72 300 Td (Quoted on the last page, far below the fold.) Tj ET",
-    ]),
-    page(6),
-    "<< /Title (cgc-annotator fixture paper) /Producer (written by the cgc e2e harness) >>",
   ]
+  pages.forEach(({ size = [612, 792], lines }, i) => {
+    objects.push(stream(lines))
+    objects.push(
+      `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${size.join(" ")}] /Resources << /Font << /F1 3 0 R >> >> /Contents ${pageRef(i) - 1} 0 R >>`,
+    )
+  })
+  objects.push(`<< /Title (${title}) /Producer (written by the cgc e2e harness) >>`)
   let out = "%PDF-1.4\n"
   const offsets = objects.map((object, i) => {
     const offset = Buffer.byteLength(out)

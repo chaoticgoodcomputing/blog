@@ -53,7 +53,9 @@ _Avoid_: download, local copy, cached PDF
 
 **Viewer**:
 The part of an annotation page that renders the mirror with its highlights: an island over the
-document, beside the annotations, which are the page's own static HTML. Only the viewer degrades
+document, beside the annotations, which are the page's own static HTML. Every page's box is laid
+out as soon as the document opens, but a page is drawn only as it comes near the screen, and let go
+once it's well away, so a long document fits in a phone's canvas memory. Only the viewer degrades
 when the mirror is unavailable. The annotations themselves always render.
 _Avoid_: PDF viewer, reader
 

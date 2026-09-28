@@ -3,7 +3,16 @@
 //
 // PDF.js is bundled, never fetched from a CDN (#37). Its worker and wasm are files the plugin emits
 // beside this chunk, found through `import.meta.url` (build.mjs copies them out of pdfjs-dist).
-import { getDocument, GlobalWorkerOptions, TextLayer, VerbosityLevel, type PDFDocumentProxy, type PDFPageProxy } from "pdfjs-dist"
+import {
+  getDocument,
+  GlobalWorkerOptions,
+  RenderingCancelledException,
+  TextLayer,
+  VerbosityLevel,
+  type PageViewport,
+  type PDFDocumentProxy,
+  type PDFPageProxy,
+} from "pdfjs-dist"
 import type { TextContent, TextItem } from "pdfjs-dist/types/src/display/api"
 import { anchor, translateOffsets, type Anchor, type Passage } from "./anchor"
 
@@ -14,44 +23,81 @@ GlobalWorkerOptions.workerSrc ||= new URL("./pdf.worker.min.js", import.meta.url
 // fetches it itself: PDF.js only uses its colour engine then.
 const WASM = new URL("./wasm/", import.meta.url).href
 
+/** A page's size at scale 1, in CSS pixels: the PDF's own size. */
+export interface PageSize {
+  width: number
+  height: number
+}
+
+/** Where a found passage starts: its page (0-based), and the top of its first line on that page. */
+export interface Place {
+  page: number
+  /** The top of the passage's first line, as a fraction of its page's height. */
+  top: number
+}
+
+/** The document's shape, known as soon as it opens and before any page is drawn. */
+export interface Geometry {
+  /** Every page's size at scale 1. */
+  pages: PageSize[]
+  /** Where each passage the Viewer found starts, by annotation id. */
+  places: Map<string, Place>
+}
+
 export interface Callbacks {
-  /** The document opened. */
-  opened(): void
-  /** Every page is drawn, with its highlights: after the first drawing, and after each redraw. */
-  drawn(): void
+  /** The document opened: every page's box is laid out, none drawn yet. */
+  opened(geometry: Geometry): void
+  /** A page was drawn, with its highlights. Called again each time it is drawn afresh. */
+  drawn(page: number): void
   /** It could not be opened or drawn. */
   failed(error: Error): void
 }
 
 export interface Shown {
-  /** Stops loading and drawing, ends the document's worker, and stops watching for resizes. */
+  /** Stops loading and drawing, ends the document's worker, and stops watching. */
   destroy(): void
 }
 
 const CLASS = "cgc-annotator-viewer"
+// Drawn at the screen's pixel density up to this, so a page's canvas is never more than twice its
+// CSS size each way: at a density of 3, a long document's canvases outgrow what a phone allows.
+const MAX_RATIO = 2
+// A page is drawn once it is within a screen of the viewport, and let go once it is three away.
+const NEAR = "100% 0px"
+const FAR = "300% 0px"
+
+// One page's box and what is drawn in it.
+interface PageState {
+  el: HTMLElement
+  size: PageSize
+  /** The width it was last drawn at, or 0 while nothing is drawn. */
+  drawnAt: number
+  /** The width it is being drawn at, or 0. */
+  drawingAt: number
+  /** Bumped on every draw and release, so a drawing overtaken by either stops. */
+  generation: number
+  task?: { cancel(): void }
+}
 
 /**
- * Draws every page of the PDF at `url` into `into`, each fitted to its width, with a highlight over
- * each passage it finds. Draws again whenever `into` changes width. Anything left over from a load
- * that `destroy()` has ended is never drawn.
+ * Shows the PDF at `url` in `into`, highlighting each passage it finds. Every page's box is laid out
+ * as soon as the document opens, as wide as `into` for the widest page, so the document has its
+ * whole height at once. A page is drawn as it comes near the viewport (`root`'s, when the document
+ * scrolls in a box of its own), and its canvas is let go once it's well away. When `into` changes
+ * width, every box is resized and only the pages near the viewport are drawn again. Anything left
+ * over from a load that `destroy()` has ended is never drawn.
  */
-export function show(url: string, into: HTMLElement, passages: Passage[], on: Callbacks): Shown {
+export function show(url: string, into: HTMLElement, passages: Passage[], on: Callbacks, root: Element | null = null): Shown {
   const task = getDocument({ url, wasmUrl: WASM, useWorkerFetch: true, verbosity: VerbosityLevel.ERRORS })
   let destroyed = false
-  // Each drawing gets a number; one overtaken by a newer drawing, or by destroy(), stops.
-  let drawing = 0
-  let width = 0
-  let resized: ReturnType<typeof setTimeout> | undefined
-  const observer = new ResizeObserver(() => {
-    clearTimeout(resized)
-    resized = setTimeout(() => {
-      if (!destroyed && Math.abs(into.clientWidth - width) > 1) draw().catch(fail)
-    }, 150)
-  })
-
   let pdf: PDFDocumentProxy | undefined
   const texts: TextContent[] = []
   const anchors = new Map<string, Anchor>()
+  const pages: PageState[] = []
+  // The pages within a screen of the viewport, by number (1-based).
+  const near = new Set<number>()
+  let width = 0
+  let widest = 0
 
   // A document that can't be shown lets go of PDF.js at once, worker and all.
   const fail = (error: unknown) => {
@@ -60,43 +106,132 @@ export function show(url: string, into: HTMLElement, passages: Passage[], on: Ca
     shown.destroy()
   }
 
-  // Draws page by page, each page going in as soon as it's drawn: in place of the page it replaces
-  // on a redraw, so the document never goes blank.
-  async function draw() {
-    const mine = ++drawing
-    const current = () => !destroyed && mine === drawing
-    width = into.clientWidth
-    for (let n = 1; n <= pdf!.numPages; n++) {
-      const page = await pdf!.getPage(n)
-      if (!current()) return
-      const el = await drawPage(page, n, texts[n - 1], width, current)
-      if (!current()) return
-      const old = into.children[n - 1]
-      if (old) old.replaceWith(el)
-      else into.append(el)
-      for (const [id, found] of anchors) if (found.page === n - 1) highlight(el, texts[n - 1], found, id)
+  const pageOf = (el: Element) => Number((el as HTMLElement).dataset.page)
+  const nearObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        const n = pageOf(entry.target)
+        if (entry.isIntersecting) {
+          near.add(n)
+          draw(n).catch(fail)
+        } else near.delete(n)
+      }
+    },
+    { root, rootMargin: NEAR },
+  )
+  const farObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) if (!entry.isIntersecting) release(pageOf(entry.target))
+    },
+    { root, rootMargin: FAR },
+  )
+
+  let resized: ReturnType<typeof setTimeout> | undefined
+  const resizeObserver = new ResizeObserver(() => {
+    clearTimeout(resized)
+    // The first width is laid out at once; later ones wait for the resizing to settle.
+    if (width === 0) layout()
+    else resized = setTimeout(layout, 150)
+  })
+
+  // Sizes every box for the width of `into`, then draws again the pages near the viewport and lets
+  // go of the rest.
+  function layout() {
+    if (destroyed || !pdf) return
+    const next = into.clientWidth
+    if (next === 0 || Math.abs(next - width) <= 1) return
+    width = next
+    const scale = width / widest
+    for (const page of pages) {
+      page.el.style.width = `${page.size.width * scale}px`
+      page.el.style.height = `${page.size.height * scale}px`
+      // PDF.js's own properties, which its text layer is sized by.
+      page.el.style.setProperty("--total-scale-factor", String(scale))
     }
-    while (into.children.length > pdf!.numPages) into.lastElementChild!.remove()
-    on.drawn()
+    pages.forEach((page, i) => {
+      if (near.has(i + 1)) draw(i + 1).catch(fail)
+      else release(i + 1)
+    })
+  }
+
+  // Lets go of a page's drawing, keeping its box.
+  function release(n: number) {
+    const page = pages[n - 1]
+    if (!page || (page.drawnAt === 0 && page.drawingAt === 0)) return
+    page.generation++
+    page.task?.cancel()
+    page.task = undefined
+    page.drawnAt = page.drawingAt = 0
+    // A canvas sized to nothing gives its memory back at once, where a removed one waits for GC.
+    for (const canvas of page.el.querySelectorAll("canvas")) canvas.width = canvas.height = 0
+    page.el.replaceChildren()
+  }
+
+  // Draws a page at the current width, unless it is drawn or being drawn at it already. The new
+  // drawing replaces the old one only once it's done, so a page being drawn again never goes blank.
+  async function draw(n: number) {
+    const page = pages[n - 1]
+    if (destroyed || !pdf || !page || width === 0 || page.drawnAt === width || page.drawingAt === width) return
+    const mine = ++page.generation
+    const current = () => !destroyed && mine === page.generation
+    page.task?.cancel()
+    page.task = undefined
+    page.drawingAt = width
+    const proxy = await pdf.getPage(n)
+    if (!current()) return
+    const el = await drawPage(proxy, texts[n - 1], width / widest, page).catch((error) => {
+      if (error instanceof RenderingCancelledException || !current()) return undefined
+      throw error
+    })
+    if (!el || !current()) return
+    page.task = undefined
+    page.drawingAt = 0
+    page.drawnAt = width
+    for (const canvas of page.el.querySelectorAll("canvas")) canvas.width = canvas.height = 0
+    page.el.replaceChildren(...el.childNodes)
+    for (const [id, found] of anchors) if (found.page === n - 1) highlight(page.el, texts[n - 1], found, id)
+    on.drawn(n)
   }
 
   task.promise
     .then(async (opened) => {
       if (destroyed) return
       pdf = opened
-      on.opened()
-      // The text of every page, once, to find the passages in: text doesn't change with scale.
+      // Every page's size and text, once: neither changes with scale. The text is what the passages
+      // are found in, and says where each one is on its page before the page is drawn.
+      const viewports = []
       for (let n = 1; n <= opened.numPages; n++) {
-        texts.push(await (await opened.getPage(n)).getTextContent())
+        const page = await opened.getPage(n)
+        viewports.push(page.getViewport({ scale: 1 }))
+        texts.push(await page.getTextContent())
         if (destroyed) return
       }
       const pageTexts = texts.map(textOf)
+      const places = new Map<string, Place>()
       for (const passage of passages) {
         const found = anchor(pageTexts, passage)
-        if (found) anchors.set(passage.id, found)
+        if (!found) continue
+        anchors.set(passage.id, found)
+        places.set(passage.id, { page: found.page, top: lineTop(texts[found.page], viewports[found.page], found.start) })
       }
-      await draw()
-      if (!destroyed) observer.observe(into)
+      widest = Math.max(...viewports.map((v) => v.width))
+      into.replaceChildren()
+      viewports.forEach((viewport, i) => {
+        const el = document.createElement("div")
+        el.className = `${CLASS}__page`
+        el.dataset.page = String(i + 1)
+        el.style.setProperty("--scale-round-x", "1px")
+        el.style.setProperty("--scale-round-y", "1px")
+        pages.push({ el, size: { width: viewport.width, height: viewport.height }, drawnAt: 0, drawingAt: 0, generation: 0 })
+        into.append(el)
+      })
+      on.opened({ pages: pages.map((p) => p.size), places })
+      layout()
+      resizeObserver.observe(into)
+      for (const page of pages) {
+        nearObserver.observe(page.el)
+        farObserver.observe(page.el)
+      }
     })
     .catch(fail)
 
@@ -104,7 +239,10 @@ export function show(url: string, into: HTMLElement, passages: Passage[], on: Ca
     destroy() {
       destroyed = true
       clearTimeout(resized)
-      observer.disconnect()
+      resizeObserver.disconnect()
+      nearObserver.disconnect()
+      farObserver.disconnect()
+      for (const page of pages) page.task?.cancel()
       // Destroying the task destroys its document and terminates its worker.
       task.destroy()
     },
@@ -116,23 +254,31 @@ export function show(url: string, into: HTMLElement, passages: Passage[], on: Ca
 const textOf = (content: TextContent) =>
   content.items.map((item) => ("str" in item ? (item as TextItem).str : "")).join("")
 
-async function drawPage(page: PDFPageProxy, n: number, text: TextContent, width: number, current: () => boolean) {
-  // Fitted to the column. A Viewer laid out with no width is drawn at the PDF's own size.
-  const scale = width > 0 ? width / page.getViewport({ scale: 1 }).width : 1
+// The top of the line holding `offset` of a page's text, as a fraction of the page's height, from
+// the text items alone: where the item is set, less its font's height.
+function lineTop(content: TextContent, viewport: PageViewport, offset: number): number {
+  let at = 0
+  for (const item of content.items) {
+    if (!("str" in item)) continue
+    const text = item as TextItem
+    at += text.str.length
+    if (at <= offset) continue
+    const [, , c, d, e, f] = text.transform as number[]
+    const [, baseline] = viewport.convertToViewportPoint(e, f) as number[]
+    const height = text.height || Math.hypot(c, d)
+    return Math.min(1, Math.max(0, (baseline - height) / viewport.height))
+  }
+  return 0
+}
+
+// Draws a page into a new element, fitted by `scale`: its canvas, text layer and an empty layer of
+// highlights, for `into` to take in once it's done.
+function drawPage(page: PDFPageProxy, text: TextContent, scale: number, into: PageState): Promise<HTMLElement> {
   const viewport = page.getViewport({ scale })
-
   const el = document.createElement("div")
-  el.className = `${CLASS}__page`
-  el.dataset.page = String(n)
-  el.style.width = `${viewport.width}px`
-  el.style.height = `${viewport.height}px`
-  // PDF.js's own properties, which its text layer is sized by.
-  el.style.setProperty("--total-scale-factor", String(scale))
-  el.style.setProperty("--scale-round-x", "1px")
-  el.style.setProperty("--scale-round-y", "1px")
 
-  // Drawn at the screen's pixel density, so text stays sharp.
-  const ratio = window.devicePixelRatio || 1
+  // Drawn at the screen's pixel density, so text stays sharp, but never above MAX_RATIO.
+  const ratio = Math.min(MAX_RATIO, window.devicePixelRatio || 1)
   const canvas = document.createElement("canvas")
   canvas.className = `${CLASS}__canvas`
   canvas.width = Math.floor(viewport.width * ratio)
@@ -144,13 +290,15 @@ async function drawPage(page: PDFPageProxy, n: number, text: TextContent, width:
   highlights.className = `${CLASS}__highlights`
   el.append(canvas, layer, highlights)
 
-  await page.render({ canvas, viewport, transform: ratio === 1 ? undefined : [ratio, 0, 0, ratio, 0, 0] }).promise
-  if (!current()) return el
-  await new TextLayer({ textContentSource: text, container: layer, viewport }).render()
-  // TextLayer measures text on a canvas it parks in <body>, which only PDF.js's own stylesheet
-  // hides. The Viewer doesn't ship that stylesheet, so the canvas goes once the text is laid out.
-  TextLayer.cleanup()
-  return el
+  const rendering = page.render({ canvas, viewport, transform: ratio === 1 ? undefined : [ratio, 0, 0, ratio, 0, 0] })
+  into.task = rendering
+  return rendering.promise.then(async () => {
+    await new TextLayer({ textContentSource: text, container: layer, viewport }).render()
+    // TextLayer measures text on a canvas it parks in <body>, which only PDF.js's own stylesheet
+    // hides. The Viewer doesn't ship that stylesheet, so the canvas goes once the text is laid out.
+    TextLayer.cleanup()
+    return el
+  })
 }
 
 interface Box {
