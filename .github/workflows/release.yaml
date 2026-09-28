@@ -1,0 +1,147 @@
+# Releases the plugins to npm (#90). One version for every plugin (nx.json, `//release`): the next one
+# comes from the conventional commits since the last `v<semver>` tag, and lives only in that tag, so
+# nothing is committed back to main. A push that touches no plugin, or brings no feat or fix, cuts no
+# release. `plan` works out whether there is a next version; only then does `release` run, and it
+# waits for the owner's approval on the `npm-publish` environment.
+#
+# npm trusted publishing signs in through GitHub's OIDC token and records provenance, with no stored
+# npm token. It needs npm 11.5.1 or later, and each package's trusted publisher on npmjs.com names
+# this file and that environment. A package's first version is published by hand (#90), since npm
+# only lets you add a trusted publisher to a package that already exists.
+name: Release plugins
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "quartz/plugins/**"
+      - "quartz/libs/**"
+  workflow_dispatch:
+
+# One release at a time, and never cancelled halfway through a publish.
+concurrency:
+  group: npm-release
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    name: Next version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      # Full history and tags: the current version is the last `v<semver>` tag, and the next one comes
+      # from the commits since.
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      # The version comes from package.json's `packageManager`.
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ".nvmrc"
+          cache: pnpm
+          cache-dependency-path: |
+            pnpm-lock.yaml
+            quartz/core/pnpm-lock.yaml
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Writes the next version into the working tree only. The plugins share one version, so any one
+      # manifest says it; still main's 0.0.0 means no feat or fix since the last release.
+      - name: Version
+        id: version
+        run: |
+          pnpm nx release version --verbose
+          version=$(node -p 'require("./quartz/plugins/quartz-mdx/package.json").version')
+          if [ "$version" = "0.0.0" ]; then
+            echo "No feat or fix since the last release: nothing to publish."
+            version=""
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+  release:
+    name: Publish and tag
+    needs: plan
+    if: needs.plan.outputs.version != ''
+    runs-on: ubuntu-latest
+    environment: npm-publish
+    permissions:
+      # The tag, and the GitHub release that is the changelog.
+      contents: write
+      # npm trusted publishing.
+      id-token: write
+    steps:
+      # Full history and tags: the current version is the last `v<semver>` tag, and the next one comes
+      # from the commits since.
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      # The version comes from package.json's `packageManager`.
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ".nvmrc"
+          cache: pnpm
+          cache-dependency-path: |
+            pnpm-lock.yaml
+            quartz/core/pnpm-lock.yaml
+          registry-url: "https://registry.npmjs.org"
+
+      # Trusted publishing needs npm 11.5.1 or later, newer than some Node releases bundle.
+      - name: Update npm
+        run: npm install -g npm@^11.5.1
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # The same guards as main: every plugin packs cleanly and meets the package contract.
+      - name: Guards
+        run: pnpm nx run site:guards
+
+      # Writes the next version into the working tree only. The plugins share one version, so any one
+      # manifest says it; still main's 0.0.0 means no feat or fix since the last release.
+      - name: Version
+        id: version
+        run: |
+          pnpm nx release version --verbose
+          version=$(node -p 'require("./quartz/plugins/quartz-mdx/package.json").version')
+          if [ "$version" = "0.0.0" ]; then
+            echo "No feat or fix since the last release: nothing to publish."
+            version=""
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      # The same version plan worked out, from the same commit.
+      - name: Check the version
+        run: test "${{ steps.version.outputs.version }}" = "${{ needs.plan.outputs.version }}"
+
+      - name: Publish
+        run: pnpm nx run site:release-publish
+
+      # After the publish, so a failed publish leaves no tag: the tag, pushed on its own, and the
+      # GitHub release that is the changelog.
+      - name: Tag and changelog
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          pnpm nx release changelog "${{ needs.plan.outputs.version }}"
