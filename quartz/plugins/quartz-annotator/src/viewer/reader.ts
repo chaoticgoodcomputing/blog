@@ -26,7 +26,9 @@
 // Zoom is the Viewer's, not the browser's: the bar's control, and `+`, `-` and `0`. 100% is the
 // fitted width, and at zoom `z` the document is `z` times as wide, so zooming in far enough on a
 // desktop turns the margin into the drawer. The reading position holds, and the page remembers
-// the zoom, never in the URL.
+// the zoom, never in the URL. On a touch screen, two fingers pinch the document, not the page, as
+// canvas-page pinches its canvas: the drawn pages are scaled live around the fingers' midpoint, and
+// on release drawn again at the new width, with the point under the fingers kept under them.
 import type { Geometry } from "./pdf"
 import { fit, stack, toPx, type Fit, type Layout } from "./layout"
 
@@ -99,9 +101,9 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
   const tab = body.querySelector<HTMLElement>(`.${PAGE}__tab`)
   const scrim = body.querySelector<HTMLElement>(`.${PAGE}__scrim`)
   const cleanups: (() => void)[] = []
-  const on = (el: EventTarget, type: string, fn: (event: any) => void) => {
-    el.addEventListener(type, fn)
-    cleanups.push(() => el.removeEventListener(type, fn))
+  const on = (el: EventTarget, type: string, fn: (event: any) => void, options?: AddEventListenerOptions) => {
+    el.addEventListener(type, fn, options)
+    cleanups.push(() => el.removeEventListener(type, fn, options))
   }
 
   let selected: string | undefined
@@ -455,6 +457,47 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
     event.preventDefault()
     select(order[next], true)
   })
+
+  // A pinch on the document. Its touch-action leaves the browser vertical scrolling and sideways
+  // panning, but not its own pinch, which would zoom the whole page.
+  let pinch: { from: number; zoom: number; mid: { x: number; y: number }; scale: number } | undefined
+  const spread = (t: TouchList) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY)
+  // Heard on the document, since a second finger's touch can be given to whatever the hit test
+  // finds first; it's a pinch of the document if either finger started on it.
+  if (scroller) {
+    const onDocument = (t: TouchList) => [...t].some((touch) => scroller.contains(touch.target as Node))
+    on(document, "touchstart", (event: TouchEvent) => {
+      if (layout === "static" || event.touches.length !== 2 || !pages || !onDocument(event.touches)) return
+      const [a, b] = [event.touches[0], event.touches[1]]
+      const mid = { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 }
+      pinch = { from: spread(event.touches), zoom, mid, scale: 1 }
+      const box = pages.getBoundingClientRect()
+      pages.style.transformOrigin = `${mid.x - box.left}px ${mid.y - box.top}px`
+    })
+    on(
+      document,
+      "touchmove",
+      (event: TouchEvent) => {
+        if (!pinch || event.touches.length !== 2 || !pages) return
+        event.preventDefault()
+        pinch.scale = clampZoom(pinch.zoom * (spread(event.touches) / pinch.from)) / pinch.zoom
+        pages.style.transform = `scale(${pinch.scale})`
+      },
+      { passive: false },
+    )
+    const release = (event: TouchEvent) => {
+      if (!pinch || event.touches.length >= 2) return
+      const { zoom: z, scale, mid } = pinch
+      pinch = undefined
+      if (pages) {
+        pages.style.transform = ""
+        pages.style.transformOrigin = ""
+      }
+      zoomTo(z * scale, mid)
+    }
+    on(document, "touchend", release)
+    on(document, "touchcancel", release)
+  }
 
   // The bar's zoom: out, the level (back to 100%), in.
   const zoomButton = (name: string, fn: () => void) => {

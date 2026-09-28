@@ -98,6 +98,8 @@
   min-width: 0;
   overflow-x: auto;
   overflow-y: hidden;
+  /* Two fingers pinch the document, not the page (src/viewer/reader.ts); one scrolls and pans. */
+  touch-action: pan-x pan-y;
 }
 
 .cgc-annotator-viewer__status,
