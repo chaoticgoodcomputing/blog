@@ -16,6 +16,12 @@
 //   just below the card above; all but the selected one shortened. Those the Viewer found no place
 //   for go last, under "Not found in the document". The bar's toggle hides and shows the margin, and
 //   the page remembers which.
+// - **the drawer**, where it doesn't: the document takes the width, and the cards come in from the
+//   right, in order, not anchored. On a tablet the drawer is a card's width, and the document stays
+//   usable beside it; on a phone, where that would cover more than half the screen, it's 85% of it,
+//   and modal. It opens from its tab on the right edge, tapped or dragged, the bar's toggle, or a
+//   tapped highlight, which opens it at its card. A swipe only ever starts from the tab or the
+//   drawer, never the document. It always starts closed.
 import type { Geometry } from "./pdf"
 import { fit, stack, toPx, type Fit, type Layout } from "./layout"
 
@@ -26,6 +32,9 @@ const ACTIVE_CARD = `${PAGE}__annotation--active`
 const ACTIVE_HIGHLIGHT = `${VIEWER}__highlight--active`
 const HOVER_HIGHLIGHT = `${VIEWER}__highlight--hover`
 const CLIPPED = `${PAGE}__note--clipped`
+const FLASH = `${VIEWER}__highlight--flash`
+/** How far a drag or swipe must go to open or close the drawer, in pixels. */
+const SWIPE = 40
 /** Space between two cards in the margin, in pixels. */
 const CARD_GAP = 12
 /** Where the page remembers the reader's choices. */
@@ -75,6 +84,8 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
   const section = body.querySelector<HTMLElement>(`.${PAGE}__annotations`)!
   const unplacedHeading = body.querySelector<HTMLElement>(`.${PAGE}__unplaced`)
   const toggle = frame?.querySelector<HTMLAnchorElement>(`.${FRAME}__toggle`) ?? null
+  const tab = body.querySelector<HTMLElement>(`.${PAGE}__tab`)
+  const scrim = body.querySelector<HTMLElement>(`.${PAGE}__scrim`)
   const cleanups: (() => void)[] = []
   const on = (el: EventTarget, type: string, fn: (event: any) => void) => {
     el.addEventListener(type, fn)
@@ -89,6 +100,7 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
   let marginHidden = recall(STORE.marginHidden) === "true"
   // An annotation the URL named before the document opened, to go to once it has.
   let pending: string | undefined
+  let drawerOpen = false
 
   const cards = () => [...section.querySelectorAll<HTMLElement>(`.${PAGE}__annotation`)]
   const card = (id: string) => cards().find((el) => el.dataset.annotation === id)
@@ -145,8 +157,7 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
 
   // --- The layout ------------------------------------------------------------------------------
 
-  // Takes the layout that fits the page now. Until the drawer, a page the margin doesn't fit keeps
-  // the static layout.
+  // Takes the layout that fits the page now.
   function apply() {
     if (!frame || !geometry) return
     const r = rem()
@@ -156,20 +167,60 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
       marginHidden,
     )
     current = next
-    layout = next.layout === "margin" ? "margin" : "static"
+    if (next.layout !== layout && drawerOpen) setDrawer(false, false)
+    layout = next.layout
     frame.dataset.layout = layout
     frame.dataset.margin = marginHidden ? "hidden" : "shown"
+    if (layout === "drawer") frame.dataset.drawer = next.mobile ? "mobile" : "tablet"
+    else delete frame.dataset.drawer
     body.style.setProperty("--cgc-annotator-document-width", `${next.documentWidth}px`)
-    if (toggle) {
-      if (layout === "static") {
-        toggle.removeAttribute("role")
-        toggle.removeAttribute("aria-expanded")
-      } else {
-        toggle.setAttribute("role", "button")
-        toggle.setAttribute("aria-expanded", String(!marginHidden))
-      }
-    }
+    tab?.setAttribute("tabindex", layout === "drawer" ? "0" : "-1")
+    showToggle()
     place()
+  }
+
+  // The bar's toggle says what it does now: nothing of its own before the document, since it's a link
+  // to the annotations; then whether the margin is shown, or the drawer open.
+  function showToggle() {
+    if (!toggle) return
+    if (layout === "static") {
+      toggle.removeAttribute("role")
+      toggle.removeAttribute("aria-expanded")
+      return
+    }
+    toggle.setAttribute("role", "button")
+    toggle.setAttribute("aria-expanded", String(layout === "margin" ? !marginHidden : drawerOpen))
+  }
+
+  const modal = () => layout === "drawer" && current?.mobile === true
+
+  // Opens or closes the drawer. A phone's drawer takes the focus while it's open, and gives it back.
+  let returnFocus: HTMLElement | null = null
+  function setDrawer(open: boolean, focus = true) {
+    if (open && layout !== "drawer") return
+    if (open === drawerOpen) return
+    drawerOpen = open
+    if (frame) frame.dataset.drawerOpen = String(open)
+    tab?.setAttribute("aria-expanded", String(open))
+    showToggle()
+    if (open && modal() && focus) {
+      returnFocus = document.activeElement as HTMLElement | null
+      section.focus({ preventScroll: true })
+    } else if (!open && returnFocus) {
+      if (section.contains(document.activeElement)) returnFocus.focus({ preventScroll: true })
+      returnFocus = null
+    }
+  }
+
+  // The selected annotation's highlight catches the eye a moment, after the drawer closes on it.
+  function flash(id: string) {
+    const boxes = [...viewer.querySelectorAll<HTMLElement>(`.${VIEWER}__highlight`)].filter((el) => el.dataset.annotation === id)
+    for (const el of boxes) {
+      el.classList.remove(FLASH)
+      void el.offsetWidth
+      el.classList.add(FLASH)
+      setTimeout(() => el.classList.remove(FLASH), 1300)
+    }
   }
 
   // Puts every card where it goes: in the margin, beside its passage; elsewhere, in the flow.
@@ -231,14 +282,84 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
 
   // --- The reader's hands ----------------------------------------------------------------------
 
-  // Clicking a card, other than a link in it, or a highlight.
+  // A drag ends in a click on what was dragged, which isn't a tap.
+  let dragged = false
+
+  // Clicking a card, other than a link in it, or a highlight. In the drawer, a highlight opens it at
+  // its card; a card takes the document to its passage, and on a phone closes the drawer first.
   on(body, "click", (event: MouseEvent) => {
     const target = event.target as Element
     const highlight = target.closest<HTMLElement>(`.${VIEWER}__highlight`)
-    if (highlight) return select(highlight.dataset.annotation, false)
+    if (highlight) {
+      select(highlight.dataset.annotation, false)
+      if (layout === "drawer" && selected) {
+        setDrawer(true)
+        card(selected)?.scrollIntoView({ block: "nearest" })
+      }
+      return
+    }
     const item = target.closest<HTMLElement>(`.${PAGE}__annotation`)
-    if (item && !target.closest("a")) select(item.dataset.annotation, true)
+    if (!item || target.closest("a") || dragged) return
+    const id = item.dataset.annotation
+    if (modal()) {
+      setDrawer(false)
+      select(id, true)
+      if (id && geometry?.places.has(id)) flash(id)
+    } else select(id, true)
   })
+
+  if (scrim) on(scrim, "click", () => setDrawer(false))
+
+  // Focus stays in a phone's drawer while it's open.
+  on(document, "focusin", (event: FocusEvent) => {
+    if (drawerOpen && modal() && !section.contains(event.target as Node)) section.focus({ preventScroll: true })
+  })
+
+  // The tab: tapped, or dragged out; and the drawer itself, swiped back to the right. The document
+  // keeps its own touch.
+  function drag(from: HTMLElement, allowOpen: boolean) {
+    on(from, "pointerdown", (event: PointerEvent) => {
+      if (layout !== "drawer" || event.button !== 0) return
+      if (from === section && (!drawerOpen || event.pointerType === "mouse")) return
+      const startX = event.clientX
+      const startY = event.clientY
+      let dx = 0
+      let dragging = false
+      const width = section.getBoundingClientRect().width
+      const move = (e: PointerEvent) => {
+        dx = e.clientX - startX
+        if (!dragging && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(e.clientY - startY)) {
+          dragging = true
+          frame?.setAttribute("data-dragging", "")
+        }
+        // The drawer follows the finger: out from the edge while closed, back towards it while open.
+        if (dragging) section.style.transform = `translateX(${drawerOpen ? Math.max(0, dx) : Math.max(0, width + dx)}px)`
+      }
+      const up = () => {
+        window.removeEventListener("pointermove", move)
+        window.removeEventListener("pointerup", up)
+        window.removeEventListener("pointercancel", up)
+        section.style.transform = ""
+        frame?.removeAttribute("data-dragging")
+        if (!dragging) return
+        dragged = true
+        setTimeout(() => (dragged = false))
+        if (!drawerOpen && allowOpen && dx < -SWIPE) setDrawer(true)
+        else if (drawerOpen && dx > SWIPE) setDrawer(false)
+      }
+      // On the window, since the pointer soon leaves a tab this narrow.
+      window.addEventListener("pointermove", move)
+      window.addEventListener("pointerup", up)
+      window.addEventListener("pointercancel", up)
+    })
+  }
+  if (tab) {
+    drag(tab, true)
+    on(tab, "click", () => {
+      if (!dragged) setDrawer(!drawerOpen)
+    })
+  }
+  drag(section, false)
 
   // Hovering a card tints its highlights.
   const hover = (id: string | undefined) => {
@@ -253,6 +374,7 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
     on(toggle, "click", (event: MouseEvent) => {
       if (layout === "static") return
       event.preventDefault()
+      if (layout === "drawer") return setDrawer(!drawerOpen)
       marginHidden = !marginHidden
       remember(STORE.marginHidden, marginHidden ? "true" : null)
       apply()
@@ -261,9 +383,11 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
   }
 
   on(document, "keydown", (event: KeyboardEvent) => {
+    if (event.key === "Tab" && drawerOpen && modal()) return trapTab(event)
     if (typing(event)) return
     if (event.key === "Escape") {
-      if (selected) select(undefined, false)
+      if (drawerOpen) setDrawer(false)
+      else if (selected) select(undefined, false)
       return
     }
     if (event.key !== "j" && event.key !== "k") return
@@ -274,6 +398,16 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
     event.preventDefault()
     select(order[next], true)
   })
+
+  // Tab and Shift-Tab go round the drawer's own links and cards while a phone's drawer is open.
+  function trapTab(event: KeyboardEvent) {
+    const focusable = [...section.querySelectorAll<HTMLElement>("a[href], button, [tabindex]:not([tabindex='-1'])")].filter((el) => el.offsetParent !== null)
+    if (!focusable.length) return event.preventDefault()
+    const at = focusable.indexOf(document.activeElement as HTMLElement)
+    const next = event.shiftKey ? (at <= 0 ? focusable.length - 1 : at - 1) : at === -1 || at === focusable.length - 1 ? 0 : at + 1
+    event.preventDefault()
+    focusable[next].focus()
+  }
 
   // The annotation the URL names, on load.
   const hashed = decodeURIComponent(location.hash.slice(1))
@@ -317,6 +451,7 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
     },
     destroy() {
       cleanups.splice(0).forEach((fn) => fn())
+      section.style.transform = ""
       for (const el of cards()) {
         el.classList.remove(ACTIVE_CARD)
         el.removeAttribute("aria-current")

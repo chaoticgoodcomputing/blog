@@ -255,3 +255,143 @@
     transition: none;
   }
 }
+
+/* The drawer: the document takes the page's width, and the cards come in from the right. On a
+   tablet it's a card's width, below the bar, and nothing is dimmed; on a phone it's most of the
+   screen, over the bar, with the document dimmed behind it. It slides, unless the reader would
+   rather things didn't move. */
+.cgc-annotator-frame[data-layout="drawer"] .cgc-annotator {
+  padding: 0 0.75rem;
+}
+
+.cgc-annotator-frame[data-layout="drawer"] .cgc-annotator__annotations {
+  --cgc-annotator-drawer-width: var(--cgc-annotator-margin-width);
+  position: fixed;
+  top: var(--cgc-annotator-frame-bar-height, 3rem);
+  right: 0;
+  bottom: 0;
+  z-index: 19;
+  box-sizing: border-box;
+  width: var(--cgc-annotator-drawer-width);
+  padding: 1rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-left: 1px solid var(--lightgray);
+  background: var(--light);
+  outline: none;
+  touch-action: pan-y;
+  transform: translateX(100%);
+  visibility: hidden;
+  transition:
+    transform 0.2s ease,
+    visibility 0s linear 0.2s;
+}
+
+.cgc-annotator-frame[data-layout="drawer"][data-drawer="mobile"] .cgc-annotator__annotations {
+  --cgc-annotator-drawer-width: 85vw;
+  top: 0;
+  z-index: 41;
+}
+
+.cgc-annotator-frame[data-layout="drawer"][data-drawer-open="true"] .cgc-annotator__annotations,
+.cgc-annotator-frame[data-layout="drawer"][data-dragging] .cgc-annotator__annotations {
+  transform: none;
+  visibility: visible;
+  transition: transform 0.2s ease;
+}
+
+.cgc-annotator-frame[data-dragging] .cgc-annotator__annotations {
+  transition: none;
+}
+
+/* The tab, on the right edge, riding the drawer's edge while it's open. */
+.cgc-annotator__tab {
+  display: none;
+}
+
+.cgc-annotator-frame[data-layout="drawer"] .cgc-annotator__tab {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  z-index: 19;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 4rem;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  border-right: 0;
+  border-radius: 0.5rem 0 0 0.5rem;
+  background: var(--light);
+  cursor: grab;
+  touch-action: none;
+  transform: translateY(-50%);
+  transition: right 0.2s ease;
+}
+
+.cgc-annotator-frame[data-layout="drawer"][data-drawer-open="true"] .cgc-annotator__tab {
+  right: var(--cgc-annotator-margin-width);
+}
+
+.cgc-annotator-frame[data-layout="drawer"][data-drawer="mobile"][data-drawer-open="true"] .cgc-annotator__tab {
+  right: 85vw;
+  z-index: 41;
+}
+
+.cgc-annotator__tab-grip {
+  width: 0.25rem;
+  height: 1.5rem;
+  border-radius: 0.125rem;
+  background: var(--gray);
+}
+
+.cgc-annotator__scrim {
+  display: none;
+}
+
+.cgc-annotator-frame[data-layout="drawer"][data-drawer="mobile"] .cgc-annotator__scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: block;
+  background: var(--dark);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.cgc-annotator-frame[data-layout="drawer"][data-drawer="mobile"][data-drawer-open="true"] .cgc-annotator__scrim {
+  opacity: 0.4;
+  pointer-events: auto;
+}
+
+/* A passage the drawer has just closed on. */
+.cgc-annotator-viewer__highlight--flash {
+  animation: cgc-annotator-viewer-flash 1.2s ease-out;
+}
+
+@keyframes cgc-annotator-viewer-flash {
+  0%,
+  30% {
+    box-shadow: 0 0 0 4px var(--secondary);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 var(--secondary);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cgc-annotator-frame[data-layout="drawer"] .cgc-annotator__annotations,
+  .cgc-annotator-frame[data-layout="drawer"][data-drawer-open="true"] .cgc-annotator__annotations,
+  .cgc-annotator-frame[data-layout="drawer"] .cgc-annotator__tab,
+  .cgc-annotator__scrim {
+    transition: none;
+  }
+
+  .cgc-annotator-viewer__highlight--flash {
+    animation: none;
+    outline: 3px solid var(--secondary);
+  }
+}

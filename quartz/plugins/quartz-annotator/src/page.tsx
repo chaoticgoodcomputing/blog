@@ -65,7 +65,7 @@ export function Body(mirrorDir: string) {
         >
           <Viewer {...viewer} />
         </div>
-        <section class="cgc-annotator__annotations popover-hint" id={ANNOTATIONS} aria-label="Annotations">
+        <section class="cgc-annotator__annotations popover-hint" id={ANNOTATIONS} aria-label="Annotations" tabindex={-1}>
           <h2 class="cgc-annotator__heading">Annotations</h2>
           {annotations.map((a) => (
             <article class="cgc-annotator__annotation" id={a.id} data-annotation={a.id} itemprop="comment" itemscope itemtype="https://schema.org/Comment">
@@ -90,6 +90,12 @@ export function Body(mirrorDir: string) {
             Not found in the document
           </h3>
         </section>
+        {/* The drawer's tab, on the right edge, and what dims the document behind a phone's drawer:
+            both out of sight but in the drawer's layout. */}
+        <button class="cgc-annotator__tab" type="button" aria-controls={ANNOTATIONS} aria-expanded="false" aria-label="Annotations" tabindex={-1}>
+          <span class="cgc-annotator__tab-grip" aria-hidden="true" />
+        </button>
+        <div class="cgc-annotator__scrim" aria-hidden="true" />
       </div>
     )
   }
