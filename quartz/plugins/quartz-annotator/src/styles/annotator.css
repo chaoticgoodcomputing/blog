@@ -40,6 +40,8 @@
   background: var(--light);
   overflow-wrap: anywhere;
   cursor: pointer;
+  /* Clear of the frame's bar when it's scrolled to, by the URL or a key. */
+  scroll-margin-top: 4rem;
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
