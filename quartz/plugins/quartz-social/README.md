@@ -51,7 +51,7 @@ A site with a Content Security Policy must allow `api.github.com`, `github-contr
 | `github.title`        | `string \| false`   | `"GitHub Contributions"` | The card's heading.                                                         |
 | `github.showProfile`  | `boolean`           | `true`                   | Show the avatar, name and bio.                                              |
 | `github.showHeader`   | `boolean`           | `true`                   | Show the year's total.                                                      |
-| `github.levelColors`  | `string[]`          | from the theme           | The calendar's five colours, from no contributions to the busiest.          |
+| `github.levelColors`  | `string[]`          | from the theme           | The calendar's five colors, from no contributions to the busiest.           |
 | `bluesky.handle`      | `string`            | required                 | The Bluesky account to show. Leave out `bluesky` for no Bluesky card.       |
 | `bluesky.postLimit`   | `number`            | `5`                      | How many posts to show, 1–100.                                              |
 | `bluesky.title`       | `string \| false`   | `"Bluesky Feed"`         | The card's heading.                                                         |

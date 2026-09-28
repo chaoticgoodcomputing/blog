@@ -11,8 +11,9 @@ description: How to install Quartz Annotator, a plugin for displaying highlights
 ---
 Publishes notes written with Obsidian's [Annotator](https://github.com/elias-sundqvist/obsidian-annotator) plugin as annotation pages: the source PDF, with each annotated passage highlighted, beside the annotations.
 
-![[public/assets/Pasted image 20260927191003.png]]
-*Screencap of [[public/content/annotations/valve-handbook|"Working with Valves"]]*
+![[assets/Pasted image 20260927191003.png]]
+
+*Screencap of [[content/annotations/valve-handbook|"Working with Valves"]]*
 
 A note becomes an annotation page when its frontmatter names the document it annotates:
 

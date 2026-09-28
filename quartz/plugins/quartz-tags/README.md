@@ -38,10 +38,10 @@ plugins:
 
 ## Configuration
 
-| Option         | Type                                | Default           | Description                                                           |
-| -------------- | ----------------------------------- | ----------------- | --------------------------------------------------------------------- |
-| `tags`         | `Record<string, { color?, icon? }>` | `{}`              | The dictionary. A colour is any CSS colour; an icon is `prefix:name`. |
-| `defaultColor` | `string`                            | `var(--darkgray)` | The colour of a tag with no colour in its lineage.                    |
+| Option         | Type                                | Default           | Description                                                         |
+| -------------- | ----------------------------------- | ----------------- | ------------------------------------------------------------------- |
+| `tags`         | `Record<string, { color?, icon? }>` | `{}`              | The dictionary. A color is any CSS color; an icon is `prefix:name`. |
+| `defaultColor` | `string`                            | `var(--darkgray)` | The color of a tag with no color in its lineage.                    |
 
 ## License
 

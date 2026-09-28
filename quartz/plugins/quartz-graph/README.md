@@ -62,10 +62,10 @@ The most useful graph settings (local / global defaults):
 | `showTags`, `removeTags`    | `true`, `[]`                                | Whether to draw tags, and which to leave out.                            |
 | `focusOnHover`              | `false` / `true`                            | Fade nodes away from the hovered one.                                    |
 | `graphStyle`                | `freeform`                                  | `pseudo-shell` pins `pseudoShellConfig.pinnedTags` to a ring.            |
-| `nodeColors`                | none                                        | `{ public, private }` colours in place of the tag colours.               |
+| `nodeColors`                | none                                        | `{ public, private }` colors in place of the tag colors.                 |
 | `defaultFilterState`        | `{ timePeriod: all, includePrivate: true }` | The global graph's filters when it opens.                                |
 
-The full list is in [`src/options.ts`](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz/plugins/quartz-graph/src/options.ts). Unknown options, unreadable colours and missing icons fail the build.
+The full list is in [`src/options.ts`](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz/plugins/quartz-graph/src/options.ts). Unknown options, unreadable colors and missing icons fail the build.
 
 ## Documentation
 
