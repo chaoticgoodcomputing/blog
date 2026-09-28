@@ -50,9 +50,10 @@ plugins:
 - **Repo guards hold these rules** (`site:guards`, #98): the package contract, one copy of each
   shared package, package sources, and packs holding only `dist/`, README, LICENSE and
   `package.json`.
-- **One version for everything**, cut together and tagged `v<semver>` (the **Release** in
-  `quartz/CONTEXT.md`), until the publishing ticket,
-  [#90](https://github.com/chaoticgoodcomputing/blog/issues/90), settles versioning after cutover.
+- **One version for every plugin**, cut together and tagged `v<semver>` (the **Release** in
+  `quartz/CONTEXT.md`). [#90](https://github.com/chaoticgoodcomputing/blog/issues/90) kept it rather
+  than versioning each plugin on its own. The next version comes from the conventional commits since
+  the last tag, and lives only in the tag, so `main` stays at `0.0.0`.
 
 > Source links point at upstream Quartz at
 > [`97a2d05`](https://github.com/jackyzha0/quartz/tree/97a2d05f80c4c50534959b1d0d41cc4b3895625e)
@@ -103,8 +104,13 @@ Keeping `cgc-<name>` keeps every published class name and family layer as it was
 
 ## Consequences
 
-- **Nothing is published before cutover.** Publishing, the CI publish job with npm trusted
-  publishing, versioning and the first release are #90's. `main` keeps every version at `0.0.0`.
+- **Publishing is #90's.** Each plugin's first version is published by hand, since npm adds a
+  trusted publisher only to a package that exists. Every later release is
+  `.github/workflows/release.yaml`: npm trusted publishing with provenance and no stored token,
+  behind the owner's approval. `main` keeps every version at `0.0.0`.
+- **The libraries are repo-only**, since every plugin inlines the ones it uses. `widgets` is the
+  exception, meant to be published once it has an entry point, so MDX pages can import it like any
+  other package.
 - **A package README's install snippet** is `npm install @chaoticgoodcomputing/quartz-<name>` and a
   `source:` entry, with no git subdirectory, `.npmrc` or tag to pin.
 - **The conversion is expand–contract.** #93 made package names load beside local paths and converted

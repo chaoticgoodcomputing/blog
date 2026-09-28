@@ -119,7 +119,8 @@ _Avoid_: customization (that is the whole category), local plugin, private plugi
 **Repo-only**:
 Of a package: marked `"private": true` in its `package.json`, which makes npm and pnpm refuse to
 publish it. It is never published to npm and is used only in this repo. The site package,
-`quartz/package.json` (`site`), is one (#92), and so is each site plugin (#96). pnpm's
+`quartz/package.json` (`site`), is one (#92), and so is each site plugin (#96) and each library but
+`widgets` (#90), since every plugin inlines the libraries it uses. pnpm's
 workspace publish leaves one out; a single package's `pnpm publish --dry-run` stops before the check,
 which only a real publish reaches. Not npm's
 "private package", a restricted package on the registry, which nothing here means.
@@ -169,12 +170,14 @@ The pull request that retires a vendored change by getting it accepted upstream.
 change is supposed to have one.
 
 **Release**:
-One version shared by every package in `plugins/` and `libs/`, cut together whenever any of them
-changes, and named by a `v<semver>` tag. Every package publishes to npm at the release's version, so
-a downstream site installs a package's npm version, which is the release's, never a branch, a git tag
-or a version of the package's own. Recorded in [ADR-0005](../docs/adr/0005-plugins-ship-as-npm-packages.md); the
-publishing ticket (#90) settles the rest. Nothing rewrites a package's metadata at a release:
-`pnpm publish` turns each `workspace:*` into the published version.
+One version shared by every plugin in `plugins/`, cut together and named by a `v<semver>` tag. The
+next version comes from the conventional commits since the last tag. Every plugin publishes to npm at
+the release's version, so a downstream site installs a plugin's npm version, which is the release's,
+never a branch, a git tag or a version of the plugin's own. The version lives only in the tag: `main`
+keeps every version at `0.0.0`, and a release writes its version into CI's working tree, publishes
+it and throws it away. The changelog is the tag's GitHub release. Recorded in
+[ADR-0005](../docs/adr/0005-plugins-ship-as-npm-packages.md); the tooling is `nx.json`'s `release`,
+`site:release-publish` and `.github/workflows/release.yaml` (#90).
 _Avoid_: package version, plugin version
 
 ### Plugin composition

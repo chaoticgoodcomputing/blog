@@ -1,6 +1,7 @@
 {
   "name": "@chaoticgoodcomputing/css-check",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "description": "ADR-0003's library-CSS check for Quartz 5 packages: fails a stylesheet that reaches outside its BEM block, defines a name outside it, or sets its own colour or font. Run at build time; it rewrites nothing. See CONTEXT.md.",
   "//exports": "Source only: no build and no dist. JavaScript with JSDoc types, not TypeScript, because a plugin's build.mjs imports it straight into Node, which won't strip types from a file under node_modules, where a downstream install puts it (docs/adr/0001).",

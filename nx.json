@@ -9,5 +9,41 @@
       "!{projectRoot}/e2e/**/*",
       "!{projectRoot}/**/*.spec.mjs"
     ]
+  },
+  "//release": "One version for every plugin, cut together and tagged v<semver> (ADR-0005, #90). The version lives in the tag, never in a commit: main keeps every version at 0.0.0. `nx release version` writes the next version into the working tree, from the conventional commits since the last tag, and touches git no further. site:release-publish packs and publishes that tree. `nx release changelog` then tags HEAD, pushes the tag and writes the GitHub release, which is the changelog; there is no changelog file. With no commit, the push sends only the tag, so releases run in CI, where HEAD is main as the remote has it (.github/workflows/release.yaml). Libraries are repo-only and inlined, so they are not released.",
+  "release": {
+    "projects": [
+      "tag:cgc:plugin"
+    ],
+    "projectsRelationship": "fixed",
+    "releaseTag": {
+      "pattern": "v{version}"
+    },
+    "version": {
+      "conventionalCommits": true,
+      "fallbackCurrentVersionResolver": "disk",
+      "preserveLocalDependencyProtocols": true,
+      "versionActionsOptions": {
+        "skipLockFileUpdate": true
+      },
+      "git": {
+        "commit": false,
+        "stageChanges": false,
+        "tag": false
+      }
+    },
+    "changelog": {
+      "workspaceChangelog": {
+        "file": false,
+        "createRelease": "github"
+      },
+      "projectChangelogs": false,
+      "git": {
+        "commit": false,
+        "stageChanges": false,
+        "tag": true,
+        "push": true
+      }
+    }
   }
 }

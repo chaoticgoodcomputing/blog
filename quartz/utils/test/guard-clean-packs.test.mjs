@@ -1,7 +1,8 @@
 // Repo guard `clean-packs` (#98): `pnpm pack --dry-run` of each publishable package (every plugin
 // that is not repo-only) lists only its built `dist/`, its README, its LICENSE and `package.json`,
 // and has each of them. A downstream site installs exactly that, and needs no build. A workspace
-// publish leaves out every repo-only package, and the libraries are left out until #90 decides.
+// publish leaves out every repo-only package: the site plugins, the site package and every library
+// but widgets (#90).
 //
 // To reproduce a failure by hand: add "src" to `files` in quartz/plugins/quartz-seo/package.json,
 // then `node quartz/utils/guards/clean-packs.guard.mjs` lists every file under src/ and exits 1.
@@ -70,14 +71,19 @@ test("a site plugin a workspace publish would publish fails", () => {
   assert.match(out, /1 violation\(s\)/)
 })
 
-// #90 decides whether the libraries are published at all, so this guard leaves them out, and says so.
-test("a library is never packed, whatever it would pack", () => {
+// #90 made the libraries repo-only, since every plugin inlines the ones it uses: one a workspace
+// publish would publish fails, like a site plugin. `widgets` is meant to be published, so it is in
+// neither check, and is never packed.
+test("a library a workspace publish would publish fails, except widgets", () => {
   const repo = packableRepo({
     "quartz/libs/lib-good/package.json": { name: "@chaoticgoodcomputing/lib-good", version: "0.0.0", files: ["src"] },
+    "quartz/libs/widgets/package.json": { name: "@chaoticgoodcomputing/widgets", version: "0.0.0", files: ["src"] },
   })
   const { code, out } = runGuard("clean-packs", ["--repo", repo])
-  assert.equal(code, 0, out)
-  assert.ok(!out.includes("lib-good"), out)
+  assert.equal(code, 1, out)
+  listed(out, "quartz/libs/lib-good: a workspace publish would publish @chaoticgoodcomputing/lib-good: it must be repo-only")
+  assert.ok(!out.includes("widgets"), out)
+  assert.match(out, /1 violation\(s\)/)
 })
 
 test("the real repo's publishable packages pack cleanly", () => {

@@ -125,6 +125,16 @@
         { "runtime": "node --version" }
       ]
     },
+    "release-publish": {
+      "//": "Publish every plugin at the version `nx release version` wrote into the working tree: each packed by pnpm, which rewrites workspace:*, and published by npm, which signs in through npm trusted publishing in CI (.github/workflows/release.yaml) and as `npm login` did locally. A version already on the registry is skipped, so a failed run can be run again. Builds every plugin first (the site package depends on each, ^build). Never cached. A dry run: -- --dry-run. See utils/publish.mjs (#90).",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node quartz/utils/publish.mjs",
+        "cwd": "{workspaceRoot}"
+      },
+      "dependsOn": ["^build"],
+      "cache": false
+    },
     "prebuild": {
       "//": "Prepare Quartz Core to build the real site: refuse to go on without the site config, core/quartz.config.yaml (a steering file; upstream's default is pruned, so there is nothing to fall back on), link host node_modules beside our plugins, and build every plugin of ours the site config enables, each a package listed by name. See VENDORED.md.",
       "executor": "nx:run-commands",

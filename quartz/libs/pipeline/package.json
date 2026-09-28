@@ -1,6 +1,7 @@
 {
   "name": "@chaoticgoodcomputing/pipeline",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "description": "Rebuilds a Quartz 5 site's configured transformer pipeline, minus an optional denylist, for content Quartz does not parse itself. See CONTEXT.md.",
   "//exports": "Source only: no build and no dist. The consuming plugin's build inlines it (ADR-0005).",

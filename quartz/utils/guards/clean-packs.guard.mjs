@@ -5,15 +5,17 @@
 // a downstream site installs, which needs no build (ADR-0005). This reads built output: a pack with no
 // `dist/` fails.
 //
-// The site plugins and the site package are repo-only and never packed. A workspace publish, the way
-// every package would be published (#90), leaves each of them out: pnpm drops a private package before
+// The site plugins, the libraries and the site package are repo-only and never packed. A workspace
+// publish, the way every package would be published (#90), leaves each of them out: pnpm drops a private package before
 // it asks the registry anything, and a single-package `pnpm publish --dry-run` stops before that
 // check, so the guard asks the workspace (`pnpm -r --filter <each> publish --dry-run`). It needs no
 // network: offline, the one registry lookup fails without retries and the dry run carries on.
 //
-// Publishable here means the plugins only. The libraries in `libs/` are not repo-only, yet this guard
-// leaves them out on purpose: whether they are published at all is #90's to decide (#89, Out of
-// Scope), and each packs its `src/`, not a `dist/`. #90 either marks them repo-only or brings them in.
+// Publishable here means the plugins only. #90 made every library in `libs/` repo-only, since each
+// plugin inlines the libraries it uses, so they are checked like the site plugins. The exception is
+// `widgets`, which MDX pages import like any npm package (quartz-mdx ADR-0001). It is meant to be
+// published, but it has no entry point yet, and it packs its `src/`, not a `dist/`. It stays out of
+// both checks until it gets an entry point and joins the release.
 //
 //   node quartz/utils/guards/clean-packs.guard.mjs [--repo <dir>]
 //
@@ -24,7 +26,9 @@ import { REPO_ROOT } from "../core-tiers.mjs"
 import { ourPackages, sitePackage } from "../packages.mjs"
 import { CannotCheck, guard, option } from "./guard.mjs"
 
-const ALLOWED = /^(dist\/.+|README(\.md)?|LICENSE(\.md|\.txt)?|package\.json)$/i
+/** The libraries, by directory, that are not repo-only: meant to be published, and in neither check. */
+const PUBLISHED_LIBRARIES = ["widgets"]
+const ALLOWED =/^(dist\/.+|README(\.md)?|LICENSE(\.md|\.txt)?|package\.json)$/i
 const REQUIRED = [
   ["dist/", (file) => file.startsWith("dist/"), " (build it)"],
   ["README.md", (file) => /^README(\.md)?$/i.test(file), ""],
@@ -102,6 +106,10 @@ await guard(import.meta, "Every publishable package packs only dist/, README, LI
     }),
   )
   const site = sitePackage(repo)
-  const repoOnly = [...ourPackages(repo, ["site-plugin"]), { rel: site.rel.replace(/\/package\.json$/, ""), pkg: site.pkg }]
+  const repoOnly = [
+    ...ourPackages(repo, ["site-plugin"]),
+    ...ourPackages(repo, ["library"]).filter(({ dir }) => !PUBLISHED_LIBRARIES.includes(dir)),
+    { rel: site.rel.replace(/\/package\.json$/, ""), pkg: site.pkg },
+  ]
   return [...reports.flat(), ...(await published(repo, repoOnly))]
 })

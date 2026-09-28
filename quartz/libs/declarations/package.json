@@ -1,6 +1,7 @@
 {
   "name": "@chaoticgoodcomputing/declarations",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "description": "Emits a plugin's type declarations at build time: one bundled .d.ts beside each dist/ entry, with the types of the libraries the plugin inlines inlined too, and its peers' left as imports. Quartz's generated plugin index skips a package without dist/index.d.ts. See CONTEXT.md.",
   "//exports": "Source only: no build and no dist. JavaScript with JSDoc types, for the same reason as @chaoticgoodcomputing/css-check's: a plugin's build.mjs imports it straight into Node (libs/css-check/docs/adr/0001).",

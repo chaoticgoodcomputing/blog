@@ -104,6 +104,7 @@ export function makePackageRepo(files = {}) {
     "quartz/libs/lib-good/package.json": json({
       name: "@chaoticgoodcomputing/lib-good",
       version: "0.0.0",
+      private: true,
       peerDependencies: { vfile: "^6.0.0" },
       dependencies: { "remark-parse": "^11.0.0" },
     }),

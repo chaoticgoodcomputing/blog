@@ -1,6 +1,7 @@
 {
   "name": "@chaoticgoodcomputing/icons",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "description": "Icon ids drawn for Quartz 5 plugins: `prefix:name` to inline SVG in currentColor, at build time, from installed Iconify sets (MDI) and a site's own SVG files. See CONTEXT.md.",
   "//exports": "Source only: no build and no dist. The consuming plugin's build inlines it (ADR-0005). Server-side: it reads the file system.",

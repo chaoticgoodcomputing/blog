@@ -1,6 +1,7 @@
 {
   "name": "@chaoticgoodcomputing/island-runtime",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "description": "Preact islands for Quartz 5 plugins: build-time markers, entry modules, and the runtime that hydrates them across SPA navigation. See CONTEXT.md.",
   "//exports": "Source only: no build and no dist. The consuming plugin's build inlines it (ADR-0005).",
