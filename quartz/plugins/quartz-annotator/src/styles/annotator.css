@@ -371,32 +371,11 @@
   pointer-events: auto;
 }
 
-/* A passage the drawer has just closed on. */
-.cgc-annotator-viewer__highlight--flash {
-  animation: cgc-annotator-viewer-flash 1.2s ease-out;
-}
-
-@keyframes cgc-annotator-viewer-flash {
-  0%,
-  30% {
-    box-shadow: 0 0 0 4px var(--secondary);
-  }
-
-  100% {
-    box-shadow: 0 0 0 0 var(--secondary);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .cgc-annotator-frame[data-layout="drawer"] .cgc-annotator__annotations,
   .cgc-annotator-frame[data-layout="drawer"][data-drawer-open="true"] .cgc-annotator__annotations,
   .cgc-annotator-frame[data-layout="drawer"] .cgc-annotator__tab,
   .cgc-annotator__scrim {
     transition: none;
-  }
-
-  .cgc-annotator-viewer__highlight--flash {
-    animation: none;
-    outline: 3px solid var(--secondary);
   }
 }

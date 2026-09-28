@@ -41,7 +41,6 @@ const SHORT_CARD = `${PAGE}__annotation--short`
 const ACTIVE_HIGHLIGHT = `${VIEWER}__highlight--active`
 const HOVER_HIGHLIGHT = `${VIEWER}__highlight--hover`
 const CLIPPED = `${PAGE}__note--clipped`
-const FLASH = `${VIEWER}__highlight--flash`
 /** How far a drag or swipe must go to open or close the drawer, in pixels. */
 const SWIPE = 40
 /** Space between two cards in the margin, in pixels. */
@@ -269,17 +268,6 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
     }
   }
 
-  // The selected annotation's highlight catches the eye a moment, after the drawer closes on it.
-  function flash(id: string) {
-    const boxes = [...viewer.querySelectorAll<HTMLElement>(`.${VIEWER}__highlight`)].filter((el) => el.dataset.annotation === id)
-    for (const el of boxes) {
-      el.classList.remove(FLASH)
-      void el.offsetWidth
-      el.classList.add(FLASH)
-      setTimeout(() => el.classList.remove(FLASH), 1300)
-    }
-  }
-
   // Puts every card where it goes: in the margin, beside its passage; elsewhere, in the flow.
   function place() {
     const inMargin = layout === "margin" && !marginHidden
@@ -343,7 +331,8 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
   let dragged = false
 
   // Clicking a card, other than a link in it, or a highlight. In the drawer, a highlight opens it at
-  // its card; a card takes the document to its passage, and on a phone closes the drawer first.
+  // its card; a card takes the document to its passage and leaves the drawer open, phone or tablet,
+  // so the card just tapped stays in front of the reader.
   on(body, "click", (event: MouseEvent) => {
     const target = event.target as Element
     const highlight = target.closest<HTMLElement>(`.${VIEWER}__highlight`)
@@ -357,12 +346,7 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
     }
     const item = target.closest<HTMLElement>(`.${PAGE}__annotation`)
     if (!item || target.closest("a") || dragged) return
-    const id = item.dataset.annotation
-    if (modal()) {
-      setDrawer(false)
-      select(id, true)
-      if (id && geometry?.places.has(id)) flash(id)
-    } else select(id, true)
+    select(item.dataset.annotation, true)
   })
 
   if (scrim) on(scrim, "click", () => setDrawer(false))

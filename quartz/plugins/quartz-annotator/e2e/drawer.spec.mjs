@@ -46,14 +46,16 @@ test.describe("on a phone, at 390px", () => {
     expect(box.width).toBeCloseTo(390 * 0.85, 0)
   })
 
-  test("tapping a card closes the drawer, with the document at its highlight", async ({ page }) => {
+  test("tapping a card takes the document to its highlight, and the drawer and the card stay", async ({ page }) => {
     await open(page, 390)
     await tab(page).click()
     await expect(drawer(page)).toBeInViewport()
     await card(page, "lastpage").locator(".cgc-annotator__quote").click()
-    await expect(drawer(page)).toBeHidden()
     await expect.poll(() => selected(page)).toEqual(["lastpage"])
     await expect(highlight(page, "lastpage")).toBeInViewport()
+    await expect(drawer(page)).toBeInViewport()
+    await expect(card(page, "lastpage")).toBeInViewport()
+    expect(await isOpen(page)).toBe("true")
   })
 
   test("tapping the dimmed document closes the drawer", async ({ page }) => {
