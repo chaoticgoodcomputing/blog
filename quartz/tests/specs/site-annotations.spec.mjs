@@ -120,6 +120,9 @@ for (const width of [390, 1000, 1440]) {
     await expect(title.getByRole("link").first()).toHaveAttribute("href", /^(\/|https:\/\/blog\.chaoticgood\.computer\/?|\.\.\/\.\.)$/)
     await expect(menu.locator(".search")).toBeVisible()
     await expect(menu.locator(".darkmode")).toBeVisible()
+    // Together at the top: the site's mobile spacer between them has nothing to grow into here.
+    const [titleBox, searchBox] = [await title.boundingBox(), await menu.locator(".search").boundingBox()]
+    expect(searchBox.y - (titleBox.y + titleBox.height)).toBeLessThan(80)
     await page.keyboard.press("Escape")
     await expect(menu).not.toBeInViewport()
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)

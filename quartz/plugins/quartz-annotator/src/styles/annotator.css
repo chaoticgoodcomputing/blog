@@ -309,6 +309,13 @@
   transition: none;
 }
 
+/* Nothing slides while the reader switches layouts, as on load. */
+.cgc-annotator-frame[data-switching] .cgc-annotator__annotations,
+.cgc-annotator-frame[data-switching] .cgc-annotator__tab,
+.cgc-annotator-frame[data-switching] .cgc-annotator__annotation {
+  transition: none;
+}
+
 /* The tab, on the right edge, riding the drawer's edge while it's open. */
 .cgc-annotator__tab {
   display: none;

@@ -187,7 +187,12 @@ export function mountReader(viewer: HTMLElement, options: ReaderOptions): Reader
       marginHidden,
     )
     current = next
-    if (next.layout !== layout && drawerOpen) setDrawer(false, false)
+    if (next.layout !== layout) {
+      if (drawerOpen) setDrawer(false, false)
+      // A new layout is taken at once: nothing slides into place, as the drawer would slide shut.
+      frame.setAttribute("data-switching", "")
+      requestAnimationFrame(() => requestAnimationFrame(() => frame.removeAttribute("data-switching")))
+    }
     layout = next.layout
     frame.dataset.layout = layout
     frame.dataset.margin = marginHidden ? "hidden" : "shown"
