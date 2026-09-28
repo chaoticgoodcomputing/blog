@@ -75,6 +75,14 @@ The global graph's time slider (every page, the last year, the last month, by ea
 the **graph index**) and its private toggle.
 _Avoid_: controls, graph settings
 
+**Debug panel**:
+The `debugPanel` option's controls, beside the global graph in the **dialog**, one for every graph
+setting but `defaultFilterState`, with a switch between the global graph's settings and the local
+graph's. The dialog draws whichever graph the switch picks, and draws it afresh on every change. It
+shows both graphs' settings as YAML, where they differ from the plugin's defaults, to paste into the
+site config. A tuning aid, not for readers.
+_Avoid_: settings panel, config editor, dev tools
+
 **Text alternative**:
 The list inside each canvas of every node it draws, linking to its page, with the nodes it has an
 edge to (docs/adr/0002). Never rendered; read by assistive technology in the canvas's place.

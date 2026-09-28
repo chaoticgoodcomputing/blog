@@ -103,10 +103,13 @@ export function fadeForHover(
 
 /**
  * An edge's opacity by how stretched it is: `max` at half its link distance or closer, `min` at
- * twice it or further.
+ * twice it or further. With a link distance of 0 every edge is stretched further than that, and takes
+ * `min`: v4 divided by zero there, and the canvas, given no opacity it could read, drew every edge
+ * whole.
  */
 export function edgeOpacity(distance: number, target: number, min: number, max: number) {
   const [near, far] = [target * 0.5, target * 2]
+  if (far <= near) return distance > near ? min : max
   const t = (Math.max(near, Math.min(far, distance)) - near) / (far - near)
   return max - t * (max - min)
 }

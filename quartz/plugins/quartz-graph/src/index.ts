@@ -145,6 +145,8 @@ function check(options: GraphOptions = {}) {
     throw new CgcGraphError(`privateTags must be a list of tags`)
   if (options.title !== undefined && typeof options.title !== "string")
     throw new CgcGraphError(`title must be a string`)
+  if (options.debugPanel !== undefined && typeof options.debugPanel !== "boolean")
+    throw new CgcGraphError(`debugPanel must be true or false`)
   const collections = options.iconCollections
   if (
     collections !== undefined &&

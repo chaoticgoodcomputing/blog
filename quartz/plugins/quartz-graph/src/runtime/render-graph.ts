@@ -19,17 +19,25 @@ import { nodeIdOf, visitedPages } from "./pages"
 import { paintOf, paletteOf } from "./palette"
 import { attachPointer } from "./pointer"
 import { settingsOf, type Settings } from "./settings"
-import { radiusOf, simulationOf } from "./simulation"
+import { radiusOf, simulationOf, type Positions } from "./simulation"
 import type { GraphData, LinkRender, NodeRender, Pages, Sources, Transform } from "./types"
+
+/** Where a graph's nodes are and how it is panned and zoomed, for a graph drawn again to start from. */
+export interface Layout {
+  positions: Positions
+  transform: Transform
+}
 
 export interface DrawnGraph {
   /** Resolves every colour again, for the scheme the page shows now. */
   repaint(): void
+  /** Where its nodes are now, and its pan and zoom. */
+  layout(): Layout | null
   /** Stops drawing, and removes what it added to the page. */
   destroy(): void
 }
 
-const NOTHING: DrawnGraph = { repaint() {}, destroy() {} }
+const NOTHING: DrawnGraph = { repaint() {}, layout: () => null, destroy() {} }
 
 // The global graph's filters as it opens: the site's `defaultFilterState`, where an adaptive period
 // settles on the narrowest one that holds enough pages.
@@ -42,13 +50,36 @@ function initialFilters(settings: Settings, data: GraphData, pages: Pages): Filt
   return { timePeriod, includePrivate }
 }
 
-export function renderGraph(container: HTMLElement, slug: string, sources: Sources): DrawnGraph {
+/** How the debug panel draws a graph: with its own settings, and the filters it last had. */
+export interface Redraw {
+  /** Settings in place of the container's: either graph's, as edited, into the global graph's. */
+  cfg: ContainerConfig
+  /** The filters as the reader last set them, in place of `defaultFilterState`'s. */
+  filters?: FilterState
+  /** Told of each change to the filters, to pass back as `filters` next time. */
+  onFilters?: (state: FilterState) => void
+  /**
+   * The graph this one replaces, as it was: each node still in the graph starts where it was, and
+   * the view keeps its pan and zoom, so a change of settings resettles the graph rather than laying
+   * it out anew. Only for the first draw: a filter change after it lays out afresh, as ever.
+   */
+  from?: Layout
+}
+
+/** Draws a graph into `container`, with the settings it carries, or as `redraw` asks. */
+export function renderGraph(
+  container: HTMLElement,
+  slug: string,
+  sources: Sources,
+  redraw?: Redraw,
+): DrawnGraph {
+  const cfg: ContainerConfig = redraw?.cfg ?? JSON.parse(container.dataset.cfg ?? "{}")
   const { pages, icons, tags } = sources
   const width = container.offsetWidth
   // Not laid out, as in a sidebar a narrow screen hides: nothing to draw into.
   if (width === 0) return NOTHING
   const height = Math.max(container.offsetHeight, 250)
-  const settings = settingsOf(JSON.parse(container.dataset.cfg ?? "{}") as ContainerConfig)
+  const settings = settingsOf(cfg)
   const current = nodeIdOf(slug)
   const visited = visitedPages()
 
@@ -59,14 +90,20 @@ export function renderGraph(container: HTMLElement, slug: string, sources: Sourc
   let palette = paletteOf(settings)
   const transform: Transform = { x: 0, y: 0, k: 1 }
   let stop: (() => void) | null = null
+  let drawn: GraphData | null = null
+  let from = redraw?.from
 
   const draw = (data: GraphData) => {
     stop?.()
     const view = canvasOf(width, height)
     const radius = radiusOf(data, settings, tagCountsOf(data))
-    const { simulation, shellRadius } = simulationOf(data, radius, settings, width, height)
-    Object.assign(transform, { x: 0, y: 0, k: 1 })
-    if (settings.shell && shellRadius !== null) {
+    const seed = from?.positions
+    const { simulation, shellRadius } = simulationOf(data, radius, settings, width, height, seed)
+    Object.assign(transform, from?.transform ?? { x: 0, y: 0, k: 1 })
+    drawn = data
+    from = undefined
+    // The pseudo-shell fits its ring to the view, unless the view is carried over.
+    if (settings.shell && shellRadius !== null && !seed) {
       // Zoom to fit the ring, and its margin, in the shorter side, around the centre.
       const k = Math.min(width, height) / (2 * (shellRadius + settings.shell.zoomMargin))
       Object.assign(transform, { k, x: (width / 2) * (1 - k), y: (height / 2) * (1 - k) })
@@ -129,10 +166,11 @@ export function renderGraph(container: HTMLElement, slug: string, sources: Sourc
 
   let removeFilters: (() => void) | null = null
   if (settings.global) {
-    const initial = initialFilters(settings, whole, pages)
-    removeFilters = filterControls(container, initial, (state) =>
-      draw(filtered(whole, pages, state)),
-    )
+    const initial = redraw?.filters ?? initialFilters(settings, whole, pages)
+    removeFilters = filterControls(container, initial, (state) => {
+      redraw?.onFilters?.(state)
+      draw(filtered(whole, pages, state))
+    })
     draw(filtered(whole, pages, initial))
   } else {
     draw(whole)
@@ -141,6 +179,13 @@ export function renderGraph(container: HTMLElement, slug: string, sources: Sourc
   return {
     repaint() {
       palette = paletteOf(settings)
+    },
+    layout() {
+      if (!drawn) return null
+      const positions: Positions = new Map()
+      for (const node of drawn.nodes)
+        if (node.x != null && node.y != null) positions.set(node.id, { x: node.x, y: node.y })
+      return { positions, transform: { ...transform } }
     },
     destroy() {
       stop?.()

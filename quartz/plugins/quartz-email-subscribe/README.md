@@ -40,10 +40,6 @@ plugins:
 | `title`              | `string` | `"Newsletter"`                          | The heading above the box. `""` for none.                          |
 | `description`        | `string` | `"Weekly updates about any new notes!"` | The line above the email field. `""` for none.                     |
 
-## Documentation
-
-See [CONTEXT.md](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz/plugins/quartz-email-subscribe/CONTEXT.md).
-
 ## License
 
 MIT

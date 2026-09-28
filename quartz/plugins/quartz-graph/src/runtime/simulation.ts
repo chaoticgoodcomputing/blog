@@ -39,20 +39,48 @@ export function radiusOf(data: GraphData, settings: Settings, tagCounts: Map<Nod
 export const shellRadiusOf = (nodeCount: number, shell: Shell) =>
   shell.radiusBase + shell.radiusScale * Math.sqrt(nodeCount)
 
+/** Where each node was, by id, for a graph drawn again to start from (`simulationOf`'s `seed`). */
+export type Positions = Map<NodeId, { x: number; y: number }>
+
+// How warm a graph drawn again from `seed` starts: enough to settle into its new settings, not so
+// much that it scatters. A graph drawn afresh starts at d3's 1.
+const RESETTLE_ALPHA = 0.3
+// How far from its neighbour a node new to a seeded graph starts, so the two don't sit on each other.
+const BESIDE = 10
+
 export function simulationOf(
   data: GraphData,
   radius: (node: NodeData) => number,
   settings: Settings,
   width: number,
   height: number,
+  seed?: Positions,
 ): { simulation: Simulation<NodeData, LinkData>; shellRadius: number | null } {
-  // Start the nodes spread along the longer axis, to fill the view sooner.
+  // Start the nodes spread along the longer axis, to fill the view sooner, but each node `seed` holds
+  // where it was.
   const long = Math.max(width, height)
   const short = Math.min(width, height)
+  const placed = new Set<NodeData>()
   for (const node of data.nodes) {
+    const at = seed?.get(node.id)
+    if (at) {
+      ;[node.x, node.y] = [at.x, at.y]
+      placed.add(node)
+      continue
+    }
     const along = (Math.random() - 0.5) * long * 0.8
     const across = (Math.random() - 0.5) * short * 0.3
     ;[node.x, node.y] = width > height ? [along, across] : [across, along]
+  }
+  // A node new to a seeded graph starts beside a neighbour that was already there, not at random.
+  if (placed.size > 0) {
+    for (const { source, target } of data.links) {
+      const [from, to] = placed.has(source) ? [source, target] : [target, source]
+      if (!placed.has(from) || placed.has(to)) continue
+      to.x = (from.x ?? 0) + (Math.random() - 0.5) * 2 * BESIDE
+      to.y = (from.y ?? 0) + (Math.random() - 0.5) * 2 * BESIDE
+      placed.add(to)
+    }
   }
 
   const simulation = forceSimulation<NodeData>(data.nodes)
@@ -76,6 +104,7 @@ export function simulationOf(
       forceRadial<NodeData>((Math.min(width, height) / 2) * 0.8).strength(0.2),
     )
   }
+  if (seed && seed.size > 0) simulation.alpha(RESETTLE_ALPHA)
   return { simulation, shellRadius }
 }
 

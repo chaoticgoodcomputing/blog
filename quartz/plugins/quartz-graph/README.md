@@ -49,6 +49,7 @@ Ctrl+G (⌘+G on a Mac) opens the global graph.
 | `iconCollections` | `Record<string, string>` | none           | Your own icon sets: a prefix and the folder of SVGs behind it. `mdi:` icons need no entry. |
 | `localGraph`      | `GraphConfig`            | see below      | Settings for the local graph, merged over its defaults.                                    |
 | `globalGraph`     | `GraphConfig`            | see below      | Settings for the global graph, merged over its defaults.                                   |
+| `debugPanel`      | `boolean`                | `false`        | A panel beside the global graph for trying every setting live. See below.                  |
 
 The most useful graph settings (local / global defaults):
 
@@ -65,11 +66,11 @@ The most useful graph settings (local / global defaults):
 | `nodeColors`                | none                                        | `{ public, private }` colors in place of the tag colors.                 |
 | `defaultFilterState`        | `{ timePeriod: all, includePrivate: true }` | The global graph's filters when it opens.                                |
 
+With `debugPanel: true`, the global graph's dialog gets a settings panel: every graph setting as a control, grouped and named by its path in the config (`linkDistance.tagPost`). A Global/Local switch picks which graph's settings you edit, and the dialog draws that graph, the local one around the current page. Each change redraws the graph. Underneath, both graphs' changed settings are shown as YAML, with a button to copy them: paste them over the `localGraph` and `globalGraph` blocks in your config. Edits last until the page reloads. The panel is for tuning, so turn it off before you publish.
+
+![[public/assets/Pasted image 20260928003156.png]]
+
 The full list is in [`src/options.ts`](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz/plugins/quartz-graph/src/options.ts). Unknown options, unreadable colors and missing icons fail the build.
-
-## Documentation
-
-See [CONTEXT.md](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz/plugins/quartz-graph/CONTEXT.md) and the [decision records](https://github.com/chaoticgoodcomputing/blog/tree/main/quartz/plugins/quartz-graph/docs/adr).
 
 ## License
 

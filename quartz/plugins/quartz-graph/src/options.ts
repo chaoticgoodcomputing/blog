@@ -115,6 +115,12 @@ export interface GraphOptions {
    * Quartz root. Installed Iconify sets (`mdi`) need no entry.
    */
   iconCollections?: IconCollections
+  /**
+   * Whether the global graph's dialog shows the debug panel: every graph setting as a control, for
+   * trying settings on the page, with a switch between the global and local graphs and the result as
+   * YAML to paste into the site config. For tuning, not for readers. Default: `false`.
+   */
+  debugPanel?: boolean
 }
 
 /** What one graph's container carries to the browser, in `data-cfg`. */
@@ -188,6 +194,17 @@ export const DEFAULT_GLOBAL: GraphConfig = {
 }
 
 export const DEFAULT_TITLE = "Graph View"
+
+// v4's pseudo-shell defaults (components/Graph.tsx), for a graph whose `graphStyle` is `pseudo-shell`.
+export const SHELL_DEFAULTS: PseudoShellConfig = {
+  radiusBase: 200,
+  radiusScale: 1.5,
+  pinnedTags: [],
+  showShell: true,
+  zoomMargin: 50,
+  circumferentialRepulsion: 0.5,
+  shellStyle: { color: "var(--lightgray)", opacity: 0.3, lineStyle: "dotted", lineWidth: 2 },
+}
 
 /** Whether a setting's value is a map of settings, not a number, a word or a list. */
 export const isMap = (value: unknown): value is Record<string, unknown> =>
@@ -266,6 +283,7 @@ export const OPTIONS = keys<GraphOptions>({
   localGraph: true,
   globalGraph: true,
   iconCollections: true,
+  debugPanel: true,
 })
 
 export const GRAPH_SETTINGS = keys<GraphConfig>({

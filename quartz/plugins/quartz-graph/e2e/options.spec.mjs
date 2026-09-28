@@ -3,7 +3,7 @@
 // a `light-dark()` pair, and an option must be one the plugin has.
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, editConfig, fixtureConfig } from "../../../tests/harness/site.mjs"
-import { bubblePaint, drawnGraph, localGraph } from "./graph.mjs"
+import { bubblePaint, drawnGraph, localGraph, nodePosition } from "./graph.mjs"
 
 // A sharper canvas, so a bubble's rim is whole pixels.
 test.use({ deviceScaleFactor: 2 })
@@ -140,3 +140,45 @@ for (const [value, rgb] of Object.entries(PRIVATE)) {
     }
   })
 }
+
+// An edge's opacity with a link distance of 0, as the real site's global graph sets it: every edge is
+// stretched past twice its link distance, so each takes its `min`. v4's fade divided by zero there,
+// and the canvas, given no opacity it could read, drew every edge whole. Two pages and the one edge
+// between them, read at its middle, where no node is drawn.
+test("draws an edge at its minimum opacity with a link distance of 0", async ({ page }) => {
+  const site = await buildScratchSite("graph-edge-opacity", {
+    "index.md": "---\ntitle: Home\n---\nSee [[far]].\n",
+    "far.md": "---\ntitle: Far\n---\nThe end.\n",
+  }, {
+    config: withOptions({
+      localGraph: {
+        linkDistance: 0,
+        edgeOpacity: { postPost: { min: 0.1, max: 1 } },
+        linkStyle: { postPost: "solid" },
+        // Apart, so the edge between them has a middle to read.
+        repelForce: 5,
+      },
+    }),
+    keep: true,
+  })
+  try {
+    expect(site.code, site.output).toBe(0)
+    await routeSite(page, site.public, "https://localhost")
+    await page.goto("https://localhost/")
+    const graph = localGraph(page)
+    const [home, far] = [await nodePosition(graph, "Home"), await nodePosition(graph, "Far")]
+    const alpha = await graph.locator(".cgc-graph__canvas").evaluate((canvas, [a, b]) => {
+      const rect = canvas.getBoundingClientRect()
+      const dpr = canvas.width / rect.width
+      const [x, y] = [((a.x + b.x) / 2 - rect.left) * dpr, ((a.y + b.y) / 2 - rect.top) * dpr]
+      const data = canvas.getContext("2d").getImageData(Math.round(x) - 3, Math.round(y) - 3, 7, 7).data
+      let most = 0
+      for (let i = 3; i < data.length; i += 4) most = Math.max(most, data[i])
+      return most / 255
+    }, [home, far])
+    expect(alpha).toBeGreaterThan(0.05)
+    expect(alpha).toBeLessThan(0.15)
+  } finally {
+    site.remove()
+  }
+})

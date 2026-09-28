@@ -3,6 +3,7 @@
 // plugin's default for it, as the component's merge already gave it.
 import {
   PER_KIND,
+  SHELL_DEFAULTS,
   isRange,
   type ContainerConfig,
   type DefaultFilterState,
@@ -102,6 +103,7 @@ function edgeOpacityRanges(
 export function settingsOf(cfg: ContainerConfig): Settings {
   const graphStyle = cfg.graphStyle ?? "freeform"
   const shell = cfg.pseudoShellConfig
+  const style = SHELL_DEFAULTS.shellStyle
   return {
     global: cfg.global,
     privateTags: cfg.privateTags ?? [],
@@ -121,16 +123,17 @@ export function settingsOf(cfg: ContainerConfig): Settings {
     shell:
       graphStyle === "pseudo-shell"
         ? {
-            radiusBase: shell?.radiusBase ?? 200,
-            radiusScale: shell?.radiusScale ?? 1.5,
-            pinnedTags: shell?.pinnedTags ?? [],
-            showShell: shell?.showShell ?? true,
-            zoomMargin: shell?.zoomMargin ?? 50,
-            circumferentialRepulsion: shell?.circumferentialRepulsion ?? 0.5,
-            color: shell?.shellStyle?.color ?? "var(--lightgray)",
-            opacity: shell?.shellStyle?.opacity ?? 0.3,
-            lineStyle: shell?.shellStyle?.lineStyle ?? "dotted",
-            lineWidth: shell?.shellStyle?.lineWidth ?? 2,
+            radiusBase: shell?.radiusBase ?? SHELL_DEFAULTS.radiusBase,
+            radiusScale: shell?.radiusScale ?? SHELL_DEFAULTS.radiusScale,
+            pinnedTags: shell?.pinnedTags ?? SHELL_DEFAULTS.pinnedTags,
+            showShell: shell?.showShell ?? SHELL_DEFAULTS.showShell,
+            zoomMargin: shell?.zoomMargin ?? SHELL_DEFAULTS.zoomMargin,
+            circumferentialRepulsion:
+              shell?.circumferentialRepulsion ?? SHELL_DEFAULTS.circumferentialRepulsion,
+            color: shell?.shellStyle?.color ?? style.color!,
+            opacity: shell?.shellStyle?.opacity ?? style.opacity,
+            lineStyle: shell?.shellStyle?.lineStyle ?? style.lineStyle,
+            lineWidth: shell?.shellStyle?.lineWidth ?? style.lineWidth,
           }
         : null,
     linkDistance: perEdge(cfg.linkDistance, PER_KIND.linkDistance, isNumber),

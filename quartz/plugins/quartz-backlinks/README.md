@@ -42,10 +42,6 @@ plugins:
 
 Give [quartz-seo](https://blog.chaoticgood.computer/plugins/quartz-seo), [quartz-graph](https://blog.chaoticgood.computer/plugins/quartz-graph) and [quartz-tag-explorer](https://blog.chaoticgood.computer/plugins/quartz-tag-explorer) the same private tags, for example through a YAML anchor.
 
-## Documentation
-
-See [CONTEXT.md](https://github.com/chaoticgoodcomputing/blog/blob/main/quartz/plugins/quartz-backlinks/CONTEXT.md).
-
 ## License
 
 MIT

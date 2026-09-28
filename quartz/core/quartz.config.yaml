@@ -269,16 +269,14 @@ plugins:
     enabled: true
     options:
       privateTags: *privateTags
+      # The global graph's settings panel, for tuning the graph live (quartz-graph's README).
+      debugPanel: true
       iconCollections: &iconCollections
         custom: ../icons
       localGraph:
-        scale: 1
-        repelForce: 3
-        centerForce: 1.75
         linkDistance:
           tagTag: 50
           tagPost: 50
-          postPost: 50
         linkStrength:
           tagTag: 0.3
           tagPost: 0.3
@@ -286,81 +284,73 @@ plugins:
         edgeOpacity:
           tagTag:
             min: 1
-            max: 1
           tagPost:
-            min: 0.75
-            max: 1
+            min: 0
+            max: 0
           postPost:
-            min: 0.5
+            min: 1
             max: 1
         baseSize:
           tags: 10
           posts: 10
-        sizeScaling: &sizeScaling
-          tags: 1.2
-          posts: 1
-        linkStyle: &linkStyle
-          tagTag: solid
-          tagPost: solid
-          postPost: dotted
+        sizeScaling:
+          tags: 1
+          posts: 2
+        repelForce: 2
+        removeTags:
+          - "private"
         privatePostSizeMultiplier: 0.8
-        removeTags: &removeTags
-          - private
         expandSelectedSize: 1.4
-        expandSelectedOscillationTime: 2
+        scale: 0.55
+        centerForce: 0.5
       globalGraph:
-        scale: 1
-        repelForce: 1
-        centerForce: 2
         linkDistance:
-          tagTag: 0
-          tagPost: 0
-          postPost: 0
+          tagPost: 60
+          postPost: 20
         linkStrength:
-          tagTag: 0.25
-          tagPost: 0.05
-          postPost: 0.01
+          tagTag: 0.5
+          tagPost: 0.5
+          postPost: 0.5
         edgeOpacity:
           tagTag:
             min: 1
-            max: 1
           tagPost:
-            min: 0.1
-            max: 1
+            min: 0.05
+            max: 0.2
           postPost:
-            min: 0.1
-            max: 0.5
+            min: 1
+            max: 1
         baseSize:
           tags: 20
           posts: 10
-        sizeScaling: *sizeScaling
-        linkStyle: *linkStyle
+        sizeScaling:
+          tags: 1.2
+        repelForce: 5
+        removeTags:
+          - "private"
         privatePostSizeMultiplier: 0.8
-        removeTags: *removeTags
+        expandSelectedSize: 1.4
+        scale: 0.8
+        centerForce: 0.05
         defaultFilterState:
-          timePeriod: month
+          timePeriod: "month"
           includePrivate: false
           adaptiveTimePeriod:
             minPosts: 3
-        expandSelectedSize: 1.4
-        expandSelectedOscillationTime: 2
-        graphStyle: pseudo-shell
+        graphStyle: "pseudo-shell"
         pseudoShellConfig:
-          radiusBase: 90
-          radiusScale: 40
-          circumferentialRepulsion: 4
-          zoomMargin: 80
+          radiusBase: 150
+          radiusScale: 50
           pinnedTags:
-            - engineering
-            - writing
-            - horticulture
-            - projects
-            - economics
-          showShell: true
+            - "engineering"
+            - "writing"
+            - "horticulture"
+            - "projects"
+            - "economics"
+          zoomMargin: 80
+          circumferentialRepulsion: 4
           shellStyle:
             opacity: 0.5
-            lineStyle: dotted
-            lineWidth: 2
     layout:
       position: right
       priority: 10

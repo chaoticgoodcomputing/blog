@@ -2,16 +2,22 @@
 // before Quartz's router dispatches the first `nav`, and draws on every `nav` after:
 //
 // - each local graph, around the page navigated to;
-// - the global graph, in its dialog, when the reader opens it with the button or Ctrl/⌘+G.
+// - the global graph, in its dialog, when the reader opens it with the button or Ctrl/⌘+G, with the
+//   debug panel beside it where the site asks for one (`debugPanel`, debug.ts).
 //
 // A navigation stops and removes whatever it drew, before the page changes under it (`prenav`). A
 // scheme switch repaints whatever is drawn, with no new layout (`themechange`). The listeners sit on
 // the document, once, so they reach every page SPA navigation brings in.
+import type { ContainerConfig } from "../options"
+import { debugPanel, debugStateOf, type DebugState } from "./debug"
 import { addVisited, loadSources, nodeIdOf } from "./pages"
 import { renderGraph, type DrawnGraph } from "./render-graph"
 
 let locals: DrawnGraph[] = []
 let global: DrawnGraph | null = null
+let removeDebug: (() => void) | null = null
+// The debug panel's edits, kept until the page reloads.
+let debug: DebugState | null = null
 // The page the graphs are drawn around, as the router last named it.
 let slug = document.body.dataset.slug ?? "index"
 // Bumped by every navigation, so a draw still waiting for the index when the reader moves on is
@@ -54,7 +60,28 @@ async function openGlobal(dialog: HTMLDialogElement) {
   }
   if (!dialog.open || !container) return
   global?.destroy()
-  global = renderGraph(container, slug, sources)
+  removeDebug?.()
+  removeDebug = null
+  if (!dialog.classList.contains("cgc-graph__dialog--debug")) {
+    global = renderGraph(container, slug, sources)
+    return
+  }
+  const local = dialog.closest(".cgc-graph")?.querySelector<HTMLElement>(".cgc-graph__local")
+  const cfgOf = (el: HTMLElement | null | undefined) =>
+    JSON.parse(el?.dataset.cfg ?? "{}") as ContainerConfig
+  debug ??= debugStateOf(cfgOf(local), cfgOf(container))
+  const state = debug
+  removeDebug = debugPanel(dialog, state, (cfg, fresh) => {
+    // A change of settings resettles the graph drawn last, from where its nodes are.
+    const from = fresh ? undefined : (global?.layout() ?? undefined)
+    global?.destroy()
+    global = renderGraph(container, slug, sources, {
+      cfg,
+      filters: state.filters,
+      onFilters: (filters) => (state.filters = filters),
+      from,
+    })
+  })
 }
 
 document.addEventListener("nav", ((event: CustomEvent<{ url?: string }>) => {
@@ -98,6 +125,8 @@ document.addEventListener(
     if (event.target instanceof Element && event.target.classList.contains("cgc-graph__dialog")) {
       global?.destroy()
       global = null
+      removeDebug?.()
+      removeDebug = null
     }
   },
   true,
