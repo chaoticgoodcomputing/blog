@@ -134,6 +134,8 @@ export function renderGraph(
       link,
       alpha: 1,
       active: false,
+      hops: 0,
+      litAt: 0,
       lineStyle: settings.linkStyle[link.type],
     }))
     const scene: Scene = {

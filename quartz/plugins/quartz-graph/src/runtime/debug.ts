@@ -76,6 +76,9 @@ const GROUPS: [string, Field[]][] = [
         field(`edgeOpacity.${kind}.max`, number(0, 1, 0.05)),
       ]),
       ...perEdge("linkStyle", { kind: "word", words: LINE_STYLES }),
+      field("hoverPulseOnTime", number(0, 10, 0.1)),
+      field("hoverPulseOffTime", number(0, 10, 0.1)),
+      field("hoverPulseDelay", number(0, 2, 0.05)),
     ],
   ],
   [
@@ -150,6 +153,9 @@ function spelledOut(cfg: ContainerConfig): Config {
     privatePostSizeMultiplier: settings.privatePostSizeMultiplier,
     expandSelectedSize: settings.expandSelectedSize,
     expandSelectedOscillationTime: settings.expandSelectedOscillationTime,
+    hoverPulseOnTime: settings.hoverPulseOnTime,
+    hoverPulseOffTime: settings.hoverPulseOffTime,
+    hoverPulseDelay: settings.hoverPulseDelay,
     pseudoShellConfig: {
       ...SHELL_DEFAULTS,
       ...shell,

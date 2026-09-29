@@ -333,6 +333,9 @@ plugins:
         expandSelectedSize: 1.4
         scale: 0.8
         centerForce: 0.05
+        hoverPulseOnTime: 0.8
+        hoverPulseOffTime: 1
+        hoverPulseDelay: 0.2
         defaultFilterState:
           timePeriod: "month"
           includePrivate: false

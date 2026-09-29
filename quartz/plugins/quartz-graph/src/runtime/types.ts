@@ -122,6 +122,10 @@ export interface LinkRender {
   link: LinkData
   alpha: number
   active: boolean
+  /** While lit: how many hops its nearer end is from the hovered node, 0 for the node's own edges. */
+  hops: number
+  /** While lit: when it was lit, on the animation frames' clock, where its pulse starts. */
+  litAt: number
   lineStyle: "solid" | "dotted"
 }
 

@@ -96,6 +96,15 @@ export interface GraphConfig {
   expandSelectedSize?: number
   /** How long one swell takes, in seconds. */
   expandSelectedOscillationTime?: number
+  /**
+   * How long one pulse along a hovered node's lit edges takes to swell and fade, in seconds. 0 holds
+   * them still, lit whole.
+   */
+  hoverPulseOnTime?: number
+  /** How long a lit edge rests, faint, between pulses, in seconds. */
+  hoverPulseOffTime?: number
+  /** How far behind the pulse runs at each hop out from the hovered node, in seconds. */
+  hoverPulseDelay?: number
 }
 
 export interface GraphOptions {
@@ -173,6 +182,9 @@ const SHARED: Omit<
   privatePostSizeMultiplier: 1,
   expandSelectedSize: 1.3,
   expandSelectedOscillationTime: 2.0,
+  hoverPulseOnTime: 1.0,
+  hoverPulseOffTime: 0.5,
+  hoverPulseDelay: 0.25,
 }
 
 export const DEFAULT_LOCAL: GraphConfig = {
@@ -313,6 +325,9 @@ export const GRAPH_SETTINGS = keys<GraphConfig>({
   defaultFilterState: true,
   expandSelectedSize: true,
   expandSelectedOscillationTime: true,
+  hoverPulseOnTime: true,
+  hoverPulseOffTime: true,
+  hoverPulseDelay: true,
 })
 export const SHELL_SETTINGS = keys<PseudoShellConfig>({
   radiusBase: true,

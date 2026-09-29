@@ -67,7 +67,7 @@ export class Tweens {
 }
 
 /**
- * After the hover changes: fade labels in and out, hide the edges away from the hovered node, and
+ * After the hover changes: fade the hovered node's label in and every other out, hide the edges away from the hovered node, and
  * dim the nodes away from it where `focusOnHover` asks (v4's `updateRenderData`).
  */
 export function fadeForHover(
@@ -86,8 +86,9 @@ export function fadeForHover(
       hovered === node.node.id
         ? { alpha: 1, scale: resting * 1.1 }
         : hovered !== null
-          ? // Only lit, public neighbours are labelled while something is hovered.
-            { alpha: node.active && !node.node.private ? 1 : 0, scale: resting }
+          ? // Only the hovered node is labelled while something is hovered: its lit neighbours'
+            // labels all at once were more than a reader could take in.
+            { alpha: 0, scale: resting }
           : { alpha: node.label.initialAlpha, scale: resting }
     labels.add(new Tween(node.label).to(target, 100))
   }
@@ -114,6 +115,30 @@ export function edgeOpacity(distance: number, target: number, min: number, max: 
   return max - t * (max - min)
 }
 
+/** The faintest a lit edge's pulse leaves it, between pulses. */
+const PULSE_FLOOR = 0.25
+
+/** A pulse's timing, in milliseconds: how long it's on, how long off, and its lag at each hop. */
+export interface Pulse {
+  on: number
+  off: number
+  delay: number
+}
+
+/**
+ * A lit edge's opacity at `time`: pulses that start at the hovered node and run outward, `delay`
+ * later at each hop, each a swell from `PULSE_FLOOR` to whole and back over `on`, then a rest at the
+ * floor for `off`. An edge waits at the floor until its first pulse reaches it. With no `on`, it is
+ * lit whole.
+ */
+export function pulseOpacity(edge: LinkRender, time: number, { on, off, delay }: Pulse) {
+  if (on <= 0) return 1
+  const since = Math.max(0, time - edge.litAt - edge.hops * delay) % (on + Math.max(0, off))
+  if (since >= on) return PULSE_FLOOR
+  const wave = (1 - Math.cos((since / on) * 2 * Math.PI)) / 2
+  return PULSE_FLOOR + wave * (1 - PULSE_FLOOR)
+}
+
 export interface Scene {
   canvas: Canvas
   simulation: Simulation<NodeData, LinkData>
@@ -135,6 +160,11 @@ export function animate(scene: Scene): () => void {
   const [cx, cy] = [width / 2, height / 2]
   const currentNode = nodes.find((node) => node.node.id === scene.current)
   const period = settings.expandSelectedOscillationTime * 1000
+  const pulse = {
+    on: settings.hoverPulseOnTime * 1000,
+    off: settings.hoverPulseOffTime * 1000,
+    delay: settings.hoverPulseDelay * 1000,
+  }
   let stopped = false
 
   const frame = (time: number) => {
@@ -167,7 +197,7 @@ export function animate(scene: Scene): () => void {
       const { min, max } = settings.edgeOpacity[kind]
       const alpha =
         edge.active && edge.alpha === 1
-          ? 1
+          ? pulseOpacity(edge, time, pulse)
           : edgeOpacity(Math.hypot(tx - sx, ty - sy), settings.linkDistance[kind], min, max) *
             edge.alpha
       ctx.save()

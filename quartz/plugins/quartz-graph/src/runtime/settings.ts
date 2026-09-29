@@ -56,6 +56,9 @@ export interface Settings {
   defaultFilterState: DefaultFilterState | null
   expandSelectedSize: number
   expandSelectedOscillationTime: number
+  hoverPulseOnTime: number
+  hoverPulseOffTime: number
+  hoverPulseDelay: number
 }
 
 const perEdge = <T>(
@@ -150,5 +153,8 @@ export function settingsOf(cfg: ContainerConfig): Settings {
     defaultFilterState: cfg.defaultFilterState ?? null,
     expandSelectedSize: cfg.expandSelectedSize ?? 1.3,
     expandSelectedOscillationTime: cfg.expandSelectedOscillationTime ?? 2.0,
+    hoverPulseOnTime: cfg.hoverPulseOnTime ?? 1.0,
+    hoverPulseOffTime: cfg.hoverPulseOffTime ?? 0.5,
+    hoverPulseDelay: cfg.hoverPulseDelay ?? 0.25,
   }
 }

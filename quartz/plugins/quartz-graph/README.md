@@ -8,6 +8,7 @@ tags:
 date: 2026-09-27
 description: An enhanced graph explorer for Quartz 5 sites
 ---
+
 ![[public/assets/Pasted image 20260927192127.png]]
 
 A customizable alternative to the default Quartz graph plugin that allows for tags, coloring, and many other config options.
@@ -53,18 +54,21 @@ Ctrl+G (⌘+G on a Mac) opens the global graph.
 
 The most useful graph settings (local / global defaults):
 
-| Setting                     | Default                                     | Description                                                              |
-| --------------------------- | ------------------------------------------- | ------------------------------------------------------------------------ |
-| `depth`                     | `1` / `-1`                                  | How many edges out from the current page to draw. `-1` draws everything. |
-| `scale`                     | `1.1` / `0.9`                               | Zoom; labels are drawn at `1 / scale`.                                   |
-| `repelForce`, `centerForce` | `0.5`, `0.3` / `0.5`, `0.2`                 | How hard nodes push apart and are pulled to the centre.                  |
-| `linkDistance`              | `{ tagTag: 20, tagPost: 30, postPost: 50 }` | Edge length by kind. A number sets all three.                            |
-| `baseSize`                  | `{ tags: 4, posts: 2 }`                     | Node radius before scaling by edge count.                                |
-| `showTags`, `removeTags`    | `true`, `[]`                                | Whether to draw tags, and which to leave out.                            |
-| `focusOnHover`              | `false` / `true`                            | Fade nodes away from the hovered one.                                    |
-| `graphStyle`                | `freeform`                                  | `pseudo-shell` pins `pseudoShellConfig.pinnedTags` to a ring.            |
-| `nodeColors`                | none                                        | `{ public, private }` colors in place of the tag colors.                 |
-| `defaultFilterState`        | `{ timePeriod: all, includePrivate: true }` | The global graph's filters when it opens.                                |
+| Setting                     | Default                                     | Description                                                               |
+| --------------------------- | ------------------------------------------- | ------------------------------------------------------------------------- |
+| `depth`                     | `1` / `-1`                                  | How many edges out from the current page to draw. `-1` draws everything.  |
+| `scale`                     | `1.1` / `0.9`                               | Zoom; labels are drawn at `1 / scale`.                                    |
+| `repelForce`, `centerForce` | `0.5`, `0.3` / `0.5`, `0.2`                 | How hard nodes push apart and are pulled to the centre.                   |
+| `linkDistance`              | `{ tagTag: 20, tagPost: 30, postPost: 50 }` | Edge length by kind. A number sets all three.                             |
+| `baseSize`                  | `{ tags: 4, posts: 2 }`                     | Node radius before scaling by edge count.                                 |
+| `showTags`, `removeTags`    | `true`, `[]`                                | Whether to draw tags, and which to leave out.                             |
+| `focusOnHover`              | `false` / `true`                            | Fade nodes away from the hovered one.                                     |
+| `hoverPulseOnTime`          | `1.0`                                       | Seconds a pulse along the hovered node's edges lasts. `0` holds them lit. |
+| `hoverPulseOffTime`         | `0.5`                                       | Seconds a lit edge rests, faint, between pulses.                          |
+| `hoverPulseDelay`           | `0.25`                                      | Seconds the pulse lags at each hop out from the hovered node.             |
+| `graphStyle`                | `freeform`                                  | `pseudo-shell` pins `pseudoShellConfig.pinnedTags` to a ring.             |
+| `nodeColors`                | none                                        | `{ public, private }` colors in place of the tag colors.                  |
+| `defaultFilterState`        | `{ timePeriod: all, includePrivate: true }` | The global graph's filters when it opens.                                 |
 
 With `debugPanel: true`, the global graph's dialog gets a settings panel: every graph setting as a control, grouped and named by its path in the config (`linkDistance.tagPost`). A Global/Local switch picks which graph's settings you edit, and the dialog draws that graph, the local one around the current page. Each change redraws the graph. Underneath, both graphs' changed settings are shown as YAML, with a button to copy them: paste them over the `localGraph` and `globalGraph` blocks in your config. Edits last until the page reloads. The panel is for tuning, not for readers: set `debugPanel: serve` to show it only while you serve the site (`quartz build --serve`), so a build you publish never has it.
 
