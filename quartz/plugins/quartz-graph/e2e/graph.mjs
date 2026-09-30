@@ -114,6 +114,34 @@ const pixelsNear = (container, at, shape) =>
   )
 
 /**
+ * How many of the canvas's pixels are painted within a few levels of `rgb`, at least half opaque, in
+ * the band under the node at `at` where its label is drawn: from just past the node's edge (`radius`,
+ * in CSS pixels) to `depth` CSS pixels below its centre, `halfWidth` either side. With the theme's
+ * `dark`, the ink of the node's label, drawn there, centred. The canvas keeps colour unpremultiplied,
+ * so a label resting at a low alpha is `dark` too, but faint: the opacity floor leaves it out.
+ */
+export const labelInk = (container, at, rgb, { radius = 10, depth = 40, halfWidth = 60 } = {}) =>
+  container.locator(".cgc-graph__canvas").evaluate(
+    (canvas, { at, rgb, radius, depth, halfWidth }) => {
+      const rect = canvas.getBoundingClientRect()
+      const k = canvas.width / rect.width
+      const [cx, cy] = [(at.x - rect.left) * k, (at.y - rect.top) * k]
+      const data = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height).data
+      let count = 0
+      for (let y = Math.round(cy + radius * k); y < cy + depth * k; y++) {
+        for (let x = Math.round(cx - halfWidth * k); x < cx + halfWidth * k; x++) {
+          if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) continue
+          const i = (y * canvas.width + x) * 4
+          const off = Math.max(...[0, 1, 2].map((c) => Math.abs(data[i + c] - rgb[c])))
+          if (data[i + 3] >= 128 && off <= 24) count++
+        }
+      }
+      return count
+    },
+    { at, rgb, radius, depth, halfWidth },
+  )
+
+/**
  * The colour a node drawn as a disc is filled with, as `[r, g, b]`: the commonest colour round a ring
  * inside its edge. For a page with no tags, which v4's colours fill (docs/adr/0004); a node with a
  * tag is a bubble, read with `bubblePaint`. Nodes must be big enough for that: the fixture's local

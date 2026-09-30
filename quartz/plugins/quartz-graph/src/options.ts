@@ -71,6 +71,8 @@ export interface GraphConfig {
   linkStrength?: Partial<PerEdge<number>>
   fontSize: number
   opacityScale: number
+  /** Whether the current page's label always shows, as a tag's does. Off, it shows on hover only. */
+  labelCurrentPage: boolean
   /** Tags left out of the graph, each with its subtags. */
   removeTags: string[]
   showTags: boolean
@@ -176,6 +178,7 @@ const SHARED: Omit<
   repelForce: 0.5,
   fontSize: 0.6,
   opacityScale: 1,
+  labelCurrentPage: false,
   showTags: true,
   removeTags: [],
   nodeColors: {},
@@ -310,6 +313,7 @@ export const GRAPH_SETTINGS = keys<GraphConfig>({
   linkStrength: true,
   fontSize: true,
   opacityScale: true,
+  labelCurrentPage: true,
   removeTags: true,
   showTags: true,
   focusOnHover: true,

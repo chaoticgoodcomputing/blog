@@ -91,7 +91,14 @@ const GROUPS: [string, Field[]][] = [
       field("expandSelectedOscillationTime", number(0.1, 10, 0.1)),
     ],
   ],
-  ["Labels", [field("fontSize", number(0.1, 2, 0.05)), field("opacityScale", number(0, 5, 0.1))]],
+  [
+    "Labels",
+    [
+      field("fontSize", number(0.1, 2, 0.05)),
+      field("opacityScale", number(0, 5, 0.1)),
+      field("labelCurrentPage", { kind: "boolean" }),
+    ],
+  ],
   [
     "Behaviour",
     [

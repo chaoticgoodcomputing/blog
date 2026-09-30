@@ -3,7 +3,7 @@
 // a `light-dark()` pair, and an option must be one the plugin has.
 import { test, expect, routeSite } from "../../../tests/harness/test.mjs"
 import { buildScratchSite, editConfig, fixtureConfig } from "../../../tests/harness/site.mjs"
-import { bubblePaint, drawnGraph, localGraph, nodePosition } from "./graph.mjs"
+import { bubblePaint, drawnGraph, hoveredLabel, labelInk, localGraph, nodePosition, rgbOf } from "./graph.mjs"
 
 // A sharper canvas, so a bubble's rim is whole pixels.
 test.use({ deviceScaleFactor: 2 })
@@ -181,4 +181,53 @@ test("draws an edge at its minimum opacity with a link distance of 0", async ({ 
   } finally {
     site.remove()
   }
+})
+
+// `labelCurrentPage`: off by default, the current page's label rests hidden like any other page's and
+// shows on hover; on, it shows at rest, as v4's did. Read as the ink of the theme's `dark` under the
+// node, where the label is drawn. The pages carry no tags, so no node draws an icon, the graph's
+// other mark in `dark`.
+test.describe("labelCurrentPage", () => {
+  const UNTAGGED = {
+    "index.md": "---\ntitle: Home\n---\nSee [[other]].\n",
+    "other.md": "---\ntitle: Other\n---\nAnother page.\n",
+  }
+  const sites = {}
+  test.beforeAll(async () => {
+    for (const labelCurrentPage of [undefined, true]) {
+      const localGraph = { baseSize: { tags: 10, posts: 10 }, ...(labelCurrentPage && { labelCurrentPage }) }
+      const site = await buildScratchSite(`graph-label-current-${labelCurrentPage ?? "default"}`, UNTAGGED, {
+        config: withOptions({ privateTags: ["private"], localGraph }),
+        keep: true,
+      })
+      expect(site.code, site.output).toBe(0)
+      sites[labelCurrentPage ?? "default"] = site
+    }
+  })
+  test.afterAll(() => Object.values(sites).forEach((site) => site.remove()))
+
+  async function home(page, site) {
+    await routeSite(page, site.public, "https://localhost")
+    await page.goto("https://localhost/")
+    const graph = localGraph(page)
+    const current = Object.values(await drawnGraph(graph)).filter((node) => node.current)
+    expect(current.map((node) => node.label)).toEqual(["Home"])
+    const at = await nodePosition(graph, "Home")
+    return { graph, at, ink: async () => labelInk(graph, at, await rgbOf(page, "var(--dark)")) }
+  }
+
+  test("leaves the current page unlabelled until it is hovered, by default", async ({ page }) => {
+    const { graph, at, ink } = await home(page, sites.default)
+    expect(await ink()).toBeLessThan(10)
+    await page.mouse.move(at.x, at.y)
+    await expect.poll(() => hoveredLabel(graph)).toBe("Home")
+    await expect.poll(ink).toBeGreaterThan(40)
+    await page.mouse.move(0, 0)
+    await expect.poll(ink).toBeLessThan(10)
+  })
+
+  test("labels the current page at rest with labelCurrentPage", async ({ page }) => {
+    const { ink } = await home(page, sites.true)
+    await expect.poll(ink).toBeGreaterThan(40)
+  })
 })

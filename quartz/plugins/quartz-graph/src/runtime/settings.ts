@@ -38,6 +38,7 @@ export interface Settings {
   centerForce: number
   fontSize: number
   opacityScale: number
+  labelCurrentPage: boolean
   removeTags: string[]
   showTags: boolean
   focusOnHover: boolean
@@ -118,6 +119,7 @@ export function settingsOf(cfg: ContainerConfig): Settings {
     centerForce: cfg.centerForce,
     fontSize: cfg.fontSize,
     opacityScale: cfg.opacityScale,
+    labelCurrentPage: cfg.labelCurrentPage ?? false,
     removeTags: cfg.removeTags ?? [],
     showTags: cfg.showTags,
     focusOnHover: cfg.focusOnHover ?? false,

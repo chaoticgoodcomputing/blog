@@ -2,22 +2,30 @@
 // exports beside each one, the light or the dark by the page's theme. Vendored, for testing, from
 // dinolupo/quartz-excalidraw (CONTEXT.md, Provenance) and ported to Quartz 5.
 //
-// Two factories, as site-styles has, because a plugin in two categories is instantiated once for each.
-// The loader picks each by its shape, calling each with no options while it does.
+// Three factories, as site-styles has two, because a plugin in several categories is instantiated once
+// for each. The loader picks each by its shape, calling each with no options while it does.
 //
 // - `transformer`: rewrites an embed of a drawing, before obsidian-flavored-markdown reads it as a
 //   transclusion (`defaultOrder: 25`, below OFM's 30), into the exports' `<img>`s. It ships no CSS:
 //   the rules that show one export per theme are in site-styles' components tier.
 // - `filter`: keeps each drawing's own note, the scene data Obsidian stores, off the site.
+// - `emitter`: unless `keepBackground`, writes each export's copy without its background, which is
+//   what an embed then shows (`src/background.ts`).
 import type { BuildCtx, ProcessedContent } from "@quartz-community/types"
 import { slugifyFilePath } from "@quartz-community/utils"
 import fs from "node:fs"
 import path from "node:path"
 import { findDrawing, type Drawing } from "./resolve"
+import { isDrawingExport, transparentCopy, withoutBackground } from "./background"
 
 export interface Options {
   /** A folder, relative to the content folder, where exports are also looked for by file name. */
   imgDir?: string
+  /**
+   * Whether an embed shows the export's own background, the canvas colour it was drawn on. Off by
+   * default: the drawing sits on the page's own background, in either theme.
+   */
+  keepBackground?: boolean
 }
 
 // `![[target]]` or `![[target|alias]]`. A target with a heading or block anchor is left alone.
@@ -35,7 +43,10 @@ export function transformer(opts?: Options) {
       const isDrawingNote = (file: string) => drawingNote(ctx, file)
       const embed = (match: string, target: string, label: string | undefined) => {
         const drawing = findDrawing(target.trim(), files, isDrawingNote, opts?.imgDir)
-        return drawing ? render(drawing, target.trim(), label?.trim()) : match
+        if (!drawing) return match
+        const source = (file: string) =>
+          opts?.keepBackground || !isDrawingExport(file, isDrawingNote) ? file : transparentCopy(file)
+        return render(drawing, target.trim(), label?.trim(), source)
       }
       return src
         .replace(WIKILINK, (match, target, alias) => embed(match, target, alias))
@@ -66,6 +77,25 @@ function drawingNote(ctx: BuildCtx, file: string): boolean {
   return known
 }
 
+// Each export's copy without its background, beside it, when the background is dropped. The Assets
+// emitter copies the export itself as it copies any file. Few and small, so a rebuild writes them all.
+export function emitter(opts?: Options) {
+  const emit = async (ctx: BuildCtx): Promise<string[]> => {
+    if (opts?.keepBackground) return []
+    const exports = ctx.allFiles.filter((file) => isDrawingExport(file, (note) => drawingNote(ctx, note)))
+    return Promise.all(
+      exports.map(async (file) => {
+        const svg = await fs.promises.readFile(path.join(ctx.argv.directory, file), "utf8")
+        const dest = path.join(ctx.argv.output, slugifyFilePath(transparentCopy(file) as never))
+        await fs.promises.mkdir(path.dirname(dest), { recursive: true })
+        await fs.promises.writeFile(dest, withoutBackground(svg))
+        return dest
+      }),
+    )
+  }
+  return { name: "SiteExcalidrawBackgrounds", emit, partialEmit: emit }
+}
+
 export function filter() {
   return {
     name: "SiteExcalidrawNotes",
@@ -79,12 +109,13 @@ export function filter() {
 // An alias of `600` or `600x400` sizes the drawing, as Obsidian's does; any other alias is its alt text.
 // Each `src` is from the content root, as a link is written in markdown: crawl-links makes it
 // relative to the page, which holds under any base path.
-function render(drawing: Drawing, target: string, label: string | undefined): string {
+// `source` names the file an export is shown from: itself, or its copy without its background.
+function render(drawing: Drawing, target: string, label: string | undefined, source: (file: string) => string): string {
   const width = label?.match(/^(\d+)(?:x\d+)?$/)?.[1]
   const alt = escapeAttribute(width || !label ? (target.split("/").pop() ?? target).replace(/\.(excalidraw|md).*$/, "") : label)
   const style = width ? ` style="max-width: ${width}px;"` : ""
   const img = (file: string, className: string) =>
-    `<img class="${className}" src="/${slugifyFilePath(file as never)}" alt="${alt}" loading="lazy" />`
+    `<img class="${className}" src="/${slugifyFilePath(source(file) as never)}" alt="${alt}" loading="lazy" />`
   const images = drawing.single
     ? img(drawing.single, "excalidraw-svg")
     : img(drawing.light!, "excalidraw-svg-light") + img(drawing.dark!, "excalidraw-svg-dark")

@@ -88,14 +88,16 @@
 
   // An Excalidraw drawing (site-excalidraw): its light and dark exports, one shown by the page's
   // theme. Upstream's rules, keyed on `saved-theme` alone: darkmode sets its `body.theme-*` classes
-  // from the same value, so upstream's second selector for each was redundant.
+  // from the same value, so upstream's second selector for each was redundant. A drawing fills its
+  // container, so it is as wide as the text's line length, not its export's own size; a numeric
+  // alias caps the container's width.
   .excalidraw-svg-container {
     display: block;
     margin: 1.5rem auto;
     text-align: center;
 
     & img {
-      max-width: 100%;
+      width: 100%;
       height: auto;
       display: inline-block;
     }

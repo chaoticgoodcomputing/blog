@@ -109,12 +109,14 @@ export function renderGraph(
       Object.assign(transform, { k, x: (width / 2) * (1 - k), y: (height / 2) * (1 - k) })
     }
 
-    // Tags' and the current page's labels always show. Other pages' rest at an alpha `scale` and
+    // Tags' labels always show, and the current page's does with `labelCurrentPage` (v4 always showed
+    // it), even when the current page is a tag's. Other pages' rest at an alpha `scale` and
     // `opacityScale` set, hidden at the defaults, and fade in on hover; zooming doesn't change them,
     // as in v4.
     const resting = Math.max((settings.scale * settings.opacityScale - 1) / 3.75, 0)
     const nodes: NodeRender[] = data.nodes.map((node) => {
-      const initialAlpha = node.isTag || node.id === current ? 1 : resting
+      const initialAlpha =
+        node.id === current ? (settings.labelCurrentPage ? 1 : resting) : node.isTag ? 1 : resting
       return {
         node,
         radius: radius(node),

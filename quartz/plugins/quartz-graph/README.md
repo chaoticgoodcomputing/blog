@@ -62,6 +62,7 @@ The most useful graph settings (local / global defaults):
 | `linkDistance`              | `{ tagTag: 20, tagPost: 30, postPost: 50 }` | Edge length by kind. A number sets all three.                             |
 | `baseSize`                  | `{ tags: 4, posts: 2 }`                     | Node radius before scaling by edge count.                                 |
 | `showTags`, `removeTags`    | `true`, `[]`                                | Whether to draw tags, and which to leave out.                             |
+| `labelCurrentPage`          | `false`                                     | Always label the current page, as tags are. Off, it's labelled on hover.  |
 | `focusOnHover`              | `false` / `true`                            | Fade nodes away from the hovered one.                                     |
 | `hoverPulseOnTime`          | `1.0`                                       | Seconds a pulse along the hovered node's edges lasts. `0` holds them lit. |
 | `hoverPulseOffTime`         | `0.5`                                       | Seconds a lit edge rests, faint, between pulses.                          |

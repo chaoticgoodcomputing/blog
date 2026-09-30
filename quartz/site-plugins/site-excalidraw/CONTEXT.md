@@ -2,7 +2,7 @@
 
 The site plugin that embeds the vault's Excalidraw drawings as the SVGs Obsidian's Excalidraw plugin
 exports beside each one, the light or the dark export by the page's theme, and keeps each drawing's
-own note off the site. It is a transformer and a filter. Inherits the family vocabulary in
+own note off the site. It is a transformer, a filter and an emitter. Inherits the family vocabulary in
 [`quartz/CONTEXT.md`](../../CONTEXT.md). No fixture config loads it, so its spec builds a scratch
 site from the site config.
 
@@ -43,7 +43,7 @@ _Avoid_: transclusion (what OFM makes of an embed the plugin leaves alone)
 ## What the port changed
 
 - **A Quartz 5 package.** A site plugin in the package contract's shape, with a `quartz` manifest
-  (`transformer` and `filter`, one factory each, as site-styles has), bundled to `dist/`.
+  (`transformer`, `filter` and `emitter`, one factory each, as site-styles has), bundled to `dist/`.
 - **The vault's embeds.** Upstream matched only a target spelled with `.excalidraw`. The vault embeds
   a drawing by its note's path from the vault root, one folder above the content folder, and with no
   extension (`![[public/assets/doodles/panic-01-engineering-loop]]`). So a target is tried as
@@ -59,6 +59,13 @@ _Avoid_: transclusion (what OFM makes of an embed the plugin leaves alone)
 - **No CSS of its own.** The rules that show one export per theme are application CSS, in
   site-styles' components tier (ADR-0003's site-plugin amendment), keyed on darkmode's `saved-theme`.
 - **Alt text** is the alias when it is not a size, else the drawing's name, and is escaped.
+- **As wide as the text.** A drawing fills its container, the text's line length, rather than
+  showing at its export's own size; a numeric alias still caps it.
+- **No background, by default.** Each export paints its canvas colour as one `<rect>` spanning its
+  viewBox. Unless `keepBackground` is set, the emitter writes a copy of each drawing's export
+  without it, beside it as `<name>.transparent.svg`, and an embed shows that copy, so the drawing
+  sits on the page's own background (`src/background.ts`). The export itself is still copied, as
+  any file is.
 
 Order: `defaultOrder: 25`, below obsidian-flavored-markdown's 30, so an embed is rewritten before OFM
 reads it as a transclusion.
@@ -67,5 +74,6 @@ reads it as a transclusion.
 
 `e2e/site-excalidraw.spec.mjs`, on a scratch site built from the site config, in both themes: an
 embed by vault path shows one export per theme, swapping on the darkmode toggle; one by name alone
-is sized by its alias; upstream's spelling still works; a plain note's embed is left alone though an
-SVG shares its name; and the drawings' notes are 404s while their exports are served.
+is sized by its alias; a drawing is as wide as a paragraph; upstream's spelling still works; a plain note's embed is left alone though an
+SVG shares its name; the drawings' notes are 404s while their exports are served; each export's copy has no background;
+and with `keepBackground` an embed shows the exports themselves and no copy is written.

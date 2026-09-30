@@ -88,6 +88,9 @@ plugins:
   # Below OFM's 30 by its defaultOrder, so a drawing's embed is rewritten before OFM reads it.
   - source: "@chaoticgoodcomputing/site-excalidraw"
     enabled: true
+    options:
+      # Drop the exports' canvas colour, so a drawing sits on the page's own background.
+      keepBackground: false
   - source: "@quartz-community/obsidian-flavored-markdown"
     enabled: true
     options:

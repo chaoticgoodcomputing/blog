@@ -47,7 +47,8 @@
     "description": "Embeds Excalidraw drawings as their exported SVGs, and unpublishes the drawings' notes.",
     "category": [
       "transformer",
-      "filter"
+      "filter",
+      "emitter"
     ],
     "version": "0.0.0",
     "quartzVersion": ">=5.0.0",
@@ -55,6 +56,8 @@
     "//defaultOrder": "Below obsidian-flavored-markdown's 30, so a drawing's embed is rewritten before OFM reads it as a transclusion.",
     "defaultOrder": 25,
     "defaultEnabled": true,
-    "defaultOptions": {}
+    "defaultOptions": {
+      "keepBackground": false
+    }
   }
 }
