@@ -1,0 +1,60 @@
+{
+  "name": "@chaoticgoodcomputing/site-excalidraw",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Embeds the vault's Excalidraw drawings as their exported light and dark SVGs, and keeps the drawings' own notes off the site. Vendored, for testing, from dinolupo/quartz-excalidraw and ported to Quartz 5. A site plugin: a repo-only package, never published (private), loaded by package name like every other plugin of ours. See CONTEXT.md.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chaoticgoodcomputing/blog.git",
+    "directory": "quartz/site-plugins/site-excalidraw"
+  },
+  "//files": "Repo-only (private), so never packed or published; files, license, publishConfig and repository are here because the package contract is one shape for every plugin of ours (#98).",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "//exports": "Every entry has its type declarations beside it, which build.mjs emits, as every plugin of ours does: the package contract (the package-contract repo guard, #98) holds a site plugin to the same shape as a published one. ./package.json is how Quartz reads the manifest (import.meta.resolve).",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "../node_modules/.bin/tsc -p ."
+  },
+  "//peerDependencies": "The host Quartz's own copies, never bundled or installed here. The types are imported for types only; @quartz-community/utils slugifies the exports' paths as Quartz's asset emitter does.",
+  "peerDependencies": {
+    "@quartz-community/types": "*",
+    "@quartz-community/utils": "*"
+  },
+  "//devDependencies": "Build-time only: esbuild bundles dist/, and @chaoticgoodcomputing/declarations writes dist/index.d.ts (build.mjs).",
+  "devDependencies": {
+    "@chaoticgoodcomputing/declarations": "workspace:*",
+    "esbuild": "^0.28.2"
+  },
+  "quartz": {
+    "name": "site-excalidraw",
+    "displayName": "Excalidraw drawings",
+    "description": "Embeds Excalidraw drawings as their exported SVGs, and unpublishes the drawings' notes.",
+    "category": [
+      "transformer",
+      "filter"
+    ],
+    "version": "0.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "//defaultOrder": "Below obsidian-flavored-markdown's 30, so a drawing's embed is rewritten before OFM reads it as a transclusion.",
+    "defaultOrder": 25,
+    "defaultEnabled": true,
+    "defaultOptions": {}
+  }
+}

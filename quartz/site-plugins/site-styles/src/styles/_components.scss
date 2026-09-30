@@ -85,4 +85,33 @@
       justify-content: center;
     }
   }
+
+  // An Excalidraw drawing (site-excalidraw): its light and dark exports, one shown by the page's
+  // theme. Upstream's rules, keyed on `saved-theme` alone: darkmode sets its `body.theme-*` classes
+  // from the same value, so upstream's second selector for each was redundant.
+  .excalidraw-svg-container {
+    display: block;
+    margin: 1.5rem auto;
+    text-align: center;
+
+    & img {
+      max-width: 100%;
+      height: auto;
+      display: inline-block;
+    }
+
+    & .excalidraw-svg-dark {
+      display: none;
+    }
+  }
+
+  :root[saved-theme="dark"] .excalidraw-svg-container {
+    & .excalidraw-svg-light {
+      display: none;
+    }
+
+    & .excalidraw-svg-dark {
+      display: inline-block;
+    }
+  }
 }

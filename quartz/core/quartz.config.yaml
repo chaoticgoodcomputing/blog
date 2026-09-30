@@ -84,6 +84,10 @@ plugins:
         dark: github-dark
       keepBackground: false
     order: 20
+  # Vendored for testing from dinolupo/quartz-excalidraw (site-plugins/site-excalidraw/CONTEXT.md).
+  # Below OFM's 30 by its defaultOrder, so a drawing's embed is rewritten before OFM reads it.
+  - source: "@chaoticgoodcomputing/site-excalidraw"
+    enabled: true
   - source: "@quartz-community/obsidian-flavored-markdown"
     enabled: true
     options:

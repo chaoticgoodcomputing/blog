@@ -93,6 +93,9 @@ importers:
       '@chaoticgoodcomputing/site-components':
         specifier: workspace:*
         version: link:site-plugins/site-components
+      '@chaoticgoodcomputing/site-excalidraw':
+        specifier: workspace:*
+        version: link:site-plugins/site-excalidraw
       '@chaoticgoodcomputing/site-styles':
         specifier: workspace:*
         version: link:site-plugins/site-styles
@@ -553,6 +556,15 @@ importers:
         version: 0.28.2
 
   quartz/site-plugins/site-components:
+    devDependencies:
+      '@chaoticgoodcomputing/declarations':
+        specifier: workspace:*
+        version: link:../../libs/declarations
+      esbuild:
+        specifier: ^0.28.2
+        version: 0.28.2
+
+  quartz/site-plugins/site-excalidraw:
     devDependencies:
       '@chaoticgoodcomputing/declarations':
         specifier: workspace:*

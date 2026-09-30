@@ -23,6 +23,7 @@
     "@chaoticgoodcomputing/quartz-tag-page": "workspace:*",
     "@chaoticgoodcomputing/quartz-tags": "workspace:*",
     "@chaoticgoodcomputing/site-components": "workspace:*",
+    "@chaoticgoodcomputing/site-excalidraw": "workspace:*",
     "@chaoticgoodcomputing/site-styles": "workspace:*",
     "email-subscribe-sidebar": "workspace:@chaoticgoodcomputing/quartz-email-subscribe@*",
     "site-footer": "workspace:@chaoticgoodcomputing/site-components@*",
