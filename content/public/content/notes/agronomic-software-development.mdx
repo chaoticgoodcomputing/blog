@@ -11,14 +11,17 @@ description: Garden-inspired development as a non-sinister, people-centric way t
 
 import { BlueskyPost } from '@chaoticgoodcomputing/widgets/bluesky-post'
 
-![[/assets/doodles/panic-07-vines]]
+![[assets/doodles/panic-07-vines]]
+
+> [!IMPORTANT]
+> **Agronomy** is the subfield of agriculture relating to the technology and practices that enable modern industrial farming
 
 The start of every year is a magical time. So many possibilities, so much excitement about what the new year might hold. At my day job, my team was coming off the success of rolling out a large product release in 2024, so our slates really were clean heading into 2025. That's when a question came my way: a question that started with an ominous phrase:
 
 > [!QUESTION]
 > How would you feel about...
 
-A little intonation on the word "*feel*" is always a canary out of the coal mine. It's the confession that even though this is the first time *you* have heard the question, it's certainly not the first time the question's been asked. The only difference is that, this time, it's yours to answer. In this case, it was:
+A little intonation on the word "*feel*" is always a canary out of the coal mine. It's the confession that, even though this is the first time *you* have heard the question, it's certainly not the first time the question's been asked. The only difference is that, this time, it's yours to answer. In this case, it was:
 
 > [!QUESTION]
 > You've played around with using LLMs for software development. We have this product that *really* needs an update, but we don't have the time or expertise to work on it.
@@ -27,11 +30,10 @@ A little intonation on the word "*feel*" is always a canary out of the coal mine
 
 The stack was entirely out of my wheelhouse. It was a mission-critical piece of [Visual DB2K](https://www.dbase.com/Knowledgebase/beg/db2ktutorial/01start.htm) software that we had *some* of the source code for, but not enough to build from. The only complete copy we had was an `.exe` file that we couldn't get running on any computer or VM except the one it was initially installed on, delicately transferred from one version of Windows to the next, over the course of the last 25 years. The source code we had on-hand was a series of progressive patches made over that period to keep the thing afloat until the only maintainer -- a long-term contractor -- could do... *something* to upgrade it to a modern stack.
 
-That contractor had died a few years prior, though, so *somebody* became *me*.
+That contractor had died a few years prior, so *somebody* became *me*.
 
 
-## No Longer A Hostage
-
+## Hostage No Longer
 
 In March of 2018, "agent" wasn't *quite* a thing yet. It's easy to forget just how fast agentic development has moved. Claude Code was still a [closed research preview](https://www.anthropic.com/news/claude-3-7-sonnet) using 3.7 Sonnet -- hell, Anthropic wasn't even a major player. To the extent that developers were using AI, it was largely:
 
@@ -45,12 +47,12 @@ By the time true agent-based development approached many of my peers' radars, I'
 
 When I wrote the primer, I [intentionally](https://blog.chaoticgood.computer/content/annotations/llm-starter#zwt3txy8fko) didn't fill in the last section. It posed a question that, at that point, would've been sheer conjecture to try and answer at the time. However, I think it is time to give it a good, college try:
 
-![[public/assets/Pasted image 20260930060305.png]]
+![[assets/Pasted image 20260930060305.png]]
 
 
 ## Software as a Factory
 
-What I'm about to say will be brutally obvious to many, but easily forgotten by my generation of software engineers: there was a time when computers were *incredibly* bespoke. The [ENIAC](https://www.engineering.upenn.edu/about/history-heritage/eniac/)'s invention in 1945 was the first time any computer could run program**s** (plural), but was still a fixture of large universities and institutions. The landscape stayed that way until home computers became a conceivable idea in the 70s. At that point, I'd say that software was an **artisan good**: developed in-house, for specific use cases. Hell, the earliest reference to *any* operating system I could find was with IBM's [OS/360](https://www.ibm.com/history/system-360), released in 1964.
+What I'm about to say will be brutally obvious to many, but easily forgotten by my generation of software engineers: there was a time when computers were a far cry from general-purpose or universally accessible. The [ENIAC](https://www.engineering.upenn.edu/about/history-heritage/eniac/)'s invention in 1945 was the first time any computer could run program**s** (plural), but swapping the program meant rewiring the thing, and it was hardly anything you could fit in your garage, nevermind your desktop. The landscape stayed that way until home computers became a conceivable idea in the 70s. At that point, I'd say that software was an **artisan good**: developed in-house, for specific use cases. Hell, the earliest reference to *any* general operating system I could find was with IBM's [OS/360](https://www.ibm.com/history/system-360), released in 1964.
 
 When I say artisan, I mean it in the most literal sense. Imagine digital homesteading: if you needed a program, you'd better be ready to write it yourself. This was a period of time when people were sharing BASIC games in the back of magazine distributions. If you wanted to play the game, you had to type the physical printed text into your terminal and run it yourself.
 
@@ -58,9 +60,9 @@ Once high demand for computer hardware came, high demand for computer software c
 
 This is about the time that papers like [[/content/annotations/programming-as-theory-building|Programming as Theory Building]] start coming into play: engineers that aren't thinking about software in terms of data structures and algorithms, but in terms of how ideas progressively *become* runnable software. We do also get the traditional management structure that you might see at a factory floor: line workers, managers, and executives:
 
-![[/assets/doodles/panic-01-engineering-loop]]
+![[assets/doodles/panic-01-engineering-loop]]
 
-This is 3-layer structure would put a company around [[/content/annotations/evolutions-revolutions|Phase 2]] in their growth -- it's no longer a handful of executives directly doing work, and there are enough disparate pieces or initiatives to warrant multiple teams. It is no longer **artisan**; it's now the start of a factory layout:
+This is 3-layer structure would put a company around [Phase 2](https://blog.chaoticgood.computer/content/annotations/evolutions-revolutions#iupe1lo6a8) in their growth -- it's no longer a handful of executives directly doing work, and there are enough disparate pieces or initiatives to warrant multiple teams. It is no longer **artisan**; it's now the start of a factory layout:
 
 1. Executives, who have ideas about their product, its position in the market, and how it could sell better to users
 2. Managers, who are responsible for coordinating work in their specific domain; for example, frontend applications or backend infrastructure.
@@ -76,7 +78,7 @@ Rinse, repeat. Even at [[/content/annotations/valve-handbook|companies that clai
 
 *And then...*
 
-![[/assets/doodles/panic-02-llm]]
+![[assets/doodles/panic-02-llm]]
 
 ## Claude Cometh
 
@@ -84,19 +86,19 @@ I'm going to try my best to correctly express this opinion:
 
 **LLMs are better than humans at writing code.**
 
-I expressed this same sentiment nearly a year ago in [[/content/notes/hostage-negotiations|Hostage Negotiations]], and they certainly haven't gotten *worse* in that time. I'm drawing the boundary, here, at **writing code**, though -- that is **not** the same as software engineering. I won't re-hash that, here: if you are interested, my thoughts on [[/content/annotations/programming-as-theory-building|Programming as Theory Building]] have those sentiments.
+I expressed this same sentiment nearly a year ago in [[/content/notes/hostage-negotiations|Hostage Negotiations]], and they certainly haven't gotten *worse* in that time. I'm drawing the boundary, here, at **writing code**, and writing code ≠ software engineering. I won't re-hash that in this post: if you are interested, my thoughts on [[/content/annotations/programming-as-theory-building|Programming as Theory Building]] cover that ground already.
 
 The fact that even other engineers seem to miss that distinction, though, means that the actual jobs are at some risk: even if the act of software engineering isn't automated (and probably not going to be anytime soon), what the job actually *looks* like is dramatically different than it was even a year ago.
 
-The technology has moved incredibly fast, and I feel that many at the executive and management layers are uncertain of how to react. The discourse around the whole ordeal is confusing and polarized; LinkedIn is a perpetual, inhospitable hellscape of horrible takes.
+The technology has moved *incredibly* fast, and I feel that many at the executive and management layers are uncertain of how to react. The discourse around the whole ordeal is confusing and polarized; LinkedIn is a perpetual, inhospitable hellscape of horrible takes.
 
 To try and get a feel for the situation, let's game out some org chart options.
 
 ### Do Nothing
 
-![[/assets/doodles/panic-03-do-nothing]]
+![[assets/doodles/panic-03-do-nothing]]
 
-When faced with a complicated problem, it's always best to take a deep breathe and ask if the best reaction is no reaction. It's a fair pause to take, here; the tech space is famously hyperreactive to The Next Big Thing. Let us not forget; just five years ago, Mark Zuckerberg rebranded Facebook into "Meta" in the hopes of pivoting humanity into the Matrix, only to divert billions into a VR fad that lasted all of two years -- billions that could've been spent refining their core business model of advertising eating disorders to teenagers.
+When faced with a complicated problem, it's always best to take a deep breathe and ask if the best reaction is no reaction. It's a fair pause to take; the tech space is famously hyperreactive to The Next Big Thing. Let us not forget; just five years ago, Mark Zuckerberg rebranded Facebook into "Meta" in the hopes of pivoting humanity into the Matrix, only to divert billions into a VR fad that lasted all of two years -- billions that could've been spent refining their core business model of advertising eating disorders to teenagers.
 
 However, LLMs have proven their worth (certainly more worth than VR ever did).
 
@@ -104,19 +106,17 @@ However, LLMs have proven their worth (certainly more worth than VR ever did).
   url="https://bsky.app/profile/pfrazee.com/post/3meogr22vtc2d"
 />
 
-There was another sentiment expressed awhile back that, in the next decade, we might see the first billion-dollar business owned and operated by a single individual. I would be inclined to believe that, which goes to show how much I believe in the abilities of a single person who is good with the tools they have access to.
+The genie's out of the bottle, then. I use the term "genie" deliberately: they're infamous for giving you what you wish for, and wreaking absolute havoc if you're not careful. Doing nothing, in this case, is a good way to let your capacity to do more work completely outpace your ability to organize and maintain that work.
 
-All that being said, I firmly believe this genie's out of the bottle. I use the term "genie" deliberately here: they're incredibly famous for giving you what you wish for, and wreaking absolute havoc if you're not careful. Doing nothing, in this case, is a good way to let your capacity to do more work completely outpace your ability to organize and maintain that work.
-
-The proliferation of the technology has certainly not been quiet. I'm sure that, if you were to think about it, or go online anywhere, "do nothing" is a difficult option to justify. I'd recommend ruling it out. So, what else can be done?
+The proliferation of the technology has hardly been a quiet revolution. I'm sure that, if you were to think about it, or go online anywhere, "do nothing" is a difficult option to justify. I'd recommend ruling it out. So, what else can be done?
 
 ### Fire the Eggheads
 
-![[/assets/doodles/panic-04-layoff-engineers]]
+![[assets/doodles/panic-04-layoff-engineers]]
 
-It's certainly an option, isn't it? I'll try to put my personal bias aside, here, and entertain the option in good faith (despite my desire to continue earning an income).
+It's an option, isn't it? I'll try to put my personal bias aside, here, and entertain the option in good faith (despite my desire to continue earning an income).
 
-Laying off engineers seems like a reasonable solution. After all, LLMs are extraordinarily good at doing almost the same thing as them. They write code pretty damn well, and have far less reservations about writing something hacky if it's needed ASAP. I wouldn't say that their quality is that of a senior engineer, but it is certainly to the point where they could beat out an intern.
+Laying off engineers seems like a reasonable solution. After all, LLMs are extraordinarily good at doing almost the same thing as them. They write code pretty damn well, and have far less reservations about writing something hacky if it's needed ASAP. I wouldn't say that their quality is that of a senior engineer, but LLMs have inarguably passed the point point where they could beat out an intern.
 
 If LLMs can do the engineering, can your managers simply manage LLMs instead, and pick up whatever engineering slack is left over?
 
@@ -149,9 +149,9 @@ But hey -- we've got bloodlust on our minds, so what else could we do?
 
 ### Fire the Suits
 
-![[/assets/doodles/panic-05-layoff-pms]]
+![[assets/doodles/panic-05-layoff-pms]]
 
-This one certainly seems to be a recent favorite of the largest tech companies: taking an audit of middle managers and asking "...so, what *do* you do, anyway?" 
+This one seems to be a recent favorite of the largest tech companies: taking an audit of middle managers and asking "...so, what *do* you do, anyway?" 
 Project managers certainly got some bad PR after a TikTok was deluged with management influencers taking stand-up calls from the sides of resort pools. Shareholders may rejoice at the announcement of those types of layoffs, but what good does it do for the product?
 
 The engineers are basically managers to a bunch of bots, anyway. Couldn't they -- or the LLMs -- pick up the management tasks instead?
@@ -164,11 +164,7 @@ I have also been in environments where no project manager is present, and where 
 
 Lastly, the project manager is likely the one with the most experience in the products being sold. They're closest to sales, to marketing, to the actual *users* who use the thing. When you're in the code, it is *very* easy to forget what something looks like from outside the window. It's grounding to have a human being say "don't worry about that -- it's not the thing that people will notice".
 
-None of this is to say that layers upon layers of middle management is efficient. There is certainly a point where there is too much, but I have personally experienced what it's like to have too little.
-
-We're quickly running out of bloodlust solutions, here -- the last tier of people to lay off would be the executives, but that seems highly unlikely. We may need to reach for a more peaceful solution here, then.
-
-What's more peaceful than a nice, green garden?
+We're quickly running out of bloodlust solutions. The last tier of people to lay off would be the executives, but that seems highly unlikely. We may need to reach for a more peaceful solution. Something old, all-natural, and proven at scale in the modern economy.
 
 ## Agronomic Software Development
 
@@ -178,23 +174,23 @@ After spending a lot of time trying to find better ways of coexisting with agent
 > 
 > What we are responsible for, though, is making sure that this new addition to our lives is handled with care. It's on us to build systems for handling its use — there's a long history of intentionally, and irresponsibly, introducing [invasive species](https://www.invasivespeciesinfo.gov/subject/pathways) into our environments to solve one problem only to create a hundred more in its place. This is the distinction I make between engineering and the act of (\**vomit*\*) *vibecoding*.
 
-I'm shocked that **agronomics** isn't a more common word. There's the adage of "everybody poops", but the obvious prequel to that is "everybody eats". A massive amount of humanity's advances in technology, process, and economics comes from farming, and in the modern era, farming and food processing is done at an unimaginable scale. There's millennia of case studies to work from, here: how can we take something unpredictable, and harness its benefits[^2]?
+I'm shocked that **agronomics** isn't a more common word. A massive amount of humanity's advances in technology, process, and economics comes from farming, and in the modern era, farming and food processing is done at an unimaginable scale. There's millennia of case studies to work from: how can we take something unpredictable, and harness its benefits[^1]?
 
 Picture, in your mind, a **trellis**: the wooden scaffolding on which plants can grow vertically.
 
-![[public/assets/Pasted Image 20260930021710_086.png]]
+![[assets/Pasted Image 20260930021710_086.png]]
 
-Across the industry, we all build our apps on incredibly stable libraries that make up the **stack** we work in. These are sliced into layers: data, business logic, API, and client are all examples of **layers** on the stack.
+Across the industry, we all build our apps on stable, thoroughly-vetted libraries that make up the **stack** we work in. These are sliced into layers: data, business logic, API, and client are all examples of **layers** on the stack.
 
-![[/assets/doodles/panic-06-scaffolding]]
+![[assets/doodles/panic-06-scaffolding]]
 
 A program, in the end, can only be reliable as the weakest link on the stack. It doesn't matter if you write a Windows program that will never crash, because Windows itself may crash eventually. The most beautiful, stable frontend in the world is still limited if the framework it's built on is flaky, or if the API it's hitting goes down.
 
-This layer-based design is usually referred to as [Onion or Hexagonal](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software))[^3] architecture. It cleanly separates the layers such that each one is concerned with a different portion of the development. The client(s) are responsible for surfacing information and capabilities to the user, acting as the front face of the application. The API is responsible for clearly establishing the communications between the clients and the servers. Every piece of the application has a clear concern, and can be reinforced, or worked on, individually.
+This layer-based design is usually referred to as [onion, or n-tier](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)), architecture. It cleanly separates the layers such that each one is concerned with a different portion of the development. The client(s) are responsible for surfacing information and capabilities to the user, acting as the front face of the application. The API is responsible for clearly establishing the communications between the clients and the servers. Every piece of the application has a clear concern, and can be reinforced, or worked on, individually.
 
 When working in this type of architecture, then, we refer to features as **vertical slices.** To the user, they see that they have to log into the client. However, looking at it across the layers, that login will need to start on the client, hit the API, then the data and logic will need to confirm the request to log in and, if successful get the user their data.
 
-![[/assets/doodles/panic-07-vines]]
+![[assets/doodles/panic-07-vines]]
 
 Here, we illustrate that vertical slices are not always clean shots through the layers. Perhaps they start from similar places, or they intersect along the way. This is one misconception I had early on when learning about the philosophy: I assumed that layers and slices were like a 2D matrix, where each row is a layer and each column is a feature. The real world, and the programs most useful *in* the real world, are simply more complicated than that.
 
@@ -202,9 +198,9 @@ This is where the scaffolding and the features intersect: they both inform each 
 
 ### Agronomic Teams
 
-![[/assets/doodles/panic-08-gardening-teams]]
+![[assets/doodles/panic-08-gardening-teams]]
 
-The agronomic metaphor fits incredibly well, here: as software development teams, we cannot get the benefits of LLMs without knowing how we'll manage their drawbacks. The biggest drawback is that their quality is hard to guarantee, and that trying to micromanage them into doing exactly what we would do means spending more time watching over their shoulder and dictating to them than we'd otherwise spend doing the task ourselves. If we can learn to manage unpredictability, rather than fight tooth and nail to force conformity, then we can start to get actual benefits to both quality *and* velocity.
+The agronomic metaphor fits well: as software development teams, we cannot get the benefits of LLMs without knowing how we'll manage their drawbacks. The biggest drawback is that their quality is hard to guarantee, and that trying to micromanage them into doing exactly what we would do means spending more time watching over their shoulder and dictating to them than we'd otherwise spend doing the task ourselves. If we can learn to manage unpredictability, rather than fight tooth and nail to force conformity, then we can start to get actual benefits to both quality *and* velocity.
 
 In agronomic development, I'd define two primary roles:
 
@@ -215,26 +211,29 @@ Stack engineering is inherently built on hyper-specialized knowledge into each l
 
 Feature engineering, then, is built on broad knowledge of both the API surfaces of each layer of the stack, as well as knowledge about the business requirements of the features they're managing. Their primary responsibility is to make sure that all of the seeds are planted, and that agents are returning code that both properly implements the feature as spec'd, and does so in a way that is legal for the layers of the stack it passes through.
 
-![[/assets/doodles/panic-09-gardening-axes]]
+![[assets/doodles/panic-09-gardening-axes]]
 
 ### Feedforward & Feedback
 
 All of the work managed by humans is ultimately done to make sure that the conditions in which features are "grown" by agents is high-quality. Part of this is rapid iteration of the system. 
 
-![[/assets/doodles/panic-10-feed-loops]]
+![[assets/doodles/panic-10-feed-loops]]
 
 Think about a houseplant, and understanding what conditions it'd thrive best in: what direction of window should it be facing? What kind of soil is the best for it? What temperature or humidity should the room be at? It will always be a case of monitoring the growth, checking for issues, and reacting accordingly.
 
-It's the same thing, here. The goal of a software development team is to make sure that what we're creating is of good quality and completed in a timely manner. This takes the rapid feedback cycle promoted by management frameworks like Agile and applies them one layer up the development abstraction: not just to the code we're writing, but to the environment that code is being written in.
+When introducing something vaguely organic, like code "grown" by an LLM, the principle is the same. The goal of a software development team is to make sure that what we're creating is of good quality and completed in a timely manner. This takes the rapid feedback cycle promoted by management frameworks like Agile and applies them one layer up the development abstraction: not just to the code we're writing, but to the environment that code is being written in.
 
-![[/assets/doodles/panic-11-agent-loops]]
+![[assets/doodles/panic-11-agent-loops]]
 
-This requires strong systems for both **feedforward** and **feedback** to accomplish[^4]:
+This requires strong systems for both **feedforward** and **feedback** to accomplish[^2]:
 
 - **Feedforward** contains all of the environmental tools available when an agent starts with zero context. It's the tools available to them, as well as what they can get through those tools. This will change depending on your harness, but think in terms of the scaffolding that's been built, the quality of previous code, the documentation available, and the quality of the prompts they're given.
-- **Feedback** contains all of the tooling, both deterministic and non-deterministic, that are used to evaluate the quality of an agent contribution. The faster, the better: anything that can be done to rapidly confirm quality gates and evaluate the work done in a timely and inexpensive manner has critical value, here.
+- **Feedback** contains all of the tooling, both deterministic and non-deterministic, that are used to evaluate the quality of an agent contribution. The faster, the better: anything that can be done to rapidly confirm quality gates and evaluate the work done in a timely and inexpensive manner has critical value.
 
 Once quality can be accounted for, the feedforward and feedback loops can, themselves, be iteratively improved on. The miracle of modern agriculture is not the amount of food we grow: it's the technology we've built around something unpredictable to make sure we harness the most benefit, and least harm, from a chaotic process.
 
 
-![[/assets/doodles/panic-12-assignments]]
+![[assets/doodles/panic-12-assignments]]
+
+[^1]: The irony is not lost on me that both require massive amounts of water and land, although a square mile of farmland is probably of more intrinsic value than a square mile of data center.
+[^2]: I cannot take credit for the concepts of "feedforward" and "feedback" -- all credit goes to [Birgitta Böckeler](https://birgitta.info/), from her post ["Harness engineering for coding agent users"](https://martinfowler.com/articles/harness-engineering.html)
