@@ -112,7 +112,7 @@ The proliferation of the technology has hardly been a quiet revolution. I'm sure
 
 ### Fire the Eggheads
 
-![[assets/doodles/panic-04-layoff-engineers]]
+![[assets/doodles/panic-04-layoff-engineers|A system where LLMs absorb the engineering layer, and managers take on some responsibilities around QA on code quality]]
 
 It's an option, isn't it? I'll try to put my personal bias aside, here, and entertain the option in good faith (despite my desire to continue earning an income).
 
@@ -149,7 +149,7 @@ But hey -- we've got bloodlust on our minds, so what else could we do?
 
 ### Fire the Suits
 
-![[assets/doodles/panic-05-layoff-pms]]
+![[assets/doodles/panic-05-layoff-pms|A system where management layers are laid off, and engineers must step in to take over some management responsibilities]]
 
 This one seems to be a recent favorite of the largest tech companies: taking an audit of middle managers and asking "...so, what *do* you do, anyway?" 
 Project managers certainly got some bad PR after a TikTok was deluged with management influencers taking stand-up calls from the sides of resort pools. Shareholders may rejoice at the announcement of those types of layoffs, but what good does it do for the product?
@@ -207,9 +207,13 @@ In agronomic development, I'd define two primary roles:
 1. **Stack Engineering:** Reinforcing the layers of the stack so that each is stable in its own right, flexible to the demands of the requested features, and procedurally well-documented.
 2. **Feature Engineering:** High-level design and specification of the required features, framed in terms of how they must pass through the stack in order to accomplish their goals.
 
-Stack engineering is inherently built on hyper-specialized knowledge into each layer of the stack, and how features of that stack's technology can be utilized to enforce good behavior from the features that are growing on it. This is where opinionated frameworks can come in: a layer built with a narrow set of "valid" strategies for development leave little wiggle room for a feature to grow in strange workarounds: there should be one way to accomplish a task, and it should be the best way to accomplish that task within that layer of the stack.
+Splitting up the stack this way means that neither engineers nor managers are left out in the cold. Instead, both take on a role that blends management with engineering, but with a focus on specific strengths:
 
-Feature engineering, then, is built on broad knowledge of both the API surfaces of each layer of the stack, as well as knowledge about the business requirements of the features they're managing. Their primary responsibility is to make sure that all of the seeds are planted, and that agents are returning code that both properly implements the feature as spec'd, and does so in a way that is legal for the layers of the stack it passes through.
+Engineers primarily take on stack engineering. Stack engineering is inherently built on hyper-specialized knowledge into each layer of the stack, and how features of that stack's technology can be utilized to enforce good behavior from the features that are growing on it. Engineers begin thinking less in terms of "pull a ticket, complete a ticket, make a PR for the ticket" and more on the frameworks used by the product. It's a reinforcement task: making sure that, for upcoming planned features, each layer of the stack has a clearly and singularly defined path to completion.
+
+Feature engineering, then, caters to both engineers and managers coordinating how LLMs grow features through the stack. The knowledge is broad, rather than deep: they trade deep expertise on how each layer operates under-the-hood for a broad understanding of each layer's API surface. Their deep understanding is in the product specifications, coordinating work done on features, and maintaining a rapid agile feedback loop for both product and stack improvements. 
+
+Both sides take on management responsibilities in the way that they work with each other. The stack engineers must keep up-to-date on the rolling quality of features being developed and triage points of friction: areas where features get cluttered, conflicted, or generally confused. In turn, feature engineering must triage their work based on new capabilities created by the stack engineers, occasionally managing refactors of previous work based on new capabilities of the stack.
 
 ![[assets/doodles/panic-09-gardening-axes]]
 
@@ -232,8 +236,21 @@ This requires strong systems for both **feedforward** and **feedback** to accomp
 
 Once quality can be accounted for, the feedforward and feedback loops can, themselves, be iteratively improved on. The miracle of modern agriculture is not the amount of food we grow: it's the technology we've built around something unpredictable to make sure we harness the most benefit, and least harm, from a chaotic process.
 
-
 ![[assets/doodles/panic-12-assignments]]
+
+The major shift in this framework is that human beings aren't as involved in the nitty-gritty, line-by-line details of the product code. The product code *is* what's being grown, derived from:
+
+1. The quality of the stack
+2. The accuracy of the specifications; and
+3. The feedforward and feedback loops of development
+
+In my own experience adopting this approach, you get more than just a high-quality product out of the other side. Out of this, your team can generate strong frameworks on which to build future work *and* a well-defined *system* for creating other products.
+
+The system isn't without its drawbacks, though. Because its byproducts are stable framework libraries and a system for developing more products, it doesn't work well in isolation. If your team is responsible for just a single product or service, I wouldn't recommend this; the shift in mindset and responsibilities likely isn't worth the benefit you'd get out of the byproducts. However, if your team is responsible for many products, where libraries can be re-used elsewhere and the agronomic loop can be repurposed for other initiatives, I highly recommend giving this approach a try.
+
+If you want to give this a try, I'd recommend seeding the process on a backlog project; something that your team has wanted, or needed, to do for awhile but never had the prior time, resources, or direct working knowledge to pull. Once you start to develop a feedback loop and stack libraries, those are perfect candidates to cross-pollinate the process upwards to other products you're working on.
+
+In the end, you'll get what many other engineering teams are scrambling for at the moment: a system where LLMs have a clearly defined and managed role in your development process, and the people on your team can focus in on the judgements and vision that actually move you towards a better output.
 
 [^1]: The irony is not lost on me that both require massive amounts of water and land, although a square mile of farmland is probably of more intrinsic value than a square mile of data center.
 [^2]: I cannot take credit for the concepts of "feedforward" and "feedback" -- all credit goes to [Birgitta Böckeler](https://birgitta.info/), from her post ["Harness engineering for coding agent users"](https://martinfowler.com/articles/harness-engineering.html)
