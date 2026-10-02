@@ -1,0 +1,16 @@
+This directory's data was generated using ColabFold. The original sequence was retrieved from the [amino acid sequence](https://www.rcsb.org/fasta/entry/3UJZ/display) provided in [NIH structure 3UJZ](https://www.ncbi.nlm.nih.gov/Structure/pdb/3UJZ), which was a supplementary material in [Zhu et al.](https://pubmed.ncbi.nlm.nih.gov/22483117/).
+
+It was generated using [YoshitakaMolocalcolabfold](https://github.com/YoshitakaMo/localcolabfold) with the default hyperparameters from the [sample run script](https://github.com/YoshitakaMo/localcolabfold/blob/main/run_colabfoldbatch_sample.sh):
+
+```bash
+colabfold_batch \
+  --num-recycle 3 \
+  --amber \
+  --templates \
+  --use-gpu-relax \
+  --num-models 5 \
+  --model-order 1,2,3,4,5 \
+  --random-seed 0 \
+  3UJZ.fasta \
+  3UJZ
+```

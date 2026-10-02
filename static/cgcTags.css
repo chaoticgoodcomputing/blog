@@ -1,0 +1,47 @@
+/* cgc-tags: one colour property per tag. A tag with no colour of its own takes its parent's. */
+@layer cgc.tags {
+  :root {
+    --cgc-tags-default: var(--darkgray);
+    --cgc-tag-economics: light-dark(#b35f00, #de8200);
+    --cgc-tag-economics--finance: var(--cgc-tag-economics);
+    --cgc-tag-economics--markets: var(--cgc-tag-economics);
+    --cgc-tag-economics--policy: var(--cgc-tag-economics);
+    --cgc-tag-economics--strategy: var(--cgc-tag-economics);
+    --cgc-tag-engineering: light-dark(#0070cc, #008CFF);
+    --cgc-tag-engineering--ai: var(--cgc-tag-engineering);
+    --cgc-tag-engineering--bio: var(--cgc-tag-engineering);
+    --cgc-tag-engineering--data: var(--cgc-tag-engineering);
+    --cgc-tag-engineering--devops: var(--cgc-tag-engineering);
+    --cgc-tag-engineering--frontend: var(--cgc-tag-engineering);
+    --cgc-tag-engineering--languages: var(--cgc-tag-engineering);
+    --cgc-tag-engineering--languages--csharp: var(--cgc-tag-engineering--languages);
+    --cgc-tag-engineering--languages--lua: var(--cgc-tag-engineering--languages);
+    --cgc-tag-engineering--languages--python: var(--cgc-tag-engineering--languages);
+    --cgc-tag-engineering--languages--scratch: var(--cgc-tag-engineering--languages);
+    --cgc-tag-engineering--languages--typescript: var(--cgc-tag-engineering--languages);
+    --cgc-tag-horticulture: light-dark(#1a8a1a, #00FF00);
+    --cgc-tag-horticulture--seasons: var(--cgc-tag-horticulture);
+    --cgc-tag-horticulture--seasons--rhythm: var(--cgc-tag-horticulture--seasons);
+    --cgc-tag-horticulture--seasons--systems: var(--cgc-tag-horticulture--seasons);
+    --cgc-tag-private: light-dark(#cc0000, #FF0000);
+    --cgc-tag-projects: light-dark(#cc0000, #FF0000);
+    --cgc-tag-projects--dayjob: var(--cgc-tag-projects);
+    --cgc-tag-projects--flowthru: var(--cgc-tag-projects);
+    --cgc-tag-projects--games: var(--cgc-tag-projects);
+    --cgc-tag-projects--games--magic-atlas: var(--cgc-tag-projects--games);
+    --cgc-tag-projects--games--roblox: var(--cgc-tag-projects--games);
+    --cgc-tag-projects--games--the-neighborhood: var(--cgc-tag-projects--games);
+    --cgc-tag-projects--homelab: var(--cgc-tag-projects);
+    --cgc-tag-projects--site: var(--cgc-tag-projects);
+    --cgc-tag-projects--site--plugins: var(--cgc-tag-projects--site);
+    --cgc-tag-projects--teaching: var(--cgc-tag-projects);
+    --cgc-tag-projects--undergrad: var(--cgc-tag-projects);
+    --cgc-tag-writing: light-dark(#9a7400, #FFD637);
+    --cgc-tag-writing--annotations: var(--cgc-tag-writing);
+    --cgc-tag-writing--annotations--a-pattern-language: var(--cgc-tag-writing--annotations);
+    --cgc-tag-writing--annotations--meetings: var(--cgc-tag-writing--annotations);
+    --cgc-tag-writing--articles: var(--cgc-tag-writing);
+    --cgc-tag-writing--highlights: var(--cgc-tag-writing);
+    --cgc-tag-writing--tutorials: var(--cgc-tag-writing);
+  }
+}
