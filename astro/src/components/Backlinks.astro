@@ -1,0 +1,80 @@
+---
+// The backlinks panel: the pages that link to the page's note, an embed counting as a link,
+// public pages first. A private page is left out, or listed with a lock, as `site.private.backlinks`
+// says (src/lib/backlinks.ts). A page nothing links to has no panel.
+import { Icon } from "astro-icon/components"
+import { backlinksOf } from "../lib/backlinks.ts"
+import type { NoteFacts } from "../lib/notes.ts"
+
+interface Props {
+  /** The note the page shows. A page that shows none has no backlinks. */
+  note: NoteFacts | undefined
+}
+
+const { note } = Astro.props
+const backlinks = note ? backlinksOf(note) : []
+
+// A private page's mark, in place of a public page's bullet: the icon `mdi:lock`, drawn inline by
+// astro-icon when the site builds, as a tag bubble's icon is (docs/adr/1101), in the link's colour.
+const lock = "mdi:lock"
+---
+
+{
+  backlinks.length > 0 && (
+    <section class="backlinks">
+      <h2>Backlinks</h2>
+      <ul>
+        {backlinks.map((link) => (
+          <li>
+            <a href={link.url}>
+              <span class="mark">
+                {link.isPrivate ? (
+                  <Icon name={lock} is:inline role="img" aria-label="Private page" width="12" height="12" fill="currentColor" />
+                ) : (
+                  <span aria-hidden="true">•</span>
+                )}
+              </span>
+              <span>{link.title}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+<style>
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li + li {
+    margin-top: 0.25rem;
+  }
+
+  /* Each is set as the headings are, at a heading's weight in their face, as on the Quartz site. */
+  a {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  /* Before each title, a box the height of its first line, which holds the bullet or the lock, so
+     that a title that wraps keeps its mark beside its first line. */
+  .mark {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1.5em;
+  }
+
+  .mark > span {
+    color: var(--gray);
+  }
+</style>

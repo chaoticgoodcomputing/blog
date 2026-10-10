@@ -1,0 +1,10 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    // The library ships TypeScript source whose files import each other by their .ts names.
+    "allowImportingTsExtensions": true,
+    // The widgets are Preact components.
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact"
+  }
+}

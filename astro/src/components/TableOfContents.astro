@@ -1,0 +1,155 @@
+---
+// The note's table of contents, in the right sidebar on a desktop: a link to each of its headings
+// to the third level, with the section being read marked. Narrower than a desktop the sidebar is
+// under the note, past the headings it would lead to, and the table is not shown.
+//
+// Its heading is a button that folds the list away and back, with a chevron that turns as it does,
+// as on the Quartz site; it says which with `aria-expanded`. Until the script runs the list is open.
+import { Icon } from "astro-icon/components"
+import type { MarkdownHeading } from "astro"
+import type { NoteFacts } from "../lib/notes.ts"
+import { tableOfContents } from "../lib/table-of-contents.ts"
+
+interface Props {
+  /** The headings of the page's rendered note, from `render()`. */
+  headings: MarkdownHeading[] | undefined
+  /** The note the page shows. */
+  note: NoteFacts | undefined
+}
+
+const { headings, note } = Astro.props
+const entries = note && headings ? tableOfContents(headings, note) : []
+---
+
+{
+  entries.length > 0 && (
+    <table-of-contents class="table-of-contents">
+      <nav aria-labelledby="table-of-contents-heading">
+        <h2 id="table-of-contents-heading">
+          <button type="button" class="fold" aria-expanded="true" aria-controls="table-of-contents-list">
+            Table of Contents
+            <Icon name="mdi:chevron-down" is:inline width="18" height="18" fill="currentColor" aria-hidden="true" />
+          </button>
+        </h2>
+        <ul id="table-of-contents-list">
+          {entries.map((entry) => (
+            <li style={`--indent: ${entry.indent}`}>
+              <a href={`#${entry.slug}`}>{entry.text}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </table-of-contents>
+  )
+}
+
+<script>
+  /**
+   * Marks the link to the section being read, `aria-current="location"`: the section of the last
+   * listed heading to have scrolled past the top tenth of the window. Above the first there is none.
+   * At the foot of the page, where the last sections can't scroll that far, it is the last listed
+   * heading in the window.
+   */
+  class TableOfContents extends HTMLElement {
+    #frame = 0
+    #onScroll = () => {
+      cancelAnimationFrame(this.#frame)
+      this.#frame = requestAnimationFrame(() => this.#mark())
+    }
+
+    /** Folds the list away, or back, from the button in the heading. */
+    #onFold = (event: Event) => {
+      const fold = event.currentTarget as HTMLButtonElement
+      const open = fold.getAttribute("aria-expanded") !== "true"
+      fold.setAttribute("aria-expanded", String(open))
+      this.querySelector("ul")!.hidden = !open
+    }
+
+    connectedCallback() {
+      this.querySelector(".fold")!.addEventListener("click", this.#onFold)
+      addEventListener("scroll", this.#onScroll, { passive: true })
+      addEventListener("resize", this.#onScroll, { passive: true })
+      this.#mark()
+    }
+
+    disconnectedCallback() {
+      removeEventListener("scroll", this.#onScroll)
+      removeEventListener("resize", this.#onScroll)
+      cancelAnimationFrame(this.#frame)
+    }
+
+    #mark() {
+      const links = [...this.querySelectorAll<HTMLAnchorElement>("a[href^='#']")]
+      const tops = links.map((link) => document.getElementById(decodeURIComponent(link.hash.slice(1)))?.getBoundingClientRect().top)
+      const atFoot = scrollY + innerHeight >= document.documentElement.scrollHeight - 1
+      const line = atFoot ? innerHeight : innerHeight / 10
+      const current = tops.findLastIndex((top) => top !== undefined && top <= line)
+      links.forEach((link, index) => {
+        if (index === current) link.setAttribute("aria-current", "location")
+        else link.removeAttribute("aria-current")
+      })
+    }
+  }
+  customElements.define("table-of-contents", TableOfContents)
+</script>
+
+<style>
+  .table-of-contents {
+    display: block;
+  }
+
+  @media (width < 1300px) {
+    .table-of-contents {
+      display: none;
+    }
+  }
+
+  /* The heading's own text, sized by the shell (docs/adr/0701), with its chevron after it, which
+     points to the side while the list is folded away. */
+  .fold {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0;
+    border: none;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .fold svg {
+    opacity: 0.8;
+    transition: rotate 0.3s ease;
+  }
+
+  .fold[aria-expanded="false"] svg {
+    rotate: -90deg;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    padding: 0.15rem 0 0.15rem calc(var(--indent) * 1rem);
+  }
+
+  /* Each entry is set as the headings it leads to are, at a heading's weight in their face, and
+     needs no underline in a list of nothing but links. */
+  a {
+    color: var(--darkgray);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--tertiary);
+  }
+
+  a[aria-current="location"] {
+    color: var(--secondary);
+  }
+</style>

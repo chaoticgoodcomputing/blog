@@ -1,0 +1,29 @@
+{
+  "name": "@chaoticgoodcomputing/obsidian-markdown",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Obsidian Markdown for Sätteri: the syntax as mdast plugins, and a vault's metadata cache (links, embeds, tags, headings, blocks, backlinks) modelled on Obsidian's own. No Astro in it.",
+  "//exports": "Source only: no build and no dist. Astro's Vite compiles it, and Node strips its types for the tests.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "sideEffects": false,
+  "//scripts": "Node strips the types (unflagged only from Node 22.18; the repo's .nvmrc is 22.16), so sources import each other with their .ts extension.",
+  "scripts": {
+    "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning --test --test-reporter=spec \"test/*.test.ts\"",
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "github-slugger": "^2.0.0",
+    "satteri": "^0.10.5",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "typescript": "^5.9.3"
+  }
+}

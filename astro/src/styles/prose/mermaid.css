@@ -1,0 +1,33 @@
+/* A mermaid block: its source as a code block, then what the `<mermaid-diagram>` element makes of
+   it (src/components/MermaidDiagram.astro). The element says which with `data-state`. */
+
+.prose mermaid-diagram {
+  display: block;
+  margin: 1rem 0;
+}
+
+/* Once the diagram is drawn, it stands in for its source. */
+.prose mermaid-diagram[data-state="drawn"] > pre {
+  display: none;
+}
+
+/* A diagram wider than the note shrinks to fit it, to no less than three quarters of its own size
+   (src/components/MermaidDiagram.astro), so its labels stay readable; past that it scrolls in its
+   own box. */
+.prose .mermaid-diagram-drawing {
+  overflow-x: auto;
+}
+
+/* Mermaid gives a drawing its natural width as a `max-width`, and lets it shrink below that. */
+.prose .mermaid-diagram-drawing > svg {
+  display: block;
+  margin-inline: auto;
+  height: auto;
+}
+
+/* In the body's text colour, which reads on the page in either scheme: --gray would not. */
+.prose .mermaid-diagram-error {
+  color: var(--darkgray);
+  font-size: 0.875rem;
+  font-style: italic;
+}

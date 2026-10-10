@@ -1,0 +1,84 @@
+/* The styles every page shares, and only those: the tokens every component reads, and the page's
+   own defaults. A component styles itself, in scoped styles; a note's rendered Markdown is styled
+   under `.prose`, in src/styles/prose.
+
+   The tokens keep the names the vault's widgets are written against: a widget kept in the vault
+   paints with `var(--light)`, `var(--secondary)`, `var(--codeFont)` and the rest (docs/adr/0005).
+
+   The site is laid out for three widths, and a component that changes with the width uses the same
+   two: a phone, narrower than 1000px; a tablet, from 1000px; a desktop, from 1300px. A media query
+   can't read a property, so they are written out where they are used, as `(width < 1000px)`,
+   `(width >= 1000px)` and `(width >= 1300px)`. */
+
+/* The palette: one value per colour scheme. The scheme is the reader's choice, `data-theme` on the
+   root, else their system's (README.md, "In the browser"). */
+:root {
+  color-scheme: light dark;
+  --light: light-dark(#faf8f8, #161618);
+  --lightgray: light-dark(#e5e5e5, #393639);
+  --gray: light-dark(#b8b8b8, #646464);
+  --darkgray: light-dark(#4e4e4e, #d4d4d4);
+  --dark: light-dark(#2b2b2b, #ebebec);
+  --secondary: light-dark(#284b63, #7b97aa);
+  --tertiary: #84a59d;
+  --highlight: rgba(143, 159, 169, 0.15);
+  --textHighlight: light-dark(#fff23688, #b3aa0288);
+
+  /* What a callout of each kind is drawn in: its title and icon, and its border and background, tints
+     of it (src/styles/prose/note-body.css). Each is legible on its tint in its scheme. A to-do is
+     drawn as information, a failure and a bug as a danger, and a quote in --secondary. */
+  --callout-note: light-dark(#1a5bb8, #6ea8fe);
+  --callout-abstract: light-dark(#0a6596, #4fc3f7);
+  --callout-info: light-dark(#006d7b, #2ec5d8);
+  --callout-tip: light-dark(#006c5f, #26d9b0);
+  --callout-success: light-dark(#1d7337, #5ccf7a);
+  --callout-question: light-dark(#8f5400, #e8b04a);
+  --callout-warning: light-dark(#a34400, #f29b45);
+  --callout-danger: light-dark(#b71f1f, #f47c7c);
+  --callout-example: light-dark(#7a43b5, #b896ee);
+
+  /* The shade under what floats over the page, a popover or a page of a document, and the scrim
+     over the page behind a dialog or a drawer: one value for both schemes, as a shadow is. */
+  --shadow: rgb(0 0 0 / 0.25);
+  --scrim: rgb(0 0 0 / 0.3);
+
+  /* A page of a document the site draws, as it was printed: white in both schemes, since the
+     document's own ink is drawn for white. */
+  --paper: white;
+}
+
+/* A reader who has chosen a scheme sees it, and every `light-dark()` on the page, the browser's own
+   controls and scrollbars included, takes that scheme's value. */
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+/* The fonts, `--bodyFont` (Inter) and `--codeFont` (IBM Plex Mono), are defined by Astro's Fonts
+   API, from astro.config.ts, in the head of every page (src/layouts/Base.astro). */
+
+/* The page: its colours, and the text everything inherits. */
+body {
+  margin: 0;
+  background: var(--light);
+  color: var(--darkgray);
+  font-family: var(--bodyFont);
+  line-height: 1.6;
+}
+
+/* What every heading and link on the site shares, in the shell, in a component or in a note. Each
+   is styled further where it is. */
+:is(h1, h2, h3, h4, h5, h6) {
+  color: var(--dark);
+}
+
+a {
+  color: var(--secondary);
+}
+
+:is(code, kbd, pre, samp) {
+  font-family: var(--codeFont);
+}

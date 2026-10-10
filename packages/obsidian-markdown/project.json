@@ -1,0 +1,19 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "@chaoticgoodcomputing/obsidian-markdown",
+  "root": "packages/obsidian-markdown",
+  "sourceRoot": "packages/obsidian-markdown/src",
+  "projectType": "library",
+  "tags": ["astro", "astro:lib"],
+  "targets": {
+    "test": {
+      "//": "The syntax plugins and the metadata cache, against Sätteri itself. No build target: the Astro site compiles the source.",
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run test", "cwd": "{projectRoot}" }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run typecheck", "cwd": "{projectRoot}" }
+    }
+  }
+}

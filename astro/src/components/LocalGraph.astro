@@ -1,0 +1,126 @@
+---
+// The local graph: the page, the notes it links to and from, and their tags, drawn on a canvas in
+// the right sidebar, with the settings of site configuration's `graph.local`. The `<local-graph>`
+// element draws it from the graph index the site publishes (src/pages/graph.json.ts), and the canvas
+// holds a list of what it shows, for whoever can't see it (src/lib/graph-drawing.ts).
+//
+// Each tag the graph is drawn with is a `<TagBubble>` here, hidden, which the canvas copies: the
+// bubble is drawn one way, with its icon and colour, wherever it is. Which tags those are is worked
+// out here from the same index, by the same functions, as the element works out the graph.
+//
+// In the corner of its frame is the control that opens the global graph, in a dialog
+// (./global-graph/GlobalGraph.astro).
+import { localGraph } from "../lib/graph.ts"
+import { graphIndex } from "../lib/graph-index.ts"
+import { graph } from "../site.config.ts"
+import GlobalGraph from "./global-graph/GlobalGraph.astro"
+import TagBubble from "./TagBubble.astro"
+
+interface Props {
+  /** The page's address, which is its node's id: a note's, the home page's `/`, a tag page's. */
+  url: string
+}
+
+const { url } = Astro.props
+const local = localGraph(graphIndex(), url, graph.local)
+const tags = [...new Set(local.nodes.flatMap((node) => (node.tag === undefined ? [] : [node.tag])))]
+---
+
+{/* A page the graph has no node for, such as a private tag's page, has no graph. */}
+{
+  local.nodes.length > 0 && (
+    <section class="local-graph">
+      <h2>Graph View</h2>
+      <div class="frame">
+        <local-graph data-url={url}>
+          <div class="bubbles" hidden>
+            {tags.map((tag) => (
+              <span data-tag={tag}>
+                <TagBubble tag={tag} />
+              </span>
+            ))}
+          </div>
+        </local-graph>
+        <GlobalGraph url={url} />
+      </div>
+    </section>
+  )
+}
+
+<script>
+  import { navigate } from "astro:transitions/client"
+  import { drawGraph, type DrawnGraph } from "../lib/graph-drawing.ts"
+  import { loadGraphIndex } from "../lib/graph-index-client.ts"
+  import { localGraph } from "../lib/graph.ts"
+  import { graph } from "../site.config.ts"
+
+  class LocalGraph extends HTMLElement {
+    #drawn: DrawnGraph | undefined
+    #connected = false
+    // The canvas is painted in the colours of one colour scheme, so it copies them again when the
+    // page's changes.
+    #repaint = () => this.#drawn?.repaint()
+
+    connectedCallback() {
+      this.#connected = true
+      document.addEventListener("themechange", this.#repaint)
+      void this.#draw()
+    }
+
+    disconnectedCallback() {
+      this.#connected = false
+      document.removeEventListener("themechange", this.#repaint)
+      this.#drawn?.destroy()
+      this.#drawn = undefined
+    }
+
+    async #draw() {
+      const url = this.dataset.url ?? ""
+      const local = localGraph(await loadGraphIndex(), url, graph.local)
+      // Taken out of the page while the index was on its way.
+      if (!this.#connected || this.#drawn) return
+      const here = local.nodes.find((node) => node.id === url)
+      this.#drawn = drawGraph(this, {
+        graph: local,
+        current: url,
+        settings: graph.local,
+        bubble: (tag) => this.querySelector<HTMLElement>(`[data-tag="${CSS.escape(tag)}"] .tag-bubble`),
+        follow: (to) => void navigate(to),
+        label: `Graph of the pages around ${here?.label ?? "this page"}`,
+      })
+    }
+  }
+
+  customElements.define("local-graph", LocalGraph)
+</script>
+
+<style>
+  /* The global graph's control sits over the graph's top-right corner. Where it goes is the frame's
+     to say, so the global graph styles only its button. */
+  .frame {
+    position: relative;
+  }
+
+  .frame > :global(.global-graph) {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+  }
+
+  /* A square box, the sidebar's width, no taller than a sidebar section should be where the sidebar
+     is the content's width, under it. The canvas fills it. */
+  local-graph {
+    display: block;
+    box-sizing: border-box;
+    aspect-ratio: 1 / 1;
+    max-height: 20rem;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--lightgray);
+    border-radius: 5px;
+  }
+
+  local-graph :global(canvas) {
+    display: block;
+  }
+</style>

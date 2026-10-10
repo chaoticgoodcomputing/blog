@@ -1,0 +1,31 @@
+/* A note embedded in another: its content set off by a rule down its side, and a link under it to
+   the note it comes from. The classes are Obsidian's own, which the library gives an embed. */
+
+.prose .markdown-embed {
+  margin: 1rem 0;
+  padding: 0 0 0 1rem;
+  border-left: 0.2rem solid var(--secondary);
+}
+
+.prose .markdown-embed-content > :first-child {
+  margin-top: 0;
+}
+
+.prose .markdown-embed-content > :last-child {
+  margin-bottom: 0.25rem;
+}
+
+/* In the body's text colour, which reads on the link's chip in either scheme: --gray would not. */
+.prose .markdown-embed-link {
+  display: inline-block;
+  font-size: 0.85em;
+  color: var(--darkgray);
+}
+
+.prose .markdown-embed-link::before {
+  content: "↪ " / "";
+}
+
+.prose .markdown-embed-link:hover {
+  color: var(--secondary);
+}

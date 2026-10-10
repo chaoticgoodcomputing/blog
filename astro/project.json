@@ -1,0 +1,55 @@
+{
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "name": "astro",
+  "root": "astro",
+  "sourceRoot": "astro/src",
+  "projectType": "application",
+  "tags": ["astro"],
+  "targets": {
+    "dev": {
+      "//": "Astro's dev server over the vault, content/public. The vault is read again whenever a file in it changes, so a new or renamed note's links follow without a restart.",
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run dev", "cwd": "{projectRoot}" },
+      "continuous": true
+    },
+    "build": {
+      "//": "Build the vault into astro/dist, once `check` passes: astro build strips types without checking them. The vault is an input, so a changed note rebuilds.",
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run build", "cwd": "{projectRoot}" },
+      "dependsOn": ["check"],
+      "inputs": ["{projectRoot}/**/*", "{workspaceRoot}/content/public/**/*"],
+      "outputs": ["{projectRoot}/dist"],
+      "parallelism": false
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run preview", "cwd": "{projectRoot}" },
+      "dependsOn": ["build"],
+      "continuous": true
+    },
+    "check": {
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run check", "cwd": "{projectRoot}" }
+    },
+    "test": {
+      "//": "The unit tests of the pure modules under src/lib, on Vitest, over the fixture vault (test/fixtures/vault). One file: `nx run astro:test -- test/notes.test.ts`.",
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run test", "cwd": "{projectRoot}" }
+    },
+    "mirrors": {
+      "//": "Saves a mirror of each annotated document that has none into the vault's mirror directory, assets/annotated-documents, which git ignores (docs/adr/2801). A saved mirror is pinned and never fetched again; delete it to fetch it afresh. The only target that reaches the network for the vault: run it before a build that should have every mirror, as the deploy does. A document that can't be fetched is reported, and its page is built with its annotations alone.",
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run mirrors", "cwd": "{projectRoot}" },
+      "cache": false
+    },
+    "e2e": {
+      "//": "The Playwright specs against the built site: over the fixture vault (src/test/fixture), or with the `vault` configuration over the real one (src/test/vault). The suite builds its own site into .e2e and serves it on a port of its own, which E2E_PORT overrides (docs/adr/0007). One spec: `nx run astro:e2e -- notes`. Never beside another build in the same checkout, and never beside its dev server, which the suite refuses to start next to: every build writes the same .astro directory, and the dev server reads it. Stop the dev server first, or run the suite from another worktree.",
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run e2e", "cwd": "{projectRoot}" },
+      "configurations": {
+        "vault": { "env": { "E2E_SITE": "vault" } }
+      },
+      "parallelism": false
+    }
+  }
+}

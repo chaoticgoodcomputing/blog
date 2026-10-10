@@ -1,0 +1,14 @@
+---
+// A date as the site prints one, in a `<time>` that carries the instant itself. Every date a
+// reader sees goes through here, so they all read alike.
+import { formatDate } from "../lib/dates.ts"
+import { site } from "../site.config.ts"
+
+interface Props {
+  date: Date
+}
+
+const { date } = Astro.props
+---
+
+<time class="formatted-date" datetime={date.toISOString()}>{formatDate(date, site.locale)}</time>

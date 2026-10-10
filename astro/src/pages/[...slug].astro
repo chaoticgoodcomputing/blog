@@ -1,0 +1,49 @@
+---
+// Every published note but the index note, each at its own address.
+import type { GetStaticPaths } from "astro"
+import { render } from "astro:content"
+import Prose from "../components/Prose.astro"
+import Page from "../layouts/Page.astro"
+import { getNoteEntries } from "../lib/entries.ts"
+import { getNote } from "../lib/notes.ts"
+import type { PageKind } from "../lib/page.ts"
+
+import { isAnnotationPage } from "../lib/annotations.ts"
+
+import AnnotationViewer from "../components/annotation-viewer/AnnotationViewer.astro"
+import { mirrorFor } from "../lib/mirrors.ts"
+
+export const getStaticPaths = (async () =>
+  (await getNoteEntries())
+    // The index note is the home page, a route of its own (index.astro).
+    .filter(({ note }) => note.url !== "/")
+    .map(({ note, entry }) => ({ params: { slug: note.url.slice(1) }, props: { entry } }))) satisfies GetStaticPaths
+
+const { entry } = Astro.props
+// Asked for again here, not carried from the paths, so the dev server shows the note as the vault
+// was last read.
+const note = getNote(entry.id)!
+const { Content, headings } = await render(entry)
+
+// A note with an annotation target is an annotation page: its body is its preface, its annotations
+// and its epilogue (src/lib/annotations.ts).
+const kind: PageKind = isAnnotationPage(note) ? "annotation" : "note"
+// An annotation page whose document the site mirrors has the document drawn beside its body.
+const mirror = kind === "annotation" ? mirrorFor(note) : undefined
+---
+
+<Page kind={kind} title={note.title} description={note.description} url={note.url} note={note} headings={headings}>
+  {
+    mirror ? (
+      <AnnotationViewer note={note} mirror={mirror}>
+        <Prose>
+          <Content />
+        </Prose>
+      </AnnotationViewer>
+    ) : (
+      <Prose>
+        <Content />
+      </Prose>
+    )
+  }
+</Page>

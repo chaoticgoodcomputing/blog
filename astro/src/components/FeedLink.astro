@@ -1,0 +1,12 @@
+---
+// Names the site's feed in a page's head, so a reader's feed client finds it from any page.
+import { site } from "../site.config.ts"
+---
+
+<link
+  class="feed-link"
+  rel="alternate"
+  type="application/rss+xml"
+  title={site.title}
+  href={new URL("/index.xml", Astro.site)}
+/>

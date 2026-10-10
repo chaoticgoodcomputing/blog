@@ -1,0 +1,59 @@
+---
+// What a page's head tells search engines and link previews, as src/lib/seo.ts works it out: the
+// title and description, the canonical address, `noindex` on a page that is not indexable, the Open
+// Graph tags, and the JSON-LD. The tags are the ones Astro's blog template writes in its head
+// (https://github.com/withastro/astro/blob/4c1470a7f907fe678ef5e7dceaa972ca83d297da/examples/blog/src/components/BaseHead.astro#L37-L52).
+// Twitter reads a page's title, description and address from its Open Graph tags, so it is told
+// only which card to draw.
+//
+// The share card, `og:image` and `twitter:image`, and with it which card Twitter draws, is
+// ShareCard.astro's.
+import icon from "../assets/icon.png"
+import type { PageProps } from "../lib/page.ts"
+import { headOf } from "../lib/seo.ts"
+
+import ShareCard from "./ShareCard.astro"
+
+type Props = { page: PageProps }
+
+const { page } = Astro.props
+const site = Astro.site!
+// The publisher's logo is the site's icon, as Astro builds it.
+const head = headOf(page, { site, logo: new URL(icon.src, site).href })
+
+// A `</script>` in a title must not end the script element, so every `<` is written as JSON's
+// escape for it, which reads back as the same text.
+const scriptSafe = (value: unknown) => JSON.stringify(value).replaceAll("<", "\\u003c")
+---
+
+<title>{head.title}</title>
+<meta name="description" content={head.description} />
+<link rel="canonical" href={head.canonical} />
+{!head.indexable && <meta name="robots" content="noindex" />}
+
+<meta property="og:type" content={head.openGraph.type} />
+<meta property="og:site_name" content={head.openGraph.siteName} />
+<meta property="og:locale" content={head.openGraph.locale} />
+<meta property="og:url" content={head.openGraph.url} />
+<meta property="og:title" content={head.openGraph.title} />
+<meta property="og:description" content={head.openGraph.description} />
+{
+  head.article && (
+    <>
+      <meta property="article:published_time" content={head.article.publishedTime} />
+      <meta property="article:modified_time" content={head.article.modifiedTime} />
+      <meta property="article:author" content={head.article.author} />
+      {head.article.section && <meta property="article:section" content={head.article.section} />}
+      {head.article.tags.map((tag) => <meta property="article:tag" content={tag} />)}
+    </>
+  )
+}
+
+{/* 17 share card: `og:image`, `twitter:image`, and the Twitter card */}
+<ShareCard page={page} />
+
+{
+  head.structuredData && (
+    <script type="application/ld+json" is:inline set:html={scriptSafe(head.structuredData)} />
+  )
+}

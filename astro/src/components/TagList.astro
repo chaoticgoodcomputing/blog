@@ -1,0 +1,42 @@
+---
+// A note's tags under its title, as tag badges, each a link to the tag's page. Site configuration
+// says whether each tag's ancestors are shown before it (`tagList.showParents`).
+import { tagList } from "../site.config.ts"
+import { listedTags } from "../lib/tag-dictionary.ts"
+import TagBadge from "./TagBadge.astro"
+
+interface Props {
+  /** Tag slugs, in the order the note writes them. */
+  tags: string[]
+}
+
+const tags = listedTags(Astro.props.tags, tagList)
+---
+
+{
+  tags.length > 0 && (
+    <ul class="tag-list">
+      {tags.map((tag) => (
+        <li>
+          <TagBadge tag={tag} />
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.875rem;
+  }
+
+  li {
+    max-width: 100%;
+  }
+</style>

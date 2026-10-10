@@ -1,0 +1,941 @@
+---
+// The annotation viewer: an annotation page's annotated document, drawn from the site's mirror of
+// it, with each annotation's passage highlighted, and the page's annotations, its cards, laid out
+// around it as the Quartz annotator lays them out (docs/cutover/annotations-audit.md, ADR 3701).
+//
+// The page's body is this component's slot: the source of the document, the preface, the
+// annotations and the epilogue, which the Markdown pipeline makes (ADR 2701). As built, and for good
+// where the document can't be shown, the cards are the page, in one column (`data-layout="static"`).
+// Once the document opens, the element's script lays the page out by the room it has, and never by
+// a media query:
+// - **the margin**, where the document fits beside a column of cards: each card level with its
+//   passage, or just below the card above; all but the selected one shortened. Cards whose passage
+//   isn't in the document go last, under "Not found in the document". The bar's toggle hides and
+//   shows the margin, and the browser remembers which.
+// - **the drawer**, where it doesn't: the document takes the column, and the cards come in from the
+//   right, in order. On a tablet the drawer is a card's width and the document stays usable beside
+//   it; on a phone, where that would cover more than half the screen, it is most of the screen, and
+//   modal. It opens from its tab on the right edge, tapped or dragged, from the bar's toggle, or
+//   from a tapped highlight, at its card. It always starts closed.
+// The page is the one scroll: the document is never a box that scrolls by itself, and pans
+// sideways in its column only when it is zoomed wider than it.
+//
+// Selecting an annotation marks its card and its highlights, and writes its address, `#^id`, in
+// place of the page's (history.replaceState), so the back button isn't cluttered. A card, a
+// highlight, `j` and `k` select; `Esc` clears; a page opened at an annotation's address opens with
+// it selected. Zoom is the viewer's, not the browser's: the bar's control, `+`, `-` and `0`, or a
+// pinch of the document; 100% is the fitted width, and the browser remembers the zoom. None of the
+// keys act while the reader is typing, or a dialog is open.
+//
+// PDF.js is loaded by the element's script as the page loads (./document.ts), so a page of another
+// kind has none of it. A mirror the browser can't open or draw leaves a notice with a link to the
+// annotated document itself, and the page laid out as any note's (`data-state="failed"`).
+//
+// What the script sets on the body's annotations, and how they are laid out in the margin and the
+// drawer, is styled in src/styles/prose/annotation-viewer.css: scoped styles never reach a slot.
+import { annotationTarget } from "@chaoticgoodcomputing/obsidian-markdown"
+import { Icon } from "astro-icon/components"
+import { MARGIN_WIDTH, MIN_DOCUMENT_WIDTH } from "../../lib/annotation-layout.ts"
+import { annotatedPassages, documentFileName } from "../../lib/annotations.ts"
+import type { Note } from "../../lib/notes.ts"
+
+interface Props {
+  note: Note
+  /** The mirror's address, from the site's root and not encoded: `mirrorFor(note)`. */
+  mirror: string
+}
+
+const { note, mirror } = Astro.props
+const target = annotationTarget(note.frontmatter)!
+const name = documentFileName(target) ?? target
+const passages = annotatedPassages(note)
+const href = encodeURI(decodeURI(target))
+---
+
+<annotation-viewer
+  class="annotation-viewer"
+  data-layout="static"
+  data-src={encodeURI(mirror)}
+  data-passages={JSON.stringify(passages)}
+  data-margin-width={MARGIN_WIDTH}
+  data-min-document-width={MIN_DOCUMENT_WIDTH}
+  style={`--margin-width: ${MARGIN_WIDTH}`}
+>
+  <div class="bar" role="toolbar" aria-label="The annotated document">
+    <div class="zoom" role="group" aria-label="Zoom">
+      <button class="zoom-out" type="button" aria-label="Zoom out">−</button>
+      <button class="zoom-level" type="button" aria-label="Reset the zoom" title="Reset the zoom">100%</button>
+      <button class="zoom-in" type="button" aria-label="Zoom in">+</button>
+    </div>
+    <button class="toggle" type="button" aria-label="Annotations">
+      <Icon name="mdi:comment-outline" is:inline width="20" height="20" fill="currentColor" aria-hidden="true" />
+      <span class="count"></span>
+    </button>
+  </div>
+  <div class="layout">
+    <div class="document" role="region" aria-label={`The annotated document, ${name}`} data-pagefind-ignore>
+      <p class="status" data-loading>Loading the document…</p>
+      <p class="status" data-failed hidden>
+        We couldn't show the PDF here, but you can read along at <a href={href}>{decodeURI(target)}</a>.
+      </p>
+      <div class="pages"></div>
+    </div>
+    <slot />
+  </div>
+  <button class="tab" type="button" aria-label="Annotations" aria-expanded="false" tabindex="-1">
+    <span class="grip" aria-hidden="true"></span>
+  </button>
+  <div class="scrim" aria-hidden="true"></div>
+</annotation-viewer>
+
+<script>
+  import {
+    clampZoom,
+    fit,
+    stack,
+    steppedZoom,
+    toPx,
+    type Fit,
+    type Layout,
+  } from "../../lib/annotation-layout.ts"
+  import type { AnnotatedPassage } from "../../lib/highlights.ts"
+  import type { Place, Shown } from "./document.ts"
+
+  /** How far a drag or a swipe must go to open or close the drawer, in pixels. */
+  const SWIPE = 40
+  /** The space between two cards in the margin, in pixels. */
+  const CARD_GAP = 12
+  /** How far below the bar a passage that is gone to sits, in pixels. */
+  const BELOW_BAR = 32
+  /** What the browser remembers for the reader, in local storage (ADR 3701). */
+  const KEPT = { zoom: "annotation-viewer:zoom", marginHidden: "annotation-viewer:margin-hidden" }
+  /** The id the script gives the page's section of annotations, which the bar and the tab control. */
+  const CARDS = "annotation-cards"
+
+  // An annotation's block id from an address's fragment, `#^id`, without its `^`.
+  const idIn = (hash: string): string | undefined => /^#\^(.+)$/.exec(decodeURIComponent(hash))?.[1]
+  const idOf = (card: Element): string => card.id.replace(/^\^/, "")
+
+  // What the browser remembers, which a private window or blocked storage can take away.
+  const recall = (key: string): string | null => {
+    try {
+      return localStorage.getItem(key)
+    } catch {
+      return null
+    }
+  }
+  const remember = (key: string, value: string | null) => {
+    try {
+      if (value === null) localStorage.removeItem(key)
+      else localStorage.setItem(key, value)
+    } catch {}
+  }
+
+  // Whether a key press is the reader typing, or meant for something else: a field, a shortcut, or
+  // a dialog in front of the page (search, the global graph).
+  const typing = (event: KeyboardEvent): boolean => {
+    if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return true
+    const target = event.target as HTMLElement | null
+    if (target?.closest?.("input, textarea, select, [contenteditable]:not([contenteditable='false'])")) return true
+    return !!document.querySelector("dialog[open], :popover-open")
+  }
+
+  class AnnotationViewer extends HTMLElement {
+    #shown: Shown | undefined
+    #places = new Map<string, Place>()
+    #layout: Layout = "static"
+    #fit: Fit | undefined
+    #selected: string | undefined
+    #pending: string | undefined
+    #drawerOpen = false
+    #returnFocus: HTMLElement | null = null
+    #marginHidden = false
+    #zoom = 1
+    #dragged = false
+    #queued = 0
+    #cleanups: (() => void)[] = []
+    #disconnected = false
+
+    #on(target: EventTarget, type: string, listener: (event: any) => void, options?: AddEventListenerOptions) {
+      target.addEventListener(type, listener, options)
+      this.#cleanups.push(() => target.removeEventListener(type, listener, options))
+    }
+
+    get #section() {
+      return this.querySelector<HTMLElement>("section.annotations")
+    }
+    get #pages() {
+      return this.querySelector<HTMLElement>(".pages")!
+    }
+    get #bar() {
+      return this.querySelector<HTMLElement>(".bar")!
+    }
+    #cards() {
+      return [...this.querySelectorAll<HTMLElement>("section.annotations > .annotation")]
+    }
+    #card(id: string) {
+      return this.#cards().find((card) => idOf(card) === id)
+    }
+
+    connectedCallback() {
+      this.#disconnected = false
+      this.#marginHidden = recall(KEPT.marginHidden) === "true"
+      this.#zoom = clampZoom(parseFloat(recall(KEPT.zoom) ?? "1"))
+      const section = this.#section
+      if (section) {
+        section.id = CARDS
+        section.tabIndex = -1
+      }
+      const count = this.#cards().length
+      this.querySelector(".count")!.textContent = String(count)
+      const toggle = this.querySelector<HTMLElement>(".toggle")!
+      toggle.setAttribute("aria-label", `Annotations (${count})`)
+      for (const control of this.querySelectorAll(".toggle, .tab")) control.setAttribute("aria-controls", CARDS)
+
+      this.#listen()
+      // The annotation the address names, selected as the page opens: its card is gone to now, and
+      // its passage once the document has its boxes.
+      const id = idIn(location.hash)
+      if (id && this.#card(id)) {
+        this.#select(id, false)
+        this.#pending = id
+      }
+      void this.#open()
+    }
+
+    disconnectedCallback() {
+      this.#disconnected = true
+      this.#cleanups.splice(0).forEach((cleanup) => cleanup())
+      cancelAnimationFrame(this.#queued)
+      this.#shown?.destroy()
+      this.#shown = undefined
+    }
+
+    async #open() {
+      const failed = () => {
+        this.dataset.state = "failed"
+        this.querySelector<HTMLElement>("[data-loading]")!.hidden = true
+        this.querySelector<HTMLElement>("[data-failed]")!.hidden = false
+      }
+      try {
+        const { show } = await import("./document.ts")
+        if (this.#disconnected) return
+        const passages = JSON.parse(this.dataset.passages ?? "[]") as AnnotatedPassage[]
+        this.#shown = show(this.dataset.src!, this.#pages, passages, {
+          opened: (places) => this.#opened(places),
+          failed,
+        })
+      } catch {
+        failed()
+      }
+    }
+
+    // The document's boxes are laid out: the cards whose passage it has no place for go last, under a
+    // heading of their own, and the page takes the layout that fits it.
+    #opened(places: Map<string, Place>) {
+      this.#places = places
+      this.dataset.state = "opened"
+      this.querySelector<HTMLElement>("[data-loading]")!.hidden = true
+      const section = this.#section
+      if (section) {
+        const unplaced = this.#cards().filter((card) => !this.#placeOf(card))
+        if (unplaced.length) {
+          const heading = document.createElement("h3")
+          heading.className = "unplaced"
+          heading.textContent = "Not found in the document"
+          section.append(heading, ...unplaced)
+        }
+        // A passage found in the document is a control that shows it there.
+        for (const card of this.#cards()) {
+          const passage = card.querySelector<HTMLElement>(":scope > .annotation-highlight")
+          if (!passage || !places.has(idOf(card))) continue
+          passage.setAttribute("role", "button")
+          passage.tabIndex = 0
+          passage.title = "Show this passage in the document"
+        }
+        const resized = new ResizeObserver(() => this.#relayout())
+        resized.observe(this)
+        for (const card of this.#cards()) resized.observe(card)
+        this.#cleanups.push(() => resized.disconnect())
+      }
+      this.#apply()
+      if (this.#pending) {
+        const id = this.#pending
+        this.#pending = undefined
+        requestAnimationFrame(() => this.#selected === id && this.#go(id, false))
+      }
+    }
+
+    // The annotation whose passage a card is placed by: its own, or, for a reply, which has none, the
+    // one it answers, which comes before it. None where the document has no place for it.
+    #placeOf(card: HTMLElement): string | undefined {
+      for (let at: Element | null = card; at?.classList.contains("annotation"); at = at.previousElementSibling) {
+        if (this.#places.has(idOf(at))) return idOf(at)
+        if (at.querySelector(":scope > .annotation-highlight")) return undefined
+      }
+      return undefined
+    }
+
+    // Where a passage starts, down the window, from where the document's text puts it on its page:
+    // known before the page is drawn, and the same once it is.
+    #passageY(id: string): number | undefined {
+      const place = this.#places.get(id)
+      const page = place && this.#pages.querySelector(`.document-page[data-page="${place.page + 1}"]`)
+      if (!place || !page) return undefined
+      const box = page.getBoundingClientRect()
+      return box.top + place.top * box.height
+    }
+
+    // Once a frame at most, however many things change at once.
+    #relayout() {
+      if (this.#queued) return
+      this.#queued = requestAnimationFrame(() => {
+        this.#queued = 0
+        this.#apply()
+      })
+    }
+
+    // Takes the layout that fits the viewer's width now, at the zoom.
+    #apply() {
+      if (this.dataset.state !== "opened") return
+      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16
+      const next = fit(
+        {
+          available: this.clientWidth,
+          margin: toPx(this.dataset.marginWidth!, rem),
+          minDocument: toPx(this.dataset.minDocumentWidth!, rem),
+          rem,
+        },
+        this.#zoom,
+        this.#marginHidden,
+      )
+      if (next.layout !== this.#layout) {
+        if (this.#drawerOpen) this.#setDrawer(false, false)
+        // A new layout is taken at once: nothing slides into place, as the drawer would slide shut.
+        this.setAttribute("data-switching", "")
+        requestAnimationFrame(() => requestAnimationFrame(() => this.removeAttribute("data-switching")))
+      }
+      this.#fit = next
+      this.#layout = next.layout
+      this.dataset.layout = next.layout
+      this.dataset.margin = this.#marginHidden ? "hidden" : "shown"
+      if (next.layout === "drawer") this.dataset.drawer = next.mobile ? "mobile" : "tablet"
+      else delete this.dataset.drawer
+      this.style.setProperty("--document-width", `${next.documentWidth}px`)
+      this.querySelector(".tab")!.setAttribute("tabindex", next.layout === "drawer" ? "0" : "-1")
+      this.querySelector(".zoom-level")!.textContent = `${Math.round(this.#zoom * 100)}%`
+      const toggle = this.querySelector(".toggle")!
+      toggle.setAttribute("aria-expanded", String(next.layout === "margin" ? !this.#marginHidden : this.#drawerOpen))
+      this.#mark()
+      this.#place()
+      this.#restore()
+    }
+
+    // Marks the selected annotation's card and highlights, and shortens every other card once the
+    // document is beside them.
+    #mark() {
+      for (const highlight of this.querySelectorAll<HTMLElement>(".highlight")) {
+        highlight.classList.toggle("selected", highlight.dataset.annotation === this.#selected)
+      }
+      for (const card of this.#cards()) {
+        const selected = idOf(card) === this.#selected
+        card.toggleAttribute("data-selected", selected)
+        card.classList.toggle("short", !selected && this.#layout !== "static")
+        if (selected) card.setAttribute("aria-current", "true")
+        else card.removeAttribute("aria-current")
+      }
+    }
+
+    // Puts every card where it goes: in the margin, beside its passage; elsewhere, in the flow.
+    #place() {
+      const section = this.#section
+      if (!section) return
+      const cards = this.#cards()
+      const heading = section.querySelector<HTMLElement>(":scope > .unplaced")
+      if (this.#layout !== "margin" || this.#marginHidden) {
+        for (const card of cards) card.style.top = ""
+        if (heading) heading.style.top = ""
+        section.style.height = ""
+        return
+      }
+      // A shortened card fades where its comment is cut.
+      for (const card of cards) {
+        const comment = card.querySelector<HTMLElement>(":scope > .annotation-comment")
+        comment?.classList.toggle("clipped", comment.scrollHeight > comment.clientHeight + 1)
+      }
+      const sectionTop = section.getBoundingClientRect().top
+      const placed = cards.filter((card) => this.#placeOf(card))
+      const unplaced = cards.filter((card) => !this.#placeOf(card))
+      const tops = stack(
+        placed.map((card) => this.#passageY(this.#placeOf(card)!)! - sectionTop),
+        placed.map((card) => card.offsetHeight),
+        placed.findIndex((card) => idOf(card) === this.#selected),
+        CARD_GAP,
+      )
+      placed.forEach((card, i) => (card.style.top = `${tops[i]}px`))
+      let y = placed.length ? tops.at(-1)! + placed.at(-1)!.offsetHeight + CARD_GAP : 0
+      if (unplaced.length) {
+        // At the margin's end, after the last page.
+        y = Math.max(y + 2 * CARD_GAP, this.#pages.getBoundingClientRect().bottom - sectionTop)
+        if (heading) {
+          heading.style.top = `${y}px`
+          y += heading.offsetHeight + CARD_GAP
+        }
+        for (const card of unplaced) {
+          card.style.top = `${y}px`
+          y += card.offsetHeight + CARD_GAP
+        }
+      }
+      section.style.height = `${y}px`
+    }
+
+    // Scrolls the page so that a point `y` down the window sits a little below the bar.
+    #reveal(y: number, smoothly: boolean) {
+      const bar = this.#layout === "static" ? 0 : this.#bar.offsetHeight
+      window.scrollTo({ top: Math.max(0, window.scrollY + y - bar - BELOW_BAR), behavior: smoothly ? "smooth" : "instant" })
+    }
+
+    // Goes to an annotation: its passage where the document is shown and has one, its card otherwise.
+    #go(id: string, smoothly = true) {
+      const card = this.#card(id)
+      const place = card && this.#layout !== "static" ? this.#placeOf(card) : undefined
+      const y = place === undefined ? undefined : this.#passageY(place)
+      if (y !== undefined) this.#reveal(y, smoothly)
+      else card?.scrollIntoView({ block: "nearest", behavior: smoothly ? "smooth" : "instant" })
+    }
+
+    /** Selects an annotation, or clears the selection, and says so in the address; goes to it if `going`. */
+    #select(id: string | undefined, going: boolean) {
+      this.#selected = id && this.#card(id) ? id : undefined
+      this.#mark()
+      const url = new URL(location.href)
+      url.hash = this.#selected ? `#^${this.#selected}` : ""
+      if (url.href !== location.href) history.replaceState(history.state, "", url.href.replace(/#$/, ""))
+      // The margin lays the selected card out whole, level with its passage, before it is gone to.
+      this.#place()
+      if (this.#selected && going) this.#go(this.#selected)
+    }
+
+    // --- The drawer ---------------------------------------------------------------------------------
+
+    #modal = () => this.#layout === "drawer" && this.#fit?.mobile === true
+
+    // Opens or closes the drawer. A phone's takes the focus while it is open, and gives it back.
+    #setDrawer(open: boolean, focus = true) {
+      if ((open && this.#layout !== "drawer") || open === this.#drawerOpen) return
+      this.#drawerOpen = open
+      this.dataset.drawerOpen = String(open)
+      this.querySelector(".tab")!.setAttribute("aria-expanded", String(open))
+      if (this.#layout === "drawer") this.querySelector(".toggle")!.setAttribute("aria-expanded", String(open))
+      const section = this.#section
+      if (open && this.#modal() && focus) {
+        this.#returnFocus = document.activeElement as HTMLElement | null
+        section?.focus({ preventScroll: true })
+      } else if (!open && this.#returnFocus) {
+        if (section?.contains(document.activeElement)) this.#returnFocus.focus({ preventScroll: true })
+        this.#returnFocus = null
+      }
+    }
+
+    // A drag from the tab, out; or across the open drawer, back to the right. The document keeps its
+    // own touch: a swipe on it never opens the drawer.
+    #drag(from: HTMLElement, opens: boolean) {
+      this.#on(from, "pointerdown", (event: PointerEvent) => {
+        const section = this.#section
+        if (this.#layout !== "drawer" || event.button !== 0 || !section) return
+        if (!opens && (!this.#drawerOpen || event.pointerType === "mouse")) return
+        const [startX, startY] = [event.clientX, event.clientY]
+        const width = section.getBoundingClientRect().width
+        let dx = 0
+        let dragging = false
+        const move = (each: PointerEvent) => {
+          dx = each.clientX - startX
+          if (!dragging && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(each.clientY - startY)) {
+            dragging = true
+            this.setAttribute("data-dragging", "")
+          }
+          // The drawer follows the finger: out from the edge while closed, back to it while open.
+          if (dragging) section.style.transform = `translateX(${this.#drawerOpen ? Math.max(0, dx) : Math.max(0, width + dx)}px)`
+        }
+        const up = () => {
+          window.removeEventListener("pointermove", move)
+          window.removeEventListener("pointerup", up)
+          window.removeEventListener("pointercancel", up)
+          section.style.transform = ""
+          this.removeAttribute("data-dragging")
+          if (!dragging) return
+          // A drag ends in a click on what was dragged, which is no tap.
+          this.#dragged = true
+          setTimeout(() => (this.#dragged = false))
+          if (!this.#drawerOpen && opens && dx < -SWIPE) this.#setDrawer(true)
+          else if (this.#drawerOpen && dx > SWIPE) this.#setDrawer(false)
+        }
+        // On the window, since the pointer soon leaves a tab this narrow.
+        window.addEventListener("pointermove", move)
+        window.addEventListener("pointerup", up)
+        window.addEventListener("pointercancel", up)
+      })
+    }
+
+    // Tab and Shift-Tab go round the drawer's own links and cards while a phone's drawer is open.
+    #trapTab(event: KeyboardEvent) {
+      const section = this.#section!
+      const focusable = [...section.querySelectorAll<HTMLElement>("a[href], button, [tabindex]:not([tabindex='-1'])")].filter(
+        (el) => el.offsetParent !== null,
+      )
+      event.preventDefault()
+      if (!focusable.length) return
+      const at = focusable.indexOf(document.activeElement as HTMLElement)
+      const next = event.shiftKey ? (at <= 0 ? focusable.length - 1 : at - 1) : at === -1 || at === focusable.length - 1 ? 0 : at + 1
+      focusable[next]!.focus()
+    }
+
+    // --- Zoom -------------------------------------------------------------------------------------
+
+    // The point of the document to keep where it is across a zoom: a page, where on it, and where in
+    // the window it was. Held until the pages have their new size, or a moment has passed.
+    #hold: { page: HTMLElement; share: number; fx: number; fy: number; x: number; y: number; until: number } | undefined
+
+    #holdAt(x: number, y: number) {
+      const pages = [...this.#pages.querySelectorAll<HTMLElement>(".document-page")]
+      if (!pages.length) return
+      const page = pages.find((each) => each.getBoundingClientRect().bottom >= y) ?? pages.at(-1)!
+      const box = page.getBoundingClientRect()
+      const share = box.width / this.#pages.getBoundingClientRect().width
+      this.#hold = { page, share, fx: (x - box.left) / box.width, fy: (y - box.top) / box.height, x, y, until: performance.now() + 1500 }
+    }
+
+    #restore() {
+      const hold = this.#hold
+      if (!hold || !this.#fit) return
+      const box = hold.page.getBoundingClientRect()
+      window.scrollBy({ top: box.top + hold.fy * box.height - hold.y, behavior: "instant" })
+      this.querySelector(".document")!.scrollLeft += box.left + hold.fx * box.width - hold.x
+      const sized = Math.abs(box.width - hold.share * this.#fit.documentWidth) < 1
+      if (sized || performance.now() > hold.until) this.#hold = undefined
+    }
+
+    #zoomTo(zoom: number, around?: { x: number; y: number }) {
+      const next = clampZoom(zoom)
+      if (Math.abs(next - this.#zoom) < 0.001 || this.#layout === "static") return
+      const bar = this.#bar.getBoundingClientRect().bottom
+      this.#holdAt(around?.x ?? window.innerWidth / 2, around?.y ?? bar + (window.innerHeight - bar) / 2)
+      this.#zoom = next
+      remember(KEPT.zoom, Math.abs(next - 1) < 0.001 ? null : String(Math.round(next * 1000) / 1000))
+      this.#apply()
+    }
+
+    // --- The reader's hands -------------------------------------------------------------------------
+
+    #listen() {
+      // A highlight selects its annotation, and in the drawer opens it at its card. A card, but not a
+      // link in it, selects its annotation and takes the document to its passage, leaving the drawer
+      // open, so the card just tapped stays in front of the reader.
+      this.#on(this, "click", (event: MouseEvent) => {
+        const target = event.target as Element
+        const highlight = target.closest<HTMLElement>(".highlight")
+        if (highlight?.dataset.annotation) {
+          event.preventDefault()
+          this.#select(highlight.dataset.annotation, false)
+          if (this.#layout === "drawer" && this.#selected) {
+            this.#setDrawer(true)
+            this.#card(this.#selected)?.scrollIntoView({ block: "nearest" })
+          }
+          return
+        }
+        const card = target.closest<HTMLElement>("section.annotations > .annotation")
+        if (!card || target.closest("a") || this.#dragged || this.#layout === "static") return
+        this.#select(idOf(card), true)
+      })
+
+      // Enter or Space on a passage that is in the document.
+      this.#on(this, "keydown", (event: KeyboardEvent) => {
+        if (event.key !== "Enter" && event.key !== " ") return
+        const passage = (event.target as Element).closest(".annotation-highlight[role='button']")
+        const card = passage?.closest<HTMLElement>(".annotation")
+        if (!card) return
+        event.preventDefault()
+        this.#select(idOf(card), true)
+      })
+
+      // A link to one of the page's annotations, from its preface say.
+      this.#on(window, "hashchange", () => {
+        const id = idIn(location.hash)
+        if (id && this.#card(id)) this.#select(id, true)
+      })
+
+      // Hovering a card tints its highlights.
+      const hover = (id: string | undefined) => {
+        for (const highlight of this.querySelectorAll<HTMLElement>(".highlight")) {
+          highlight.classList.toggle("hovered", id !== undefined && highlight.dataset.annotation === id)
+        }
+      }
+      this.#on(this, "mouseover", (event: MouseEvent) => {
+        const card = (event.target as Element).closest<HTMLElement>("section.annotations > .annotation")
+        hover(card ? idOf(card) : undefined)
+      })
+      this.#on(this, "mouseleave", () => hover(undefined))
+
+      const tab = this.querySelector<HTMLElement>(".tab")!
+      this.#drag(tab, true)
+      this.#on(tab, "click", () => {
+        if (!this.#dragged) this.#setDrawer(!this.#drawerOpen)
+      })
+      const section = this.#section
+      if (section) this.#drag(section, false)
+      this.#on(this.querySelector(".scrim")!, "click", () => this.#setDrawer(false))
+
+      // Focus stays in a phone's drawer while it is open.
+      this.#on(document, "focusin", (event: FocusEvent) => {
+        if (this.#drawerOpen && this.#modal() && !this.#section?.contains(event.target as Node)) {
+          this.#section?.focus({ preventScroll: true })
+        }
+      })
+
+      // The bar's toggle hides and shows the margin, or opens and closes the drawer.
+      this.#on(this.querySelector(".toggle")!, "click", () => {
+        if (this.#layout === "drawer") return this.#setDrawer(!this.#drawerOpen)
+        this.#marginHidden = !this.#marginHidden
+        remember(KEPT.marginHidden, this.#marginHidden ? "true" : null)
+        this.#apply()
+        if (this.#selected) this.#go(this.#selected, false)
+      })
+
+      this.#on(this.querySelector(".zoom-out")!, "click", () => this.#zoomTo(steppedZoom(this.#zoom, -1)))
+      this.#on(this.querySelector(".zoom-level")!, "click", () => this.#zoomTo(1))
+      this.#on(this.querySelector(".zoom-in")!, "click", () => this.#zoomTo(steppedZoom(this.#zoom, 1)))
+
+      this.#on(document, "keydown", (event: KeyboardEvent) => {
+        if (event.key === "Tab" && this.#drawerOpen && this.#modal()) return this.#trapTab(event)
+        if (typing(event)) return
+        if (event.key === "Escape") {
+          if (this.#drawerOpen) this.#setDrawer(false)
+          else if (this.#selected) this.#select(undefined, false)
+          return
+        }
+        if (this.#layout !== "static" && ["+", "=", "-", "0"].includes(event.key)) {
+          event.preventDefault()
+          return this.#zoomTo(event.key === "0" ? 1 : steppedZoom(this.#zoom, event.key === "-" ? -1 : 1))
+        }
+        if (event.key !== "j" && event.key !== "k") return
+        const order = this.#cards().map(idOf)
+        const at = this.#selected ? order.indexOf(this.#selected) : -1
+        const next =
+          event.key === "j" ? (at === -1 ? 0 : Math.min(order.length - 1, at + 1)) : at === -1 ? order.length - 1 : Math.max(0, at - 1)
+        if (order[next] === undefined) return
+        event.preventDefault()
+        this.#select(order[next], true)
+      })
+
+      // Two fingers on the document pinch it, not the page: the drawn pages are scaled live around
+      // the fingers' midpoint, and on release drawn again at the new width, with the point under the
+      // fingers kept under them. Heard on the document, since a second finger's touch can go to
+      // whatever is hit first; it is a pinch of the document if either finger started on it.
+      const scroller = this.querySelector<HTMLElement>(".document")!
+      const spread = (touches: TouchList) =>
+        Math.hypot(touches[0]!.clientX - touches[1]!.clientX, touches[0]!.clientY - touches[1]!.clientY)
+      let pinch: { from: number; zoom: number; mid: { x: number; y: number }; scale: number } | undefined
+      this.#on(document, "touchstart", (event: TouchEvent) => {
+        const touches = [...event.touches]
+        if (this.#layout === "static" || touches.length !== 2 || !touches.some((touch) => scroller.contains(touch.target as Node))) return
+        const [a, b] = touches as [Touch, Touch]
+        const mid = { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 }
+        pinch = { from: spread(event.touches), zoom: this.#zoom, mid, scale: 1 }
+        const box = this.#pages.getBoundingClientRect()
+        this.#pages.style.transformOrigin = `${mid.x - box.left}px ${mid.y - box.top}px`
+      })
+      this.#on(
+        document,
+        "touchmove",
+        (event: TouchEvent) => {
+          if (!pinch || event.touches.length !== 2) return
+          event.preventDefault()
+          pinch.scale = clampZoom(pinch.zoom * (spread(event.touches) / pinch.from)) / pinch.zoom
+          this.#pages.style.transform = `scale(${pinch.scale})`
+        },
+        { passive: false },
+      )
+      const release = (event: TouchEvent) => {
+        if (!pinch || event.touches.length >= 2) return
+        const { zoom, scale, mid } = pinch
+        pinch = undefined
+        this.#pages.style.transform = ""
+        this.#pages.style.transformOrigin = ""
+        this.#zoomTo(zoom * scale, mid)
+      }
+      this.#on(document, "touchend", release)
+      this.#on(document, "touchcancel", release)
+    }
+  }
+
+  customElements.define("annotation-viewer", AnnotationViewer)
+</script>
+
+<style>
+  .annotation-viewer {
+    display: block;
+  }
+
+  /* The bar: the zoom, and the annotations' toggle with their count. At the top of the window while
+     the document is on the page, as the Quartz annotator's bar is; nothing of it before the document
+     opens. */
+  .bar {
+    display: none;
+  }
+
+  .annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .bar {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    box-sizing: border-box;
+    height: 3rem;
+    margin-bottom: 1rem;
+    padding: 0 0.5rem;
+    border-bottom: 1px solid var(--lightgray);
+    background: var(--light);
+  }
+
+  .zoom {
+    display: flex;
+    align-items: center;
+  }
+
+  .bar button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    min-width: 2.25rem;
+    height: 2.25rem;
+    padding: 0 0.5rem;
+    border: 0;
+    border-radius: 0.375rem;
+    background: transparent;
+    color: var(--darkgray);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .bar button:hover,
+  .bar button[aria-expanded="true"] {
+    background: var(--highlight);
+    color: var(--dark);
+  }
+
+  .zoom-level {
+    min-width: 3.5rem;
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .count {
+    font-size: 0.9rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The document: out of sight until it opens, or a notice says it can't. It pans sideways in its
+     column when it is zoomed wider than it, and never scrolls down by itself: the page is the one
+     scroll. */
+  .document {
+    display: none;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    /* Two fingers pinch the document, not the page; one scrolls and pans. */
+    touch-action: pan-x pan-y;
+  }
+
+  .annotation-viewer:is([data-layout="margin"], [data-layout="drawer"], [data-state="failed"]) .document {
+    display: block;
+  }
+
+  .status {
+    margin: 0;
+    padding: 1rem 0;
+    color: var(--darkgray);
+  }
+
+  .status a {
+    overflow-wrap: anywhere;
+  }
+
+  .pages {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: var(--document-width, 100%);
+    margin: 0 auto;
+  }
+
+  .annotation-viewer[data-state="failed"] .pages {
+    display: none;
+  }
+
+  /* What PDF.js draws is made by the element's script, which scoped styles never reach. A page is
+     paper, white in either scheme, ruled off from the next. */
+  .pages :global(.document-page) {
+    position: relative;
+    flex-shrink: 0;
+    background: var(--paper);
+    outline: 1px solid var(--lightgray);
+  }
+
+  .pages :global(.document-page canvas) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* A passage, each line of it, over the text a reader can select. */
+  .pages :global(.highlight) {
+    position: absolute;
+    z-index: 2;
+    border-radius: 2px;
+    background: var(--textHighlight);
+    cursor: pointer;
+  }
+
+  .pages :global(.highlight.selected) {
+    outline: 2px solid var(--secondary);
+  }
+
+  .pages :global(.highlight:focus-visible) {
+    outline: 2px solid var(--secondary);
+    outline-offset: 1px;
+  }
+
+  /* A card being hovered tints its highlights. */
+  .pages :global(.highlight.hovered) {
+    box-shadow: inset 0 0 0 100vmax color-mix(in srgb, var(--tertiary) 35%, transparent);
+  }
+
+  /* PDF.js's text layer: transparent text laid over the drawing, so it can be selected and found,
+     as in the PDF viewer widget (src/components/widgets/pdf-viewer/pdf-viewer.module.css), from
+     PDF.js 5.4.530's web/text_layer_builder.css. The script writes --total-scale-factor on the page,
+     and PDF.js writes --min-font-size on the layer, and --font-height, --scale-x and --rotate on
+     each span. */
+  .pages :global(.text-layer) {
+    --pdf-text-scale: calc(var(--total-scale-factor) * var(--min-font-size));
+    --pdf-min-font-size-inv: calc(1 / var(--min-font-size));
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: clip;
+    opacity: 1;
+    line-height: 1;
+    text-align: initial;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+    forced-color-adjust: none;
+    transform-origin: 0 0;
+  }
+
+  .pages :global(.text-layer :is(span, br)) {
+    position: absolute;
+    color: transparent;
+    white-space: pre;
+    cursor: text;
+    transform-origin: 0% 0%;
+  }
+
+  .pages :global(.text-layer > :not(.markedContent)),
+  .pages :global(.text-layer .markedContent span:not(.markedContent)) {
+    z-index: 1;
+    font-size: calc(var(--pdf-text-scale) * var(--font-height, 0px));
+    transform: rotate(var(--rotate, 0deg)) scaleX(var(--scale-x, 1)) scale(var(--pdf-min-font-size-inv));
+  }
+
+  .pages :global(.text-layer .markedContent) {
+    display: contents;
+  }
+
+  .pages :global(.text-layer span[role="img"]) {
+    cursor: default;
+    user-select: none;
+  }
+
+  .pages :global(.text-layer ::selection) {
+    background: var(--textHighlight);
+    color: transparent;
+  }
+
+  .pages :global(.text-layer br::selection) {
+    background: transparent;
+  }
+
+  /* The drawer's tab, on the right edge, riding the drawer's edge while it is open; and what dims the
+     document behind a phone's drawer. Neither is anywhere but in the drawer's layout. */
+  .tab,
+  .scrim {
+    display: none;
+  }
+
+  .annotation-viewer[data-layout="drawer"] .tab {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    z-index: 19;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 4rem;
+    padding: 0;
+    border: 1px solid var(--lightgray);
+    border-right: 0;
+    border-radius: 0.5rem 0 0 0.5rem;
+    background: var(--light);
+    cursor: grab;
+    touch-action: none;
+    transform: translateY(-50%);
+    transition: right 0.2s ease;
+  }
+
+  .annotation-viewer[data-layout="drawer"][data-drawer-open="true"] .tab {
+    right: var(--margin-width);
+  }
+
+  .annotation-viewer[data-layout="drawer"][data-drawer="mobile"][data-drawer-open="true"] .tab {
+    right: 85vw;
+    z-index: 41;
+  }
+
+  .grip {
+    width: 0.25rem;
+    height: 1.5rem;
+    border-radius: 0.125rem;
+    background: var(--gray);
+  }
+
+  .annotation-viewer[data-layout="drawer"][data-drawer="mobile"] .scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: block;
+    background: var(--scrim);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .annotation-viewer[data-layout="drawer"][data-drawer="mobile"][data-drawer-open="true"] .scrim {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .annotation-viewer[data-switching] .tab {
+    transition: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tab,
+    .scrim {
+      transition: none !important;
+    }
+  }
+</style>

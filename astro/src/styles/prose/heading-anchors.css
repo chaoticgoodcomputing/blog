@@ -1,0 +1,25 @@
+/* A heading's link to itself (src/lib/heading-anchors.ts): an icon after the heading's text, in the
+   colour of the text around it, shown while the pointer is on the heading. Hidden, it keeps its
+   room, so the heading doesn't shift as the pointer reaches it. */
+
+.prose a.heading-anchor {
+  display: inline-block;
+  margin-left: 0.4rem;
+  color: var(--darkgray);
+  font-size: 0.75em;
+  vertical-align: middle;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.prose :is(h1, h2, h3, h4, h5, h6):hover > a.heading-anchor {
+  opacity: 1;
+}
+
+.prose a.heading-anchor:hover {
+  color: var(--tertiary);
+}
+
+.prose a.heading-anchor svg {
+  display: block;
+}

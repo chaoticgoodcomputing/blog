@@ -1,0 +1,31 @@
+---
+// A note's rendered Markdown, and the styles for it. A note's HTML comes from the Markdown pipeline,
+// not from a component's template, so scoped styles never reach it: these are global, and held
+// under `.prose`. The class names inside are Obsidian's own.
+//
+// A feature's styles for what it renders into a note are a stylesheet of its own,
+// src/styles/prose/<feature>.css, imported here on a line of its own. Everything
+// imported here reaches every page with a note on it, so a stylesheet a page should load only when
+// it needs it (a typesetter's, a diagram library's) is loaded by its feature another way.
+
+import "../styles/prose/note-embeds.css"
+
+import "../styles/prose/drawings.css"
+
+import "../styles/prose/mermaid.css"
+
+// 07 note body
+import "../styles/prose/note-body.css"
+
+import "../styles/prose/annotations.css"
+
+import "../styles/prose/annotation-viewer.css"
+
+import "../styles/prose/heading-anchors.css"
+
+import "../styles/prose/external-links.css"
+---
+
+<article class="prose">
+  <slot />
+</article>

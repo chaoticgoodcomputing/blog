@@ -1,1 +1,0 @@
-../../../quartz/plugins/quartz-seo/README.md

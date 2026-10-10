@@ -1,0 +1,59 @@
+---
+// What every page ends with: the site's links, and its copyright line.
+import { footer } from "../site.config.ts"
+
+// The year the site was last built, which a deploy keeps current.
+const year = new Date().getFullYear()
+---
+
+<div class="site-footer">
+  <ul>
+    {
+      footer.links.map((link) => (
+        <li>
+          <a href={link.url}>{link.label}</a>
+        </li>
+      ))
+    }
+  </ul>
+  <p>
+    Copyright{" "}
+    {
+      footer.copyright.map((holder, index) => (
+        <Fragment>
+          {index > 0 && " & "}
+          <a href={holder.url}>{holder.label}</a>
+        </Fragment>
+      ))
+    }{" "}
+    © {year}
+  </p>
+</div>
+
+<style>
+  .site-footer {
+    font-size: 0.875rem;
+    text-align: center;
+    opacity: 0.7;
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  p {
+    margin: 0.5rem 0 0;
+  }
+
+  /* Bold, and with no underline, as on the Quartz site: a row of nothing but links. */
+  a {
+    font-weight: 600;
+    text-decoration: none;
+  }
+</style>

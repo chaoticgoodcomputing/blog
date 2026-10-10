@@ -1,0 +1,55 @@
+---
+// The colour scheme a reader chose, put on the page before it is painted: a script in the head,
+// written into the page as it is (`is:inline`), so it runs while the head is parsed, before the
+// body exists. A bundled script would run after the page had been painted in the system's scheme.
+// It is Astro's own way with a scheme that the reader chooses
+// (https://docs.astro.build/en/tutorial/6-islands/2/), and the switch is SchemeSwitch.astro.
+import { SCHEME_KEY } from "../lib/colour-scheme.ts"
+---
+
+<script is:inline define:vars={{ key: SCHEME_KEY }}>
+  const root = document.documentElement
+  const system = matchMedia("(prefers-color-scheme: dark)")
+
+  const isScheme = (scheme) => scheme === "light" || scheme === "dark"
+
+  // The kept choice. Storage can be refused, in a private window or by the reader's settings: a
+  // first page then follows the system, and a choice made on it lasts as long as the visit's pages.
+  function kept() {
+    try {
+      const chosen = localStorage.getItem(key)
+      if (isScheme(chosen)) return chosen
+    } catch {}
+    return null
+  }
+
+  // The scheme a page is put in: the kept choice, else the one the page before it was in, should
+  // storage have been refused.
+  let carried = null
+  function apply(page) {
+    const chosen = kept() ?? carried
+    if (chosen) page.documentElement.dataset.theme = chosen
+  }
+
+  apply(document)
+
+  // A client-side navigation gives the root the new page's attributes, which have no scheme in
+  // them, and does not run this script again: this is the one place the choice crosses to the next
+  // page (ClientNavigation.astro leaves it here). So the choice is written onto the new page before
+  // it is swapped in, as Astro's guide does it, and what connects with it (the switch) finds it
+  // there (https://docs.astro.build/en/guides/view-transitions/#astrobefore-swap); and is put back
+  // once it is in, should a swap of the page's own have left it out.
+  document.addEventListener("astro:before-swap", (event) => {
+    const shown = document.documentElement.dataset.theme
+    carried = isScheme(shown) ? shown : null
+    apply(event.newDocument)
+  })
+  document.addEventListener("astro:after-swap", () => apply(document))
+
+  // The system's scheme is the page's while the reader has chosen none, and a change to it is a
+  // change of the page's scheme, announced as the switch announces one.
+  system.addEventListener("change", () => {
+    if (root.dataset.theme) return
+    document.dispatchEvent(new CustomEvent("themechange", { detail: { theme: system.matches ? "dark" : "light" } }))
+  })
+</script>

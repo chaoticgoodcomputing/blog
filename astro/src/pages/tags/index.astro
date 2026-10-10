@@ -1,0 +1,12 @@
+---
+// The tags index, at `tags`: the top-level tags, each a tag badge with how many posts are under it.
+// The site shell lists every post after it, as on any tag page.
+import TagPageTags from "../../components/TagPageTags.astro"
+import Page from "../../layouts/Page.astro"
+import { tagPageTitle } from "../../lib/tag-pages.ts"
+import { TAGS_INDEX } from "../../lib/tags.ts"
+---
+
+<Page kind="tag" title={tagPageTitle(undefined).title} url={TAGS_INDEX}>
+  <TagPageTags />
+</Page>

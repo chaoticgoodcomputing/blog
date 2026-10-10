@@ -1,0 +1,199 @@
+.root {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--lightgray);
+  border-radius: 0.5rem;
+  background: var(--light);
+  contain: layout paint;
+  isolation: isolate;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--gray);
+  background: var(--lightgray);
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  color: var(--darkgray);
+  font-size: 0.875rem;
+}
+
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.download {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  background: var(--secondary);
+  color: var(--light);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.download:hover,
+.download:focus-visible {
+  background: var(--tertiary);
+}
+
+.icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.viewport {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  padding: 1rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  background: var(--light);
+}
+
+.status {
+  margin: 0;
+  padding: 2rem;
+  color: var(--gray);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.statusFailed {
+  color: var(--darkgray);
+}
+
+.open {
+  color: var(--secondary);
+  text-decoration: underline;
+}
+
+.count::before {
+  content: "•";
+  margin-right: 0.5rem;
+  color: var(--gray);
+}
+
+.pages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* One drawn page, sized in pixels by the script to fit the column at load. */
+.page {
+  position: relative;
+  flex-shrink: 0;
+  outline: 1px solid var(--lightgray);
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.link {
+  position: absolute;
+  z-index: 2;
+  border-radius: 2px;
+}
+
+.link:hover,
+.link:focus-visible {
+  background: var(--textHighlight);
+}
+
+/* PDF.js's text layer: transparent text laid over the drawing so it can be selected and found.
+   Prefixed by hand from PDF.js 5.4.530's web/text_layer_builder.css (`.textLayer` in pdfjs-dist's
+   web/pdf_viewer.css), keeping only what TextLayer's markup needs. Rule 9's vendor layer can't
+   reach a widget, so the rules live in the block like any other (the library's ADR-0001).
+   The widget's script writes --total-scale-factor on the page for PDF.js to read (the library's
+   ADR-0001 records it as an exception to rule 7), and PDF.js writes --min-font-size on this
+   element, and --font-height, --scale-x and --rotate on each span. The fallbacks stand in for the
+   defaults text_layer_builder.css declares. */
+.textLayer {
+  --pdf-text-scale: calc(var(--total-scale-factor) * var(--min-font-size));
+  --pdf-min-font-size-inv: calc(1 / var(--min-font-size));
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: clip;
+  opacity: 1;
+  line-height: 1;
+  text-align: initial;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  forced-color-adjust: none;
+  transform-origin: 0 0;
+}
+
+.textLayer :is(span, br) {
+  position: absolute;
+  color: transparent;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+}
+
+.textLayer > :not(:global(.markedContent)),
+.textLayer :global(.markedContent) span:not(:global(.markedContent)) {
+  z-index: 1;
+  font-size: calc(var(--pdf-text-scale) * var(--font-height, 0px));
+  transform: rotate(var(--rotate, 0deg)) scaleX(var(--scale-x, 1))
+    scale(var(--pdf-min-font-size-inv));
+}
+
+.textLayer :global(.markedContent) {
+  display: contents;
+}
+
+.textLayer span[role="img"] {
+  cursor: default;
+  user-select: none;
+}
+
+/* Core's page-wide ::selection gives selected text a colour, which would print the text layer
+   over the drawing. */
+.textLayer ::selection {
+  background: var(--textHighlight);
+  color: transparent;
+}
+
+.textLayer br::selection {
+  background: transparent;
+}
+
+@media (max-width: 768px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .info,
+  .download {
+    justify-content: center;
+  }
+}

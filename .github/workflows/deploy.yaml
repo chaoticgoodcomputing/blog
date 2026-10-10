@@ -1,6 +1,7 @@
-# Builds the site with Quartz 5 and publishes it to the `pages` branch, which GitHub Pages serves at
-# blog.chaoticgood.computer (#81). Deliberately minimal for now: no tests, no affected check, no
-# Bluesky, email or IndexNow jobs; every push to main rebuilds and redeploys the whole site.
+# Builds the site with Astro (astro/) and publishes it to the `pages` branch, which GitHub Pages
+# serves at blog.chaoticgood.computer (#81; astro/docs/adr/3001). Deliberately minimal for now: no
+# tests, no affected check, no Bluesky, email or IndexNow jobs; every push to main rebuilds and
+# redeploys the whole site (astro/docs/cutover/deploy.md).
 name: Deploy to GitHub Pages
 
 on:
@@ -22,7 +23,8 @@ jobs:
     name: Build and deploy
     runs-on: ubuntu-latest
     steps:
-      # Full history: page dates fall back to git (created-modified-date's `priority`). The private
+      # Full history: a note's date falls back to git's, the newest commit to touch it
+      # (astro/src/lib/dates.ts), and in a shallow clone that is the tip for every note. The private
       # vault, content/private, is a submodule on another host and is never checked out.
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -38,24 +40,66 @@ jobs:
         with:
           node-version-file: ".nvmrc"
           cache: pnpm
-          cache-dependency-path: |
-            pnpm-lock.yaml
-            quartz/core/pnpm-lock.yaml
+          cache-dependency-path: pnpm-lock.yaml
 
-      # The workspace (our libraries, plugins and site package), and through its postinstall Quartz
-      # Core, a pnpm project of its own (site:postinstall).
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build site
-        run: pnpm nx run site:build
+      # The mirrors of annotated documents are kept between deploys, so a mirror stays the copy first
+      # saved and a host that refuses CI's runners costs nothing once its document is saved
+      # (astro/docs/adr/2801). The newest set is restored; astro:mirrors adds what is missing.
+      - name: Restore the annotated documents' mirrors
+        id: mirrors
+        uses: actions/cache/restore@v6
+        with:
+          path: content/public/assets/annotated-documents
+          key: annotation-mirrors-${{ github.sha }}
+          restore-keys: annotation-mirrors-
 
-      # force_orphan: the branch holds exactly this build. peaceiris adds .nojekyll; the build
-      # carries CNAME and the site's other root files.
+      # The only step that reaches the documents' hosts. One that can't be fetched is reported and
+      # its page built without the viewer; the step still succeeds.
+      - name: Save missing mirrors
+        run: pnpm nx run astro:mirrors
+
+      # Named by what the directory holds, so a new set is saved only when a mirror was added.
+      - name: Keep the mirrors
+        if: hashFiles('content/public/assets/annotated-documents/**') != '' && steps.mirrors.outputs.cache-matched-key != format('annotation-mirrors-{0}', hashFiles('content/public/assets/annotated-documents/**'))
+        uses: actions/cache/save@v6
+        with:
+          path: content/public/assets/annotated-documents
+          key: annotation-mirrors-${{ hashFiles('content/public/assets/annotated-documents/**') }}
+
+      # Share cards are named by the hash of everything they are drawn from, so the newest set is
+      # always safe to start from: a page that changed draws a new card, the rest are read
+      # (astro/docs/adr/1701). Only this directory of Astro's cache is kept: the content layer's
+      # rendered notes don't know a Markdown plugin's code changed.
+      - name: Restore the share cards
+        id: share-cards
+        uses: actions/cache/restore@v6
+        with:
+          path: astro/node_modules/.astro/share-cards
+          key: share-cards-${{ github.sha }}
+          restore-keys: share-cards-
+
+      # Search, the share cards, the mirrors and the attachments are all made by the build itself,
+      # through its integrations and endpoints.
+      - name: Build site
+        run: pnpm nx run astro:build
+
+      - name: Keep the share cards
+        if: hashFiles('astro/node_modules/.astro/share-cards/**') != '' && steps.share-cards.outputs.cache-matched-key != format('share-cards-{0}', hashFiles('astro/node_modules/.astro/share-cards/**'))
+        uses: actions/cache/save@v6
+        with:
+          path: astro/node_modules/.astro/share-cards
+          key: share-cards-${{ hashFiles('astro/node_modules/.astro/share-cards/**') }}
+
+      # force_orphan: the branch holds exactly this build. peaceiris adds .nojekyll, without which
+      # Pages' Jekyll would drop `_astro/`, where the site's scripts and stylesheets are; the build
+      # carries CNAME and the site's other root files, from astro/public.
       - name: Deploy to pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./quartz/core/public
+          publish_dir: ./astro/dist
           publish_branch: pages
           force_orphan: true

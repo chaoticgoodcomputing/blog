@@ -1,6 +1,6 @@
 ---
 title: "APL: Pattern 191; The Shape of Indoor Space"
-date: "1970-01-02T00:00:00.000Z"
+draft: true
 tags:
   - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"

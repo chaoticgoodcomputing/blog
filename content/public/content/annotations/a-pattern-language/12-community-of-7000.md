@@ -1,6 +1,6 @@
 ---
 title: "APL: Pattern 12; Community of 7000"
-date: "1970-01-02T00:00:00.000Z"
+draft: true
 tags:
   - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"

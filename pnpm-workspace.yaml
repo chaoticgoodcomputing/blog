@@ -1,30 +1,13 @@
-# One workspace for everything of ours outside Quartz Core: the libraries, every plugin and site
-# plugin, the repo-only site package (quartz/package.json) and the e2e suite, installed together
-# by one `pnpm install` from one lock (#92). Quartz Core is a pnpm project of its own
-# (quartz/core/pnpm-workspace.yaml), and pnpm stops at the nearest workspace file, so this
-# workspace never reaches it. See quartz/VENDORED.md, "Dependencies".
 packages:
-  - quartz
-  - quartz/libs/*
-  - quartz/plugins/*
-  - quartz/site-plugins/*
-  - quartz/tests
+  - astro
+  - packages/*
 
-# A plugin's peers (Preact, vfile, unified, lightningcss, @quartz-community/*) are Quartz Core's own
-# copies, reached through the gitignored plugins/node_modules and site-plugins/node_modules links.
-# Installing them beside a plugin would shadow Core's: a second Preact on the page.
 autoInstallPeers: false
 
-# Every install runs the root postinstall, which installs Quartz Core (site:postinstall). pnpm's
-# repeat-install shortcut checks only this workspace's lock and manifests, so it would skip that
-# when only Core's side is stale: its node_modules missing, or its lock moved by an upgrade.
 optimisticRepeatInstall: false
 
-# pnpm 11 fails an install on any dependency build script nobody has reviewed. These are the ones
-# the install runs; a new one needs a decision here.
 allowBuilds:
   "@parcel/watcher": true
   esbuild: true
   sharp: true
-  # Nx's postinstall only prepares its daemon; pnpm 10 never ran it here, and Nx works without it.
   nx: false

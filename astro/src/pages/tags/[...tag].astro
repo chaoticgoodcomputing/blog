@@ -1,0 +1,43 @@
+---
+// Every tag's page, at `tags/<tag slug>`: one for each tag a published note carries and each
+// ancestor of one (src/lib/tag-pages.ts). Its body is the tags it links to and the tag's
+// description note, where the vault has one; the site shell lists the posts under the tag after it.
+import type { GetStaticPaths } from "astro"
+import { render } from "astro:content"
+import Prose from "../../components/Prose.astro"
+import TagPageTags from "../../components/TagPageTags.astro"
+import Page from "../../layouts/Page.astro"
+import { entryOf } from "../../lib/entries.ts"
+import { descriptionOf, tagPages, tagPageTitle } from "../../lib/tag-pages.ts"
+import { tagUrl } from "../../lib/tags.ts"
+
+export const getStaticPaths = (() => tagPages().map((tag) => ({ params: { tag }, props: { tag } }))) satisfies GetStaticPaths
+
+const { tag } = Astro.props
+// Asked for here, not carried from the paths, so the dev server shows the note as the vault was
+// last read.
+const note = descriptionOf(tag)
+const description = note ? await render(await entryOf(note)) : undefined
+const Content = description?.Content
+// What its head and its share card say (src/lib/share-card.ts).
+const head = tagPageTitle(tag)
+---
+
+<Page
+  kind="tag"
+  title={head.title}
+  description={head.description}
+  url={tagUrl(tag)}
+  note={note}
+  headings={description?.headings}
+  tag={tag}
+>
+  <TagPageTags tag={tag} />
+  {
+    Content && (
+      <Prose>
+        <Content />
+      </Prose>
+    )
+  }
+</Page>

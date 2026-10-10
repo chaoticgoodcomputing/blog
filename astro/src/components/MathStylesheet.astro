@@ -1,0 +1,20 @@
+---
+// KaTeX's stylesheet and fonts, linked in the head of a page whose note has math, and of no other.
+// A stylesheet imported the usual way would be bundled into every page that uses the layout, so this
+// one is imported as a URL and linked only when it is needed (docs/adr/0501).
+//
+// Whether a note has math is what its render says (src/lib/math.ts): the note's body as rendered, so
+// whatever the pipeline put into it is counted.
+import { render } from "astro:content"
+import { entryOf } from "../lib/entries.ts"
+import { hasMath } from "../lib/math.ts"
+import type { PageProps } from "../lib/page.ts"
+import stylesheet from "../styles/math.css?url"
+
+type Props = Pick<PageProps, "note">
+
+const { note } = Astro.props
+const needed = note !== undefined && hasMath((await render(await entryOf(note))).remarkPluginFrontmatter)
+---
+
+{needed && <link class="math-stylesheet" rel="stylesheet" href={stylesheet} />}

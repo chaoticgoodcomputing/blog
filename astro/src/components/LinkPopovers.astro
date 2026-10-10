@@ -1,0 +1,218 @@
+---
+// Link popovers: while the pointer rests on a link to another page of the site, in a note or in
+// what lists pages around it, a preview of that page's note beside the link, without leaving the
+// page. The preview is the page as the site serves it, fetched, and its rendered body (`.prose`)
+// taken out of it.
+//
+// It is at the end of the body of every page, and is one element, `<link-popovers>`, which listens
+// for the pointer over the whole page while it is there (README.md, "In the browser"). The preview
+// is a popover in the top layer, over the sidebars. It opens without moving focus, and never holds
+// it: it closes when the pointer leaves both it and its link, or on Escape.
+//
+// What the body holds is shown as the page's HTML has it. Its scripts never run, and an element
+// that draws itself, a mermaid diagram, draws itself only where this page has its code: on a page
+// with no diagram of its own, a preview shows a diagram's source, and no mermaid is loaded for it.
+---
+
+<link-popovers class="link-popovers">
+  <div class="link-popover" popover="manual"></div>
+</link-popovers>
+
+<script>
+  /** What a preview shows of a page: its rendered body, and the stylesheets the page links. */
+  interface Preview {
+    body: HTMLElement
+    stylesheets: HTMLLinkElement[]
+  }
+
+  // The pages already fetched, by address, each as its preview, or none.
+  const previews = new Map<string, Promise<Preview | undefined>>()
+
+  // What a body shows besides its text.
+  const MEDIA = "img, svg, picture, video, audio, iframe, canvas, object, embed, math"
+
+  /**
+   * The preview of the page at an address, or none when it is no page with a body, or its body
+   * shows nothing, as an empty note's does.
+   */
+  function previewOf(address: string): Promise<Preview | undefined> {
+    let preview = previews.get(address)
+    if (!preview) {
+      preview = fetch(address)
+        .then(async (response) => {
+          if (!response.ok || !response.headers.get("Content-Type")?.startsWith("text/html")) return undefined
+          const page = new DOMParser().parseFromString(await response.text(), "text/html")
+          const body = page.querySelector<HTMLElement>(".prose")
+          if (!body || (!body.textContent?.trim() && !body.querySelector(MEDIA))) return undefined
+          return { body, stylesheets: [...page.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]')] }
+        })
+        .catch(() => undefined)
+      previews.set(address, preview)
+    }
+    return preview
+  }
+
+  /**
+   * The stylesheets a page links that this one doesn't. A stylesheet only some pages need, as
+   * KaTeX's is (docs/adr/0501), is linked by the page that needs it, and not by this one.
+   */
+  function missing(stylesheets: HTMLLinkElement[]): HTMLLinkElement[] {
+    const linked = new Set(
+      [...document.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]')].map((link) => link.href),
+    )
+    return stylesheets.filter((stylesheet) => !linked.has(stylesheet.href))
+  }
+
+  // Where a link has a preview: a note's body, and what lists or names other pages around it.
+  const PREVIEWED = ".prose, .backlinks, .post-listing, .tag-explorer, .tag-badge"
+
+  /**
+   * The page a link on this page goes to on this site, if a preview can be shown of it: a link in
+   * a note, or in the backlinks, a post listing, the tag explorer or a tag badge (`PREVIEWED`). A
+   * link anywhere else has none: the site's title, a table of contents, a search result, whose
+   * preview would cover the results under it, or a link in a preview. An unresolved link goes
+   * nowhere, and a link to an attachment is to a file that is no page, which is left to the browser
+   * (docs/adr/0901): neither is fetched. Markdown's links to an attachment carry
+   * `data-astro-reload`; a widget's own do not, and are known by their address: a page's has no
+   * extension (docs/adr/0003), and a file's does. So a note named with a dot in its last part,
+   * `v1.2`, would have no preview, and no note of the vault is. Outside the note, a link to the
+   * page the reader is on has none: the reader is there. In the note, a link to a place on it has
+   * one, as a footnote's does, to read it without leaving the place, but a heading's link to itself
+   * has none: it is on the heading it would show.
+   */
+  function previewed(link: HTMLAnchorElement): URL | undefined {
+    if (!link.closest(PREVIEWED) || link.closest(".link-popover")) return undefined
+    if (link.classList.contains("heading-anchor")) return undefined
+    if (link.classList.contains("is-unresolved") || link.hasAttribute("data-astro-reload")) return undefined
+    const url = new URL(link.href)
+    if (url.origin !== location.origin || /\.[^./]+$/.test(url.pathname)) return undefined
+    if (url.pathname === location.pathname && !link.closest(".prose")) return undefined
+    return url
+  }
+
+  // A pointer that can rest on a link without following it, as a mouse can. A finger can't: on a
+  // touch screen the first touch of a link follows it, and there is no preview. A screen that has
+  // both, a laptop's, hovers with its mouse, and a touch on it is still a finger's.
+  const hovering = matchMedia("(hover: hover) and (pointer: fine)")
+
+  // How long the pointer rests on a link before its preview opens, so that one passing over a
+  // paragraph of links on its way elsewhere opens none; and how long a preview stays once the
+  // pointer is off both it and its link, so that one crossing the gap between them keeps it.
+  const OPENING = 300
+  const CLOSING = 150
+
+  // How far the preview is from the link, and from the edges of the window.
+  const GAP = 4
+  const MARGIN = 8
+
+  class LinkPopovers extends HTMLElement {
+    #popover!: HTMLElement
+    /** The link a preview is wanted for, so that one fetched too late for its link is not shown. */
+    #wanted: HTMLAnchorElement | undefined
+    #opening: ReturnType<typeof setTimeout> | undefined
+    #closing: ReturnType<typeof setTimeout> | undefined
+
+    #over = (event: PointerEvent) => {
+      if (!hovering.matches || event.pointerType === "touch") return
+      const target = event.target as Element
+      if (this.#popover.contains(target) || this.#wanted?.contains(target)) {
+        clearTimeout(this.#closing)
+        return
+      }
+      const link = target.closest?.<HTMLAnchorElement>("a[href]")
+      const url = link && previewed(link)
+      if (!link || !url) return
+      clearTimeout(this.#closing)
+      clearTimeout(this.#opening)
+      this.#wanted = link
+      this.#opening = setTimeout(() => void this.#open(link, url), OPENING)
+    }
+
+    // The preview closes when the pointer is on neither the link nor the preview.
+    #out = (event: PointerEvent) => {
+      if (!this.#wanted) return
+      const to = event.relatedTarget as Node | null
+      if (to && (this.#wanted.contains(to) || this.#popover.contains(to))) return
+      clearTimeout(this.#closing)
+      this.#closing = setTimeout(() => this.#close(), CLOSING)
+    }
+
+    #key = (event: KeyboardEvent) => {
+      if (event.key === "Escape") this.#close()
+    }
+
+    connectedCallback() {
+      this.#popover = this.querySelector(".link-popover")!
+      document.addEventListener("pointerover", this.#over)
+      document.addEventListener("pointerout", this.#out)
+      document.addEventListener("keydown", this.#key)
+    }
+
+    disconnectedCallback() {
+      document.removeEventListener("pointerover", this.#over)
+      document.removeEventListener("pointerout", this.#out)
+      document.removeEventListener("keydown", this.#key)
+      this.#close()
+    }
+
+    #close() {
+      clearTimeout(this.#opening)
+      clearTimeout(this.#closing)
+      this.#wanted = undefined
+      if (this.#popover.matches(":popover-open")) this.#popover.hidePopover()
+    }
+
+    async #open(link: HTMLAnchorElement, url: URL) {
+      const fetched = await previewOf(url.pathname)
+      if (!fetched || this.#wanted !== link) return
+      const preview = fetched.body.cloneNode(true) as HTMLElement
+      const id = decodeURIComponent(url.hash.slice(1))
+      const named = id ? preview.querySelector<HTMLElement>(`[id="${CSS.escape(id)}"]`) : null
+      // The page already has the ids it needs: one in a preview would be a second, where a link to
+      // a heading on this page might land.
+      for (const element of preview.querySelectorAll("[id]")) element.removeAttribute("id")
+      // A heading's link to itself would go to a place on this page.
+      for (const anchor of preview.querySelectorAll(".heading-anchor")) anchor.remove()
+
+      this.#popover.replaceChildren(...missing(fetched.stylesheets).map((link) => link.cloneNode()), preview)
+      this.#popover.showPopover()
+      this.#place(link)
+      // The heading or block the link names is at the top of the preview, a little below its edge.
+      this.#popover.scrollTop = named
+        ? named.getBoundingClientRect().top - preview.getBoundingClientRect().top - 12
+        : 0
+    }
+
+    /** Puts the preview under the link, or over it where there is more room there. */
+    #place(link: HTMLAnchorElement) {
+      const around = link.getBoundingClientRect()
+      const { width, height } = this.#popover.getBoundingClientRect()
+      const below = innerHeight - around.bottom
+      const top = below >= height + GAP + MARGIN || below >= around.top ? around.bottom + GAP : around.top - GAP - height
+      const left = Math.max(MARGIN, Math.min(around.left, innerWidth - width - MARGIN))
+      Object.assign(this.#popover.style, { top: `${top}px`, left: `${left}px` })
+    }
+  }
+
+  customElements.define("link-popovers", LinkPopovers)
+</script>
+
+<style>
+  .link-popover {
+    /* Where the script puts it, not where a popover is put by default, in the middle of the window. */
+    inset: auto;
+    margin: 0;
+    box-sizing: border-box;
+    width: min(30rem, 100vw - 1rem);
+    max-height: 20rem;
+    padding: 1rem;
+    overflow: auto;
+    overscroll-behavior: contain;
+    border: 1px solid var(--lightgray);
+    border-radius: 5px;
+    background-color: var(--light);
+    color: var(--darkgray);
+    box-shadow: 0 1rem 3rem var(--shadow);
+    font-size: 0.9rem;
+  }
+</style>

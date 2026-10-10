@@ -1,0 +1,18 @@
+/* A link to another site (src/lib/external-links.ts) ends with an element that tells a screen reader
+   the link opens in a new tab, and draws an icon that says so to the eye. It is a box of its own, not
+   a run of text, so that its words are read apart from the link's: "Astro's documentation (opens in
+   a new tab)". The icon marks the link, which needs no underline, as on the Quartz site. */
+
+.prose a:has(> .new-tab) {
+  text-decoration: none;
+}
+
+.prose .new-tab {
+  display: inline-block;
+  margin-left: 0.15em;
+  font-size: 0.8em;
+}
+
+.prose .new-tab svg {
+  display: block;
+}

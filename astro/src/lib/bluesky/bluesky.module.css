@@ -1,0 +1,366 @@
+/* The card's scale: its spacing, corners, pictures and type, which the compact card turns down. */
+.root {
+  --post-space: 1rem;
+  --post-gap: 0.75rem;
+  --post-radius: 8px;
+  --post-avatar-size: 48px;
+  --post-quote-avatar-size: 32px;
+  --post-thumb-size: 100px;
+  --post-font-size: 0.9375rem;
+  --post-small-font-size: 0.8125rem;
+  display: block;
+  position: relative;
+  box-sizing: border-box;
+  padding: var(--post-space);
+  border: 1px solid var(--lightgray);
+  border-radius: var(--post-radius);
+  background: var(--light);
+  transition: border-color 0.2s ease;
+}
+
+/* A compact card, for a sidebar: v4's sidebar feed drew its posts at this scale (#80). */
+.rootCompact {
+  --post-space: 0.75rem;
+  --post-gap: 0.5rem;
+  --post-radius: 4px;
+  --post-avatar-size: 40px;
+  --post-quote-avatar-size: 24px;
+  --post-thumb-size: 80px;
+  --post-font-size: 0.875rem;
+  --post-small-font-size: 0.75rem;
+}
+
+.root:hover {
+  border-color: var(--secondary);
+}
+
+/* Why a feed item is there: a repost, or a reply. */
+.context {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: var(--post-gap);
+  color: var(--gray);
+  font-size: var(--post-small-font-size);
+}
+
+.contextText {
+  font-weight: 500;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: var(--post-gap);
+  margin-bottom: var(--post-gap);
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: var(--post-avatar-size);
+  height: var(--post-avatar-size);
+  margin: 0;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.names {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.name,
+.handle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.name {
+  color: var(--dark);
+  font-size: var(--post-font-size);
+  font-weight: 600;
+}
+
+.handle {
+  color: var(--gray);
+  font-size: var(--post-small-font-size);
+}
+
+.content {
+  margin-bottom: var(--post-space);
+}
+
+/* A post's text is plain text: its line breaks are drawn as written. */
+.text {
+  margin: 0;
+  color: var(--darkgray);
+  font-size: var(--post-font-size);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.images {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.5rem;
+  margin-top: var(--post-space);
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  border: 1px solid var(--lightgray);
+  border-radius: var(--post-radius);
+}
+
+/* A link card. */
+.card {
+  display: flex;
+  gap: var(--post-space);
+  margin-top: var(--post-space);
+  padding: var(--post-space);
+  border: 1px solid var(--lightgray);
+  border-radius: var(--post-radius);
+  background: var(--highlight);
+  color: inherit;
+  font-size: var(--post-font-size);
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--secondary);
+  background: var(--light);
+}
+
+.cardThumb {
+  flex-shrink: 0;
+  width: var(--post-thumb-size);
+  height: var(--post-thumb-size);
+  margin: 0;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.cardBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.cardTitle,
+.cardDescription {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+}
+
+.cardTitle {
+  color: var(--dark);
+  font-size: inherit;
+  font-weight: 600;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.cardDescription {
+  color: var(--gray);
+  font-size: var(--post-small-font-size);
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.cardCompact {
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  background: var(--light);
+  font-size: 0.8125rem;
+}
+
+.cardCompact:hover {
+  background: var(--highlight);
+}
+
+.cardThumbCompact {
+  width: 70px;
+  height: 70px;
+  border-radius: 4px;
+}
+
+/* A quoted post. */
+.quote {
+  margin-top: var(--post-space);
+  padding: var(--post-space);
+  border: 1px solid var(--lightgray);
+  border-left: 4px solid var(--secondary);
+  border-radius: var(--post-radius);
+  background: var(--highlight);
+}
+
+.quoteAuthor {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-width: 0;
+  margin-bottom: 0.75rem;
+}
+
+.quoteAvatar {
+  flex-shrink: 0;
+  align-self: center;
+  width: var(--post-quote-avatar-size);
+  height: var(--post-quote-avatar-size);
+  margin: 0;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.quoteName,
+.quoteHandle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quoteName {
+  color: var(--dark);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.quoteHandle {
+  color: var(--gray);
+  font-size: 0.8125rem;
+}
+
+.quoteText {
+  margin: 0;
+  color: var(--darkgray);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: var(--post-gap);
+  font-size: var(--post-small-font-size);
+}
+
+.time {
+  color: var(--gray);
+}
+
+.metrics {
+  display: flex;
+  gap: 1rem;
+}
+
+.metric {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: var(--gray);
+}
+
+/* v4's emoji before each count. Decorative (the empty alternative text), since the count's name
+   says what it counts; the first declaration is for a browser without alternative text. */
+.metricReplies::before {
+  content: "💬";
+  content: "💬" / "";
+}
+
+.metricReposts::before {
+  content: "🔁";
+  content: "🔁" / "";
+}
+
+.metricLikes::before {
+  content: "❤️";
+  content: "❤️" / "";
+}
+
+/* What a count counts, for a reader who can't see its emoji. */
+.metricName {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The icon is drawn in currentColor, so it takes its line's colour. */
+.context svg {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  color: var(--secondary);
+  font-size: var(--post-small-font-size);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.link:hover,
+.link:focus-visible {
+  color: var(--tertiary);
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  /* Only the card's own padding and its avatar shrink: the spacing inside keeps the scale. */
+  .root {
+    --post-avatar-size: 40px;
+    padding: 0.875rem;
+  }
+
+  /* The compact card is already smaller than this, and keeps its own scale. */
+  .rootCompact {
+    padding: var(--post-space);
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .card {
+    flex-direction: column;
+  }
+
+  .cardThumb {
+    width: 100%;
+    height: 200px;
+  }
+
+  /* A quoted post's link card stays a row. */
+  .cardCompact {
+    flex-direction: row;
+  }
+
+  .cardThumbCompact {
+    width: 70px;
+    height: 70px;
+  }
+}

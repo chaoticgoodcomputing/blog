@@ -1,0 +1,18 @@
+---
+// The home page: the vault's index note.
+import { render } from "astro:content"
+import Prose from "../components/Prose.astro"
+import Page from "../layouts/Page.astro"
+import { entryOf } from "../lib/entries.ts"
+import { getNote } from "../lib/notes.ts"
+
+const note = getNote("index")
+if (!note) throw new Error("The vault has no index note (index.md at its root), so the site has no home page.")
+const { Content, headings } = await render(await entryOf(note))
+---
+
+<Page kind="home" title={note.title} description={note.description} url={note.url} note={note} headings={headings}>
+  <Prose>
+    <Content />
+  </Prose>
+</Page>

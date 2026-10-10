@@ -1,0 +1,43 @@
+---
+// The tags a tag page links to, as tag badges, each with how many posts are under it: with
+// `tagList.showParents` the tags above it, then its subtags; on the tags index, the top-level tags
+// (src/lib/tag-pages.ts).
+import { tagPageTags } from "../lib/tag-pages.ts"
+import { tagList } from "../site.config.ts"
+import TagBadge from "./TagBadge.astro"
+
+interface Props {
+  /** The page's tag. The tags index has none. */
+  tag?: string | undefined
+}
+
+const tags = tagPageTags(Astro.props.tag, tagList)
+---
+
+{
+  tags.length > 0 && (
+    <ul class="tag-page-tags">
+      {tags.map(({ tag, count }) => (
+        <li>
+          <TagBadge tag={tag} count={count} />
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0 0 1.5rem;
+    padding: 0;
+    list-style: none;
+    font-size: 0.875rem;
+  }
+
+  li {
+    max-width: 100%;
+  }
+</style>

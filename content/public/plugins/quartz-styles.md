@@ -1,1 +1,0 @@
-../../../quartz/plugins/quartz-styles/README.md

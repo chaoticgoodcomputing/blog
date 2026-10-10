@@ -1,0 +1,109 @@
+---
+// The subscribe box: the newsletter's form, with its heading and a line of text. Under a note it
+// asks for more; in the sidebar it is headed as a sidebar section is. The form is Buttondown's
+// embed form, a plain post to the list, so it works with no script: the reader lands on
+// Buttondown's page, which asks them to confirm.
+import { subscribe } from "../site.config.ts"
+
+interface Props {
+  /** Which box: the one under a note, or the one in the sidebar. Each has its own wording. */
+  box: "underNote" | "sidebar"
+}
+
+const { box } = Astro.props
+const { title, description } = subscribe[box]
+const action = `https://buttondown.com/api/emails/embed-subscribe/${encodeURIComponent(subscribe.buttondown)}`
+---
+
+<section class="subscribe-box" data-box={box}>
+  <h2>{title}</h2>
+  <div class="panel">
+    <p>{description}</p>
+    <form action={action} method="post">
+      {/* The placeholder is an example, not a name: a screen reader reads the label. */}
+      <label>
+        <span class="label">Email address</span>
+        <input type="email" name="email" placeholder="you@youmail.com" autocomplete="email" required />
+      </label>
+      <button type="submit">Subscribe</button>
+    </form>
+  </div>
+</section>
+
+<style>
+  /* Under a note the heading is a step under the body's second level. In the sidebar the shell
+     sizes it, as it does every section's. */
+  .subscribe-box[data-box="underNote"] h2 {
+    margin: 0 0 0.75rem;
+    font-size: 1.12rem;
+  }
+
+  .panel {
+    padding: 1rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 8px;
+    background: var(--light);
+  }
+
+  p {
+    margin: 0 0 0.5rem;
+    /* A sentence to read, so the palette's dark grey: --gray is too faint for it on the box. */
+    color: var(--darkgray);
+    font-size: 0.8rem;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  /* The label is for a screen reader, and is not drawn: the box's heading and line say what the
+     field is for. */
+  .label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  input,
+  button {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 4px;
+    font: inherit;
+    font-size: 1rem;
+  }
+
+  input {
+    border: 1px solid var(--lightgray);
+    background: var(--light);
+    color: var(--dark);
+  }
+
+  input:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 1px;
+  }
+
+  button {
+    border: none;
+    background: var(--secondary);
+    color: var(--light);
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  button:hover {
+    opacity: 0.9;
+  }
+
+  button:focus-visible {
+    outline: 2px solid var(--dark);
+    outline-offset: 2px;
+  }
+</style>

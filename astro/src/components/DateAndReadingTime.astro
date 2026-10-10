@@ -1,0 +1,30 @@
+---
+// A note's date and how long it takes to read, under its title: "Mar 14, 2026, 3 min read". A note
+// with no body has its date alone.
+import { readingMinutes } from "../lib/reading-time.ts"
+import type { NoteFacts } from "../lib/notes.ts"
+import FormattedDate from "./FormattedDate.astro"
+
+interface Props {
+  /** The note the page shows. A page that shows none has neither. */
+  note: NoteFacts | undefined
+}
+
+const { note } = Astro.props
+const minutes = note ? readingMinutes(note) : 0
+---
+
+{
+  note && (
+    <p class="date-and-reading-time">
+      <FormattedDate date={note.date} />{minutes > 0 && <span>, {minutes} min read</span>}
+    </p>
+  )
+}
+
+<style>
+  p {
+    margin: 0;
+    color: var(--gray);
+  }
+</style>

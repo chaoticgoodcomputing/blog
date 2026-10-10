@@ -1,5 +1,5 @@
 ---
-title: Agronomic Software Development
+title: Software Gardening
 date: 2026-09-30
 tags:
   - engineering/ai
@@ -12,9 +12,6 @@ description: Garden-inspired development as a non-sinister, people-centric way t
 import { BlueskyPost } from '@chaoticgoodcomputing/widgets/bluesky-post'
 
 ![[assets/doodles/panic-07-vines]]
-
-> [!IMPORTANT]
-> **Agronomy** is the subfield of agriculture relating to the technology and practices that enable modern industrial farming
 
 The start of every year is a magical time. So many possibilities, so much excitement about what the new year might hold. At my day job, my team was coming off the success of rolling out a large product release in 2024, so our slates really were clean heading into 2025. That's when a question came my way: a question that started with an ominous phrase:
 
@@ -166,7 +163,7 @@ Lastly, the project manager is likely the one with the most experience in the pr
 
 We're quickly running out of bloodlust solutions. The last tier of people to lay off would be the executives, but that seems highly unlikely. We may need to reach for a more peaceful solution. Something old, all-natural, and proven at scale in the modern economy.
 
-## Agronomic Software Development
+## Software Gardening
 
 After spending a lot of time trying to find better ways of coexisting with agents, the approach I've bumbled my way towards for the past two years has been something akin to gardening. It came up in the [[/content/notes/hostage-negotiations|Hostage Negotiations]] post:
 
@@ -174,7 +171,7 @@ After spending a lot of time trying to find better ways of coexisting with agent
 > 
 > What we are responsible for, though, is making sure that this new addition to our lives is handled with care. It's on us to build systems for handling its use — there's a long history of intentionally, and irresponsibly, introducing [invasive species](https://www.invasivespeciesinfo.gov/subject/pathways) into our environments to solve one problem only to create a hundred more in its place. This is the distinction I make between engineering and the act of (\**vomit*\*) *vibecoding*.
 
-I'm shocked that **agronomics** isn't a more common word. A massive amount of humanity's advances in technology, process, and economics comes from farming, and in the modern era, farming and food processing is done at an unimaginable scale. There's millennia of case studies to work from: how can we take something unpredictable, and harness its benefits[^1]?
+A massive amount of humanity's advances in technology, process, and economics comes from farming and agriculture. In the modern era, farming and food processing is done at an unimaginable scale. There's millennia of case studies to work from: how can we take something unpredictable, and harness its benefits[^1]?
 
 Picture, in your mind, a **trellis**: the wooden scaffolding on which plants can grow vertically.
 
@@ -184,25 +181,23 @@ Across the industry, we all build our apps on stable, thoroughly-vetted librarie
 
 ![[assets/doodles/panic-06-scaffolding]]
 
-A program, in the end, can only be reliable as the weakest link on the stack. It doesn't matter if you write a Windows program that will never crash, because Windows itself may crash eventually. The most beautiful, stable frontend in the world is still limited if the framework it's built on is flaky, or if the API it's hitting goes down.
+A program, in the end, can only be reliable as the weakest link on the stack. It doesn't matter if you write a Windows program that will never crash, because Windows itself may crash eventually. The most beautiful, stable frontend in the world is still limited if the framework it's built on is flaky, or if the API it's hitting goes down. In this model, the stack acts as the trellis: your software can only be as stable as these critical backing pieces.
 
-This layer-based design is usually referred to as [onion, or n-tier](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)), architecture. It cleanly separates the layers such that each one is concerned with a different portion of the development. The client(s) are responsible for surfacing information and capabilities to the user, acting as the front face of the application. The API is responsible for clearly establishing the communications between the clients and the servers. Every piece of the application has a clear concern, and can be reinforced, or worked on, individually.
-
-When working in this type of architecture, then, we refer to features as **vertical slices.** To the user, they see that they have to log into the client. However, looking at it across the layers, that login will need to start on the client, hit the API, then the data and logic will need to confirm the request to log in and, if successful get the user their data.
+Your software, though, isn't just your stack. It's also how you develop a feature *through* your stack. Thinking about software as gardening, then, this is the most organic piece: it's the part that differentiates what you're creating against what everybody else using the same stack is creating as well.
 
 ![[assets/doodles/panic-07-vines]]
 
-Here, we illustrate that vertical slices are not always clean shots through the layers. Perhaps they start from similar places, or they intersect along the way. This is one misconception I had early on when learning about the philosophy: I assumed that layers and slices were like a 2D matrix, where each row is a layer and each column is a feature. The real world, and the programs most useful *in* the real world, are simply more complicated than that.
+Here, we illustrate that these features are not always clean shots through the layers. Perhaps they start from similar places, or they intersect along the way. This is one misconception I had early on when learning about [vertical slice architecture](https://www.jimmybogard.com/vertical-slice-architecture/) (VSA): I assumed that layers and slices were a pure a 2D matrix, where two columns (features) could never touch. In the the real world, and in the programs most useful *in* the real world, are simply more complicated than that.
 
-This is where the scaffolding and the features intersect: they both inform each others design. The scaffolding must enforce certain patterns for a feature to properly fit on it and latch on, but should be a good fit for the features being created. The features should do their best to fit the needs of the application, but must utilize the scaffolding to avoid becoming a spaghetti, tangled mess rotting on the ground.
+This is where the scaffolding and the features intersect: they both inform each others' design. The scaffolding must enforce certain patterns for a feature to properly fit on it and latch on, but should be a good fit for the features being created. The features should do their best to fit the needs of the application, but must utilize the scaffolding to avoid becoming a spaghetti, tangled mess rotting on the ground.
 
-### Agronomic Teams
+### Garden Teams
 
 ![[assets/doodles/panic-08-gardening-teams]]
 
-The agronomic metaphor fits well: as software development teams, we cannot get the benefits of LLMs without knowing how we'll manage their drawbacks. The biggest drawback is that their quality is hard to guarantee, and that trying to micromanage them into doing exactly what we would do means spending more time watching over their shoulder and dictating to them than we'd otherwise spend doing the task ourselves. If we can learn to manage unpredictability, rather than fight tooth and nail to force conformity, then we can start to get actual benefits to both quality *and* velocity.
+The agricultural metaphor fits well: as software development teams, we cannot get the benefits of LLMs without knowing how we'll manage their drawbacks. The biggest drawback is that their quality is hard to guarantee, and that trying to micromanage them into doing exactly what we would do means spending more time watching over their shoulder and dictating to them than we'd otherwise spend doing the task ourselves. If we can learn to manage unpredictability, rather than fight tooth and nail to force conformity, then we can start to get actual benefits to both quality *and* velocity.
 
-In agronomic development, I'd define two primary roles:
+In software gardening, I'd define two primary roles:
 
 1. **Stack Engineering:** Reinforcing the layers of the stack so that each is stable in its own right, flexible to the demands of the requested features, and procedurally well-documented.
 2. **Feature Engineering:** High-level design and specification of the required features, framed in terms of how they must pass through the stack in order to accomplish their goals.
@@ -246,7 +241,7 @@ The major shift in this framework is that human beings aren't as involved in the
 
 In my own experience adopting this approach, you get more than just a high-quality product out of the other side. Out of this, your team can generate strong frameworks on which to build future work *and* a well-defined *system* for creating other products.
 
-The system isn't without its drawbacks, though. Because its byproducts are stable framework libraries and a system for developing more products, it doesn't work well in isolation. If your team is responsible for just a single product or service, I wouldn't recommend this; the shift in mindset and responsibilities likely isn't worth the benefit you'd get out of the byproducts. However, if your team is responsible for many products, where libraries can be re-used elsewhere and the agronomic loop can be repurposed for other initiatives, I highly recommend giving this approach a try.
+The system isn't without its drawbacks, though. Because its byproducts are stable framework libraries and a system for developing more products, it doesn't work well in isolation. If your team is responsible for just a single product or service, I wouldn't recommend this; the shift in mindset and responsibilities likely isn't worth the benefit you'd get out of the byproducts. However, if your team is responsible for many products, where libraries can be re-used elsewhere and the garden loop can be repurposed for other initiatives, I highly recommend giving this approach a try.
 
 If you want to give this a try, I'd recommend seeding the process on a backlog project; something that your team has wanted, or needed, to do for awhile but never had the prior time, resources, or direct working knowledge to pull. Once you start to develop a feedback loop and stack libraries, those are perfect candidates to cross-pollinate the process upwards to other products you're working on.
 

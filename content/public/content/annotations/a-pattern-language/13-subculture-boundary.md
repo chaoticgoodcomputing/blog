@@ -1,6 +1,6 @@
 ---
 title: "APL: Pattern 13; Subculture Boundary"
-date: "1970-01-02T00:00:00.000Z"
+draft: true
 tags:
   - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"

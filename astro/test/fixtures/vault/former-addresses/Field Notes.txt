@@ -1,0 +1,1 @@
+An attachment whose name has capitals and a space: the Quartz site served it slugged, in lower case.

@@ -1,0 +1,56 @@
+---
+// A tag badge: a tag bubble, then `#` and the tag name, as one link to the tag's page. How a tag
+// appears among text.
+import { tagName, tagUrl } from "../lib/tags.ts"
+import TagBubble from "./TagBubble.astro"
+
+interface Props {
+  /** A tag slug. */
+  tag: string
+  /** How many posts are under the tag, where the badge says so. */
+  count?: number | undefined
+}
+
+const { tag, count } = Astro.props
+---
+
+<a class="tag-badge" href={tagUrl(tag)} title={tag}>
+  <TagBubble tag={tag} />
+  {/* `#` and the name as one string, so that they never break apart. */}
+  <span class="name">{`#${tagName(tag)}`}</span>
+  {count !== undefined && <span class="count">({count})</span>}
+</a>
+
+<style>
+  .tag-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 0.3rem 0.6rem 0.3rem 0.3rem;
+    border-radius: 18px 8px 8px 18px;
+    background-color: var(--lightgray);
+    color: inherit;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .tag-badge:hover {
+    background-color: var(--gray);
+  }
+
+  .name {
+    min-width: 0;
+    font-size: 0.95em;
+    font-weight: 500;
+    /* A tag name with nowhere to break breaks rather than widen the page. */
+    overflow-wrap: anywhere;
+  }
+
+  .count {
+    margin-left: -0.25rem;
+    font-size: 0.85em;
+    color: var(--darkgray);
+  }
+</style>

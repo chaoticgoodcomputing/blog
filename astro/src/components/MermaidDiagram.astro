@@ -1,0 +1,118 @@
+---
+// What draws a mermaid block: the `<mermaid-diagram>` element the Markdown pipeline puts each one
+// in (src/lib/mermaid.ts). The element is a note's HTML, not this component's, so it is styled by
+// src/styles/prose/mermaid.css, and this component is only its script.
+//
+// It is on a page whose note has a diagram, or embeds a note that has one (`hasDiagrams`), so a page
+// with none loads nothing of it. Mermaid itself, the bulk, is loaded once a diagram reaches the page
+// (docs/adr/0401).
+---
+
+<script>
+  import type { MermaidConfig } from "mermaid"
+
+  // The palette, as mermaid's base theme names what it paints. Mermaid works its other colours out
+  // from these, so each has to be a colour it can read, which a palette token as written is not:
+  // it is a `light-dark()` pair. Each is read as the browser resolves it for the element.
+  const palette = {
+    background: "var(--light)",
+    primaryColor: "var(--light)",
+    primaryTextColor: "var(--darkgray)",
+    primaryBorderColor: "var(--tertiary)",
+    lineColor: "var(--darkgray)",
+    secondaryColor: "var(--lightgray)",
+    tertiaryColor: "var(--lightgray)",
+    clusterBkg: "var(--highlight)",
+    clusterBorder: "var(--gray)",
+    edgeLabelBackground: "var(--light)",
+  }
+
+  // Which colour scheme the element is in: this resolves to white only in the dark one.
+  const dark = "light-dark(rgb(0, 0, 0), rgb(255, 255, 255))"
+
+  // Mermaid names each drawing's `<svg>` by an id the page gives it.
+  let drawings = 0
+
+  // The smallest a drawing is shown, as a share of its own size: its 16px labels no smaller than 12px.
+  const SMALLEST = 0.75
+
+  class MermaidDiagram extends HTMLElement {
+    /** The block's source, kept from before anything is drawn over it. */
+    #source = ""
+    /** Counts the drawings begun, so one that a later one has overtaken is dropped. */
+    #begun = 0
+    #redraw = () => void this.#draw()
+
+    connectedCallback() {
+      this.#source ||= this.querySelector("pre")?.textContent ?? ""
+      // A diagram is painted in the colours of one colour scheme, so it is drawn again when the
+      // page's changes: `themechange`, fired when the reader switches, or when their system changes
+      // while they have chosen none (SchemeBeforePaint.astro).
+      document.addEventListener("themechange", this.#redraw)
+      void this.#draw()
+    }
+
+    disconnectedCallback() {
+      document.removeEventListener("themechange", this.#redraw)
+    }
+
+    /** A CSS colour as the browser resolves it here: `rgb(…)`, whichever scheme the reader is in. */
+    #resolve(colour: string): string {
+      const probe = this.appendChild(document.createElement("span"))
+      probe.style.color = colour
+      const resolved = getComputedStyle(probe).color
+      probe.remove()
+      return resolved
+    }
+
+    #config(): MermaidConfig {
+      const themeVariables = Object.fromEntries(
+        Object.entries(palette).map(([name, colour]) => [name, this.#resolve(colour)]),
+      )
+      return {
+        startOnLoad: false,
+        // A block that isn't mermaid throws, and what the reader is shown is this element's to say.
+        suppressErrorRendering: true,
+        // The one theme whose colours can be given.
+        theme: "base",
+        // Mermaid's base theme casts a shadow under each shape, which the site's diagrams go without.
+        themeVariables: { ...themeVariables, darkMode: this.#resolve(dark) === "rgb(255, 255, 255)", dropShadow: "none" },
+        fontFamily: getComputedStyle(this).fontFamily,
+      }
+    }
+
+    async #draw() {
+      const drawing = ++this.#begun
+      try {
+        const { default: mermaid } = await import("mermaid")
+        mermaid.initialize(this.#config())
+        const { svg } = await mermaid.render(`mermaid-diagram-${++drawings}`, this.#source)
+        if (drawing !== this.#begun) return
+        const shown = this.#show("mermaid-diagram-drawing")
+        shown.innerHTML = svg
+        // Mermaid writes the drawing's own width as its `max-width`, and lets it shrink to any
+        // width. It shrinks to three quarters of it at most, and past that scrolls in its box.
+        const drawn = shown.querySelector<SVGSVGElement>(":scope > svg")
+        const natural = Number.parseFloat(drawn?.style.maxWidth ?? "")
+        if (drawn && natural > 0) drawn.style.minWidth = `${natural * SMALLEST}px`
+        this.dataset.state = "drawn"
+      } catch (error) {
+        if (drawing !== this.#begun) return
+        // The source stays where it is, under a line that says why the reader is looking at it.
+        this.#show("mermaid-diagram-error").textContent = "This diagram could not be drawn. Its source is shown instead."
+        this.dataset.state = "failed"
+        console.error(error)
+      }
+    }
+
+    /** The one element after the source, which holds the drawing or says there is none. */
+    #show(className: string): HTMLElement {
+      const shown = this.querySelector<HTMLElement>(":scope > div") ?? this.appendChild(document.createElement("div"))
+      shown.className = className
+      shown.replaceChildren()
+      return shown
+    }
+  }
+
+  customElements.define("mermaid-diagram", MermaidDiagram)
+</script>

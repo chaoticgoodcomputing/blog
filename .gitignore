@@ -30,3 +30,10 @@ quartz/.site-scratch-*/
 
 .op
 .playwright-mcp
+
+# The Astro prototype: generated types and the content cache
+astro/.astro
+# its end-to-end suite's own builds and their caches (astro/docs/adr/0007), and Playwright's output
+astro/.e2e
+astro/test-results
+astro/playwright-report

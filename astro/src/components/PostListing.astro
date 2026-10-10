@@ -1,0 +1,130 @@
+---
+// The post listing: posts, newest first, each with its title, its date, its description and its
+// tags as tag badges. Every post on the home page and the 404 page; on a tag page, the posts under
+// its tag (src/lib/post-listing.ts).
+//
+// A long listing shows its first few posts, and the rest in a `<details>` the reader opens: the
+// browser's own disclosure, which needs no script (docs/adr/1301).
+import { listedPosts, postCounts } from "../lib/post-listing.ts"
+import { postListing } from "../site.config.ts"
+import FormattedDate from "./FormattedDate.astro"
+import TagBadge from "./TagBadge.astro"
+
+interface Props {
+  /** On a tag page, the tag whose posts are listed. */
+  tag?: string | undefined
+}
+
+const posts = listedPosts(Astro.props.tag)
+const lists = [
+  { posts: posts.slice(0, postListing.collapsedItemCount), collapsed: false },
+  { posts: posts.slice(postListing.collapsedItemCount), collapsed: true },
+].filter((list) => list.posts.length > 0)
+const counts = postListing.showTagCounts ? postCounts() : undefined
+---
+
+<section class="post-listing">
+  <h2>{postListing.title}</h2>
+  {posts.length === 0 && <p class="empty">{postListing.emptyText}</p>}
+  {
+    lists.map(({ posts, collapsed }) => {
+      const list = (
+        <ul class="posts">
+          {posts.map((note) => (
+            <li class="post">
+              <h3>
+                <a href={note.url}>{note.title}</a>
+              </h3>
+              <p class="meta">
+                <FormattedDate date={note.date} />
+                {note.description && <span class="description">{` — ${note.description}`}</span>}
+              </p>
+              {note.tags.length > 0 && (
+                <ul class="tags">
+                  {note.tags.map((tag) => (
+                    <li>
+                      <TagBadge tag={tag} count={counts?.get(tag)} />
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+      )
+      return collapsed ? (
+        <details>
+          <summary>{`Show ${posts.length} more ${posts.length === 1 ? "post" : "posts"}`}</summary>
+          {list}
+        </details>
+      ) : (
+        list
+      )
+    })
+  }
+</section>
+
+<style>
+  .post-listing {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  h2 {
+    margin: 0;
+  }
+
+  .empty {
+    margin: 0;
+    color: var(--darkgray);
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .posts {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  details .posts {
+    margin-top: 1.5rem;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+
+  h3 a {
+    text-decoration: none;
+  }
+
+  .meta {
+    margin: 0.25rem 0 0;
+    color: var(--darkgray);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .tags li {
+    max-width: 100%;
+  }
+
+  summary {
+    cursor: pointer;
+    color: var(--secondary);
+    font-weight: 600;
+  }
+</style>

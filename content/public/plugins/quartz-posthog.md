@@ -1,1 +1,0 @@
-../../../quartz/plugins/quartz-posthog/README.md

@@ -1,0 +1,303 @@
+---
+// The search box: a button in the left sidebar's toolbar, and the dialog it opens, which searches
+// the site's full text and lists what it finds. Ctrl+K, or ⌘K on a Mac, opens it from anywhere on
+// the page.
+//
+// The index is Pagefind's, built with the site (src/integrations/search.ts, docs/adr/1901). Nothing
+// of it is loaded until a reader types into the box: Pagefind's script then loads, and fetches only
+// the parts of the index the words typed are in.
+import { Icon } from "astro-icon/components"
+---
+
+<site-search class="search">
+  <button type="button" class="search-button" aria-haspopup="dialog" aria-keyshortcuts="Control+K Meta+K">
+    <Icon name="mdi:magnify" is:inline width="16" height="16" fill="currentColor" aria-hidden="true" />
+    <span>Search</span>
+    <kbd aria-hidden="true">Ctrl K</kbd>
+  </button>
+
+  <dialog aria-label="Search">
+    <input type="search" placeholder="Search for something" aria-label="Search the site" autocomplete="off" />
+    <p class="search-status" role="status"></p>
+    <ol class="search-results"></ol>
+  </dialog>
+</site-search>
+
+<script>
+  import { SEARCH_INDEX } from "../lib/search-index.ts"
+
+  /** What Pagefind's script exports, as far as the search box uses it. */
+  interface Pagefind {
+    debouncedSearch(query: string): Promise<{ results: { data(): Promise<Found> }[] } | null>
+  }
+  interface Found {
+    url: string
+    excerpt: string
+    meta: { title?: string }
+  }
+
+  // Pagefind's script, where the integration writes the index. A variable, so that Vite leaves the
+  // import as it is: the file is the build's, and there is nothing at this address for Vite to bundle.
+  const PAGEFIND = `/${SEARCH_INDEX}/pagefind.js`
+
+  /** How many results are shown. */
+  const SHOWN = 8
+
+  // Pagefind's script, loaded once for the page by whichever search box asks first.
+  let loading: Promise<Pagefind> | undefined
+  const loadPagefind = () => (loading ??= import(/* @vite-ignore */ PAGEFIND) as Promise<Pagefind>)
+
+  class SiteSearch extends HTMLElement {
+    #dialog!: HTMLDialogElement
+    #input!: HTMLInputElement
+    #status!: HTMLElement
+    #results!: HTMLOListElement
+
+    #open = () => {
+      if (this.#dialog.open) return
+      this.#dialog.showModal()
+      this.#input.select()
+    }
+
+    #onKey = (event: KeyboardEvent) => {
+      if (event.key.toLowerCase() !== "k" || !(event.ctrlKey || event.metaKey) || event.altKey) return
+      event.preventDefault()
+      if (this.#dialog.open) this.#dialog.close()
+      else this.#open()
+    }
+
+    // A click outside the dialog's box lands on the dialog itself, behind its backdrop.
+    #onDialogClick = (event: MouseEvent) => {
+      if (event.target === this.#dialog) this.#dialog.close()
+    }
+
+    #onInput = () => void this.#search(this.#input.value.trim())
+
+    /** The search the results shown are for. */
+    #shownFor = ""
+    /** A search Enter was pressed for before its results arrived, whose first result then opens. */
+    #enteredFor: string | undefined
+
+    // Enter goes to the first result, or, while the search is on its way, to its first result once
+    // it arrives; every result is a link, reached with Tab. Escape closes the dialog at once, where
+    // a search field would first clear itself, and keeps the search.
+    #onInputKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault()
+        this.#dialog.close()
+        return
+      }
+      if (event.key !== "Enter") return
+      event.preventDefault()
+      const query = this.#input.value.trim()
+      if (query === this.#shownFor) this.#openFirst()
+      else this.#enteredFor = query
+    }
+
+    #openFirst() {
+      this.#enteredFor = undefined
+      this.#results.querySelector("a")?.click()
+    }
+
+    // Under client-side navigation the page stays, and the dialog would stay open over the next one.
+    #onResultClick = (event: MouseEvent) => {
+      if ((event.target as Element).closest("a")) this.#dialog.close()
+    }
+
+    connectedCallback() {
+      this.#dialog = this.querySelector("dialog")!
+      this.#input = this.#dialog.querySelector("input")!
+      this.#status = this.#dialog.querySelector(".search-status")!
+      this.#results = this.#dialog.querySelector(".search-results")!
+
+      // The shortcut a Mac writes with ⌘.
+      if (/Mac|iPhone|iPad/.test(navigator.userAgent)) this.querySelector("kbd")!.textContent = "⌘ K"
+
+      this.querySelector("button")!.addEventListener("click", this.#open)
+      this.#dialog.addEventListener("click", this.#onDialogClick)
+      this.#input.addEventListener("input", this.#onInput)
+      this.#input.addEventListener("keydown", this.#onInputKey)
+      this.#results.addEventListener("click", this.#onResultClick)
+      document.addEventListener("keydown", this.#onKey)
+    }
+
+    disconnectedCallback() {
+      document.removeEventListener("keydown", this.#onKey)
+    }
+
+    async #search(query: string) {
+      if (!query) {
+        this.#show(query, [], "")
+        return
+      }
+      let pagefind: Pagefind
+      try {
+        pagefind = await loadPagefind()
+      } catch (error) {
+        // The dev server has an index only once the site has been built.
+        loading = undefined
+        this.#show(query, [], "Search is not available.")
+        console.error(error)
+        return
+      }
+      // Null when the reader has typed more since: the later search shows its own results.
+      const search = await pagefind.debouncedSearch(query)
+      if (!search) return
+      const found = await Promise.all(search.results.slice(0, SHOWN).map((result) => result.data()))
+      if (query !== this.#input.value.trim()) return
+      this.#show(query, found, found.length ? "" : `Nothing found for “${query}”.`)
+    }
+
+    #show(query: string, found: Found[], status: string) {
+      this.#shownFor = query
+      this.#status.textContent = status
+      this.#results.replaceChildren(
+        ...found.map((page) => {
+          const title = document.createElement("span")
+          title.className = "search-result-title"
+          title.textContent = page.meta.title ?? page.url
+          // Pagefind's excerpt is the page's text, escaped, with each matching word in a `<mark>`.
+          const excerpt = document.createElement("span")
+          excerpt.className = "search-result-excerpt"
+          excerpt.innerHTML = page.excerpt
+          const link = document.createElement("a")
+          link.href = page.url
+          link.append(title, excerpt)
+          const item = document.createElement("li")
+          item.append(link)
+          return item
+        }),
+      )
+      if (this.#enteredFor === query) this.#openFirst()
+    }
+  }
+
+  customElements.define("site-search", SiteSearch)
+</script>
+
+<style>
+  .search {
+    /* The search button takes the toolbar's room beside the scheme switch. */
+    flex: 1;
+    min-width: 0;
+  }
+
+  .search-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.4rem 0.75rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 0.5rem;
+    background: var(--light);
+    color: var(--gray);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  /* The magnifying glass, in the button's colour. */
+  .search-button svg {
+    flex: none;
+  }
+
+  .search-button:hover {
+    border-color: var(--gray);
+  }
+
+  .search-button span {
+    flex: 1;
+  }
+
+  kbd {
+    font-size: 0.75rem;
+  }
+
+  dialog {
+    box-sizing: border-box;
+    width: min(40rem, 100% - 2rem);
+    max-height: min(36rem, 100% - 6rem);
+    margin: 4rem auto auto;
+    padding: 0;
+    border: 1px solid var(--lightgray);
+    border-radius: 0.5rem;
+    background: var(--light);
+    color: var(--darkgray);
+    box-shadow: 0 1rem 3rem var(--shadow);
+  }
+
+  dialog[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  dialog::backdrop {
+    background: var(--scrim);
+    backdrop-filter: blur(2px);
+  }
+
+  input {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-bottom: 1px solid var(--lightgray);
+    background: transparent;
+    color: var(--dark);
+    font: inherit;
+    font-size: 1.1rem;
+  }
+
+  input:focus {
+    outline: none;
+  }
+
+  .search-status:empty {
+    display: none;
+  }
+
+  .search-status {
+    margin: 0;
+    padding: 0.75rem 1rem;
+    color: var(--gray);
+  }
+
+  .search-results {
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    list-style: none;
+  }
+
+  .search-results :global(a) {
+    display: block;
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid var(--lightgray);
+    color: var(--darkgray);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+
+  .search-results :global(a:is(:hover, :focus-visible)) {
+    outline: none;
+    background: var(--highlight);
+  }
+
+  .search-results :global(.search-result-title) {
+    display: block;
+    color: var(--dark);
+    font-weight: 600;
+  }
+
+  .search-results :global(.search-result-excerpt) {
+    display: block;
+    font-size: 0.875rem;
+  }
+
+  .search-results :global(mark) {
+    background: var(--textHighlight);
+    color: inherit;
+  }
+</style>

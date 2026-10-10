@@ -1,0 +1,65 @@
+---
+// A link to the note's file in the repository, where a reader can read it as it is written, and
+// see its history: the file that holds its text, should the note be a link to one (sourcePath).
+// Drawn as a button, with GitHub's mark before its words, as on the Quartz site.
+import { Icon } from "astro-icon/components"
+import type { NoteFacts } from "../lib/notes.ts"
+import { sourcePath } from "../lib/source-link.ts"
+import { site } from "../site.config.ts"
+
+interface Props {
+  /** The note the page shows. A page that shows none has no source. */
+  note: NoteFacts | undefined
+}
+
+const { note } = Astro.props
+const { url, branch } = site.repository
+// Each part of the path is encoded on its own, so a space, a `#` or a `?` in a name stays in it.
+const path = note && sourcePath(note.file).split("/").map(encodeURIComponent).join("/")
+---
+
+{
+  note && (
+    <p class="source-link">
+      <a href={`${url}/blob/${branch}/${path}`}>
+        <Icon name="mdi:github" is:inline width="16" height="16" fill="currentColor" aria-hidden="true" />
+        View source on GitHub
+      </a>
+    </p>
+  )
+}
+
+<style>
+  p {
+    margin: 0;
+  }
+
+  a {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 5px;
+    background: var(--light);
+    color: var(--darkgray);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  a:hover,
+  a:focus-visible {
+    border-color: var(--secondary);
+    background: var(--lightgray);
+    color: var(--dark);
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+</style>

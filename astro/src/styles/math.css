@@ -1,0 +1,9 @@
+/* What a page with math loads, and no other page: KaTeX's stylesheet, whose fonts Vite emits beside
+   it, and the site's own rules for typeset math (src/components/MathStylesheet.astro). */
+@import "katex/dist/katex.min.css";
+
+/* A formula wider than the column scrolls on its own, and never widens the page. */
+.prose .katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+}

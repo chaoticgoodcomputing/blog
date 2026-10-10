@@ -1,0 +1,431 @@
+---
+// The global graph: every note and tag of the site, in a dialog opened by an icon button in the
+// corner of the local graph's frame, drawn with the settings of site configuration's
+// `graph.global`. The tags its shell pins are held on a ring, and each note settles around its tags
+// (src/lib/graph-layout.ts). The reader chooses a time period, and whether private pages are drawn;
+// it opens on the configured period, widened until it holds enough posts (src/lib/global-graph.ts),
+// and keeps the reader's choice for as long as the document is open. The period is a slider with a
+// stop for each, and both filters are drawn over the graph's corner in the code font, as the Quartz
+// site drew them; the close button is over the other corner.
+//
+// The dialog is a modal `<dialog>`: the browser raises it above the page, makes the page inert, closes
+// it on Escape, and gives the focus back to the button. The graph is drawn while it is open, and
+// stopped when it closes.
+//
+// Each tag it may draw is a `<TagBubble>` here, hidden, which the canvas copies, as the local graph's
+// are (docs/adr/2201): every tag of the whole graph, with its private pages.
+//
+// On the dev server a panel beside the graph tunes its settings (./settings-panel.ts); the built site
+// has none.
+//
+// The button is an icon, arrows pointing outwards, a Material Design Icon drawn by astro-icon as every
+// icon is (docs/adr/1101), and named "Open the global graph" by its label: the owner's first flag on
+// the component parity sheet (ticket 35) found a full-width text button under
+// the graph a heavier control than it needed to be. Where the element sits is LocalGraph.astro's to
+// say, over the graph's top-right corner; the dialog, in the top layer, is not moved by it.
+import { Icon } from "astro-icon/components"
+import { globalGraph, TIME_PERIODS } from "../../lib/global-graph.ts"
+import { graphIndex } from "../../lib/graph-index.ts"
+import { graph } from "../../site.config.ts"
+import type { TimePeriod } from "../../site.config.types.ts"
+import TagBubble from "../TagBubble.astro"
+
+interface Props {
+  /** The page's address, which is its node's id. */
+  url: string
+}
+
+const { url } = Astro.props
+// The widest the reader can ask for: every period, with the private pages.
+const widest = globalGraph(graphIndex(), graph.global, { period: "all", includePrivate: true }, new Date())
+const tags = [...new Set(widest.nodes.flatMap((node) => (node.tag === undefined ? [] : [node.tag])))]
+const periodLabel: Record<TimePeriod, string> = { month: "Month", year: "Year", all: "All" }
+// The slider's stops, from the widest period to the narrowest, as on the Quartz site.
+const stops = TIME_PERIODS.toReversed()
+---
+
+<global-graph class="global-graph" data-url={url}>
+  <button type="button" class="open" aria-haspopup="dialog" aria-label="Open the global graph" title="Open the global graph">
+    <Icon name="mdi:arrow-expand-all" is:inline width="18" height="18" fill="currentColor" aria-hidden="true" />
+  </button>
+  <dialog aria-label="Global graph">
+    <div class="body">
+      <div class="graph">
+        <div class="drawing"></div>
+        <div class="filters">
+          <div class="period">
+            <div class="stops" aria-hidden="true">{stops.map((period) => <span>{periodLabel[period]}</span>)}</div>
+            <input type="range" name="period" min="0" max={stops.length - 1} step="1" aria-label="Time period" />
+          </div>
+          <label class="private">
+            <input type="checkbox" name="private" />
+            Include private pages
+          </label>
+        </div>
+        <button type="button" class="close" aria-label="Close">×</button>
+      </div>
+      {import.meta.env.DEV && <aside class="graph-settings"></aside>}
+    </div>
+    <div class="bubbles" hidden>
+      {
+        tags.map((tag) => (
+          <span data-tag={tag}>
+            <TagBubble tag={tag} />
+          </span>
+        ))
+      }
+    </div>
+  </dialog>
+</global-graph>
+
+<script>
+  import { navigate } from "astro:transitions/client"
+  import { defaultPeriod, globalGraph, TIME_PERIODS, type GraphFilter } from "../../lib/global-graph.ts"
+  import { drawGraph, type DrawnGraph } from "../../lib/graph-drawing.ts"
+  import { loadGraphIndex } from "../../lib/graph-index-client.ts"
+  import type { TimePeriod } from "../../site.config.types.ts"
+  import { graph } from "../../site.config.ts"
+
+  // The reader's choice of what the graph draws, kept for the document, across the pages the client
+  // router brings in. Until they choose, what it opens on.
+  let chosen: GraphFilter | undefined
+  // The settings it is drawn with: site configuration's, or on the dev server, as the panel tunes them.
+  let settings = graph.global
+  // The slider's stops, as the markup has them: from the widest period to the narrowest.
+  const stops: TimePeriod[] = TIME_PERIODS.toReversed()
+
+  class GlobalGraph extends HTMLElement {
+    #dialog!: HTMLDialogElement
+    #drawing!: HTMLElement
+    #drawn: DrawnGraph | undefined
+    // Whether the graph should be drawn: the dialog is open, and the element on the page.
+    #wanted = false
+    #repaint = () => this.#drawn?.repaint()
+
+    #open = async () => {
+      if (this.#dialog.open) return
+      this.#dialog.showModal()
+      this.#wanted = true
+      const index = await loadGraphIndex()
+      chosen ??= {
+        period: defaultPeriod(index, settings.filters, new Date()),
+        includePrivate: settings.filters.includePrivate,
+      }
+      this.#showChoice(chosen)
+      this.#draw()
+    }
+
+    #onClose = () => {
+      this.#wanted = false
+      this.#erase()
+    }
+
+    // A click outside the dialog's box lands on the dialog itself, behind its backdrop.
+    #onDialogClick = (event: MouseEvent) => {
+      if (event.target === this.#dialog) this.#dialog.close()
+    }
+
+    #onFilter = () => {
+      const period = stops[Number(this.#slider().value)]
+      const includePrivate = this.#dialog.querySelector<HTMLInputElement>('input[name="private"]')!.checked
+      chosen = { period: period ?? chosen?.period ?? settings.filters.timePeriod, includePrivate }
+      this.#showChoice(chosen)
+      this.#draw()
+    }
+
+    #slider() {
+      return this.#dialog.querySelector<HTMLInputElement>('input[name="period"]')!
+    }
+
+    connectedCallback() {
+      this.#dialog = this.querySelector("dialog")!
+      this.#drawing = this.querySelector(".drawing")!
+      this.querySelector(".open")!.addEventListener("click", this.#open)
+      this.querySelector(".close")!.addEventListener("click", () => this.#dialog.close())
+      this.#dialog.addEventListener("close", this.#onClose)
+      this.#dialog.addEventListener("click", this.#onDialogClick)
+      // As the slider moves, not only when it is let go: it has only its few stops.
+      this.#dialog.querySelector(".filters")!.addEventListener("input", this.#onFilter)
+      document.addEventListener("themechange", this.#repaint)
+
+      // Read as false where the site is built, so the panel's module is left out of it.
+      if (import.meta.env.DEV) {
+        const panel = this.querySelector<HTMLElement>(".graph-settings")!
+        void import("./settings-panel.ts").then(({ settingsPanel }) =>
+          settingsPanel(panel, settings, (tuned) => {
+            settings = tuned
+            this.#draw()
+          }),
+        )
+      }
+    }
+
+    disconnectedCallback() {
+      this.#wanted = false
+      document.removeEventListener("themechange", this.#repaint)
+      this.#erase()
+    }
+
+    // The slider at the period's stop, read aloud by the stop's name rather than its number.
+    #showChoice({ period, includePrivate }: GraphFilter) {
+      const slider = this.#slider()
+      const stop = stops.indexOf(period)
+      slider.value = String(stop)
+      slider.setAttribute("aria-valuetext", this.#dialog.querySelectorAll(".stops > span")[stop]?.textContent ?? period)
+      this.#dialog.querySelector<HTMLInputElement>('input[name="private"]')!.checked = includePrivate
+    }
+
+    #erase() {
+      this.#drawn?.destroy()
+      this.#drawn = undefined
+    }
+
+    // Draws the graph afresh, as the reader has chosen it, while it is wanted.
+    async #draw() {
+      const index = await loadGraphIndex()
+      if (!this.#wanted || !chosen) return
+      this.#erase()
+      const url = this.dataset.url ?? ""
+      this.#drawn = drawGraph(this.#drawing, {
+        graph: globalGraph(index, settings, chosen, new Date()),
+        current: url,
+        settings,
+        bubble: (tag) => this.querySelector<HTMLElement>(`.bubbles [data-tag="${CSS.escape(tag)}"] .tag-bubble`),
+        follow: (to) => {
+          this.#dialog.close()
+          void navigate(to)
+        },
+        label: "Graph of every page of the site",
+      })
+    }
+  }
+
+  customElements.define("global-graph", GlobalGraph)
+</script>
+
+<style>
+  button {
+    border: 1px solid var(--lightgray);
+    border-radius: 5px;
+    background: none;
+    color: var(--darkgray);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  button:hover {
+    color: var(--secondary);
+  }
+
+  /* Over the canvas, so it has the page's background behind it, and a box the size of a fingertip. */
+  .open {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border-color: transparent;
+    background: var(--light);
+  }
+
+  .open:hover,
+  .open:focus-visible {
+    border-color: var(--lightgray);
+  }
+
+  /* Nearly the whole window, the graph filling what its controls leave. */
+  dialog {
+    box-sizing: border-box;
+    width: calc(100% - 2rem);
+    max-width: 90rem;
+    height: calc(100% - 2rem);
+    padding: 0;
+    border: 1px solid var(--lightgray);
+    border-radius: 0.5rem;
+    background: var(--light);
+    color: var(--darkgray);
+    box-shadow: 0 1rem 3rem var(--shadow);
+  }
+
+  dialog[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  dialog::backdrop {
+    background: var(--scrim);
+    backdrop-filter: blur(2px);
+  }
+
+  .body {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* The graph fills the dialog, and its controls are drawn over it, as on the Quartz site: the
+     filters in its top-left corner, and the close button in its top-right. */
+  .graph {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .drawing {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .filters {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-family: var(--codeFont);
+    font-size: 0.7rem;
+    line-height: 1;
+    /* Only the controls take the pointer; the graph between them is the graph's. */
+    pointer-events: none;
+  }
+
+  .period,
+  .private {
+    pointer-events: auto;
+  }
+
+  .period {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    width: 150px;
+  }
+
+  .stops {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.65rem;
+  }
+
+  /* A slider with a notch at each of its three stops. */
+  input[type="range"] {
+    --notches: linear-gradient(to right, var(--gray) 2px, transparent 2px calc(50% - 1px), var(--gray) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px) calc(100% - 2px), var(--gray) calc(100% - 2px));
+    width: 100%;
+    height: 12px;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    appearance: none;
+  }
+
+  input[type="range"]:focus-visible {
+    outline: 2px solid var(--tertiary);
+    outline-offset: 2px;
+  }
+
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--notches), var(--lightgray);
+  }
+
+  input[type="range"]::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--notches), var(--lightgray);
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    width: 12px;
+    height: 12px;
+    margin-top: -4px;
+    border-radius: 50%;
+    background: var(--secondary);
+    appearance: none;
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border: none;
+    border-radius: 50%;
+    background: var(--secondary);
+  }
+
+  input[type="range"]:hover::-webkit-slider-thumb {
+    background: var(--tertiary);
+  }
+
+  input[type="range"]:hover::-moz-range-thumb {
+    background: var(--tertiary);
+  }
+
+  .private {
+    display: inline-flex;
+    gap: 0.375rem;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .private input {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    accent-color: var(--secondary);
+  }
+
+  .close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 2rem;
+    height: 2rem;
+    background: var(--light);
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  /* Narrower than a desktop, the filters are at the top, in the middle, clear of the close button. */
+  @media (width < 1300px) {
+    .filters {
+      top: 0.5rem;
+      left: 50%;
+      align-items: center;
+      translate: -50% 0;
+    }
+  }
+
+  .drawing :global(canvas) {
+    display: block;
+  }
+
+  .graph-settings {
+    width: 18rem;
+    padding: 0.5rem 0.75rem;
+    border-left: 1px solid var(--lightgray);
+    font-size: 0.8rem;
+    overflow-y: auto;
+  }
+
+  .graph-settings :global(.fields) {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .graph-settings :global(label) {
+    display: flex;
+    justify-content: space-between;
+    overflow-wrap: anywhere;
+  }
+
+  .graph-settings :global(input) {
+    width: 6rem;
+  }
+
+  .graph-settings :global(pre) {
+    font-size: 0.7rem;
+  }
+</style>

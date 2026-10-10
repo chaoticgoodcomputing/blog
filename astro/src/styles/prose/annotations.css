@@ -1,0 +1,109 @@
+/* An annotation page (src/lib/annotations.ts): where the annotated document comes from, then the
+   preface, the annotations under their heading, and the epilogue. Each annotation is a card, as the
+   Quartz annotator draws one: its passage, quoted, then the comment written on it, its tags and its
+   date. The cards are one column, in the order of the document. How the annotation viewer lays them
+   out beside the document is in annotation-viewer.css. */
+
+.prose .annotated-document {
+  color: var(--darkgray);
+  font-size: 0.9rem;
+}
+
+.prose .annotated-document a {
+  font-weight: 500;
+}
+
+.prose .annotations {
+  margin: 1.5rem 0;
+}
+
+.prose .annotations-heading {
+  margin: 0 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--lightgray);
+  color: var(--darkgray);
+  font-size: 1.25rem;
+}
+
+/* A card. */
+.prose .annotation {
+  margin: 0 0 1rem;
+  padding: 1rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 0.5rem;
+  background: var(--light);
+  overflow-wrap: anywhere;
+  /* A link to an annotation lands with room over it, clear of the viewer's bar. */
+  scroll-margin-top: 4rem;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* The annotation a link has landed on, or the viewer has selected (annotation-viewer.css). */
+.prose .annotation:target {
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 1px var(--secondary);
+}
+
+/* The passage: the document's words, not the author's, so set apart from the comment as a quote. */
+.prose .annotation-highlight {
+  margin: 0;
+  padding: 0.125rem 0 0.125rem 0.75rem;
+  border-left: 3px solid var(--tertiary);
+  color: var(--darkgray);
+  font-style: italic;
+}
+
+.prose .annotation-highlight > p {
+  margin: 0;
+}
+
+.prose .annotation-comment {
+  margin-top: 0.75rem;
+  color: var(--dark);
+  line-height: 1.6;
+}
+
+.prose .annotation-comment > :first-child {
+  margin-top: 0;
+}
+
+.prose .annotation-comment > :last-child {
+  margin-bottom: 0;
+}
+
+/* Annotator's tags, as text: no tag of the site's, and no tag page holds them (ADR 2701). In the
+   palette's dark grey, where the Quartz annotator's were in --secondary, which on --lightgray is
+   3.9:1 in the dark scheme: text to read at this size wants 4.5. */
+.prose .annotation-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.prose .annotation-tags > li {
+  margin: 0;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  background: var(--lightgray);
+  color: var(--darkgray);
+  font-size: 0.85rem;
+}
+
+/* As every date the site prints is (DateAndReadingTime.astro). */
+.prose .annotation-date {
+  display: block;
+  margin-top: 0.75rem;
+  color: var(--gray);
+  font-size: 0.85rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prose .annotation {
+    transition: none;
+  }
+}

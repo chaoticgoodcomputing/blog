@@ -1,0 +1,61 @@
+---
+// The site's icon, title and author, at the top of the left sidebar: one link to the home page.
+import { Image } from "astro:assets"
+import icon from "../assets/icon.png"
+import { site } from "../site.config.ts"
+---
+
+<a class="site-title" href="/">
+  {/* Beside the site's name the icon says nothing more, so it has no text of its own. */}
+  <Image src={icon} alt="" width={64} height={64} densities={[1, 2]} loading="eager" />
+  <span class="text">
+    <span class="name">{site.title}</span>
+    <span class="author">by {site.author.name}</span>
+  </span>
+</a>
+
+<style>
+  .site-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--dark);
+    text-decoration: none;
+  }
+
+  img {
+    flex: none;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 0.25rem;
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .name {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .author {
+    font-size: 0.875rem;
+    opacity: 0.7;
+  }
+
+  /* On a phone the title shares a row with the toolbar, and gives it room. */
+  @media (width < 1000px) {
+    img {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    .name {
+      font-size: 1.25rem;
+    }
+  }
+</style>

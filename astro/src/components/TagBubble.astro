@@ -1,0 +1,52 @@
+---
+// A tag bubble: the circle that holds a tag's icon, in a rim of the tag's colour. It holds no text,
+// so whatever shows it names the tag beside it. A tag with no colour in its lineage has a rim of
+// the palette's gray, and one with no icon an empty circle.
+//
+// The icon is drawn by astro-icon when the site builds: the page needs no script for it. Each is
+// whole where it is drawn, not a `<use>` of the page's first, so it survives being moved into
+// another page (docs/adr/1101).
+import { Icon } from "astro-icon/components"
+import { iconName } from "../lib/icons.ts"
+import { TAG_BUBBLE } from "../lib/tag-bubble.ts"
+import { tagColor, tagIcon } from "../lib/tag-dictionary.ts"
+
+interface Props {
+  /** A tag slug. */
+  tag: string
+}
+
+const { tag } = Astro.props
+const color = tagColor(tag)
+const icon = tagIcon(tag)
+---
+
+{/* The tag colour is site configuration's, so it is set here, and the stylesheet paints with it. */}
+<span class="tag-bubble" style={color === undefined ? undefined : `--tag-color: ${color}`}>
+  {icon !== undefined && <Icon name={iconName(icon)} is:inline aria-hidden="true" />}
+</span>
+
+{/* Its proportions are src/lib/tag-bubble.ts's. Where it is drawn smaller, `--bubble-size` says how big. */}
+<style define:vars={{ diameter: `${TAG_BUBBLE.diameter}px`, rim: TAG_BUBBLE.rim, icon: TAG_BUBBLE.icon }}>
+  .tag-bubble {
+    --size: var(--bubble-size, var(--diameter));
+    box-sizing: border-box;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: var(--size);
+    height: var(--size);
+    border: calc(var(--size) * var(--rim)) solid var(--tag-color, var(--gray));
+    border-radius: 50%;
+    background-color: var(--light);
+    color: var(--dark);
+  }
+
+  /* An icon is painted in `currentColor`, the bubble's `--dark`, whatever colours its file had. */
+  .tag-bubble :global(svg) {
+    width: calc(var(--size) * var(--icon));
+    height: calc(var(--size) * var(--icon));
+    fill: currentColor;
+  }
+</style>

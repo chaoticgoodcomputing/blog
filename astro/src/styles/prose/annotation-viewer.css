@@ -1,0 +1,174 @@
+/* What the annotation viewer (src/components/annotation-viewer) does with an annotation page's body,
+   its slot, which only its script lays out: the cards in the document's margin or in a drawer, the
+   card it has selected (data-selected), and the cards it shortens (.short). As the Quartz annotator
+   lays them out (docs/cutover/annotations-audit.md). Scoped styles never reach a slot, so these are
+   here, under the viewer's element. */
+
+/* As built, and where the document couldn't be shown, the cards are the page: one column, at the
+   width of a note's. */
+annotation-viewer[data-layout="static"] .layout {
+  max-width: 40rem;
+}
+
+/* With the document, the body is laid out with it in one grid: what comes before the annotations
+   (where the document comes from, the preface) across the top, then the document, then the cards in
+   its margin or its drawer, then what comes after them (the epilogue). The body's own article
+   leaves its children to the grid. */
+annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+annotation-viewer[data-layout="margin"] .layout {
+  grid-template-columns: var(--document-width) var(--margin-width);
+  column-gap: 3rem;
+}
+
+annotation-viewer[data-layout="margin"][data-margin="hidden"] .layout {
+  grid-template-columns: var(--document-width);
+}
+
+annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .prose {
+  display: contents;
+}
+
+annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .prose > * {
+  grid-column: 1 / -1;
+  max-width: 40rem;
+}
+
+annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .document {
+  grid-column: 1;
+  order: 1;
+  margin-bottom: 2rem;
+}
+
+annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .prose > .annotations {
+  order: 2;
+  max-width: none;
+  margin: 0;
+}
+
+annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .prose > .annotations ~ * {
+  order: 3;
+}
+
+/* A card selects its annotation once the document is beside it. */
+annotation-viewer:not([data-layout="static"]) .annotation {
+  cursor: pointer;
+}
+
+annotation-viewer .annotation[data-selected] {
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 1px var(--secondary);
+}
+
+/* The address an annotation was opened at stays the page's :target, though another is selected
+   since: the viewer's selection is the one marked. */
+annotation-viewer .annotation:target:not([data-selected]) {
+  border-color: var(--lightgray);
+  box-shadow: none;
+}
+
+annotation-viewer .annotation-highlight[role="button"] {
+  cursor: pointer;
+}
+
+/* The margin: a column of cards beside the document, each level with its passage. */
+annotation-viewer[data-layout="margin"] .annotations {
+  grid-column: 2;
+  position: relative;
+}
+
+annotation-viewer[data-layout="margin"][data-margin="hidden"] .annotations {
+  display: none;
+}
+
+annotation-viewer[data-layout="margin"] .annotations-heading {
+  display: none;
+}
+
+annotation-viewer[data-layout="margin"] :is(.annotation, .unplaced) {
+  position: absolute;
+  right: 0;
+  left: 0;
+  margin: 0;
+  transition: top 0.2s ease;
+}
+
+annotation-viewer[data-layout="margin"] .annotation {
+  padding: 0.75rem;
+  font-size: 0.9rem;
+}
+
+annotation-viewer .unplaced {
+  margin: 1.5rem 0 1rem;
+  color: var(--darkgray);
+  font-size: 1rem;
+}
+
+/* Beside the document, every card but the selected one is shortened: two lines of its passage,
+   about four of its comment, faded where it is cut. */
+annotation-viewer .annotation.short .annotation-highlight > p {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+annotation-viewer .annotation.short .annotation-comment {
+  max-height: 6.4em;
+  overflow: hidden;
+}
+
+annotation-viewer .annotation.short .annotation-comment.clipped {
+  mask-image: linear-gradient(to bottom, black 55%, transparent);
+}
+
+/* The drawer: the document takes the column, and the cards come in from the right. On a tablet it
+   is a card's width, and nothing is dimmed; on a phone it is most of the screen, with the page
+   dimmed behind it. It slides, unless the reader would rather things didn't move. */
+annotation-viewer[data-layout="drawer"] .annotations {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 19;
+  box-sizing: border-box;
+  width: var(--margin-width);
+  padding: 1rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-left: 1px solid var(--lightgray);
+  background: var(--light);
+  outline: none;
+  touch-action: pan-y;
+  transform: translateX(100%);
+  visibility: hidden;
+  transition:
+    transform 0.2s ease,
+    visibility 0s linear 0.2s;
+}
+
+annotation-viewer[data-layout="drawer"][data-drawer="mobile"] .annotations {
+  z-index: 41;
+  width: 85vw;
+}
+
+annotation-viewer[data-layout="drawer"]:is([data-drawer-open="true"], [data-dragging]) .annotations {
+  transform: none;
+  visibility: visible;
+  transition: transform 0.2s ease;
+}
+
+annotation-viewer[data-dragging] .annotations,
+annotation-viewer[data-switching] :is(.annotations, .annotation) {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  annotation-viewer :is(.annotations, .annotation, .unplaced) {
+    transition: none !important;
+  }
+}

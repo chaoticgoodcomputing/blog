@@ -1,0 +1,107 @@
+---
+// Analytics, sent to PostHog: a page view for each page shown, and a `navigation` event, naming the
+// kind of link, for each link the client router follows. The project, its host and the kinds of
+// link are site configuration's `analytics`.
+//
+// It renders nothing, and is only its script. The client router runs a bundled script once for the
+// visit, so PostHog is loaded once, and a page reached by a link is counted by the router's
+// `astro:page-load`, which also follows the first page's load
+// (https://docs.astro.build/en/guides/view-transitions/#astropage-load).
+---
+
+<script>
+  import { analytics } from "../site.config.ts"
+
+  /** PostHog, as the page calls it: the snippet's queue until the library arrives, then the library. */
+  interface PostHog {
+    capture(event: string, properties: Record<string, unknown>): void
+  }
+  declare global {
+    interface Window {
+      posthog?: PostHog
+      /** Old Safari's Do Not Track. */
+      doNotTrack?: string
+    }
+    interface Navigator {
+      /** Old IE's Do Not Track. */
+      msDoNotTrack?: string
+    }
+  }
+
+  // Wherever a browser has reported Do Not Track: the standard place, then old Safari's and old
+  // IE's. A reader who has set it is not tracked at all: PostHog is never loaded, so nothing is sent.
+  const doNotTrack = [navigator.doNotTrack, window.doNotTrack, navigator.msDoNotTrack].some(
+    (value) => value === "1" || value === "yes",
+  )
+
+  // PostHog's snippet, written out (https://posthog.com/docs/libraries/js): `window.posthog` is a
+  // queue of the calls made before the library arrives, with the `init` in `_i`, and the library
+  // plays them back when it loads. Its address is the host's, or on PostHog's own cloud its asset
+  // host's.
+  function loadPostHog() {
+    const queue = Object.assign([] as unknown[][], {
+      _i: [
+        [
+          analytics.posthogKey,
+          {
+            api_host: analytics.posthogHost,
+            // Counted below, once for each page shown: PostHog's own would miss the client
+            // router's navigations.
+            capture_pageview: false,
+            // No cookie: what PostHog keeps of a visit is kept in local storage.
+            persistence: "localStorage",
+            disable_session_recording: true,
+            // The site's since Quartz 4. The library ignores it now; an IP is dropped by the
+            // project's "Discard client IP data".
+            ip: false,
+          },
+          "posthog",
+        ],
+      ],
+      __SV: 1,
+      people: [],
+      capture: (...args: unknown[]) => void queue.push(["capture", ...args]),
+    })
+    window.posthog = queue
+    const library = document.createElement("script")
+    library.async = true
+    library.crossOrigin = "anonymous"
+    library.src = `${analytics.posthogHost.replace(".i.posthog.com", "-assets.i.posthog.com")}/static/array.js`
+    document.head.append(library)
+  }
+
+  // `window.posthog` is read at each call: the library replaces the queue when it loads.
+  const capture = (event: string, properties: Record<string, unknown>) => window.posthog?.capture(event, properties)
+
+  // The kind of link `link` is: the name of the first selector it matches, or is inside what
+  // matches. A selector the browser can't read matches nothing, so the others still name links.
+  function kindOf(link: Element): string {
+    for (const [selector, name] of Object.entries(analytics.navigationSources)) {
+      try {
+        if (link.closest(selector)) return name
+      } catch {
+        console.warn(`analytics: "${selector}" is not a selector this browser can read`)
+      }
+    }
+    return "other"
+  }
+
+  // Nothing from the dev server, whose visits are the author's own: there `import.meta.env.DEV` is
+  // true, and PostHog is never loaded.
+  if (!import.meta.env.DEV && !doNotTrack) {
+    loadPostHog()
+    document.addEventListener("astro:page-load", () => capture("$pageview", { path: location.pathname }))
+    // A link the router followed to another page, just before that page is swapped in: the link is
+    // still on the page it was clicked on. The browser's back and forward buttons follow no link,
+    // and a link to a heading on the same page swaps nothing.
+    document.addEventListener("astro:before-swap", ({ sourceElement, from, to }) => {
+      if (!(sourceElement instanceof Element) || !sourceElement.closest("a")) return
+      capture("navigation", {
+        source: kindOf(sourceElement),
+        from_page: from.pathname,
+        to_page: to.pathname,
+        url: to.href,
+      })
+    })
+  }
+</script>

@@ -1,0 +1,318 @@
+/* The note body: how Markdown reads on the site, the CommonMark and GFM a note is written in, and
+   the Obsidian syntax every note may use (highlights, callouts, links that go nowhere). What a
+   feature renders into a note of its own, an embed or a diagram, is that feature's stylesheet. */
+
+.prose {
+  /* A word longer than the column breaks rather than widen the page. */
+  overflow-wrap: anywhere;
+}
+
+.prose > :first-child {
+  margin-top: 0;
+}
+
+/* Headings, each level a step smaller. Their colour is every heading's (global.css). */
+
+.prose :is(h1, h2, h3, h4, h5, h6) {
+  margin: 1.5rem 0 1rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.prose h1 {
+  margin-top: 2.25rem;
+  font-size: 1.75rem;
+}
+
+.prose h2 {
+  margin-top: 1.9rem;
+  font-size: 1.4rem;
+}
+
+.prose h3 {
+  margin-top: 1.62rem;
+  font-size: 1.12rem;
+}
+
+.prose :is(h4, h5, h6) {
+  font-size: 1rem;
+}
+
+/* Text. */
+
+.prose strong {
+  color: var(--dark);
+  font-weight: 600;
+}
+
+.prose a {
+  font-weight: 600;
+  text-underline-offset: 0.15em;
+}
+
+.prose a:hover {
+  color: var(--tertiary);
+}
+
+/* A link to another note is marked by its background, and needs no underline. */
+.prose a.internal-link {
+  padding: 0 0.1rem;
+  border-radius: 5px;
+  background: var(--highlight);
+  text-decoration: none;
+}
+
+.prose .internal-link.is-unresolved,
+.prose .internal-embed.is-unresolved {
+  opacity: 0.6;
+  text-decoration: underline dashed;
+}
+
+.prose mark {
+  background: var(--textHighlight);
+  color: inherit;
+}
+
+.prose kbd {
+  padding: 0 0.3rem;
+  border: 1px solid var(--gray);
+  border-radius: 4px;
+  font-family: var(--codeFont);
+  font-size: 0.85em;
+}
+
+.prose hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid var(--lightgray);
+}
+
+/* Lists. */
+
+.prose :is(ul, ol) {
+  padding-left: 1.5rem;
+}
+
+.prose li + li,
+.prose li > :is(ul, ol) {
+  margin-top: 0.25rem;
+}
+
+.prose li > :is(ul, ol) {
+  margin-bottom: 0;
+}
+
+.prose ul.contains-task-list {
+  padding-left: 0.25rem;
+  list-style: none;
+}
+
+.prose .task-list-item input {
+  margin: 0 0.5rem 0 0;
+  accent-color: var(--secondary);
+}
+
+/* Quotes and callouts. */
+
+.prose blockquote {
+  margin: 1rem 0;
+  padding: 0 1rem;
+  border-left: 3px solid var(--secondary);
+}
+
+/* A callout is a box in its kind's colour (global.css): a border and a background of tints of it, and
+   its title in it, after its kind's icon (src/lib/callouts.ts). Its kind is `data-callout-kind`, as
+   which a type Obsidian reads as another kind is drawn. A callout that folds ends its title with a
+   fold icon, turned while it is closed. */
+
+.prose .callout {
+  --callout-color: var(--callout-note);
+  margin: 1rem 0;
+  padding: 0 1rem;
+  border: 1px solid color-mix(in srgb, var(--callout-color) 30%, var(--light));
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--callout-color) 8%, var(--light));
+}
+
+/* The title's icons are in its line, so that what the title holds, a link or emphasis, stays text. */
+.prose .callout-title {
+  display: block;
+  padding: 0.75rem 0;
+  color: var(--callout-color);
+  font-weight: 600;
+}
+
+.prose .callout-title > svg {
+  width: 1.1em;
+  height: 1.1em;
+  vertical-align: -0.2em;
+}
+
+.prose .callout-icon {
+  margin-right: 0.4rem;
+}
+
+.prose .callout-fold {
+  margin-left: 0.4rem;
+}
+
+.prose summary.callout-title {
+  cursor: pointer;
+  list-style: none;
+}
+
+.prose summary.callout-title::-webkit-details-marker {
+  display: none;
+}
+
+.prose .callout-fold {
+  opacity: 0.8;
+  transition: rotate 0.15s ease;
+}
+
+.prose details.callout:not([open]) > summary > .callout-fold {
+  rotate: -90deg;
+}
+
+.prose .callout-content > :first-child {
+  margin-top: 0;
+}
+
+.prose .callout-content > :last-child {
+  margin-bottom: 0.75rem;
+}
+
+.prose .callout[data-callout-kind="abstract"] {
+  --callout-color: var(--callout-abstract);
+}
+
+.prose .callout:is([data-callout-kind="info"], [data-callout-kind="todo"]) {
+  --callout-color: var(--callout-info);
+}
+
+.prose .callout[data-callout-kind="tip"] {
+  --callout-color: var(--callout-tip);
+}
+
+.prose .callout[data-callout-kind="success"] {
+  --callout-color: var(--callout-success);
+}
+
+.prose .callout[data-callout-kind="question"] {
+  --callout-color: var(--callout-question);
+}
+
+.prose .callout[data-callout-kind="warning"] {
+  --callout-color: var(--callout-warning);
+}
+
+.prose .callout:is([data-callout-kind="failure"], [data-callout-kind="danger"], [data-callout-kind="bug"]) {
+  --callout-color: var(--callout-danger);
+}
+
+.prose .callout[data-callout-kind="example"] {
+  --callout-color: var(--callout-example);
+}
+
+.prose .callout[data-callout-kind="quote"] {
+  --callout-color: var(--secondary);
+}
+
+/* Tables. A table narrower than the column is centred in it, and one wider scrolls inside itself. */
+
+.prose table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.5rem auto;
+  overflow-x: auto;
+  border-collapse: collapse;
+  /* Its cells keep their words whole, and the table scrolls instead. */
+  overflow-wrap: normal;
+}
+
+.prose :is(th, td) {
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid var(--lightgray);
+  text-align: left;
+}
+
+.prose th {
+  border-bottom-width: 2px;
+  color: var(--dark);
+  font-weight: 600;
+}
+
+/* Code. Inline code breaks where it must, as the note's text does, and keeps its words whole in a
+   table, which scrolls instead. A block of code scrolls inside itself; its colours are the
+   highlighter's. */
+
+.prose code {
+  padding: 0.1rem 0.25rem;
+  border-radius: 5px;
+  background: var(--lightgray);
+  font-family: var(--codeFont);
+  font-size: 0.9em;
+}
+
+.prose pre {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  overflow-x: auto;
+  border: 1px solid var(--lightgray);
+  border-radius: 5px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.prose pre code {
+  padding: 0;
+  background: none;
+  font-size: inherit;
+}
+
+/* Images and frames are never wider than the column. */
+
+.prose :is(img, video, iframe) {
+  max-width: 100%;
+}
+
+.prose img {
+  height: auto;
+}
+
+/* Footnotes: a reference keeps its line's height, and the notes are set apart under the body. */
+
+.prose sup {
+  line-height: 0;
+}
+
+.prose sup a[data-footnote-ref] {
+  padding: 0 0.15rem;
+  text-decoration: none;
+}
+
+.prose .footnotes {
+  margin-top: 3rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--lightgray);
+  font-size: 0.875rem;
+}
+
+.prose .footnotes li > p {
+  margin: 0.25rem 0;
+}
+
+.prose .data-footnote-backref {
+  text-decoration: none;
+}
+
+/* The footnotes' heading is there for a screen reader, and is not drawn. */
+.prose .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

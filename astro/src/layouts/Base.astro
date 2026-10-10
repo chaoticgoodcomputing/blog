@@ -1,0 +1,80 @@
+---
+// The document every page is in: its head, and the end of its body. What is around the page's
+// content is the site shell, src/layouts/Page.astro.
+//
+// A feature of the head is one component, on the one line that names its ticket: an import here,
+// and a place below. A ticket replaces its own lines and leaves the rest as they are, blank lines
+// included, so that branches written side by side merge (README.md, "Working in parallel"). What a
+// feature needs to know of the page it reads from `page`.
+import type { PageProps } from "../lib/page.ts"
+import { site } from "../site.config.ts"
+import "../styles/global.css"
+
+// 05 math stylesheet
+import MathStylesheet from "../components/MathStylesheet.astro"
+
+// 07 fonts
+import { Font } from "astro:assets"
+
+// 08 scheme before paint
+import SchemeBeforePaint from "../components/SchemeBeforePaint.astro"
+
+// 09 client-side navigation
+import ClientNavigation from "../components/ClientNavigation.astro"
+
+import FeedLink from "../components/FeedLink.astro"
+
+// 16 SEO
+import Seo from "../components/Seo.astro"
+
+// 26 analytics
+import Analytics from "../components/Analytics.astro"
+
+import MermaidDiagram from "../components/MermaidDiagram.astro"
+import { hasDiagrams } from "../lib/mermaid.ts"
+
+// 20 link popovers
+import LinkPopovers from "../components/LinkPopovers.astro"
+
+type Props = PageProps
+
+const page = Astro.props
+---
+
+<!doctype html>
+<html lang={site.locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.ico" />
+
+    {/* 16 SEO: the title and description, the canonical address, Open Graph and JSON-LD */}
+    <Seo page={page} />
+
+    {/* 07 fonts: the text's is preloaded, since every page sets text in it at once */}
+    <Font cssVariable="--bodyFont" preload={[{ subset: "latin", style: "normal" }]} />
+    <Font cssVariable="--codeFont" />
+
+    {/* 08 scheme before paint */}
+    <SchemeBeforePaint />
+
+    {/* 09 client-side navigation */}
+    <ClientNavigation />
+
+    <FeedLink />
+
+    {/* 05 math stylesheet: only on a page whose note has math */}
+    <MathStylesheet note={page.note} />
+
+    {/* 26 analytics */}
+    <Analytics />
+  </head>
+  <body>
+    <slot />
+
+    {page.note && hasDiagrams(page.note.file) && <MermaidDiagram />}
+
+    {/* 20 link popovers: every kind */}
+    <LinkPopovers />
+  </body>
+</html>

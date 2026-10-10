@@ -1,0 +1,24 @@
+---
+// The 404 page, in the site shell. Astro builds it as 404.html, the file a static host serves for an
+// address it has no file for, so its links are from the site's root: it is read at any depth.
+//
+// Its heading is the shell's article title, drawn where a note's is, though the page's title is
+// "Not Found": the shell shows no article title on this kind of page, so the page shows its own.
+import ArticleTitle from "../components/ArticleTitle.astro"
+import Page from "../layouts/Page.astro"
+---
+
+<Page kind="404" title="Not Found" url="/404">
+  <div class="not-found">
+    <ArticleTitle title="404" />
+    <p>There is no page at this address.</p>
+    <a href="/">Return to the home page</a>
+  </div>
+</Page>
+
+<style>
+  /* The space under the title is the space the shell's header leaves under a note's. */
+  .not-found p {
+    margin-top: 1.5rem;
+  }
+</style>

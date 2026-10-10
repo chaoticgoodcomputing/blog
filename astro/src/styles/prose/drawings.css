@@ -1,0 +1,43 @@
+/* An Excalidraw drawing embedded in a note: the SVGs the Excalidraw plugin exported, one for each
+   colour scheme, of which the reader sees theirs. An image that is not displayed and loads lazily
+   is never fetched, so the other export costs nothing. The class names are the library's. */
+
+.prose .excalidraw-embed {
+  display: block;
+  margin: 1rem 0;
+}
+
+/* As wide as the text, whatever size it was drawn at, unless the embed gives a size, which the
+   image then has. Its height follows from its width and the size it was drawn at. */
+.prose .excalidraw-svg {
+  display: block;
+  margin-inline: auto;
+}
+
+.prose .excalidraw-embed:not([width]) .excalidraw-svg {
+  width: 100%;
+}
+
+/* The colour scheme is the reader's choice, `data-theme` on the root, else their system's
+   (README.md, "In the browser"). */
+.prose .excalidraw-dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .prose .excalidraw-light {
+    display: none;
+  }
+
+  :root:not([data-theme="light"]) .prose .excalidraw-dark {
+    display: block;
+  }
+}
+
+:root[data-theme="dark"] .prose .excalidraw-light {
+  display: none;
+}
+
+:root[data-theme="dark"] .prose .excalidraw-dark {
+  display: block;
+}

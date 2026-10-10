@@ -1,0 +1,13 @@
+---
+// Moving between the site's pages without a full page load: Astro's client router, which fetches
+// the next page, swaps it in for this one, and keeps the back and forward buttons working. It is in
+// the head of every page, since a page without it is left by a full page load. A link still works
+// as an ordinary link with scripts off: the router only takes over a click it can handle.
+//
+// An island is torn down by Astro when its page is swapped out, and one on the next page is
+// hydrated there. A custom element starts and stops on its own (README.md, "In the browser"). The
+// reader's colour scheme is carried onto the next page by SchemeBeforePaint.astro, which owns it.
+import { ClientRouter } from "astro:transitions"
+---
+
+<ClientRouter />

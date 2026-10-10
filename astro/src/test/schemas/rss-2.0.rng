@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  RSS 2.0, as the RSS Advisory Board's specification writes it:
+  https://www.rssboard.org/rss-specification (version 2.0.11). RSS has no schema of its own, so this
+  one is the specification's elements and their rules, written out for RELAX NG:
+
+  - <rss version="2.0"> holds one <channel>.
+  - A channel has a title, a link and a description, each once, and optionally the specification's
+    other channel elements, in any order, and any number of items.
+  - An item has a title or a description, or both, and optionally the specification's other item
+    elements, each at most once except <category>.
+  - A date is RFC 822's, with a four-digit year allowed and seconds optional.
+  - A guid's isPermaLink is true or false. A link is a URI.
+  - An element in a namespace is an extension, which the specification allows anywhere.
+-->
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+         datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <start>
+    <element name="rss">
+      <attribute name="version"><value>2.0</value></attribute>
+      <zeroOrMore><ref name="extension-attribute"/></zeroOrMore>
+      <interleave>
+        <ref name="channel"/>
+        <zeroOrMore><ref name="extension"/></zeroOrMore>
+      </interleave>
+    </element>
+  </start>
+
+  <define name="channel">
+    <element name="channel">
+      <interleave>
+        <element name="title"><text/></element>
+        <element name="link"><ref name="uri"/></element>
+        <element name="description"><text/></element>
+        <optional><element name="language"><text/></element></optional>
+        <optional><element name="copyright"><text/></element></optional>
+        <optional><element name="managingEditor"><text/></element></optional>
+        <optional><element name="webMaster"><text/></element></optional>
+        <optional><element name="pubDate"><ref name="date"/></element></optional>
+        <optional><element name="lastBuildDate"><ref name="date"/></element></optional>
+        <zeroOrMore><ref name="category"/></zeroOrMore>
+        <optional><element name="generator"><text/></element></optional>
+        <optional><element name="docs"><ref name="uri"/></element></optional>
+        <optional><ref name="cloud"/></optional>
+        <optional><element name="ttl"><data type="nonNegativeInteger"/></element></optional>
+        <optional><ref name="image"/></optional>
+        <optional><element name="rating"><text/></element></optional>
+        <optional><ref name="textInput"/></optional>
+        <optional><ref name="skipHours"/></optional>
+        <optional><ref name="skipDays"/></optional>
+        <zeroOrMore><ref name="item"/></zeroOrMore>
+        <zeroOrMore><ref name="extension"/></zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+
+  <define name="item">
+    <element name="item">
+      <interleave>
+        <choice>
+          <interleave>
+            <element name="title"><text/></element>
+            <optional><element name="description"><text/></element></optional>
+          </interleave>
+          <element name="description"><text/></element>
+        </choice>
+        <optional><element name="link"><ref name="uri"/></element></optional>
+        <optional><element name="author"><text/></element></optional>
+        <zeroOrMore><ref name="category"/></zeroOrMore>
+        <optional><element name="comments"><ref name="uri"/></element></optional>
+        <optional>
+          <element name="enclosure">
+            <attribute name="url"><ref name="uri"/></attribute>
+            <attribute name="length"><data type="nonNegativeInteger"/></attribute>
+            <attribute name="type"><text/></attribute>
+          </element>
+        </optional>
+        <optional>
+          <element name="guid">
+            <optional>
+              <attribute name="isPermaLink"><choice><value>true</value><value>false</value></choice></attribute>
+            </optional>
+            <text/>
+          </element>
+        </optional>
+        <optional><element name="pubDate"><ref name="date"/></element></optional>
+        <optional>
+          <element name="source">
+            <attribute name="url"><ref name="uri"/></attribute>
+            <text/>
+          </element>
+        </optional>
+        <zeroOrMore><ref name="extension"/></zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+
+  <define name="category">
+    <element name="category">
+      <optional><attribute name="domain"><text/></attribute></optional>
+      <text/>
+    </element>
+  </define>
+
+  <define name="cloud">
+    <element name="cloud">
+      <attribute name="domain"><text/></attribute>
+      <attribute name="port"><data type="nonNegativeInteger"/></attribute>
+      <attribute name="path"><text/></attribute>
+      <attribute name="registerProcedure"><text/></attribute>
+      <attribute name="protocol"><text/></attribute>
+    </element>
+  </define>
+
+  <define name="image">
+    <element name="image">
+      <interleave>
+        <element name="url"><ref name="uri"/></element>
+        <element name="title"><text/></element>
+        <element name="link"><ref name="uri"/></element>
+        <optional><element name="width"><data type="nonNegativeInteger"><param name="maxInclusive">144</param></data></element></optional>
+        <optional><element name="height"><data type="nonNegativeInteger"><param name="maxInclusive">400</param></data></element></optional>
+        <optional><element name="description"><text/></element></optional>
+      </interleave>
+    </element>
+  </define>
+
+  <define name="textInput">
+    <element name="textInput">
+      <interleave>
+        <element name="title"><text/></element>
+        <element name="description"><text/></element>
+        <element name="name"><text/></element>
+        <element name="link"><ref name="uri"/></element>
+      </interleave>
+    </element>
+  </define>
+
+  <define name="skipHours">
+    <element name="skipHours">
+      <oneOrMore>
+        <element name="hour"><data type="nonNegativeInteger"><param name="maxInclusive">23</param></data></element>
+      </oneOrMore>
+    </element>
+  </define>
+
+  <define name="skipDays">
+    <element name="skipDays">
+      <oneOrMore>
+        <element name="day">
+          <choice>
+            <value>Monday</value><value>Tuesday</value><value>Wednesday</value><value>Thursday</value>
+            <value>Friday</value><value>Saturday</value><value>Sunday</value>
+          </choice>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+
+  <!-- RFC 822, section 5: `Wed, 02 Oct 2002 13:00:00 GMT`, `2 Oct 02 13:00 +0200`. -->
+  <define name="date">
+    <data type="string">
+      <param name="pattern">((Mon|Tue|Wed|Thu|Fri|Sat|Sun), )?\d{1,2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{2}|\d{4}) \d{2}:\d{2}(:\d{2})? (UT|GMT|EST|EDT|CST|CDT|MST|MDT|PST|PDT|[A-IK-Z]|[+\-]\d{4})</param>
+    </data>
+  </define>
+
+  <define name="uri">
+    <data type="anyURI"/>
+  </define>
+
+  <define name="extension">
+    <element>
+      <anyName><except><nsName ns=""/></except></anyName>
+      <ref name="anything"/>
+    </element>
+  </define>
+
+  <define name="extension-attribute">
+    <attribute>
+      <anyName><except><nsName ns=""/></except></anyName>
+    </attribute>
+  </define>
+
+  <define name="anything">
+    <zeroOrMore>
+      <choice>
+        <element><anyName/><ref name="anything"/></element>
+        <attribute><anyName/></attribute>
+        <text/>
+      </choice>
+    </zeroOrMore>
+  </define>
+</grammar>
