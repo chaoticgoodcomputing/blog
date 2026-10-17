@@ -1,7 +1,8 @@
 # Builds the site with Astro (astro/) and publishes it to the `pages` branch, which GitHub Pages
 # serves at blog.chaoticgood.computer (#81; astro/docs/adr/3001). Deliberately minimal for now: no
-# tests, no affected check, no Bluesky, email or IndexNow jobs; every push to main rebuilds and
-# redeploys the whole site (astro/docs/cutover/deploy.md).
+# tests, no affected check, no Bluesky or IndexNow jobs; every push to main rebuilds and redeploys
+# the whole site (astro/docs/cutover/deploy.md). After a push's deploy, the email job drafts a
+# Buttondown email from each note it made an email.
 name: Deploy to GitHub Pages
 
 on:
@@ -60,6 +61,12 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      # The private notes' stubs, dist/vault-private, must publish nothing but the placeholder
+      # (content/utils/guard-private.ts). The commit hook checks them too, but can be skipped; this is
+      # the last check before the site is built from them.
+      - name: Check the private notes' stubs
+        run: pnpm nx run vault:guard-private
 
       # The mirrors of annotated documents are kept between deploys, so a mirror stays the copy first
       # saved and a host that refuses CI's runners costs nothing once its document is saved
@@ -120,3 +127,36 @@ jobs:
           publish_dir: ./astro/dist
           publish_branch: pages
           force_orphan: true
+
+  # Each public note the push made an email (tagged `writing/emails`, not a draft) becomes a
+  # Buttondown draft, after the deploy so its links reach live pages. Only ever a draft: it is sent
+  # by hand from Buttondown (.github/workflows/scripts/send-email.mjs).
+  email:
+    name: Draft emails
+    needs: deploy
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      # Full history, to compare each note with how it was before the push.
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ".nvmrc"
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Draft emails in Buttondown
+        env:
+          BUTTONDOWN_API_KEY: ${{ secrets.BUTTONDOWN_POST_KEY }}
+        run: node .github/workflows/scripts/send-email.mjs --changed "${{ github.event.before }}" "${{ github.sha }}"

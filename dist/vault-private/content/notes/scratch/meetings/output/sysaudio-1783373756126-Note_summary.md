@@ -1,9 +1,6 @@
 ---
 title: "Meeting 2026-07-06 16:13"
 date: "2026-07-06T20:13:19.625Z"
-duration_seconds: 1908
-language: "en"
-is_diarised: true
 tags:
   - "engineering/data"
   - "engineering/languages/csharp"
@@ -12,13 +9,11 @@ tags:
   - "projects/dayjob"
   - "writing/annotations/meetings"
   - "private"
-auto_tagged: true
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
 
 If you are interested in what this note contains, please reach out! If it's not anything terribly sensitive, I'm happy to chat about it!
-
 
 ## Links
 

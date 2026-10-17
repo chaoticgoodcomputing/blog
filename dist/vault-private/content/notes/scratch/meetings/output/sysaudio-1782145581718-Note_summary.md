@@ -1,10 +1,6 @@
 ---
 title: "Meeting 2026-06-22 10:38"
 date: "2026-06-22T14:38:39.254Z"
-duration_seconds: 699
-language: "en"
-is_diarised: false
-auto_tagged: true
 tags:
   - "engineering/data"
   - "projects/dayjob"
@@ -15,7 +11,6 @@ tags:
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
 
 If you are interested in what this note contains, please reach out! If it's not anything terribly sensitive, I'm happy to chat about it!
-
 
 ## Links
 

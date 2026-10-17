@@ -86,6 +86,7 @@ export const tags: TagDictionary = {
   "writing/annotations/a-pattern-language": { icon: "mdi:home-city" },
   "writing/annotations/meetings": { icon: "mdi:account-group" },
   "writing/articles": { icon: "mdi:file-edit" },
+  "writing/emails": { icon: "mdi:email" },
   "writing/highlights": { icon: "mdi:star" },
   "writing/tutorials": { icon: "mdi:map" },
 }
@@ -205,11 +206,11 @@ export const subscribe: SubscribeConfig = {
   buttondown: "chaoticgoodcomputing",
   underNote: {
     title: "Subscribe for more!",
-    description: "Be notified weekly about any fresh notes or articles!",
+    description: "Be notified about new highlights and cool updates!",
   },
   sidebar: {
     title: "Newsletter",
-    description: "Weekly updates about any new notes!",
+    description: "Occasional emails with highlights and updates.",
   },
 }
 

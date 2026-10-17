@@ -1,12 +1,6 @@
 ---
 title: "Meeting 2026-09-23 11:11"
 date: "2026-09-23T15:11:54.845Z"
-duration_seconds: 3810
-language: "en"
-configured_language: "en"
-detected_language: "en"
-is_diarised: true
-notes_generated: false
 tags:
   - "projects/dayjob"
   - "writing/annotations/meetings"
@@ -16,7 +10,6 @@ tags:
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
 
 If you are interested in what this note contains, please reach out! If it's not anything terribly sensitive, I'm happy to chat about it!
-
 
 ## Links
 

@@ -1,9 +1,6 @@
 ---
 title: "Meeting 2026-07-14 12:21"
 date: "2026-07-14T16:21:36.418Z"
-duration_seconds: 526
-language: "en"
-is_diarised: true
 tags:
   - "engineering/devops"
   - "engineering/ai"
@@ -11,13 +8,11 @@ tags:
   - "projects/dayjob"
   - "writing/annotations/meetings"
   - "private"
-auto_tagged: true
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
 
 If you are interested in what this note contains, please reach out! If it's not anything terribly sensitive, I'm happy to chat about it!
-
 
 ## Links
 

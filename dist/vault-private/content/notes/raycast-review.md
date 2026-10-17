@@ -1,9 +1,5 @@
 ---
 title: "Diary of a Raycastaway"
-description: |
-  A MacOS Spotlight replacement I'd recommend to everybody, not just engineers.
-  Brief thoughts on Raycast before diving into extensions and workflows.
-  
 date: "2024-02-28T00:00:00.000Z"
 tags:
   - "horticulture/seasons/rhythm"

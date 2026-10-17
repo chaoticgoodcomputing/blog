@@ -11,7 +11,7 @@ test("under a note, the subscribe box has its heading, its line of text and the 
   const box = page.locator(".after-body .subscribe-box")
   await expect(box).toHaveCount(1)
   await expect(box.getByRole("heading")).toHaveText("Subscribe for more!")
-  await expect(box.locator("p")).toHaveText("Be notified weekly about any fresh notes or articles!")
+  await expect(box.locator("p")).toHaveText("Be notified about new highlights and cool updates!")
 
   const form = box.locator("form")
   await expect(form).toHaveAttribute("action", list)
@@ -37,7 +37,7 @@ test("on the home page, the sidebar has the subscribe box, and nothing follows t
   await expect(box).toHaveCount(1)
   // Headed as every sidebar section is.
   await expect(box.getByRole("heading", { level: 2 })).toHaveText("Newsletter")
-  await expect(box.locator("p")).toHaveText("Weekly updates about any new notes!")
+  await expect(box.locator("p")).toHaveText("Occasional emails with highlights and updates.")
   await expect(box.locator("form")).toHaveAttribute("action", list)
   await expect(page.locator(".subscribe-box")).toHaveCount(1)
 })

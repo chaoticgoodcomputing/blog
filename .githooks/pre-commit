@@ -1,0 +1,5 @@
+#!/bin/sh
+# Refuses a commit whose private-note stubs, dist/vault-private, publish more than the placeholder,
+# checking the files as staged (content/utils/guard-private.ts). git uses this folder's hooks once
+# `pnpm install` has run `git config core.hooksPath .githooks` (git:postinstall).
+exec node --experimental-strip-types --disable-warning=ExperimentalWarning content/utils/guard-private.ts --staged

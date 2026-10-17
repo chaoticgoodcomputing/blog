@@ -6,7 +6,6 @@ tags:
   - "horticulture/seasons/systems"
   - "writing/annotations"
   - "private"
-description: null
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.

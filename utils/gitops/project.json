@@ -26,6 +26,17 @@
         "parallel": false,
         "cwd": "{workspaceRoot}"
       }
+    },
+    "postinstall": {
+      "//": "Points git at the repo's tracked hooks, .githooks/, whose pre-commit refuses a commit whose private-note stubs publish more than the placeholder (vault:guard-private). Runs on `pnpm install`.",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "git config core.hooksPath .githooks"
+        ],
+        "parallel": false,
+        "cwd": "{workspaceRoot}"
+      }
     }
   }
 }

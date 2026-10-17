@@ -4,7 +4,6 @@ date: "2026-03-30T00:00:00.000Z"
 tags:
   - "writing/annotations"
   - "private"
-description: null
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.

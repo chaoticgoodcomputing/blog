@@ -4,13 +4,11 @@ date: "2026-04-06T00:00:00.000Z"
 tags:
   - "writing/annotations"
   - "private"
-description: null
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
 
 If you are interested in what this note contains, please reach out! If it's not anything terribly sensitive, I'm happy to chat about it!
-
 
 ## Links
 
@@ -38,7 +36,3 @@ This note originally contained the following links:
 - [show annotation](#^nmp4kibi2g)
 - [show annotation](#^asijf01osvv)
 - [show annotation](#^0eoysdv0r48p)
-- [a talk that Gabe Newell gave at UT's LBJ School](https://www.youtube.com/watch?v=t8QEOBgLBQU)
-- [every Flowthru project prior](https://github.com/chaoticgoodcomputing/flowthru/tree/main/examples/starter)
-- [properly decentralized pipelines and catalogs, packaged together into a central runtime](https://github.com/chaoticgoodcomputing/flowthru/tree/main/examples/advanced/SpaceflightsDistributed)
-- [knock-on request for user data](https://github.com/constituentvoice/nwyc/issues/666)

@@ -1,9 +1,9 @@
 ---
-title: null
 date: "2026-10-13T00:00:00.000Z"
 tags:
+  - "engineering/ai"
+  - "writing/annotations"
   - "private"
-description: null
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
