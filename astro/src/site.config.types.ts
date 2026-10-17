@@ -22,7 +22,11 @@ export interface SiteConfig {
   locale: string
   author: SiteParty
   publisher: SiteParty
-  /** Where the vault's files are on GitHub: `<url>/blob/<branch>/<vaultPath>/<a note's path>`. */
+  /**
+   * Where the vault's files are on GitHub: `<url>/blob/<branch>/<a file's path in the repository>`.
+   * In the assembled vault, a file's path is its source file's, as the manifest names it
+   * (src/lib/source-link.ts); in any other vault, `<vaultPath>/<its path in the vault>`.
+   */
   repository: { url: string; branch: string; vaultPath: string }
   /** A note under one of these folders of the vault is an article: what the feed holds. */
   articleFolders: string[]

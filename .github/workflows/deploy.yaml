@@ -42,17 +42,34 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
+      # The resume is compiled here, by `resume:build`, which astro:build depends on, and published
+      # from dist/resume (astro/src/lib/resume.ts). Typst is the release used locally, the official
+      # static binary checked against its hash, so the PDF is the one a local build makes: the
+      # resume's font, New Computer Modern, is built into Typst, and it imports no packages.
+      - name: Install Typst
+        env:
+          TYPST_VERSION: 0.14.2
+          TYPST_SHA256: a6044cbad2a954deb921167e257e120ac0a16b20339ec01121194ff9d394996d
+        run: |
+          curl -fsSL -o typst.tar.xz "https://github.com/typst/typst/releases/download/v${TYPST_VERSION}/typst-x86_64-unknown-linux-musl.tar.xz"
+          echo "${TYPST_SHA256}  typst.tar.xz" | sha256sum --check --strict
+          mkdir -p "$RUNNER_TOOL_CACHE/typst"
+          tar -xJf typst.tar.xz -C "$RUNNER_TOOL_CACHE/typst" --strip-components=1
+          rm typst.tar.xz
+          echo "$RUNNER_TOOL_CACHE/typst" >> "$GITHUB_PATH"
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       # The mirrors of annotated documents are kept between deploys, so a mirror stays the copy first
       # saved and a host that refuses CI's runners costs nothing once its document is saved
-      # (astro/docs/adr/2801). The newest set is restored; astro:mirrors adds what is missing.
+      # (astro/docs/adr/2801). They live in dist/mirrors, outside node_modules, never in the vault.
+      # The newest set is restored; astro:mirrors adds what is missing.
       - name: Restore the annotated documents' mirrors
         id: mirrors
         uses: actions/cache/restore@v6
         with:
-          path: content/public/assets/annotated-documents
+          path: dist/mirrors
           key: annotation-mirrors-${{ github.sha }}
           restore-keys: annotation-mirrors-
 
@@ -63,11 +80,11 @@ jobs:
 
       # Named by what the directory holds, so a new set is saved only when a mirror was added.
       - name: Keep the mirrors
-        if: hashFiles('content/public/assets/annotated-documents/**') != '' && steps.mirrors.outputs.cache-matched-key != format('annotation-mirrors-{0}', hashFiles('content/public/assets/annotated-documents/**'))
+        if: hashFiles('dist/mirrors/**') != '' && steps.mirrors.outputs.cache-matched-key != format('annotation-mirrors-{0}', hashFiles('dist/mirrors/**'))
         uses: actions/cache/save@v6
         with:
-          path: content/public/assets/annotated-documents
-          key: annotation-mirrors-${{ hashFiles('content/public/assets/annotated-documents/**') }}
+          path: dist/mirrors
+          key: annotation-mirrors-${{ hashFiles('dist/mirrors/**') }}
 
       # Share cards are named by the hash of everything they are drawn from, so the newest set is
       # always safe to start from: a page that changed draws a new card, the rest are read

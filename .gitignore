@@ -7,7 +7,12 @@ tsconfig.tsbuildinfo
 replit.nix
 .nx
 
+# Build output. One folder of it is committed: dist/vault-private, the private notes' stubs, which
+# vault:publish-private writes and CI builds from, since it never checks out the private vault.
 dist
+!/dist/
+/dist/*
+!/dist/vault-private/
 
 .nx/cache
 .nx/workspace-data
@@ -37,3 +42,6 @@ astro/.astro
 astro/.e2e
 astro/test-results
 astro/playwright-report
+
+# Local issue tracker (docs/agents/issue-tracker.md)
+.scratch

@@ -2,7 +2,7 @@
 
 ### Issue tracker
 
-Issues are tracked in GitHub Issues for `chaoticgoodcomputing/blog`. Use GitHub MCP servers over the `gh` CLI.
+Issues are tracked locally as Markdown files under `.scratch/<effort>/`, which git ignores. Don't file GitHub issues unless asked. See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
 

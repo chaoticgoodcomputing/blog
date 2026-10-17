@@ -12,6 +12,7 @@ import { parseFrontMatterAliases } from "@chaoticgoodcomputing/obsidian-markdown
 import { publishedAttachments } from "./attachments.ts"
 import { getDrawingExports } from "./drawings.ts"
 import { getNotes, tagsOf, type Note } from "./notes.ts"
+import { resumeAddresses } from "./resume.ts"
 import { tagUrl } from "./tags.ts"
 import { pagePath, slugFor } from "./vault.ts"
 
@@ -100,8 +101,8 @@ export function staticPages(pages: string = fileURLToPath(new URL("../pages/", i
 
 /**
  * The addresses of the files the site publishes as they are, beside its pages: each drawing's
- * exports (src/pages/drawings), the vault's attachments (src/integrations/attachments.ts), and the
- * files of `public/`. Not percent-encoded, as an alias's address is not.
+ * exports (src/pages/drawings), the vault's attachments (src/integrations/attachments.ts), the
+ * resume (src/integrations/resume.ts), and the files of `public/`. Not percent-encoded, as an alias's address is not.
  */
 export function publishedFiles(
   publicFolder: string = fileURLToPath(new URL("../../public/", import.meta.url)),
@@ -112,7 +113,7 @@ export function publishedFiles(
     .readdirSync(publicFolder, { recursive: true, withFileTypes: true })
     .filter((entry) => entry.isFile())
     .map((entry) => `/${path.relative(publicFolder, path.join(entry.parentPath, entry.name)).split(path.sep).join("/")}`)
-  return [...exports, ...publishedAttachments().keys(), ...own]
+  return [...exports, ...publishedAttachments().keys(), ...resumeAddresses(), ...own]
 }
 
 /**

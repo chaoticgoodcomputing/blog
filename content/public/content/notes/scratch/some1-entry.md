@@ -13,15 +13,15 @@ Awhile ago, the channel 3blue1brown announced an internship and public competiti
 
 ## Bachelor Analysis
 
-![[/bachelors.jpeg]]
+![[public/assets/bachelors.jpeg]]
 
 ## Excerpts from Stable Marriage
 
-Largely taken from [[/content/notes/stability-of-marriage|a presentation on stable matching algorithms]]
-![[/stable_matching_1.png]]
-![[/stable_matching_2.png]]
-![[/stable_matching_3.png]] ^77ff26
+Largely taken from [[public/content/notes/stability-of-marriage|a presentation on stable matching algorithms]]
+![[public/assets/stable_matching_1.png]]
+![[public/assets/stable_matching_2.png]]
+![[public/assets/stable_matching_3.png]] ^77ff26
 
 ## Optimal Stopping Problem
 
-![[/stopping.jpeg]]
+![[public/assets/stopping.jpeg]]

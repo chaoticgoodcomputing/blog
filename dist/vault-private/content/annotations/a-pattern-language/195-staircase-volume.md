@@ -1,0 +1,24 @@
+---
+title: "APL: Pattern 195; Staircase Volume"
+draft: true
+tags:
+  - "writing/annotations/a-pattern-language"
+  - "projects/games/the-neighborhood"
+  - "private"
+description: ""
+---
+
+This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
+
+If you are interested in what this note contains, please reach out! If it's not anything terribly sensitive, I'm happy to chat about it!
+
+
+## Links
+
+This note originally contained the following links:
+
+- [Interior Windows](content/annotations/a-pattern-language/194-interior-windows)
+- [Corner Doors](content/annotations/a-pattern-language/196-corner-doors)
+- [133-staircase-as-a-stage](content/annotations/a-pattern-language/133-staircase-as-a-stage)
+- [158-open-stairs](content/annotations/a-pattern-language/158-open-stairs)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

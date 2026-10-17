@@ -43,7 +43,7 @@ export interface OwnBuild {
   /** The build's cache, so it never clears the real build's (astro.config.ts). */
   cacheDir: string
   port: number
-  /** More of the build's environment: `VAULT_ROOT`, for a vault other than the real one. */
+  /** More of the build's environment: `VAULT_ROOT` and `MIRRORS_ROOT`, for a vault other than the real one. */
   env?: Record<string, string>
 }
 

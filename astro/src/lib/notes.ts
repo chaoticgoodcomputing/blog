@@ -7,10 +7,10 @@
 // renders a note's body joins the note to its collection entry (./entries.ts).
 
 import { createHash } from "node:crypto"
-import path from "node:path"
 import { getAllTags, isExcalidraw, type CachedMetadata, type Vault, type VaultFile } from "@chaoticgoodcomputing/obsidian-markdown"
 import { site } from "../site.config.ts"
-import { gitDates, modifiedTime, resolveDates } from "./dates.ts"
+import { modifiedTime, resolveDates, vaultDates } from "./dates.ts"
+import { sourceDate } from "./resume.ts"
 import { tagSlug, tagUrl, underAny, withAncestors } from "./tags.ts"
 import { getVault, pagePath, slugFor } from "./vault.ts"
 
@@ -144,7 +144,7 @@ const text = (value: unknown): string | undefined =>
  * the file system are asked for the dates frontmatter doesn't give.
  */
 export function indexNotes(vault: Vault, rules: Unpublished[] = unpublished): NoteIndex {
-  const git = gitDates(vault.root)
+  const { git, sourceOf } = vaultDates(vault.root)
   const index: NoteIndex = {
     notes: [],
     unpublished: new Map(),
@@ -174,9 +174,10 @@ export function indexNotes(vault: Vault, rules: Unpublished[] = unpublished): No
       tags,
       tagsWithAncestors: withAncestors(tags),
       ...resolveDates({
-        frontmatter: frontmatter.date,
+        // The resume's note is dated by the resume's source, outside the vault (./resume.ts).
+        frontmatter: frontmatter.date ?? sourceDate(file.path),
         git: git.get(file.path),
-        filesystem: () => modifiedTime(path.join(vault.root, file.path)),
+        filesystem: () => modifiedTime(sourceOf(file.path)),
       }),
       isPrivate: isPrivate(tags),
       isArticle: site.articleFolders.some((folder) => isUnder(file.path, folder)),

@@ -3,42 +3,47 @@
   "name": "vault",
   "root": "content",
   "projectType": "library",
-  "implicitDependencies": [ "resume" ],
   "targets": {
     "precommit": {
       "//": "Runs all pre-commit tasks related to setting up the vault prior to builds and commits.",
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "nx run vault:sync",
-          "nx run vault:index-tags"
+          "nx run vault:publish-private"
         ],
         "cwd": "content",
         "parallel": false
-      },
-      "dependsOn": [
-        "resume:publish",
-        "vault:_clear-copilot"
-      ]
+      }
     },
-    "sync": {
-      "//": "Run private scrub.mjs to populate private/dist, copy scrubbed content into public/, then normalize all internal links.",
+    "publish-private": {
+      "//": "Publishes the private notes' stubs: the private vault's scrub.mjs empties dist/vault-private and writes a stub of each private note into dist/vault-private/content, at the path the note has in content/private/content, then index-tags gives each new tag a description file. dist/vault-private is committed, so CI, which never checks out the private vault, builds from the stubs (astro:vault). Without the private vault, the scrub is skipped and the committed stubs are left as they are. The scrub also edits the private notes in place (its meeting-note steps); nothing else here writes into content/ but index-tags.",
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "node utils/extract-private-metadata.mjs",
-          "node utils/fix-vault-links.mjs"
+          "if [ -f private/scrub.mjs ]; then node private/scrub.mjs ../dist/vault-private; else echo 'The private vault is not checked out; leaving dist/vault-private as it is.'; fi",
+          "nx run vault:index-tags"
         ],
         "parallel": false,
         "cwd": "content"
       }
     },
     "index-tags": {
-      "//": "Generate index.md files for all tags found in markdown frontmatter.",
+      "//": "Writes a description file, content/public/tags/<tag>.md, for each tag that has none, from the tags of the public notes and the private notes' stubs in dist/vault-private. One of the two writers into content/, with the private vault's scrub.",
       "executor": "nx:run-commands",
       "options": {
         "commands": [
           "node utils/generate-tag-indexes.mjs"
+        ],
+        "parallel": false,
+        "cwd": "content"
+      }
+    },
+    "check-links": {
+      "//": "Read-only: fails on any link in either vault that doesn't start from Obsidian's vault root, content/ (public/… or private/…), and name a file there by its exact path (utils/check-links.ts). Bare names, links to notes not yet written, Copilot conversations, and the links a vault's .check-links-allow lists pass. Run by hand; the private vault is checked when it is checked out.",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "node --experimental-strip-types --disable-warning=ExperimentalWarning utils/check-links.ts"
         ],
         "parallel": false,
         "cwd": "content"
@@ -63,7 +68,7 @@
       }
     },
     "_clear-copilot": {
-      "//": "Clean Obsidian Copilot conversations",
+      "//": "Clean Obsidian Copilot conversations. Run by hand when wanted (`nx run vault:_clear-copilot`); it is no longer part of vault:precommit, so a commit leaves the conversations alone.",
       "executor": "nx:run-commands",
       "options": {
         "commands": [

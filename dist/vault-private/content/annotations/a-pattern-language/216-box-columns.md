@@ -1,0 +1,24 @@
+---
+title: "APL: Pattern 216; Box Columns"
+draft: true
+tags:
+  - "writing/annotations/a-pattern-language"
+  - "projects/games/the-neighborhood"
+  - "private"
+description: ""
+---
+
+This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
+
+If you are interested in what this note contains, please reach out! If it's not anything terribly sensitive, I'm happy to chat about it!
+
+
+## Links
+
+This note originally contained the following links:
+
+- [Ground Floor Slab](content/annotations/a-pattern-language/215-ground-floor-slab)
+- [Perimeter Beams](content/annotations/a-pattern-language/217-perimeter-beams)
+- [214-root-foundations](content/annotations/a-pattern-language/214-root-foundations)
+- [213-final-column-distribution](content/annotations/a-pattern-language/213-final-column-distribution)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

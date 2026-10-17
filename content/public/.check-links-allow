@@ -1,0 +1,4 @@
+# Links vault:check-links lets pass in the public vault (content/utils/check-links.ts): the note's
+# path from content/, a tab, and the link's path as written.
+# Pages of the Quartz site, which has no note for them in the vault.
+public/content/notes/mdx-widgets-test.mdx	/widgets/README

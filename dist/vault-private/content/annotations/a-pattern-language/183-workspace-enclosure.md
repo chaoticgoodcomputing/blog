@@ -1,0 +1,26 @@
+---
+title: "APL: Pattern 183; Workspace Enclosure"
+draft: true
+tags:
+  - "writing/annotations/a-pattern-language"
+  - "projects/games/the-neighborhood"
+  - "private"
+description: ""
+---
+
+This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
+
+If you are interested in what this note contains, please reach out! If it's not anything terribly sensitive, I'm happy to chat about it!
+
+
+## Links
+
+This note originally contained the following links:
+
+- [Eating Atmosphere](content/annotations/a-pattern-language/182-eating-atmosphere)
+- [Cooking Layout](content/annotations/a-pattern-language/184-cooking-layout)
+- [146-flexible-office-space](content/annotations/a-pattern-language/146-flexible-office-space)
+- [152-half-private-office](content/annotations/a-pattern-language/152-half-private-office)
+- [157-home-workshop](content/annotations/a-pattern-language/157-home-workshop)
+- [179-alcoves](content/annotations/a-pattern-language/179-alcoves)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

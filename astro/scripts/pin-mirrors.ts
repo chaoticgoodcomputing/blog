@@ -8,8 +8,9 @@
 // no mirror is built with its annotations alone. A document that can't be fetched is reported and
 // left, and the script still succeeds, so a host that refuses one reader can't stop a deploy.
 //
-// Reads the vault VAULT_ROOT names, else the repository's content/public, and writes only into its
-// mirror directory, which git ignores.
+// Reads the vault VAULT_ROOT names, else the assembled one (`astro:vault`), and writes only into the
+// mirror directory, MIRRORS_ROOT, else the repository's dist/mirrors (src/lib/mirrors.ts): never
+// into the vault.
 
 import fs from "node:fs"
 import http from "node:http"

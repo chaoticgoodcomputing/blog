@@ -5,7 +5,7 @@ tags:
   - engineering
 description: A brief side-rant about the burrito-style economics of junior-level software engineering
 ---
-This is a side note that I carved out of [[/content/notes/agronomic-software-development.mdx|Agronomic Software Development]]. I'm a stream-of-consciousness writer, and this... ended up being a slightly longer stream. It was cut from the portion about software factories.
+This is a side note that I carved out of [[public/content/notes/agronomic-software-development.mdx|Agronomic Software Development]]. I'm a stream-of-consciousness writer, and this... ended up being a slightly longer stream. It was cut from the portion about software factories.
 
 ## What is a software engineer, anyway?
 
@@ -18,7 +18,7 @@ At a large company, a junior engineering position truly is line-worker style. Th
 
 1. You get a ticket to fix a bug
 2. You investigate the bug; you write a fix
-3. You submit a [[/content/notes/natural-language-cve|pull request]]
+3. You submit a [[public/content/notes/natural-language-cve|pull request]]
 4. You get a ticket to fix a bug...
 
 Don't get me wrong: I'm not trying to understate how much intellectual work can go into charting a path between the problem and the solution. I'm also not here to claim that it's easy, especially when you don't have an effective manager to simplify that "get a ticket" bit. Being a junior engineer without an effective manager is like being expected to roll a burrito for a customer while the kitchen is burning behind you, none of the kitchenware is clean, the card reader isn't working, and the customer is telling you that they never would've had to deal with this mediocrity when they were VP of Vice Presidents at Metabook in the 2010s.

@@ -1,0 +1,25 @@
+---
+title: "APL: Pattern 82; Office Connections"
+draft: true
+tags:
+  - "writing/annotations/a-pattern-language"
+  - "projects/games/the-neighborhood"
+  - "private"
+description: ""
+---
+
+This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
+
+If you are interested in what this note contains, please reach out! If it's not anything terribly sensitive, I'm happy to chat about it!
+
+
+## Links
+
+This note originally contained the following links:
+
+- [Small Services without Red Tape](content/annotations/a-pattern-language/81-small-services-without-red-tape)
+- [Master and Apprentices](content/annotations/a-pattern-language/83-master-and-apprentices)
+- [41-work-community](content/annotations/a-pattern-language/41-work-community)
+- [80-self-governing-workshops-and-offices](content/annotations/a-pattern-language/80-self-governing-workshops-and-offices)
+- [81-small-services-without-red-tape](content/annotations/a-pattern-language/81-small-services-without-red-tape)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

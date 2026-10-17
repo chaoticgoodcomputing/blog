@@ -12,9 +12,21 @@ reader sees where they still fit. How the project is laid out and worked on is i
 ### The vault and its notes
 
 **Vault**:
-The Obsidian vault the site is built from: `content/public`, or the folder `VAULT_ROOT` names. It
-stays where Obsidian has it, outside this project.
+The Obsidian vault the site is built from: the assembled vault, or the folder `VAULT_ROOT` names.
+Its sources stay where Obsidian has them, outside this project.
 _Avoid_: content folder, content directory
+
+**Vault source**:
+A folder the assembled vault is put together from, mounted at its root: `content/public`, then the
+private notes' stubs in `dist/vault-private`. The site only reads one.
+_Avoid_: input vault
+
+**Assembled vault**:
+`dist/vault`, which `astro:vault` writes from the vault sources (`src/lib/assembly.ts`): each
+note copied, with the `public/` and `private/` its links start with taken off
+(`src/lib/link-prefixes.ts`), each attachment linked, without dotfiles and what git ignores. Its
+manifest, `.sources.json`, names each file's source file, which is where the file's git history is.
+_Avoid_: merged vault, build vault
 
 **Note**:
 A Markdown or MDX file of the vault.
@@ -244,9 +256,9 @@ What an annotation page's note says after its first annotation that is not one.
 _Avoid_: conclusion, outro
 
 **Mirror**:
-The site's own pinned copy of an annotated document, served from the site. Saved in the vault's
-mirror directory, which git ignores, under the document's file name, and never fetched again once
-saved.
+The site's own pinned copy of an annotated document, served from the site under
+assets/annotated-documents. Saved in the mirror directory, the repository's dist/mirrors, and never
+in the vault, under the document's file name, and never fetched again once saved.
 _Avoid_: download, cached PDF
 
 **Annotation viewer**:

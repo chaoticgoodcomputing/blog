@@ -7,14 +7,17 @@ import { dirname, join } from "path"
 import { existsSync, readdirSync } from "fs"
 
 const PUBLIC_DIR = "public"
-const CONTENT_DIR = join(PUBLIC_DIR, "content")
 const TAGS_DIR = join(PUBLIC_DIR, "tags")
+// The notes whose tags get a description file: the public vault's, and the private notes' stubs,
+// which vault:publish-private writes to dist/vault-private, so a tag only private notes carry has
+// one too. Paths are from content/, where the target runs.
+const CONTENT_DIRS = [join(PUBLIC_DIR, "content"), join("..", "dist", "vault-private", "content")]
 
 async function collectTags() {
   console.log("Collecting tags from markdown files...")
 
-  // Find all markdown files in content directory
-  const markdownFiles = await globby([`${CONTENT_DIR}/**/*.md`])
+  // Find all markdown files in the content directories
+  const markdownFiles = await globby(CONTENT_DIRS.map((dir) => `${dir}/**/*.md`))
 
   const tags = new Set()
 

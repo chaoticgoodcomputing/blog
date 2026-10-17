@@ -6,6 +6,7 @@ import os from "node:os"
 import path from "node:path"
 import type { Vault, VaultFile } from "@chaoticgoodcomputing/obsidian-markdown"
 import { afterAll, beforeAll, describe, expect, test } from "vitest"
+import { assembleVault } from "../src/lib/assembly.ts"
 import { attachmentAddresses, attachmentAddressOf, serveAttachments } from "../src/lib/attachments.ts"
 import { openVault } from "../src/lib/vault.ts"
 
@@ -36,7 +37,9 @@ beforeAll(async () => {
     fs.writeFileSync(path.join(repo, "vault", file), contents)
   }
   execFileSync("git", ["init", "--quiet"], { cwd: repo, stdio: "pipe" })
-  vault = await openVault(path.join(repo, "vault"))
+  // Read as the site reads its own: assembled first, which is where what git ignores is left out.
+  assembleVault([path.join(repo, "vault")], path.join(repo, "site"))
+  vault = await openVault(path.join(repo, "site"))
 })
 
 afterAll(() => fs.rmSync(repo, { recursive: true, force: true }))
@@ -130,7 +133,8 @@ describe("on the dev server", () => {
   })
 
   test("a file added to the vault after the server started is served once the vault has it", async () => {
-    fs.writeFileSync(path.join(vault.root, "assets/added.pdb"), "ADDED")
+    fs.writeFileSync(path.join(repo, "vault/assets/added.pdb"), "ADDED")
+    assembleVault([path.join(repo, "vault")], vault.root)
     expect((await get("/assets/added.pdb")).status).toBe(404)
     published = attachmentAddresses(await openVault(vault.root))
     expect(await get("/assets/added.pdb")).toEqual({ status: 200, body: "ADDED" })

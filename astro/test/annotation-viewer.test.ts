@@ -1,4 +1,3 @@
-import { execFileSync } from "node:child_process"
 import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
@@ -6,7 +5,7 @@ import { afterAll, beforeAll, expect, test } from "vitest"
 import { findPassage, highlightBoxes, pageText } from "../src/lib/highlights.ts"
 import { annotatedPassages, documentFileName } from "../src/lib/annotations.ts"
 import { getNote } from "../src/lib/notes.ts"
-import { isPdf, mirrorName, mirrorOf, mirrorsToSave } from "../src/lib/mirrors.ts"
+import { MIRRORS_ROOT, defaultMirrorsRoot, workspaceRoot, isPdf, mirrorFile, mirrorName, mirrorOf, mirrorsToSave } from "../src/lib/mirrors.ts"
 
 test("a mirror is named by its document's file name, a space written as -", () => {
   expect(mirrorName("https://media.steampowered.com/apps/valve/Valve_Handbook_LowRes.pdf")).toBe("Valve_Handbook_LowRes.pdf")
@@ -22,23 +21,45 @@ test("a document with no file name in its address, or that is not on the web, ha
   expect(mirrorName("ftp://example.com/paper.pdf")).toBeUndefined()
 })
 
-// A vault whose mirror directory git ignores, as the real vault's .gitignore has it.
+// A mirror directory with one mirror saved in it, flat, as astro:mirrors saves them.
 let root: string
 
 beforeAll(() => {
   root = fs.mkdtempSync(path.join(os.tmpdir(), "astro-mirrors-"))
-  execFileSync("git", ["init", "-q"], { cwd: root })
-  fs.writeFileSync(path.join(root, ".gitignore"), "assets/annotated-documents/*\n")
-  fs.mkdirSync(path.join(root, "assets/annotated-documents"), { recursive: true })
-  fs.writeFileSync(path.join(root, "assets/annotated-documents/Valve_Handbook_LowRes.pdf"), "%PDF-1.4")
+  fs.writeFileSync(path.join(root, "Valve_Handbook_LowRes.pdf"), "%PDF-1.4")
 })
 
 afterAll(() => fs.rmSync(root, { recursive: true, force: true }))
 
-test("a document whose mirror is in the vault's mirror directory is served from the site's, though git ignores it", () => {
+test("a document whose mirror is in the mirror directory is served from the site's, the address mirrors have always had", () => {
   expect(mirrorOf("https://media.steampowered.com/apps/valve/Valve_Handbook_LowRes.pdf", root)).toBe(
     "/assets/annotated-documents/Valve_Handbook_LowRes.pdf",
   )
+  expect(mirrorFile("Valve_Handbook_LowRes.pdf", root)).toBe(path.join(root, "Valve_Handbook_LowRes.pdf"))
+})
+
+test("mirrors are kept in the repository's dist/mirrors, whichever vault the site reads: here, the fixture vault", () => {
+  // The tests run from astro/, so the repository is the folder above it.
+  expect(MIRRORS_ROOT).toBe(path.resolve("../dist/mirrors"))
+  expect(mirrorFile("Greiner.pdf")).toBe(path.join(MIRRORS_ROOT, "Greiner.pdf"))
+})
+
+test("the repository is found from any folder in it, so the mirror directory is the same whichever folder runs the code", () => {
+  const repo = fs.mkdtempSync(path.join(os.tmpdir(), "astro-workspace-"))
+  try {
+    fs.writeFileSync(path.join(repo, "nx.json"), "{}")
+    const deep = path.join(repo, "astro", "dist", ".prerender", "chunks")
+    fs.mkdirSync(deep, { recursive: true })
+    for (const from of [repo, path.join(repo, "astro"), deep]) {
+      expect(workspaceRoot(from)).toBe(repo)
+      expect(defaultMirrorsRoot(workspaceRoot(from)!)).toBe(path.join(repo, "dist", "mirrors"))
+    }
+    // The first folder in a repository wins; one outside every repository is passed over.
+    expect(workspaceRoot(os.tmpdir(), deep)).toBe(repo)
+    expect(workspaceRoot(path.parse(repo).root)).toBeUndefined()
+  } finally {
+    fs.rmSync(repo, { recursive: true, force: true })
+  }
 })
 
 test("a document with no mirror saved is not served", () => {

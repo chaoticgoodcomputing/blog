@@ -11,7 +11,7 @@ description: Garden-inspired development as a non-sinister, people-centric way t
 
 import { BlueskyPost } from '@chaoticgoodcomputing/widgets/bluesky-post'
 
-![[assets/doodles/panic-07-vines]]
+![[public/assets/doodles/panic-07-vines]]
 
 The start of every year is a magical time. So many possibilities, so much excitement about what the new year might hold. At my day job, my team was coming off the success of rolling out a large product release in 2024, so our slates really were clean heading into 2025. That's when a question came my way: a question that started with an ominous phrase:
 
@@ -40,11 +40,11 @@ In March of 2018, "agent" wasn't *quite* a thing yet. It's easy to forget just h
    
 That said, given the timeline I was given, how little I had to work from, and how out-of-water I was on the stack (db2k was released when I was about 19 months old, and superseded by dBase PLUS when I was 3), the name of the game was to leverage whatever I could to dig out of the hole we were in. I saw the role of LLMs go from content indexing and vectorization, into light "summarize these files" Markdown generation, into full-fledged code writing over the course of *maybe* 6 months. An important inflection point happened about 8 months after I got the question: most of the code on the project had been written by LLMs.
 
-By the time true agent-based development approached many of my peers' radars, I'd been trying to keep ahead on how development might look at this point we're at today. The first wave was the purely technical approach: [[/content/annotations/llm-starter|my LLM primer presentation]] was built out of understanding Anthropic's first wave of agentic documentation. [[/content/notes/hostage-negotiations|"How to Run Your Own Hostage Negotiation"]] came once agents got up to the skill that you might see from, say, a very green software development intern and the vibe shifted from "how do these work?" to "will they replace us?".
+By the time true agent-based development approached many of my peers' radars, I'd been trying to keep ahead on how development might look at this point we're at today. The first wave was the purely technical approach: [[public/content/annotations/llm-starter|my LLM primer presentation]] was built out of understanding Anthropic's first wave of agentic documentation. [[public/content/notes/hostage-negotiations|"How to Run Your Own Hostage Negotiation"]] came once agents got up to the skill that you might see from, say, a very green software development intern and the vibe shifted from "how do these work?" to "will they replace us?".
 
 When I wrote the primer, I [intentionally](https://blog.chaoticgood.computer/content/annotations/llm-starter#zwt3txy8fko) didn't fill in the last section. It posed a question that, at that point, would've been sheer conjecture to try and answer at the time. However, I think it is time to give it a good, college try:
 
-![[assets/Pasted image 20260930060305.png]]
+![[public/assets/Pasted image 20260930060305.png]]
 
 
 ## Software as a Factory
@@ -55,9 +55,9 @@ When I say artisan, I mean it in the most literal sense. Imagine digital homeste
 
 Once high demand for computer hardware came, high demand for computer software came hand-in-hand. Like any other market, increased supply must follow, and artisan production of *anything* is fundamentally incompatible with high supply of it. Artisan production of physical goods was superseded by the factories of the Industrial Revolution, so you might imagine some kind of software factory as the replacement to artisan development. Software isn't car axles or pinheads, though -- so what would a software factory even *look* like?
 
-This is about the time that papers like [[/content/annotations/programming-as-theory-building|Programming as Theory Building]] start coming into play: engineers that aren't thinking about software in terms of data structures and algorithms, but in terms of how ideas progressively *become* runnable software. We do also get the traditional management structure that you might see at a factory floor: line workers, managers, and executives:
+This is about the time that papers like [[public/content/annotations/programming-as-theory-building|Programming as Theory Building]] start coming into play: engineers that aren't thinking about software in terms of data structures and algorithms, but in terms of how ideas progressively *become* runnable software. We do also get the traditional management structure that you might see at a factory floor: line workers, managers, and executives:
 
-![[assets/doodles/panic-01-engineering-loop]]
+![[public/assets/doodles/panic-01-engineering-loop]]
 
 This is 3-layer structure would put a company around [Phase 2](https://blog.chaoticgood.computer/content/annotations/evolutions-revolutions#iupe1lo6a8) in their growth -- it's no longer a handful of executives directly doing work, and there are enough disparate pieces or initiatives to warrant multiple teams. It is no longer **artisan**; it's now the start of a factory layout:
 
@@ -71,11 +71,11 @@ At this point, the concerns of software engineering and production engineering s
 2. Managers plan out how to express those ideas as tickets, and plan out how to delegate them out
 3. Engineers pull tickets, complete them, and merge them into the product.
 
-Rinse, repeat. Even at [[/content/annotations/valve-handbook|companies that claim to not have hierarchies like this]], you'll still find this operating structure somewhere in the core of every modern software factory.
+Rinse, repeat. Even at [[public/content/annotations/valve-handbook|companies that claim to not have hierarchies like this]], you'll still find this operating structure somewhere in the core of every modern software factory.
 
 *And then...*
 
-![[assets/doodles/panic-02-llm]]
+![[public/assets/doodles/panic-02-llm]]
 
 ## Claude Cometh
 
@@ -83,7 +83,7 @@ I'm going to try my best to correctly express this opinion:
 
 **LLMs are better than humans at writing code.**
 
-I expressed this same sentiment nearly a year ago in [[/content/notes/hostage-negotiations|Hostage Negotiations]], and they certainly haven't gotten *worse* in that time. I'm drawing the boundary, here, at **writing code**, and writing code ≠ software engineering. I won't re-hash that in this post: if you are interested, my thoughts on [[/content/annotations/programming-as-theory-building|Programming as Theory Building]] cover that ground already.
+I expressed this same sentiment nearly a year ago in [[public/content/notes/hostage-negotiations|Hostage Negotiations]], and they certainly haven't gotten *worse* in that time. I'm drawing the boundary, here, at **writing code**, and writing code ≠ software engineering. I won't re-hash that in this post: if you are interested, my thoughts on [[public/content/annotations/programming-as-theory-building|Programming as Theory Building]] cover that ground already.
 
 The fact that even other engineers seem to miss that distinction, though, means that the actual jobs are at some risk: even if the act of software engineering isn't automated (and probably not going to be anytime soon), what the job actually *looks* like is dramatically different than it was even a year ago.
 
@@ -93,7 +93,7 @@ To try and get a feel for the situation, let's game out some org chart options.
 
 ### Do Nothing
 
-![[assets/doodles/panic-03-do-nothing]]
+![[public/assets/doodles/panic-03-do-nothing]]
 
 When faced with a complicated problem, it's always best to take a deep breathe and ask if the best reaction is no reaction. It's a fair pause to take; the tech space is famously hyperreactive to The Next Big Thing. Let us not forget; just five years ago, Mark Zuckerberg rebranded Facebook into "Meta" in the hopes of pivoting humanity into the Matrix, only to divert billions into a VR fad that lasted all of two years -- billions that could've been spent refining their core business model of advertising eating disorders to teenagers.
 
@@ -109,7 +109,7 @@ The proliferation of the technology has hardly been a quiet revolution. I'm sure
 
 ### Fire the Eggheads
 
-![[assets/doodles/panic-04-layoff-engineers|A system where LLMs absorb the engineering layer, and managers take on some responsibilities around QA on code quality]]
+![[public/assets/doodles/panic-04-layoff-engineers|A system where LLMs absorb the engineering layer, and managers take on some responsibilities around QA on code quality]]
 
 It's an option, isn't it? I'll try to put my personal bias aside, here, and entertain the option in good faith (despite my desire to continue earning an income).
 
@@ -146,7 +146,7 @@ But hey -- we've got bloodlust on our minds, so what else could we do?
 
 ### Fire the Suits
 
-![[assets/doodles/panic-05-layoff-pms|A system where management layers are laid off, and engineers must step in to take over some management responsibilities]]
+![[public/assets/doodles/panic-05-layoff-pms|A system where management layers are laid off, and engineers must step in to take over some management responsibilities]]
 
 This one seems to be a recent favorite of the largest tech companies: taking an audit of middle managers and asking "...so, what *do* you do, anyway?" 
 Project managers certainly got some bad PR after a TikTok was deluged with management influencers taking stand-up calls from the sides of resort pools. Shareholders may rejoice at the announcement of those types of layoffs, but what good does it do for the product?
@@ -165,9 +165,9 @@ We're quickly running out of bloodlust solutions. The last tier of people to lay
 
 ## Software Gardening
 
-After spending a lot of time trying to find better ways of coexisting with agents, the approach I've bumbled my way towards for the past two years has been something akin to gardening. It came up in the [[/content/notes/hostage-negotiations|Hostage Negotiations]] post:
+After spending a lot of time trying to find better ways of coexisting with agents, the approach I've bumbled my way towards for the past two years has been something akin to gardening. It came up in the [[public/content/notes/hostage-negotiations|Hostage Negotiations]] post:
 
-> The tomato plant/trellis is the analogy I've settled on the most — it reminds me of [[/content/notes/digital-gardening-with-quartz|digital gardening]]. Human beings have figured out how to wrangle things we don't fully understand for thousands of years, and reading LLM research and model cards can start to feel more like a natural science like biology than something like an applied math paper. We can prod a taught model to check its behavior, but for folks outside of the research side, it falls on us to accept that something we don't fully understand can still be useful.
+> The tomato plant/trellis is the analogy I've settled on the most — it reminds me of [[public/content/notes/digital-gardening-with-quartz|digital gardening]]. Human beings have figured out how to wrangle things we don't fully understand for thousands of years, and reading LLM research and model cards can start to feel more like a natural science like biology than something like an applied math paper. We can prod a taught model to check its behavior, but for folks outside of the research side, it falls on us to accept that something we don't fully understand can still be useful.
 > 
 > What we are responsible for, though, is making sure that this new addition to our lives is handled with care. It's on us to build systems for handling its use — there's a long history of intentionally, and irresponsibly, introducing [invasive species](https://www.invasivespeciesinfo.gov/subject/pathways) into our environments to solve one problem only to create a hundred more in its place. This is the distinction I make between engineering and the act of (\**vomit*\*) *vibecoding*.
 
@@ -175,17 +175,17 @@ A massive amount of humanity's advances in technology, process, and economics co
 
 Picture, in your mind, a **trellis**: the wooden scaffolding on which plants can grow vertically.
 
-![[assets/Pasted Image 20260930021710_086.png]]
+![[public/assets/Pasted Image 20260930021710_086.png]]
 
 Across the industry, we all build our apps on stable, thoroughly-vetted libraries that make up the **stack** we work in. These are sliced into layers: data, business logic, API, and client are all examples of **layers** on the stack.
 
-![[assets/doodles/panic-06-scaffolding]]
+![[public/assets/doodles/panic-06-scaffolding]]
 
 A program, in the end, can only be reliable as the weakest link on the stack. It doesn't matter if you write a Windows program that will never crash, because Windows itself may crash eventually. The most beautiful, stable frontend in the world is still limited if the framework it's built on is flaky, or if the API it's hitting goes down. In this model, the stack acts as the trellis: your software can only be as stable as these critical backing pieces.
 
 Your software, though, isn't just your stack. It's also how you develop a feature *through* your stack. Thinking about software as gardening, then, this is the most organic piece: it's the part that differentiates what you're creating against what everybody else using the same stack is creating as well.
 
-![[assets/doodles/panic-07-vines]]
+![[public/assets/doodles/panic-07-vines]]
 
 Here, we illustrate that these features are not always clean shots through the layers. Perhaps they start from similar places, or they intersect along the way. This is one misconception I had early on when learning about [vertical slice architecture](https://www.jimmybogard.com/vertical-slice-architecture/) (VSA): I assumed that layers and slices were a pure a 2D matrix, where two columns (features) could never touch. In the the real world, and in the programs most useful *in* the real world, are simply more complicated than that.
 
@@ -193,7 +193,7 @@ This is where the scaffolding and the features intersect: they both inform each 
 
 ### Garden Teams
 
-![[assets/doodles/panic-08-gardening-teams]]
+![[public/assets/doodles/panic-08-gardening-teams]]
 
 The agricultural metaphor fits well: as software development teams, we cannot get the benefits of LLMs without knowing how we'll manage their drawbacks. The biggest drawback is that their quality is hard to guarantee, and that trying to micromanage them into doing exactly what we would do means spending more time watching over their shoulder and dictating to them than we'd otherwise spend doing the task ourselves. If we can learn to manage unpredictability, rather than fight tooth and nail to force conformity, then we can start to get actual benefits to both quality *and* velocity.
 
@@ -210,19 +210,19 @@ Feature engineering, then, caters to both engineers and managers coordinating ho
 
 Both sides take on management responsibilities in the way that they work with each other. The stack engineers must keep up-to-date on the rolling quality of features being developed and triage points of friction: areas where features get cluttered, conflicted, or generally confused. In turn, feature engineering must triage their work based on new capabilities created by the stack engineers, occasionally managing refactors of previous work based on new capabilities of the stack.
 
-![[assets/doodles/panic-09-gardening-axes]]
+![[public/assets/doodles/panic-09-gardening-axes]]
 
 ### Feedforward & Feedback
 
 All of the work managed by humans is ultimately done to make sure that the conditions in which features are "grown" by agents is high-quality. Part of this is rapid iteration of the system. 
 
-![[assets/doodles/panic-10-feed-loops]]
+![[public/assets/doodles/panic-10-feed-loops]]
 
 Think about a houseplant, and understanding what conditions it'd thrive best in: what direction of window should it be facing? What kind of soil is the best for it? What temperature or humidity should the room be at? It will always be a case of monitoring the growth, checking for issues, and reacting accordingly.
 
 When introducing something vaguely organic, like code "grown" by an LLM, the principle is the same. The goal of a software development team is to make sure that what we're creating is of good quality and completed in a timely manner. This takes the rapid feedback cycle promoted by management frameworks like Agile and applies them one layer up the development abstraction: not just to the code we're writing, but to the environment that code is being written in.
 
-![[assets/doodles/panic-11-agent-loops]]
+![[public/assets/doodles/panic-11-agent-loops]]
 
 This requires strong systems for both **feedforward** and **feedback** to accomplish[^2]:
 
@@ -231,7 +231,7 @@ This requires strong systems for both **feedforward** and **feedback** to accomp
 
 Once quality can be accounted for, the feedforward and feedback loops can, themselves, be iteratively improved on. The miracle of modern agriculture is not the amount of food we grow: it's the technology we've built around something unpredictable to make sure we harness the most benefit, and least harm, from a chaotic process.
 
-![[assets/doodles/panic-12-assignments]]
+![[public/assets/doodles/panic-12-assignments]]
 
 The major shift in this framework is that human beings aren't as involved in the nitty-gritty, line-by-line details of the product code. The product code *is* what's being grown, derived from:
 

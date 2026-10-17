@@ -48,6 +48,8 @@ import { annotatedDocument, annotationDate } from "./src/lib/annotations.ts"
 
 import { mirrors } from "./src/integrations/mirrors.ts"
 
+import { resume } from "./src/integrations/resume.ts"
+
 import { externalLinks } from "./src/lib/external-links.ts"
 import { headingAnchors } from "./src/lib/heading-anchors.ts"
 import { calloutIcons } from "./src/lib/callouts.ts"
@@ -124,9 +126,12 @@ export default defineConfig({
     // The vault's attachments, each at its path in the vault (docs/adr/0101).
     attachments(),
 
-    // The mirrors of the annotated documents, which git ignores, each at its path in the vault
-    // (docs/adr/2801).
+    // The mirrors of the annotated documents, kept in dist/mirrors, each under
+    // assets/annotated-documents (docs/adr/2801).
     mirrors(),
+
+    // The resume, compiled by `resume:build` outside the vault, at the address the vault's copy had.
+    resume(),
 
     // 11 icons
     // An icon id drawn as inline SVG when the site builds: Material Design Icons, and the site's own

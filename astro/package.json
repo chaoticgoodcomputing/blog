@@ -5,6 +5,7 @@
   "type": "module",
   "description": "Prototype: the vault rendered by Astro, through @chaoticgoodcomputing/obsidian-markdown.",
   "scripts": {
+    "vault": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/assemble-vault.ts",
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",

@@ -12,6 +12,7 @@
 import { aliasRedirects, publishedFiles, staticPages } from "./aliases.ts"
 import { publishedAttachments } from "./attachments.ts"
 import { getNotes, type Note } from "./notes.ts"
+import { resumeAddresses } from "./resume.ts"
 import { TAGS_INDEX } from "./tags.ts"
 import { slugFor } from "./vault.ts"
 
@@ -79,5 +80,6 @@ export function getFormerAddressRedirects(): Record<string, string> {
   const notes = getNotes()
   // The aliases' redirects as `getAliasRedirects()` gives them, without reporting its collisions again.
   const aliases = aliasRedirects(notes, staticPages(), publishedFiles()).redirects
-  return formerAddressRedirects(notes, aliases, publishedAttachments().keys())
+  // The resume was an attachment of the vault's, and keeps its former address (./resume.ts).
+  return formerAddressRedirects(notes, aliases, [...publishedAttachments().keys(), ...resumeAddresses()])
 }

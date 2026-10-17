@@ -2,6 +2,7 @@ import path from "node:path"
 import { defineCollection } from "astro:content"
 import { glob, type Loader, type LoaderContext } from "astro/loaders"
 import { z } from "astro/zod"
+import { assembleVault, readManifest } from "./lib/assembly.ts"
 import { getLinksDigest } from "./lib/notes.ts"
 import { VAULT_ROOT, refreshVault, slugFor } from "./lib/vault.ts"
 
@@ -18,7 +19,11 @@ import { VAULT_ROOT, refreshVault, slugFor } from "./lib/vault.ts"
  * renders is followed by `astro build --force` (README.md, "Tests").
  *
  * In dev it also does `glob`'s watching itself, since the vault has to be read again before any note
- * is rendered against it.
+ * is rendered against it. An assembled vault (src/lib/assembly.ts) is watched at its sources, where
+ * Obsidian saves, and assembled again before it is read: in this process rather than by a watcher of
+ * its own beside the dev server, so a change is in the vault before the vault is read again, and a
+ * vault the dev server has open is never assembled by anyone else. Assembling again rewrites only
+ * what changed, in a fraction of a second.
  */
 function vaultNotes(): Loader {
   const notes = glob({
@@ -44,18 +49,24 @@ function vaultNotes(): Loader {
 
       const watcher = context.watcher
       if (!watcher) return
-      watcher.add(VAULT_ROOT)
+      // A vault that is not assembled is its own source.
+      const sources = readManifest(VAULT_ROOT)?.sources
+      const watched = sources ?? [VAULT_ROOT]
+      watcher.add(watched)
 
       // A save often arrives as several events, so they are gathered, and one refresh runs at a time.
       let timer: ReturnType<typeof setTimeout> | undefined
       let running = Promise.resolve()
       const refresh = (changed: string) => {
-        const relative = path.relative(VAULT_ROOT, changed)
-        if (relative.startsWith("..") || relative.split(path.sep).some((part) => part.startsWith("."))) return
+        const relative = watched
+          .map((root) => path.relative(root, changed))
+          .find((relative) => !relative.startsWith("..") && !path.isAbsolute(relative))
+        if (relative === undefined || relative.split(path.sep).some((part) => part.startsWith("."))) return
         clearTimeout(timer)
         timer = setTimeout(() => {
           running = running
             .then(async () => {
+              if (sources) assembleVault(sources, VAULT_ROOT)
               await refreshVault()
               await sync(context)
               context.logger.info(`Vault read again after a change to ${relative}`)

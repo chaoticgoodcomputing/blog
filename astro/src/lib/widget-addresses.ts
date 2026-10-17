@@ -1,8 +1,8 @@
 // A widget in an MDX note that names an attachment by its address gets the attachment's own.
 //
 // The vault's MDX notes are written for Quartz too (docs/adr/0005), which publishes an attachment at
-// its path lower-cased: the resume's viewer asks for `/assets/elkington_resume.pdf`, and the file
-// is `assets/Elkington_Resume.pdf`. A static host tells the two apart. So a component's text prop
+// its path lower-cased: a viewer asks for `/assets/thesis_draft.pdf`, and the file is
+// `assets/Thesis_Draft.pdf`. A static host tells the two apart. So a component's text prop
 // that starts with `/` and names a published attachment, in any case, as a link from the vault's
 // root would, is given the URL the site publishes that attachment at. Anything else is left as
 // written.

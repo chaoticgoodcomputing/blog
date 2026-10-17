@@ -193,7 +193,7 @@ export const graph: GraphConfig = {
       radiusBase: 150,
       radiusScale: 50,
       zoomMargin: 80,
-      circumferentialRepulsion: 100,
+      circumferentialRepulsion: 1,
       style: { opacity: 1, lineStyle: "dotted", lineWidth: 3 },
     },
     hoverPulse: { on: 800, off: 1000, delay: 200 },

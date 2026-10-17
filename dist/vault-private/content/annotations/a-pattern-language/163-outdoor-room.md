@@ -1,0 +1,29 @@
+---
+title: "APL: Pattern 163; Outdoor Room"
+draft: true
+tags:
+  - "writing/annotations/a-pattern-language"
+  - "projects/games/the-neighborhood"
+  - "private"
+description: ""
+---
+
+This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
+
+If you are interested in what this note contains, please reach out! If it's not anything terribly sensitive, I'm happy to chat about it!
+
+
+## Links
+
+This note originally contained the following links:
+
+- [North Face](content/annotations/a-pattern-language/162-north-face)
+- [Street Windows](content/annotations/a-pattern-language/164-street-windows)
+- [129-common-areas-at-the-heart](content/annotations/a-pattern-language/129-common-areas-at-the-heart)
+- [139-farmhouse-kitchen](content/annotations/a-pattern-language/139-farmhouse-kitchen)
+- [142-sequence-of-sitting-spaces](content/annotations/a-pattern-language/142-sequence-of-sitting-spaces)
+- [69-public-outdoor-room](content/annotations/a-pattern-language/69-public-outdoor-room)
+- [111-half-hidden-garden](content/annotations/a-pattern-language/111-half-hidden-garden)
+- [140-private-terrace-on-the-street](content/annotations/a-pattern-language/140-private-terrace-on-the-street)
+- [161-sunny-place](content/annotations/a-pattern-language/161-sunny-place)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

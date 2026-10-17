@@ -29,6 +29,6 @@ export default defineConfig({
     outDir: builtSite(site),
     cacheDir: `${root}.e2e/${site}/cache`,
     port,
-    env: site === "fixture" ? { VAULT_ROOT: `${root}test/fixtures/vault` } : {},
+    env: site === "fixture" ? { VAULT_ROOT: `${root}test/fixtures/vault`, MIRRORS_ROOT: `${root}test/fixtures/mirrors` } : {},
   }),
 })

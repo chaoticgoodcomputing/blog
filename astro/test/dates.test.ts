@@ -74,11 +74,29 @@ test("a date that is not written as ISO 8601 is no date, since the machine's tim
 })
 
 test("a path's git date is the time of the newest commit to touch it", () => {
-  const log = "\x011780819750\0\nnotes/first.md\0\x011770091506\0\nnotes/a note é.md\0notes/first.md\0"
-  const dates = parseGitLog(log)
+  const log = "\x011780819750\0\nM\0vault/notes/first.md\0\x011770091506\0\nA\0vault/notes/a note é.md\0A\0vault/notes/first.md\0A\0outside.md\0"
+  const dates = parseGitLog(log, "vault/")
   expect(dates.get("notes/first.md")?.toISOString()).toBe("2026-06-07T08:09:10.000Z")
   expect(dates.get("notes/a note é.md")?.toISOString()).toBe("2026-02-03T04:05:06.000Z")
   expect(dates.size).toBe(2)
+})
+
+test("a file moved into the folder unchanged keeps the date it had outside it; a move within it is a change", () => {
+  const commit = (seconds: number, ...changes: string[][]) => `\x01${seconds}\0\n${changes.map((c) => c.join("\0")).join("\0")}\0`
+  const log = [
+    // Newest first: two stubs moved in from content/public, one moved within the folder, and one
+    // stub moved in and then changed.
+    commit(400, ["M", "stubs/changed.md"]),
+    commit(300, ["R100", "public/kept.md", "stubs/kept.md"], ["R100", "public/changed.md", "stubs/changed.md"], ["R100", "stubs/old.md", "stubs/renamed.md"]),
+    commit(200, ["M", "public/kept.md"], ["M", "public/changed.md"]),
+    commit(100, ["A", "public/kept.md"], ["A", "public/changed.md"], ["A", "stubs/old.md"]),
+  ].join("")
+  const dates = parseGitLog(log, "stubs/")
+  const seconds = (file: string) => (dates.get(file)?.getTime() ?? 0) / 1000
+  expect(seconds("kept.md")).toBe(200)
+  expect(seconds("changed.md")).toBe(400)
+  expect(seconds("renamed.md")).toBe(300)
+  expect(dates.has("public/kept.md")).toBe(false)
 })
 
 test("git is asked once for every file under a folder, by its path from that folder", () => {

@@ -79,22 +79,6 @@
         "commands": [ ],
         "parallel": false
       }
-    },
-    "publish": {
-      "//": "Publishes resume PDF to site assets if content changed (checksum-based). Safe to run unconditionally.",
-      "executor": "nx:run-commands",
-      "dependsOn": [ "build" ],
-      "options": {
-        "commands": [
-          "node resume/utils/publish.mjs"
-        ],
-        "parallel": false
-      },
-      "outputs": [
-        "{workspaceRoot}/content/public/assets/Elkington_Resume.pdf",
-        "{workspaceRoot}/content/public/resume.mdx"
-      ],
-      "cache": true
     }
   }
 }

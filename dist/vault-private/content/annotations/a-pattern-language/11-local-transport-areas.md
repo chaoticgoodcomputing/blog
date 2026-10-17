@@ -1,0 +1,25 @@
+---
+title: "APL: Pattern 11; Local Transport Areas"
+draft: true
+tags:
+  - "writing/annotations/a-pattern-language"
+  - "projects/games/the-neighborhood"
+  - "private"
+description: ""
+---
+
+This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
+
+If you are interested in what this note contains, please reach out! If it's not anything terribly sensitive, I'm happy to chat about it!
+
+
+## Links
+
+This note originally contained the following links:
+
+- [Magic of the City](content/annotations/a-pattern-language/10-magic-of-the-city)
+- [Community of 7000](content/annotations/a-pattern-language/12-community-of-7000)
+- [08-mosaic-of-subcultures](content/annotations/a-pattern-language/08-mosaic-of-subcultures)
+- [03-city-country-fingers](/content/annotations/a-pattern-language/03-city-country-fingers)
+- [10-magic-of-the-city](content/annotations/a-pattern-language/10-magic-of-the-city)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)
