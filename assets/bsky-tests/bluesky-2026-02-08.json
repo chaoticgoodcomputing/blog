@@ -1,0 +1,22 @@
+{
+  "timestamp": "2026-02-08T04:41:38.102Z",
+  "total_rss_items": 1,
+  "already_posted": 45,
+  "new_posts": 1,
+  "posts": [
+    {
+      "$type": "app.bsky.feed.post",
+      "text": "New blog post: \"Test Post About Education\"",
+      "createdAt": "2026-02-08T04:41:38.102Z",
+      "embed": {
+        "$type": "app.bsky.embed.external",
+        "external": {
+          "uri": "https://blog.chaoticgood.computer/content/notes/test-education",
+          "title": "Test Post About Education",
+          "description": " This is a test post about learning and development. (5 min read) ",
+          "og_image_path": "pages-content/content/notes/test-education/index-og-image.webp"
+        }
+      }
+    }
+  ]
+}
