@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 61; Small Public Squares"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [31-promenade](content/annotations/a-pattern-language/31-promenade)
 - [41-work-community](content/annotations/a-pattern-language/41-work-community)
 - [14-identifiable-neighborhood](content/annotations/a-pattern-language/14-identifiable-neighborhood)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

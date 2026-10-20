@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 64; Pools and Streams"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [15-neighborhood-boundary](content/annotations/a-pattern-language/15-neighborhood-boundary)
 - [59-quiet-backs](content/annotations/a-pattern-language/59-quiet-backs)
 - [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 245; Raised Flowers"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -23,4 +23,4 @@ This note originally contained the following links:
 - [125-stair-seats](content/annotations/a-pattern-language/125-stair-seats)
 - [160-building-edge](content/annotations/a-pattern-language/160-building-edge)
 - [173-garden-wall](content/annotations/a-pattern-language/173-garden-wall)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

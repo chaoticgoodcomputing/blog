@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 250; Warm Colors"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [207-good-materials](content/annotations/a-pattern-language/207-good-materials)
 - [233-floor-surface](content/annotations/a-pattern-language/233-floor-surface)
 - [235-soft-inside-walls](content/annotations/a-pattern-language/235-soft-inside-walls)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

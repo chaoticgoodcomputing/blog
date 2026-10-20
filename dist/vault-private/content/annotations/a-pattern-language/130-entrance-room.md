@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 130; Entrance Room"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [112-entrance-transition](content/annotations/a-pattern-language/112-entrance-transition)
 - [113-car-connection](content/annotations/a-pattern-language/113-car-connection)
 - [140-private-terrace-on-the-street](content/annotations/a-pattern-language/140-private-terrace-on-the-street)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

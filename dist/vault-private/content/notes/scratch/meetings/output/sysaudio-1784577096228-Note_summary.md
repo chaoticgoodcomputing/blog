@@ -5,7 +5,7 @@ tags:
   - "engineering/ai"
   - "writing/tutorials"
   - "projects/dayjob"
-  - "writing/annotations/meetings"
+  - "writing/notes/annotations/meetings"
   - "private"
 ---
 

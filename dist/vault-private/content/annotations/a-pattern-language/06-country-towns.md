@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 6; Country Towns"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -18,4 +18,4 @@ This note originally contained the following links:
 - [Lace of Country Streets](/content/annotations/a-pattern-language/05-lace-of-country-streets)
 - [The Countryside](content/annotations/a-pattern-language/07-the-countryside)
 - [02-the-distribution-of-towns](/content/annotations/a-pattern-language/02-the-distribution-of-towns)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

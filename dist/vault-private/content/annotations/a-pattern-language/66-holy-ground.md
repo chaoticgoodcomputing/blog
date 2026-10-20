@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 66; Holy Ground"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Common Land](content/annotations/a-pattern-language/67-common-land)
 - [26-life-cycle](content/annotations/a-pattern-language/26-life-cycle)
 - [24-sacred-sites](content/annotations/a-pattern-language/24-sacred-sites)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

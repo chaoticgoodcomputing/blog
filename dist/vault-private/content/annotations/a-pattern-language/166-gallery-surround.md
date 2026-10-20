@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 166; Gallery Surround"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [119-arcades](content/annotations/a-pattern-language/119-arcades)
 - [118-roof-garden](content/annotations/a-pattern-language/118-roof-garden)
 - [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

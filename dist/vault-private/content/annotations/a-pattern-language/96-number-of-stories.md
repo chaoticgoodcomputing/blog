@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 96; Number of Stories"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Shielded Parking](content/annotations/a-pattern-language/97-shielded-parking)
 - [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
 - [21-four-story-limit](content/annotations/a-pattern-language/21-four-story-limit)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

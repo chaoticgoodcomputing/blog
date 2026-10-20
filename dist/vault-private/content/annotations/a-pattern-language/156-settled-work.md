@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 156; Settled Work"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [75-the-family](content/annotations/a-pattern-language/75-the-family)
 - [155-old-age-cottage](content/annotations/a-pattern-language/155-old-age-cottage)
 - [141-a-room-of-one-s-own](content/annotations/a-pattern-language/141-a-room-of-one-s-own)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

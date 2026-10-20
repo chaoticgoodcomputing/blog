@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 225; Frames as Thickened Doors"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [221-natural-doors-and-windows](content/annotations/a-pattern-language/221-natural-doors-and-windows)
 - [206-efficient-structure](content/annotations/a-pattern-language/206-efficient-structure)
 - [208-gradual-stiffening](content/annotations/a-pattern-language/208-gradual-stiffening)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 227; Column Connection"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -25,4 +25,4 @@ This note originally contained the following links:
 - [167-six-foot-balcony](content/annotations/a-pattern-language/167-six-foot-balcony)
 - [226-column-place](content/annotations/a-pattern-language/226-column-place)
 - [225-frames-as-thickened-edges](content/annotations/a-pattern-language/225-frames-as-thickened-edges)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

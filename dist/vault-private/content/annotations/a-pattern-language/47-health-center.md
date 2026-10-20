@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 47; Health Center"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -18,4 +18,4 @@ This note originally contained the following links:
 - [Market of Many Shops](content/annotations/a-pattern-language/46-market-of-many-shops)
 - [Housing In Between](content/annotations/a-pattern-language/48-housing-in-between)
 - [26-life-cycle](content/annotations/a-pattern-language/26-life-cycle)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

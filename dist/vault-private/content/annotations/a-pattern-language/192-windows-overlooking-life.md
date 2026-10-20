@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 192; Windows Overlooking Life"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [159-light-on-two-sides-of-every-room](content/annotations/a-pattern-language/159-light-on-two-sides-of-every-room)
 - [190-ceiling-height-variety](content/annotations/a-pattern-language/190-ceiling-height-variety)
 - [191-the-shape-of-indoor-space](content/annotations/a-pattern-language/191-the-shape-of-indoor-space)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

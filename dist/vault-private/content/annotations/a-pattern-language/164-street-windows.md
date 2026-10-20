@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 164; Street Windows"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [61-small-public-squares](content/annotations/a-pattern-language/61-small-public-squares)
 - [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)
 - [101-building-thoroughfare](content/annotations/a-pattern-language/101-building-thoroughfare)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

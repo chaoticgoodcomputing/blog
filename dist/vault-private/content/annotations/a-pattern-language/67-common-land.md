@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 67; Common Land"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [38-row-houses](content/annotations/a-pattern-language/38-row-houses)
 - [39-housing-hill](content/annotations/a-pattern-language/39-housing-hill)
 - [41-work-community](content/annotations/a-pattern-language/41-work-community)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

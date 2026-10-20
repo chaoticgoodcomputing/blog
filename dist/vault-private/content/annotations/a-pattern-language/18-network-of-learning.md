@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 18; Network of Learning"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -17,4 +17,4 @@ This note originally contained the following links:
 
 - [Ring Roads](content/annotations/a-pattern-language/17-ring-roads)
 - [Web of Shopping](content/annotations/a-pattern-language/19-web-of-shopping)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

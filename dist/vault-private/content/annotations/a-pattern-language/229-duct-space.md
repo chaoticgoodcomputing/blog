@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 229; Duct Space"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Radiant Heat](content/annotations/a-pattern-language/230-radiant-heat)
 - [206-efficient-structure](content/annotations/a-pattern-language/206-efficient-structure)
 - [219-floor-ceiling-vaults](content/annotations/a-pattern-language/219-floor-ceiling-vaults)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

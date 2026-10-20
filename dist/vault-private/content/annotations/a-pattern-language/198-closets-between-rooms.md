@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 198; Closets Between Rooms"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [183-workspace-enclosure](content/annotations/a-pattern-language/183-workspace-enclosure)
 - [189-dressing-room](content/annotations/a-pattern-language/189-dressing-room)
 - [196-corner-doors](content/annotations/a-pattern-language/196-corner-doors)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

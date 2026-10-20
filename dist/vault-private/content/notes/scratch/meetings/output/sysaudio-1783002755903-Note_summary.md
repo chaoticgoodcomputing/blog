@@ -3,11 +3,11 @@ title: "Meeting 2026-07-02 09:04"
 date: "2026-07-02T13:04:36.891Z"
 tags:
   - "engineering/data"
-  - "writing/annotations"
+  - "writing/notes/annotations"
   - "projects/flowthru"
   - "horticulture/seasons/systems"
   - "projects/dayjob"
-  - "writing/annotations/meetings"
+  - "writing/notes/annotations/meetings"
   - "private"
 ---
 

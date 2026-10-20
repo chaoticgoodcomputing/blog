@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 184; Cooking Layout"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -18,4 +18,4 @@ This note originally contained the following links:
 - [Workspace Enclosure](content/annotations/a-pattern-language/183-workspace-enclosure)
 - [Sitting Circle](content/annotations/a-pattern-language/185-sitting-circle)
 - [139-farmhouse-kitchen](content/annotations/a-pattern-language/139-farmhouse-kitchen)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

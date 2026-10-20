@@ -6,7 +6,7 @@ tags:
   - "engineering/ai"
   - "economics/finance"
   - "projects/dayjob"
-  - "writing/annotations/meetings"
+  - "writing/notes/annotations/meetings"
   - "private"
 ---
 

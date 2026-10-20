@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 100; Pedestrian Street"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -27,4 +27,4 @@ This note originally contained the following links:
 - [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
 - [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)
 - [55-raised-walk](content/annotations/a-pattern-language/55-raised-walk)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 180; Window Place"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [134-zen-view](content/annotations/a-pattern-language/134-zen-view)
 - [159-light-on-two-sides-of-every-room](content/annotations/a-pattern-language/159-light-on-two-sides-of-every-room)
 - [164-street-windows](content/annotations/a-pattern-language/164-street-windows)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 148; Small Work Groups"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Reception Welcomes You](content/annotations/a-pattern-language/149-reception-welcomes-you)
 - [80-self-governing-workshops-and-offices](content/annotations/a-pattern-language/80-self-governing-workshops-and-offices)
 - [146-flexible-office-space](content/annotations/a-pattern-language/146-flexible-office-space)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

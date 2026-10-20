@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 98; Circulation Realms"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Main Building](content/annotations/a-pattern-language/99-main-building)
 - [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
 - [96-number-of-stories](content/annotations/a-pattern-language/96-number-of-stories)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

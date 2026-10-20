@@ -6,7 +6,7 @@ description: |
 date: 2026-01-06
 tags:
   - engineering
-  - writing/annotations
+  - writing/notes/annotations
   - projects/dayjob
   - horticulture/seasons/systems
 ---

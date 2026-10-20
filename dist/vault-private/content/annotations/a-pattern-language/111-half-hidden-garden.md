@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 111; Half-Hidden Garden"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -24,4 +24,4 @@ This note originally contained the following links:
 - [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
 - [105-south-facing-outdoors](content/annotations/a-pattern-language/105-south-facing-outdoors)
 - [104-site-repair](content/annotations/a-pattern-language/104-site-repair)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

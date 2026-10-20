@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 190; Ceiling Height Variety"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -17,4 +17,4 @@ This note originally contained the following links:
 
 - [Dressing Room](content/annotations/a-pattern-language/189-dressing-room)
 - [The Shape of Indoor Space](content/annotations/a-pattern-language/191-the-shape-of-indoor-space)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

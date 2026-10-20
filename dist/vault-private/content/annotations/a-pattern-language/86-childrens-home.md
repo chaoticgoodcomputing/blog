@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 86; Children's Home"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [57-children-in-the-city](content/annotations/a-pattern-language/57-children-in-the-city)
 - [68-connected-play](content/annotations/a-pattern-language/68-connected-play)
 - [18-network-of-learning](content/annotations/a-pattern-language/18-network-of-learning)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

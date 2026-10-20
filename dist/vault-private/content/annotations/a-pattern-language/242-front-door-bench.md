@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 242; Front Door Bench"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -24,4 +24,4 @@ This note originally contained the following links:
 - [168-connection-to-the-earth](content/annotations/a-pattern-language/168-connection-to-the-earth)
 - [130-entrance-room](content/annotations/a-pattern-language/130-entrance-room)
 - [155-old-age-cottage](content/annotations/a-pattern-language/155-old-age-cottage)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

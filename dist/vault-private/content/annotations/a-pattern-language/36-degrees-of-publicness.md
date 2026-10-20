@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 36; Degrees of Publicness"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [14-identifiable-neighborhood](/content/annotations/a-pattern-language/14-identifiable-neighborhood)
 - [30-activity-nodes](/content/annotations/a-pattern-language/30-activity-nodes)
 - [29-density-rings](/content/annotations/a-pattern-language/29-density-rings)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

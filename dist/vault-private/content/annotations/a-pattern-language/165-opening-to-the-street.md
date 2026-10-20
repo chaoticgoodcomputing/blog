@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 165; Opening to the Street"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -25,4 +25,4 @@ This note originally contained the following links:
 - [47-health-center](content/annotations/a-pattern-language/47-health-center)
 - [88-street-cafe](content/annotations/a-pattern-language/88-street-cafe)
 - [101-building-thoroughfare](content/annotations/a-pattern-language/101-building-thoroughfare)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

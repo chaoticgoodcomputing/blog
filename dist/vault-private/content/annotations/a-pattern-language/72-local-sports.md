@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 72; Local Sports"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Adventure Playground](content/annotations/a-pattern-language/73-adventure-playground)
 - [41-work-community](content/annotations/a-pattern-language/41-work-community)
 - [47-health-center](content/annotations/a-pattern-language/47-health-center)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

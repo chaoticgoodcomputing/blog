@@ -2,11 +2,11 @@
 title: Agentic Programming as Theory Building
 date: 2026-02-12
 tags:
-  - writing/highlights
+  - writing/essays
   - engineering/ai
   - engineering
   - economics/strategy
-  - writing/annotations
+  - writing/notes/annotations
 description: Do humans have a role in software development anymore? Absolutely — but we need to rethink what it means to program. An modern review of Peter Naur's 1985 essay "Programming as Theory Building"
 annotation-target: https://pablo.rauzy.name/dev/naur1985programming.pdf
 ---

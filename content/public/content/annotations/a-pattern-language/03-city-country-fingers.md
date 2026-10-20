@@ -2,7 +2,7 @@
 title: "APL: Pattern 3; City Country Fingers"
 date: 2026-02-07
 tags:
-  - writing/annotations/a-pattern-language
+  - writing/notes/annotations/a-pattern-language
   - projects/games/the-neighborhood
   - economics/markets
   - engineering/data
@@ -13,7 +13,7 @@ description: City, with natural stripes — or nature, with city stripes? Annota
 > [!QUOTE]
 > ... the distribution of towns required to make a balanced region—[[public/content/annotations/a-pattern-language/02-the-distribution-of-towns|02-the-distribution-of-towns]]—can be further helped by controlling the balance of urban land and open countryside within the towns and cities themselves.
 > 
-> — *[[public/tags/writing/annotations/a-pattern-language|A Pattern Language]]*
+> — *[[public/tags/writing/notes/annotations/a-pattern-language|A Pattern Language]]*
 
 ## Notes
 

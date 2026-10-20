@@ -82,12 +82,12 @@ export const tags: TagDictionary = {
   "projects/teaching": { icon: "mdi:school" },
   "projects/undergrad": { icon: "custom:uofu" },
   writing: { color: "light-dark(#9a7400, #FFD637)", icon: "mdi:pencil" },
-  "writing/annotations": { icon: "mdi:chat-plus" },
-  "writing/annotations/a-pattern-language": { icon: "mdi:home-city" },
-  "writing/annotations/meetings": { icon: "mdi:account-group" },
+  "writing/notes/annotations": { icon: "mdi:chat-plus" },
+  "writing/notes/annotations/a-pattern-language": { icon: "mdi:home-city" },
+  "writing/notes/annotations/meetings": { icon: "mdi:account-group" },
   "writing/articles": { icon: "mdi:file-edit" },
   "writing/emails": { icon: "mdi:email" },
-  "writing/highlights": { icon: "mdi:star" },
+  "writing/essays": { icon: "mdi:star" },
   "writing/tutorials": { icon: "mdi:map" },
 }
 
@@ -124,7 +124,7 @@ export const seo: SeoConfig = {
   description:
     "Articles for the data and engineering consulting practice Chaotic Good Computing, as well as personal notes by Spencer Elkington.",
   articleTypes: [
-    { tag: "writing/annotations", type: "ScholarlyArticle", section: "Annotations" },
+    { tag: "writing/notes/annotations", type: "ScholarlyArticle", section: "Annotations" },
     { tag: "writing/tutorials", type: "HowTo", section: "Tutorials" },
     { tag: "writing/articles", type: "Article", section: "Articles" },
     { tag: "engineering", type: "TechArticle", section: "Engineering" },

@@ -3,7 +3,7 @@ title: "AC: Optimized Primer Design for the Universal Amplification of the Whole
 date: "2026-02-04T00:00:00.000Z"
 tags:
   - "engineering/bio"
-  - "writing/annotations"
+  - "writing/notes/annotations"
   - "private"
 ---
 

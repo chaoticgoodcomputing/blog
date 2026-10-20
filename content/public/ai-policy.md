@@ -6,7 +6,7 @@ date: 2026-01-04
 tags:
   - engineering/ai
   - horticulture/seasons/systems
-  - writing/highlights
+  - writing/essays
   - projects/site
 ---
 

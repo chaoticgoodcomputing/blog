@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 116; Cascade of Roofs"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [96-number-of-stories](content/annotations/a-pattern-language/96-number-of-stories)
 - [99-main-building](content/annotations/a-pattern-language/99-main-building)
 - [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

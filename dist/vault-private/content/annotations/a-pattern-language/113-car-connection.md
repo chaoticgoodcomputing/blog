@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 113; Car Connection"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Hierarchy of Open Space](content/annotations/a-pattern-language/114-hierarchy-of-open-space)
 - [110-main-entrance](content/annotations/a-pattern-language/110-main-entrance)
 - [112-entrance-transition](content/annotations/a-pattern-language/112-entrance-transition)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

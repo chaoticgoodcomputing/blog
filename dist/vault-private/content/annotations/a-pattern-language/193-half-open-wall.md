@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 193; Half-Open Wall"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -26,4 +26,4 @@ This note originally contained the following links:
 - [101-building-thoroughfare](content/annotations/a-pattern-language/101-building-thoroughfare)
 - [119-arcades](content/annotations/a-pattern-language/119-arcades)
 - [131-the-flow-through-rooms](content/annotations/a-pattern-language/131-the-flow-through-rooms)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 213; Final Column Distribution"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [212-columns-at-the-corners](content/annotations/a-pattern-language/212-columns-at-the-corners)
 - [206-efficient-structure](content/annotations/a-pattern-language/206-efficient-structure)
 - [190-ceiling-height-variety](content/annotations/a-pattern-language/190-ceiling-height-variety)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

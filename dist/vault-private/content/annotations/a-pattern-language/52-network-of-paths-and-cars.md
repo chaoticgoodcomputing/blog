@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 52; Network of Paths and Cars"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -23,4 +23,4 @@ This note originally contained the following links:
 - [30-activity-nodes](content/annotations/a-pattern-language/30-activity-nodes)
 - [31-promenade](content/annotations/a-pattern-language/31-promenade)
 - [120-paths-and-goals](content/annotations/a-pattern-language/120-paths-and-goals)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

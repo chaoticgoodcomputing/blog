@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 202; Built-in Seats"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [130-entrance-room](content/annotations/a-pattern-language/130-entrance-room)
 - [179-alcoves](content/annotations/a-pattern-language/179-alcoves)
 - [180-window-place](content/annotations/a-pattern-language/180-window-place)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

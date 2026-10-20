@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 7; The Countryside"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [04-agricultural-valleys](/content/annotations/a-pattern-language/04-agricultural-valleys)
 - [05-lace-of-country-streets](/content/annotations/a-pattern-language/05-lace-of-country-streets)
 - [06-country-towns](content/annotations/a-pattern-language/06-country-towns)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

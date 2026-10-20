@@ -3,7 +3,7 @@ title: "Meeting 2026-07-21 09:07"
 date: "2026-07-21T13:07:47.213Z"
 tags:
   - "projects/dayjob"
-  - "writing/annotations/meetings"
+  - "writing/notes/annotations/meetings"
   - "private"
 ---
 

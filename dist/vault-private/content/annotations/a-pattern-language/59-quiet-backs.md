@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 59; Quiet Backs"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Accessible Green](content/annotations/a-pattern-language/60-accessible-green)
 - [09-scattered-work](content/annotations/a-pattern-language/09-scattered-work)
 - [41-work-community](content/annotations/a-pattern-language/41-work-community)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 252; Pools of Light"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -26,4 +26,4 @@ This note originally contained the following links:
 - [185-sitting-circle](content/annotations/a-pattern-language/185-sitting-circle)
 - [251-different-chairs](content/annotations/a-pattern-language/251-different-chairs)
 - [250-warm-colors](content/annotations/a-pattern-language/250-warm-colors)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

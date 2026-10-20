@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 57; Children in the City"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -24,4 +24,4 @@ This note originally contained the following links:
 - [52-network-of-paths-and-cars](content/annotations/a-pattern-language/52-network-of-paths-and-cars)
 - [56-bike-paths-and-racks](content/annotations/a-pattern-language/56-bike-paths-and-racks)
 - [18-network-of-learning](content/annotations/a-pattern-language/18-network-of-learning)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

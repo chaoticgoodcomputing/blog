@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 153; Rooms to Rent"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -25,4 +25,4 @@ This note originally contained the following links:
 - [154-teenager-s-cottage](content/annotations/a-pattern-language/154-teenager-s-cottage)
 - [155-old-age-cottage](content/annotations/a-pattern-language/155-old-age-cottage)
 - [157-home-workshop](content/annotations/a-pattern-language/157-home-workshop)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 25; Access to Water"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -18,4 +18,4 @@ This note originally contained the following links:
 - [Sacred Sites](content/annotations/a-pattern-language/24-sacred-sites)
 - [Life Cycle](content/annotations/a-pattern-language/26-life-cycle)
 - [24-sacred-sites](content/annotations/a-pattern-language/24-sacred-sites)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

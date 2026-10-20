@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 79; Your Own Home"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -23,4 +23,4 @@ This note originally contained the following links:
 - [78-house-for-one-person](content/annotations/a-pattern-language/78-house-for-one-person)
 - [38-row-houses](content/annotations/a-pattern-language/38-row-houses)
 - [39-housing-hill](content/annotations/a-pattern-language/39-housing-hill)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

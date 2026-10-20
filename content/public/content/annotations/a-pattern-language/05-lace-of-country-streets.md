@@ -2,7 +2,7 @@
 title: "APL: Pattern 5; Lace of Country Streets"
 date: 2026-02-08
 tags:
-  - writing/annotations/a-pattern-language
+  - writing/notes/annotations/a-pattern-language
   - projects/games/the-neighborhood
   - economics/policy
 description: How dense is too dense? How sparse is too sparse? Annotations for A Pattern Language's proposals for the density of metro-adjacent country streets for agriculture, recreation, and preservation.
@@ -12,7 +12,7 @@ description: How dense is too dense? How sparse is too sparse? Annotations for A
 > [!QUOTE]
 > ... according to the pattern [[public/content/annotations/a-pattern-language/03-city-country-fingers|03-city-country-fingers]], there is a rather sharp division between city land and rural land. But at the ends of city fingers, where the country fingers open out, there is a need for an additional kind of structure. This structure has traditionally been the suburbs. But...
 > 
-> — *[[public/tags/writing/annotations/a-pattern-language|A Pattern Language]]*
+> — *[[public/tags/writing/notes/annotations/a-pattern-language|A Pattern Language]]*
 
 ## Notes
 
@@ -21,7 +21,7 @@ This will be another smaller set of pattern notes, I think. The pattern itself i
 > [!QUOTE]
 > **The suburb is an obsolete and contradictory form of human settlement.**
 > 
-> — *[[public/tags/writing/annotations/a-pattern-language|A Pattern Language]]*
+> — *[[public/tags/writing/notes/annotations/a-pattern-language|A Pattern Language]]*
 
 *Woof!* Recalling from my last read-through of this book, this will be the first time this sentiment comes up. I'm still forming an opinion on it, myself — especially in relation to [[public/tags/projects/games/the-neighborhood|The Neighborhood]] and looking at this text through the lens of graph theory, but it is worth noting the principal here.
 

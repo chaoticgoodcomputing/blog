@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 118; Roof Garden"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [117-sheltering-roof](content/annotations/a-pattern-language/117-sheltering-roof)
 - [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)
 - [116-cascade-of-roofs](content/annotations/a-pattern-language/116-cascade-of-roofs)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

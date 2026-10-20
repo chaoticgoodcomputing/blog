@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 23; Parallel Roads"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [17-ring-roads](content/annotations/a-pattern-language/17-ring-roads)
 - [13-subculture-boundary](content/annotations/a-pattern-language/13-subculture-boundary)
 - [15-neighborhood-boundary](content/annotations/a-pattern-language/15-neighborhood-boundary)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

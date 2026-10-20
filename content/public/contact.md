@@ -1,6 +1,6 @@
 ---
 title: About Me
 tags:
-  - writing/highlights
+  - writing/essays
 date: 2026-01-20
 ---

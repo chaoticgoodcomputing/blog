@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 222; Low Sill"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [134-zen-view](content/annotations/a-pattern-language/134-zen-view)
 - [180-window-place](content/annotations/a-pattern-language/180-window-place)
 - [192-windows-overlooking-life](content/annotations/a-pattern-language/192-windows-overlooking-life)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

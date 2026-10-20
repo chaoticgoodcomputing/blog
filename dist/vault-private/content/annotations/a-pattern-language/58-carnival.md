@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 58; Carnival"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Quiet Backs](content/annotations/a-pattern-language/59-quiet-backs)
 - [31-promenade](content/annotations/a-pattern-language/31-promenade)
 - [33-night-life](content/annotations/a-pattern-language/33-night-life)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

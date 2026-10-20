@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 107; Wings of Light"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -28,4 +28,4 @@ This note originally contained the following links:
 - [82-office-connections](content/annotations/a-pattern-language/82-office-connections)
 - [83-master-and-apprentices](content/annotations/a-pattern-language/83-master-and-apprentices)
 - [87-individually-owned-shops](content/annotations/a-pattern-language/87-individually-owned-shops)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

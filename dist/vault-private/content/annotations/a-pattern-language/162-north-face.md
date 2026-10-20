@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 162; North Face"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [105-south-facing-outdoors](content/annotations/a-pattern-language/105-south-facing-outdoors)
 - [128-indoor-sunlight](content/annotations/a-pattern-language/128-indoor-sunlight)
 - [161-sunny-place](content/annotations/a-pattern-language/161-sunny-place)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

@@ -64,7 +64,7 @@ function generateMarkdown(pattern, prevPattern, nextPattern) {
 title: "${title}"
 date: ${CURRENT_DATE}
 tags:
-  - writing/annotations/a-pattern-language
+  - writing/notes/annotations/a-pattern-language
   - projects/games/the-neighborhood
 ---
 

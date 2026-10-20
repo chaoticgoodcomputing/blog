@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 155; Old Age Cottage"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [75-the-family](content/annotations/a-pattern-language/75-the-family)
 - [153-rooms-to-rent](content/annotations/a-pattern-language/153-rooms-to-rent)
 - [154-teenager-s-cottage](content/annotations/a-pattern-language/154-teenager-s-cottage)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

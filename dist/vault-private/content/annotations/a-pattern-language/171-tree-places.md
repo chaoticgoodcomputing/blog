@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 171; Tree Places"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Garden Growing Wild](content/annotations/a-pattern-language/172-garden-growing-wild)
 - [104-site-repair](content/annotations/a-pattern-language/104-site-repair)
 - [170-fruit-trees](content/annotations/a-pattern-language/170-fruit-trees)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

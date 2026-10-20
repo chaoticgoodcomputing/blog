@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 32; Shopping Street"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [10-magic-of-the-city](content/annotations/a-pattern-language/10-magic-of-the-city)
 - [31-promenade](content/annotations/a-pattern-language/31-promenade)
 - [19-web-of-shopping](content/annotations/a-pattern-language/19-web-of-shopping)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

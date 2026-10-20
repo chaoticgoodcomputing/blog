@@ -5,7 +5,7 @@ description: |
   Articles for the data and engineering consulting practice Chaotic Good Computing, as well as personal
   notes by Spencer Elkington.
 tags:
-  - writing/highlights
+  - writing/essays
   - projects
   - economics
   - engineering

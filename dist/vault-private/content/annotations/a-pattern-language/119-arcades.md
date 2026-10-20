@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 119; Arcades"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)
 - [108-connected-buildings](content/annotations/a-pattern-language/108-connected-buildings)
 - [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)

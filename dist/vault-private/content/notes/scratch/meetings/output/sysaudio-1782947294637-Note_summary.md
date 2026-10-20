@@ -6,7 +6,7 @@ tags:
   - "engineering/ai"
   - "projects/flowthru"
   - "projects/dayjob"
-  - "writing/annotations/meetings"
+  - "writing/notes/annotations/meetings"
   - "private"
 ---
 

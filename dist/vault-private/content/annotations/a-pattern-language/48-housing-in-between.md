@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 48; Housing In Between"
 tags:
-  - "writing/annotations/a-pattern-language"
+  - "writing/notes/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -23,4 +23,4 @@ This note originally contained the following links:
 - [15-neighborhood-boundary](content/annotations/a-pattern-language/15-neighborhood-boundary)
 - [41-work-community](content/annotations/a-pattern-language/41-work-community)
 - [32-shopping-streets](content/annotations/a-pattern-language/32-shopping-street)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
