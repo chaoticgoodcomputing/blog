@@ -3,7 +3,7 @@ title: "Annotation: Acoustic Modeling of Skull Bone for Improved Transcranial Fo
 date: "2025-12-22T00:00:00.000Z"
 tags:
   - "engineering/bio"
-  - "writing/notes/annotations"
+  - "writing/fragments/annotations"
   - "private"
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "APL: Conclusion"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true

@@ -3,7 +3,7 @@ title: "AW: Defense Draft 2 Notes"
 date: "2026-01-25T00:00:00.000Z"
 tags:
   - "engineering/bio"
-  - "writing/notes/annotations"
+  - "writing/fragments/annotations"
   - "private"
 ---
 

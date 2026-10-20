@@ -18,7 +18,7 @@ test("a tag's ancestors are every tag above it, nearest last", () => {
 })
 
 test("tags with their ancestors are each tag and every tag above one, once, sorted", () => {
-  expect(withAncestors(["writing/articles", "a/b/c", "a/b"])).toEqual(["a", "a/b", "a/b/c", "writing", "writing/articles"])
+  expect(withAncestors(["writing/essays", "a/b/c", "a/b"])).toEqual(["a", "a/b", "a/b/c", "writing", "writing/essays"])
 })
 
 test("a tag is under itself and under each ancestor, and not under a tag it merely starts with", () => {

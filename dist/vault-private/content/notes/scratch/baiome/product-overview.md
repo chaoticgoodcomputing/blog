@@ -3,6 +3,7 @@ title: "B: Product Spec"
 date: "2026-01-30T00:00:00.000Z"
 tags:
   - "engineering/ai"
+  - "writing/notes"
   - "private"
 ---
 

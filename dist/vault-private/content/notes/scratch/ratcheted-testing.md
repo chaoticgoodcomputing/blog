@@ -3,7 +3,7 @@ title: "Ratcheted Testing: Actual Test-Driven Development"
 date: "2026-01-05T00:00:00.000Z"
 tags:
   - "engineering/devops"
-  - "writing/articles"
+  - "writing/essays"
   - "projects/games/magic-atlas"
   - "private"
 ---

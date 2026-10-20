@@ -7,6 +7,7 @@ date: 2024-02-26
 tags:
   - economics
   - projects/undergrad
+  - writing/notes
 ---
 In 2022, I graduated from the University of Utah with a degree in [Quantitative Analysis of Markets & Organizations](https://eccles.utah.edu/programs/undergraduate/academics/majors/qamo/) (QAMO, more-or-less [[public/tags/economics|quantitative economics]]).
 

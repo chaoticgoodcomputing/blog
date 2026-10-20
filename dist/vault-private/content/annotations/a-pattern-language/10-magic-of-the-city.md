@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 10; Magic of the City"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Local Transport Areas](content/annotations/a-pattern-language/11-local-transport-areas)
 - [08-mosaic-of-subcultures](content/annotations/a-pattern-language/08-mosaic-of-subcultures)
 - [03-city-country-fingers](/content/annotations/a-pattern-language/03-city-country-fingers)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

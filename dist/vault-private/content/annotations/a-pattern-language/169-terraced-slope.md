@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 169; Terraced Slope"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [104-site-repair](content/annotations/a-pattern-language/104-site-repair)
 - [160-building-edge](content/annotations/a-pattern-language/160-building-edge)
 - [168-connection-to-the-earth](content/annotations/a-pattern-language/168-connection-to-the-earth)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

@@ -2,7 +2,7 @@
 title: An annotated field manual
 date: 2026-03-27
 tags:
-  - writing/notes/annotations
+  - writing/fragments/annotations
 annotation-target: https://example.com/manuals/Field_Manual.pdf
 ---
 Why I read the field manual.

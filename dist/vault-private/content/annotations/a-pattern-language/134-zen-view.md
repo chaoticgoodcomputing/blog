@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 134; Zen View"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [132-short-passages](content/annotations/a-pattern-language/132-short-passages)
 - [133-staircase-as-a-stage](content/annotations/a-pattern-language/133-staircase-as-a-stage)
 - [120-paths-and-goals](content/annotations/a-pattern-language/120-paths-and-goals)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

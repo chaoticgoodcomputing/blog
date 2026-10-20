@@ -11,7 +11,7 @@ import { openVault } from "../src/lib/vault.ts"
 const FILES: Record<string, string> = {
   "index.md": "---\ntitle: Home\ndate: 2026-06-01\n---\n\nNot under the article folder.\n",
   "content/essay.md":
-    "---\ntitle: Essay\ndate: 2026-02-01T08:30:00Z\ndescription: An essay.\ntags: [writing/articles, garden]\n---\n\nAn essay.\n",
+    "---\ntitle: Essay\ndate: 2026-02-01T08:30:00Z\ndescription: An essay.\ntags: [writing/essays, garden]\n---\n\nAn essay.\n",
   "content/plain.md": "---\ntitle: Plain\ndate: 2026-01-31\n---\n\nNo description and no tags.\n",
   "content/diary.md": "---\ntitle: Diary\ndate: 2026-05-01\ntags: [private/work]\n---\n\nA private page.\n",
   "content/Widget Note.mdx": "---\ntitle: Widget\ndate: 2026-01-30\n---\n\nAn MDX note.\n",
@@ -46,7 +46,7 @@ test("an article is an item with its title, its page's address, its date, its de
     link: "/content/essay",
     pubDate: new Date("2026-02-01T08:30:00Z"),
     description: "An essay.",
-    categories: ["writing/articles", "garden"],
+    categories: ["writing/essays", "garden"],
   })
 })
 

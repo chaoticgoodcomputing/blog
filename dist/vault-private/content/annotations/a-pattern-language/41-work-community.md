@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 41; Work Community"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [13-subculture-boundary](content/annotations/a-pattern-language/13-subculture-boundary)
 - [15-neighborhood-boundary](content/annotations/a-pattern-language/15-neighborhood-boundary)
 - [30-activity-nodes](content/annotations/a-pattern-language/30-activity-nodes)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

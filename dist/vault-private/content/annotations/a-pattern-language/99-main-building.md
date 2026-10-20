@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 99; Main Building"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
 - [96-number-of-stories](content/annotations/a-pattern-language/96-number-of-stories)
 - [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

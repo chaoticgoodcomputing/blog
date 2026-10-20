@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 197; Thick Walls"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [180-window-place](content/annotations/a-pattern-language/180-window-place)
 - [190-ceiling-height-variety](content/annotations/a-pattern-language/190-ceiling-height-variety)
 - [160-building-edge](content/annotations/a-pattern-language/160-building-edge)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

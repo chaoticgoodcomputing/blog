@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 34; Interchange"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [16-web-of-public-transportation](content/annotations/a-pattern-language/16-web-of-public-transportation)
 - [11-local-transport-areas](content/annotations/a-pattern-language/11-local-transport-areas)
 - [20-mini-buses](content/annotations/a-pattern-language/20-mini-buses)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

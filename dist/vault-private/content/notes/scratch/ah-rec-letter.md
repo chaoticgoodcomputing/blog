@@ -5,6 +5,7 @@ tags:
   - "writing"
   - "projects/dayjob"
   - "projects/undergrad"
+  - "writing/notes"
   - "private"
 ---
 

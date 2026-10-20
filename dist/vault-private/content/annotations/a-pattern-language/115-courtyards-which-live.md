@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 115; Courtyards Which Live"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Cascade of Roofs](content/annotations/a-pattern-language/116-cascade-of-roofs)
 - [106-positive-outdoor-space](content/annotations/a-pattern-language/106-positive-outdoor-space)
 - [114-hierarchy-of-open-space](content/annotations/a-pattern-language/114-hierarchy-of-open-space)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

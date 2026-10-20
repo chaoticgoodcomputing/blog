@@ -2,7 +2,7 @@
 title: Alpha
 description: The first note.
 date: 2026-01-04
-tags: [engineering/ai, writing/articles]
+tags: [engineering/ai, writing/essays]
 ---
 
 ## A heading

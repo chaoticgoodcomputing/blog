@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 26; Life Cycle"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Men and Women](content/annotations/a-pattern-language/27-men-and-women)
 - [12-community-of-7000](/content/annotations/a-pattern-language/12-community-of-7000)
 - [14-identifiable-neighborhood](/content/annotations/a-pattern-language/14-identifiable-neighborhood)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

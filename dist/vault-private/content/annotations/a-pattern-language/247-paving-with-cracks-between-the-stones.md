@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 247; Paving with Cracks Between the Stones"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -23,4 +23,4 @@ This note originally contained the following links:
 - [163-outdoor-room](content/annotations/a-pattern-language/163-outdoor-room)
 - [168-connection-to-the-earth](content/annotations/a-pattern-language/168-connection-to-the-earth)
 - [169-terraced-slope](content/annotations/a-pattern-language/169-terraced-slope)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 241; Seat Spots"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -26,4 +26,4 @@ This note originally contained the following links:
 - [168-connection-to-the-earth](content/annotations/a-pattern-language/168-connection-to-the-earth)
 - [174-trellised-walk](content/annotations/a-pattern-language/174-trellised-walk)
 - [176-garden-seat](content/annotations/a-pattern-language/176-garden-seat)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

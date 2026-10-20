@@ -8,7 +8,7 @@ tags:
   - engineering/data
   - engineering/devops
   - engineering/languages/python
-  - writing/tutorials
+  - writing/notes/tutorials
   - engineering/data
   - economics/finance
   - projects/dayjob

@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 24; Sacred Sites"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -17,4 +17,4 @@ This note originally contained the following links:
 
 - [Parallel Roads](content/annotations/a-pattern-language/23-parallel-roads)
 - [Access to Water](content/annotations/a-pattern-language/25-access-to-water)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

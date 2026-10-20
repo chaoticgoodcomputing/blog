@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 40; Old People Everywhere"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [14-identifiable-neighborhood](/content/annotations/a-pattern-language/14-identifiable-neighborhood)
 - [26-life-cycle](content/annotations/a-pattern-language/26-life-cycle)
 - [35-household-mix](content/annotations/a-pattern-language/35-household-mix)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

@@ -8,6 +8,7 @@ tags:
   - engineering/languages/python
   - economics/markets
   - projects/undergrad
+  - writing/fragments
 ---
 Awhile ago, the channel 3blue1brown announced an internship and public competition, Summer of Math Education - at the time, I submitted some half-assed entries that I've kept around since then.
 

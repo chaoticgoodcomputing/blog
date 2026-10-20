@@ -9,6 +9,7 @@ tags:
   - engineering/languages/python
   - engineering/data
   - projects/undergrad
+  - writing/fragments
 ---
 Below, you'll find some graphs. These are what is known in the field of [[public/tags/engineering/data|data visualization]] as "bad."
 

@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 37; House Cluster"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [29-density-rings](content/annotations/a-pattern-language/29-density-rings)
 - [35-household-mix](content/annotations/a-pattern-language/35-household-mix)
 - [36-degrees-of-publicness](content/annotations/a-pattern-language/36-degrees-of-publicness)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

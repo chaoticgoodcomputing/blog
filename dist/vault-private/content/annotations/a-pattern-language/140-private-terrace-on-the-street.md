@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 140; Private Terrace on the Street"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [111-half-hidden-garden](content/annotations/a-pattern-language/111-half-hidden-garden)
 - [51-green-streets](content/annotations/a-pattern-language/51-green-streets)
 - [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

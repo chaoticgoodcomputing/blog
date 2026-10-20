@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 199; Sunny Counter"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [139-farmhouse-kitchen](content/annotations/a-pattern-language/139-farmhouse-kitchen)
 - [184-cooking-layout](/content/annotations/a-pattern-language/184-cooking-layout)
 - [128-indoor-sunlight](content/annotations/a-pattern-language/128-indoor-sunlight)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

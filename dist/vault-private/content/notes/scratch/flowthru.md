@@ -7,6 +7,7 @@ tags:
   - "engineering/data"
   - "engineering/languages/csharp"
   - "engineering/languages/python"
+  - "writing/notes"
   - "private"
 ---
 

@@ -2,7 +2,7 @@
 title: "The Feed's First Article"
 description: An article the feed holds, with a description & an ampersand.
 date: 2026-07-03
-tags: [writing/articles]
+tags: [writing/essays]
 ---
 
 The newest article in the fixture vault.

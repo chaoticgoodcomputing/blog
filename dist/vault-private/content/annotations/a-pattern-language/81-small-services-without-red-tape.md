@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 81; Small Services without Red Tape"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [44-local-town-hall](content/annotations/a-pattern-language/44-local-town-hall)
 - [47-health-center](content/annotations/a-pattern-language/47-health-center)
 - [84-teenage-society](content/annotations/a-pattern-language/84-teenage-society)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

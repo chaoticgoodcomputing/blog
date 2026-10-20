@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 239; Small Panes"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [236-windows-which-open-wide](content/annotations/a-pattern-language/236-windows-which-open-wide)
 - [237-solid-doors-with-glass](content/annotations/a-pattern-language/237-solid-doors-with-glass)
 - [225-frames-as-thickened-edges](content/annotations/a-pattern-language/225-frames-as-thickened-edges)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

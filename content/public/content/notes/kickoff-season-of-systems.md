@@ -9,6 +9,7 @@ tags:
   - engineering/ai
   - projects/homelab
   - projects/site
+  - writing/notes
 ---
 Letting the vault go stale for a year and a half feels less like falling off the wagon, and more like completely losing the wagon altogether.
 

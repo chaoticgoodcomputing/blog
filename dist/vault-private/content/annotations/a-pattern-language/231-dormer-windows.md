@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 231; Dormer Windows"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [117-sheltering-roof](content/annotations/a-pattern-language/117-sheltering-roof)
 - [180-window-place](content/annotations/a-pattern-language/180-window-place)
 - [220-roof-vaults](content/annotations/a-pattern-language/220-roof-vaults)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

@@ -3,7 +3,7 @@ title: "Boston Timeline"
 date: "2026-07-05T00:00:00.000Z"
 tags:
   - "private"
-  - "writing/notes/annotations"
+  - "writing/fragments/annotations"
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-// Drafts a Buttondown email from each public note tagged `writing/emails`. The note's title is the
+// Drafts a Buttondown email from each public note tagged `writing/notes/emails`. The note's title is the
 // subject and its body the email, with its links written as full addresses on the site; the note
 // stays an ordinary page, so the site is the newsletter's archive.
 //
@@ -9,7 +9,7 @@
 //
 //   node send-email.mjs --file <note> [--dry-run]           draft one note
 //   node send-email.mjs --changed <before> <after> [--dry-run]
-//       draft each note that became an email between two commits: tagged `writing/emails`, not a
+//       draft each note that became an email between two commits: tagged `writing/notes/emails`, not a
 //       draft and not private after, and not all of those before. The deploy workflow runs this on
 //       each push, so editing a note that is already an email drafts nothing new.
 //
@@ -27,7 +27,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..")
 const PUBLIC = "content/public"
 const STUBS = "dist/vault-private/content"
 const SITE = "https://blog.chaoticgood.computer"
-const EMAIL_TAG = "writing/emails"
+const EMAIL_TAG = "writing/notes/emails"
 const DRY_RUN_DIR = "dist/emails"
 
 const NOTE = /\.mdx?$/i
@@ -40,7 +40,7 @@ function tagsOf(frontmatter) {
 
 const isDraft = (frontmatter) => String(frontmatter.draft).toLowerCase() === "true"
 
-/** Whether a note's source makes it an email: tagged `writing/emails`, and neither a draft nor private. */
+/** Whether a note's source makes it an email: tagged `writing/notes/emails`, and neither a draft nor private. */
 export function isEmail(source) {
   if (source === undefined) return false
   const { data } = matter(source)
@@ -113,7 +113,7 @@ function resolveTarget(target, byName) {
  * full addresses, as do Markdown links to the vault; Obsidian comments go. Code is left as it is.
  * `warn` hears of each link no file answers, which is left as its text.
  */
-export function toEmailMarkdown(body, { byName = new Map(), warn = () => {} } = {}) {
+export function toEmailMarkdown(body, { byName = new Map(), warn = () => { } } = {}) {
   const convert = (text) =>
     text
       .replace(/%%[\s\S]*?%%/g, "")
@@ -139,7 +139,7 @@ export function toEmailMarkdown(body, { byName = new Map(), warn = () => {} } = 
         let decoded = target
         try {
           decoded = decodeURI(target)
-        } catch {}
+        } catch { }
         const [path, heading] = decoded.split("#")
         return `${embed}[${label}](${pageAddress(path, heading)})`
       })

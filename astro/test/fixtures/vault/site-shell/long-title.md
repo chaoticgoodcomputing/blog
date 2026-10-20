@@ -1,5 +1,5 @@
 ---
-title: "#writing/notes/annotations/meetings/a-title-with-no-space-in-it-and-wider-than-any-phone"
+title: "#writing/fragments/annotations/meetings/a-title-with-no-space-in-it-and-wider-than-any-phone"
 date: 2026-02-05
 ---
 

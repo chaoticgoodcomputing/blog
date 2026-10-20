@@ -7,6 +7,7 @@ tags:
   - engineering/ai
   - projects/flowthru
   - projects/site
+  - writing/notes
 draft: true
 ---
 > [!QUOTE]

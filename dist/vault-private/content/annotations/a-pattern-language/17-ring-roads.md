@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 17; Ring Roads"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [11-local-transport-areas](content/annotations/a-pattern-language/11-local-transport-areas)
 - [34-interchange](content/annotations/a-pattern-language/34-interchange)
 - [16-web-of-public-transportation](content/annotations/a-pattern-language/16-web-of-public-transportation)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

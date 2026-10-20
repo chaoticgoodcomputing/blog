@@ -7,6 +7,7 @@ tags:
   - horticulture/seasons/rhythm
   - engineering/data
   - engineering/devops
+  - writing/notes
 ---
 Time-tracking is one of the tools I've picked up during my [[public/tags/horticulture/seasons/rhythm|Year of Rhythm]] and [[public/tags/horticulture|horticulture]]. I'll probably write about it more, here, later.
 

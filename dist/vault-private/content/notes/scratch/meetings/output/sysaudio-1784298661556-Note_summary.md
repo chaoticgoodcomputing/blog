@@ -5,7 +5,7 @@ tags:
   - "engineering/ai"
   - "engineering/languages/csharp"
   - "projects/dayjob"
-  - "writing/notes/annotations/meetings"
+  - "writing/fragments/annotations/meetings"
   - "private"
 ---
 

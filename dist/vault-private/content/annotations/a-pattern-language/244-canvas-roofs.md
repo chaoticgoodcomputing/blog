@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 244; Canvas Roofs"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -26,4 +26,4 @@ This note originally contained the following links:
 - [180-window-place](content/annotations/a-pattern-language/180-window-place)
 - [103-small-parking-lots](content/annotations/a-pattern-language/103-small-parking-lots)
 - [238-filtered-light](content/annotations/a-pattern-language/238-filtered-light)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

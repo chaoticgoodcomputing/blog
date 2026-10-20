@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 89; Corner Grocery"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [46-market-of-many-shops](content/annotations/a-pattern-language/46-market-of-many-shops)
 - [19-web-of-shopping](content/annotations/a-pattern-language/19-web-of-shopping)
 - [14-identifiable-neighborhood](content/annotations/a-pattern-language/14-identifiable-neighborhood)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

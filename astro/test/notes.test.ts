@@ -30,8 +30,8 @@ test("a published note knows its address, title, description, tags and date", ()
     url: "/content/notes/alpha",
     title: "Alpha",
     description: "The first note.",
-    tags: ["engineering/ai", "writing/articles"],
-    tagsWithAncestors: ["engineering", "engineering/ai", "writing", "writing/articles"],
+    tags: ["engineering/ai", "writing/essays"],
+    tagsWithAncestors: ["engineering", "engineering/ai", "writing", "writing/essays"],
     isPrivate: false,
   })
   expect(alpha.file.path).toBe("content/notes/alpha.md")

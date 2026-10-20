@@ -6,12 +6,12 @@ import { emailFor, isEmail, toEmailMarkdown } from "./send-email.mjs"
 const SITE = "https://blog.chaoticgood.computer"
 const note = (frontmatter, body = "Hello.") => `---\n${frontmatter}\n---\n\n${body}\n`
 
-test("an email is tagged writing/emails, and neither a draft nor private", () => {
-  assert.equal(isEmail(note("tags:\n  - writing/emails")), true)
-  assert.equal(isEmail(note("tags: writing/emails")), true)
-  assert.equal(isEmail(note("tags:\n  - writing/emails\ndraft: true")), false)
-  assert.equal(isEmail(note("tags:\n  - writing/emails\n  - private")), false)
-  assert.equal(isEmail(note("tags:\n  - writing/articles")), false)
+test("an email is tagged writing/notes/emails, and neither a draft nor private", () => {
+  assert.equal(isEmail(note("tags:\n  - writing/notes/emails")), true)
+  assert.equal(isEmail(note("tags: writing/notes/emails")), true)
+  assert.equal(isEmail(note("tags:\n  - writing/notes/emails\ndraft: true")), false)
+  assert.equal(isEmail(note("tags:\n  - writing/notes/emails\n  - private")), false)
+  assert.equal(isEmail(note("tags:\n  - writing/essays")), false)
   assert.equal(isEmail(undefined), false)
 })
 
@@ -23,7 +23,7 @@ test("wikilinks become links to the site", () => {
       "[[/content/notes/qamo]]",
       "[[hello-blog]]",
       "[[public/content/notes/beethoven#The Ninth|the Ninth]]",
-      "[[public/tags/writing/emails]]",
+      "[[public/tags/writing/notes/emails]]",
     ].join("\n"),
     { byName },
   )
@@ -34,7 +34,7 @@ test("wikilinks become links to the site", () => {
       `[qamo](${SITE}/content/notes/qamo)`,
       `[hello-blog](${SITE}/content/articles/hello-blog)`,
       `[the Ninth](${SITE}/content/notes/beethoven#the-ninth)`,
-      `[emails](${SITE}/tags/writing/emails)`,
+      `[emails](${SITE}/tags/writing/notes/emails)`,
     ].join("\n"),
   )
 })
@@ -53,15 +53,15 @@ test("unresolved links stay as text, comments go, code is left alone", () => {
 })
 
 test("an email's subject is its title, and it links back to its page", () => {
-  const email = emailFor("content/public/content/notes/hi.md", note('title: "Hi there"\ntags:\n  - writing/emails'), new Map())
+  const email = emailFor("content/public/content/notes/hi.md", note('title: "Hi there"\ntags:\n  - writing/notes/emails'), new Map())
   assert.equal(email.subject, "Hi there")
   assert.equal(email.page, `${SITE}/content/notes/hi`)
   assert.equal(email.body, `Hello.\n\n---\n\n[Read this on the site](${SITE}/content/notes/hi)\n`)
 })
 
 test("an .mdx note or a private note can't be an email", () => {
-  assert.throws(() => emailFor("content/public/content/notes/w.mdx", note("tags: writing/emails"), new Map()), /only a \.md note/)
-  assert.throws(() => emailFor("content/public/content/notes/p.md", note("tags:\n  - writing/emails\n  - private"), new Map()), /private/)
+  assert.throws(() => emailFor("content/public/content/notes/w.mdx", note("tags: writing/notes/emails"), new Map()), /only a \.md note/)
+  assert.throws(() => emailFor("content/public/content/notes/p.md", note("tags:\n  - writing/notes/emails\n  - private"), new Map()), /private/)
 })
 
 test("callouts become bold labels", () => {

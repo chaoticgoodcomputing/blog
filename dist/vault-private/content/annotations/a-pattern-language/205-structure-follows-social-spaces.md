@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 205; Structure Follows Social Spaces"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -17,4 +17,4 @@ This note originally contained the following links:
 
 - [Secret Place](content/annotations/a-pattern-language/204-secret-place)
 - [Efficient Structure](content/annotations/a-pattern-language/206-efficient-structure)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

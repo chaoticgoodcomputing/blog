@@ -3,7 +3,7 @@ title: Evolution and Revolution as Organizations Grow
 date: 2026-01-28
 tags:
   - economics/strategy
-  - writing/notes/annotations
+  - writing/fragments/annotations
 annotation-target: https://ils.unc.edu/daniel/131/cco4/Greiner.pdf
 description: Annotations for Greiner's 1972 paper "Evolution and Revolution as Organizations Grow", about the structural composition of organizations at different sizes and requirements.
 ---

@@ -5,7 +5,7 @@ tags:
   - "engineering/ai"
   - "projects/games/magic-atlas"
   - "projects/dayjob"
-  - "writing/notes/annotations/meetings"
+  - "writing/fragments/annotations/meetings"
   - "private"
 ---
 

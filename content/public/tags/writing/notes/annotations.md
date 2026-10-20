@@ -1,4 +1,4 @@
 ---
-title: "#writing/notes/annotations"
+title: "#writing/fragments/annotations"
 ---
 

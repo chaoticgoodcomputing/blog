@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 167; Six-Foot Balcony"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Connection to the Earth](content/annotations/a-pattern-language/168-connection-to-the-earth)
 - [119-arcades](content/annotations/a-pattern-language/119-arcades)
 - [166-gallery-surround](content/annotations/a-pattern-language/166-gallery-surround)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

@@ -7,6 +7,7 @@ date: 2024-02-27
 tags:
   - horticulture/seasons/rhythm
   - projects/site
+  - writing/notes
 ---
 The past few days have been a weird experience as I actively try to lower the internal bar for what I feel comfortable putting out into the world. As a proud member of the most terminally online generation to ever live, **I have a deep and relentless fear of being wrong on the Internet.**
 

@@ -3,6 +3,7 @@ title: Software as Burritos
 date: 2026-09-30
 tags:
   - engineering
+  - writing/notes
 description: A brief side-rant about the burrito-style economics of junior-level software engineering
 ---
 This is a side note that I carved out of [[public/content/notes/agronomic-software-development.mdx|Agronomic Software Development]]. I'm a stream-of-consciousness writer, and this... ended up being a slightly longer stream. It was cut from the portion about software factories.

@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 219; Floor-Ceiling Vaults"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [210-floor-and-ceiling-layout](content/annotations/a-pattern-language/210-floor-and-ceiling-layout)
 - [217-perimeter-beams](content/annotations/a-pattern-language/217-perimeter-beams)
 - [190-ceiling-height-variety](content/annotations/a-pattern-language/190-ceiling-height-variety)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

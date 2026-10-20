@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 168; Connection to the Earth"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [140-private-terrace-on-the-street](content/annotations/a-pattern-language/140-private-terrace-on-the-street)
 - [166-gallery-surround](content/annotations/a-pattern-language/166-gallery-surround)
 - [167-six-foot-balcony](content/annotations/a-pattern-language/167-six-foot-balcony)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

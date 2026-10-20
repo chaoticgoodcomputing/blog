@@ -17,7 +17,7 @@ test("an article is an item with its title, link, date and description, newest f
     isPermaLink: "true",
     pubDate: "Fri, 03 Jul 2026 00:00:00 GMT",
     description: "An article the feed holds, with a description & an ampersand.",
-    categories: ["writing/articles"],
+    categories: ["writing/essays"],
   })
   const titles = items.map((item) => item.title)
   expect(titles.slice(first, first + 3)).toEqual(["The Feed's First Article", "Weekly W06", "Widget Article"])

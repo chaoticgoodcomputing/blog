@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 8; Mosaic of Subcultures"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -18,4 +18,4 @@ This note originally contained the following links:
 - [The Countryside](content/annotations/a-pattern-language/07-the-countryside)
 - [Scattered Work](content/annotations/a-pattern-language/09-scattered-work)
 - [03-city-country-fingers](/content/annotations/a-pattern-language/03-city-country-fingers)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

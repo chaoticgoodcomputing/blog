@@ -6,7 +6,7 @@ date: 2021-08-05
 tags:
   - projects/games/roblox
   - engineering/languages/lua
-  - writing/articles
+  - writing/essays
   - writing/essays
 ---
 Guilty confession: I've had a ROBLOX account for 14 years. At 23 years old, that's *more than half my life.* After picking up development again in 2021, I've had quite the walk through memory lane.
@@ -63,7 +63,7 @@ To fix the *slightly* problematic client exploit issue, the company introduced t
 
 (For reference, I didn't learn anything about server and client relationships until my third year into a computer science degree.)
 
-Even though [this feature could be disabled](https://developer.roblox.com/en-us/writing/articles/Converting-From-Experimental-Mode) to allow legacy games to keep functioning (and yes, Robloxaville is legacy now - [it even has the Fandom Wiki page](https://roblox.fandom.com/wiki/Community:Playrobot/Robloxaville#:~:text=Robloxaville%20is%20a%20game%20created%20by%20Playrobot.&text=Robloxaville%20is%20a%20role%2Dplaying,prisoner%20or%20a%20police%20officer.) to prove it), ROBLOX's featured games algorithm wouldn't touch your project with a ten-foot pole for risk of traumatizing even more unsuspecting children. This was especially important for the next major change,
+Even though [this feature could be disabled](https://developer.roblox.com/en-us/writing/essays/Converting-From-Experimental-Mode) to allow legacy games to keep functioning (and yes, Robloxaville is legacy now - [it even has the Fandom Wiki page](https://roblox.fandom.com/wiki/Community:Playrobot/Robloxaville#:~:text=Robloxaville%20is%20a%20game%20created%20by%20Playrobot.&text=Robloxaville%20is%20a%20role%2Dplaying,prisoner%20or%20a%20police%20officer.) to prove it), ROBLOX's featured games algorithm wouldn't touch your project with a ten-foot pole for risk of traumatizing even more unsuspecting children. This was especially important for the next major change,
 
 #### 2. Monetization
 
@@ -101,7 +101,7 @@ Hm.
 
 Of course, this does not come without some caveats. First: this is one of the most played games in the history of the platform - its' success is by no means descriptive of *every* developer. Second: their estimated payout was made over the course of the six years the game has been in development. Third: the *BLOXburg* team is not just a single developer, and they are *very* good at what they do - *enviously* good, even.
 
-That being said: those caveats *also* come with caveats. Although not *every* developer is going to be that successful, ROBLOX self-reportedly spends [about 25% of their revenue on developer payouts](https://developer.roblox.com/en-us/writing/articles/developer-economics) as of a report from 2017. Since the company made its' public debut on the New York Stock Exchange and started reporting revenue as a publicly traded company, they reported a revenue of **$147 million dollars** in 2020. Assuming they still pay out 25% to developers, that's a big ol' pot of 34 million dollars to go around.
+That being said: those caveats *also* come with caveats. Although not *every* developer is going to be that successful, ROBLOX self-reportedly spends [about 25% of their revenue on developer payouts](https://developer.roblox.com/en-us/writing/essays/developer-economics) as of a report from 2017. Since the company made its' public debut on the New York Stock Exchange and started reporting revenue as a publicly traded company, they reported a revenue of **$147 million dollars** in 2020. Assuming they still pay out 25% to developers, that's a big ol' pot of 34 million dollars to go around.
 
 ## How To Make Games and Influence Gen Z
 

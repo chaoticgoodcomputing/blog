@@ -55,7 +55,7 @@ test("an article's head says when it was published, who wrote it, its section an
   const tags = await page
     .locator('head meta[property="article:tag"]')
     .evaluateAll((metas) => metas.map((meta) => meta.getAttribute("content")))
-  expect(tags).toEqual(["horticulture", "writing/tutorials"])
+  expect(tags).toEqual(["horticulture", "writing/notes/tutorials"])
 })
 
 test("a private page asks not to be indexed, and a public page does not", async ({ page }) => {

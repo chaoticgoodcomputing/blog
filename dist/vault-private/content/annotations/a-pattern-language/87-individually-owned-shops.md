@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 87; Individually Owned Shops"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [89-corner-grocery](content/annotations/a-pattern-language/89-corner-grocery)
 - [32-shopping-street](content/annotations/a-pattern-language/32-shopping-street)
 - [46-market-of-many-shops](content/annotations/a-pattern-language/46-market-of-many-shops)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

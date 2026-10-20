@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 55; Raised Walk"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [52-network-of-paths-and-cars](content/annotations/a-pattern-language/52-network-of-paths-and-cars)
 - [54-road-crossing](content/annotations/a-pattern-language/54-road-crossing)
 - [23-parallel-roads](content/annotations/a-pattern-language/23-parallel-roads)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

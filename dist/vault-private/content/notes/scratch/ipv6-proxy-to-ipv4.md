@@ -4,6 +4,7 @@ date: "2026-02-25T00:00:00.000Z"
 tags:
   - "engineering/devops"
   - "projects/homelab"
+  - "writing/notes"
   - "private"
 ---
 

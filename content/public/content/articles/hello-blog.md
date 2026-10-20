@@ -5,7 +5,7 @@ description: |
 date: 2021-07-28
 tags:
   - engineering/languages/python
-  - writing/articles
+  - writing/essays
   - projects/site
 ---
 

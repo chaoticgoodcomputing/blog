@@ -7,6 +7,7 @@ date: 2024-03-05
 tags:
   - engineering
   - horticulture/seasons/rhythm
+  - writing/notes
 ---
 
 ## Opinionated Software

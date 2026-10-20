@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 253; Things from your Life"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -17,4 +17,4 @@ This note originally contained the following links:
 
 - [Pools of Light](content/annotations/a-pattern-language/252-pools-of-light)
 - [Conclusion](content/annotations/a-pattern-language/254-conclusion)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

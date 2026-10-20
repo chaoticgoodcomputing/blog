@@ -7,7 +7,7 @@ date: 2024-03-03
 tags:
   - projects/homelab
   - engineering/devops
-  - writing/tutorials
+  - writing/notes/tutorials
 ---
 I recently had [a misadventure](https://bsky.app/profile/spencer.chaoticgood.computer/post/3kljmrvqd2u2q) while trying to [**slabtop**](https://www.theverge.com/22965732/macbook-decapitation-slabtop-mod-mac-studio-event-rumor-keyboard-computer-diy) (remove the LCD panel of a laptop to use it as a server) an old Dell Alienware G2 15. I didn't see this piece of friendly advice while Googling around before making my attempt. I really wish I had - it would've saved me a lot of time, trouble, and a motherboard to boot (pun intended).
 

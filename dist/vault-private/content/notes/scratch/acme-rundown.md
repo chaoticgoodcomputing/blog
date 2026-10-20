@@ -5,6 +5,7 @@ tags:
   - "projects/dayjob"
   - "engineering/languages/csharp"
   - "economics/finance"
+  - "writing/fragments"
   - "private"
 ---
 

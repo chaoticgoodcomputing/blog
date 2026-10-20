@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 144; Bathing Room"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -23,4 +23,4 @@ This note originally contained the following links:
 - [137-childrens-realm](content/annotations/a-pattern-language/137-childrens-realm)
 - [138-sleeping-to-the-east](content/annotations/a-pattern-language/138-sleeping-to-the-east)
 - [143-bed-cluster](content/annotations/a-pattern-language/143-bed-cluster)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

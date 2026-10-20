@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 207; Good Materials"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Gradual Stiffening](content/annotations/a-pattern-language/208-gradual-stiffening)
 - [205-structure-follows-social-spaces](content/annotations/a-pattern-language/205-structure-follows-social-spaces)
 - [206-efficient-structure](content/annotations/a-pattern-language/206-efficient-structure)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

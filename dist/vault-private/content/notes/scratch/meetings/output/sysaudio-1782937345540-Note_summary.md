@@ -5,9 +5,9 @@ tags:
   - "engineering/data"
   - "engineering/ai"
   - "projects/flowthru"
-  - "writing/notes/annotations"
+  - "writing/fragments/annotations"
   - "projects/dayjob"
-  - "writing/notes/annotations/meetings"
+  - "writing/fragments/annotations/meetings"
   - "private"
 ---
 

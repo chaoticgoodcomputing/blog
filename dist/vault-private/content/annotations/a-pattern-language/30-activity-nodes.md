@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 30; Activity Nodes"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -26,4 +26,4 @@ This note originally contained the following links:
 - [15-neighborhood-boundary](/content/annotations/a-pattern-language/15-neighborhood-boundary)
 - [28-eccentric-nucleus](/content/annotations/a-pattern-language/28-eccentric-nucleus)
 - [29-density-rings](/content/annotations/a-pattern-language/29-density-rings)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

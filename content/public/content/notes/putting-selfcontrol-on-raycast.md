@@ -7,6 +7,7 @@ date: 2024-02-28
 tags:
   - engineering/languages/typescript
   - horticulture/seasons/rhythm
+  - writing/notes
 ---
 
 During this recent period of [[public/tags/horticulture/seasons/rhythm|trying to break quite a few years of bad work habits]], I've been putting up little guardrails in my own life to keep myself on-track when I want to stay on-track. One issue I've run into - especially during a *particularly tumultuous US election year* - is a tendency to check the news.

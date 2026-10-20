@@ -5,6 +5,7 @@ date: 2026-01-24
 tags:
   - projects/site
   - engineering/frontend
+  - writing/fragments
 ---
 This'll be a quicker note, and likely kicked to a Gist.
 

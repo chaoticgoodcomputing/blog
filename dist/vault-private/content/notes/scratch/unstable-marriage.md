@@ -4,6 +4,7 @@ date: "2024-02-27T00:00:00.000Z"
 tags:
   - "engineering/data"
   - "economics/markets"
+  - "writing/fragments"
   - "private"
 ---
 

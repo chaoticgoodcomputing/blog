@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 196; Corner Doors"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [131-the-flow-through-rooms](content/annotations/a-pattern-language/131-the-flow-through-rooms)
 - [142-sequence-of-sitting-spaces](content/annotations/a-pattern-language/142-sequence-of-sitting-spaces)
 - [135-tapestry-of-light-and-dark](content/annotations/a-pattern-language/135-tapestry-of-light-and-dark)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

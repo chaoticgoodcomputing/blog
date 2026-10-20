@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 114; Hierarchy of Open Space"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [104-site-repair](content/annotations/a-pattern-language/104-site-repair)
 - [105-south-facing-outdoors](content/annotations/a-pattern-language/105-south-facing-outdoors)
 - [106-positive-outdoor-space](content/annotations/a-pattern-language/106-positive-outdoor-space)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

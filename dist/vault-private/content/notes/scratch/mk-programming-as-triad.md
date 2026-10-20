@@ -2,7 +2,7 @@
 title: "MK: Programming as Triad"
 date: "2026-04-06T00:00:00.000Z"
 tags:
-  - "writing/notes/annotations"
+  - "writing/fragments/annotations"
   - "private"
 ---
 

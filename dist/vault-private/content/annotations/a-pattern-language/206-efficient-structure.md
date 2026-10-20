@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 206; Efficient Structure"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -18,4 +18,4 @@ This note originally contained the following links:
 - [Structure Follows Social Spaces](content/annotations/a-pattern-language/205-structure-follows-social-spaces)
 - [Good Materials](content/annotations/a-pattern-language/207-good-materials)
 - [205-structure-follows-social-spaces](content/annotations/a-pattern-language/205-structure-follows-social-spaces)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

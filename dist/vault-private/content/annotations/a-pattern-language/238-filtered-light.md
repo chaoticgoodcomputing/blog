@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 238; Filtered Light"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Small Panes](content/annotations/a-pattern-language/239-small-panes)
 - [221-natural-doors-and-windows](content/annotations/a-pattern-language/221-natural-doors-and-windows)
 - [223-deep-reveals](content/annotations/a-pattern-language/223-deep-reveals)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

@@ -8,6 +8,7 @@ tags:
   - projects/site
   - horticulture/seasons/rhythm
   - engineering/languages/typescript
+  - writing/notes
 ---
 I've decided that I'm pretty bad at capital-B Blogging™. The last "post" I made (as of writing) was [[public/content/articles/structured-streaming|the Databricks guest post on Spark Structured Streaming]] that I did back when I worked at M Science in 2022. That particular post went through a few different stages of revisions:
 

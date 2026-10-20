@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 91; Traveler’s Inn"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [31-promenade](content/annotations/a-pattern-language/31-promenade)
 - [33-night-life](content/annotations/a-pattern-language/33-night-life)
 - [41-work-community](content/annotations/a-pattern-language/41-work-community)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

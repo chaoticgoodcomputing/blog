@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 128; Indoor Sunlight"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Common Areas at the Heart](content/annotations/a-pattern-language/129-common-areas-at-the-heart)
 - [105-south-facing-outdoors](content/annotations/a-pattern-language/105-south-facing-outdoors)
 - [127-intimacy-gradient](content/annotations/a-pattern-language/127-intimacy-gradient)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 187; Marriage Bed"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -18,4 +18,4 @@ This note originally contained the following links:
 - [Communal Sleeping](content/annotations/a-pattern-language/186-communal-sleeping)
 - [Bed Alcove](content/annotations/a-pattern-language/188-bed-alcove)
 - [136-couple-s-realm](content/annotations/a-pattern-language/136-couple-s-realm)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

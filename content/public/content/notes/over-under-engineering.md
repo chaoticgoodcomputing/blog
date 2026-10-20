@@ -7,6 +7,7 @@ date: 2024-02-25
 tags:
   - engineering
   - horticulture/seasons/rhythm
+  - writing/notes
 ---
 
 I think that over-engineering is the single greatest contributor to starting projects and never finishing them.

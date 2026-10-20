@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 179; Alcoves"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -23,4 +23,4 @@ This note originally contained the following links:
 - [146-flexible-office-space](content/annotations/a-pattern-language/146-flexible-office-space)
 - [150-a-place-to-wait](content/annotations/a-pattern-language/150-a-place-to-wait)
 - [151-small-meeting-rooms](content/annotations/a-pattern-language/151-small-meeting-rooms)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

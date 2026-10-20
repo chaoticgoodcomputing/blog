@@ -47,7 +47,7 @@ test("a note's share card says its title, description, date, reading time and ta
     description: "When and how to cut back a rose.",
     date: "Feb 14, 2026",
     readingTime: "2 min read",
-    tags: ["horticulture/seasons", "writing/tutorials"],
+    tags: ["horticulture/seasons", "writing/notes/tutorials"],
   })
 })
 
@@ -151,7 +151,7 @@ test("a card is a 1200 by 630 PNG, on the dark palette's background", async () =
 
 test("a card's tags are drawn in their dark colours", async () => {
   // horticulture is light-dark(#1a8a1a, #00FF00), and writing light-dark(#9a7400, #FFD637).
-  const png = await drawShareCard({ title: "Tagged", tags: ["horticulture/seasons", "writing/tutorials"] }, SITE)
+  const png = await drawShareCard({ title: "Tagged", tags: ["horticulture/seasons", "writing/notes/tutorials"] }, SITE)
   expect(await count(png, "#00ff00")).toBeGreaterThan(100)
   expect(await count(png, "#ffd637")).toBeGreaterThan(100)
   const untagged = await drawShareCard({ title: "Tagged", tags: [] }, SITE)
@@ -194,7 +194,7 @@ test("a card draws every tag it has room for", async () => {
 test("a card with more tags than it has room for draws those that fit, and says how many more there are", async () => {
   // A Pattern Language annotation's tags: the first is long, and leaves no room for the others.
   const foot = { date: "Feb 15, 2026", readingTime: "12 min read" }
-  const first = "writing/notes/annotations/a-pattern-language"
+  const first = "writing/fragments/annotations/a-pattern-language"
   const all = await drawShareCard({ title: "Tagged", ...foot, tags: [first, "projects/games/the-neighborhood", "horticulture"] }, SITE)
   expect(await count(all, "#ffd637")).toBeGreaterThan(100)
   expect(await count(all, "#ff0000")).toBe(0)

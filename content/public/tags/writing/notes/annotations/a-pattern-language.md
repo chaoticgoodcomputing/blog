@@ -1,4 +1,4 @@
 ---
-title: "#writing/notes/annotations/a-pattern-language"
+title: "#writing/fragments/annotations/a-pattern-language"
 ---
 

@@ -2,7 +2,7 @@
 title: "Lean Software Development: Prelude Notes"
 date: 2026-09-18
 tags:
-  - writing/notes/annotations
+  - writing/fragments/annotations
 annotation-target:
 description:
 ---

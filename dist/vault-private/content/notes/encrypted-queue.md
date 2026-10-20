@@ -6,6 +6,7 @@ tags:
   - "economics/finance"
   - "engineering/languages/typescript"
   - "engineering/languages/csharp"
+  - "writing/notes"
   - "private"
 ---
 

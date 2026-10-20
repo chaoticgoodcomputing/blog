@@ -128,7 +128,7 @@ jobs:
           publish_branch: pages
           force_orphan: true
 
-  # Each public note the push made an email (tagged `writing/emails`, not a draft) becomes a
+  # Each public note the push made an email (tagged `writing/notes/emails`, not a draft) becomes a
   # Buttondown draft, after the deploy so its links reach live pages. Only ever a draft: it is sent
   # by hand from Buttondown (.github/workflows/scripts/send-email.mjs).
   email:

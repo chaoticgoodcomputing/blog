@@ -9,6 +9,7 @@ tags:
   - engineering/data
   - economics/strategy
   - projects/undergrad
+  - writing/notes
 ---
 I am **awful** at sticking to routines - the only thing I can bear to check on every day is Twitter. Even if it means spending twice as long over the course of a weekend, I will *always* try to find a way to automate away routine manual work.
 

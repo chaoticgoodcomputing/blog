@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 33; Night Life"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [10-magic-of-the-city](content/annotations/a-pattern-language/10-magic-of-the-city)
 - [12-community-of-7000](content/annotations/a-pattern-language/12-community-of-7000)
 - [31-promenade](content/annotations/a-pattern-language/31-promenade)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 150; A Place to Wait"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [47-health-center](content/annotations/a-pattern-language/47-health-center)
 - [81-small-services-without-red-tape](content/annotations/a-pattern-language/81-small-services-without-red-tape)
 - [82-office-connections](content/annotations/a-pattern-language/82-office-connections)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

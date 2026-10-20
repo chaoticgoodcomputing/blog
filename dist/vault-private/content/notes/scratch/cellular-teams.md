@@ -2,7 +2,7 @@
 title: "Cellular Teams"
 date: "2026-03-30T00:00:00.000Z"
 tags:
-  - "writing/notes/annotations"
+  - "writing/fragments/annotations"
   - "private"
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 50; T Junctions"
 tags:
-  - "writing/notes/annotations/a-pattern-language"
+  - "writing/fragments/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Green Streets](content/annotations/a-pattern-language/51-green-streets)
 - [23-parallel-roads](content/annotations/a-pattern-language/23-parallel-roads)
 - [49-looped-local-roads](content/annotations/a-pattern-language/49-looped-local-roads)
-- [A Pattern Language](tags/writing/notes/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)

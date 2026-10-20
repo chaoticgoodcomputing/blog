@@ -5,6 +5,7 @@ tags:
   - "horticulture/seasons/rhythm"
   - "horticulture/seasons/systems"
   - "projects/homelab"
+  - "writing/fragments"
   - "private"
 ---
 
