@@ -47,7 +47,7 @@ test("a note's share card says its title, description, date, reading time and ta
     description: "When and how to cut back a rose.",
     date: "Feb 14, 2026",
     readingTime: "2 min read",
-    tags: ["horticulture/seasons", "writing/notes/tutorials"],
+    tags: ["horticulture/seasons", "writing/notes"],
   })
 })
 
@@ -151,7 +151,7 @@ test("a card is a 1200 by 630 PNG, on the dark palette's background", async () =
 
 test("a card's tags are drawn in their dark colours", async () => {
   // horticulture is light-dark(#1a8a1a, #00FF00), and writing light-dark(#9a7400, #FFD637).
-  const png = await drawShareCard({ title: "Tagged", tags: ["horticulture/seasons", "writing/notes/tutorials"] }, SITE)
+  const png = await drawShareCard({ title: "Tagged", tags: ["horticulture/seasons", "writing/notes"] }, SITE)
   expect(await count(png, "#00ff00")).toBeGreaterThan(100)
   expect(await count(png, "#ffd637")).toBeGreaterThan(100)
   const untagged = await drawShareCard({ title: "Tagged", tags: [] }, SITE)

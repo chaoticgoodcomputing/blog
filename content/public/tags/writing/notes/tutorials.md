@@ -1,4 +1,4 @@
 ---
-title: "#writing/notes/tutorials"
+title: "#writing/notes"
 ---
 

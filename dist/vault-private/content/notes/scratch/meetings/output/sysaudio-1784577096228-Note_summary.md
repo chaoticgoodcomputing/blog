@@ -3,7 +3,7 @@ title: "Meeting 2026-07-21 08:45"
 date: "2026-07-21T12:45:35.775Z"
 tags:
   - "engineering/ai"
-  - "writing/notes/tutorials"
+  - "writing/notes"
   - "projects/dayjob"
   - "writing/annotations/meetings"
   - "private"

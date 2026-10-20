@@ -89,7 +89,7 @@ export const tags: TagDictionary = {
   "writing/notes/emails": { icon: "mdi:email" },
   "writing/essays": { icon: "mdi:pine-tree" },
   "writing/fragments": { icon: "mdi:seed" },
-  "writing/notes/tutorials": { icon: "mdi:map" },
+  "writing/notes": { icon: "mdi:map" },
 }
 
 export const tagList: TagListConfig = {
@@ -126,7 +126,7 @@ export const seo: SeoConfig = {
     "Articles for the data and engineering consulting practice Chaotic Good Computing, as well as personal notes by Spencer Elkington.",
   articleTypes: [
     { tag: "writing/annotations", type: "ScholarlyArticle", section: "Annotations" },
-    { tag: "writing/notes/tutorials", type: "HowTo", section: "Tutorials" },
+    { tag: "writing/notes", type: "HowTo", section: "Tutorials" },
     { tag: "writing/essays", type: "Article", section: "Articles" },
     { tag: "engineering", type: "TechArticle", section: "Engineering" },
     { tag: "economics", type: "Article", section: "Economics" },

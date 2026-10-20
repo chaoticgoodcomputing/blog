@@ -74,7 +74,7 @@ test("an article is an article to Open Graph: its dates, its author, its section
     publishedTime: "2026-03-04T10:00:00.000Z",
     author: "https://example.com/about",
     section: "Tutorials",
-    tags: ["horticulture", "writing/notes/tutorials"],
+    tags: ["horticulture", "writing/notes"],
   })
   expect(head.article!.modifiedTime).toMatch(/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/)
   const undescribed = note("content/seo/undescribed")
@@ -150,7 +150,7 @@ test("the home page's JSON-LD is the website, and a page that is no article's ha
 // The site's rules, as the old site configured them (quartz-seo's `articleTypes`): first match wins.
 test("a note's article type and section are the first rule's whose tag it is under", () => {
   expect(articleTypeOf(["writing/annotations"])).toEqual({ type: "ScholarlyArticle", section: "Annotations" })
-  expect(articleTypeOf(["writing/notes/tutorials"])).toEqual({ type: "HowTo", section: "Tutorials" })
+  expect(articleTypeOf(["writing/notes"])).toEqual({ type: "HowTo", section: "Tutorials" })
   expect(articleTypeOf(["writing/essays"])).toEqual({ type: "Article", section: "Articles" })
   expect(articleTypeOf(["engineering"])).toEqual({ type: "TechArticle", section: "Engineering" })
   expect(articleTypeOf(["economics"])).toEqual({ type: "Article", section: "Economics" })
@@ -159,7 +159,7 @@ test("a note's article type and section are the first rule's whose tag it is und
 })
 
 test("the rules are tried in order, not the note's tags", () => {
-  expect(articleTypeOf(["projects", "engineering", "writing/notes/tutorials"])).toEqual({
+  expect(articleTypeOf(["projects", "engineering", "writing/notes"])).toEqual({
     type: "HowTo",
     section: "Tutorials",
   })
