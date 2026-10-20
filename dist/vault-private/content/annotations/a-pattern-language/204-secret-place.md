@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 204; Secret Place"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Structure Follows Social Spaces](content/annotations/a-pattern-language/205-structure-follows-social-spaces)
 - [197-thick-walls](content/annotations/a-pattern-language/197-thick-walls)
 - [190-ceiling-height-variety](content/annotations/a-pattern-language/190-ceiling-height-variety)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

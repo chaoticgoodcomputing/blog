@@ -6,7 +6,7 @@ tags:
   - "engineering/ai"
   - "engineering/frontend"
   - "projects/dayjob"
-  - "writing/fragments/annotations/meetings"
+  - "writing/annotations/meetings"
   - "private"
 ---
 

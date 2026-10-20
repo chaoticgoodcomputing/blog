@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 90; Beer Hall"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [15-neighborhood-boundary](content/annotations/a-pattern-language/15-neighborhood-boundary)
 - [31-promenade](content/annotations/a-pattern-language/31-promenade)
 - [33-night-life](content/annotations/a-pattern-language/33-night-life)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

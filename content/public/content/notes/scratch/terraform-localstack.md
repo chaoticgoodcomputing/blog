@@ -6,7 +6,7 @@ description: |
 date: 2024-04-18
 tags:
   - engineering/devops
-  - writing/fragments/annotations
+  - writing/annotations
 ---
 ## Primary Takeaways
 

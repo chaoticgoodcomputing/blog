@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 46; Market of Many Shops"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Health Center](content/annotations/a-pattern-language/47-health-center)
 - [19-web-of-shopping](content/annotations/a-pattern-language/19-web-of-shopping)
 - [32-shopping-streets](content/annotations/a-pattern-language/32-shopping-street)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

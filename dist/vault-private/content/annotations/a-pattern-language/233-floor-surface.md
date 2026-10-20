@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 233; Floor Surface"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [215-ground-floor-slab](content/annotations/a-pattern-language/215-ground-floor-slab)
 - [219-floor-ceiling-vaults](content/annotations/a-pattern-language/219-floor-ceiling-vaults)
 - [127-intimacy-gradient](content/annotations/a-pattern-language/127-intimacy-gradient)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

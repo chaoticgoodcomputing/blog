@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 175; Greenhouse"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [37-house-cluster](content/annotations/a-pattern-language/37-house-cluster)
 - [41-work-community](content/annotations/a-pattern-language/41-work-community)
 - [67-common-land](content/annotations/a-pattern-language/67-common-land)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

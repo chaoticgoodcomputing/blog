@@ -6,7 +6,7 @@ tags:
   - "projects/games/magic-atlas"
   - "engineering/languages/csharp"
   - "projects/dayjob"
-  - "writing/fragments/annotations/meetings"
+  - "writing/annotations/meetings"
   - "private"
 ---
 

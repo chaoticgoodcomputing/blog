@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 84; Teenage Society"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [26-life-cycle](content/annotations/a-pattern-language/26-life-cycle)
 - [18-network-of-learning](content/annotations/a-pattern-language/18-network-of-learning)
 - [83-master-and-apprentices](content/annotations/a-pattern-language/83-master-and-apprentices)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

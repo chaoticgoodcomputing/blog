@@ -4,7 +4,7 @@ date: "2026-06-22T13:22:54.474Z"
 tags:
   - "engineering/data"
   - "projects/dayjob"
-  - "writing/fragments/annotations/meetings"
+  - "writing/annotations/meetings"
   - "private"
 ---
 

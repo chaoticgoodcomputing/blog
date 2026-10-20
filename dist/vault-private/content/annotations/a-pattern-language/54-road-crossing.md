@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 54; Road Crossing"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Raised Walk](content/annotations/a-pattern-language/55-raised-walk)
 - [23-parallel-roads](content/annotations/a-pattern-language/23-parallel-roads)
 - [52-network-of-paths-and-cars](content/annotations/a-pattern-language/52-network-of-paths-and-cars)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

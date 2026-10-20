@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 183; Workspace Enclosure"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [152-half-private-office](content/annotations/a-pattern-language/152-half-private-office)
 - [157-home-workshop](content/annotations/a-pattern-language/157-home-workshop)
 - [179-alcoves](content/annotations/a-pattern-language/179-alcoves)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 136; Couple’s Realm"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [76-house-for-a-small-family](content/annotations/a-pattern-language/76-house-for-a-small-family)
 - [77-house-for-a-couple](content/annotations/a-pattern-language/77-house-for-a-couple)
 - [127-intimacy-gradient](content/annotations/a-pattern-language/127-intimacy-gradient)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

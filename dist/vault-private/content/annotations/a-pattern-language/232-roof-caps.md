@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 232; Roof Caps"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Floor Surface](content/annotations/a-pattern-language/233-floor-surface)
 - [118-roof-garden](content/annotations/a-pattern-language/118-roof-garden)
 - [220-roof-vaults](content/annotations/a-pattern-language/220-roof-vaults)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

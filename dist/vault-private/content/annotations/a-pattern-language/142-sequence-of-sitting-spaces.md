@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 142; Sequence of Sitting Spaces"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -18,4 +18,4 @@ This note originally contained the following links:
 - [A Room of One’s Own](content/annotations/a-pattern-language/141-a-room-of-one-s-own)
 - [Bed Cluster](content/annotations/a-pattern-language/143-bed-cluster)
 - [127-intimacy-gradient](content/annotations/a-pattern-language/127-intimacy-gradient)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

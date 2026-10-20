@@ -2,7 +2,7 @@
 title: "APL: Pattern 4; Agricultural Valleys"
 date: 2026-02-08
 tags:
-  - writing/fragments/annotations/a-pattern-language
+  - writing/annotations/a-pattern-language
   - projects/games/the-neighborhood
 description: "Urban development has the high ground over agricultural and ecological preservation — and it should! *A Pattern Language* annotations on Pattern 4: Agricultural Valleys"
 ---
@@ -11,7 +11,7 @@ description: "Urban development has the high ground over agricultural and ecolog
 > [!QUOTE]
 > ... this pattern helps maintain the [[public/content/annotations/a-pattern-language/01-independent-regions|01-independent-regions]] by making regions more self-sufficient agriculturally; and it will create [[public/content/annotations/a-pattern-language/03-city-country-fingers|03-city-country-fingers]] almost automatically by preserving agricultural land in urban areas. But just exactly which land ought to be preserved, and which land built upon?
 > 
-> — *[[public/tags/writing/fragments/annotations/a-pattern-language|A Pattern Language]]*
+> — *[[public/tags/writing/annotations/a-pattern-language|A Pattern Language]]*
 
 ## Notes
 

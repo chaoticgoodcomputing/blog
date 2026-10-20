@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 85; Shopfront Schools"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Children's Home](content/annotations/a-pattern-language/86-childrens-home)
 - [86-childrens-home](content/annotations/a-pattern-language/86-childrens-home)
 - [18-network-of-learning](content/annotations/a-pattern-language/18-network-of-learning)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

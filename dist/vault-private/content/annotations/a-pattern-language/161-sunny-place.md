@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 161; Sunny Place"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [North Face](content/annotations/a-pattern-language/162-north-face)
 - [105-south-facing-outdoors](content/annotations/a-pattern-language/105-south-facing-outdoors)
 - [160-building-edge](content/annotations/a-pattern-language/160-building-edge)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

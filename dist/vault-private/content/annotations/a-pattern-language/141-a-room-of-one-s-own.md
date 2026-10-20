@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 141; A Room of One’s Own"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -22,4 +22,4 @@ This note originally contained the following links:
 - [76-house-for-a-small-family](content/annotations/a-pattern-language/76-house-for-a-small-family)
 - [77-house-for-a-couple](content/annotations/a-pattern-language/77-house-for-a-couple)
 - [129-common-areas-at-the-heart](content/annotations/a-pattern-language/129-common-areas-at-the-heart)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

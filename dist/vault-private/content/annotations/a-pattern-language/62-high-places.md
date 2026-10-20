@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 62; High Places"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [61-small-public-squares](content/annotations/a-pattern-language/61-small-public-squares)
 - [66-holy-ground](content/annotations/a-pattern-language/66-holy-ground)
 - [12-community-of-7000](content/annotations/a-pattern-language/12-community-of-7000)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

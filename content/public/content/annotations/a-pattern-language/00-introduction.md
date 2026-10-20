@@ -2,7 +2,7 @@
 title: "APL: Pattern 0; Introduction"
 date: 2026-02-05
 tags:
-  - writing/fragments/annotations/a-pattern-language
+  - writing/annotations/a-pattern-language
   - projects/games/the-neighborhood
   - economics/policy
 description: Can graphs be libertarian? Authoritarian? Annotations for the introductory portion of the 1977 book A Pattern Language.
@@ -12,7 +12,7 @@ description: Can graphs be libertarian? Authoritarian? Annotations for the intro
 > [!QUOTE]
 > The elements of this language are entities called *patterns.* Each pattern describes a problem which occurs over and over again in our environment, and then describes the core of the solution to that problem, in such a way that you can still use this solution a million times over, without ever doing it the same way twice.
 > 
-> — [[public/tags/writing/fragments/annotations/a-pattern-language|A Pattern Language]] 
+> — [[public/tags/writing/annotations/a-pattern-language|A Pattern Language]] 
 
 ## Notes
 

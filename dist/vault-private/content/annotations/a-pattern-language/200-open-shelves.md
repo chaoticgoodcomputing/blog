@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 200; Open Shelves"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [197-thick-walls](content/annotations/a-pattern-language/197-thick-walls)
 - [139-farmhouse-kitchen](content/annotations/a-pattern-language/139-farmhouse-kitchen)
 - [183-workspace-enclosure](content/annotations/a-pattern-language/183-workspace-enclosure)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

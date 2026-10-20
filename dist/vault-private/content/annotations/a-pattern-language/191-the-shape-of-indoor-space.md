@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 191; The Shape of Indoor Space"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -18,4 +18,4 @@ This note originally contained the following links:
 - [Ceiling Height Variety](content/annotations/a-pattern-language/190-ceiling-height-variety)
 - [Windows Overlooking Life](content/annotations/a-pattern-language/192-windows-overlooking-life)
 - [190-ceiling-height-variety](content/annotations/a-pattern-language/190-ceiling-height-variety)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

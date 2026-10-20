@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 105; South Facing Outdoors"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -18,4 +18,4 @@ This note originally contained the following links:
 - [Site Repair](content/annotations/a-pattern-language/104-site-repair)
 - [Positive Outdoor Space](content/annotations/a-pattern-language/106-positive-outdoor-space)
 - [104-site-repair](content/annotations/a-pattern-language/104-site-repair)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

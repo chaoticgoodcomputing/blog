@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 185; Sitting Circle"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Communal Sleeping](content/annotations/a-pattern-language/186-communal-sleeping)
 - [142-sequence-of-sitting-spaces](content/annotations/a-pattern-language/142-sequence-of-sitting-spaces)
 - [127-intimacy-gradient](content/annotations/a-pattern-language/127-intimacy-gradient)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

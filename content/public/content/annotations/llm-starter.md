@@ -9,7 +9,7 @@ tags:
   - writing/essays
   - engineering/languages/csharp
   - engineering/languages/typescript
-  - writing/fragments/annotations
+  - writing/annotations
   - projects/teaching
 annotation-target: https://raw.githubusercontent.com/chaoticgoodcomputing/blog/refs/heads/main/content/public/assets/llms.pdf
 ---

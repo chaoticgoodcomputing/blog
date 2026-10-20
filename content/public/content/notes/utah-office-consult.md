@@ -6,7 +6,7 @@ description: |
 date: 2021-03-01
 tags:
   - economics/strategy
-  - writing/fragments/annotations
+  - writing/annotations
   - engineering/languages/python
   - engineering/data
   - projects/undergrad

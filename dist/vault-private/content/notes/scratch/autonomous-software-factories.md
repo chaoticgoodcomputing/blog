@@ -4,7 +4,7 @@ date: "2026-05-13T00:00:00.000Z"
 tags:
   - "engineering/ai"
   - "horticulture/seasons/systems"
-  - "writing/fragments/annotations"
+  - "writing/annotations"
   - "private"
 ---
 

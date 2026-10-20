@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 249; Ornament"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -29,4 +29,4 @@ This note originally contained the following links:
 - [232-roof-caps](content/annotations/a-pattern-language/232-roof-caps)
 - [235-soft-inside-walls](content/annotations/a-pattern-language/235-soft-inside-walls)
 - [243-sitting-wall](content/annotations/a-pattern-language/243-sitting-wall)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

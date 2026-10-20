@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 39; Housing Hill"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Old People Everywhere](content/annotations/a-pattern-language/40-old-people-everywhere)
 - [29-density-rings](content/annotations/a-pattern-language/29-density-rings)
 - [21-four-story-limit](content/annotations/a-pattern-language/21-four-story-limit)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

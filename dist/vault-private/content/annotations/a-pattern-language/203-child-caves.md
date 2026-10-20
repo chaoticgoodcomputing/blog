@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 203; Child Caves"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [86-childrens-home](content/annotations/a-pattern-language/86-childrens-home)
 - [137-childrens-realm](content/annotations/a-pattern-language/137-childrens-realm)
 - [197-thick-walls](content/annotations/a-pattern-language/197-thick-walls)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

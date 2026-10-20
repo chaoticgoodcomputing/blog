@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 95; Building Complex"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -18,4 +18,4 @@ This note originally contained the following links:
 - [Sleeping in Public](content/annotations/a-pattern-language/94-sleeping-in-public)
 - [Number of Stories](content/annotations/a-pattern-language/96-number-of-stories)
 - [96-number-of-stories](content/annotations/a-pattern-language/96-number-of-stories)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

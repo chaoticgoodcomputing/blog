@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 132; Short Passages"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [131-the-flow-through-rooms](content/annotations/a-pattern-language/131-the-flow-through-rooms)
 - [101-building-thoroughfare](content/annotations/a-pattern-language/101-building-thoroughfare)
 - [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

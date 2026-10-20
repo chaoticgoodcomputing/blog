@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 146; Flexible Office Space"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [82-office-connections](content/annotations/a-pattern-language/82-office-connections)
 - [127-intimacy-gradient](content/annotations/a-pattern-language/127-intimacy-gradient)
 - [129-common-areas-at-the-heart](content/annotations/a-pattern-language/129-common-areas-at-the-heart)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

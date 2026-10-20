@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 38; Row Houses"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [37-house-cluster](content/annotations/a-pattern-language/37-house-cluster)
 - [29-density-rings](content/annotations/a-pattern-language/29-density-rings)
 - [36-degrees-of-publicness](content/annotations/a-pattern-language/36-degrees-of-publicness)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

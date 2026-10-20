@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 82; Office Connections"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [41-work-community](content/annotations/a-pattern-language/41-work-community)
 - [80-self-governing-workshops-and-offices](content/annotations/a-pattern-language/80-self-governing-workshops-and-offices)
 - [81-small-services-without-red-tape](content/annotations/a-pattern-language/81-small-services-without-red-tape)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

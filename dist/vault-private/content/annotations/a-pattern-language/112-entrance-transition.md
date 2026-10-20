@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 112; Entrance Transition"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [102-family-of-entrances](content/annotations/a-pattern-language/102-family-of-entrances)
 - [110-main-entrance](content/annotations/a-pattern-language/110-main-entrance)
 - [111-half-hidden-garden](content/annotations/a-pattern-language/111-half-hidden-garden)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

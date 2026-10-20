@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 102; Family of Entrances"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -18,4 +18,4 @@ This note originally contained the following links:
 - [Building Thoroughfare](content/annotations/a-pattern-language/101-building-thoroughfare)
 - [Small Parking Lots](content/annotations/a-pattern-language/103-small-parking-lots)
 - [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

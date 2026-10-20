@@ -3,7 +3,7 @@ title: "Boston Move: Listings"
 date: "2026-06-02T00:00:00.000Z"
 tags:
   - "private"
-  - "writing/fragments/annotations"
+  - "writing/annotations"
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.

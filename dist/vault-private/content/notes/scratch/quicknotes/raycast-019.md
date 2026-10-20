@@ -4,7 +4,7 @@ date: "2026-10-17T00:00:00.000Z"
 tags:
   - "writing/fragments"
   - "economics/strategy"
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "private"
 ---
 

@@ -2,7 +2,7 @@
 title: "APL: Pattern 2; The Distribution of Towns"
 date: 2026-02-07
 tags:
-  - writing/fragments/annotations/a-pattern-language
+  - writing/annotations/a-pattern-language
   - projects/games/the-neighborhood
   - economics/policy
 description: How close is too close? How far is too far? *A Pattern Language* annotations related to the statistical, economic, and ecologic concerns in balancing how dense human habitats ought to be.
@@ -12,7 +12,7 @@ description: How close is too close? How far is too far? *A Pattern Language* an
 > [!QUOTE]
 > ... consider now the character of settlements within the region: what balance of villages, towns, and cities is in keeping with the independence of the region—[[public/content/annotations/a-pattern-language/01-independent-regions|01-independent-regions]]?
 > 
-> — *[[public/tags/writing/fragments/annotations/a-pattern-language|A Pattern Language]]*
+> — *[[public/tags/writing/annotations/a-pattern-language|A Pattern Language]]*
 
 ## Notes
 

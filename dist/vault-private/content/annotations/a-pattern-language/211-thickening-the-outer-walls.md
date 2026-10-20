@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 211; Thickening the Outer Walls"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -26,4 +26,4 @@ This note originally contained the following links:
 - [204-secret-place](content/annotations/a-pattern-language/204-secret-place)
 - [209-roof-layout](content/annotations/a-pattern-language/209-roof-layout)
 - [210-floor-and-ceiling-layout](content/annotations/a-pattern-language/210-floor-and-ceiling-layout)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

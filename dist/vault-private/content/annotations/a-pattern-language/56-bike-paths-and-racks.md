@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 56; Bike Paths and Racks"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [11-local-transport-areas](content/annotations/a-pattern-language/11-local-transport-areas)
 - [49-looped-local-roads](content/annotations/a-pattern-language/49-looped-local-roads)
 - [52-network-of-paths-and-cars](content/annotations/a-pattern-language/52-network-of-paths-and-cars)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

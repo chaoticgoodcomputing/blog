@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 129; Common Areas at the Heart"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [127-intimacy-gradient](content/annotations/a-pattern-language/127-intimacy-gradient)
 - [128-indoor-sunlight](content/annotations/a-pattern-language/128-indoor-sunlight)
 - [116-cascade-of-roofs](content/annotations/a-pattern-language/116-cascade-of-roofs)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

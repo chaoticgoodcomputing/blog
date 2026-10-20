@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 94; Sleeping in Public"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -24,4 +24,4 @@ This note originally contained the following links:
 - [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)
 - [101-building-thoroughfare](content/annotations/a-pattern-language/101-building-thoroughfare)
 - [150-a-place-to-wait](content/annotations/a-pattern-language/150-a-place-to-wait)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

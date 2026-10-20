@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 194; Interior Windows"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -24,4 +24,4 @@ This note originally contained the following links:
 - [135-tapestry-of-light-and-dark](content/annotations/a-pattern-language/135-tapestry-of-light-and-dark)
 - [142-sequence-of-sitting-spaces](content/annotations/a-pattern-language/142-sequence-of-sitting-spaces)
 - [193-half-open-wall](content/annotations/a-pattern-language/193-half-open-wall)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

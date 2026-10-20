@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 101; Building Thoroughfare"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [100-pedestrian-street](content/annotations/a-pattern-language/100-pedestrian-street)
 - [98-circulation-realms](content/annotations/a-pattern-language/98-circulation-realms)
 - [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

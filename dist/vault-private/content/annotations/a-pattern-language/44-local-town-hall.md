@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 44; Local Town Hall"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -18,4 +18,4 @@ This note originally contained the following links:
 - [University as a Marketplace](content/annotations/a-pattern-language/43-university-as-a-marketplace)
 - [Necklace of Community Projects](content/annotations/a-pattern-language/45-necklace-of-community-projects)
 - [12-community-of-7000](content/annotations/a-pattern-language/12-community-of-7000)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

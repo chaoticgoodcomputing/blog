@@ -2,7 +2,7 @@
 date: "2026-10-13T00:00:00.000Z"
 tags:
   - "engineering/ai"
-  - "writing/fragments/annotations"
+  - "writing/annotations"
   - "private"
 ---
 

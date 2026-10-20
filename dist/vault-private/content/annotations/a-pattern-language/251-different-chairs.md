@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 251; Different Chairs"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [142-sequence-of-sitting-spaces](content/annotations/a-pattern-language/142-sequence-of-sitting-spaces)
 - [185-sitting-circle](content/annotations/a-pattern-language/185-sitting-circle)
 - [202-built-in-seats](content/annotations/a-pattern-language/202-built-in-seats)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

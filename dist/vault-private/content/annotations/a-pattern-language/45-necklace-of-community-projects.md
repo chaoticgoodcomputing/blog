@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 45; Necklace of Community Projects"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [44-local-town-hall](/content/annotations/a-pattern-language/44-local-town-hall)
 - [43-university-as-a-marketplace](/content/annotations/a-pattern-language/43-university-as-a-marketplace)
 - [47-health-center](/content/annotations/a-pattern-language/47-health-center)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

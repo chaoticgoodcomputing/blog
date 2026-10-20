@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 201; Waist-High Shelf"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Built-in Seats](content/annotations/a-pattern-language/202-built-in-seats)
 - [197-thick-walls](content/annotations/a-pattern-language/197-thick-walls)
 - [200-open-shelves](content/annotations/a-pattern-language/200-open-shelves)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

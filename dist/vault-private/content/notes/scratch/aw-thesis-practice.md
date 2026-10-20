@@ -3,7 +3,7 @@ title: "AW: Thesis Presentation Notes"
 date: "2026-01-23T00:00:00.000Z"
 tags:
   - "engineering/bio"
-  - "writing/fragments/annotations"
+  - "writing/annotations"
   - "private"
 ---
 

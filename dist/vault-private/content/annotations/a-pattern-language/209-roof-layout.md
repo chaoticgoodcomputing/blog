@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 209; Roof Layout"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [116-cascade-of-roofs](content/annotations/a-pattern-language/116-cascade-of-roofs)
 - [117-sheltering-roof](content/annotations/a-pattern-language/117-sheltering-roof)
 - [118-roof-garden](content/annotations/a-pattern-language/118-roof-garden)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

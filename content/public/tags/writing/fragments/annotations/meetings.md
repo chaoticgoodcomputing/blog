@@ -1,4 +1,4 @@
 ---
-title: "#writing/fragments/annotations/meetings"
+title: "#writing/annotations/meetings"
 ---
 

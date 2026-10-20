@@ -4,7 +4,7 @@ date: "2026-07-17T19:31:50.451Z"
 tags:
   - "engineering/languages/csharp"
   - "projects/dayjob"
-  - "writing/fragments/annotations/meetings"
+  - "writing/annotations/meetings"
   - "private"
 ---
 

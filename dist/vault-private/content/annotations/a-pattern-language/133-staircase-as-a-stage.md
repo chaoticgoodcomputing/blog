@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 133; Staircase as a Stage"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [110-main-entrance](content/annotations/a-pattern-language/110-main-entrance)
 - [131-the-flow-through-rooms](content/annotations/a-pattern-language/131-the-flow-through-rooms)
 - [132-short-passages](content/annotations/a-pattern-language/132-short-passages)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

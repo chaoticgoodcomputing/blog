@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 106; Positive Outdoor Space"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Wings of Light](content/annotations/a-pattern-language/107-wings-of-light)
 - [105-south-facing-outdoors](content/annotations/a-pattern-language/105-south-facing-outdoors)
 - [107-wings-of-light](content/annotations/a-pattern-language/107-wings-of-light)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

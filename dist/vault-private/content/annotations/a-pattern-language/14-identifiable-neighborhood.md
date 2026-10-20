@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 14; Identifiable Neighborhood"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Neighborhood Boundary](content/annotations/a-pattern-language/15-neighborhood-boundary)
 - [08-mosaic-of-subcultures](content/annotations/a-pattern-language/08-mosaic-of-subcultures)
 - [12-community-of-7000](content/annotations/a-pattern-language/12-community-of-7000)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

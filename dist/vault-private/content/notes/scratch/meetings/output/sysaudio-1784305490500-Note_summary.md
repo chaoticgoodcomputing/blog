@@ -4,7 +4,7 @@ date: "2026-07-17T15:24:44.227Z"
 tags:
   - "projects/flowthru"
   - "projects/dayjob"
-  - "writing/fragments/annotations/meetings"
+  - "writing/annotations/meetings"
   - "private"
 ---
 

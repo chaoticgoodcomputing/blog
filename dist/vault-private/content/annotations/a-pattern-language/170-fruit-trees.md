@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 170; Fruit Trees"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Tree Places](content/annotations/a-pattern-language/171-tree-places)
 - [67-common-land](content/annotations/a-pattern-language/67-common-land)
 - [111-half-hidden-garden](content/annotations/a-pattern-language/111-half-hidden-garden)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

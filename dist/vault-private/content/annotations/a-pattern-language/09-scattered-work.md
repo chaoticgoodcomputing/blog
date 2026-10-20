@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 9; Scattered Work"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -18,4 +18,4 @@ This note originally contained the following links:
 - [Mosaic of Subcultures](content/annotations/a-pattern-language/08-mosaic-of-subcultures)
 - [Magic of the City](content/annotations/a-pattern-language/10-magic-of-the-city)
 - [08-mosaic-of-subcultures](content/annotations/a-pattern-language/08-mosaic-of-subcultures)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

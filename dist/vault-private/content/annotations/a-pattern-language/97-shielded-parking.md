@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 97; Shielded Parking"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [11-local-transport-areas](content/annotations/a-pattern-language/11-local-transport-areas)
 - [22-nine-per-cent-parking](content/annotations/a-pattern-language/22-nine-per-cent-parking)
 - [95-building-complex](content/annotations/a-pattern-language/95-building-complex)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

@@ -5,7 +5,7 @@ tags:
   - "engineering/languages/csharp"
   - "horticulture/seasons/systems"
   - "projects/dayjob"
-  - "writing/fragments/annotations/meetings"
+  - "writing/annotations/meetings"
   - "private"
 ---
 

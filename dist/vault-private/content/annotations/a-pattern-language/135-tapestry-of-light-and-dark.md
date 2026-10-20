@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 135; Tapestry of Light and Dark"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [132-short-passages](content/annotations/a-pattern-language/132-short-passages)
 - [133-staircase-as-a-stage](content/annotations/a-pattern-language/133-staircase-as-a-stage)
 - [134-zen-view](content/annotations/a-pattern-language/134-zen-view)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

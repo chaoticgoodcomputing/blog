@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 230; Radiant Heat"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [218-wall-membranes](content/annotations/a-pattern-language/218-wall-membranes)
 - [219-floor-ceiling-vaults](content/annotations/a-pattern-language/219-floor-ceiling-vaults)
 - [229-duct-space](content/annotations/a-pattern-language/229-duct-space)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

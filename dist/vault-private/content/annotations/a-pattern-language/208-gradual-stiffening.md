@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 208; Gradual Stiffening"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [205-structure-follows-social-spaces](content/annotations/a-pattern-language/205-structure-follows-social-spaces)
 - [206-efficient-structure](content/annotations/a-pattern-language/206-efficient-structure)
 - [207-good-materials](content/annotations/a-pattern-language/207-good-materials)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

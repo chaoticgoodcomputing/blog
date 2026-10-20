@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 235; Soft Inside Walls"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -19,4 +19,4 @@ This note originally contained the following links:
 - [Windows (Which Open Wide)](content/annotations/a-pattern-language/236-windows-which-open-wide)
 - [218-wall-membranes](content/annotations/a-pattern-language/218-wall-membranes)
 - [219-floor-ceiling-vaults](content/annotations/a-pattern-language/219-floor-ceiling-vaults)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)

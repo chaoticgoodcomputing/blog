@@ -1,7 +1,7 @@
 ---
 title: "APL: Pattern 217; Perimeter Beams"
 tags:
-  - "writing/fragments/annotations/a-pattern-language"
+  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
   - "private"
 draft: true
@@ -20,4 +20,4 @@ This note originally contained the following links:
 - [216-box-columns](content/annotations/a-pattern-language/216-box-columns)
 - [219-floor-ceiling-vaults](content/annotations/a-pattern-language/219-floor-ceiling-vaults)
 - [210-floor-and-ceiling-layout](content/annotations/a-pattern-language/210-floor-and-ceiling-layout)
-- [A Pattern Language](tags/writing/fragments/annotations/a-pattern-language)
+- [A Pattern Language](tags/writing/annotations/a-pattern-language)
