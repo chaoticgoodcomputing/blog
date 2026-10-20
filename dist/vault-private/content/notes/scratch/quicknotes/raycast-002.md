@@ -2,8 +2,9 @@
 title: "Misc Raycast"
 date: "2026-10-17T00:00:00.000Z"
 tags:
-  - "writing"
   - "writing/fragments"
+  - "projects/site"
+  - "engineering/languages/typescript"
   - "private"
 ---
 
