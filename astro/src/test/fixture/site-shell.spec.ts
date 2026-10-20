@@ -232,7 +232,7 @@ test("on a phone a title with nowhere to break breaks anyway, and nothing scroll
   await page.setViewportSize({ width: 390, height: 800 })
   await page.goto("/site-shell/long-title")
   const title = page.getByRole("heading", { level: 1 })
-  await expect(title).toHaveText("#writing/fragments/annotations/meetings/a-title-with-no-space-in-it-and-wider-than-any-phone")
+  await expect(title).toHaveText("#writing/annotations/meetings/a-title-with-no-space-in-it-and-wider-than-any-phone")
   const box = (await title.boundingBox())!
   expect(box.x + box.width).toBeLessThanOrEqual(390)
   expect(await sideways(page)).toBe(0)

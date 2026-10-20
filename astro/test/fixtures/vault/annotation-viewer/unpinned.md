@@ -2,7 +2,7 @@
 title: Annotations on a document with no mirror
 date: 2026-03-29
 tags:
-  - writing/fragments/annotations
+  - writing/annotations
 annotation-target: https://example.com/papers/Unpinned.pdf
 ---
 

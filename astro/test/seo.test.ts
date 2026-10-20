@@ -149,7 +149,7 @@ test("the home page's JSON-LD is the website, and a page that is no article's ha
 
 // The site's rules, as the old site configured them (quartz-seo's `articleTypes`): first match wins.
 test("a note's article type and section are the first rule's whose tag it is under", () => {
-  expect(articleTypeOf(["writing/fragments/annotations"])).toEqual({ type: "ScholarlyArticle", section: "Annotations" })
+  expect(articleTypeOf(["writing/annotations"])).toEqual({ type: "ScholarlyArticle", section: "Annotations" })
   expect(articleTypeOf(["writing/notes/tutorials"])).toEqual({ type: "HowTo", section: "Tutorials" })
   expect(articleTypeOf(["writing/essays"])).toEqual({ type: "Article", section: "Articles" })
   expect(articleTypeOf(["engineering"])).toEqual({ type: "TechArticle", section: "Engineering" })

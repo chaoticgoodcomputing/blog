@@ -2,7 +2,7 @@
 title: Annotations on meetings
 date: 2026-03-28
 tags:
-  - writing/fragments/annotations
+  - writing/annotations
 annotation-target: "https://example.com/papers/On%20Meetings.pdf"
 ---
 

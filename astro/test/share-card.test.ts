@@ -194,7 +194,7 @@ test("a card draws every tag it has room for", async () => {
 test("a card with more tags than it has room for draws those that fit, and says how many more there are", async () => {
   // A Pattern Language annotation's tags: the first is long, and leaves no room for the others.
   const foot = { date: "Feb 15, 2026", readingTime: "12 min read" }
-  const first = "writing/fragments/annotations/a-pattern-language"
+  const first = "writing/annotations/a-pattern-language"
   const all = await drawShareCard({ title: "Tagged", ...foot, tags: [first, "projects/games/the-neighborhood", "horticulture"] }, SITE)
   expect(await count(all, "#ffd637")).toBeGreaterThan(100)
   expect(await count(all, "#ff0000")).toBe(0)
