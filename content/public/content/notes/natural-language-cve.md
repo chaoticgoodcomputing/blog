@@ -5,6 +5,8 @@ tags:
   - engineering
   - engineering/ai
   - writing/notes
+  - horticulture/seasons/systems
+  - economics/management
 description:
 ---
 I think I've found a pretty large CVE that has gone without a formal report, despite absolutely saturating the field of software engineering. It's subtle and insidious, allowing a malicious or unknowing actor to either inject arbitrary code into a software project, or softlock it entirely.

@@ -6,9 +6,10 @@ description: |
 date: 2021-03-01
 tags:
   - economics/strategy
-  - writing/annotations
+  - economics/management
   - engineering/languages/python
   - engineering/data
+  - writing/annotations
   - projects/undergrad
 annotation-target: https://raw.githubusercontent.com/chaoticgoodcomputing/blog/refs/heads/main/content/public/assets/utah_office_update.pdf
 ---

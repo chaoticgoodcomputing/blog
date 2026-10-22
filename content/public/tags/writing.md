@@ -2,6 +2,6 @@
 title: "#writing"
 ---
 
-One of my many hopes from maintaining this site is to improve my own writing, hopefully developing a distinct voice over time in this era of [[public/ai-policy|AI-generated]], [[public/content/articles/binglish|slop content]].
+One of my many hopes from maintaining this site is to improve my own writing, hopefully developing a distinct voice.
 
-Readers beware — the further back you go, the cringier it'll get.
+As a general rule, I'll despite anything I've written older than roughly a year. Readers, beware.

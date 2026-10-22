@@ -163,7 +163,10 @@ export interface GraphSettings {
     charge: number
     /** How strongly the graph is pulled to the middle of its box. */
     center: number
-    /** Each kind of edge's length at rest, in CSS pixels. */
+    /**
+     * Each kind of edge's length at rest, as a share of the shell's diameter (`shellSize`): at 1,
+     * an edge reaches right across the shell.
+     */
     linkDistance: PerEdge<number>
     /** How strongly each kind of edge pulls towards its length. */
     linkStrength: PerEdge<number>
@@ -185,26 +188,27 @@ export interface GraphSettings {
     opacity: PerEdge<{ min: number; max: number }>
     style: PerEdge<"solid" | "dotted">
   }
+  /**
+   * The shell's radius, in CSS pixels, by how many nodes the graph has: `base + scaling × √n`. Every
+   * graph has a shell size, the unit its link distances are measured in, though only a graph with
+   * `shell` draws the ring or pins tags to it.
+   */
+  shellSize: NodeSize
   /** A ring the chosen top-level tags are pinned to, which the notes settle around. */
   shell?: ShellSettings
   /** How a hovered node's lit edges pulse. With none, they are lit whole. */
   hoverPulse?: HoverPulse
 }
 /**
- * The pseudo-shell: a ring through the middle of the graph's box, which each pinned tag is held on,
- * and along which pinned tags push each other apart. Each note is pulled towards its tags, so the
+ * The pseudo-shell: a ring through the middle of the graph's box, `shellSize` in radius, which the
+ * pinned tags are fixed on, evenly spaced. Each note is pulled towards its tags, so the
  * notes settle in a shell around each one.
  */
 export interface ShellSettings {
-  /** The tags held on the ring, as tag slugs, in the order they start round it. */
+  /** The tags fixed on the ring, as tag slugs, in their order round it. */
   pinnedTags: string[]
-  /** The ring's radius, in CSS pixels: `radiusBase + radiusScale × √(how many nodes)`. */
-  radiusBase: number
-  radiusScale: number
   /** The room kept round the ring when the view fits the graph to its box, in the graph's pixels. */
   zoomMargin: number
-  /** How strongly two pinned tags push each other apart along the ring. */
-  circumferentialRepulsion: number
   /** How the ring is drawn, in the palette's `--lightgray`. */
   style: { opacity: number; lineStyle: "solid" | "dotted"; lineWidth: number }
 }

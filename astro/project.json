@@ -1,10 +1,10 @@
 {
   "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "name": "astro",
+  "name": "site",
   "root": "astro",
   "sourceRoot": "astro/src",
   "projectType": "application",
-  "tags": ["astro"],
+  "tags": [ "astro" ],
   "targets": {
     "vault": {
       "//": "Assembles the site's vault, dist/vault, from its sources: content/public, then the private notes' stubs in dist/vault-private, each at the vault's root (src/lib/assembly.ts). Notes are copied, with each link's public/ or private/ prefix (Obsidian's, from content/) taken off and each tags/<tag>/index link written tags/<tag> (src/lib/link-prefixes.ts), and attachments linked; what git ignores, and dotfiles, are left out; a source that isn't there is empty; a path in both sources fails it, naming both files. dist/vault/.sources.json names each file's source, for its git dates. Never cached: it takes a fraction of a second, and the cache would keep its links as copies.",
@@ -17,21 +17,21 @@
         "{workspaceRoot}/content/public/**/*",
         "{workspaceRoot}/dist/vault-private/**/*"
       ],
-      "outputs": ["{workspaceRoot}/dist/vault"],
+      "outputs": [ "{workspaceRoot}/dist/vault" ],
       "cache": false
     },
-    "dev": {
+    "serve": {
       "//": "Astro's dev server over the assembled vault, dist/vault. The vault's sources are watched, and the vault assembled and read again whenever a file in one changes, so a new or renamed note's links follow without a restart.",
       "executor": "nx:run-commands",
       "options": { "command": "pnpm run dev", "cwd": "{projectRoot}" },
-      "dependsOn": ["vault"],
+      "dependsOn": [ "vault" ],
       "continuous": true
     },
     "build": {
       "//": "Build the assembled vault into astro/dist, once `check` passes and `vault` has assembled it: astro build strips types without checking them. The vault and its sources are inputs, so a changed note rebuilds. So is the resume, which `resume:build` compiles into dist/resume and the site publishes (src/lib/resume.ts).",
       "executor": "nx:run-commands",
       "options": { "command": "pnpm run build", "cwd": "{projectRoot}" },
-      "dependsOn": ["check", "vault", "resume:build"],
+      "dependsOn": [ "check", "vault", "resume:build" ],
       "inputs": [
         "{projectRoot}/**/*",
         "{workspaceRoot}/content/public/**/*",
@@ -39,17 +39,17 @@
         "{workspaceRoot}/dist/vault/**/*",
         "{workspaceRoot}/resume/**/*"
       ],
-      "outputs": ["{projectRoot}/dist"],
+      "outputs": [ "{projectRoot}/dist" ],
       "parallelism": false
     },
     "preview": {
       "executor": "nx:run-commands",
       "options": { "command": "pnpm run preview", "cwd": "{projectRoot}" },
-      "dependsOn": ["build"],
+      "dependsOn": [ "build" ],
       "continuous": true
     },
     "check": {
-      "dependsOn": ["vault"],
+      "dependsOn": [ "vault" ],
       "executor": "nx:run-commands",
       "options": { "command": "pnpm run check", "cwd": "{projectRoot}" }
     },
@@ -62,14 +62,14 @@
       "//": "Saves a mirror of each annotated document that has none into the mirror directory, the repository's dist/mirrors (MIRRORS_ROOT overrides it), never into the vault; the site serves each under assets/annotated-documents (docs/adr/2801). A saved mirror is pinned and never fetched again; delete it to fetch it afresh. The only target that reaches the network for the vault: run it before a build that should have every mirror, as the deploy does. A document that can't be fetched is reported, and its page is built with its annotations alone.",
       "executor": "nx:run-commands",
       "options": { "command": "pnpm run mirrors", "cwd": "{projectRoot}" },
-      "dependsOn": ["vault"],
+      "dependsOn": [ "vault" ],
       "cache": false
     },
     "e2e": {
       "//": "The Playwright specs against the built site: over the fixture vault (src/test/fixture), or with the `vault` configuration over the real one (src/test/vault). The suite builds its own site into .e2e and serves it on a port of its own, which E2E_PORT overrides (docs/adr/0007). One spec: `nx run astro:e2e -- notes`. Never beside another build in the same checkout, and never beside its dev server, which the suite refuses to start next to: every build writes the same .astro directory, and the dev server reads it. Stop the dev server first, or run the suite from another worktree.",
       "executor": "nx:run-commands",
       "options": { "command": "pnpm run e2e", "cwd": "{projectRoot}" },
-      "dependsOn": ["vault"],
+      "dependsOn": [ "vault" ],
       "configurations": {
         "vault": { "env": { "E2E_SITE": "vault" } }
       },

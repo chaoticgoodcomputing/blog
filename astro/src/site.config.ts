@@ -48,12 +48,13 @@ export const site: SiteConfig = {
 const red = "light-dark(#cc0000, #FF0000)"
 
 export const tags: TagDictionary = {
-  economics: { color: "light-dark(#b35f00, #de8200)", icon: "mdi:earth" },
+  economics: { color: "light-dark(#B35F00, #de8200)", icon: "mdi:earth" },
   "economics/finance": { icon: "mdi:currency-usd" },
   "economics/markets": { icon: "mdi:handshake" },
   "economics/policy": { icon: "mdi:script" },
   "economics/strategy": { icon: "mdi:arrow-decision" },
-  engineering: { color: "light-dark(#0070cc, #008CFF)", icon: "mdi:wrench" },
+  "economics/management": { icon: "mdi:account-group" },
+  engineering: { color: "light-dark(#0070CC, #008CFF)", icon: "mdi:wrench" },
   "engineering/ai": { icon: "mdi:robot" },
   "engineering/bio": { icon: "mdi:dna" },
   "engineering/data": { icon: "mdi:pulse" },
@@ -65,12 +66,13 @@ export const tags: TagDictionary = {
   "engineering/languages/python": { icon: "mdi:language-python" },
   "engineering/languages/scratch": { icon: "mdi:cat" },
   "engineering/languages/typescript": { icon: "mdi:language-typescript" },
-  horticulture: { color: "light-dark(#1a8a1a, #00FF00)", icon: "mdi:flower" },
+  horticulture: { color: "light-dark(#FF00CC, #FF00CC)", icon: "mdi:flower" },
   "horticulture/seasons": { icon: "mdi:weather-sunny" },
   "horticulture/seasons/rhythm": { icon: "mdi:music-note" },
   "horticulture/seasons/systems": { icon: "mdi:connection" },
+  "horticulture/seasons/stamps": { icon: "mdi:check-decagram" },
   private: { color: red, icon: "mdi:lock" },
-  projects: { color: red, icon: "mdi:source-branch" },
+  projects: { color: "light-dark(#CC0000, #DD0000)", icon: "mdi:source-branch" },
   "projects/dayjob": { icon: "mdi:vote" },
   "projects/flowthru": { icon: "mdi:graph-outline" },
   "projects/games": { icon: "custom:d20" },
@@ -81,15 +83,14 @@ export const tags: TagDictionary = {
   "projects/site": { icon: "custom:quartz-filled" },
   "projects/teaching": { icon: "mdi:school" },
   "projects/undergrad": { icon: "custom:uofu" },
-  writing: { color: "light-dark(#9a7400, #FFD637)", icon: "mdi:pencil" },
+  writing: { color: "light-dark(#1A8A1A, #00FF00)", icon: "mdi:pencil" },
   "writing/notes": { icon: "mdi:sprout" },
   "writing/annotations": { icon: "mdi:chat-plus" },
   "writing/annotations/a-pattern-language": { icon: "mdi:home-city" },
-  "writing/annotations/meetings": { icon: "mdi:account-group" },
+  "writing/annotations/meetings": { icon: "mdi:microphone" },
   "writing/notes/emails": { icon: "mdi:email" },
   "writing/essays": { icon: "mdi:pine-tree" },
   "writing/fragments": { icon: "mdi:seed" },
-  "writing/notes": { icon: "mdi:map" },
 }
 
 export const tagList: TagListConfig = {
@@ -149,9 +150,12 @@ export const graph: GraphConfig = {
     forces: {
       charge: -200,
       center: 0.5,
-      linkDistance: { tagTag: 50, tagNote: 50, noteNote: 50 },
+      // Shares of the shell's diameter: 50px each for a graph of 16 nodes.
+      linkDistance: { tagTag: 0.25, tagNote: 0.25, noteNote: 0.25 },
       linkStrength: { tagTag: 0.3, tagNote: 0.3, noteNote: 0.3 },
     },
+    // Never drawn: the unit the link distances are measured in.
+    shellSize: { base: 60, scaling: 10 },
     sizes: {
       tag: { base: 10, scaling: 1 },
       note: { base: 10, scaling: 2 },
@@ -172,9 +176,11 @@ export const graph: GraphConfig = {
     forces: {
       charge: -500,
       center: 0.05,
-      linkDistance: { tagTag: 20, tagNote: 60, noteNote: 20 },
+      // Shares of the shell's diameter: 20px, 60px and 20px for a graph of 49 nodes.
+      linkDistance: { tagTag: 0.02, tagNote: 0.06, noteNote: 0.02 },
       linkStrength: { tagTag: 0.5, tagNote: 0.5, noteNote: 0.5 },
     },
+    shellSize: { base: 150, scaling: 50 },
     sizes: {
       tag: { base: 20, scaling: 1.2 },
       note: { base: 10, scaling: 1 },
@@ -192,10 +198,7 @@ export const graph: GraphConfig = {
     },
     shell: {
       pinnedTags: ["engineering", "writing", "horticulture", "projects", "economics"],
-      radiusBase: 150,
-      radiusScale: 50,
       zoomMargin: 80,
-      circumferentialRepulsion: 1,
       style: { opacity: 1, lineStyle: "dotted", lineWidth: 3 },
     },
     hoverPulse: { on: 800, off: 1000, delay: 200 },

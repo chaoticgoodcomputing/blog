@@ -94,7 +94,7 @@ test("the global graph opens on its configured period, widened until it holds th
   expect(defaultPeriod(INDEX, filters(2, "month", true), NOW)).toBe("month")
 })
 
-test("laid out, the pinned tags rest on the shell, spread round it, and each note settles nearer its own tag than another", () => {
+test("laid out, the pinned tags rest on the shell, evenly spaced round it, and each note settles nearer its own tag than another", () => {
   const whole = globalGraph(INDEX, graph.global, { period: "all", includePrivate: false }, NOW)
   const { simulation, nodes, shell } = layOut(whole, graph.global)
   simulation.tick(300)
@@ -104,14 +104,33 @@ test("laid out, the pinned tags rest on the shell, spread round it, and each not
   expect(shell).toBeCloseTo(291.42, 2)
   const pinned = ["/tags/engineering", "/tags/writing", "/tags/horticulture"].map(at)
   for (const tag of pinned) expect(Math.hypot(tag.x!, tag.y!)).toBeCloseTo(shell!, 0)
-  // Three tags, each a third of the way round from the next, give or take.
+  // Three tags, each a third of the way round from the next.
   const [a, b, c] = pinned.map((tag) => Math.atan2(tag.y!, tag.x!)).sort((a, b) => a - b) as [number, number, number]
-  for (const gap of [b - a, c - b, 2 * Math.PI - (c - a)]) expect(gap).toBeGreaterThan(Math.PI / 2)
+  for (const gap of [b - a, c - b, 2 * Math.PI - (c - a)]) expect(gap).toBeCloseTo((2 * Math.PI) / 3, 6)
 
   const distance = (a: string, b: string) => Math.hypot(at(a).x! - at(b).x!, at(a).y! - at(b).y!)
   expect(distance("/old", "/tags/horticulture")).toBeLessThan(distance("/old", "/tags/engineering"))
   expect(distance("/old", "/tags/horticulture")).toBeLessThan(distance("/old", "/tags/writing"))
   expect(distance("/winter", "/tags/engineering")).toBeLessThan(distance("/winter", "/tags/writing"))
+})
+
+test("turning the shell by a pinned tag puts it towards the point, the others turning with it, evenly spaced", () => {
+  const whole = globalGraph(INDEX, graph.global, { period: "all", includePrivate: false }, NOW)
+  const { simulation, nodes, shell, turnShell } = layOut(whole, graph.global)
+  const at = (id: string) => nodes.find((node) => node.id === id)!
+  const pinned = ["/tags/engineering", "/tags/writing", "/tags/horticulture"].map(at)
+
+  // Straight down, from anywhere along that way: the tag lands on the ring.
+  expect(turnShell(pinned[1]!, 0, 10)).toBe(true)
+  simulation.tick(50)
+  expect(pinned[1]!.x!).toBeCloseTo(0, 6)
+  expect(pinned[1]!.y!).toBeCloseTo(shell!, 6)
+  const angles = pinned.map((tag) => Math.atan2(tag.y!, tag.x!)).sort((a, b) => a - b) as [number, number, number]
+  for (const gap of [angles[1] - angles[0], angles[2] - angles[1], 2 * Math.PI - (angles[2] - angles[0])]) {
+    expect(gap).toBeCloseTo((2 * Math.PI) / 3, 6)
+  }
+  // A note isn't pinned, and turns nothing.
+  expect(turnShell(at("/recent"), 0, 10)).toBe(false)
 })
 
 test("laid out, what has no way along its edges to a pinned tag is kept inside the shell", () => {
@@ -139,6 +158,16 @@ test("a graph with no shell is laid out with no tag pinned", () => {
   const whole = globalGraph(INDEX, graph.global, { period: "all", includePrivate: false }, NOW)
   const { shell } = layOut(whole, graph.local)
   expect(shell).toBeUndefined()
+})
+
+test("each edge's length at rest is its link distance times the shell's diameter, drawn or not", () => {
+  const whole = globalGraph(INDEX, graph.global, { period: "all", includePrivate: false }, NOW)
+  const shellSize = { base: 100, scaling: 0 }
+  const forces = { ...graph.local.forces, linkDistance: { tagTag: 0.1, tagNote: 0.25, noteNote: 0.5 } }
+  // A diameter of 200, whether the shell is drawn or not.
+  for (const settings of [{ ...graph.local, shellSize, forces }, { ...graph.global, shellSize, forces }]) {
+    expect(layOut(whole, settings).linkDistance).toEqual({ tagTag: 20, tagNote: 50, noteNote: 100 })
+  }
 })
 
 test("hovering a note lights it, the nodes it has an edge to, and those edges", () => {
@@ -228,6 +257,6 @@ test("the view is never larger than the graph", () => {
 
 test("the shell's radius grows with the square root of how many nodes the graph has", () => {
   // 150 + 50 × √16.
-  expect(shellRadius(16, graph.global.shell)).toBe(350)
-  expect(shellRadius(0, graph.global.shell)).toBe(150)
+  expect(shellRadius(16, graph.global.shellSize)).toBe(350)
+  expect(shellRadius(0, graph.global.shellSize)).toBe(150)
 })

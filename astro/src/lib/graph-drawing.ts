@@ -133,7 +133,7 @@ function describe(canvas: HTMLCanvasElement, graph: Graph, current: string, labe
 export function drawGraph(container: HTMLElement, options: DrawingOptions): DrawnGraph {
   const { graph, current, settings } = options
   // d3-force's own timer is stopped: the frames tick the layout while it is warm.
-  const { simulation, nodes, edges, radius, shell } = layOut(graph, settings)
+  const { simulation, nodes, edges, radius, shell, linkDistance, turnShell } = layOut(graph, settings)
 
   const canvas = document.createElement("canvas")
   describe(canvas, graph, current, options.label)
@@ -251,24 +251,26 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
   let pressed = 0
   selection.call(
     drag<HTMLCanvasElement, unknown, PlacedNode | undefined>()
-      // A press on a node drags it; anywhere else, the zoom pans.
+      // A press on a node drags it; anywhere else, the zoom pans. A pinned tag stays on the shell,
+      // and dragging one turns the shell, every pinned tag with it.
       .subject((event) => nodeAt(...point(event.sourceEvent.touches?.[0] ?? event.sourceEvent)))
       .on("start", (event) => {
         const node = event.subject!
         if (!event.active) simulation.alphaTarget(0.3)
-        ;[node.fx, node.fy] = [node.x, node.y]
+        if (!turnShell(node, node.x ?? 0, node.y ?? 0)) [node.fx, node.fy] = [node.x, node.y]
         pressed = performance.now()
         following = false
         hover(node)
       })
       .on("drag", (event) => {
         const node = event.subject!
-        ;[node.fx, node.fy] = toGraph(...point(event.sourceEvent.touches?.[0] ?? event.sourceEvent))
+        const [x, y] = toGraph(...point(event.sourceEvent.touches?.[0] ?? event.sourceEvent))
+        if (!turnShell(node, x, y)) [node.fx, node.fy] = [x, y]
       })
       .on("end", (event) => {
         const node = event.subject!
         if (!event.active) simulation.alphaTarget(0)
-        ;[node.fx, node.fy] = [null, null]
+        if (!turnShell(node, node.x ?? 0, node.y ?? 0)) [node.fx, node.fy] = [null, null]
         if (performance.now() - pressed < CLICK_MS) options.follow(node.id)
       }),
   )
@@ -303,7 +305,7 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
       // reader allows motion, and every other is put out.
       const hops = hopsOf(index)
       context.globalAlpha = !hovered
-        ? edgeOpacity(length, settings.forces.linkDistance[kind], settings.edges.opacity[kind])
+        ? edgeOpacity(length, linkDistance[kind], settings.edges.opacity[kind])
         : hops === undefined
           ? 0
           : settings.hoverPulse && !still.matches

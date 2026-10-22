@@ -224,7 +224,8 @@ test("the local graph's settings are the Quartz site's, carried over", () => {
   // quartz/core/quartz.config.yaml's `localGraph`, over quartz-graph's defaults: the private tag
   // removed and private pages drawn at 0.8 of their size, a repel force of 2 (d3's many-body
   // strength is -100 times it) and a centre force of 0.5, and the distances, strengths, sizes and
-  // opacities below. Its labels were 0.6 of 15px, 9px, over a scale of 0.55: 16.36px.
+  // opacities below. Its labels were 0.6 of 15px, 9px, over a scale of 0.55: 16.36px. Its link
+  // distances were 50px; here they are shares of the shell's diameter, 50px at 16 nodes.
   expect(graph.local).toEqual({
     depth: 1,
     removeTags: ["private"],
@@ -232,9 +233,10 @@ test("the local graph's settings are the Quartz site's, carried over", () => {
     forces: {
       charge: -200,
       center: 0.5,
-      linkDistance: { tagTag: 50, tagNote: 50, noteNote: 50 },
+      linkDistance: { tagTag: 0.25, tagNote: 0.25, noteNote: 0.25 },
       linkStrength: { tagTag: 0.3, tagNote: 0.3, noteNote: 0.3 },
     },
+    shellSize: { base: 60, scaling: 10 },
     sizes: {
       tag: { base: 10, scaling: 1 },
       note: { base: 10, scaling: 2 },

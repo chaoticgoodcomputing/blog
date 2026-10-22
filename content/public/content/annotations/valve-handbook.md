@@ -2,10 +2,12 @@
 title: 'Working with Valves: Understanding the Structure of "Flat" Organizations'
 date: 2026-03-26
 tags:
+  - economics/management
   - economics/strategy
   - engineering
   - engineering/ai
   - writing/annotations
+  - horticulture/seasons/systems
 annotation-target: https://media.steampowered.com/apps/valve/Valve_Handbook_LowRes.pdf
 description: Many an engineer has heard tales of Valve's "flat" organization structure — what is fact, what is fiction, and how does it actually work? An annotated copy of the 2012 First Edition of Valve's Employee Handbook.
 ---

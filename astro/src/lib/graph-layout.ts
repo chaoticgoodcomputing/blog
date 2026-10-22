@@ -4,7 +4,7 @@
 // ticks it to rest.
 
 import { forceCenter, forceCollide, forceLink, forceManyBody, forceSimulation, type Simulation, type SimulationLinkDatum, type SimulationNodeDatum } from "d3-force"
-import type { GraphSettings, ShellSettings } from "../site.config.types.ts"
+import type { GraphSettings, NodeSize, PerEdge, ShellSettings } from "../site.config.types.ts"
 import { radii, type Graph, type GraphEdge, type GraphNode } from "./graph.ts"
 import { tagUrl } from "./tags.ts"
 
@@ -26,6 +26,13 @@ export interface Layout {
   radius: Map<string, number>
   /** The shell's radius, around the middle of the graph; none for a graph with no shell. */
   shell: number | undefined
+  /** Each kind of edge's length at rest, in CSS pixels: `linkDistance` times the shell's diameter. */
+  linkDistance: PerEdge<number>
+  /**
+   * Turns the shell so that `node`, if it is a pinned tag, is on the ring towards `x` and `y`, every
+   * other pinned tag turning with it, evenly spaced still. Whether `node` is a pinned tag.
+   */
+  turnShell: (node: PlacedNode, x: number, y: number) => boolean
 }
 
 /** A graph laid out with `settings`: its nodes and edges, and the simulation that moves them. */
@@ -33,7 +40,11 @@ export function layOut(graph: Graph, settings: GraphSettings): Layout {
   const radius = radii(graph, settings.sizes)
   const nodes: PlacedNode[] = graph.nodes.map((node) => ({ ...node }))
   const edges = graph.edges.map((edge) => ({ ...edge })) as unknown as PlacedEdge[]
-  const { charge, center, linkDistance, linkStrength } = settings.forces
+  const { charge, center, linkStrength } = settings.forces
+  const size = shellRadius(nodes.length, settings.shellSize)
+  const linkDistance = Object.fromEntries(
+    Object.entries(settings.forces.linkDistance).map(([kind, share]) => [kind, share * 2 * size]),
+  ) as PerEdge<number>
   const simulation = forceSimulation(nodes)
     .stop()
     .force("charge", forceManyBody<PlacedNode>().strength(charge))
@@ -46,13 +57,12 @@ export function layOut(graph: Graph, settings: GraphSettings): Layout {
         .strength((edge) => linkStrength[edge.kind]),
     )
     .force("collide", forceCollide<PlacedNode>((node) => radius.get(node.id) ?? 0).iterations(3))
-  if (!settings.shell) return { simulation, nodes, edges, radius, shell: undefined }
+  if (!settings.shell) return { simulation, nodes, edges, radius, shell: undefined, linkDistance, turnShell: () => false }
 
-  const shell = shellRadius(nodes.length, settings.shell)
-  simulation.force("shell", pinToShell(nodes, settings.shell, shell))
+  const turnShell = pinOnShell(nodes, settings.shell, size)
   const reached = reaching(graph, settings.shell.pinnedTags.map(tagUrl))
-  simulation.force("inside", keepInside(nodes.filter((node) => !reached.has(node.id)), shell))
-  return { simulation, nodes, edges, radius, shell }
+  simulation.force("inside", keepInside(nodes.filter((node) => !reached.has(node.id)), size))
+  return { simulation, nodes, edges, radius, shell: size, linkDistance, turnShell }
 }
 
 /** A node at rest as a view is fitted to it: where it is, its radius, and its label's width if shown. */
@@ -104,9 +114,9 @@ export function fittedView(
   return { k, x: width / 2 - k * middleX, y: height / 2 - k * middleY }
 }
 
-/** The radius of the ring the pinned tags are held on, for a graph of `nodes` nodes. */
-export function shellRadius(nodes: number, { radiusBase, radiusScale }: Pick<ShellSettings, "radiusBase" | "radiusScale">): number {
-  return radiusBase + radiusScale * Math.sqrt(nodes)
+/** The shell's radius, for a graph of `nodes` nodes: the ring's, if the graph draws one. */
+export function shellRadius(nodes: number, { base, scaling }: NodeSize): number {
+  return base + scaling * Math.sqrt(nodes)
 }
 
 /** The ids of the nodes that have a way to one of `ids` along the graph's edges, either way round. */
@@ -154,46 +164,25 @@ function keepInside(nodes: PlacedNode[], radius: number) {
 }
 
 /**
- * The pseudo-shell, as a force: each pinned tag the graph has starts evenly round the ring, and on
- * every tick is put back on it, keeping only its motion along it, while the pinned tags push each
- * other apart along it, so that they settle evenly spaced. Registered after the centring force, so a
- * tag is on the ring after the graph is moved to the middle.
+ * The pseudo-shell: each pinned tag the graph has is fixed on the ring, evenly spaced round it in
+ * the order `pinnedTags` names them. d3-force puts a fixed node back at its `fx` and `fy` on every
+ * tick, after the other forces, the centring force among them, have moved it. Returns
+ * `Layout.turnShell`, which turns them all together.
  */
-function pinToShell(nodes: PlacedNode[], { pinnedTags, circumferentialRepulsion }: ShellSettings, radius: number) {
+function pinOnShell(nodes: PlacedNode[], { pinnedTags }: ShellSettings, radius: number) {
   const pinned = pinnedTags.flatMap((tag) => nodes.find((node) => node.id === tagUrl(tag)) ?? [])
-  pinned.forEach((node, i) => {
-    const angle = (i * 2 * Math.PI) / pinned.length
-    ;[node.x, node.y] = [Math.cos(angle) * radius, Math.sin(angle) * radius]
-  })
-  const ideal = (2 * Math.PI) / Math.max(pinned.length, 1)
-
-  return () => {
-    for (const node of pinned) {
-      const [x, y] = [node.x ?? 0, node.y ?? 0]
-      const distance = Math.hypot(x, y)
-      // At the very middle, a tag has no way out to the ring but a direction of its own.
-      const [dx, dy] = distance > 0.01 ? [x / distance, y / distance] : [1, 0]
-      ;[node.x, node.y] = [dx * radius, dy * radius]
-      const [vx, vy] = [node.vx ?? 0, node.vy ?? 0]
-      const outward = vx * dx + vy * dy
-      ;[node.vx, node.vy] = [vx - outward * dx, vy - outward * dy]
-    }
-    // Two tags nearer than the ideal angle apart push each other along the ring, by the inverse
-    // square of how near, with no cut-off, so that they settle smoothly.
-    for (let i = 0; i < pinned.length; i++) {
-      for (let j = i + 1; j < pinned.length; j++) {
-        const [a, b] = [pinned[i]!, pinned[j]!]
-        let apart = Math.atan2(b.y ?? 0, b.x ?? 0) - Math.atan2(a.y ?? 0, a.x ?? 0)
-        if (apart > Math.PI) apart -= 2 * Math.PI
-        if (apart < -Math.PI) apart += 2 * Math.PI
-        const ratio = Math.abs(apart) / ideal
-        const push = (circumferentialRepulsion / Math.max(ratio * ratio, 0.01)) * (apart > 0 ? -1 : 1)
-        // Along the ring at each tag: its position turned a quarter.
-        a.vx = (a.vx ?? 0) + (-(a.y ?? 0) / radius) * push
-        a.vy = (a.vy ?? 0) + ((a.x ?? 0) / radius) * push
-        b.vx = (b.vx ?? 0) - (-(b.y ?? 0) / radius) * push
-        b.vy = (b.vy ?? 0) - ((b.x ?? 0) / radius) * push
-      }
-    }
+  const step = (2 * Math.PI) / Math.max(pinned.length, 1)
+  const place = (turn: number) =>
+    pinned.forEach((node, i) => {
+      const angle = turn + i * step
+      ;[node.fx, node.fy] = [Math.cos(angle) * radius, Math.sin(angle) * radius]
+      ;[node.x, node.y] = [node.fx, node.fy]
+    })
+  place(0)
+  return (node: PlacedNode, x: number, y: number) => {
+    const i = pinned.indexOf(node)
+    if (i < 0) return false
+    place(Math.atan2(y, x) - i * step)
+    return true
   }
 }
