@@ -1,7 +1,7 @@
 import { expect, test } from "vitest"
 import { defaultPeriod, globalGraph } from "../src/lib/global-graph.ts"
-import { labelled, litBy, pulseOpacity, type Graph, type GraphIndex } from "../src/lib/graph.ts"
-import { fittedView, layOut, shellRadius } from "../src/lib/graph-layout.ts"
+import { labelled, litBy, neighbourhood, pulseOpacity, type Graph, type GraphIndex } from "../src/lib/graph.ts"
+import { fittedView, labelBox, layOut, shellRadius } from "../src/lib/graph-layout.ts"
 import { numbersIn, withNumber } from "../src/lib/graph-tuning.ts"
 import { graph } from "../src/site.config.ts"
 
@@ -151,6 +151,48 @@ test("laid out, what has no way along its edges to a pinned tag is kept inside t
     const node = nodes.find((node) => node.id === id)!
     // On the ring at most, give or take a step along it.
     expect(Math.hypot(node.x!, node.y!)).toBeLessThan(shell! + 1)
+  }
+})
+
+test("each node starts on its top-level tag, a note by its first tag, before the layout moves it", () => {
+  const whole = globalGraph(INDEX, graph.global, { period: "all", includePrivate: false }, NOW)
+  const { nodes } = layOut(whole, graph.global)
+  const at = (id: string) => nodes.find((node) => node.id === id)!
+  const apart = (a: string, b: string) => Math.hypot(at(a).x! - at(b).x!, at(a).y! - at(b).y!)
+  // Winter's first tag is #engineering/ai: it starts on #engineering, as #engineering/ai does.
+  expect(apart("/winter", "/tags/engineering")).toBeLessThan(10)
+  expect(apart("/tags/engineering/ai", "/tags/engineering")).toBeLessThan(10)
+  expect(apart("/old", "/tags/horticulture")).toBeLessThan(10)
+  // Never on one point: d3-force would push them apart at random.
+  expect(apart("/winter", "/tags/engineering/ai")).toBeGreaterThan(0)
+})
+
+test("where a local graph has no top-level tag, a node starts on the highest tag of its line it has", () => {
+  const local = neighbourhood(globalGraph(INDEX, graph.global, { period: "all", includePrivate: false }, NOW), "/winter", 1)
+  expect(local.nodes.map((node) => node.id)).not.toContain("/tags/engineering")
+  const { nodes } = layOut(local, graph.local)
+  const [winter, ai] = ["/winter", "/tags/engineering/ai"].map((id) => nodes.find((node) => node.id === id)!) as [typeof nodes[0], typeof nodes[0]]
+  expect(Math.hypot(winter.x! - ai.x!, winter.y! - ai.y!)).toBeLessThan(10)
+})
+
+test("at rest, nodes keep the gap between them, and clear of every tag's label", () => {
+  const whole = globalGraph(INDEX, graph.global, { period: "all", includePrivate: false }, NOW)
+  const settings = { ...graph.global, sizes: { ...graph.global.sizes, gap: 10 } }
+  const { simulation, nodes, radius } = layOut(whole, settings, (label) => label.length * 7)
+  simulation.tick(300)
+  const r = (id: string) => radius.get(id)!
+  for (const [i, a] of nodes.entries()) {
+    for (const b of nodes.slice(i + 1)) {
+      // Give or take a pixel: the collisions are forces, not walls.
+      expect(Math.hypot(a.x! - b.x!, a.y! - b.y!) - r(a.id) - r(b.id)).toBeGreaterThan(10 - 1)
+    }
+  }
+  for (const tag of nodes.filter((node) => node.kind === "tag")) {
+    const box = labelBox(tag.x!, tag.y!, r(tag.id), tag.label.length * 7, settings.sizes.label)
+    for (const node of nodes.filter((node) => node !== tag)) {
+      const [px, py] = [Math.min(Math.max(node.x!, box.left), box.right), Math.min(Math.max(node.y!, box.top), box.bottom)]
+      expect(Math.hypot(node.x! - px, node.y! - py)).toBeGreaterThan(r(node.id))
+    }
   }
 })
 

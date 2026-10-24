@@ -235,6 +235,7 @@ test("the local graph's settings are the Quartz site's, carried over", () => {
       center: 0.5,
       linkDistance: { tagTag: 0.25, tagNote: 0.25, noteNote: 0.25 },
       linkStrength: { tagTag: 0.3, tagNote: 0.3, noteNote: 0.3 },
+      collision: 1,
     },
     shellSize: { base: 60, scaling: 10 },
     sizes: {
@@ -243,6 +244,7 @@ test("the local graph's settings are the Quartz site's, carried over", () => {
       private: 0.8,
       current: 1.4,
       label: 16.36,
+      gap: 4,
     },
     edges: {
       opacity: { tagTag: { min: 1, max: 1 }, tagNote: { min: 0, max: 0 }, noteNote: { min: 1, max: 1 } },

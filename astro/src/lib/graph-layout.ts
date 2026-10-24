@@ -6,7 +6,7 @@
 import { forceCenter, forceCollide, forceLink, forceManyBody, forceSimulation, type Simulation, type SimulationLinkDatum, type SimulationNodeDatum } from "d3-force"
 import type { GraphSettings, NodeSize, PerEdge, ShellSettings } from "../site.config.types.ts"
 import { radii, type Graph, type GraphEdge, type GraphNode } from "./graph.ts"
-import { tagUrl } from "./tags.ts"
+import { tagAncestors, tagUrl } from "./tags.ts"
 
 /** A node as d3-force moves it. */
 export interface PlacedNode extends GraphNode, SimulationNodeDatum {}
@@ -35,12 +35,21 @@ export interface Layout {
   turnShell: (node: PlacedNode, x: number, y: number) => boolean
 }
 
-/** A graph laid out with `settings`: its nodes and edges, and the simulation that moves them. */
-export function layOut(graph: Graph, settings: GraphSettings): Layout {
+/**
+ * A graph laid out with `settings`: its nodes and edges, and the simulation that moves them. A tag's
+ * label is as wide as `measure` says, at the label's size: the canvas measures it, and with none, it
+ * is guessed from its length.
+ */
+export function layOut(
+  graph: Graph,
+  settings: GraphSettings,
+  measure: (label: string) => number = (label) => label.length * settings.sizes.label * 0.6,
+): Layout {
   const radius = radii(graph, settings.sizes)
+  const half = settings.sizes.gap / 2
   const nodes: PlacedNode[] = graph.nodes.map((node) => ({ ...node }))
   const edges = graph.edges.map((edge) => ({ ...edge })) as unknown as PlacedEdge[]
-  const { charge, center, linkStrength } = settings.forces
+  const { charge, center, linkStrength, collision } = settings.forces
   const size = shellRadius(nodes.length, settings.shellSize)
   const linkDistance = Object.fromEntries(
     Object.entries(settings.forces.linkDistance).map(([kind, share]) => [kind, share * 2 * size]),
@@ -56,13 +65,131 @@ export function layOut(graph: Graph, settings: GraphSettings): Layout {
         .distance((edge) => linkDistance[edge.kind])
         .strength((edge) => linkStrength[edge.kind]),
     )
-    .force("collide", forceCollide<PlacedNode>((node) => radius.get(node.id) ?? 0).iterations(3))
-  if (!settings.shell) return { simulation, nodes, edges, radius, shell: undefined, linkDistance, turnShell: () => false }
+    .force("collide", forceCollide<PlacedNode>((node) => (radius.get(node.id) ?? 0) + half).strength(collision).iterations(3))
+    .force("labels", labelCollide(nodes, radius, measure, settings.sizes, collision))
+  if (!settings.shell) {
+    startOnTags(nodes)
+    return { simulation, nodes, edges, radius, shell: undefined, linkDistance, turnShell: () => false }
+  }
 
   const turnShell = pinOnShell(nodes, settings.shell, size)
+  startOnTags(nodes)
   const reached = reaching(graph, settings.shell.pinnedTags.map(tagUrl))
   simulation.force("inside", keepInside(nodes.filter((node) => !reached.has(node.id)), size))
   return { simulation, nodes, edges, radius, shell: size, linkDistance, turnShell }
+}
+
+/** The room round a label inside its box, as a share of the label's size. */
+export const LABEL_PAD = 0.2
+
+/** A box, in the graph's pixels. */
+export interface Box {
+  left: number
+  top: number
+  right: number
+  bottom: number
+}
+
+/** The box a label is drawn on, under its node at `x` and `y`, of radius `r`: `width` wide, at `size`. */
+export function labelBox(x: number, y: number, r: number, width: number, size: number): Box {
+  const [pad, top] = [size * LABEL_PAD, y + r + 2]
+  return { left: x - width / 2 - pad, top: top - pad, right: x + width / 2 + pad, bottom: top + size + pad }
+}
+
+/**
+ * Keeps each tag's label box, which always shows, clear of every other node and every other tag's
+ * label box, by `sizes.gap`, as the collision force keeps nodes clear of each other: a node in a box
+ * is pushed out of it, and the tag the box is under the other way; two boxes over each other are
+ * pushed apart along the way they overlap least. A note's label shows only while it is hovered, and
+ * takes no room. `strength` is the share of the way they are pushed apart in a tick.
+ */
+function labelCollide(
+  nodes: PlacedNode[],
+  radius: Map<string, number>,
+  measure: (label: string) => number,
+  sizes: GraphSettings["sizes"],
+  strength: number,
+) {
+  const half = sizes.gap / 2
+  const tags = nodes.filter((node) => node.kind === "tag").map((node) => ({ node, width: measure(node.label) }))
+  // Where a node will be this tick, as d3-force's collision force reads it.
+  const next = (node: PlacedNode): [number, number] => [(node.x ?? 0) + (node.vx ?? 0), (node.y ?? 0) + (node.vy ?? 0)]
+  const boxOf = ({ node, width }: (typeof tags)[number]): Box => {
+    const [x, y] = next(node)
+    const box = labelBox(x, y, radius.get(node.id) ?? 0, width, sizes.label)
+    return { left: box.left - half, top: box.top - half, right: box.right + half, bottom: box.bottom + half }
+  }
+  // Moves `a` by half of (dx, dy), and `b` by half of it the other way, at `strength`.
+  const push = (a: PlacedNode, b: PlacedNode, dx: number, dy: number) => {
+    const [x, y] = [(dx * strength) / 2, (dy * strength) / 2]
+    ;[a.vx, a.vy] = [(a.vx ?? 0) + x, (a.vy ?? 0) + y]
+    ;[b.vx, b.vy] = [(b.vx ?? 0) - x, (b.vy ?? 0) - y]
+  }
+
+  return () => {
+    for (const [i, tag] of tags.entries()) {
+      const box = boxOf(tag)
+      for (const node of nodes) {
+        if (node === tag.node) continue
+        const [x, y] = next(node)
+        const r = (radius.get(node.id) ?? 0) + half
+        // The box's nearest point to the node's middle.
+        const [px, py] = [Math.min(Math.max(x, box.left), box.right), Math.min(Math.max(y, box.top), box.bottom)]
+        const distance = Math.hypot(x - px, y - py)
+        if (distance >= r) continue
+        if (distance > 0) {
+          const out = (r - distance) / distance
+          push(node, tag.node, (x - px) * out, (y - py) * out)
+        } else {
+          // Its middle in the box: out the nearest side.
+          const [left, right, up, down] = [x - box.left, box.right - x, y - box.top, box.bottom - y]
+          const least = Math.min(left, right, up, down)
+          if (least === left) push(node, tag.node, -(left + r), 0)
+          else if (least === right) push(node, tag.node, right + r, 0)
+          else if (least === up) push(node, tag.node, 0, -(up + r))
+          else push(node, tag.node, 0, down + r)
+        }
+      }
+      for (const other of tags.slice(i + 1)) {
+        const them = boxOf(other)
+        const [across, down] = [Math.min(box.right, them.right) - Math.max(box.left, them.left), Math.min(box.bottom, them.bottom) - Math.max(box.top, them.top)]
+        if (across <= 0 || down <= 0) continue
+        // The other box's middle against this one's: which way it goes.
+        const sign = (a: number, b: number) => (a + b >= 0 ? 1 : -1)
+        if (across < down) push(other.node, tag.node, across * sign(them.left - box.left, them.right - box.right), 0)
+        else push(other.node, tag.node, 0, down * sign(them.top - box.top, them.bottom - box.bottom))
+      }
+    }
+  }
+}
+
+/** How far apart, in CSS pixels, the nodes that start on one tag are spread round it. */
+const START_SPREAD = 3
+
+/**
+ * Starts each node on its tag's top: a note on the top-level tag over its first tag, a tag on its
+ * own top-level tag. Where the graph hasn't that tag, as a local graph often hasn't, on the highest
+ * ancestor it has, or the tag itself. A top-level tag, a note with no tags, and a node whose tags
+ * the graph has none of, start where d3-force put them, or the shell pinned them. The nodes that
+ * start on one tag are spread a little round it, in a sunflower's spiral: d3-force pushes nodes at
+ * one point apart at random, and hard.
+ */
+function startOnTags(nodes: PlacedNode[]) {
+  const byId = new Map(nodes.map((node) => [node.id, node]))
+  const onTag = new Map<PlacedNode, number>()
+  for (const node of nodes) {
+    if (node.tag === undefined) continue
+    const chain = [...tagAncestors(node.tag), node.tag].map(tagUrl).filter((id) => id !== node.id)
+    const home = chain.map((id) => byId.get(id)).find((tag) => tag !== undefined)
+    // None for a top-level tag, or the highest the graph has of its line. A home never moves itself:
+    // it has nothing above it in the graph, so the order nodes start in doesn't matter.
+    if (home === undefined) continue
+    const k = onTag.get(home) ?? 0
+    onTag.set(home, k + 1)
+    const [r, angle] = [START_SPREAD * Math.sqrt(k + 1), (k + 1) * Math.PI * (3 - Math.sqrt(5))]
+    ;[node.x, node.y] = [(home.x ?? 0) + r * Math.cos(angle), (home.y ?? 0) + r * Math.sin(angle)]
+    ;[node.vx, node.vy] = [0, 0]
+  }
 }
 
 /** A node at rest as a view is fitted to it: where it is, its radius, and its label's width if shown. */

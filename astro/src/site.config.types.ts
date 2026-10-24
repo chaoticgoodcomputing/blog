@@ -170,6 +170,11 @@ export interface GraphSettings {
     linkDistance: PerEdge<number>
     /** How strongly each kind of edge pulls towards its length. */
     linkStrength: PerEdge<number>
+    /**
+     * How strongly two nodes, or a node and a tag's label, or two tags' labels, closer than
+     * `sizes.gap` are pushed apart, from 0, not at all, to 1, the whole way in a tick.
+     */
+    collision: number
   }
   sizes: {
     /** A tag's radius, by how many notes in the graph are under it. */
@@ -182,6 +187,11 @@ export interface GraphSettings {
     current: number
     /** A label's size in the graph, in CSS pixels, which the view zooms with everything else. */
     label: number
+    /**
+     * The least room kept between two nodes, in CSS pixels, and between a node and a tag's label, or
+     * two tags' labels: an invisible margin the layout's collisions keep clear.
+     */
+    gap: number
   }
   edges: {
     /** Each kind's opacity: `max` at half its length or nearer, `min` at twice it or further. */

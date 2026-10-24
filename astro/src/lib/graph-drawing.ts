@@ -16,7 +16,7 @@ import { select } from "d3-selection"
 import { zoom, zoomIdentity, type ZoomTransform } from "d3-zoom"
 import type { GraphSettings } from "../site.config.types.ts"
 import { edgeOpacity, labelled, litBy, pulseOpacity, type Graph, type GraphEdge, type Lit } from "./graph.ts"
-import { fittedView, layOut, type PlacedNode } from "./graph-layout.ts"
+import { fittedView, labelBox, layOut, LABEL_PAD, type PlacedNode } from "./graph-layout.ts"
 import { bubbleParts } from "./tag-bubble.ts"
 
 export interface DrawingOptions {
@@ -60,6 +60,8 @@ interface Palette {
   edge: string
   litEdge: string
   label: string
+  /** The box behind a label: the page's background. */
+  labelBox: string
   /** A note with no tag. */
   disc: string
   /** The page's own note, with no tag. */
@@ -85,6 +87,9 @@ function iconImage(svg: SVGSVGElement, colour: string): HTMLImageElement {
   image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(new XMLSerializer().serializeToString(copy))}`
   return image
 }
+
+/** The width of the outline round a label's box, in the label's colour, in the graph's pixels. */
+const LABEL_OUTLINE = 0.5
 
 /** How opaque a node is drawn while another is hovered that doesn't light it. */
 const UNLIT = 0.2
@@ -132,13 +137,14 @@ function describe(canvas: HTMLCanvasElement, graph: Graph, current: string, labe
 /** Draws a graph into `container`, filling it, until destroyed. */
 export function drawGraph(container: HTMLElement, options: DrawingOptions): DrawnGraph {
   const { graph, current, settings } = options
-  // d3-force's own timer is stopped: the frames tick the layout while it is warm.
-  const { simulation, nodes, edges, radius, shell, linkDistance, turnShell } = layOut(graph, settings)
-
   const canvas = document.createElement("canvas")
   describe(canvas, graph, current, options.label)
   container.append(canvas)
   const context = canvas.getContext("2d")!
+  // d3-force's own timer is stopped: the frames tick the layout while it is warm. Its tags' labels
+  // take the room the canvas measures them at.
+  context.font = `${settings.sizes.label}px ${getComputedStyle(container).fontFamily}`
+  const { simulation, nodes, edges, radius, shell, linkDistance, turnShell } = layOut(graph, settings, (label) => context.measureText(label).width)
   let [width, height] = [0, 0]
   const fit = () => {
     const dpr = window.devicePixelRatio || 1
@@ -160,6 +166,7 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
       edge: resolve(container, "var(--lightgray)"),
       litEdge: resolve(container, "var(--gray)"),
       label: resolve(container, "var(--dark)"),
+      labelBox: resolve(container, "var(--light)"),
       disc: resolve(container, "var(--gray)"),
       currentDisc: resolve(container, "var(--secondary)"),
       font: getComputedStyle(container).fontFamily,
@@ -185,8 +192,16 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
     const [gx, gy] = view.invert([x, y])
     return [gx - width / 2, gy - height / 2]
   }
+  // The node at a point: one whose label shows there, the label drawn last if two do, since labels
+  // are drawn over every node; else the nearest whose circle it is in.
   const nodeAt = (x: number, y: number): PlacedNode | undefined => {
     const [gx, gy] = toGraph(x, y)
+    for (const node of nodes.toReversed()) {
+      if (!labelled(node, hovered?.id, lit)) continue
+      const width = context.measureText(node.label).width
+      const box = labelBox(node.x ?? 0, node.y ?? 0, radius.get(node.id) ?? 0, width, settings.sizes.label)
+      if (gx >= box.left && gx <= box.right && gy >= box.top && gy <= box.bottom) return node
+    }
     let found: PlacedNode | undefined
     let nearest = Infinity
     for (const node of nodes) {
@@ -356,13 +371,25 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
     }
 
     // A tag's label always shows; while a node is hovered, its own and the lit tags' (`labelled`).
+    // Each on a box of the page's background, over every node and edge, and over the labels before it.
     context.globalAlpha = 1
-    context.fillStyle = palette.label
     context.textAlign = "center"
     context.textBaseline = "top"
+    const size = settings.sizes.label
+    const pad = size * LABEL_PAD
     for (const node of nodes) {
       if (!labelled(node, hovered?.id, lit)) continue
-      context.fillText(node.label, node.x ?? 0, (node.y ?? 0) + (radius.get(node.id) ?? 0) + 2)
+      const [x, y, r] = [node.x ?? 0, node.y ?? 0, radius.get(node.id) ?? 0]
+      const box = labelBox(x, y, r, context.measureText(node.label).width, size)
+      context.fillStyle = palette.labelBox
+      context.beginPath()
+      context.roundRect(box.left, box.top, box.right - box.left, box.bottom - box.top, pad)
+      context.fill()
+      context.strokeStyle = palette.label
+      context.lineWidth = LABEL_OUTLINE
+      context.stroke()
+      context.fillStyle = palette.label
+      context.fillText(node.label, x, y + r + 2)
     }
     frame = requestAnimationFrame(draw)
   })

@@ -1,0 +1,10 @@
+---
+// The global graph, filling the window: the dialog the local graph opens
+// (src/components/global-graph/GlobalGraph.astro), open from the start, as a page of its own.
+import GlobalGraph from "../components/global-graph/GlobalGraph.astro"
+import Base from "../layouts/Base.astro"
+---
+
+<Base kind="graph" title="Graph" url="/graph" description="Every page of the site, and how they connect.">
+  <GlobalGraph url="/graph" fullPage />
+</Base>

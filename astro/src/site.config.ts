@@ -153,6 +153,7 @@ export const graph: GraphConfig = {
       // Shares of the shell's diameter: 50px each for a graph of 16 nodes.
       linkDistance: { tagTag: 0.25, tagNote: 0.25, noteNote: 0.25 },
       linkStrength: { tagTag: 0.3, tagNote: 0.3, noteNote: 0.3 },
+      collision: 1,
     },
     // Never drawn: the unit the link distances are measured in.
     shellSize: { base: 60, scaling: 10 },
@@ -163,6 +164,7 @@ export const graph: GraphConfig = {
       current: 1.4,
       // The Quartz site's: its `fontSize`, 0.6 of 15px, over its `scale`, 0.55.
       label: 16.36,
+      gap: 4,
     },
     edges: {
       // An edge from a note to a tag pulls the two together, and is never seen.
@@ -174,25 +176,26 @@ export const graph: GraphConfig = {
     removeTags: site.private.tags,
     privatePages: "mark",
     forces: {
-      charge: -500,
+      charge: -20,
       center: 0.05,
-      // Shares of the shell's diameter: 20px, 60px and 20px for a graph of 49 nodes.
-      linkDistance: { tagTag: 0.02, tagNote: 0.06, noteNote: 0.02 },
-      linkStrength: { tagTag: 0.5, tagNote: 0.5, noteNote: 0.5 },
+      linkDistance: { tagTag: 0.1, tagNote: 0.1, noteNote: 0.01 },
+      linkStrength: { tagTag: 1.0, tagNote: 0.2, noteNote: 0.1 },
+      collision: 0.1,
     },
-    shellSize: { base: 150, scaling: 50 },
+    shellSize: { base: 150, scaling: 15 },
     sizes: {
-      tag: { base: 20, scaling: 1.2 },
-      note: { base: 10, scaling: 1 },
-      private: 0.8,
-      current: 1.4,
-      label: 11.25,
+      tag: { base: 10, scaling: 1 },
+      note: { base: 3, scaling: 3 },
+      private: 0.5,
+      current: 2,
+      label: 9,
+      gap: 15,
     },
     edges: {
       opacity: {
-        tagTag: { min: 0.99, max: 1 },
-        tagNote: { min: 0.5, max: 1 },
-        noteNote: { min: 0.2, max: 1 }
+        tagTag: { min: 0.99, max: 1.0 },
+        tagNote: { min: 0.01, max: 0.2 },
+        noteNote: { min: 0.8, max: 1 }
       },
       style: { tagTag: "solid", tagNote: "solid", noteNote: "dotted" },
     },

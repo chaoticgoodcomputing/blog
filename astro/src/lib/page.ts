@@ -7,7 +7,7 @@ import { getNotes, isPrivate, type Note, type UnpublishedNote } from "./notes.ts
 import { TAGS_INDEX } from "./tags.ts"
 
 /** Which page the site shell is around. A feature is on some kinds of page and not on others. */
-export type PageKind = "note" | "home" | "tag" | "annotation" | "404"
+export type PageKind = "note" | "home" | "tag" | "annotation" | "404" | "graph"
 
 export interface PageProps {
   kind: PageKind
