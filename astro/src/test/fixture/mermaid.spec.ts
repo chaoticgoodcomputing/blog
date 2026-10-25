@@ -97,8 +97,8 @@ test("a block that is not mermaid shows its source, and the rest of the page is 
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("A broken diagram")
   await expect(page.locator(".prose")).toContainText("After the diagrams.")
   // Mermaid draws an error of its own at the end of the page unless it is told not to. The graph
-  // column's icons are not diagrams, nor are the copy-link button's and the source link's.
-  await expect(page.locator("svg:not(aside svg, copy-link svg, .source-link svg)")).toHaveCount(2)
+  // column's icons are not diagrams, nor are the menu's, the copy-link button's and the source link's.
+  await expect(page.locator("svg:not(aside svg, .menu-bar svg, copy-link svg, .source-link svg)")).toHaveCount(2)
   expect(errors).toEqual([])
 })
 

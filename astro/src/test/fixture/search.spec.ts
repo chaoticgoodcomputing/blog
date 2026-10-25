@@ -111,6 +111,8 @@ test("nothing of the index is fetched until the reader types a search", async ({
 test("on a phone the search box and its results fit the screen", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 800 })
   await page.goto("/site-shell/body")
+  // On a phone the search box is in the menu.
+  await page.getByRole("button", { name: "Menu" }).click()
   await page.getByRole("button", { name: "Search" }).click()
   const search = page.getByRole("dialog", { name: "Search" })
   await search.getByRole("searchbox").fill("quillwort")

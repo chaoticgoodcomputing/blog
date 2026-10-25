@@ -180,6 +180,21 @@ for (const width of [1440, 1100, 390, 320]) {
   })
 }
 
+test("on a phone the note comes first, and a menu opens the search box, the graph and the footer", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto(note)
+  await expect(page.locator("main").getByRole("heading", { level: 1 })).toBeInViewport()
+  await expect(page.getByRole("button", { name: "Search" })).toBeHidden()
+
+  await page.getByRole("button", { name: "Menu" }).click()
+  await expect(page.getByRole("button", { name: "Search" })).toBeVisible()
+  await expect(page.getByRole("region", { name: "Graph View" }).locator("canvas")).toBeVisible()
+  await expect(page.getByRole("contentinfo")).toBeVisible()
+
+  await page.keyboard.press("Escape")
+  await expect(page.getByRole("button", { name: "Search" })).toBeHidden()
+})
+
 test("on a phone a title with nowhere to break breaks anyway, and nothing scrolls sideways", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 800 })
   await page.goto("/site-shell/long-title")

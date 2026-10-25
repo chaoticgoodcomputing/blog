@@ -5,10 +5,14 @@
 // reader came through, then the note itself: its header (title, date, tags) over the page's
 // content, and what follows the body under it.
 //
-// The window is the one scroll: the graph column and the spines stay in view beside the note. What
-// a feature needs to know of the page it reads from `page`, and which kinds of page it is on is
-// said where it is placed.
+// The window is the one scroll: the graph column and the spines stay in view beside the note. On a
+// phone or a tablet the graph column is a menu instead, opened from a bar over the note, which
+// comes in from the left: a popover, so the browser closes it on Escape or a tap outside it, and a
+// link followed from it loads a page with it closed. What a feature needs to know of the page it
+// reads from `page`, and which kinds of page it is on is said where it is placed.
+import { Icon } from "astro-icon/components"
 import type { PageKind, PageProps } from "../lib/page.ts"
+import { site } from "../site.config.ts"
 import Base from "./Base.astro"
 
 import SiteTitle from "../components/SiteTitle.astro"
@@ -32,7 +36,15 @@ const on = (...kinds: PageKind[]) => kinds.includes(page.kind)
 
 <Base {...page}>
   <div class="page" data-kind={page.kind}>
-    <aside class="graph-column">
+    {/* A phone's or a tablet's: what opens the graph column. Not drawn on a desktop. */}
+    <header class="menu-bar">
+      <button type="button" popovertarget="graph-column" aria-label="Menu" title="Menu">
+        <Icon name="mdi:menu" is:inline width="24" height="24" aria-hidden="true" />
+      </button>
+      <a class="menu-bar-title" href="/">{site.title}</a>
+    </header>
+
+    <aside class="graph-column" id="graph-column" popover>
       <header>
         <SiteTitle />
         <Search />
@@ -75,10 +87,6 @@ const on = (...kinds: PageKind[]) => kinds.includes(page.kind)
     min-height: 100vh;
   }
 
-  .graph-column {
-    grid-area: graph;
-  }
-
   .page > :global(trail-spines) {
     grid-area: spines;
   }
@@ -87,17 +95,30 @@ const on = (...kinds: PageKind[]) => kinds.includes(page.kind)
     grid-area: note;
   }
 
+  .menu-bar {
+    display: none;
+  }
+
   /* The graph column: a header, the graph filling the room between, and a footer. As tall as the
-     window, and in view while the note scrolls. */
+     window, and in view while the note scrolls. It is a popover, which the browser hides until it is
+     opened, and draws in a box of its own: on a desktop it is always drawn, as the page's column. */
   .graph-column {
+    grid-area: graph;
     position: sticky;
-    top: 0;
+    inset: 0 auto auto;
     align-self: start;
     display: grid;
     grid-template-rows: auto minmax(0, 1fr) auto;
     box-sizing: border-box;
+    width: auto;
     height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: none;
     border-right: 1px solid var(--lightgray);
+    color: inherit;
+    background: var(--light);
   }
 
   .graph-column > header {
@@ -171,24 +192,89 @@ const on = (...kinds: PageKind[]) => kinds.includes(page.kind)
     padding-inline: 1.5rem;
   }
 
-  /* A phone or a tablet: one column. The graph column over the note, as tall as its graph needs,
-     and the spines a row between them. */
+  /* A phone or a tablet: one column. A bar over the note opens the graph column, which comes in from
+     the left, over the page, as tall as the screen; the spines are a row under the bar. */
   @media (width < 1000px) {
     .page {
       grid-template-columns: minmax(0, 1fr);
-      grid-template-areas: "graph" "spines" "note";
+      /* A short note's page is still a screen tall: the room it doesn't fill is the note's. */
+      grid-template-rows: auto auto 1fr;
+      grid-template-areas: "bar" "spines" "note";
+    }
+
+    .menu-bar {
+      grid-area: bar;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--lightgray);
+      background: var(--light);
+    }
+
+    .menu-bar button {
+      display: grid;
+      place-items: center;
+      padding: 0.25rem;
+      border: none;
+      border-radius: 4px;
+      background: none;
+      color: var(--dark);
+      cursor: pointer;
+    }
+
+    .menu-bar button:hover {
+      background: var(--highlight);
+    }
+
+    .menu-bar-title {
+      font-weight: 700;
+      color: var(--dark);
+      text-decoration: none;
     }
 
     .graph-column {
-      position: static;
-      grid-template-rows: auto 40vh auto;
-      height: auto;
-      border-right: none;
-      border-bottom: 1px solid var(--lightgray);
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: min(22rem, 85vw);
+      height: 100dvh;
+      box-shadow: 0 0 2rem var(--shadow);
+      transform: translateX(-100%);
+      transition:
+        transform 0.2s ease-out,
+        display 0.2s allow-discrete,
+        overlay 0.2s allow-discrete;
+    }
+
+    .graph-column:not(:popover-open) {
+      display: none;
+    }
+
+    .graph-column:popover-open {
+      transform: none;
+    }
+
+    @starting-style {
+      .graph-column:popover-open {
+        transform: translateX(-100%);
+      }
+    }
+
+    .graph-column::backdrop {
+      background: var(--scrim);
     }
 
     main {
       padding: 1.5rem 1rem 4rem;
+    }
+  }
+
+  @media (width < 1000px) and (prefers-reduced-motion: reduce) {
+    .graph-column {
+      transition: none;
     }
   }
 </style>

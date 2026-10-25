@@ -39,15 +39,23 @@ async function nodePosition(page: Page, label: string) {
     const at = await canvas(page).evaluate((element, label) => {
       const box = element.getBoundingClientRect()
       const hovered = () => element.querySelector("li[data-hovered] > a")?.textContent
-      let [x, y, hits] = [0, 0, 0]
+      const hits: { x: number; y: number }[] = []
       for (let py = box.top + 1; py < box.bottom; py += 2) {
         for (let px = box.left + 1; px < box.right; px += 2) {
+          // Only where the canvas is what a click there would reach, not a control over it.
+          if (document.elementFromPoint(px, py) !== element) continue
           element.dispatchEvent(new MouseEvent("mousemove", { clientX: px, clientY: py }))
-          if (hovered() === label) [x, y, hits] = [x + px, y + py, hits + 1]
+          if (hovered() === label) hits.push({ x: px, y: py })
         }
       }
       element.dispatchEvent(new MouseEvent("mouseleave"))
-      return hits ? { x: x / hits, y: y / hits } : null
+      if (hits.length === 0) return null
+      // The point that hovered the node nearest the middle of all that did: a point on the node, where
+      // the middle of a tag's circle and its label may be on neither.
+      const middle = { x: hits.reduce((sum, hit) => sum + hit.x, 0) / hits.length, y: hits.reduce((sum, hit) => sum + hit.y, 0) / hits.length }
+      return hits.reduce((best, hit) =>
+        Math.hypot(hit.x - middle.x, hit.y - middle.y) < Math.hypot(best.x - middle.x, best.y - middle.y) ? hit : best,
+      )
     }, label)
     if (at && last && Math.hypot(at.x - last.x, at.y - last.y) < 0.5) return at
     last = at

@@ -123,7 +123,7 @@
     background: color-mix(in srgb, var(--secondary) 8%, var(--light));
   }
 
-  /* A phone or a tablet: the spines are a row over the note, each title on its line. */
+  /* A phone or a tablet: the spines are a row over the note. */
   @media (width < 1000px) {
     trail-spines {
       position: static;
@@ -140,13 +140,25 @@
       border-right: none;
     }
 
-    ol :global(a) {
-      width: auto;
-      padding: 0.5rem 0.75rem;
-      writing-mode: horizontal-tb;
+    /* A breadcrumb of where the reader came from, each note pointing on to the next, the last to the
+       note under it. */
+    nav {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 0.25rem 0.5rem;
+      border-bottom: 1px solid var(--lightgray);
     }
 
-    ol :global(li:not(:last-child) a)::after {
+    ol :global(a) {
+      width: auto;
+      padding: 0.25rem 0.5rem;
+      writing-mode: horizontal-tb;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--darkgray);
+    }
+
+    ol :global(a)::after {
       content: " →";
       color: var(--gray);
     }

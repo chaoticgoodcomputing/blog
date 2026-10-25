@@ -19,6 +19,13 @@ const period = (page: Page) => dialog(page).getByRole("slider", { name: "Time pe
 // A dialog the size of a small window, so that finding a node under the pointer is quick.
 test.use({ viewport: { width: 640, height: 560 } })
 
+/** Goes to `address`, and opens the menu where the local graph is in one, as it is on a window this small. */
+async function visit(page: Page, address: string) {
+  await page.goto(address)
+  const menu = page.getByRole("button", { name: "Menu" })
+  if (await menu.isVisible()) await menu.click()
+}
+
 test.beforeEach(async ({ page }) => {
   await page.clock.setFixedTime(NOW)
 })
@@ -64,7 +71,7 @@ async function nodePosition(page: Page, label: string) {
 }
 
 test("a control on the local graph opens the global graph in a dialog, which Escape closes, giving the focus back", async ({ page }) => {
-  await page.goto(recent)
+  await visit(page, recent)
   await expect(dialog(page)).toBeHidden()
   await opener(page).click()
   await expect(dialog(page)).toBeVisible()
@@ -79,7 +86,7 @@ test("a control on the local graph opens the global graph in a dialog, which Esc
 })
 
 test("the control is an icon button in the local graph's frame, named for a screen reader and reached by the keyboard", async ({ page }) => {
-  await page.goto(recent)
+  await visit(page, recent)
   // An icon, with no text of its own: its name, "Open the global graph", is its label.
   await expect(opener(page).locator("svg")).toBeVisible()
   expect((await opener(page).innerText()).trim()).toBe("")
@@ -103,7 +110,7 @@ test("the control is an icon button in the local graph's frame, named for a scre
 test("the global graph opens on the last month, widened to the last year when the month has fewer posts than it should", async ({ page }) => {
   // The month has one post, Global Recent, fewer than three; the year has four.
   expect(settings.global.filters).toMatchObject({ timePeriod: "month", minPosts: 3 })
-  await page.goto(recent)
+  await visit(page, recent)
   await opener(page).click()
   await expect(period(page)).toHaveAttribute("aria-valuetext", "Year")
   const year = await drawn(page)
@@ -114,7 +121,7 @@ test("the global graph opens on the last month, widened to the last year when th
 })
 
 test("the reader can filter the global graph by time period, and by whether private pages are drawn", async ({ page }) => {
-  await page.goto(recent)
+  await visit(page, recent)
   await opener(page).click()
 
   // The slider runs from the widest period to the narrowest, all, the year, the month, and opens
@@ -140,7 +147,7 @@ test("the reader can filter the global graph by time period, and by whether priv
 })
 
 test("the filters are drawn over the graph's top corner, in the code font, with the period's three stops named over its slider", async ({ page }) => {
-  await page.goto(recent)
+  await visit(page, recent)
   await opener(page).click()
   await expect(canvas(page)).toBeVisible()
   const filters = dialog(page).locator(".filters")
@@ -158,7 +165,7 @@ test("the filters are drawn over the graph's top corner, in the code font, with 
 test("the configured top-level tags are pinned on a ring", async ({ page }) => {
   // Four of the five are in the year's graph: three points make a circle, and the fourth is on it.
   expect(settings.global.shell.pinnedTags).toEqual(expect.arrayContaining(["engineering", "writing", "horticulture", "projects"]))
-  await page.goto(recent)
+  await visit(page, recent)
   await opener(page).click()
   const [a, b, c, d] = [
     await nodePosition(page, "#engineering"),
@@ -178,7 +185,7 @@ test("the configured top-level tags are pinned on a ring", async ({ page }) => {
 })
 
 test("hovering a node lights it and its neighbours", async ({ page }) => {
-  await page.goto(recent)
+  await visit(page, recent)
   await opener(page).click()
   const node = await nodePosition(page, "Global Recent")
   await page.mouse.move(node.x, node.y)
@@ -188,7 +195,7 @@ test("hovering a node lights it and its neighbours", async ({ page }) => {
 })
 
 test("clicking a node closes the dialog and goes to its page", async ({ page }) => {
-  await page.goto(recent)
+  await visit(page, recent)
   await opener(page).click()
   const node = await nodePosition(page, "Global Older")
   await page.mouse.click(node.x, node.y)
@@ -201,7 +208,7 @@ test("the built site has no settings panel for the graph, in its markup or in it
   page.on("response", (response) => {
     if (response.request().resourceType() === "script") scripts.push(response.text())
   })
-  await page.goto(recent)
+  await visit(page, recent)
   await opener(page).click()
   await expect(canvas(page)).toBeAttached()
   await expect(dialog(page).locator(".graph-settings")).toHaveCount(0)
