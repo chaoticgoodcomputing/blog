@@ -26,6 +26,11 @@ test("the 404 page is not indexable", () => {
   expect(isIndexable({ kind: "404" })).toBe(false)
 })
 
+test("the graph page is not indexable, at its address or by its kind: it is a tool, with no content of its own", () => {
+  expect(isIndexable({ kind: "graph" })).toBe(false)
+  expect(isIndexableAt("/graph")).toBe(false)
+})
+
 test("whether the page at an address is indexable is asked of the note or tag the address names", () => {
   expect(isIndexableAt("/content/notes/alpha")).toBe(true)
   expect(isIndexableAt("/content/notes/secret")).toBe(false)

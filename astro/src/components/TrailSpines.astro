@@ -7,8 +7,10 @@
 // This module also carries the trail on. Every navigation of the client router
 // (ClientNavigation.astro) is sent to the address of the trail it makes: following any link on the
 // site, from a note, a search result or a graph, goes on to its note, or back to it if the trail
-// has it. Back and forward go where history says, trail and all; a link the router doesn't take
-// (a full page load), or one followed from the 404 page, which is no note, starts a trail afresh.
+// has it, and says which way it goes, for the note's fold (Page.astro): back, to a note the trail
+// has. Back and forward go where history says, trail and all; a link the router doesn't take
+// (a full page load), one followed from the 404 page, which is no note, and one marked
+// `data-trail-reset` (the site's title, to the home page) start a trail afresh.
 //
 // Each spine is titled from the graph index (src/lib/graph-index-client.ts), and shows the note's
 // address until it has loaded.
@@ -29,7 +31,11 @@
     const navigation = event as TransitionBeforePreparationEvent
     if (navigation.navigationType === "traverse") return
     const lost = document.querySelector<HTMLElement>(".page")?.dataset.kind === "404"
-    const trail = follow(lost ? [] : trailOf(new URL(location.href)), navigation.to.pathname)
+    const reset = navigation.sourceElement?.closest("[data-trail-reset]") != null
+    const before = lost || reset ? [] : trailOf(new URL(location.href))
+    const trail = follow(before, navigation.to.pathname)
+    // Back to a note the trail has is back, though history goes forward: the note unfolds again.
+    navigation.direction = before.includes(trail.at(-1)!) ? "back" : "forward"
     const to = new URL(addressOf(trail), navigation.to)
     to.hash = navigation.to.hash
     navigation.to = to
@@ -110,6 +116,8 @@
     width: 2.5rem;
     padding: 1.25rem 0;
     writing-mode: vertical-rl;
+    /* On its side, a line is as wide as its height: as wide as the spine, the title in its middle. */
+    line-height: 2.5rem;
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--dark);
@@ -153,6 +161,7 @@
       width: auto;
       padding: 0.25rem 0.5rem;
       writing-mode: horizontal-tb;
+      line-height: normal;
       font-size: 0.8rem;
       font-weight: 500;
       color: var(--darkgray);

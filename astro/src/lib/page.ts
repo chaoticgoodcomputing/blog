@@ -6,6 +6,9 @@ import type { MarkdownHeading } from "astro"
 import { getNotes, isPrivate, type Note, type UnpublishedNote } from "./notes.ts"
 import { TAGS_INDEX } from "./tags.ts"
 
+/** The full-window global graph's page (src/pages/graph.astro): a tool for finding pages, with no content of its own. */
+export const GRAPH_PAGE = "/graph"
+
 /** Which page the site shell is around. A feature is on some kinds of page and not on others. */
 export type PageKind = "note" | "home" | "tag" | "annotation" | "404" | "graph"
 
@@ -41,11 +44,11 @@ export function tagAt(url: string): Pick<PageProps, "tag"> | undefined {
 /**
  * Whether a page is an indexable page: one the site asks search engines to index, and lists in its
  * sitemap. A private page is not, nor is the tag page of a private tag or of a tag under one, nor
- * the 404 page. The page of a tag that only private pages carry is: it shows the tag's description
+ * the 404 page, nor the graph page, which are no content. The page of a tag that only private pages carry is: it shows the tag's description
  * note, and lists no posts.
  */
 export function isIndexable(page: Pick<PageProps, "kind" | "note" | "tag">): boolean {
-  if (page.kind === "404") return false
+  if (page.kind === "404" || page.kind === "graph") return false
   if (page.note?.isPrivate) return false
   return !page.tag || !isPrivate([page.tag])
 }
@@ -56,6 +59,7 @@ export function isIndexable(page: Pick<PageProps, "kind" | "note" | "tag">): boo
  * note or the tag page there; undefined where there is neither, a page the rule says nothing of.
  */
 export function isIndexableAt(url: string, notes: Note[] = getNotes()): boolean | undefined {
+  if (url === GRAPH_PAGE) return isIndexable({ kind: "graph" })
   const tagPage = tagAt(url)
   if (tagPage) return isIndexable({ kind: "tag", ...tagPage })
   const note = notes.find((each) => each.url === url)

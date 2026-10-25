@@ -23,7 +23,13 @@ test.use({ viewport: { width: 640, height: 560 } })
 async function visit(page: Page, address: string) {
   await page.goto(address)
   const menu = page.getByRole("button", { name: "Menu" })
-  if (await menu.isVisible()) await menu.click()
+  if (!(await menu.isVisible())) return
+  await menu.click()
+  // The menu slides in: what is in it is where it stays once it has.
+  await page
+    .getByRole("complementary")
+    .filter({ has: page.locator(".local-graph") })
+    .evaluate((menu) => Promise.all(menu.getAnimations().map((animation) => animation.finished)))
 }
 
 test.beforeEach(async ({ page }) => {

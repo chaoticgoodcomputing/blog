@@ -5,7 +5,8 @@ import icon from "../assets/icon.png"
 import { site } from "../site.config.ts"
 ---
 
-<a class="site-title" href="/">
+{/* A fresh start: no trail to the home page (TrailSpines.astro). */}
+<a class="site-title" href="/" data-trail-reset>
   {/* Beside the site's name the icon says nothing more, so it has no text of its own. */}
   <Image src={icon} alt="" width={64} height={64} densities={[1, 2]} loading="eager" />
   <span class="text">

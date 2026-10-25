@@ -3,8 +3,9 @@
 // (src/components/global-graph/GlobalGraph.astro), open from the start, as a page of its own.
 import GlobalGraph from "../components/global-graph/GlobalGraph.astro"
 import Base from "../layouts/Base.astro"
+import { GRAPH_PAGE } from "../lib/page.ts"
 ---
 
-<Base kind="graph" title="Graph" url="/graph" description="Every page of the site, and how they connect.">
-  <GlobalGraph url="/graph" fullPage />
+<Base kind="graph" title="Graph" url={GRAPH_PAGE} description="Every page of the site, and how they connect.">
+  <GlobalGraph url={GRAPH_PAGE} fullPage />
 </Base>

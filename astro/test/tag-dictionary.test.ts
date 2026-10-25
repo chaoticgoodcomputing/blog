@@ -35,17 +35,6 @@ test("a tag with nothing in its lineage has no colour and no icon", () => {
   expect(tagColor("engineers", dictionary)).toBeUndefined()
 })
 
-test("the site's dictionary is the one the Quartz site configured", () => {
-  expect(tagColor("engineering/languages/typescript")).toBe("light-dark(#0070cc, #008CFF)")
-  expect(tagIcon("engineering/languages/typescript")).toBe("mdi:language-typescript")
-  expect(tagColor("projects/site/plugins")).toBe("light-dark(#cc0000, #FF0000)")
-  expect(tagIcon("projects/site/plugins")).toBe("custom:quartz-filled")
-  expect(tagColor("private")).toBe("light-dark(#cc0000, #FF0000)")
-  expect(tagIcon("writing/annotations/meetings")).toBe("mdi:account-group")
-  expect(tagColor("horticulture/seasons/rhythm")).toBe("light-dark(#1a8a1a, #00FF00)")
-  expect(tagIcon("economics/strategy")).toBe("mdi:arrow-decision")
-})
-
 test("a note's tags are listed as written, or with each one's parents before it", () => {
   const tags = ["writing/essays", "engineering/languages/typescript", "engineering/ai"]
   expect(listedTags(tags, { showParents: false })).toEqual(tags)

@@ -12,8 +12,12 @@ import {
   shareCardUrl,
   type ShareCard,
 } from "../src/lib/share-card.ts"
+import { tagColor } from "../src/lib/tag-dictionary.ts"
 
 const note = (id: string) => getNote(id)!
+
+/** A tag's colour in the dark scheme, which a card is drawn in, as the site's dictionary gives it: `#rrggbb`. */
+const dark = (tag: string) => /light-dark\([^,]*,\s*([^)]+)\)/.exec(tagColor(tag) ?? "")![1]!.trim().toLowerCase()
 const SITE = new URL("https://blog.chaoticgood.computer")
 
 // The image's pixels, three bytes each, and its width.
@@ -150,12 +154,11 @@ test("a card is a 1200 by 630 PNG, on the dark palette's background", async () =
 })
 
 test("a card's tags are drawn in their dark colours", async () => {
-  // horticulture is light-dark(#1a8a1a, #00FF00), and writing light-dark(#9a7400, #FFD637).
   const png = await drawShareCard({ title: "Tagged", tags: ["horticulture/seasons", "writing/notes"] }, SITE)
-  expect(await count(png, "#00ff00")).toBeGreaterThan(100)
-  expect(await count(png, "#ffd637")).toBeGreaterThan(100)
+  expect(await count(png, dark("horticulture"))).toBeGreaterThan(100)
+  expect(await count(png, dark("writing"))).toBeGreaterThan(100)
   const untagged = await drawShareCard({ title: "Tagged", tags: [] }, SITE)
-  expect(await count(untagged, "#00ff00")).toBe(0)
+  expect(await count(untagged, dark("horticulture"))).toBe(0)
 })
 
 test("a long title is cut to fit, and leaves the card's foot where every card has it", async () => {
@@ -183,12 +186,9 @@ test("a long title is cut to two lines, and draws nothing in the room a third wo
 })
 
 test("a card draws every tag it has room for", async () => {
-  // Three tags with the foot to themselves, as on a tag page's card: writing is #FFD637, projects
-  // #FF0000 and horticulture #00FF00 in the dark scheme.
+  // Three tags with the foot to themselves, as on a tag page's card.
   const png = await drawShareCard({ title: "Tagged", tags: ["writing", "projects", "horticulture"] }, SITE)
-  expect(await count(png, "#ffd637")).toBeGreaterThan(100)
-  expect(await count(png, "#ff0000")).toBeGreaterThan(100)
-  expect(await count(png, "#00ff00")).toBeGreaterThan(100)
+  for (const tag of ["writing", "projects", "horticulture"]) expect(await count(png, dark(tag)), tag).toBeGreaterThan(100)
 })
 
 test("a card with more tags than it has room for draws those that fit, and says how many more there are", async () => {
@@ -196,9 +196,9 @@ test("a card with more tags than it has room for draws those that fit, and says 
   const foot = { date: "Feb 15, 2026", readingTime: "12 min read" }
   const first = "writing/annotations/a-pattern-language"
   const all = await drawShareCard({ title: "Tagged", ...foot, tags: [first, "projects/games/the-neighborhood", "horticulture"] }, SITE)
-  expect(await count(all, "#ffd637")).toBeGreaterThan(100)
-  expect(await count(all, "#ff0000")).toBe(0)
-  expect(await count(all, "#00ff00")).toBe(0)
+  expect(await count(all, dark(first))).toBeGreaterThan(100)
+  expect(await count(all, dark("projects/games/the-neighborhood"))).toBe(0)
+  expect(await count(all, dark("horticulture"))).toBe(0)
   // `+2` is drawn where a card with the one tag has nothing.
   const one = await drawShareCard({ title: "Tagged", ...foot, tags: [first] }, SITE)
   const end = { top: 500, height: 80 }

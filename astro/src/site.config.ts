@@ -143,9 +143,10 @@ export const graph: GraphConfig = {
   // The graph column's: every note of the trail, and what is next to one.
   local: {
     depth: 1,
-    focusZoom: 2.5,
+    focusZoom: 1.5,
     removeTags: site.private.tags,
-    privatePages: "mark",
+    // A private page is never in the graph column's graph.
+    privatePages: "omit",
     forces: {
       charge: -20,
       center: 0.05,
@@ -159,7 +160,7 @@ export const graph: GraphConfig = {
       tag: { base: 10, scaling: 1 },
       note: { base: 3, scaling: 3 },
       private: 0.5,
-      current: 2,
+      current: 1.5,
       label: 9,
       gap: 15,
     },
@@ -183,12 +184,12 @@ export const graph: GraphConfig = {
       linkStrength: { tagTag: 1.0, tagNote: 0.2, noteNote: 0.1 },
       collision: 0.1,
     },
-    shellSize: { base: 150, scaling: 15 },
+    shellSize: { base: 150, scaling: 13 },
     sizes: {
       tag: { base: 10, scaling: 1 },
       note: { base: 3, scaling: 3 },
       private: 0.5,
-      current: 2,
+      current: 1.5,
       label: 9,
       gap: 15,
     },

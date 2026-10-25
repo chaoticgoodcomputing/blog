@@ -166,14 +166,23 @@ test("the rules are tried in order, not the note's tags", () => {
 })
 
 test("a note under a rule's tag matches it, as a tag puts a note under each of its ancestors", () => {
+  // Rules of the test's own, so that what is tested is how a rule matches, not the site's rules.
+  const rules: SeoConfig = {
+    ...seo,
+    articleTypes: [
+      { tag: "engineering", type: "TechArticle", section: "Engineering" },
+      { tag: "projects", type: "Report", section: "Projects" },
+    ],
+    defaultArticleType: "Article",
+  }
   // The old site matched a tag only as written, so this note, tagged `writing/essays,
   // engineering/ai, projects/site`, was an Article with no section.
-  expect(articleTypeOf(["writing/essays", "engineering/ai", "projects/site"])).toEqual({
+  expect(articleTypeOf(["writing/essays", "engineering/ai", "projects/site"], rules)).toEqual({
     type: "TechArticle",
     section: "Engineering",
   })
-  expect(articleTypeOf(["Engineering/AI"])).toEqual({ type: "TechArticle", section: "Engineering" })
-  expect(articleTypeOf(["engineeringish"])).toEqual({ type: "Article" })
+  expect(articleTypeOf(["Engineering/AI"], rules)).toEqual({ type: "TechArticle", section: "Engineering" })
+  expect(articleTypeOf(["engineeringish"], rules)).toEqual({ type: "Article" })
 })
 
 test("a note no rule matches is the default type, with no section", () => {

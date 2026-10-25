@@ -67,6 +67,22 @@ test("a link followed from the 404 page starts a trail afresh", async ({ page })
   await expect(spines(page)).toHaveCount(0)
 })
 
+test("the site's title goes to the home page with no trail: a fresh start", async ({ page }) => {
+  await page.goto(`${destination}?trail=/&trail=${start}`)
+  await page.getByRole("link", { name: "Chaotic Good Computing by Spencer Elkington" }).click()
+  await expectAt(page, "/")
+  expect(new URL(page.url()).search).toBe("")
+  await expect(spines(page)).toHaveCount(0)
+})
+
+test("on a phone, the site's name in the bar is a fresh start too", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto(`${destination}?trail=${start}`)
+  await page.getByRole("banner").getByRole("link", { name: "Chaotic Good Computing" }).click()
+  await expectAt(page, "/")
+  expect(new URL(page.url()).search).toBe("")
+})
+
 test("the button beside a title copies the page's own address, with none of the trail", async ({ page, context }) => {
   await context.grantPermissions(["clipboard-read", "clipboard-write"])
   await page.goto(`${destination}?trail=${start}`)

@@ -5,14 +5,12 @@ description: |
   Articles for the data and engineering consulting practice Chaotic Good Computing, as well as personal
   notes by Spencer Elkington.
 tags:
-  - writing/essays
+  - writing
   - projects
   - economics
   - engineering
-  - writing
+  - horticulture
 ---
-
-
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 

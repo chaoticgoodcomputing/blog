@@ -32,6 +32,21 @@ type Props = PageProps
 
 const page = Astro.props
 const on = (...kinds: PageKind[]) => kinds.includes(page.kind)
+
+// Moving to another page, the note folds away to the left, into the spine it becomes, and the next
+// slides in from the right; going back along the trail, the other way round. Which way a navigation
+// goes is the trail's to say (TrailSpines.astro). The keyframes are the global style's below.
+const timing = { duration: "0.4s", easing: "cubic-bezier(0.4, 0, 0.2, 1)", fillMode: "both" }
+const fold = {
+  forwards: {
+    old: { name: "note-fold-away", ...timing },
+    new: { name: "note-slide-in", ...timing },
+  },
+  backwards: {
+    old: { name: "note-slide-away", ...timing },
+    new: { name: "note-unfold", ...timing },
+  },
+}
 ---
 
 <Base {...page}>
@@ -41,10 +56,10 @@ const on = (...kinds: PageKind[]) => kinds.includes(page.kind)
       <button type="button" popovertarget="graph-column" aria-label="Menu" title="Menu">
         <Icon name="mdi:menu" is:inline width="24" height="24" aria-hidden="true" />
       </button>
-      <a class="menu-bar-title" href="/">{site.title}</a>
+      <a class="menu-bar-title" href="/" data-trail-reset>{site.title}</a>
     </header>
 
-    <aside class="graph-column" id="graph-column" popover>
+    <aside class="graph-column" id="graph-column" popover transition:name="graph-column" transition:animate="none">
       <header>
         <SiteTitle />
         <Search />
@@ -58,7 +73,7 @@ const on = (...kinds: PageKind[]) => kinds.includes(page.kind)
 
     <TrailSpines />
 
-    <main>
+    <main transition:name="note" transition:animate={fold}>
       <header>
         {on("note", "home", "tag", "annotation") && <ArticleTitle title={page.title} url={page.url} />}
         {on("note", "tag", "annotation") && <DateAndReadingTime note={page.note} />}
@@ -144,15 +159,15 @@ const on = (...kinds: PageKind[]) => kinds.includes(page.kind)
     border-top: 1px solid var(--lightgray);
   }
 
-  /* The note: as wide as reads well, in the middle of the room it has. A wide table or a long line
-     of code scrolls inside it, and the page stays as wide as the window. */
+  /* The note: its text as wide as reads well, 40rem, in the middle of the room it has. The note
+     itself fills that room, the same box on every page, so its fold from one page to the next is
+     one box's (the global style below). A wide table or a long line of code scrolls inside it, and
+     the page stays as wide as the window. */
   main {
     box-sizing: border-box;
     width: 100%;
-    max-width: 44rem;
     min-width: 0;
-    margin: 0 auto;
-    padding: 2.5rem 2rem 6rem;
+    padding: 2.5rem max(2rem, calc((100% - 40rem) / 2)) 6rem;
   }
 
   main > header {
@@ -188,7 +203,6 @@ const on = (...kinds: PageKind[]) => kinds.includes(page.kind)
      viewer lays itself out by the room it has, the document beside its cards where they fit. One
      whose document couldn't be shown is laid out as any note. */
   .page:has(.annotation-viewer:not([data-state="failed"])) main {
-    max-width: none;
     padding-inline: 1.5rem;
   }
 
@@ -275,6 +289,51 @@ const on = (...kinds: PageKind[]) => kinds.includes(page.kind)
   @media (width < 1000px) and (prefers-reduced-motion: reduce) {
     .graph-column {
       transition: none;
+    }
+  }
+</style>
+
+<style is:global>
+  /* The note's fold (`fold` above): into its left edge, where the spines are, and out of it. Flat,
+     not turned in depth: a note is a box as tall as the whole note, whose middle may be far below
+     the window, and turned about it the part in view would slant. */
+  ::view-transition-old(note),
+  ::view-transition-new(note) {
+    transform-origin: left center;
+  }
+
+  @keyframes note-fold-away {
+    to {
+      transform: scaleX(0);
+      opacity: 0;
+    }
+  }
+
+  @keyframes note-unfold {
+    from {
+      transform: scaleX(0);
+      opacity: 0;
+    }
+  }
+
+  @keyframes note-slide-in {
+    from {
+      transform: translateX(6rem);
+      opacity: 0;
+    }
+  }
+
+  @keyframes note-slide-away {
+    to {
+      transform: translateX(6rem);
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(note),
+    ::view-transition-new(note) {
+      animation: none;
     }
   }
 </style>

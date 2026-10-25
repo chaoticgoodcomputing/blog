@@ -1,3 +1,4 @@
+import { tagColor } from "../../lib/tag-dictionary.ts"
 import { expect, test } from "../site.ts"
 
 // A note with three tags: `engineering/languages/typescript`, which has an icon of its own and
@@ -6,9 +7,16 @@ import { expect, test } from "../site.ts"
 // nothing for.
 const note = "/tag-dictionary/badges"
 
-// The colours the Quartz site configured, as a browser computes them: light, then dark.
-const engineering = ["rgb(0, 112, 204)", "rgb(0, 140, 255)"]
-const projects = ["rgb(204, 0, 0)", "rgb(255, 0, 0)"]
+/** A tag's colours in the site's dictionary, as a browser computes them: light, then dark. */
+function colours(tag: string): string[] {
+  const [, light, dark] = /light-dark\(\s*([^,]+?)\s*,\s*([^)]+?)\s*\)/.exec(tagColor(tag) ?? "")!
+  return [light!, dark!].map((hex) => {
+    const [r, g, b] = [1, 3, 5].map((at) => parseInt(hex.slice(at, at + 2), 16))
+    return `rgb(${r}, ${g}, ${b})`
+  })
+}
+const engineering = colours("engineering")
+const projects = colours("projects")
 
 test("a note's tags are tag badges under its title, each linking to its tag's page", async ({ page }) => {
   await page.goto(note)
