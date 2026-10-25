@@ -4,7 +4,7 @@ date: 2026-10-22
 tags:
   - horticulture/seasons/stamps
   - writing/notes
-description: The kickoff post for my Season of Stamps: exploring new places, meeting new people, and putting the final stamp of approval on a back catalog of projects worth publishing.
+description: "The kickoff post for my Season of Stamps: exploring new places, meeting new people, and putting the final stamp of approval on a back catalog of projects worth publishing."
 ---
 In 2026, for many white-collar workers, two circumstances have been very common:
 
