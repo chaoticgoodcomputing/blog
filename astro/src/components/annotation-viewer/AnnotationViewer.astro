@@ -331,8 +331,8 @@ const href = encodeURI(decodeURI(target))
       this.#restore()
     }
 
-    // Marks the selected annotation's card and highlights, and shortens every other card once the
-    // document is beside them.
+    // Marks the selected annotation's card and highlights, and, while one is selected, shortens
+    // every other card once the document is beside them.
     #mark() {
       for (const highlight of this.querySelectorAll<HTMLElement>(".highlight")) {
         highlight.classList.toggle("selected", highlight.dataset.annotation === this.#selected)
@@ -340,7 +340,8 @@ const href = encodeURI(decodeURI(target))
       for (const card of this.#cards()) {
         const selected = idOf(card) === this.#selected
         card.toggleAttribute("data-selected", selected)
-        card.classList.toggle("short", !selected && this.#layout !== "static")
+        // PROTOTYPE (stacked notes): every card whole until one is selected.
+        card.classList.toggle("short", !selected && this.#layout !== "static" && this.#selected !== undefined)
         if (selected) card.setAttribute("aria-current", "true")
         else card.removeAttribute("aria-current")
       }
@@ -389,10 +390,18 @@ const href = encodeURI(decodeURI(target))
       section.style.height = `${y}px`
     }
 
+    // PROTOTYPE (stacked notes): what scrolls the viewer: the window, or a column it is shown in.
+    #scroller(): Element | Window {
+      for (let at = this.parentElement; at; at = at.parentElement) {
+        if (/auto|scroll/.test(getComputedStyle(at).overflowY) && at.scrollHeight > at.clientHeight) return at
+      }
+      return window
+    }
+
     // Scrolls the page so that a point `y` down the window sits a little below the bar.
     #reveal(y: number, smoothly: boolean) {
       const bar = this.#layout === "static" ? 0 : this.#bar.offsetHeight
-      window.scrollTo({ top: Math.max(0, window.scrollY + y - bar - BELOW_BAR), behavior: smoothly ? "smooth" : "instant" })
+      this.#scroller().scrollBy({ top: y - bar - BELOW_BAR, behavior: smoothly ? "smooth" : "instant" })
     }
 
     // Goes to an annotation: its passage where the document is shown and has one, its card otherwise.
@@ -509,7 +518,7 @@ const href = encodeURI(decodeURI(target))
       const hold = this.#hold
       if (!hold || !this.#fit) return
       const box = hold.page.getBoundingClientRect()
-      window.scrollBy({ top: box.top + hold.fy * box.height - hold.y, behavior: "instant" })
+      this.#scroller().scrollBy({ top: box.top + hold.fy * box.height - hold.y, behavior: "instant" })
       this.querySelector(".document")!.scrollLeft += box.left + hold.fx * box.width - hold.x
       const sized = Math.abs(box.width - hold.share * this.#fit.documentWidth) < 1
       if (sized || performance.now() > hold.until) this.#hold = undefined

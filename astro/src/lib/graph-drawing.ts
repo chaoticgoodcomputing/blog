@@ -30,6 +30,11 @@ export interface DrawingOptions {
   follow: (url: string) => void
   /** What the canvas is: its text alternative's name. */
   label: string
+  /**
+   * PROTOTYPE (stacked notes): the ids of the notes a reader went through, in order, drawn as one
+   * line through them over the edges. A step between two nodes with no edge is dashed.
+   */
+  path?: string[]
 }
 
 export interface DrawnGraph {
@@ -336,6 +341,28 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
       context.stroke()
     })
     context.setLineDash([])
+
+    // PROTOTYPE (stacked notes): the reader's path, over the edges and under the nodes.
+    if (options.path && options.path.length > 1) {
+      const placed = new Map(nodes.map((node) => [node.id, node]))
+      const linked = (a: string, b: string) =>
+        graph.edges.some((edge) => (edge.source === a && edge.target === b) || (edge.source === b && edge.target === a))
+      context.globalAlpha = hovered ? 0.35 : 1
+      context.strokeStyle = palette.currentDisc
+      context.lineWidth = 4
+      context.lineCap = "round"
+      for (let i = 1; i < options.path.length; i++) {
+        const [from, to] = [placed.get(options.path[i - 1]!), placed.get(options.path[i]!)]
+        if (!from || !to) continue
+        context.setLineDash(linked(from.id, to.id) ? [] : [2, 8])
+        context.beginPath()
+        context.moveTo(from.x ?? 0, from.y ?? 0)
+        context.lineTo(to.x ?? 0, to.y ?? 0)
+        context.stroke()
+      }
+      context.setLineDash([])
+      context.lineCap = "butt"
+    }
 
     for (const node of nodes) {
       const [x, y] = [node.x ?? 0, node.y ?? 0]

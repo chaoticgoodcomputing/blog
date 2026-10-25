@@ -1,0 +1,1208 @@
+---
+// PROTOTYPE: throwaway, on the prototype/stacked-notes branch only. Never merge to main.
+//
+// Question: what should stacked-note navigation look like on this site, where the path a reader
+// takes through the graph is visible? (After notes.andymatuschak.org.)
+//
+// Three variants, switched with `?variant=A|B|C` on any page, in dev only (Base.astro mounts this
+// under `import.meta.env.DEV`). Without `?variant=` the site is as it is.
+//
+//   A  Trail      Andy's layout: columns, earlier ones collapse to spines. A small map of the
+//                 path floats in the corner.
+//   B  Graph rail The graph is the navigation: a rail on the left draws every note next to the
+//                 path, with the path drawn through it. A click on a node opens it as a column.
+//   C  Ribbon     The path unrolled along the top, a station over each column, with arcs for the
+//                 links between notes of the path that the path didn't take.
+//
+// The stack is in the address: `?variant=A&stacked=/a&stacked=/b`, after the page's own path.
+// A click on a link in a column closes the columns after it and opens the link's note next to it.
+
+import TagBubble from "../TagBubble.astro"
+import { graphOf } from "../../lib/graph.ts"
+import { graphIndex } from "../../lib/graph-index.ts"
+import { graph } from "../../site.config.ts"
+
+// Every tag's bubble, hidden, for the graph drawing to copy, as the local graph does.
+const tags = graphOf(graphIndex(), { removeTags: graph.local.removeTags, privatePages: "mark" })
+  .nodes.flatMap((node) => (node.kind === "tag" && node.tag !== undefined ? [node.tag] : []))
+---
+
+<div id="sn-root" hidden></div>
+<div id="sn-bubbles" hidden>
+  {tags.map((tag) => <span data-tag={tag}><TagBubble tag={tag} /></span>)}
+</div>
+
+<script>
+  import { forceCenter, forceCollide, forceLink, forceManyBody, forceSimulation, type SimulationNodeDatum } from "d3-force"
+  import { globalGraph } from "../../lib/global-graph.ts"
+  import { neighbourhood, type Graph, type GraphEdge, type GraphNode } from "../../lib/graph.ts"
+  import { drawGraph, type DrawnGraph } from "../../lib/graph-drawing.ts"
+  import { loadGraphIndex } from "../../lib/graph-index-client.ts"
+  import { graph as graphConfig } from "../../site.config.ts"
+
+  const VARIANTS = [
+    { key: "A", name: "Trail" },
+    { key: "B", name: "Graph rail" },
+    { key: "C", name: "Ribbon" },
+  ] as const
+  type VariantKey = (typeof VARIANTS)[number]["key"]
+
+  const params = new URLSearchParams(location.search)
+  const variant = VARIANTS.find((each) => each.key === params.get("variant")?.toUpperCase())?.key
+
+  // ---------------------------------------------------------------------------------------------
+  // The stack: which notes are open, in order. Column 0 is the page's own path.
+
+  const normal = (url: string) => {
+    const path = decodeURI(new URL(url, location.origin).pathname).replace(/\/$/, "")
+    return path === "" ? "/" : path
+  }
+
+  let stack: string[] = [normal(location.pathname), ...params.getAll("stacked").map(normal)]
+
+  function writeAddress() {
+    const next = new URLSearchParams()
+    next.set("variant", current)
+    for (const url of stack.slice(1)) next.append("stacked", url)
+    history.replaceState(history.state, "", `${encodeURI(stack[0])}?${next}`)
+  }
+
+  let current: VariantKey = variant ?? "A"
+
+  // ---------------------------------------------------------------------------------------------
+  // A note's column content, fetched from its page: the page's `<main>`, and its backlinks.
+
+  interface Fetched {
+    url: string
+    title: string
+    body: HTMLElement
+  }
+
+  const cache = new Map<string, Promise<Fetched>>()
+  const seenStyles = new Set<string>()
+
+  function adoptStyles(doc: Document) {
+    // A note's page may need styles this page didn't load (a component only it has). In dev they
+    // are <style> tags keyed by Vite's id; in a build, stylesheet links.
+    for (const each of doc.head.querySelectorAll<HTMLElement>("style, link[rel=stylesheet]")) {
+      const key = each.getAttribute("data-vite-dev-id") ?? each.getAttribute("href") ?? each.textContent ?? ""
+      if (seenStyles.has(key)) continue
+      seenStyles.add(key)
+      document.head.append(each.cloneNode(true))
+    }
+  }
+  // A note's page may need a component's script (the annotation viewer's custom element, say) or,
+  // in dev, its styles, which Vite also loads as module scripts. A module runs once per address,
+  // so loading one this page already has does nothing.
+  function adoptScripts(doc: Document) {
+    const loaded = new Set([...document.querySelectorAll<HTMLScriptElement>("script[type=module][src]")].map((each) => each.getAttribute("src")))
+    for (const each of doc.querySelectorAll<HTMLScriptElement>("script[type=module][src]")) {
+      const src = each.getAttribute("src")!
+      if (loaded.has(src)) continue
+      loaded.add(src)
+      document.head.append(Object.assign(document.createElement("script"), { type: "module", src }))
+    }
+  }
+
+  for (const each of document.head.querySelectorAll<HTMLElement>("style, link[rel=stylesheet]")) {
+    seenStyles.add(each.getAttribute("data-vite-dev-id") ?? each.getAttribute("href") ?? each.textContent ?? "")
+  }
+
+  function fetchNote(url: string): Promise<Fetched> {
+    let found = cache.get(url)
+    if (!found) {
+      found = fetch(encodeURI(url))
+        .then((response) => response.text())
+        .then((html) => {
+          const doc = new DOMParser().parseFromString(html, "text/html")
+          adoptStyles(doc)
+          adoptScripts(doc)
+          const main = doc.querySelector("main")
+          const body = document.createElement("div")
+          body.className = "sn-note"
+          if (main) {
+            // What is under a note and only clutters a column.
+            main.querySelectorAll(".subscribe-box, .source-link").forEach((each) => each.remove())
+            body.append(...main.childNodes)
+          } else {
+            body.textContent = `No page at ${url}`
+          }
+          const backlinks = doc.querySelector(".backlinks")
+          if (backlinks) body.append(backlinks)
+          const title = doc.querySelector("main h1")?.textContent?.trim() || doc.title || url
+          return { url, title, body }
+        })
+      cache.set(url, found)
+    }
+    return found
+  }
+
+  // ---------------------------------------------------------------------------------------------
+  // The graph, from the index every graph is drawn from. Neighbours are notes linked either way.
+
+  let siteGraph: Graph = { nodes: [], edges: [] }
+  const nodeById = new Map<string, GraphNode>()
+  const neighbours = new Map<string, Set<string>>()
+
+  async function loadGraph() {
+    const index = await loadGraphIndex()
+    // The global graph's, over every date: the graph drawn is cut from it (pathGraph).
+    siteGraph = globalGraph(index, graphConfig.global, { period: "all", includePrivate: graphConfig.global.filters.includePrivate }, new Date())
+    for (const node of siteGraph.nodes) {
+      nodeById.set(node.id, node)
+      neighbours.set(node.id, new Set())
+    }
+    for (const edge of siteGraph.edges) {
+      if (edge.kind !== "noteNote") continue
+      neighbours.get(edge.source)?.add(edge.target)
+      neighbours.get(edge.target)?.add(edge.source)
+    }
+  }
+
+  const linked = (a: string, b: string) => neighbours.get(a)?.has(b) ?? false
+  const labelOf = (id: string) => nodeById.get(id)?.label ?? id
+
+  // ---------------------------------------------------------------------------------------------
+  // Shared DOM: the root, and the scrolling row of columns every variant has.
+
+  const root = document.getElementById("sn-root")!
+  let columnsEl: HTMLElement
+  let onStackChange: () => void = () => {}
+
+  async function renderColumns() {
+    const notes = await Promise.all(stack.map(fetchNote))
+    columnsEl.replaceChildren(
+      ...notes.map((note, i) => {
+        const column = document.createElement("article")
+        column.className = "sn-col"
+        column.dataset.index = String(i)
+        column.dataset.url = note.url
+        column.style.setProperty("--i", String(i))
+        const spine = document.createElement("a")
+        spine.className = "sn-spine"
+        spine.href = encodeURI(note.url)
+        spine.textContent = labelOf(note.url)
+        spine.addEventListener("click", (event) => {
+          event.preventDefault()
+          event.stopImmediatePropagation()
+          if (current === "B") back(i)
+          else scrollToColumn(i)
+        })
+        // The same fetched body can't sit in two places; columns are rebuilt each time, so clone.
+        column.append(spine, note.body.cloneNode(true))
+        return column
+      }),
+    )
+    markLinks()
+    updateSpines()
+    onStackChange()
+  }
+
+  // Links to an open note are marked; the one that leads to the next column most of all.
+  function markLinks() {
+    for (const column of columnsEl.querySelectorAll<HTMLElement>(".sn-col")) {
+      const i = Number(column.dataset.index)
+      for (const a of column.querySelectorAll<HTMLAnchorElement>(".sn-note a[href]")) {
+        a.classList.remove("sn-open", "sn-next")
+        if (!isInternal(a)) continue
+        const target = normal(a.href)
+        if (target === stack[i + 1]) a.classList.add("sn-next")
+        else if (stack.includes(target)) a.classList.add("sn-open")
+      }
+    }
+  }
+
+  function isInternal(a: HTMLAnchorElement) {
+    // A link within the note (a heading, an annotation's `#^id`) is the note's own.
+    if (a.getAttribute("href")?.startsWith("#")) return false
+    const url = new URL(a.href, location.href)
+    return (
+      url.origin === location.origin &&
+      !url.pathname.startsWith("/assets/") &&
+      !/\.(pdf|png|jpe?g|svg|xml|json)$/i.test(url.pathname) &&
+      !(url.pathname === location.pathname && url.hash && !url.search)
+    )
+  }
+
+  function scrollToColumn(i: number) {
+    const column = columnsEl.querySelector<HTMLElement>(`.sn-col[data-index="${i}"]`)
+    if (!column) return
+    // A column sticks at its spine's offset, so its place in the flow is i column widths in.
+    const width = column.offsetWidth
+    const spine = spineWidth()
+    columnsEl.scrollTo({ left: Math.max(0, i * width - i * spine), behavior: "smooth" })
+    column.classList.remove("sn-flash")
+    void column.offsetWidth
+    column.classList.add("sn-flash")
+  }
+
+  function spineWidth() {
+    const value = parseFloat(getComputedStyle(columnsEl).getPropertyValue("--spine"))
+    return Number.isNaN(value) ? 40 : value
+  }
+
+  // A column under the ones after it shows only its spine.
+  function updateSpines() {
+    const columns = [...columnsEl.querySelectorAll<HTMLElement>(".sn-col")]
+    if (columns.length === 0) return
+    const width = columns[0].offsetWidth
+    const spine = spineWidth()
+    const left = columnsEl.scrollLeft
+    // Where a column's left edge is on screen: where the flow puts it, or where it sticks.
+    const edge = (i: number) => Math.max(i * width - left, i * spine)
+    columns.forEach((column, i) => {
+      // Covered once the next column has slid over most of it.
+      const covered = i + 1 < columns.length && edge(i + 1) - edge(i) < width * 0.6
+      column.classList.toggle("sn-covered", covered)
+    })
+  }
+
+  /** Opens `url` after column `from`, closing what was after it. */
+  async function open(url: string, from: number) {
+    url = normal(url)
+    const at = stack.indexOf(url)
+    // Already open at or before where it would go: show it there. B shows one note, so it goes back.
+    if (at !== -1 && at <= from + 1) return current === "B" ? back(at) : scrollToColumn(at)
+    stack = [...stack.slice(0, from + 1), url]
+    writeAddress()
+    await renderColumns()
+    requestAnimationFrame(() => scrollToColumn(stack.length - 1))
+  }
+
+  function reset(url: string) {
+    stack = [normal(url)]
+    writeAddress()
+    void renderColumns().then(() => columnsEl.scrollTo({ left: 0 }))
+  }
+
+  // Every same-site link click while the prototype is on is the stack's, before the client router
+  // sees it.
+  function interceptClicks() {
+    document.addEventListener(
+      "click",
+      (event) => {
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey) return
+        const a = (event.target as Element).closest?.("a[href]") as HTMLAnchorElement | null
+        if (!a || !root.contains(a) || !isInternal(a)) return
+        if (a.closest(".sn-spine")) return
+        event.preventDefault()
+        event.stopImmediatePropagation()
+        const column = a.closest<HTMLElement>(".sn-col")
+        if (column) void open(a.href, Number(column.dataset.index))
+        else if (a.dataset.snReset !== undefined) reset(a.href)
+        else void open(a.href, stack.length - 1)
+      },
+      { capture: true },
+    )
+  }
+
+  // ---------------------------------------------------------------------------------------------
+  // A small force-laid graph in SVG, for A and B. Positions are kept between redraws, so a node
+  // stays where it was as the path grows.
+
+  interface Placed extends SimulationNodeDatum {
+    id: string
+  }
+
+  const SVG = "http://www.w3.org/2000/svg"
+  const svgEl = <K extends keyof SVGElementTagNameMap>(tag: K, attrs: Record<string, string | number> = {}) => {
+    const element = document.createElementNS(SVG, tag)
+    for (const [key, value] of Object.entries(attrs)) element.setAttribute(key, String(value))
+    return element
+  }
+
+  function forceView(
+    host: HTMLElement,
+    options: {
+      /** Which nodes to draw, besides the path's. */
+      around: (path: string[]) => string[]
+      labels: "path" | "all"
+      radius: { path: number; other: number }
+    },
+  ) {
+    const positions = new Map<string, Placed>()
+    const svg = svgEl("svg", { class: "sn-graph" })
+    host.append(svg)
+    let simulation: ReturnType<typeof forceSimulation<Placed>> | undefined
+    let hovered: string | undefined
+
+    function draw() {
+      simulation?.stop()
+      const path = stack
+      const ids = [...new Set([...path, ...options.around(path)])]
+      const fresh = ids.filter((id) => !positions.has(id)).length
+      const nodes = ids.map((id) => {
+        const existing = positions.get(id)
+        if (existing) return existing
+        // A new node starts beside a neighbour already placed, or near the middle.
+        const near = [...(neighbours.get(id) ?? [])].map((n) => positions.get(n)).find(Boolean)
+        const placed: Placed = {
+          id,
+          x: (near?.x ?? 0) + (Math.random() - 0.5) * 30,
+          y: (near?.y ?? 0) + (Math.random() - 0.5) * 30,
+        }
+        positions.set(id, placed)
+        return placed
+      })
+      const idSet = new Set(ids)
+      const links: { source: string; target: string; path: boolean }[] = []
+      for (const edge of siteGraph.edges) {
+        if (edge.kind === "noteNote" && idSet.has(edge.source) && idSet.has(edge.target)) {
+          links.push({ source: edge.source, target: edge.target, path: false })
+        }
+      }
+      // The path's own steps pull together, whether or not the graph has an edge for them.
+      for (let i = 1; i < path.length; i++) links.push({ source: path[i - 1], target: path[i], path: true })
+
+      simulation = forceSimulation(nodes)
+        .force("charge", forceManyBody().strength(-60))
+        .force(
+          "link",
+          forceLink<Placed, (typeof links)[number]>(links.map((link) => ({ ...link })))
+            .id((node) => node.id)
+            .distance((link) => (link.path ? 50 : 40))
+            .strength((link) => (link.path ? 0.6 : 0.15)),
+        )
+        .force("center", forceCenter(0, 0).strength(0.05))
+        .force("collide", forceCollide(10))
+        .alpha(fresh === 0 ? 0.3 : 0.8)
+        .on("tick", () => paint(nodes, links))
+    }
+
+    function paint(nodes: Placed[], links: { source: string; target: string; path: boolean }[]) {
+      const path = stack
+      const at = (id: string) => positions.get(id)!
+      const xs = nodes.map((node) => node.x ?? 0)
+      const ys = nodes.map((node) => node.y ?? 0)
+      // Fit the nodes, but never zoom in past a 240×180 view.
+      const pad = 30
+      const [x0, x1, y0, y1] = [Math.min(...xs) - pad, Math.max(...xs) + pad, Math.min(...ys) - pad, Math.max(...ys) + pad]
+      const w = Math.max(240, x1 - x0)
+      const h = Math.max(180, y1 - y0)
+      svg.setAttribute("viewBox", `${(x0 + x1 - w) / 2} ${(y0 + y1 - h) / 2} ${w} ${h}`)
+      svg.replaceChildren()
+
+      const edges = svgEl("g", { class: "sn-edges" })
+      for (const link of links) {
+        if (link.path) continue
+        const a = at(link.source)
+        const b = at(link.target)
+        const lit = hovered !== undefined && (link.source === hovered || link.target === hovered)
+        edges.append(svgEl("line", { x1: a.x!, y1: a.y!, x2: b.x!, y2: b.y!, class: lit ? "lit" : "" }))
+      }
+      svg.append(edges)
+
+      // The path: one line through every step, solid where the graph has the edge, dashed where
+      // the step was taken some other way (a tag page's listing, a node clicked on the graph).
+      const trail = svgEl("g", { class: "sn-trail" })
+      for (let i = 1; i < path.length; i++) {
+        const a = at(path[i - 1])
+        const b = at(path[i])
+        trail.append(
+          svgEl("line", {
+            x1: a.x!,
+            y1: a.y!,
+            x2: b.x!,
+            y2: b.y!,
+            class: linked(path[i - 1], path[i]) ? "" : "jump",
+          }),
+        )
+      }
+      svg.append(trail)
+
+      const nodeGroup = svgEl("g", { class: "sn-nodes" })
+      for (const node of nodes) {
+        const step = path.indexOf(node.id)
+        const onPath = step !== -1
+        const last = step === path.length - 1
+        const nextStep = !onPath && linked(path[path.length - 1], node.id)
+        const g = svgEl("g", {
+          class: ["node", onPath ? "path" : "", last ? "last" : "", nextStep ? "next" : "", nodeById.get(node.id)?.kind ?? ""].join(" "),
+          transform: `translate(${node.x} ${node.y})`,
+        })
+        g.append(svgEl("circle", { r: onPath ? options.radius.path : options.radius.other }))
+        if (onPath) {
+          const number = svgEl("text", { class: "step", "text-anchor": "middle", dy: "0.35em" })
+          number.textContent = String(step + 1)
+          g.append(number)
+        }
+        if (options.labels === "all" || onPath || hovered === node.id) {
+          const label = svgEl("text", { class: "label", "text-anchor": "middle", y: (onPath ? options.radius.path : options.radius.other) + 11 })
+          label.textContent = labelOf(node.id)
+          g.append(label)
+        }
+        const title = svgEl("title")
+        title.textContent = labelOf(node.id)
+        g.append(title)
+        g.addEventListener("pointerenter", () => {
+          hovered = node.id
+          paint(nodes, links)
+          highlightColumn(node.id)
+        })
+        g.addEventListener("pointerleave", () => {
+          hovered = undefined
+          paint(nodes, links)
+          highlightColumn(undefined)
+        })
+        g.addEventListener("click", () => {
+          if (onPath) scrollToColumn(step)
+          else void open(node.id, stack.length - 1)
+        })
+        nodeGroup.append(g)
+      }
+      svg.append(nodeGroup)
+    }
+
+    return { draw }
+  }
+
+  function highlightColumn(url: string | undefined) {
+    for (const column of columnsEl.querySelectorAll<HTMLElement>(".sn-col")) {
+      column.classList.toggle("sn-hover", column.dataset.url === url)
+    }
+  }
+
+  // ---------------------------------------------------------------------------------------------
+  // The top bar every variant has: the site's name, which starts again at the index.
+
+  function topBar(extra = "") {
+    const bar = document.createElement("header")
+    bar.className = "sn-bar"
+    bar.innerHTML = `<a href="/" data-sn-reset class="sn-home">Chaotic Good Computing</a><span class="sn-crumbs"></span>${extra}`
+    return bar
+  }
+
+  function crumbs(bar: HTMLElement) {
+    const holder = bar.querySelector(".sn-crumbs")!
+    holder.replaceChildren(
+      ...stack.flatMap((url, i) => {
+        const crumb = document.createElement("button")
+        crumb.textContent = labelOf(url)
+        crumb.addEventListener("click", () => scrollToColumn(i))
+        return i === 0 ? [crumb] : [Object.assign(document.createElement("span"), { textContent: "→", className: "sep" }), crumb]
+      }),
+    )
+  }
+
+  // ---------------------------------------------------------------------------------------------
+  // A: Trail. Columns as Andy has them, and a map of the path in the corner.
+
+  function variantA() {
+    root.dataset.variant = "A"
+    const bar = topBar()
+    columnsEl = Object.assign(document.createElement("div"), { className: "sn-columns" })
+    const map = Object.assign(document.createElement("aside"), { className: "sn-trailmap" })
+    map.innerHTML = `<h2>Your path</h2>`
+    root.replaceChildren(bar, columnsEl, map)
+    const view = forceView(map, {
+      // The path, and where its last note leads.
+      around: (path) => [...(neighbours.get(path[path.length - 1]) ?? [])],
+      labels: "path",
+      radius: { path: 7, other: 3 },
+    })
+    onStackChange = () => {
+      crumbs(bar)
+      view.draw()
+    }
+  }
+
+  // ---------------------------------------------------------------------------------------------
+  // B: Graph rail. Laid out as a page is: a left sidebar, and one note. The whole sidebar is the
+  // site's own graph drawing (tag bubbles, hover, drag, zoom) over the local graphs of every note on
+  // the path, with the path drawn through it: the notes before this one are its earlier nodes.
+  // Clicking one goes back to it and closes what came after.
+
+  let drawn: DrawnGraph | undefined
+
+  /** Every visited note and what is next to it, cut from the whole graph. */
+  function pathGraph(path: string[]): Graph {
+    const nodes = new Map<string, GraphNode>()
+    const edges = new Map<string, GraphEdge>()
+    for (const id of path) {
+      const local = neighbourhood(siteGraph, id, graphConfig.local.depth)
+      for (const node of local.nodes) nodes.set(node.id, node)
+      for (const edge of local.edges) edges.set(`${edge.kind} ${edge.source} ${edge.target}`, edge)
+    }
+    return { nodes: [...nodes.values()], edges: [...edges.values()] }
+  }
+
+  function back(i: number) {
+    if (i >= stack.length - 1) return
+    stack = stack.slice(0, i + 1)
+    writeAddress()
+    void renderColumns()
+  }
+
+  function variantB() {
+    root.dataset.variant = "B"
+    // The whole sidebar is the graph canvas, with the site's name over its corner.
+    const side = Object.assign(document.createElement("aside"), { className: "sn-side" })
+    side.innerHTML = `<a href="/" data-sn-reset class="sn-home">Chaotic Good Computing</a>`
+    const graphHost = side
+    columnsEl = Object.assign(document.createElement("div"), { className: "sn-columns" })
+    root.replaceChildren(side, columnsEl)
+    const repaint = () => drawn?.repaint()
+    document.addEventListener("themechange", repaint)
+
+    onStackChange = () => {
+      const last = stack[stack.length - 1]
+      drawn?.destroy()
+      drawn = drawGraph(graphHost, {
+        graph: pathGraph(stack),
+        current: last,
+        settings: graphConfig.local,
+        bubble: (tag) => document.querySelector<HTMLElement>(`#sn-bubbles [data-tag="${CSS.escape(tag)}"] .tag-bubble`),
+        follow: (to) => {
+          const at = stack.indexOf(to)
+          if (at !== -1) back(at)
+          else void open(to, stack.length - 1)
+        },
+        label: `Graph of the notes around your path`,
+        path: stack,
+      })
+    }
+  }
+
+  // ---------------------------------------------------------------------------------------------
+  // C: Ribbon. The path unrolled over the columns: a station over each, the line between them, and
+  // arcs for links between notes on the path the path didn't take. Under each station, the ways out
+  // of its note that aren't open.
+
+  function variantC() {
+    root.dataset.variant = "C"
+    const bar = topBar()
+    columnsEl = Object.assign(document.createElement("div"), { className: "sn-columns" })
+    const track = Object.assign(document.createElement("div"), { className: "sn-track" })
+    root.replaceChildren(bar, columnsEl)
+    const ribbon = Object.assign(document.createElement("div"), { className: "sn-ribbon" })
+
+    onStackChange = () => {
+      // The ribbon scrolls with the columns: it is the first row inside the scroller.
+      columnsEl.prepend(ribbon)
+      ribbon.style.gridColumn = `1 / span ${Math.max(1, stack.length)}`
+      ribbon.replaceChildren(track)
+      const columns = [...columnsEl.querySelectorAll<HTMLElement>(".sn-col")]
+      const width = columns[0]?.offsetWidth ?? 600
+      const total = columns.length * width
+      const height = 92
+      const lineY = 54
+      const svg = svgEl("svg", { width: total, height, class: "sn-ribbonsvg" })
+      const x = (i: number) => i * width + 34
+
+      // Arcs: a link between two notes of the path that aren't next to each other.
+      for (let i = 0; i < stack.length; i++) {
+        for (let j = i + 2; j < stack.length; j++) {
+          if (!linked(stack[i], stack[j])) continue
+          const x1 = x(i)
+          const x2 = x(j)
+          const rise = Math.min(46, 14 + (j - i) * 8)
+          svg.append(svgEl("path", { class: "arc", d: `M ${x1} ${lineY} C ${x1} ${lineY - rise}, ${x2} ${lineY - rise}, ${x2} ${lineY}` }))
+        }
+      }
+      // The line.
+      for (let i = 1; i < stack.length; i++) {
+        svg.append(
+          svgEl("line", { x1: x(i - 1), y1: lineY, x2: x(i), y2: lineY, class: linked(stack[i - 1], stack[i]) ? "line" : "line jump" }),
+        )
+      }
+      // Stations, with ticks for the ways out not taken.
+      stack.forEach((url, i) => {
+        const g = svgEl("g", { class: `station${i === stack.length - 1 ? " last" : ""}`, transform: `translate(${x(i)} ${lineY})` })
+        g.append(svgEl("circle", { r: 8 }))
+        const number = svgEl("text", { class: "step", "text-anchor": "middle", dy: "0.35em" })
+        number.textContent = String(i + 1)
+        g.append(number)
+        const label = svgEl("text", { class: "label", x: -8, y: -16 })
+        label.textContent = labelOf(url)
+        g.append(label)
+        g.addEventListener("click", () => scrollToColumn(i))
+        svg.append(g)
+
+        const outs = [...(neighbours.get(url) ?? [])].filter((n) => !stack.includes(n))
+        const ticks = svgEl("g", { class: "ticks", transform: `translate(${x(i)} ${lineY + 16})` })
+        outs.slice(0, 24).forEach((out, k) => {
+          const tick = svgEl("g", { class: "tick", transform: `translate(${k * 11} 0)` })
+          tick.append(svgEl("circle", { r: 3.5 }))
+          const title = svgEl("title")
+          title.textContent = labelOf(out)
+          tick.append(title)
+          tick.addEventListener("click", () => void open(out, i))
+          ticks.append(tick)
+        })
+        if (outs.length > 24) {
+          const more = svgEl("text", { x: 24 * 11, dy: "0.35em", class: "more" })
+          more.textContent = `+${outs.length - 24}`
+          ticks.append(more)
+        }
+        svg.append(ticks)
+      })
+      track.replaceChildren(svg)
+    }
+  }
+
+  // ---------------------------------------------------------------------------------------------
+  // The switcher: ← variant →, and the arrow keys.
+
+  function switcher() {
+    const bar = document.createElement("div")
+    bar.className = "sn-switcher"
+    const label = document.createElement("span")
+    const prev = Object.assign(document.createElement("button"), { textContent: "←", title: "Previous variant" })
+    const next = Object.assign(document.createElement("button"), { textContent: "→", title: "Next variant" })
+    const off = Object.assign(document.createElement("a"), { textContent: "off", title: "The site as it is", href: encodeURI(stack[0]) })
+    off.dataset.astroReload = ""
+    bar.append(prev, label, next, off)
+    document.body.append(bar)
+    const step = (by: number) => {
+      const i = VARIANTS.findIndex((each) => each.key === current)
+      current = VARIANTS[(i + by + VARIANTS.length) % VARIANTS.length].key
+      writeAddress()
+      mount()
+    }
+    prev.addEventListener("click", () => step(-1))
+    next.addEventListener("click", () => step(1))
+    document.addEventListener("keydown", (event) => {
+      const target = event.target as HTMLElement
+      if (target.closest("input, textarea, [contenteditable], dialog")) return
+      if (event.key === "ArrowLeft") step(-1)
+      if (event.key === "ArrowRight") step(1)
+    })
+    return () => {
+      const found = VARIANTS.find((each) => each.key === current)!
+      label.textContent = `${found.key} (${found.name})`
+    }
+  }
+
+  // ---------------------------------------------------------------------------------------------
+
+  let label: () => void = () => {}
+
+  function mount() {
+    drawn?.destroy()
+    drawn = undefined
+    ;({ A: variantA, B: variantB, C: variantC })[current]()
+    columnsEl.addEventListener("scroll", updateSpines, { passive: true })
+    label()
+    void renderColumns().then(() => requestAnimationFrame(() => scrollToColumn(stack.length - 1)))
+  }
+
+  if (variant) {
+    document.documentElement.classList.add("sn-on")
+    root.hidden = false
+    interceptClicks()
+    label = switcher()
+    window.addEventListener("resize", () => {
+      updateSpines()
+      onStackChange()
+    })
+    void loadGraph().then(() => {
+      writeAddress()
+      mount()
+    })
+  }
+</script>
+
+<style is:global>
+  /* PROTOTYPE: stacked notes. Everything is scoped under .sn-on, which only ?variant= sets. */
+  html.sn-on,
+  html.sn-on body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  html.sn-on body > .page {
+    display: none;
+  }
+
+  #sn-root {
+    --col: min(38rem, calc(100vw - 2rem));
+    --accent: var(--secondary);
+    position: fixed;
+    inset: 0;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    background: var(--light);
+    color: var(--darkgray);
+  }
+
+  .sn-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid var(--lightgray);
+    font-size: 0.85rem;
+    min-width: 0;
+  }
+
+  .sn-home {
+    font-weight: 700;
+    color: var(--dark);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .sn-crumbs {
+    display: flex;
+    gap: 0.35rem;
+    align-items: center;
+    overflow-x: auto;
+    white-space: nowrap;
+    color: var(--gray);
+  }
+
+  .sn-crumbs button,
+  .sn-steps button {
+    border: none;
+    background: none;
+    padding: 0;
+    font: inherit;
+    color: var(--darkgray);
+    cursor: pointer;
+  }
+
+  .sn-crumbs button:hover,
+  .sn-steps button:hover {
+    color: var(--accent);
+  }
+
+  /* The scroller: columns side by side, each sticking at its spine's offset so earlier ones pile up
+     at the left as the later ones slide over them. */
+  .sn-columns {
+    --spine: 40px;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-width: 0;
+    height: 100%;
+  }
+
+  .sn-col {
+    position: sticky;
+    left: calc(var(--i) * var(--spine));
+    flex: 0 0 var(--col);
+    box-sizing: border-box;
+    height: 100%;
+    overflow-y: auto;
+    padding: 1.5rem 1.75rem 4rem;
+    background: var(--light);
+    border-left: 1px solid var(--lightgray);
+    box-shadow: -6px 0 14px -10px var(--shadow);
+    transition: background 0.2s;
+  }
+
+  .sn-col.sn-hover {
+    background: color-mix(in srgb, var(--accent) 6%, var(--light));
+  }
+
+  .sn-col.sn-flash {
+    animation: sn-flash 0.8s;
+  }
+
+  @keyframes sn-flash {
+    from {
+      background: color-mix(in srgb, var(--accent) 18%, var(--light));
+    }
+  }
+
+  /* A covered column's spine: its title, turned on its side, over its content. */
+  .sn-spine {
+    display: none;
+  }
+
+  .sn-col.sn-covered {
+    overflow: hidden;
+  }
+
+  .sn-col.sn-covered > .sn-note {
+    opacity: 0.15;
+  }
+
+  .sn-col.sn-covered > .sn-spine {
+    display: block;
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: var(--spine);
+    z-index: 1;
+    padding: 1.25rem 0;
+    box-sizing: border-box;
+    writing-mode: vertical-rl;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--dark);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sn-note header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .sn-note .after-body,
+  .sn-note .backlinks {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--lightgray);
+  }
+
+  /* The path, in the text: a link to an open note, and the link that was taken. */
+  .sn-note a.sn-open {
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    border-radius: 3px;
+  }
+
+  .sn-note a.sn-next {
+    background: color-mix(in srgb, var(--accent) 22%, transparent);
+    border-radius: 3px;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 50%, transparent);
+  }
+
+  /* Graphs, A and B. */
+  .sn-graph {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .sn-graph .sn-edges line {
+    stroke: var(--lightgray);
+    stroke-width: 1;
+  }
+
+  .sn-graph .sn-edges line.lit {
+    stroke: var(--gray);
+    stroke-width: 1.5;
+  }
+
+  .sn-graph .sn-trail line {
+    stroke: var(--accent);
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
+
+  .sn-graph .sn-trail line.jump {
+    stroke-dasharray: 2 5;
+  }
+
+  .sn-graph .node {
+    cursor: pointer;
+  }
+
+  .sn-graph .node circle {
+    fill: var(--gray);
+  }
+
+  .sn-graph .node.tag circle {
+    fill: var(--tertiary);
+  }
+
+  .sn-graph .node.next circle {
+    fill: var(--light);
+    stroke: var(--accent);
+    stroke-width: 1.5;
+  }
+
+  .sn-graph .node.path circle {
+    fill: var(--accent);
+  }
+
+  .sn-graph .node.last circle {
+    stroke: var(--dark);
+    stroke-width: 2;
+  }
+
+  .sn-graph .node .step {
+    font-size: 8px;
+    font-weight: 700;
+    fill: var(--light);
+    pointer-events: none;
+  }
+
+  .sn-graph .node .label {
+    font-size: 9px;
+    fill: var(--darkgray);
+    paint-order: stroke;
+    stroke: var(--light);
+    stroke-width: 3px;
+    pointer-events: none;
+  }
+
+  /* A: the trail map, floating in the bottom-right corner over the columns. */
+  [data-variant="A"] .sn-trailmap {
+    position: fixed;
+    right: 1rem;
+    bottom: 4.5rem;
+    width: 18rem;
+    height: 14rem;
+    box-sizing: border-box;
+    padding: 0.5rem 0.5rem 0;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    background: color-mix(in srgb, var(--light) 92%, transparent);
+    backdrop-filter: blur(6px);
+    border: 1px solid var(--lightgray);
+    border-radius: 8px;
+    box-shadow: 0 4px 18px -8px var(--shadow);
+    z-index: 5;
+  }
+
+  .sn-trailmap h2 {
+    margin: 0 0.25rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gray);
+  }
+
+  /* B: a page's layout. A left sidebar, with the graph and the collapsed notes, and one note. */
+  [data-variant="B"] {
+    grid-template-rows: none !important;
+    grid-template-columns: 22rem minmax(0, 1fr);
+  }
+
+  .sn-side {
+    position: relative;
+    min-height: 0;
+    overflow: hidden;
+    border-right: 1px solid var(--lightgray);
+  }
+
+  .sn-side canvas {
+    display: block;
+  }
+
+  .sn-side .sn-home {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--light) 85%, transparent);
+    font-size: 1.1rem;
+  }
+
+  /* The notes: every one before the last collapsed to its spine, its title on its side, and the
+     last taking the rest of the room, scrolling by itself. */
+  [data-variant="B"] .sn-columns {
+    overflow: hidden;
+  }
+
+  [data-variant="B"] .sn-col {
+    position: relative;
+    left: auto;
+    flex: 0 0 var(--spine);
+    padding: 0;
+    overflow: hidden;
+    box-shadow: none;
+    cursor: pointer;
+  }
+
+  [data-variant="B"] .sn-col:not(:last-child) > .sn-note {
+    display: none;
+  }
+
+  [data-variant="B"] .sn-col:not(:last-child) > .sn-spine {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: var(--spine);
+    padding: 1.25rem 0;
+    box-sizing: border-box;
+    writing-mode: vertical-rl;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--dark);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  [data-variant="B"] .sn-col:not(:last-child):hover {
+    background: color-mix(in srgb, var(--secondary) 8%, var(--light));
+  }
+
+  [data-variant="B"] .sn-col:last-child {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 2.5rem 2rem 6rem;
+    overflow-y: auto;
+    cursor: auto;
+  }
+
+  [data-variant="B"] .sn-col:last-child > .sn-spine {
+    display: none;
+  }
+
+  [data-variant="B"] .sn-col:last-child > .sn-note {
+    max-width: 44rem;
+    margin: 0 auto;
+    opacity: 1;
+  }
+
+  /* An annotation page whose document opens takes the whole of the note's room: the viewer lays
+     itself out by the room it has, the document beside its cards where they fit. */
+  [data-variant="B"] .sn-col:last-child > .sn-note:has(.annotation-viewer:not([data-state="failed"])) {
+    max-width: none;
+  }
+
+  @media (width < 1000px) {
+    [data-variant="B"] {
+      grid-template-columns: none;
+      grid-template-rows: auto minmax(0, 1fr) !important;
+    }
+
+    .sn-side {
+      height: 40vh;
+      border-right: none;
+      border-bottom: 1px solid var(--lightgray);
+    }
+  }
+
+  /* C: the ribbon, the first thing in the scroller, as wide as every column together. */
+  [data-variant="C"] .sn-columns {
+    --spine: 0px;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: var(--col);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  [data-variant="C"] .sn-ribbon {
+    grid-row: 1;
+    grid-column: 1 / -1;
+    border-bottom: 1px solid var(--lightgray);
+    background: var(--light);
+  }
+
+  [data-variant="C"] .sn-col {
+    grid-row: 2;
+    /* The ribbon names each column, so a column needs no spine of its own. */
+    position: relative;
+    left: auto;
+    height: auto;
+    min-height: 0;
+  }
+
+  [data-variant="C"] .sn-col.sn-covered > .sn-note {
+    opacity: 1;
+  }
+
+  [data-variant="C"] .sn-col.sn-covered {
+    overflow-y: auto;
+  }
+
+  [data-variant="C"] .sn-col.sn-covered > .sn-spine {
+    display: none;
+  }
+
+  .sn-ribbonsvg {
+    display: block;
+  }
+
+  .sn-ribbonsvg .line {
+    stroke: var(--accent);
+    stroke-width: 4;
+    stroke-linecap: round;
+  }
+
+  .sn-ribbonsvg .line.jump {
+    stroke-dasharray: 3 7;
+  }
+
+  .sn-ribbonsvg .arc {
+    fill: none;
+    stroke: var(--tertiary);
+    stroke-width: 1.5;
+  }
+
+  .sn-ribbonsvg .station {
+    cursor: pointer;
+  }
+
+  .sn-ribbonsvg .station circle {
+    fill: var(--accent);
+    stroke: var(--light);
+    stroke-width: 2;
+  }
+
+  .sn-ribbonsvg .station.last circle {
+    stroke: var(--dark);
+  }
+
+  .sn-ribbonsvg .station .step {
+    font-size: 9px;
+    font-weight: 700;
+    fill: var(--light);
+    pointer-events: none;
+  }
+
+  .sn-ribbonsvg .station .label {
+    font-size: 13px;
+    font-weight: 600;
+    fill: var(--dark);
+    paint-order: stroke;
+    stroke: var(--light);
+    stroke-width: 4px;
+  }
+
+  .sn-ribbonsvg .tick {
+    cursor: pointer;
+  }
+
+  .sn-ribbonsvg .tick circle {
+    fill: var(--lightgray);
+    stroke: var(--gray);
+  }
+
+  .sn-ribbonsvg .tick:hover circle {
+    fill: var(--accent);
+    stroke: var(--accent);
+  }
+
+  .sn-ribbonsvg .more {
+    font-size: 10px;
+    fill: var(--gray);
+  }
+
+  /* The switcher: obviously not part of the design. */
+  .sn-switcher {
+    position: fixed;
+    left: 50%;
+    bottom: 1rem;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 999px;
+    background: #111;
+    color: #fff;
+    font: 600 0.8rem/1 system-ui, sans-serif;
+    box-shadow: 0 6px 20px rgb(0 0 0 / 0.35);
+  }
+
+  .sn-switcher button,
+  .sn-switcher a {
+    border: none;
+    background: #333;
+    color: #fff;
+    border-radius: 999px;
+    padding: 0.3rem 0.6rem;
+    font: inherit;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .sn-switcher span {
+    min-width: 8.5rem;
+    text-align: center;
+  }
+</style>

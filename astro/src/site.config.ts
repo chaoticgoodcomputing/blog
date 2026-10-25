@@ -141,74 +141,49 @@ export const tagExplorer: TagExplorerConfig = {
   title: "Tag Explorer",
 }
 
-export const graph: GraphConfig = {
-  local: {
-    depth: 1,
-    // The private tags, and every tag under one.
-    removeTags: site.private.tags,
-    privatePages: "mark",
-    forces: {
-      charge: -200,
-      center: 0.5,
-      // Shares of the shell's diameter: 50px each for a graph of 16 nodes.
-      linkDistance: { tagTag: 0.25, tagNote: 0.25, noteNote: 0.25 },
-      linkStrength: { tagTag: 0.3, tagNote: 0.3, noteNote: 0.3 },
-      collision: 1,
-    },
-    // Never drawn: the unit the link distances are measured in.
-    shellSize: { base: 60, scaling: 10 },
-    sizes: {
-      tag: { base: 10, scaling: 1 },
-      note: { base: 10, scaling: 2 },
-      private: 0.8,
-      current: 1.4,
-      // The Quartz site's: its `fontSize`, 0.6 of 15px, over its `scale`, 0.55.
-      label: 16.36,
-      gap: 4,
-    },
-    edges: {
-      // An edge from a note to a tag pulls the two together, and is never seen.
-      opacity: { tagTag: { min: 1, max: 1 }, tagNote: { min: 0, max: 0 }, noteNote: { min: 1, max: 1 } },
-      style: { tagTag: "solid", tagNote: "solid", noteNote: "dotted" },
-    },
+// PROTOTYPE (stacked notes): the global graph's settings, which the local graph starts from too.
+const globalGraph: GraphConfig["global"] = {
+  removeTags: site.private.tags,
+  privatePages: "mark",
+  forces: {
+    charge: -20,
+    center: 0.05,
+    linkDistance: { tagTag: 0.1, tagNote: 0.1, noteNote: 0.01 },
+    linkStrength: { tagTag: 1.0, tagNote: 0.2, noteNote: 0.1 },
+    collision: 0.1,
   },
-  global: {
-    removeTags: site.private.tags,
-    privatePages: "mark",
-    forces: {
-      charge: -20,
-      center: 0.05,
-      linkDistance: { tagTag: 0.1, tagNote: 0.1, noteNote: 0.01 },
-      linkStrength: { tagTag: 1.0, tagNote: 0.2, noteNote: 0.1 },
-      collision: 0.1,
-    },
-    shellSize: { base: 150, scaling: 15 },
-    sizes: {
-      tag: { base: 10, scaling: 1 },
-      note: { base: 3, scaling: 3 },
-      private: 0.5,
-      current: 2,
-      label: 9,
-      gap: 15,
-    },
-    edges: {
-      opacity: {
-        tagTag: { min: 0.99, max: 1.0 },
-        tagNote: { min: 0.01, max: 0.2 },
-        noteNote: { min: 0.8, max: 1 }
-      },
-      style: { tagTag: "solid", tagNote: "solid", noteNote: "dotted" },
-    },
-    shell: {
-      pinnedTags: ["engineering", "writing", "horticulture", "projects", "economics"],
-      zoomMargin: 80,
-      style: { opacity: 1, lineStyle: "dotted", lineWidth: 3 },
-    },
-    hoverPulse: { on: 800, off: 1000, delay: 200 },
-    filters: { timePeriod: "month", includePrivate: false, minPosts: 3 },
+  shellSize: { base: 150, scaling: 15 },
+  sizes: {
+    tag: { base: 10, scaling: 1 },
+    note: { base: 3, scaling: 3 },
+    private: 0.5,
+    current: 2,
+    label: 9,
+    gap: 15,
   },
+  edges: {
+    opacity: {
+      tagTag: { min: 0.99, max: 1.0 },
+      tagNote: { min: 0.01, max: 0.2 },
+      noteNote: { min: 0.8, max: 1 }
+    },
+    style: { tagTag: "solid", tagNote: "solid", noteNote: "dotted" },
+  },
+  shell: {
+    pinnedTags: ["engineering", "writing", "horticulture", "projects", "economics"],
+    zoomMargin: 80,
+    style: { opacity: 1, lineStyle: "dotted", lineWidth: 3 },
+  },
+  hoverPulse: { on: 800, off: 1000, delay: 200 },
+  filters: { timePeriod: "month", includePrivate: false, minPosts: 3 },
 }
 
+export const graph: GraphConfig = {
+  // PROTOTYPE (stacked notes): exactly the global graph's settings, drawn over the visited notes
+  // and what is next to them. `filters` is the global graph's alone, and unread here.
+  local: { ...globalGraph, depth: 1 },
+  global: globalGraph,
+}
 export const subscribe: SubscribeConfig = {
   buttondown: "chaoticgoodcomputing",
   underNote: {
