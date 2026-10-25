@@ -1,6 +1,6 @@
 import type { Locator, Page } from "@playwright/test"
 import { graph as settings } from "../../site.config.ts"
-import { expect, test } from "../site.ts"
+import { expect, expectAt, test } from "../site.ts"
 
 // The fixture vault's local-graph/ notes: a hub tagged `engineering/ai` that links to a spoke and to
 // a private page, a spoke tagged `horticulture` that links on to a far note, and a note that links
@@ -97,7 +97,7 @@ test("the site publishes a graph index of its notes, each with its date, tags an
 
 test("a note's local graph is the note, the notes it links to and from, and their tags, listed inside the canvas", async ({ page }) => {
   await page.goto(hub)
-  await expect(page.locator("aside.right .local-graph").getByRole("heading", { level: 2 })).toHaveText("Graph View")
+  await expect(page.getByRole("region", { name: "Graph View" }).locator("canvas")).toBeAttached()
   await expect(canvas(page)).toHaveAttribute("aria-label", "Graph of the pages around Hub")
   const graph = await drawnGraph(page)
   expect(Object.keys(graph).sort()).toEqual(["#ai", "Hub", "Inbound", "Private Spoke", "Spoke"])
@@ -147,19 +147,20 @@ test("the home page has a local graph around the home note", async ({ page }) =>
   expect(graph["Fixture Home"]!.edges).toContain("Alpha")
 })
 
-test("clicking a node goes to its page, whose own graph is then drawn", async ({ page }) => {
+test("clicking a node goes to its page, whose graph is then the trail's: the page's, and the one it came from", async ({ page }) => {
   await page.goto(hub)
   const spoke = await nodePosition(page, "Spoke")
   await page.mouse.click(spoke.x, spoke.y)
-  await expect(page).toHaveURL("/local-graph/spoke")
+  await expectAt(page, "/local-graph/spoke")
   await expect(canvas(page)).toHaveAttribute("aria-label", "Graph of the pages around Spoke")
   const graph = await drawnGraph(page)
   expect(graph.Spoke!.current).toBe(true)
-  expect(Object.keys(graph).sort()).toEqual(["#horticulture", "Far", "Hub", "Spoke"])
+  // The spoke's neighbours, and the hub's, where the reader came from.
+  expect(Object.keys(graph).sort()).toEqual(["#ai", "#horticulture", "Far", "Hub", "Inbound", "Private Spoke", "Spoke"])
 
   const tag = await nodePosition(page, "#horticulture")
   await page.mouse.click(tag.x, tag.y)
-  await expect(page).toHaveURL("/tags/horticulture")
+  await expectAt(page, "/tags/horticulture")
 })
 
 test.describe("on a high-density screen, where a rim is wide enough to have pixels of its colour alone", () => {
@@ -180,8 +181,8 @@ test.describe("on a high-density screen, where a rim is wide enough to have pixe
     await expect.poll(() => pixelsLike(canvas(page), engineering.light)).toBeGreaterThan(20)
     expect(await pixelsLike(canvas(page), engineering.dark)).toBe(0)
 
-    // Painted again on `themechange`, with nothing laid out again.
-    await page.locator("aside.left").getByRole("switch", { name: "Dark colour scheme" }).click()
+    // Painted again when the reader's system turns dark, with nothing laid out again.
+    await page.emulateMedia({ colorScheme: "dark" })
     await expect.poll(() => pixelsLike(canvas(page), engineering.dark)).toBeGreaterThan(20)
     expect(await pixelsLike(canvas(page), engineering.light)).toBe(0)
     await expect.poll(() => pixelsLike(canvas(page), dark.dark, icon)).toBeGreaterThan(5)

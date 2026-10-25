@@ -1,5 +1,5 @@
 import { githubPages } from "../github-pages.ts"
-import { expect, test } from "../site.ts"
+import { expect, expectAt, test } from "../site.ts"
 
 // Each address the Quartz site served a page or an attachment at, where this site serves it at
 // another, forwards the reader there (src/lib/former-addresses.ts, docs/adr/2901). Whether GitHub
@@ -44,6 +44,6 @@ test("the pages and the attachment at their own addresses stay what they are", (
 
 test("a reader at an MDX note's former address is taken to its page", async ({ page }) => {
   await page.goto("/former-addresses/moved.mdx")
-  await expect(page).toHaveURL("/former-addresses/moved")
+  await expectAt(page, "/former-addresses/moved")
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Moved MDX")
 })

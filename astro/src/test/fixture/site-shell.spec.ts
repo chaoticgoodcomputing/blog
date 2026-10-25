@@ -2,49 +2,33 @@ import type { Page } from "@playwright/test"
 import { expect, test } from "../site.ts"
 
 // A note with every kind of Markdown in its body, a table and a line of code wider than a phone
-// among them, and a backlink, so its right sidebar has something in it.
+// among them, and a backlink.
 const note = "/site-shell/body"
-
-/** Where each of the shell's places is on the page, in pixels from its top left. */
-async function places(page: Page) {
-  const box = async (selector: string) => {
-    const found = await page.locator(selector).boundingBox()
-    if (!found) throw new Error(`${selector} is not drawn`)
-    return { left: found.x, right: found.x + found.width, top: found.y, bottom: found.y + found.height }
-  }
-  return {
-    left: await box("aside.left"),
-    main: await box("main"),
-    right: await box("aside.right"),
-    footer: await box(".page > footer"),
-  }
-}
 
 /** How far the page scrolls sideways: nothing, when it is as wide as the screen. */
 const sideways = (page: Page) =>
   page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
 
-test("a note's page has the site title, both sidebars, the note and the footer", async ({ page }) => {
+test("a note's page has the site title, a search box, the note and the footer", async ({ page }) => {
   await page.goto(note)
 
-  const siteTitle = page.locator("aside.left").getByRole("link", { name: "Chaotic Good Computing by Spencer Elkington" })
+  const siteTitle = page.getByRole("link", { name: "Chaotic Good Computing by Spencer Elkington" })
   await expect(siteTitle).toHaveAttribute("href", "/")
   // The icon is drawn, at the size the title gives it. It has no name of its own beside the site's.
   const icon = siteTitle.locator("img")
   await expect(icon).toBeVisible()
   expect(await icon.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true)
+  await expect(page.getByRole("button", { name: "Search" })).toBeVisible()
 
   await expect(page.locator("main").getByRole("heading", { level: 1 })).toHaveText("A note with everything in its body")
   await expect(page.locator("main .prose")).toContainText("After the rule.")
-  await expect(page.locator("aside.right")).toBeAttached()
 
   const footer = page.getByRole("contentinfo")
   const links = {
-    Contact: "/contact",
     GitHub: "https://github.com/spelkington",
+    Email: "mailto:spencer@chaoticgood.computer",
     LinkedIn: "https://www.linkedin.com/in/spelkington",
-    "Privacy Policy": "https://chaoticgood.computer/privacy",
-    "AI Policy": "https://chaoticgood.computer/ai-policy",
+    Bluesky: "https://bsky.app/profile/speen.us",
     "Spencer Elkington": "https://chaoticgood.computer/contact",
     "Chaotic Good Computing": "https://github.com/chaoticgoodcomputing",
   }
@@ -52,6 +36,7 @@ test("a note's page has the site title, both sidebars, the note and the footer",
     await expect(footer.getByRole("link", { name, exact: true })).toHaveAttribute("href", href)
   }
   await expect(footer).toContainText(/Copyright Spencer Elkington & Chaotic Good Computing © 20\d\d/)
+  await expect(footer).toContainText("All content on this site is handwritten.")
 })
 
 test("the footer's links are bold, and not underlined", async ({ page }) => {
@@ -170,60 +155,27 @@ test("Inter and IBM Plex Mono are the site's own files, and no font comes from a
   expect(externalRequests).toEqual([])
 })
 
-test("on a desktop the note is between the two sidebars, over the footer", async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 })
-  await page.goto(note)
-  const { left, main, right, footer } = await places(page)
-
-  expect(left.right).toBeLessThanOrEqual(main.left)
-  expect(right.left).toBeGreaterThanOrEqual(main.right)
-  // The content column is the measure, 40rem, and the three columns are centred on the screen.
-  expect(main.right - main.left).toBe(640)
-  expect(left.left).toBe(1440 - right.right)
-  expect(footer.top).toBeGreaterThanOrEqual(main.bottom)
-  expect(await sideways(page)).toBe(0)
-})
-
-test("on a tablet the left sidebar is beside the note, and the right sidebar under it", async ({ page }) => {
-  await page.setViewportSize({ width: 1100, height: 800 })
-  await page.goto(note)
-  const { left, main, right, footer } = await places(page)
-
-  expect(left.right).toBeLessThanOrEqual(main.left)
-  expect(left.top).toBeLessThan(main.bottom)
-  expect(right.top).toBeGreaterThanOrEqual(main.bottom)
-  expect(right.left).toBe(main.left)
-  expect(footer.top).toBeGreaterThanOrEqual(right.bottom)
-  expect(await sideways(page)).toBe(0)
-})
-
-// A common phone, and the narrowest one the site is laid out for.
-for (const width of [390, 320]) {
-  test(`on a phone ${width}px wide the sidebars fold into one column with the note, and nothing scrolls sideways`, async ({
+// A desktop, a tablet, a common phone, and the narrowest one the site is laid out for.
+for (const width of [1440, 1100, 390, 320]) {
+  test(`at ${width}px wide nothing scrolls sideways: what is wider than the note scrolls in its own box`, async ({
     page,
   }) => {
     await page.setViewportSize({ width, height: 800 })
     await page.goto(note)
-    const { left, main, right, footer } = await places(page)
-
-    expect(left.bottom).toBeLessThanOrEqual(main.top)
-    expect(right.top).toBeGreaterThanOrEqual(main.bottom)
-    expect(footer.top).toBeGreaterThanOrEqual(right.bottom)
-    for (const place of [left, main, right, footer]) {
-      expect(place.left).toBeGreaterThanOrEqual(0)
-      expect(place.right).toBeLessThanOrEqual(width)
-    }
     expect(await sideways(page)).toBe(0)
 
-    // What is wider than the screen scrolls inside its own box.
-    for (const wide of ["pre", "table"]) {
-      const overflow = await page.locator(`.prose ${wide}`).evaluate((element) => element.scrollWidth - element.clientWidth)
-      expect(overflow, wide).toBeGreaterThan(0)
+    // On a phone the note's wide table and long line of code are wider than the screen.
+    if (width < 1000) {
+      for (const wide of ["pre", "table"]) {
+        const overflow = await page.locator(`.prose ${wide}`).evaluate((element) => element.scrollWidth - element.clientWidth)
+        expect(overflow, wide).toBeGreaterThan(0)
+      }
     }
     // A path in inline code, in a link or not, breaks where it must, and stays within the note.
+    const main = (await page.locator("main").boundingBox())!
     for (const code of await page.locator(".prose p > code, .prose p > a > code").all()) {
       const box = (await code.boundingBox())!
-      expect(box.x + box.width, (await code.textContent()) ?? "").toBeLessThanOrEqual(main.right)
+      expect(box.x + box.width, (await code.textContent()) ?? "").toBeLessThanOrEqual(main.x + main.width)
     }
   })
 }

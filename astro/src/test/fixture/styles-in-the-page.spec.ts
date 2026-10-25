@@ -11,8 +11,8 @@ test("a page with no math links no stylesheet, and is styled", async ({ page }) 
   for (const url of ["/", "/tags"]) {
     await page.goto(url)
     expect(await linkedStylesheets(page), url).toEqual([])
-    // The site shell's own rules are on the page: the left sidebar is laid out beside the body.
-    await expect(page.locator("aside.left"), url).toBeVisible()
+    // The site shell's own rules are on the page: the site title is laid out, its icon beside its name.
+    await expect(page.locator(".site-title"), url).toHaveCSS("display", "flex")
     expect(await page.locator("style").count(), url).toBeGreaterThan(0)
   }
 })

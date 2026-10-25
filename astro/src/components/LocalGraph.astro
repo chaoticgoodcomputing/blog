@@ -90,6 +90,7 @@ const tags = graphOf(graphIndex(), { removeTags, privatePages }).nodes.flatMap((
       // Taken out of the page while the index was on its way.
       if (!this.#connected) return
       const whole = graphOf(index, { removeTags: settings.removeTags, privatePages: settings.privatePages })
+      const here = whole.nodes.find((node) => node.id === shown)
       this.#drawn?.destroy()
       this.#drawn = drawGraph(this, {
         graph: trailGraph(whole, trail, settings.depth),
@@ -97,7 +98,7 @@ const tags = graphOf(graphIndex(), { removeTags, privatePages }).nodes.flatMap((
         settings,
         bubble: (tag) => this.querySelector<HTMLElement>(`[data-tag="${CSS.escape(tag)}"] .tag-bubble`),
         follow: (to) => void navigate(to),
-        label: "Graph of the notes on your trail, and what is next to them",
+        label: `Graph of the pages around ${here?.label ?? "this page"}`,
         path: [...trail],
         focus: settings.focusZoom,
       })

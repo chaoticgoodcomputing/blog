@@ -1,5 +1,5 @@
 import type { Page } from "@playwright/test"
-import { expect, test } from "../site.ts"
+import { expect, expectAt, test } from "../site.ts"
 
 test("an address that names nothing gets the site's 404 page, in the site shell", async ({ page, externalRequests }) => {
   const response = await page.goto("/content/notes/nothing/at/all")
@@ -7,15 +7,15 @@ test("an address that names nothing gets the site's 404 page, in the site shell"
   await expect(page).toHaveTitle("Not Found | Spencer Elkington")
   await expect(page.locator("main").getByRole("heading", { level: 1 })).toHaveText("404")
   await expect(page.locator("main")).toContainText("There is no page at this address.")
-  await expect(page.locator(".page > aside.left")).toBeAttached()
-  await expect(page.locator(".page > footer")).toBeAttached()
+  await expect(page.getByRole("link", { name: "Chaotic Good Computing by Spencer Elkington" })).toBeVisible()
+  await expect(page.getByRole("contentinfo")).toBeVisible()
   expect(externalRequests).toEqual([])
 })
 
 test("the 404 page leads home from any depth", async ({ page }) => {
   await page.goto("/a/b/c/nothing")
   await page.locator("main").getByRole("link", { name: "Return to the home page" }).click()
-  await expect(page).toHaveURL(/:\d+\/$/)
+  await expectAt(page, "/")
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Fixture Home")
 })
 
@@ -34,7 +34,6 @@ const title = async (page: Page) => {
   return {
     box: await heading.boundingBox(),
     size: await heading.evaluate((element) => getComputedStyle(element).fontSize),
-    className: await heading.getAttribute("class"),
   }
 }
 
@@ -49,7 +48,6 @@ for (const [width, name] of [
     await page.goto("/nothing/at/all")
     const notFound = await title(page)
 
-    expect(notFound.className).toContain("article-title")
     expect(notFound.size).toBe(note.size)
     expect(notFound.box!.x).toBe(note.box!.x)
     expect(notFound.box!.y).toBe(note.box!.y)

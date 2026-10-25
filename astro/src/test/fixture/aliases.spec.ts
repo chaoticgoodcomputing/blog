@@ -1,4 +1,4 @@
-import { expect, test } from "../site.ts"
+import { expect, expectAt, test } from "../site.ts"
 
 // The fixture vault's aliases/renamed.md has the aliases `aliases/Old Name` and `archive/old-name`,
 // and four that are taken: `content/notes/alpha`, a note's page, `404`, a page of the site,
@@ -7,7 +7,7 @@ import { expect, test } from "../site.ts"
 test("each alias of a note is an address that forwards the reader to the note", async ({ page, externalRequests }) => {
   for (const alias of ["/archive/old-name", "/aliases/Old-Name"]) {
     await page.goto(alias)
-    await expect(page).toHaveURL(/\/aliases\/renamed$/)
+    await expectAt(page, /\/aliases\/renamed$/)
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Renamed")
   }
   expect(externalRequests).toEqual([])
@@ -21,11 +21,11 @@ test("an alias redirect asks not to be indexed, and names the note as the page i
 
 test("an alias that is the address of a page leaves the page where it is", async ({ page }) => {
   await page.goto("/content/notes/alpha")
-  await expect(page).toHaveURL(/\/content\/notes\/alpha$/)
+  await expectAt(page, /\/content\/notes\/alpha$/)
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Alpha")
 
   const response = await page.goto("/404")
-  await expect(page).toHaveURL(/\/404$/)
+  await expectAt(page, /\/404$/)
   expect(await response!.text()).not.toContain('http-equiv="refresh"')
 })
 
@@ -49,7 +49,7 @@ test("a wikilink written to an alias links to the note itself", async ({ page })
   )
 
   await prose.getByRole("link", { name: "archive/old-name" }).click()
-  await expect(page).toHaveURL(/\/aliases\/renamed$/)
+  await expectAt(page, /\/aliases\/renamed$/)
 })
 
 // The sitemap and the feed list what the notes query lists, which holds no alias redirect

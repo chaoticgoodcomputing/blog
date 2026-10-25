@@ -1,13 +1,19 @@
 import type { Page } from "@playwright/test"
 import { events, postHog } from "../analytics.ts"
-import { expect, test } from "../site.ts"
+import { expect, expectAt, test } from "../site.ts"
 
 const start = "/analytics/start"
 
-test("a page view is recorded when a page is loaded", async ({ page }) => {
+test("a page view is recorded when a page is loaded, with the trail it was reached by", async ({ page }) => {
   await page.goto(start)
+  await expect.poll(() => events(page, "$pageview")).toEqual([{ path: "/analytics/start", trail: [] }])
+})
 
-  await expect.poll(() => events(page, "$pageview")).toEqual([{ path: "/analytics/start" }])
+test("a page loaded at an address with a trail is recorded with that trail, oldest first", async ({ page }) => {
+  await page.goto(`${start}?trail=/&trail=/analytics/destination`)
+  await expect
+    .poll(() => events(page, "$pageview"))
+    .toEqual([{ path: "/analytics/start", trail: ["/", "/analytics/destination"] }])
 })
 
 test("a page reached by a link is recorded too, by the PostHog the visit has already loaded", async ({ page }) => {
@@ -16,10 +22,13 @@ test("a page reached by a link is recorded too, by the PostHog the visit has alr
 
   await page.getByRole("link", { name: "a link in the text" }).click()
 
-  await expect(page).toHaveURL("/analytics/destination")
+  await expectAt(page, "/analytics/destination")
   await expect
     .poll(() => events(page, "$pageview"))
-    .toEqual([{ path: "/analytics/start" }, { path: "/analytics/destination" }])
+    .toEqual([
+      { path: "/analytics/start", trail: [] },
+      { path: "/analytics/destination", trail: ["/analytics/start"] },
+    ])
   // From the project's host, and set up once, with its key.
   expect(postHog(page).loads).toEqual(["https://app.posthog.com/static/array.js"])
   expect(postHog(page).inits.map((init) => init.token)).toEqual(["phc_BviHJVml66FIB1RFmgeAzZpKRWA0nntGdIOo47hTA3X"])
@@ -44,8 +53,7 @@ test("PostHog is set up with no cookie and no session recording", async ({ page 
 for (const { kind, link, name, to } of [
   { kind: "a link in a note's text", link: (page: Page) => page.getByRole("link", { name: "a link in the text" }), name: "inline-link", to: "/analytics/destination" },
   { kind: "a tag badge", link: (page: Page) => page.locator(".tag-list").getByRole("link", { name: "#analytics" }), name: "tag-badge", to: "/tags/analytics" },
-  { kind: "a link in the tag explorer", link: (page: Page) => page.locator(".tag-explorer").getByRole("link", { name: /^analytics \(\d+\)$/ }), name: "tag-explorer", to: "/tags/analytics" },
-  { kind: "a link of no kind it names", link: (page: Page) => page.locator("aside.left .site-title"), name: "other", to: "/" },
+  { kind: "a link of no kind it names", link: (page: Page) => page.locator(".site-title"), name: "other", to: "/" },
 ]) {
   test(`following ${kind} is recorded as a navigation from "${name}"`, async ({ page, baseURL }) => {
     await page.goto(start)
@@ -53,9 +61,9 @@ for (const { kind, link, name, to } of [
 
     await link(page).click()
 
-    await expect(page).toHaveURL(to)
+    await expectAt(page, to)
     await expect.poll(() => events(page, "navigation")).toEqual([
-      { source: name, from_page: "/analytics/start", to_page: to, url: new URL(to, baseURL).href },
+      { source: name, from_page: "/analytics/start", to_page: to, url: new URL(to, baseURL).href, trail: ["/analytics/start"] },
     ])
   })
 }
@@ -66,12 +74,12 @@ test("no navigation is recorded where the router moves to no other page, or no l
 
   // A heading on the same page: the page scrolls to it.
   await page.getByRole("link", { name: "a link to a heading on this page" }).click()
-  await expect(page).toHaveURL("/analytics/start#further-down")
+  await expectAt(page, "/analytics/start#further-down")
   // Then to another page, and back by the browser's button.
   await page.getByRole("link", { name: "a link in the text" }).click()
-  await expect(page).toHaveURL("/analytics/destination")
+  await expectAt(page, "/analytics/destination")
   await page.goBack()
-  await expect(page).toHaveURL("/analytics/start#further-down")
+  await expectAt(page, "/analytics/start#further-down")
 
   // Each page shown is a page view, and only the link to another page a navigation.
   await expect.poll(() => events(page, "$pageview")).toHaveLength(3)
@@ -88,7 +96,7 @@ for (const [where, setDoNotTrack] of [
     await page.addInitScript(setDoNotTrack)
     await page.goto(start)
     await page.getByRole("link", { name: "a link in the text" }).click()
-    await expect(page).toHaveURL("/analytics/destination")
+    await expectAt(page, "/analytics/destination")
     await page.goto(start)
 
     // The page is shown, and whatever it would have sent has been sent.

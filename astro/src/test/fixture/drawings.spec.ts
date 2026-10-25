@@ -46,27 +46,6 @@ test("in the dark scheme, an embed of a drawing shows its dark export", async ({
   await expect(loop.getByRole("img", { name: "loop" })).toHaveAttribute("src", "/drawings/drawings/loop.dark.svg")
 })
 
-test("the reader's own choice of scheme, on the page's root, wins over the system's", async ({ page }) => {
-  await page.emulateMedia({ colorScheme: "light" })
-  await page.goto(POST)
-  const loop = embeds(page).first().getByRole("img", { name: "loop" })
-  await page.evaluate(() => document.documentElement.setAttribute("data-theme", "dark"))
-  await expect(loop).toHaveAttribute("src", "/drawings/drawings/loop.dark.svg")
-
-  await page.emulateMedia({ colorScheme: "dark" })
-  await page.evaluate(() => document.documentElement.setAttribute("data-theme", "light"))
-  await expect(loop).toHaveAttribute("src", "/drawings/drawings/loop.light.svg")
-})
-
-test("a drawing has no canvas of its own: the page's background shows through it", async ({ page }) => {
-  for (const colorScheme of ["light", "dark"] as const) {
-    await page.emulateMedia({ colorScheme })
-    await page.goto(POST)
-    const image = embeds(page).first().locator(`img.excalidraw-${colorScheme}`)
-    expect(await cornerAlpha(image), colorScheme).toBe(0)
-  }
-})
-
 test("a drawing with one export shows it in either scheme, under the embed's alternative text", async ({ page }) => {
   for (const colorScheme of ["light", "dark"] as const) {
     await page.emulateMedia({ colorScheme })

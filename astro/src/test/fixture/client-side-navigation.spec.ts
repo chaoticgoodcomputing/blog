@@ -1,5 +1,5 @@
 import type { Page } from "@playwright/test"
-import { expect, test } from "../site.ts"
+import { expect, expectAt, test } from "../site.ts"
 
 const start = "/client-side-navigation/start"
 
@@ -18,7 +18,7 @@ test("following a link changes the page without loading a new one", async ({ pag
 
   await page.getByRole("link", { name: "To the destination" }).click()
 
-  await expect(page).toHaveURL("/client-side-navigation/destination")
+  await expectAt(page, "/client-side-navigation/destination")
   await expect(heading(page)).toHaveText("The destination")
   // The head is swapped with the page: the title, with the site's suffix (ticket 16), is the new one's.
   await expect(page).toHaveTitle("The destination | Spencer Elkington")
@@ -33,11 +33,11 @@ test("the back and forward buttons go between pages reached by links, without lo
   await expect(heading(page)).toHaveText("The destination")
 
   await page.goBack()
-  await expect(page).toHaveURL(start)
+  await expectAt(page, start)
   await expect(heading(page)).toHaveText("Where navigation starts")
 
   await page.goForward()
-  await expect(page).toHaveURL("/client-side-navigation/destination")
+  await expectAt(page, "/client-side-navigation/destination")
   await expect(heading(page)).toHaveText("The destination")
   expect(await marked(page)).toBe("kept")
 })
@@ -48,7 +48,7 @@ test("a link to a heading on another page lands on the heading", async ({ page }
 
   await page.getByRole("link", { name: "To a heading far down the destination" }).click()
 
-  await expect(page).toHaveURL("/client-side-navigation/destination#far-heading")
+  await expectAt(page, "/client-side-navigation/destination#far-heading")
   await expect(page.getByRole("heading", { name: "Far heading" })).toBeInViewport()
   await expect(page.getByText("The top of the destination.")).not.toBeInViewport()
   expect(await marked(page)).toBe("kept")
@@ -73,7 +73,7 @@ test("a diagram on a page reached by a link is drawn", async ({ page }) => {
 
   await page.getByRole("link", { name: "To a page with a diagram" }).click()
 
-  await expect(page).toHaveURL("/mermaid/diagram")
+  await expectAt(page, "/mermaid/diagram")
   await expect(heading(page)).toHaveText("A diagram")
   const svg = page.locator(".prose mermaid-diagram svg")
   await expect(svg).toBeVisible()
@@ -137,7 +137,7 @@ test("a link to an attachment the browser can show opens it, asked for once, as 
   await pointAt(page, "The reading list")
   await page.getByRole("link", { name: "The reading list" }).click()
 
-  await expect(page).toHaveURL("/client-side-navigation/files/reading%20list.txt")
+  await expectAt(page, "/client-side-navigation/files/reading%20list.txt")
   await expect(page.locator("body")).toHaveText("The reading list, as plain text.")
   expect(requests).toEqual(["document"])
 })
@@ -151,7 +151,7 @@ test("a link to an attachment the browser can't show downloads it, asked for onc
   await page.getByRole("link", { name: "The handout" }).click()
 
   expect((await download).suggestedFilename()).toBe("handout.pdf")
-  await expect(page).toHaveURL(start)
+  await expectAt(page, start)
   expect(requests).toEqual(["document"])
 })
 
@@ -161,37 +161,12 @@ test.describe("with scripts disabled", () => {
   test("a link is an ordinary link, to a page and to a heading on it", async ({ page }) => {
     await page.goto(start)
     await page.getByRole("link", { name: "To the destination" }).click()
-    await expect(page).toHaveURL("/client-side-navigation/destination")
+    await expectAt(page, "/client-side-navigation/destination")
     await expect(heading(page)).toHaveText("The destination")
 
     await page.goBack()
     await page.getByRole("link", { name: "To a heading far down the destination" }).click()
-    await expect(page).toHaveURL("/client-side-navigation/destination#far-heading")
+    await expectAt(page, "/client-side-navigation/destination#far-heading")
     await expect(page.getByRole("heading", { name: "Far heading" })).toBeInViewport()
   })
-})
-
-test("the reader's colour scheme holds across navigations", async ({ page }) => {
-  await page.emulateMedia({ colorScheme: "light" })
-  await page.goto(start)
-  await mark(page)
-  // The reader's choice, made with the scheme switch (ticket 08).
-  const toggle = () => page.locator("aside.left").getByRole("switch", { name: "Dark colour scheme" })
-  await toggle().click()
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark")
-
-  // The next page is in it, and its own switch says so.
-  await page.getByRole("link", { name: "To the destination" }).click()
-  await expect(heading(page)).toHaveText("The destination")
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark")
-  await expect(page.locator("body")).toHaveCSS("background-color", "rgb(22, 22, 24)")
-  await expect(toggle()).toHaveAttribute("aria-checked", "true")
-
-  // Switched back there, the page it goes back to is light again.
-  await toggle().click()
-  await page.goBack()
-  await expect(heading(page)).toHaveText("Where navigation starts")
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "light")
-  await expect(toggle()).toHaveAttribute("aria-checked", "false")
-  expect(await marked(page)).toBe("kept")
 })

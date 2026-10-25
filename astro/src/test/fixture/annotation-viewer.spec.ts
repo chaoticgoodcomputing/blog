@@ -1,5 +1,5 @@
 import type { Locator, Page } from "@playwright/test"
-import { expect, test } from "../site.ts"
+import { expect, expectAt, test } from "../site.ts"
 
 // test/fixtures/vault/annotation-viewer: a note written with the Annotator plugin against a
 // two-page PDF, "On Meetings", whose mirror is in the fixture's mirror directory
@@ -153,16 +153,21 @@ test("a highlight is the scheme's text highlight, and the page is paper, white i
   await expect(highlights(page, "promise").first()).toHaveCSS("background-color", "rgba(179, 170, 2, 0.533)")
 })
 
-test("every card but the selected one is shortened beside the document, and selecting one lays it whole beside its passage", async ({ page }) => {
+test("every card is whole beside the document until one is selected, which then lays the others short", async ({ page }) => {
   await opened(page, DESKTOP)
   const promise = card(page, "promise")
-  await expect(promise).toHaveClass(/\bshort\b/)
-  // Its comment is cut, at about four lines, and fades where it is.
   const comment = promise.locator(".annotation-comment")
-  await expect(comment).toHaveClass(/\bclipped\b/)
-  expect((await comment.boundingBox())!.height).toBeLessThan(100)
+  for (const id of ["promise", "cancel", "minutes"]) await expect(card(page, id)).not.toHaveClass(/\bshort\b/)
+  expect((await comment.boundingBox())!.height).toBeGreaterThan(100)
 
-  await promise.locator(".annotation-comment").click()
+  await card(page, "cancel").locator(".annotation-comment").click()
+  await expect(card(page, "cancel")).toHaveAttribute("data-selected")
+  // Every other card is cut, at about four lines, and fades where it is.
+  await expect(promise).toHaveClass(/\bshort\b/)
+  await expect(comment).toHaveClass(/\bclipped\b/)
+  await expect.poll(async () => (await comment.boundingBox())!.height).toBeLessThan(100)
+
+  await comment.click()
   await expect(promise).toHaveAttribute("data-selected")
   await expect(promise).not.toHaveClass(/\bshort\b/)
   await expect(promise).toHaveCSS("border-color", "rgb(40, 75, 99)")
@@ -181,7 +186,7 @@ test("a card takes the document to its passage, marks its highlights, and puts i
   await expect(highlight).toHaveClass(/\bselected\b/)
   await expect(card(page, "minutes")).toHaveAttribute("data-selected")
   await expect(card(page, "minutes")).toBeInViewport()
-  await expect(page).toHaveURL(/#\^minutes$/)
+  await expectAt(page, /#\^minutes$/)
   expect(await page.evaluate(() => history.length)).toBe(before)
 })
 
@@ -190,7 +195,7 @@ test("a highlight selects its annotation, whose card is beside it", async ({ pag
   await highlights(page, "cancel").first().click()
   await expect(card(page, "cancel")).toHaveAttribute("data-selected")
   await expect(card(page, "cancel")).toBeInViewport()
-  await expect(page).toHaveURL(/#\^cancel$/)
+  await expectAt(page, /#\^cancel$/)
 })
 
 test("j and k step through the annotations in order, Esc clears, and none of them act while the reader types", async ({ page }) => {
@@ -207,7 +212,9 @@ test("j and k step through the annotations in order, Esc clears, and none of the
   await expect(page.locator(".annotation[data-selected]"), "Esc").toHaveCount(0)
   await expect(page).not.toHaveURL(/#/)
 
-  await page.locator('input[type="email"]').focus()
+  // A field on the page, which the keys leave alone while the reader types in it.
+  await page.evaluate(() => document.querySelector("main")!.appendChild(document.createElement("input")))
+  await page.locator("main > input").focus()
   await page.keyboard.press("j")
   await expect(page.locator(".annotation[data-selected]"), "typing").toHaveCount(0)
 })
@@ -355,6 +362,8 @@ test.describe("by touch", () => {
 
   test("two fingers pinch the document, not the page, and the zoom is the one the bar shows", async ({ page }) => {
     const viewer = await opened(page, PHONE)
+    // Where the reader pinches it: on the document, scrolled to.
+    await viewer.locator(".document-page").first().scrollIntoViewIfNeeded()
     const before = (await viewer.locator(".document-page").first().boundingBox())!.width
     const [x, y] = await centre(viewer.locator(".document-page").first())
     await touch(page, [
@@ -420,12 +429,18 @@ test("after a client-side navigation away, the keys are the next page's own agai
   page.on("pageerror", (error) => errors.push(error.message))
   await opened(page, DESKTOP)
   await page.evaluate(() => ((window as { mark?: boolean }).mark = true))
-  await page.locator("tag-explorer").getByRole("link", { name: "Annotations on a document with no mirror" }).click()
-  await expect(page).toHaveURL(/\/annotation-viewer\/unpinned$/)
+  // Any link on the page is one the client router follows: here, one put there to follow.
+  await page.evaluate(() => {
+    const link = document.querySelector("main")!.appendChild(document.createElement("a"))
+    link.href = "/annotation-viewer/unpinned"
+    link.textContent = "Onwards"
+  })
+  await page.getByRole("link", { name: "Onwards" }).click()
+  await expectAt(page, /\/annotation-viewer\/unpinned$/)
   expect(await page.evaluate(() => (window as { mark?: boolean }).mark)).toBe(true)
   await page.keyboard.press("j")
   await page.keyboard.press("+")
-  await expect(page).toHaveURL(/\/annotation-viewer\/unpinned$/)
+  await expectAt(page, /\/annotation-viewer\/unpinned$/)
   await expect(page.locator(".annotation[data-selected]")).toHaveCount(0)
   expect(errors).toEqual([])
 })

@@ -1,6 +1,6 @@
 import type { Locator } from "@playwright/test"
 import { contrast } from "../contrast.ts"
-import { expect, test } from "../site.ts"
+import { expect, expectAt, test } from "../site.ts"
 
 // A note with headings, with a note embedded in it that has a heading of the same name as one of
 // its own.
@@ -21,7 +21,7 @@ test("each heading of a note ends with a link to itself, shown while the pointer
   await heading.hover()
   await expect(anchor).toHaveCSS("opacity", "1")
   await anchor.click()
-  await expect(page).toHaveURL(new RegExp(`${sections}#details$`))
+  await expectAt(page, new RegExp(`${sections}#details$`))
   await expect(page.locator("#details")).toBeInViewport()
 })
 

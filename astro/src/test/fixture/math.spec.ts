@@ -1,5 +1,5 @@
 import type { Page } from "@playwright/test"
-import { expect, test } from "../site.ts"
+import { expect, expectAt, test } from "../site.ts"
 
 // The style rules a page has that are about math: KaTeX's own all name a `.katex` class.
 const mathRules = (page: Page) =>
@@ -63,7 +63,7 @@ test("a link to a heading with math lands on the heading", async ({ page }) => {
   await expect(heading.locator(".katex")).toBeVisible()
 
   await page.locator(".prose").getByRole("link", { name: "The $x$ value" }).click()
-  await expect(page).toHaveURL(/\/math\/heading#the-x-value$/)
+  await expectAt(page, /\/math\/heading#the-x-value$/)
   await expect(page.locator(":target")).toHaveCount(1)
   await expect(heading).toHaveAttribute("id", "the-x-value")
   expect(await page.locator(":target").evaluate((element) => element.tagName)).toBe("H2")

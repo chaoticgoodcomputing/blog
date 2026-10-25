@@ -10,6 +10,7 @@
 ---
 
 <script>
+  import { TRAIL_KEY, trailOf } from "../lib/trail.ts"
   import { analytics } from "../site.config.ts"
 
   /** PostHog, as the page calls it: the snippet's queue until the library arrives, then the library. */
@@ -88,19 +89,30 @@
 
   // Nothing from the dev server, whose visits are the author's own: there `import.meta.env.DEV` is
   // true, and PostHog is never loaded.
+  // How the reader reached a page: the notes of their trail (src/lib/trail.ts) before it, oldest
+  // first. Sent as its own property, so that a page's own address, and so its count, is the same
+  // however it was reached.
+  const trailBefore = (address: URL) => trailOf(address).slice(0, -1)
+
   if (!import.meta.env.DEV && !doNotTrack) {
     loadPostHog()
-    document.addEventListener("astro:page-load", () => capture("$pageview", { path: location.pathname }))
+    document.addEventListener("astro:page-load", () =>
+      capture("$pageview", { path: location.pathname, trail: trailBefore(new URL(location.href)) }),
+    )
     // A link the router followed to another page, just before that page is swapped in: the link is
     // still on the page it was clicked on. The browser's back and forward buttons follow no link,
     // and a link to a heading on the same page swaps nothing.
     document.addEventListener("astro:before-swap", ({ sourceElement, from, to }) => {
       if (!(sourceElement instanceof Element) || !sourceElement.closest("a")) return
+      // The page's own address: the reader's trail is no part of where it is, and goes on its own.
+      const url = new URL(to.href)
+      url.searchParams.delete(TRAIL_KEY)
       capture("navigation", {
         source: kindOf(sourceElement),
         from_page: from.pathname,
         to_page: to.pathname,
-        url: to.href,
+        url: url.href,
+        trail: trailBefore(to),
       })
     })
   }

@@ -1,4 +1,4 @@
-import { expect, test } from "../site.ts"
+import { expect, expectAt, test } from "../site.ts"
 
 // test/fixtures/vault/annotations: a note written with the Annotator plugin, three annotations in
 // the order they were written, one with tags and one with a callout for a comment; a note that
@@ -45,7 +45,7 @@ test("an annotation shows its passage and its comment, the comment's Markdown an
   await expect(smallPrint.locator(".annotation-comment .callout em")).toHaveText("before")
 
   await adventure.getByRole("link", { name: "Flatland" }).click()
-  await expect(page).toHaveURL(/\/annotations\/flatland$/)
+  await expectAt(page, /\/annotations\/flatland$/)
 })
 
 test("an annotation's tags are shown, and one with none shows none", async ({ page }) => {
@@ -87,7 +87,7 @@ test("each annotation is addressed by its block id, and a link from another note
   await page.setViewportSize({ width: 1440, height: 600 })
   await page.goto("/annotations/flatland")
   await page.getByRole("link", { name: "the small print" }).click()
-  await expect(page).toHaveURL(/\/annotations\/handbook#\^cftvox6c89v$/)
+  await expectAt(page, /\/annotations\/handbook#\^cftvox6c89v$/)
   const landed = page.locator(".annotation:target")
   await expect(landed.locator(".annotation-highlight")).toHaveText(
     "This handbook does not constitute an employment contract or binding policy",
@@ -127,7 +127,7 @@ test("on a phone an annotation page reads in one column and does not scroll side
 // the vault's are, with one annotation whose comment has a word no other page has.
 const ARTICLE = "/content/annotations/field-manual"
 
-test("an annotation page is an article in the site shell: its type, its date, its tag, the subscribe box, and search", async ({
+test("an annotation page is an article in the site shell: its type, its date, its tag, and search", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1300, height: 800 })
@@ -140,9 +140,6 @@ test("an annotation page is an article in the site shell: its type, its date, it
 
   await expect(page.locator("main header .date-and-reading-time")).toHaveText(/^Mar 27, 2026, \d+ min read$/)
   await expect(page.locator("main header .tag-list").getByRole("link", { name: "#annotations" })).toBeVisible()
-  await expect(page.locator(".after-body .subscribe-box")).toBeVisible()
-  // The table of contents names only a note's headings, and at this width a note's would be shown.
-  await expect(page.locator(".table-of-contents")).toHaveCount(0)
 
   // A comment is the page's text, and is searched: "quodlibet" is in one comment, and nowhere else.
   await page.keyboard.press("Control+k")

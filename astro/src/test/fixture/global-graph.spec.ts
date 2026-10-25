@@ -1,6 +1,6 @@
 import type { Page } from "@playwright/test"
 import { graph as settings } from "../../site.config.ts"
-import { expect, test } from "../site.ts"
+import { expect, expectAt, test } from "../site.ts"
 
 // The fixture vault's global-graph/ notes, read on 15 January 2030: Global Recent, from this month,
 // tagged `engineering`, which links to Global Older; Global Older, Global Project and Global Oldest,
@@ -192,7 +192,7 @@ test("clicking a node closes the dialog and goes to its page", async ({ page }) 
   await opener(page).click()
   const node = await nodePosition(page, "Global Older")
   await page.mouse.click(node.x, node.y)
-  await expect(page).toHaveURL("/global-graph/older")
+  await expectAt(page, "/global-graph/older")
   await expect(dialog(page)).toBeHidden()
 })
 

@@ -1,4 +1,4 @@
-import { expect, test } from "../site.ts"
+import { expect, expectAt, test } from "../site.ts"
 
 // A note with links to other sites, and links that stay on this one.
 const links = "/external-links/links"
@@ -19,7 +19,7 @@ test("a link to another site opens in a new tab, safely, and says so to a screen
   await link.click()
   await (await opened).waitForLoadState()
   expect(externalRequests).toContain("https://docs.astro.build/")
-  await expect(page).toHaveURL(new RegExp(`${links}$`))
+  await expectAt(page, new RegExp(`${links}$`))
 })
 
 test("a link to another site ends with an icon, in the link's colour, and is not underlined", async ({ page }) => {

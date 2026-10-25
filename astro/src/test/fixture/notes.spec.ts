@@ -1,4 +1,4 @@
-import { expect, test } from "../site.ts"
+import { expect, expectAt, test } from "../site.ts"
 
 test("a note is published at its address, under its title, and its links go to the notes they name", async ({
   page,
@@ -8,7 +8,7 @@ test("a note is published at its address, under its title, and its links go to t
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Alpha")
 
   await page.locator(".prose").getByRole("link", { name: "beta" }).click()
-  await expect(page).toHaveURL(/\/content\/notes\/beta$/)
+  await expectAt(page, /\/content\/notes\/beta$/)
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Beta")
   expect(externalRequests).toEqual([])
 })

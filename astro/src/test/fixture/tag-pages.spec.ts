@@ -1,4 +1,4 @@
-import { expect, test } from "../site.ts"
+import { expect, expectAt, test } from "../site.ts"
 
 // The fixture vault's tags: `ledger`, with a description note, `tags/ledger.md`, and six posts under
 // it or under `ledger/accounts` (test/fixtures/vault/post-listing); `ledger/sealed`, which only a
@@ -74,7 +74,7 @@ test("a wikilink to a tag's description note lands on the tag's page, and is not
   await expect(markdown).toHaveAttribute("href", "/tags/ledger")
   await expect(markdown).not.toHaveClass(/is-unresolved/)
   await wikilink.click()
-  await expect(page).toHaveURL(/\/tags\/ledger$/)
+  await expectAt(page, /\/tags\/ledger$/)
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("#ledger")
 })
 
@@ -84,7 +84,7 @@ test("a wikilink to the page of a tag with no description note lands on it, and 
   await expect(wikilink).toHaveAttribute("href", "/tags/ledger/accounts")
   await expect(wikilink).not.toHaveClass(/is-unresolved/)
   await wikilink.click()
-  await expect(page).toHaveURL(/\/tags\/ledger\/accounts$/)
+  await expectAt(page, /\/tags\/ledger\/accounts$/)
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("#accounts")
 })
 
@@ -98,7 +98,7 @@ test("a wikilink to the description note of a tag with no page is unresolved", a
 test("a note's tag badge lands on its tag's page", async ({ page }) => {
   await page.goto("/post-listing/ledger-two")
   await page.locator("main header .tag-badge", { hasText: "#accounts" }).click()
-  await expect(page).toHaveURL(/\/tags\/ledger\/accounts$/)
+  await expectAt(page, /\/tags\/ledger\/accounts$/)
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("#accounts")
 })
 

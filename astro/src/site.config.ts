@@ -214,6 +214,7 @@ export const analytics: AnalyticsConfig = {
   posthogKey: "phc_BviHJVml66FIB1RFmgeAzZpKRWA0nntGdIOo47hTA3X",
   posthogHost: "https://app.posthog.com",
   navigationSources: {
+    "trail-spines": "trail",
     ".tag-badge": "tag-badge",
     ".prose a": "inline-link",
   },

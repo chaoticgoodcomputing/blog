@@ -8,7 +8,7 @@
 // (ClientNavigation.astro) is sent to the address of the trail it makes: following any link on the
 // site, from a note, a search result or a graph, goes on to its note, or back to it if the trail
 // has it. Back and forward go where history says, trail and all; a link the router doesn't take
-// (a full page load) starts a trail afresh.
+// (a full page load), or one followed from the 404 page, which is no note, starts a trail afresh.
 //
 // Each spine is titled from the graph index (src/lib/graph-index-client.ts), and shows the note's
 // address until it has loaded.
@@ -28,7 +28,8 @@
   document.addEventListener("astro:before-preparation", (event) => {
     const navigation = event as TransitionBeforePreparationEvent
     if (navigation.navigationType === "traverse") return
-    const trail = follow(trailOf(new URL(location.href)), navigation.to.pathname)
+    const lost = document.querySelector<HTMLElement>(".page")?.dataset.kind === "404"
+    const trail = follow(lost ? [] : trailOf(new URL(location.href)), navigation.to.pathname)
     const to = new URL(addressOf(trail), navigation.to)
     to.hash = navigation.to.hash
     navigation.to = to

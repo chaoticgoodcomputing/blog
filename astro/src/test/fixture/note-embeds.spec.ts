@@ -1,4 +1,4 @@
-import { expect, test } from "../site.ts"
+import { expect, expectAt, test } from "../site.ts"
 
 // test/fixtures/vault/note-embeds: one note embeds another, whole, one section and one block of it.
 
@@ -16,7 +16,7 @@ test("an embed shows the whole of a note in place, rendered as a note is, its li
   await expect(whole.locator("pre.astro-code")).toContainText("const steeped = true")
 
   await whole.getByRole("link", { name: "Sibling" }).click()
-  await expect(page).toHaveURL(/\/note-embeds\/shelf\/Sibling$/)
+  await expectAt(page, /\/note-embeds\/shelf\/Sibling$/)
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Sibling on the shelf")
 })
 
@@ -28,7 +28,7 @@ test("an embed of a heading shows that section, and links back to it on its note
   await expect(section).not.toContainText("First section")
 
   await section.locator(".markdown-embed-link").click()
-  await expect(page).toHaveURL(/\/note-embeds\/shelf\/Embedded#second-section$/)
+  await expectAt(page, /\/note-embeds\/shelf\/Embedded#second-section$/)
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Embedded")
 })
 

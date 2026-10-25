@@ -31,14 +31,15 @@ const on = (...kinds: PageKind[]) => kinds.includes(page.kind)
 ---
 
 <Base {...page}>
-  <div class="page">
+  <div class="page" data-kind={page.kind}>
     <aside class="graph-column">
       <header>
         <SiteTitle />
         <Search />
       </header>
       <LocalGraph url={page.url} />
-      <footer>
+      {/* The site's footer, though it is in the graph column: the page's contentinfo landmark. */}
+      <footer role="contentinfo">
         <SiteFooter />
       </footer>
     </aside>
@@ -65,11 +66,25 @@ const on = (...kinds: PageKind[]) => kinds.includes(page.kind)
 </Base>
 
 <style>
-  /* The graph column, the spines (as wide as the trail before the note), and the note. */
+  /* The graph column, the spines (as wide as the trail before the note, and none without one), and
+     the note. Each in its own named area, so the note keeps its column when the spines are hidden. */
   .page {
     display: grid;
     grid-template-columns: 22rem auto minmax(0, 1fr);
+    grid-template-areas: "graph spines note";
     min-height: 100vh;
+  }
+
+  .graph-column {
+    grid-area: graph;
+  }
+
+  .page > :global(trail-spines) {
+    grid-area: spines;
+  }
+
+  main {
+    grid-area: note;
   }
 
   /* The graph column: a header, the graph filling the room between, and a footer. As tall as the
@@ -161,6 +176,7 @@ const on = (...kinds: PageKind[]) => kinds.includes(page.kind)
   @media (width < 1000px) {
     .page {
       grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "graph" "spines" "note";
     }
 
     .graph-column {

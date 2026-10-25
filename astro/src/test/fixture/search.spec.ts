@@ -1,11 +1,11 @@
-import { expect, test } from "../site.ts"
+import { expect, expectAt, test } from "../site.ts"
 
 // test/fixtures/vault/search: `A Findable Note`, about quillwort, and `An Unfindable Note`, a
 // private page that mentions quillwort and a bramblefinch.
 
-test("a reader searches from the left sidebar, and a result opens its note", async ({ page }) => {
+test("a reader searches from the graph column, and a result opens its note", async ({ page }) => {
   await page.goto("/site-shell/body")
-  await page.locator("aside.left").getByRole("button", { name: "Search" }).click()
+  await page.getByRole("button", { name: "Search" }).click()
 
   const search = page.getByRole("dialog", { name: "Search" })
   await expect(search).toBeVisible()
@@ -18,7 +18,7 @@ test("a reader searches from the left sidebar, and a result opens its note", asy
   await expect(result.locator("mark")).toHaveText("quillwort")
 
   await result.click()
-  await expect(page).toHaveURL(/\/search\/findable$/)
+  await expectAt(page, /\/search\/findable$/)
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("A Findable Note")
 })
 
@@ -99,7 +99,7 @@ test("nothing of the index is fetched until the reader types a search", async ({
   })
   await page.goto("/site-shell/body")
   await page.waitForLoadState("networkidle")
-  await page.locator("aside.left").getByRole("button", { name: "Search" }).click()
+  await page.getByRole("button", { name: "Search" }).click()
   await page.waitForLoadState("networkidle")
   expect(fetched).toEqual([])
 
@@ -111,7 +111,7 @@ test("nothing of the index is fetched until the reader types a search", async ({
 test("on a phone the search box and its results fit the screen", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 800 })
   await page.goto("/site-shell/body")
-  await page.locator("aside.left").getByRole("button", { name: "Search" }).click()
+  await page.getByRole("button", { name: "Search" }).click()
   const search = page.getByRole("dialog", { name: "Search" })
   await search.getByRole("searchbox").fill("quillwort")
   await expect(search.getByRole("link", { name: /A Findable Note/ })).toBeVisible()
@@ -142,7 +142,7 @@ for (const shortcut of ["Control+k", "Meta+k"]) {
     // Opened again, the box still holds the search, and Enter goes to its first result.
     await page.keyboard.press(shortcut)
     await page.keyboard.press("Enter")
-    await expect(page).toHaveURL(/\/search\/findable$/)
+    await expectAt(page, /\/search\/findable$/)
   })
 }
 
@@ -152,5 +152,5 @@ test("Enter pressed before the results arrive opens the first result once they d
   // Typed and entered at once: nothing of the index is loaded yet, so there is no result to go to.
   await page.keyboard.type("quillwort")
   await page.keyboard.press("Enter")
-  await expect(page).toHaveURL(/\/search\/findable$/)
+  await expectAt(page, /\/search\/findable$/)
 })

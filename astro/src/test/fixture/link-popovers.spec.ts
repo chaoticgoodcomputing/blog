@@ -222,16 +222,15 @@ test("on a page reached by client-side navigation, a link shows its preview", as
 })
 
 test.describe("outside a note's body", () => {
-  // A desktop's window, where both sidebars are beside the body.
+  // A desktop's window.
   test.use({ viewport: { width: 1440, height: 900 } })
 
-  test("a link in the backlinks, a post listing, the tag explorer or a tag badge shows its preview too", async ({
+  test("a link in the backlinks, a post listing or a tag badge shows its preview too", async ({
     page,
   }) => {
     const links = {
       backlinks: ["/link-popovers/destination", '.backlinks a[href="/link-popovers/start"]', "Each link here is pointed at"],
       "post listing": ["/tags/previewing", '.post-listing a[href="/link-popovers/tagged"]', "The top of the tagged note"],
-      "tag explorer": [start, '.tag-explorer a.tag[href="/tags/previewing"]', "The description of the previewed tag"],
       "tag badge": ["/link-popovers/tagged", 'main header .tag-badge[href="/tags/previewing"]', "The description of the previewed tag"],
     }
     for (const [where, [address, selector, text]] of Object.entries(links)) {
@@ -242,21 +241,6 @@ test.describe("outside a note's body", () => {
       await away(page)
       await expect(popover(page), where).toBeHidden()
     }
-  })
-
-  test("a link in the table of contents, to a place on the page the reader is on, shows none", async ({ page }) => {
-    await page.goto("/link-popovers/tagged")
-    await page.waitForLoadState("networkidle")
-    const asked: string[] = []
-    page.on("request", (request) => {
-      if (request.resourceType() === "fetch") asked.push(new URL(request.url()).pathname)
-    })
-
-    await page.locator(".table-of-contents").getByRole("link", { name: "A heading of its own" }).hover()
-    await page.waitForTimeout(1000)
-
-    await expect(popover(page)).toBeHidden()
-    expect(asked).toEqual([])
   })
 
   test("the site's title, to the home page, shows none", async ({ page }) => {

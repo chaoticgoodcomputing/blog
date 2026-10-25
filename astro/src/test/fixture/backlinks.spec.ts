@@ -8,7 +8,7 @@ const linked = "/backlinks/linked"
 
 test("a note's backlinks panel lists the pages that link to it, an embed counting as a link", async ({ page }) => {
   await page.goto(linked)
-  const panel = page.locator("aside.right .backlinks")
+  const panel = page.locator(".backlinks")
   await expect(panel.getByRole("heading", { level: 2 })).toHaveText("Backlinks")
   await expect(panel.getByRole("link", { name: "Links to it", exact: true })).toHaveAttribute("href", "/backlinks/by-link")
   await expect(panel.getByRole("link", { name: "Embeds it", exact: true })).toHaveAttribute("href", "/backlinks/by-embed")
@@ -16,7 +16,7 @@ test("a note's backlinks panel lists the pages that link to it, an embed countin
 
 test("a backlink is set as the headings are", async ({ page }) => {
   await page.goto(linked)
-  const link = page.locator("aside.right .backlinks").getByRole("link", { name: "Links to it", exact: true })
+  const link = page.locator(".backlinks").getByRole("link", { name: "Links to it", exact: true })
   await expect(link).toHaveCSS("font-weight", "600")
   const heading = page.locator("main h1")
   expect(await link.evaluate((element) => getComputedStyle(element).fontFamily)).toBe(
