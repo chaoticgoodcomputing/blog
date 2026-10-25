@@ -100,8 +100,8 @@ test("laid out, the pinned tags rest on the shell, evenly spaced round it, and e
   simulation.tick(300)
   const at = (id: string) => nodes.find((node) => node.id === id)!
 
-  // Eight nodes: 150 + 50 × √8. Only the pinned tags this graph has are on it.
-  expect(shell).toBeCloseTo(291.42, 2)
+  // The shell is as wide as its size says for the graph's nodes. Only the pinned tags this graph has are on it.
+  expect(shell).toBeCloseTo(shellRadius(nodes.length, graph.global.shellSize), 6)
   const pinned = ["/tags/engineering", "/tags/writing", "/tags/horticulture"].map(at)
   for (const tag of pinned) expect(Math.hypot(tag.x!, tag.y!)).toBeCloseTo(shell!, 0)
   // Three tags, each a third of the way round from the next.
@@ -299,6 +299,7 @@ test("the view is never larger than the graph", () => {
 
 test("the shell's radius grows with the square root of how many nodes the graph has", () => {
   // 150 + 50 × √16.
-  expect(shellRadius(16, graph.global.shellSize)).toBe(350)
-  expect(shellRadius(0, graph.global.shellSize)).toBe(150)
+  const size = { base: 150, scaling: 50 }
+  expect(shellRadius(16, size)).toBe(350)
+  expect(shellRadius(0, size)).toBe(150)
 })

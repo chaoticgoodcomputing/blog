@@ -1,61 +1,28 @@
 ---
-// The site shell: what is around a page's content, on every kind of page. Its named places are
-// the left sidebar, the header over the content, after the body, the right sidebar and the footer.
+// The site shell: what is around a page's content, on every kind of page. Two columns: the graph
+// column, and the note. The graph column holds the site's title and the search box, the local
+// graph over the reader's trail, and the footer. Beside it are the trail's spines, the notes the
+// reader came through, then the note itself: its header (title, date, tags) over the page's
+// content, and what follows the body under it.
 //
-// A feature is one component on one line in one of those places, shown on the kinds of page the
-// line names, and imported on the line here that names its ticket. A ticket replaces its own lines
-// and leaves the rest as they are, blank lines and indentation included, so that branches written
-// side by side merge (README.md, "Working in parallel"). What a feature needs to know of the page
-// it reads from `page`.
-//
-// One layout with a kind, rather than a layout per kind of page, is for that merging: a feature
-// shown on three kinds of page is still one line.
+// The window is the one scroll: the graph column and the spines stay in view beside the note. What
+// a feature needs to know of the page it reads from `page`, and which kinds of page it is on is
+// said where it is placed.
 import type { PageKind, PageProps } from "../lib/page.ts"
 import Base from "./Base.astro"
 
-// 07 site title
 import SiteTitle from "../components/SiteTitle.astro"
-
 import Search from "../components/Search.astro"
-
-// 08 scheme switch
-import SchemeSwitch from "../components/SchemeSwitch.astro"
-
-// 21 tag explorer
-import TagExplorer from "../components/TagExplorer.astro"
-
-// 07 article title
-import ArticleTitle from "../components/ArticleTitle.astro"
-
-// 10 date and reading time
-import DateAndReadingTime from "../components/DateAndReadingTime.astro"
-
-// 11 tag list
-import TagList from "../components/TagList.astro"
-
-// 13 post listing
-import PostListing from "../components/PostListing.astro"
-
-// 24 subscribe box
-import SubscribeBox from "../components/SubscribeBox.astro"
-
-// 10 source link
-import SourceLink from "../components/SourceLink.astro"
-
-// 22 local graph
 import LocalGraph from "../components/LocalGraph.astro"
-
-// 10 table of contents
-import TableOfContents from "../components/TableOfContents.astro"
-
-// 14 backlinks
-import Backlinks from "../components/Backlinks.astro"
-
-// 25 social cards
-import SocialCards from "../components/SocialCards.astro"
-
-// 07 site footer
 import SiteFooter from "../components/SiteFooter.astro"
+import TrailSpines from "../components/TrailSpines.astro"
+
+import ArticleTitle from "../components/ArticleTitle.astro"
+import DateAndReadingTime from "../components/DateAndReadingTime.astro"
+import TagList from "../components/TagList.astro"
+import PostListing from "../components/PostListing.astro"
+import Backlinks from "../components/Backlinks.astro"
+import SourceLink from "../components/SourceLink.astro"
 
 type Props = PageProps
 
@@ -65,269 +32,147 @@ const on = (...kinds: PageKind[]) => kinds.includes(page.kind)
 
 <Base {...page}>
   <div class="page">
-    <aside class="left">
-      {/* 07 site title */}
-      <SiteTitle />
-
-      <div class="toolbar">
+    <aside class="graph-column">
+      <header>
+        <SiteTitle />
         <Search />
-
-        {/* 08 scheme switch: every kind */}
-        <SchemeSwitch />
-      </div>
-
-      {/* 21 tag explorer: every kind. A drawer opened from this row on a phone */}
-      <TagExplorer url={page.url} tag={page.tag} />
+      </header>
+      <LocalGraph url={page.url} />
+      <footer>
+        <SiteFooter />
+      </footer>
     </aside>
+
+    <TrailSpines />
 
     <main>
       <header>
-        {/* 07 article title: note, home, tag, annotation */}
-        {on("note", "home", "tag", "annotation") && <ArticleTitle title={page.title} />}
-
-        {/* 10 date and reading time: note, tag, annotation */}
+        {on("note", "home", "tag", "annotation") && <ArticleTitle title={page.title} url={page.url} />}
         {on("note", "tag", "annotation") && <DateAndReadingTime note={page.note} />}
-
-        {/* 11 tag list: note, home, tag, annotation */}
         {on("note", "home", "tag", "annotation") && <TagList tags={page.note?.tags ?? []} />}
       </header>
 
       <slot />
 
       <div class="after-body">
-        {/* 13 post listing: home, tag, 404. On a tag page, the posts under `page.tag` */}
+        {/* On a tag page, the posts under `page.tag`. */}
         {on("home", "tag", "404") && <PostListing tag={page.tag} />}
-
-        {/* 24 subscribe box: note, annotation */}
-        {on("note", "annotation") && <SubscribeBox box="underNote" />}
-
-        {/* 10 source link: note */}
+        {on("note", "tag", "annotation") && <Backlinks note={page.note} />}
         {on("note") && <SourceLink note={page.note} />}
       </div>
     </main>
-
-    <aside class="right">
-      {/* 22 local graph: note, home, tag, annotation */}
-      {on("note", "home", "tag", "annotation") && <LocalGraph url={page.url} />}
-
-      {/* 10 table of contents: note */}
-      {on("note") && <TableOfContents headings={page.headings} note={page.note} />}
-
-      {/* 14 backlinks: note, tag, annotation */}
-      {on("note", "tag", "annotation") && <Backlinks note={page.note} />}
-
-      {/* 24 subscribe box: home, tag */}
-      {on("home", "tag") && <SubscribeBox box="sidebar" />}
-
-      {/* 25 social cards: home. On a desktop only */}
-      {on("home") && <SocialCards />}
-    </aside>
-
-    <footer>
-      {/* 07 site footer */}
-      <SiteFooter />
-    </footer>
   </div>
 </Base>
 
 <style>
-  /* The shell's named places are the areas of one grid, laid out three ways: for a phone, a tablet
-     and a desktop (src/styles/global.css says how wide each is). In the document the elements keep
-     one order at every width, which is the order they are read in: the left sidebar, the content,
-     the right sidebar, the footer. */
-
-  /* A phone: one column. */
+  /* The graph column, the spines (as wide as the trail before the note), and the note. */
   .page {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas:
-      "left"
-      "main"
-      "right"
-      "footer";
-    padding: 0 1rem;
+    grid-template-columns: 22rem auto minmax(0, 1fr);
+    min-height: 100vh;
   }
 
-  /* The left sidebar is a row over the content: the site title, and beside it the toolbar. */
-  .left {
-    grid-area: left;
+  /* The graph column: a header, the graph filling the room between, and a footer. As tall as the
+     window, and in view while the note scrolls. */
+  .graph-column {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    box-sizing: border-box;
+    height: 100vh;
+    border-right: 1px solid var(--lightgray);
+  }
+
+  .graph-column > header {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     align-items: center;
     gap: 1rem;
-    padding: 1.5rem 0 0;
+    padding: 1.5rem 1.25rem 1.25rem;
+    border-bottom: 1px solid var(--lightgray);
   }
 
-  .toolbar {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.5rem;
+  .graph-column > header > :global(site-search) {
+    width: 100%;
+    max-width: 16rem;
   }
 
-  /* The content column is as wide as the grid makes it, never as wide as what is in it: a wide
-     table or a long line of code scrolls inside the column, and the page stays as wide as the
-     screen. */
+  .graph-column > header :global(.search-button) {
+    width: 100%;
+  }
+
+  .graph-column > footer {
+    padding: 1rem 1.25rem 1.25rem;
+    border-top: 1px solid var(--lightgray);
+  }
+
+  /* The note: as wide as reads well, in the middle of the room it has. A wide table or a long line
+     of code scrolls inside it, and the page stays as wide as the window. */
   main {
-    grid-area: main;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 44rem;
     min-width: 0;
-    padding: 1.5rem 0 0;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 6rem;
   }
 
-  header {
+  main > header {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
     margin-bottom: 1.5rem;
   }
 
-  .after-body,
-  .right {
+  .after-body {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-  }
-
-  .after-body {
     margin-top: 2.5rem;
     padding-top: 1.5rem;
     border-top: 1px solid var(--lightgray);
   }
 
-  .right {
-    grid-area: right;
-    min-width: 0;
-    margin-top: 2.5rem;
-  }
-
   /* A place with no feature in it on this kind of page takes no room, and draws no rule. */
-  header:not(:has(*)),
-  .toolbar:not(:has(*)),
-  .after-body:not(:has(*)),
-  .right:not(:has(*)) {
+  main > header:not(:has(*)),
+  .after-body:not(:has(*)) {
     display: none;
   }
 
-  footer {
-    grid-area: footer;
-    margin: 3rem 0 4rem;
-  }
-
-  /* A section of a sidebar is headed by an `h2`, which the shell sizes, so that every feature's
-     heading is alike. A scoped style can't reach into a feature's component, so this is global,
-     and written with no specificity: a feature's own scoped styles say otherwise by saying so. */
-  :global(:where(aside.left, aside.right) :where(h2)) {
+  /* A section after the body is headed by an `h2`, which the shell sizes, so that every feature's
+     heading is alike. Written with no specificity: a feature's own styles say otherwise by saying so. */
+  .after-body :global(:where(h2)) {
     margin: 0 0 0.25rem;
     font-size: 1rem;
   }
 
-  /* A tablet: the left sidebar beside the content, and the right sidebar under it. */
-  @media (width >= 1000px) {
+  /* An annotation page whose document opens takes the whole of the note's room: the annotation
+     viewer lays itself out by the room it has, the document beside its cards where they fit. One
+     whose document couldn't be shown is laid out as any note. */
+  .page:has(.annotation-viewer:not([data-state="failed"])) main {
+    max-width: none;
+    padding-inline: 1.5rem;
+  }
+
+  /* A phone or a tablet: one column. The graph column over the note, as tall as its graph needs,
+     and the spines a row between them. */
+  @media (width < 1000px) {
     .page {
-      grid-template-columns: 20rem minmax(0, 40rem);
-      grid-template-areas:
-        "left main"
-        "left right"
-        "left footer";
-      /* The content's row takes the height the left sidebar adds, so the rows under it stay as
-         tall as what is in them. */
-      grid-template-rows: 1fr auto auto;
-      justify-content: center;
-      column-gap: 1rem;
-      padding: 0 2rem;
+      grid-template-columns: minmax(0, 1fr);
     }
 
-    /* A sidebar stays in view while the content scrolls, and scrolls by itself when it is taller
-       than the window. */
-    .left {
-      position: sticky;
-      top: 0;
-      align-self: start;
-      box-sizing: border-box;
-      max-height: 100vh;
-      overflow-y: auto;
-      flex-direction: column;
-      flex-wrap: nowrap;
-      align-items: stretch;
-      padding: 2.5rem 1.5rem 2rem 0;
-    }
-
-    .toolbar {
-      flex: none;
-      justify-content: flex-start;
+    .graph-column {
+      position: static;
+      grid-template-rows: auto 40vh auto;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--lightgray);
     }
 
     main {
-      padding-top: 2.5rem;
-    }
-  }
-
-  /* A desktop: a sidebar on either side of the content. */
-  @media (width >= 1300px) {
-    .page {
-      grid-template-columns: 20rem minmax(0, 40rem) 20rem;
-      grid-template-areas:
-        "left main right"
-        ". footer .";
-      grid-template-rows: 1fr auto;
-      column-gap: 0;
-      padding: 0;
-    }
-
-    .left {
-      padding-left: 1.5rem;
-    }
-
-    .right {
-      position: sticky;
-      top: 0;
-      align-self: start;
-      box-sizing: border-box;
-      max-height: 100vh;
-      overflow-y: auto;
-      margin-top: 0;
-      padding: 2.5rem 1.5rem 2rem;
-    }
-
-    /* The column is the right sidebar's on every kind of page, with a feature in it or not. */
-    .right:not(:has(*)) {
-      display: flex;
-    }
-  }
-
-  /* 28 annotation viewer */
-  /* An annotation page with the annotation viewer shows a document beside its annotations, which
-     the content's 40rem has no room for. From a tablet up its content takes the room of the right
-     sidebar as well, and the right sidebar stays under the content, as it is on a tablet. A viewer
-     whose document couldn't be shown is a notice, and the page is laid out as any note's. */
-  @media (width >= 1000px) {
-    .page:has(.annotation-viewer:not([data-state="failed"])) {
-      grid-template-columns: 20rem minmax(0, 100rem);
-    }
-  }
-
-  @media (width >= 1300px) {
-    .page:has(.annotation-viewer:not([data-state="failed"])) {
-      grid-template-areas:
-        "left main"
-        "left right"
-        "left footer";
-      grid-template-rows: 1fr auto auto;
-      column-gap: 1rem;
-      padding: 0 2rem 0 0;
-    }
-
-    .page:has(.annotation-viewer:not([data-state="failed"])) .right {
-      position: static;
-      max-height: none;
-      overflow-y: visible;
-      margin-top: 2.5rem;
-      padding: 0;
-    }
-
-    .page:has(.annotation-viewer:not([data-state="failed"])) .right:not(:has(*)) {
-      display: none;
+      padding: 1.5rem 1rem 4rem;
     }
   }
 </style>

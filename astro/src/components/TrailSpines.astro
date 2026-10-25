@@ -1,0 +1,153 @@
+---
+// The reader's trail (src/lib/trail.ts), beside the note: before the note shown, each note the
+// reader came through, as a spine with its title on its side, which goes back to that note. The
+// trail is in the page's address, so the spines are drawn in the browser, from the address; a page
+// with no trail before it has none.
+//
+// This module also carries the trail on. Every navigation of the client router
+// (ClientNavigation.astro) is sent to the address of the trail it makes: following any link on the
+// site, from a note, a search result or a graph, goes on to its note, or back to it if the trail
+// has it. Back and forward go where history says, trail and all; a link the router doesn't take
+// (a full page load) starts a trail afresh.
+//
+// Each spine is titled from the graph index (src/lib/graph-index-client.ts), and shows the note's
+// address until it has loaded.
+---
+
+<trail-spines hidden>
+  <nav aria-label="Trail"><ol></ol></nav>
+</trail-spines>
+
+<script>
+  import type { TransitionBeforePreparationEvent } from "astro:transitions/client"
+  import { graphOf } from "../lib/graph.ts"
+  import { loadGraphIndex } from "../lib/graph-index-client.ts"
+  import { addressOf, follow, trailOf } from "../lib/trail.ts"
+  import { graph } from "../site.config.ts"
+
+  document.addEventListener("astro:before-preparation", (event) => {
+    const navigation = event as TransitionBeforePreparationEvent
+    if (navigation.navigationType === "traverse") return
+    const trail = follow(trailOf(new URL(location.href)), navigation.to.pathname)
+    const to = new URL(addressOf(trail), navigation.to)
+    to.hash = navigation.to.hash
+    navigation.to = to
+  })
+
+  // Each note's title, by its address, from the graph index: a note's, or a tag's name.
+  let titles: Promise<Map<string, string>> | undefined
+  const titlesOf = () =>
+    (titles ??= loadGraphIndex().then((index) => {
+      const { nodes } = graphOf(index, { removeTags: [], privatePages: graph.local.privatePages })
+      return new Map(nodes.map((node) => [node.id, node.label]))
+    }))
+
+  class TrailSpines extends HTMLElement {
+    // Drawn as each page loads, when its address, and so its trail, is the page's own.
+    async draw() {
+      const trail = trailOf(new URL(location.href))
+      const before = trail.slice(0, -1)
+      this.hidden = before.length === 0
+      const list = this.querySelector("ol")!
+      const spines = before.map((note, i) => {
+        const item = document.createElement("li")
+        const link = item.appendChild(document.createElement("a"))
+        link.href = addressOf(trail.slice(0, i + 1))
+        link.textContent = note
+        return { link, note }
+      })
+      list.replaceChildren(...spines.map(({ link }) => link.parentElement!))
+      try {
+        const known = await titlesOf()
+        for (const { link, note } of spines) link.textContent = known.get(note) ?? note
+      } catch {
+        // Without the index, a spine keeps its note's address.
+      }
+    }
+  }
+
+  customElements.define("trail-spines", TrailSpines)
+  document.addEventListener("astro:page-load", () => {
+    for (const spines of document.querySelectorAll<TrailSpines>("trail-spines")) void spines.draw()
+  })
+</script>
+
+<style>
+  /* A column of spines, as tall as the window and staying in view while the note scrolls. */
+  trail-spines {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    display: flex;
+    height: 100vh;
+  }
+
+  trail-spines[hidden] {
+    display: none;
+  }
+
+  nav,
+  ol {
+    display: flex;
+    height: 100%;
+  }
+
+  ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  ol :global(li) {
+    display: flex;
+    border-right: 1px solid var(--lightgray);
+  }
+
+  /* A spine: the note's title on its side, the whole strip a link back to it. */
+  ol :global(a) {
+    box-sizing: border-box;
+    width: 2.5rem;
+    padding: 1.25rem 0;
+    writing-mode: vertical-rl;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--dark);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  ol :global(a:hover) {
+    background: color-mix(in srgb, var(--secondary) 8%, var(--light));
+  }
+
+  /* A phone or a tablet: the spines are a row over the note, each title on its line. */
+  @media (width < 1000px) {
+    trail-spines {
+      position: static;
+      height: auto;
+    }
+
+    nav,
+    ol {
+      flex-wrap: wrap;
+      height: auto;
+    }
+
+    ol :global(li) {
+      border-right: none;
+    }
+
+    ol :global(a) {
+      width: auto;
+      padding: 0.5rem 0.75rem;
+      writing-mode: horizontal-tb;
+    }
+
+    ol :global(li:not(:last-child) a)::after {
+      content: " →";
+      color: var(--gray);
+    }
+  }
+</style>

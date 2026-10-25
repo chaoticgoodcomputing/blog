@@ -10,8 +10,7 @@
    can't read a property, so they are written out where they are used, as `(width < 1000px)`,
    `(width >= 1000px)` and `(width >= 1300px)`. */
 
-/* The palette: one value per colour scheme. The scheme is the reader's choice, `data-theme` on the
-   root, else their system's (README.md, "In the browser"). */
+/* The palette: one value per colour scheme. The scheme is the reader's system's. */
 :root {
   color-scheme: light dark;
   --light: light-dark(#faf8f8, #161618);
@@ -45,16 +44,6 @@
   /* A page of a document the site draws, as it was printed: white in both schemes, since the
      document's own ink is drawn for white. */
   --paper: white;
-}
-
-/* A reader who has chosen a scheme sees it, and every `light-dark()` on the page, the browser's own
-   controls and scrollbars included, takes that scheme's value. */
-:root[data-theme="light"] {
-  color-scheme: light;
-}
-
-:root[data-theme="dark"] {
-  color-scheme: dark;
 }
 
 /* The fonts, `--bodyFont` (Inter) and `--codeFont` (IBM Plex Mono), are defined by Astro's Fonts

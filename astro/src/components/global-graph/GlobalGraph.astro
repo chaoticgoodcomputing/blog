@@ -200,8 +200,12 @@ const stops = TIME_PERIODS.toReversed()
       if (!this.#wanted || !chosen) return
       this.#erase()
       const url = this.dataset.url ?? ""
+      // The reader's trail, which the local graph sets (LocalGraph.astro), drawn through the graph,
+      // and every note on it drawn whatever the filters say.
+      const path: string[] = this.dataset.path ? JSON.parse(this.dataset.path) : []
       this.#drawn = drawGraph(this.#drawing, {
-        graph: globalGraph(index, settings, chosen, new Date()),
+        graph: globalGraph(index, settings, chosen, new Date(), path),
+        path,
         current: url,
         settings,
         bubble: (tag) => this.querySelector<HTMLElement>(`.bubbles [data-tag="${CSS.escape(tag)}"] .tag-bubble`),

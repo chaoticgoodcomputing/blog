@@ -76,8 +76,12 @@ export interface SiteLink {
  * `url`, the page that says who they are.
  */
 export interface FooterConfig {
-  links: SiteLink[]
+  /** How to reach the site's author: a page, a profile, a `mailto:` address. */
+  contacts: SiteLink[]
+  /** Who the copyright is held by, each linked. */
   copyright: SiteLink[]
+  /** A line under the copyright: what the site promises of its content. */
+  notice: string
 }
 
 /**
@@ -126,15 +130,6 @@ export interface SeoConfig {
   articleTypes: ArticleTypeRule[]
   /** An article's type when no rule matches. It has no section. */
   defaultArticleType: ArticleType
-}
-
-/**
- * The tag explorer in the left sidebar: the site's tags as a tree, each with the notes under it. A
- * private page in it is left out or marked, as `site.private.explorer` says.
- */
-export interface TagExplorerConfig {
-  /** Its heading, which also names the button that opens it as a drawer on a narrow screen. */
-  title: string
 }
 
 /**
@@ -233,8 +228,13 @@ export interface HoverPulse {
 }
 /** The local graph's settings: a graph's, with how far from the page it reaches. */
 export interface LocalGraphSettings extends GraphSettings {
-  /** How many edges from the page a node may be, and be drawn. Below zero, every node is. */
+  /** How many edges from a note of the trail a node may be, and be drawn. Below zero, every node is. */
   depth: number
+  /**
+   * How far the graph opens zoomed in, centred on the note shown, where 1 draws the graph at its
+   * own size. It follows the note as the graph settles, until the reader pans, zooms or drags.
+   */
+  focusZoom: number
 }
 /** Which notes the global graph draws, by date: those of the last month, of the last year, or all. */
 export type TimePeriod = "month" | "year" | "all"
@@ -255,6 +255,12 @@ export interface GlobalGraphSettings extends GraphSettings {
  * private page is among them, and not under `site.private`: the global graph lets a reader choose
  * whether private pages are shown, which neither "omit" nor "mark" says.
  */
+/** A reader's trail: the notes they came through to the note shown (src/lib/trail.ts). */
+export interface TrailConfig {
+  /** The most notes a trail holds, the note shown among them. Following a link past it lets the oldest go. */
+  length: number
+}
+
 export interface GraphConfig {
   /** The graph in a page's right sidebar: the page, the notes it links to and from, and their tags. */
   local: LocalGraphSettings
@@ -263,52 +269,6 @@ export interface GraphConfig {
    * how a private page is drawn when the reader has asked for them.
    */
   global: GlobalGraphSettings
-}
-
-/** What one subscribe box says above its form. */
-export interface SubscribeWording {
-  title: string
-  description: string
-}
-/**
- * The newsletter: the Buttondown list a subscribe box's form posts to, and what each box says. The
- * box under a note asks for more; the one in the sidebar of the home page and a tag page is
- * headed as a sidebar section is.
- */
-export interface SubscribeConfig {
-  /** The Buttondown newsletter's username, which names its list. */
-  buttondown: string
-  underNote: SubscribeWording
-  sidebar: SubscribeWording
-}
-
-/**
- * The social cards, in the home page's right sidebar on a desktop: the site owner's year of
- * contributions on GitHub, and their latest posts on Bluesky. Each is fetched in the reader's
- * browser, so the build asks neither host for anything.
- */
-export interface SocialConfig {
-  github: {
-    /** The GitHub user whose contributions the card shows. */
-    username: string
-    /** The card's heading. */
-    title: string
-    /**
-     * The calendar's five colours, a colour value each, from a day with no contributions to the
-     * busiest: the contributions API's five levels.
-     */
-    levelColors: [string, string, string, string, string]
-  }
-  bluesky: {
-    /** The Bluesky account whose posts the card shows, by handle. */
-    handle: string
-    /** The card's heading. */
-    title: string
-    /** How many of the latest posts it shows, from 1 to 100. */
-    postLimit: number
-    /** Whether each post shows its reply, repost and like counts. */
-    showMetrics: boolean
-  }
 }
 
 /**

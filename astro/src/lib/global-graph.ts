@@ -31,11 +31,13 @@ function since(period: TimePeriod, now: Date): Date | undefined {
 // A note at a tag page's address is the tag's description note, which goes with the tag.
 const isTagPage = (note: IndexedNote) => note.url.startsWith(`${TAGS_INDEX}/`)
 
-// The notes, not tag description notes, that the filter keeps.
-function postsOf(index: GraphIndex, { period, includePrivate }: GraphFilter, now: Date): IndexedNote[] {
+// The notes, not tag description notes, that the filter keeps, and those of `keep` whatever it says.
+function postsOf(index: GraphIndex, { period, includePrivate }: GraphFilter, now: Date, keep: ReadonlySet<string> = new Set()): IndexedNote[] {
   const start = since(period, now)
   return index.notes.filter(
-    (note) => !isTagPage(note) && (includePrivate || !note.private) && (start === undefined || new Date(note.date) >= start),
+    (note) =>
+      !isTagPage(note) &&
+      (keep.has(note.url) || ((includePrivate || !note.private) && (start === undefined || new Date(note.date) >= start))),
   )
 }
 
@@ -45,8 +47,15 @@ function postsOf(index: GraphIndex, { period, includePrivate }: GraphFilter, now
  * description note is drawn as the tag, and so only while a note kept carries the tag or a tag under
  * it.
  */
-export function globalGraph(index: GraphIndex, settings: Pick<GlobalGraphSettings, "removeTags" | "privatePages">, filter: GraphFilter, now: Date): Graph {
-  const posts = postsOf(index, filter, now)
+export function globalGraph(
+  index: GraphIndex,
+  settings: Pick<GlobalGraphSettings, "removeTags" | "privatePages">,
+  filter: GraphFilter,
+  now: Date,
+  // Notes drawn whatever the filter says: a reader's trail.
+  keep: string[] = [],
+): Graph {
+  const posts = postsOf(index, filter, now, new Set(keep))
   const carried = new Set(posts.flatMap((note) => note.tags.flatMap((tag) => [...tagAncestors(tag), tag])))
   const descriptions = index.notes.filter((note) => isTagPage(note) && carried.has(note.url.slice(TAGS_INDEX.length + 1)))
   return graphOf({ notes: [...posts, ...descriptions] }, { removeTags: settings.removeTags, privatePages: settings.privatePages })

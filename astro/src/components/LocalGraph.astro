@@ -1,16 +1,20 @@
 ---
-// The local graph: the page, the notes it links to and from, and their tags, drawn on a canvas in
-// the right sidebar, with the settings of site configuration's `graph.local`. The `<local-graph>`
-// element draws it from the graph index the site publishes (src/pages/graph.json.ts), and the canvas
-// holds a list of what it shows, for whoever can't see it (src/lib/graph-drawing.ts).
+// The local graph: the reader's trail (src/lib/trail.ts), each of its notes with what is next to
+// it, drawn on a canvas in the graph column with the settings of site configuration's
+// `graph.local`, the trail drawn through it, and opened zoomed in on the note shown
+// (src/lib/graph-drawing.ts). The trail is in the page's address, so the graph is drawn in the
+// browser, from the address and the graph index the site publishes (src/pages/graph.json.ts), as
+// each page loads. The canvas holds a list of what it shows, for whoever can't see it.
 //
-// Each tag the graph is drawn with is a `<TagBubble>` here, hidden, which the canvas copies: the
-// bubble is drawn one way, with its icon and colour, wherever it is. Which tags those are is worked
-// out here from the same index, by the same functions, as the element works out the graph.
+// Every tag's bubble is a `<TagBubble>` here, hidden, which the canvas copies: the bubble is drawn
+// one way, with its icon and colour, wherever it is. Any tag may be next to a trail, so all of them
+// are here.
 //
 // In the corner of its frame is the control that opens the global graph, in a dialog
-// (./global-graph/GlobalGraph.astro).
-import { localGraph } from "../lib/graph.ts"
+// (./global-graph/GlobalGraph.astro), which marks the note shown and draws the trail through it
+// too. Following a node of either graph is a navigation like any link's, which carries the trail
+// on (TrailSpines.astro).
+import { graphOf } from "../lib/graph.ts"
 import { graphIndex } from "../lib/graph-index.ts"
 import { graph } from "../site.config.ts"
 import GlobalGraph from "./global-graph/GlobalGraph.astro"
@@ -22,37 +26,36 @@ interface Props {
 }
 
 const { url } = Astro.props
-const local = localGraph(graphIndex(), url, graph.local)
-const tags = [...new Set(local.nodes.flatMap((node) => (node.tag === undefined ? [] : [node.tag])))]
+const { removeTags, privatePages } = graph.local
+const tags = graphOf(graphIndex(), { removeTags, privatePages }).nodes.flatMap((node) =>
+  node.kind === "tag" && node.tag !== undefined ? [node.tag] : [],
+)
 ---
 
-{/* A page the graph has no node for, such as a private tag's page, has no graph. */}
-{
-  local.nodes.length > 0 && (
-    <section class="local-graph">
-      <h2>Graph View</h2>
-      <div class="frame">
-        <local-graph data-url={url}>
-          <div class="bubbles" hidden>
-            {tags.map((tag) => (
-              <span data-tag={tag}>
-                <TagBubble tag={tag} />
-              </span>
-            ))}
-          </div>
-        </local-graph>
-        <GlobalGraph url={url} />
-      </div>
-    </section>
-  )
-}
+<section class="local-graph" aria-label="Graph View">
+  <local-graph>
+    <div class="bubbles" hidden>
+      {
+        tags.map((tag) => (
+          <span data-tag={tag}>
+            <TagBubble tag={tag} />
+          </span>
+        ))
+      }
+    </div>
+  </local-graph>
+  <GlobalGraph url={url} />
+</section>
 
 <script>
   import { navigate } from "astro:transitions/client"
+  import { graphOf, trailGraph } from "../lib/graph.ts"
   import { drawGraph, type DrawnGraph } from "../lib/graph-drawing.ts"
   import { loadGraphIndex } from "../lib/graph-index-client.ts"
-  import { localGraph } from "../lib/graph.ts"
+  import { trailOf } from "../lib/trail.ts"
   import { graph } from "../site.config.ts"
+
+  const settings = graph.local
 
   class LocalGraph extends HTMLElement {
     #drawn: DrawnGraph | undefined
@@ -64,7 +67,6 @@ const tags = [...new Set(local.nodes.flatMap((node) => (node.tag === undefined ?
     connectedCallback() {
       this.#connected = true
       document.addEventListener("themechange", this.#repaint)
-      void this.#draw()
     }
 
     disconnectedCallback() {
@@ -74,50 +76,61 @@ const tags = [...new Set(local.nodes.flatMap((node) => (node.tag === undefined ?
       this.#drawn = undefined
     }
 
-    async #draw() {
-      const url = this.dataset.url ?? ""
-      const local = localGraph(await loadGraphIndex(), url, graph.local)
+    // Drawn as each page loads, when its address, and so its trail, is the page's own.
+    async draw() {
+      const trail = trailOf(new URL(location.href))
+      const shown = trail.at(-1)!
+      // The global graph marks the note shown, and draws the trail through itself.
+      const opener = this.closest(".local-graph")?.querySelector<HTMLElement>("global-graph")
+      if (opener) {
+        opener.dataset.url = shown
+        opener.dataset.path = JSON.stringify(trail)
+      }
+      const index = await loadGraphIndex()
       // Taken out of the page while the index was on its way.
-      if (!this.#connected || this.#drawn) return
-      const here = local.nodes.find((node) => node.id === url)
+      if (!this.#connected) return
+      const whole = graphOf(index, { removeTags: settings.removeTags, privatePages: settings.privatePages })
+      this.#drawn?.destroy()
       this.#drawn = drawGraph(this, {
-        graph: local,
-        current: url,
-        settings: graph.local,
+        graph: trailGraph(whole, trail, settings.depth),
+        current: shown,
+        settings,
         bubble: (tag) => this.querySelector<HTMLElement>(`[data-tag="${CSS.escape(tag)}"] .tag-bubble`),
         follow: (to) => void navigate(to),
-        label: `Graph of the pages around ${here?.label ?? "this page"}`,
+        label: "Graph of the notes on your trail, and what is next to them",
+        path: [...trail],
+        focus: settings.focusZoom,
       })
     }
   }
 
   customElements.define("local-graph", LocalGraph)
+  document.addEventListener("astro:page-load", () => {
+    for (const each of document.querySelectorAll<LocalGraph>("local-graph")) void each.draw()
+  })
 </script>
 
 <style>
-  /* The global graph's control sits over the graph's top-right corner. Where it goes is the frame's
-     to say, so the global graph styles only its button. */
-  .frame {
+  /* The graph fills the room the graph column gives it. The global graph's control sits over its
+     top-right corner: where it goes is this frame's to say, so the global graph styles only its
+     button. */
+  .local-graph {
     position: relative;
+    min-height: 0;
+    height: 100%;
   }
 
-  .frame > :global(.global-graph) {
+  .local-graph > :global(.global-graph) {
     position: absolute;
-    top: 0.25rem;
-    right: 0.25rem;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 1;
   }
 
-  /* A square box, the sidebar's width, no taller than a sidebar section should be where the sidebar
-     is the content's width, under it. The canvas fills it. */
   local-graph {
     display: block;
-    box-sizing: border-box;
-    aspect-ratio: 1 / 1;
-    max-height: 20rem;
-    width: 100%;
+    height: 100%;
     overflow: hidden;
-    border: 1px solid var(--lightgray);
-    border-radius: 5px;
   }
 
   local-graph :global(canvas) {

@@ -195,13 +195,6 @@ The note at `tags/<tag slug>.md`, whose body is the body of that tag's page. An 
 its page is the tag page.
 _Avoid_: description file (the Quartz name), tag note
 
-**Tag explorer**:
-The tree of the site's tags in the left sidebar, each with the notes under it but the home page,
-which is no tag's post. Its tags are those of the notes it lists: where it leaves private pages
-out, a tag only private pages carry is not in it, though the tag has a tag page. A drawer on a
-narrow screen.
-_Avoid_: file explorer, tag tree
-
 ### Pages and layout
 
 **Site configuration**:
@@ -211,9 +204,19 @@ _Avoid_: file explorer, tag tree
 _Avoid_: site config (Quartz's YAML file), settings
 
 **Site shell**:
-What is around a page's content on every page, `src/layouts/Page.astro`: the left sidebar, the
-header over the content, what follows the body, the right sidebar and the footer.
+What is around a page's content on every page, `src/layouts/Page.astro`: the graph column, the
+trail's spines, the header over the content, and what follows the body.
 _Avoid_: frame (Quartz's), chrome, template
+
+**Graph column**:
+The column beside the note on every page, in view while the note scrolls: the site's title and
+the search box, the local graph, and the footer.
+_Avoid_: sidebar, rail
+
+**Spine**:
+One note of the trail before the note shown, as a strip beside it with the note's title on its
+side, which goes back to that note.
+_Avoid_: column, tab, breadcrumb
 
 **Page kind**:
 Which page the site shell is around: a note, the home page, a tag page, an annotation page, the
@@ -221,8 +224,8 @@ Which page the site shell is around: a note, the home page, a tag page, an annot
 _Avoid_: page type (Quartz's), layout
 
 **Named place**:
-A region of a layout that features are put into: the head, the left sidebar, the header, after the
-body, the right sidebar, the footer, the end of the body.
+A region of a layout that features are put into: the head, the graph column's header and footer,
+the header over the content, after the body, the end of the body.
 _Avoid_: slot (Astro's word, for content a page passes in), position
 
 **Reserved line**:
@@ -279,11 +282,11 @@ _Avoid_: annotation, selection
 **Margin**:
 The column beside the document where the cards sit, each level with its passage, where the
 document fits beside it.
-_Avoid_: sidebar (that is the site shell's), panel
+_Avoid_: sidebar, panel
 
 **Drawer**:
 On an annotation page, the cards where the margin doesn't fit, coming in from the right edge, from
-its tab. A phone's covers most of the screen. (The tag explorer's drawer, on a phone, is its own.)
+its tab. A phone's covers most of the screen.
 _Avoid_: sidebar, sheet
 
 ### Features
@@ -299,8 +302,15 @@ _Avoid_: recent posts (its heading), feed (that is the RSS)
 The file the site publishes of its notes, its tags and the links between them, which every graph
 is drawn from.
 
+**Trail**:
+The notes a reader came through to the note shown, oldest first, ending with it, and at most a
+configured number of them. Following a link goes on to its note, or back to it if the trail has
+it already. The address carries the trail, so a trail can be shared.
+_Avoid_: stack, path, history (the browser's)
+
 **Local graph**:
-The graph in a page's sidebar: the page, the notes it links to and from, and their tags.
+The graph in the graph column: every note of the reader's trail, what is next to each, and their
+tags, with the trail drawn through them.
 _Avoid_: mini graph
 
 **Global graph**:
@@ -337,21 +347,6 @@ The list inside a graph's canvas of every node it draws, linking to its page, wi
 an edge to. Never shown; read by assistive technology in the drawing's place.
 _Avoid_: fallback, hidden list
 
-**Subscribe box**:
-The newsletter's form with its heading and a line of text: under a note, or in the sidebar.
-_Avoid_: signup, newsletter form
-
-**Social card**:
-One of the two cards in the home page's sidebar, each for one account: the GitHub card, the
-Bluesky card. On a desktop only, and filled in the reader's browser: the page as built holds its
-loading state, and a card that can't be filled says so and links to the account's profile.
-_Avoid_: widget, share card
-
-**Contribution calendar**:
-The GitHub card's year: a square a day, a column a week with Sunday on top, each coloured by its
-level, from 0 (no contributions) to 4, in the colours site configuration gives the five levels.
-_Avoid_: heatmap, contribution graph
-
 **Share card**:
 The image a page's `og:image` names, drawn when the site builds.
 _Avoid_: social card, OG image, thumbnail
@@ -383,7 +378,7 @@ It opens in a new tab.
 _Avoid_: outbound link, absolute link (a link to the site may be written whole too)
 
 **Search box**:
-The button in the left sidebar's toolbar, and the dialog it opens, that searches the site's full
+The button in the graph column's header, and the dialog it opens, that searches the site's full
 text: the indexable pages', and no other's. Ctrl+K or ⌘K opens it.
 _Avoid_: search bar, search modal
 
@@ -396,8 +391,8 @@ One use of a component that is hydrated in the reader's browser. Every widget is
 _Avoid_: mount point
 
 **Colour scheme**:
-Light or dark: which of the site's two palettes a reader is seeing. The reader's choice, else
-their system's. Anything that paints in script paints again when it changes.
+Light or dark: which of the site's two palettes a reader is seeing: their system's. Anything that
+paints in script paints again when it changes.
 _Avoid_: theme, mode, dark mode (for the scheme itself)
 
 ### Tests

@@ -16,8 +16,7 @@ import MathStylesheet from "../components/MathStylesheet.astro"
 // 07 fonts
 import { Font } from "astro:assets"
 
-// 08 scheme before paint
-import SchemeBeforePaint from "../components/SchemeBeforePaint.astro"
+import SchemeChange from "../components/SchemeChange.astro"
 
 // 09 client-side navigation
 import ClientNavigation from "../components/ClientNavigation.astro"
@@ -35,9 +34,6 @@ import { hasDiagrams } from "../lib/mermaid.ts"
 
 // 20 link popovers
 import LinkPopovers from "../components/LinkPopovers.astro"
-
-// PROTOTYPE stacked notes (prototype/stacked-notes branch only)
-import StackedNotesPrototype from "../components/prototype-stacked-notes/StackedNotesPrototype.astro"
 
 type Props = PageProps
 
@@ -58,8 +54,7 @@ const page = Astro.props
     <Font cssVariable="--bodyFont" preload={[{ subset: "latin", style: "normal" }]} />
     <Font cssVariable="--codeFont" />
 
-    {/* 08 scheme before paint */}
-    <SchemeBeforePaint />
+    <SchemeChange />
 
     {/* 09 client-side navigation */}
     <ClientNavigation />
@@ -79,8 +74,5 @@ const page = Astro.props
 
     {/* 20 link popovers: every kind */}
     <LinkPopovers />
-
-    {/* PROTOTYPE stacked notes: dev only, and only with ?variant= */}
-    {import.meta.env.DEV && <StackedNotesPrototype />}
   </body>
 </html>

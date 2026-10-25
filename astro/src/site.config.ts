@@ -18,11 +18,9 @@ import type {
   PostListingConfig,
   SeoConfig,
   SiteConfig,
-  SocialConfig,
-  SubscribeConfig,
   TagDictionary,
-  TagExplorerConfig,
   TagListConfig,
+  TrailConfig,
 } from "./site.config.types.ts"
 
 export const site: SiteConfig = {
@@ -98,17 +96,17 @@ export const tagList: TagListConfig = {
 }
 
 export const footer: FooterConfig = {
-  links: [
-    { label: "Contact", url: "/contact" },
+  contacts: [
     { label: "GitHub", url: "https://github.com/spelkington" },
+    { label: "Email", url: "mailto:spencer@chaoticgood.computer" },
     { label: "LinkedIn", url: "https://www.linkedin.com/in/spelkington" },
-    { label: "Privacy Policy", url: "https://chaoticgood.computer/privacy" },
-    { label: "AI Policy", url: "https://chaoticgood.computer/ai-policy" },
+    { label: "Bluesky", url: "https://bsky.app/profile/speen.us" },
   ],
   copyright: [
     { label: "Spencer Elkington", url: "https://chaoticgood.computer/contact" },
     { label: "Chaotic Good Computing", url: "https://github.com/chaoticgoodcomputing" },
   ],
+  notice: "All content on this site is handwritten.",
 }
 
 export const postListing: PostListingConfig = {
@@ -137,83 +135,78 @@ export const seo: SeoConfig = {
   defaultArticleType: "Article",
 }
 
-export const tagExplorer: TagExplorerConfig = {
-  title: "Tag Explorer",
-}
-
-// PROTOTYPE (stacked notes): the global graph's settings, which the local graph starts from too.
-const globalGraph: GraphConfig["global"] = {
-  removeTags: site.private.tags,
-  privatePages: "mark",
-  forces: {
-    charge: -20,
-    center: 0.05,
-    linkDistance: { tagTag: 0.1, tagNote: 0.1, noteNote: 0.01 },
-    linkStrength: { tagTag: 1.0, tagNote: 0.2, noteNote: 0.1 },
-    collision: 0.1,
-  },
-  shellSize: { base: 150, scaling: 15 },
-  sizes: {
-    tag: { base: 10, scaling: 1 },
-    note: { base: 3, scaling: 3 },
-    private: 0.5,
-    current: 2,
-    label: 9,
-    gap: 15,
-  },
-  edges: {
-    opacity: {
-      tagTag: { min: 0.99, max: 1.0 },
-      tagNote: { min: 0.01, max: 0.2 },
-      noteNote: { min: 0.8, max: 1 }
-    },
-    style: { tagTag: "solid", tagNote: "solid", noteNote: "dotted" },
-  },
-  shell: {
-    pinnedTags: ["engineering", "writing", "horticulture", "projects", "economics"],
-    zoomMargin: 80,
-    style: { opacity: 1, lineStyle: "dotted", lineWidth: 3 },
-  },
-  hoverPulse: { on: 800, off: 1000, delay: 200 },
-  filters: { timePeriod: "month", includePrivate: false, minPosts: 3 },
+export const trail: TrailConfig = {
+  length: 4,
 }
 
 export const graph: GraphConfig = {
-  // PROTOTYPE (stacked notes): exactly the global graph's settings, drawn over the visited notes
-  // and what is next to them. `filters` is the global graph's alone, and unread here.
-  local: { ...globalGraph, depth: 1 },
-  global: globalGraph,
-}
-export const subscribe: SubscribeConfig = {
-  buttondown: "chaoticgoodcomputing",
-  underNote: {
-    title: "Subscribe for more!",
-    description: "Be notified about new highlights and cool updates!",
+  // The graph column's: every note of the trail, and what is next to one.
+  local: {
+    depth: 1,
+    focusZoom: 2.5,
+    removeTags: site.private.tags,
+    privatePages: "mark",
+    forces: {
+      charge: -20,
+      center: 0.05,
+      linkDistance: { tagTag: 0.1, tagNote: 0.1, noteNote: 0.01 },
+      linkStrength: { tagTag: 1.0, tagNote: 0.2, noteNote: 0.1 },
+      collision: 0.1,
+    },
+    // Never drawn, with no shell: the unit the link distances are measured in.
+    shellSize: { base: 150, scaling: 15 },
+    sizes: {
+      tag: { base: 10, scaling: 1 },
+      note: { base: 3, scaling: 3 },
+      private: 0.5,
+      current: 2,
+      label: 9,
+      gap: 15,
+    },
+    edges: {
+      opacity: {
+        tagTag: { min: 0.99, max: 1.0 },
+        tagNote: { min: 0.01, max: 0.2 },
+        noteNote: { min: 0.8, max: 1 },
+      },
+      style: { tagTag: "solid", tagNote: "solid", noteNote: "dotted" },
+    },
+    hoverPulse: { on: 800, off: 1000, delay: 200 },
   },
-  sidebar: {
-    title: "Newsletter",
-    description: "Occasional emails with highlights and updates.",
-  },
-}
-
-export const social: SocialConfig = {
-  github: {
-    username: "spelkington",
-    title: "GitHub Activity",
-    // GitHub's own calendar colours, in either scheme.
-    levelColors: [
-      "light-dark(#ebedf0, #161b22)",
-      "light-dark(#9be9a8, #0e4429)",
-      "light-dark(#40c463, #006d32)",
-      "light-dark(#30a14e, #26a641)",
-      "light-dark(#216e39, #39d353)",
-    ],
-  },
-  bluesky: {
-    handle: "speen.us",
-    title: "ATProto Feed",
-    postLimit: 5,
-    showMetrics: false,
+  global: {
+    removeTags: site.private.tags,
+    privatePages: "mark",
+    forces: {
+      charge: -20,
+      center: 0.05,
+      linkDistance: { tagTag: 0.1, tagNote: 0.1, noteNote: 0.01 },
+      linkStrength: { tagTag: 1.0, tagNote: 0.2, noteNote: 0.1 },
+      collision: 0.1,
+    },
+    shellSize: { base: 150, scaling: 15 },
+    sizes: {
+      tag: { base: 10, scaling: 1 },
+      note: { base: 3, scaling: 3 },
+      private: 0.5,
+      current: 2,
+      label: 9,
+      gap: 15,
+    },
+    edges: {
+      opacity: {
+        tagTag: { min: 0.99, max: 1.0 },
+        tagNote: { min: 0.01, max: 0.2 },
+        noteNote: { min: 0.8, max: 1 },
+      },
+      style: { tagTag: "solid", tagNote: "solid", noteNote: "dotted" },
+    },
+    shell: {
+      pinnedTags: ["engineering", "writing", "horticulture", "projects", "economics"],
+      zoomMargin: 80,
+      style: { opacity: 1, lineStyle: "dotted", lineWidth: 3 },
+    },
+    hoverPulse: { on: 800, off: 1000, delay: 200 },
+    filters: { timePeriod: "month", includePrivate: false, minPosts: 3 },
   },
 }
 
@@ -221,7 +214,6 @@ export const analytics: AnalyticsConfig = {
   posthogKey: "phc_BviHJVml66FIB1RFmgeAzZpKRWA0nntGdIOo47hTA3X",
   posthogHost: "https://app.posthog.com",
   navigationSources: {
-    ".tag-explorer": "tag-explorer",
     ".tag-badge": "tag-badge",
     ".prose a": "inline-link",
   },

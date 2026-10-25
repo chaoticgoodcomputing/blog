@@ -3,7 +3,7 @@
 // the browser, so a page and its script agree on what a graph holds. How a graph is laid out and
 // drawn is src/lib/graph-drawing.ts's.
 
-import type { EdgeKind, GraphSettings, HoverPulse, LocalGraphSettings, PrivateTreatment } from "../site.config.types.ts"
+import type { EdgeKind, GraphSettings, HoverPulse, PrivateTreatment } from "../site.config.types.ts"
 import { TAGS_INDEX, tagAncestors, tagName, tagUrl, underAny } from "./tags.ts"
 
 /** Where the site publishes its graph index (src/pages/graph.json.ts). */
@@ -116,19 +116,7 @@ export function graphOf(index: GraphIndex, choices: GraphChoices): Graph {
 }
 
 /**
- * A page's local graph, as `settings` (site configuration's `graph.local`) draws it: its
- * neighbourhood in the whole graph of the index.
- */
-export function localGraph(
-  index: GraphIndex,
-  url: string,
-  { depth, removeTags, privatePages }: Pick<LocalGraphSettings, "depth" | "removeTags" | "privatePages">,
-): Graph {
-  return neighbourhood(graphOf(index, { removeTags, privatePages }), url, depth)
-}
-
-/**
- * A page's local graph: the node at `id` and every node within `depth` edges of it, whichever way
+ * A node's neighbourhood: the node at `id` and every node within `depth` edges of it, whichever way
  * each edge runs, with the edges among them. With a depth below zero, the whole graph. Empty for an
  * id the graph has no node for.
  */
@@ -154,6 +142,19 @@ export function neighbourhood(graph: Graph, id: string, depth: number): Graph {
     }
     frontier = next
   }
+  return {
+    nodes: graph.nodes.filter((node) => found.has(node.id)),
+    edges: graph.edges.filter((edge) => found.has(edge.source) && found.has(edge.target)),
+  }
+}
+
+/**
+ * The graph around a reader's trail (./trail.ts): each of its notes, every node within `depth`
+ * edges of one, and every edge among them, whichever note's neighbourhood each end is in. A trail
+ * note the graph has no node for adds nothing.
+ */
+export function trailGraph(graph: Graph, trail: readonly string[], depth: number): Graph {
+  const found = new Set(trail.flatMap((id) => neighbourhood(graph, id, depth).nodes.map((node) => node.id)))
   return {
     nodes: graph.nodes.filter((node) => found.has(node.id)),
     edges: graph.edges.filter((edge) => found.has(edge.source) && found.has(edge.target)),

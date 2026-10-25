@@ -220,47 +220,12 @@ test("with a depth below zero, the local graph is the whole graph", () => {
   expect(neighbourhood(graph, "/far", -1)).toEqual(graph)
 })
 
-test("the local graph's settings are the Quartz site's, carried over", () => {
-  // quartz/core/quartz.config.yaml's `localGraph`, over quartz-graph's defaults: the private tag
-  // removed and private pages drawn at 0.8 of their size, a repel force of 2 (d3's many-body
-  // strength is -100 times it) and a centre force of 0.5, and the distances, strengths, sizes and
-  // opacities below. Its labels were 0.6 of 15px, 9px, over a scale of 0.55: 16.36px. Its link
-  // distances were 50px; here they are shares of the shell's diameter, 50px at 16 nodes.
-  expect(graph.local).toEqual({
-    depth: 1,
-    removeTags: ["private"],
-    privatePages: "mark",
-    forces: {
-      charge: -200,
-      center: 0.5,
-      linkDistance: { tagTag: 0.25, tagNote: 0.25, noteNote: 0.25 },
-      linkStrength: { tagTag: 0.3, tagNote: 0.3, noteNote: 0.3 },
-      collision: 1,
-    },
-    shellSize: { base: 60, scaling: 10 },
-    sizes: {
-      tag: { base: 10, scaling: 1 },
-      note: { base: 10, scaling: 2 },
-      private: 0.8,
-      current: 1.4,
-      label: 16.36,
-      gap: 4,
-    },
-    edges: {
-      opacity: { tagTag: { min: 1, max: 1 }, tagNote: { min: 0, max: 0 }, noteNote: { min: 1, max: 1 } },
-      style: { tagTag: "solid", tagNote: "solid", noteNote: "dotted" },
-    },
-  })
-})
-
-test("the global graph's labels are the Quartz site's size", () => {
-  // 0.6 of 15px, 9px, over the global graph's scale of 0.8.
-  expect(graph.global.sizes.label).toBe(11.25)
-})
+// Sizes of the test's own, so that what is tested is how a radius is worked out, not the site's sizes.
+const SIZES = { tag: { base: 10, scaling: 1 }, note: { base: 10, scaling: 2 }, private: 0.8, current: 1.4, label: 16, gap: 4 }
 
 test("a note's radius grows with its edges, a tag's with the notes under it, and a private page's is smaller", () => {
   const local = neighbourhood(graphOf(INDEX, { removeTags: [], privatePages: "mark" }), "/hub", 1)
-  const radius = radii(local, graph.local.sizes)
+  const radius = radii(local, SIZES)
   // The hub has five edges here: to the spoke, the secret twice (each way) and its two tags. 10 + 2√5.
   expect(radius.get("/hub")).toBeCloseTo(14.472, 3)
   // The secret has two, to and from the hub, and is private: (10 + 2√2) × 0.8.
@@ -269,7 +234,7 @@ test("a note's radius grows with its edges, a tag's with the notes under it, and
   expect(radius.get("/tags/engineering/ai")).toBe(11)
 
   // In the whole graph, #engineering has the spoke, and the hub through #ai: 10 + √2.
-  const whole = radii(graphOf(INDEX, { removeTags: [], privatePages: "mark" }), graph.local.sizes)
+  const whole = radii(graphOf(INDEX, { removeTags: [], privatePages: "mark" }), SIZES)
   expect(whole.get("/tags/engineering")).toBeCloseTo(11.414, 3)
 })
 

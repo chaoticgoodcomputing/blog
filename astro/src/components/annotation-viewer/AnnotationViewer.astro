@@ -9,7 +9,8 @@
 // Once the document opens, the element's script lays the page out by the room it has, and never by
 // a media query:
 // - **the margin**, where the document fits beside a column of cards: each card level with its
-//   passage, or just below the card above; all but the selected one shortened. Cards whose passage
+//   passage, or just below the card above; every card whole until one is selected, and then all
+//   but the selected one shortened. Cards whose passage
 //   isn't in the document go last, under "Not found in the document". The bar's toggle hides and
 //   shows the margin, and the browser remembers which.
 // - **the drawer**, where it doesn't: the document takes the column, and the cards come in from the
@@ -340,7 +341,7 @@ const href = encodeURI(decodeURI(target))
       for (const card of this.#cards()) {
         const selected = idOf(card) === this.#selected
         card.toggleAttribute("data-selected", selected)
-        // PROTOTYPE (stacked notes): every card whole until one is selected.
+        // Every card is whole until one is selected.
         card.classList.toggle("short", !selected && this.#layout !== "static" && this.#selected !== undefined)
         if (selected) card.setAttribute("aria-current", "true")
         else card.removeAttribute("aria-current")
@@ -390,18 +391,10 @@ const href = encodeURI(decodeURI(target))
       section.style.height = `${y}px`
     }
 
-    // PROTOTYPE (stacked notes): what scrolls the viewer: the window, or a column it is shown in.
-    #scroller(): Element | Window {
-      for (let at = this.parentElement; at; at = at.parentElement) {
-        if (/auto|scroll/.test(getComputedStyle(at).overflowY) && at.scrollHeight > at.clientHeight) return at
-      }
-      return window
-    }
-
     // Scrolls the page so that a point `y` down the window sits a little below the bar.
     #reveal(y: number, smoothly: boolean) {
       const bar = this.#layout === "static" ? 0 : this.#bar.offsetHeight
-      this.#scroller().scrollBy({ top: y - bar - BELOW_BAR, behavior: smoothly ? "smooth" : "instant" })
+      window.scrollTo({ top: Math.max(0, window.scrollY + y - bar - BELOW_BAR), behavior: smoothly ? "smooth" : "instant" })
     }
 
     // Goes to an annotation: its passage where the document is shown and has one, its card otherwise.
@@ -518,7 +511,7 @@ const href = encodeURI(decodeURI(target))
       const hold = this.#hold
       if (!hold || !this.#fit) return
       const box = hold.page.getBoundingClientRect()
-      this.#scroller().scrollBy({ top: box.top + hold.fy * box.height - hold.y, behavior: "instant" })
+      window.scrollBy({ top: box.top + hold.fy * box.height - hold.y, behavior: "instant" })
       this.querySelector(".document")!.scrollLeft += box.left + hold.fx * box.width - hold.x
       const sized = Math.abs(box.width - hold.share * this.#fit.documentWidth) < 1
       if (sized || performance.now() > hold.until) this.#hold = undefined

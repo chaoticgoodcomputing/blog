@@ -31,10 +31,16 @@ export interface DrawingOptions {
   /** What the canvas is: its text alternative's name. */
   label: string
   /**
-   * PROTOTYPE (stacked notes): the ids of the notes a reader went through, in order, drawn as one
+   * A reader's trail (./trail.ts): the ids of the notes they came through, in order, drawn as one
    * line through them over the edges. A step between two nodes with no edge is dashed.
    */
   path?: string[]
+  /**
+   * The zoom to open on, centred on the current node, in place of the
+   * whole graph fitted to the box. The view follows the node as the graph settles, as a fitted view
+   * follows the graph, until the reader pans, zooms or drags.
+   */
+  focus?: number
 }
 
 export interface DrawnGraph {
@@ -267,6 +273,13 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
     return zoomIdentity.translate(x, y).scale(k)
   }
 
+  // The view centred on the current node, at `focus`.
+  const centred = (k: number): ZoomTransform => {
+    const node = nodes.find((each) => each.id === current)
+    const [x, y] = [node?.x ?? 0, node?.y ?? 0]
+    return zoomIdentity.translate(width / 2 - k * (x + width / 2), height / 2 - k * (y + height / 2)).scale(k)
+  }
+
   const selection = select(canvas)
   let pressed = 0
   selection.call(
@@ -300,7 +313,7 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
   let frame = requestAnimationFrame(function draw(time) {
     if (simulation.alpha() >= simulation.alphaMin() || simulation.alphaTarget() > 0) simulation.tick()
     context.font = `${settings.sizes.label}px ${palette.font}`
-    if (following) selection.call(zoomer.transform, fitted())
+    if (following) selection.call(zoomer.transform, options.focus ? centred(options.focus) : fitted())
     context.setTransform(1, 0, 0, 1, 0, 0)
     context.clearRect(0, 0, canvas.width, canvas.height)
     const dpr = canvas.width / Math.max(width, 1)
@@ -342,19 +355,21 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
     })
     context.setLineDash([])
 
-    // PROTOTYPE (stacked notes): the reader's path, over the edges and under the nodes.
+    // The reader's trail, over the edges and under the nodes.
     if (options.path && options.path.length > 1) {
       const placed = new Map(nodes.map((node) => [node.id, node]))
+      // The path through the nodes the graph has: a step it doesn't draw is passed over.
+      const steps = options.path.flatMap((id) => placed.get(id) ?? [])
       const linked = (a: string, b: string) =>
         graph.edges.some((edge) => (edge.source === a && edge.target === b) || (edge.source === b && edge.target === a))
       context.globalAlpha = hovered ? 0.35 : 1
       context.strokeStyle = palette.currentDisc
-      context.lineWidth = 4
+      // As wide on screen at any zoom: the global graph is drawn far smaller than a local one.
+      context.lineWidth = 4 / view.k
       context.lineCap = "round"
-      for (let i = 1; i < options.path.length; i++) {
-        const [from, to] = [placed.get(options.path[i - 1]!), placed.get(options.path[i]!)]
-        if (!from || !to) continue
-        context.setLineDash(linked(from.id, to.id) ? [] : [2, 8])
+      for (let i = 1; i < steps.length; i++) {
+        const [from, to] = [steps[i - 1]!, steps[i]!]
+        context.setLineDash(linked(from.id, to.id) ? [] : [2 / view.k, 8 / view.k])
         context.beginPath()
         context.moveTo(from.x ?? 0, from.y ?? 0)
         context.lineTo(to.x ?? 0, to.y ?? 0)

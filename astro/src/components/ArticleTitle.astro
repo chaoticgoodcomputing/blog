@@ -1,20 +1,107 @@
 ---
-// The page's title, over its content: the page's one first-level heading.
+// The page's title, over its content: the page's one first-level heading, and beside it a button
+// that copies the page's own address, as a heading's anchor is beside a heading
+// (src/styles/prose/heading-anchors.css): shown while the pointer is on the title. The address is
+// the page's alone, whole, on the site's domain: none of the reader's trail is in it.
+//
+// The button is beside the heading, not in it, so that the heading's name is the title's.
+import { Icon } from "astro-icon/components"
+
 interface Props {
   title: string
+  /** The page's address from the site's root, which the button copies. Without one, no button. */
+  url?: string | undefined
 }
 
-const { title } = Astro.props
+const { title, url } = Astro.props
+const address = url === undefined ? undefined : new URL(url, Astro.site).href
 ---
 
-<h1 class="article-title">{title}</h1>
+<div class="article-title">
+  <h1>{title}</h1>
+  {
+    address && (
+      <copy-link data-address={address}>
+        <button type="button" title="Copy a link to this page" aria-label="Copy a link to this page">
+          <Icon name="mdi:link-variant" is:inline width="1em" height="1em" aria-hidden="true" />
+        </button>
+      </copy-link>
+    )
+  }
+</div>
+
+<script>
+  /** Copies its `data-address` when its button is pressed, and says so for a moment. */
+  class CopyLink extends HTMLElement {
+    #timer: ReturnType<typeof setTimeout> | undefined
+
+    connectedCallback() {
+      this.querySelector("button")!.addEventListener("click", () => {
+        void navigator.clipboard.writeText(this.dataset.address ?? "").then(() => {
+          this.dataset.copied = ""
+          clearTimeout(this.#timer)
+          this.#timer = setTimeout(() => delete this.dataset.copied, 1500)
+        })
+      })
+    }
+  }
+
+  customElements.define("copy-link", CopyLink)
+</script>
 
 <style>
   .article-title {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  h1 {
     margin: 0;
     font-size: 1.75rem;
     line-height: 1.25;
     /* A title with nowhere to break, a tag page's `#a/b/c`, breaks rather than widen the page. */
     overflow-wrap: anywhere;
+  }
+
+  copy-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    flex: none;
+    font-size: 1.3rem;
+    color: var(--darkgray);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .article-title:hover copy-link,
+  copy-link:focus-within,
+  copy-link[data-copied] {
+    opacity: 1;
+  }
+
+  button {
+    display: block;
+    padding: 0;
+    border: none;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  button:hover {
+    color: var(--tertiary);
+  }
+
+  button :global(svg) {
+    display: block;
+  }
+
+  copy-link[data-copied]::after {
+    content: "Copied";
+    font-size: 0.6em;
+    color: var(--gray);
   }
 </style>
