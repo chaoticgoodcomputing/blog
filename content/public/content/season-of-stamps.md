@@ -59,7 +59,8 @@ I've had a great time attending local development meetups, ranging from formal s
 
 "Like a passport" and "like an envelope" were both offshoots; "like approval" was the original source of the idea. "Stamps" came to mind when I saw a reference to the old "Official Nintendo Seal" that the company used to put on first-party products.
 
-![The Official Nintendo Seal, retrieved from the Nintendo Fandom Site](https://static.wikia.nocookie.net/nintendo/images/d/de/Official_Nintendo_Seal.svg/revision/latest?cb=20190121014434&path-prefix=en)
+![[public/assets/Pasted image 20261026102901.png]]
+
 
 Growing up, my family had a copy of The Legend of Zelda: Majora's Mask for the Nintendo 64, where that seal was prominently placed on the front of the cartridge itself. I chiseled away at that game for years, and the shape of the seal is stamped (ha) in my memory.
 
