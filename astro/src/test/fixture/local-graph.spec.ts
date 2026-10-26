@@ -183,6 +183,8 @@ test.describe("on a high-density screen, where a rim is wide enough to have pixe
     await page.emulateMedia({ colorScheme: "light" })
     await page.goto(hub)
     const ai = await nodePosition(page, "#ai")
+    // The pointer on the graph, which draws a node off the trail in colour.
+    await page.mouse.move(ai.x, ai.y)
     // Inside the bubble, short of its rim: the robot.
     const icon = { ...ai, radius: 5 }
     await expect.poll(() => pixelsLike(canvas(page), dark.light, icon)).toBeGreaterThan(5)
@@ -194,5 +196,26 @@ test.describe("on a high-density screen, where a rim is wide enough to have pixe
     await expect.poll(() => pixelsLike(canvas(page), engineering.dark)).toBeGreaterThan(20)
     expect(await pixelsLike(canvas(page), engineering.light)).toBe(0)
     await expect.poll(() => pixelsLike(canvas(page), dark.dark, icon)).toBeGreaterThan(5)
+  })
+
+  test("while the pointer is off the canvas, a node off the trail is drawn in grayscale, and in colour once it is on", async ({ page }) => {
+    // engineering's colour, which `#ai` takes. The hub, the trail's one note, is tagged `#ai` and
+    // drawn as its bubble too, in colour, so only the pixels round `#ai` are counted.
+    const engineering = [0x00, 0x70, 0xcc]
+    await page.emulateMedia({ colorScheme: "light" })
+    await page.goto(hub)
+    const ai = await nodePosition(page, "#ai")
+    const around = { ...ai, radius: 20 }
+    await expect.poll(() => pixelsLike(canvas(page), engineering, around)).toBe(0)
+    // While the trail's own node is in colour.
+    expect(await pixelsLike(canvas(page), engineering)).toBeGreaterThan(20)
+
+    await page.mouse.move(ai.x, ai.y)
+    await expect.poll(() => pixelsLike(canvas(page), engineering, around)).toBeGreaterThan(20)
+
+    // Off it again: grayscale again.
+    const box = (await canvas(page).boundingBox())!
+    await page.mouse.move(box.x > 40 ? box.x - 20 : box.x + box.width + 20, box.y + box.height / 2)
+    await expect.poll(() => pixelsLike(canvas(page), engineering, around)).toBe(0)
   })
 })

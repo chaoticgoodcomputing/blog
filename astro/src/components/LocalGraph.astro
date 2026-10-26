@@ -10,6 +10,9 @@
 // one way, with its icon and colour, wherever it is. Any tag may be next to a trail, so all of them
 // are here.
 //
+// While the pointer is off the canvas, only the trail's nodes are drawn in colour; the rest are
+// grayscale until the reader points at the graph.
+//
 // In the corner of its frame is the control that opens the global graph, in a dialog
 // (./global-graph/GlobalGraph.astro), which marks the note shown and draws the trail through it
 // too. Following a node of either graph is a navigation like any link's, which carries the trail
@@ -101,6 +104,7 @@ const tags = graphOf(graphIndex(), { removeTags, privatePages }).nodes.flatMap((
         label: `Graph of the pages around ${here?.label ?? "this page"}`,
         path: [...trail],
         focus: settings.focusZoom,
+        grayOffPath: true,
       })
     }
   }

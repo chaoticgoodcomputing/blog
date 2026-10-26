@@ -32,7 +32,7 @@ const kind: PageKind = isAnnotationPage(note) ? "annotation" : "note"
 const mirror = kind === "annotation" ? mirrorFor(note) : undefined
 ---
 
-<Page kind={kind} title={note.title} description={note.description} url={note.url} note={note} headings={headings}>
+<Page kind={kind} title={note.title} description={note.summary} url={note.url} note={note} headings={headings}>
   {
     mirror ? (
       <AnnotationViewer note={note} mirror={mirror}>

@@ -47,3 +47,33 @@ test("a note's text is what a reader reads of it: no frontmatter, no comment, no
 test("a file that is no note has no text", () => {
   assert.equal(vault.readText(vault.getFileByPath("picture.png")!), null)
 })
+
+test("a note's text is also its blocks, each with its type, where it is, and the blocks it is inside", () => {
+  const file = vault.getFileByPath("words.md")!
+  const blocks = vault.readTextBlocks(file)!
+  assert.deepEqual(
+    blocks.map(({ type, text, within }) => ({ type, text, within })),
+    [
+      { type: "heading", text: "A heading", within: [] },
+      { type: "paragraph", text: "A paragraph with a link and another note. ", within: [] },
+      { type: "paragraph", text: "One item", within: ["list", "listItem"] },
+      { type: "paragraph", text: "Two items", within: ["list", "listItem"] },
+      { type: "calloutTitle", text: "A callout", within: ["callout"] },
+      { type: "paragraph", text: "Its body.", within: ["callout", "calloutContent"] },
+      { type: "tableCell", text: "Cell", within: ["table", "tableRow"] },
+      { type: "tableCell", text: "Other", within: ["table", "tableRow"] },
+      { type: "tableCell", text: "Row", within: ["table", "tableRow"] },
+      { type: "tableCell", text: "Last", within: ["table", "tableRow"] },
+      { type: "code", text: "const code = 1", within: [] },
+    ],
+  )
+  // Where each is in the note's source.
+  const source = vault.read(file)!
+  const paragraph = blocks[1]!
+  assert.equal(
+    source.slice(paragraph.position!.start.offset, paragraph.position!.end.offset),
+    "A paragraph with a [link](https://example.com/a/long/address) and [[Other note|another note]]. %%A hidden remark.%%",
+  )
+  // The text is the blocks', a block to a line.
+  assert.equal(vault.readText(file), blocks.map((block) => block.text).join("\n"))
+})

@@ -55,10 +55,11 @@ test("a note's share card says its title, description, date, reading time and ta
   })
 })
 
-test("a note with no description has a card with none", () => {
+test("a note with no description has a card with its first paragraph in its place", () => {
   expect(shareCardOf({ note: note("share-card/long-title") })).toEqual({
     title:
       "Everything I Learned Building a Static Site Generator Twice Over, Including the Parts I Would Rather Forget About Entirely",
+    description: "No description, and a title too long for one line.",
     date: "Feb 15, 2026",
     readingTime: "1 min read",
     tags: [],

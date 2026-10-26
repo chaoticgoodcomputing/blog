@@ -1,0 +1,61 @@
+---
+// The links panel: the pages the page's note links to, its forward links, beside the pages that
+// link to it, its backlinks, an embed counting as a link (src/lib/backlinks.ts). Each column keeps
+// its side when the other has nothing, and has no heading when it has nothing itself; a page with
+// neither has no panel. Where the panel is too narrow for two, the backlinks go under.
+import { backlinksOf, forwardLinksOf } from "../lib/backlinks.ts"
+import type { NoteFacts } from "../lib/notes.ts"
+import LinkList from "./LinkList.astro"
+
+interface Props {
+  /** The note the page shows. A page that shows none has no links panel. */
+  note: NoteFacts | undefined
+}
+
+const { note } = Astro.props
+const forward = note ? forwardLinksOf(note) : []
+const back = note ? backlinksOf(note) : []
+---
+
+{
+  (forward.length > 0 || back.length > 0) && (
+    <div class="page-links">
+      <div class="columns">
+        <LinkList heading="Forward links" links={forward} class="forward-links" />
+        <LinkList heading="Backlinks" links={back} class="backlinks" />
+      </div>
+    </div>
+  )
+}
+
+<style>
+  /* Laid out by its own width, not the window's: the note's column is narrower than the window. */
+  .page-links {
+    container-type: inline-size;
+  }
+
+  .columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem 2rem;
+  }
+
+  .columns > :global(.forward-links) {
+    grid-column: 1;
+  }
+
+  .columns > :global(.backlinks) {
+    grid-column: 2;
+  }
+
+  @container (width < 36rem) {
+    .columns {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .columns > :global(.forward-links),
+    .columns > :global(.backlinks) {
+      grid-column: 1;
+    }
+  }
+</style>

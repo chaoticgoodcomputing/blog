@@ -38,12 +38,14 @@ export interface Layout {
 /**
  * A graph laid out with `settings`: its nodes and edges, and the simulation that moves them. A tag's
  * label is as wide as `measure` says, at the label's size: the canvas measures it, and with none, it
- * is guessed from its length.
+ * is guessed from its length. Every node is kept clear of the line through a reader's `trail`
+ * (./trail.ts), as its nodes are drawn, by `forces.trailThickness`.
  */
 export function layOut(
   graph: Graph,
   settings: GraphSettings,
   measure: (label: string) => number = (label) => label.length * settings.sizes.label * 0.6,
+  trail: string[] = [],
 ): Layout {
   const radius = radii(graph, settings.sizes)
   const half = settings.sizes.gap / 2
@@ -67,6 +69,7 @@ export function layOut(
     )
     .force("collide", forceCollide<PlacedNode>((node) => (radius.get(node.id) ?? 0) + half).strength(collision).iterations(3))
     .force("labels", labelCollide(nodes, radius, measure, settings.sizes, collision))
+    .force("trail", trailCollide(nodes, trail, radius, settings.forces.trailThickness, collision))
   if (!settings.shell) {
     startOnTags(nodes)
     return { simulation, nodes, edges, radius, shell: undefined, linkDistance, turnShell: () => false }
@@ -163,6 +166,52 @@ function labelCollide(
   }
 }
 
+/**
+ * Keeps every node clear of each step of a trail, the line between two of its notes the graph has,
+ * by half of `thickness` each side of it, as the collision force keeps nodes clear of each other: a
+ * node in the band is pushed out of it, and the step's two notes the other way, each by how near the
+ * node is to it along the step. `strength` is the share of the way they are pushed apart in a tick.
+ * With no thickness, or no step, it does nothing.
+ */
+function trailCollide(nodes: PlacedNode[], trail: string[], radius: Map<string, number>, thickness: number, strength: number) {
+  const byId = new Map(nodes.map((node) => [node.id, node]))
+  // The trail through the nodes the graph has, as it is drawn: a step it doesn't draw is passed over.
+  const notes = trail.flatMap((id) => byId.get(id) ?? [])
+  const steps = notes.slice(1).map((to, i) => [notes[i]!, to] as const).filter(([from, to]) => from !== to)
+  const half = thickness / 2
+  // Where a node will be this tick, as d3-force's collision force reads it.
+  const next = (node: PlacedNode): [number, number] => [(node.x ?? 0) + (node.vx ?? 0), (node.y ?? 0) + (node.vy ?? 0)]
+  const move = (node: PlacedNode, dx: number, dy: number) => {
+    ;[node.vx, node.vy] = [(node.vx ?? 0) + dx, (node.vy ?? 0) + dy]
+  }
+
+  return () => {
+    if (half <= 0) return
+    for (const [from, to] of steps) {
+      const [[ax, ay], [bx, by]] = [next(from), next(to)]
+      const [dx, dy] = [bx - ax, by - ay]
+      const length = dx * dx + dy * dy
+      if (length === 0) continue
+      for (const node of nodes) {
+        if (node === from || node === to) continue
+        const [x, y] = next(node)
+        // How far along the step its nearest point to the node is, from 0 at `from` to 1 at `to`.
+        const t = Math.min(1, Math.max(0, ((x - ax) * dx + (y - ay) * dy) / length))
+        const [px, py] = [ax + t * dx, ay + t * dy]
+        const r = (radius.get(node.id) ?? 0) + half
+        const distance = Math.hypot(x - px, y - py)
+        if (distance >= r) continue
+        // Out of the band at right angles to the step, or, on it, to the step's left.
+        const [ox, oy] = distance > 0 ? [(x - px) / distance, (y - py) / distance] : [-dy / Math.sqrt(length), dx / Math.sqrt(length)]
+        const push = ((r - distance) * strength) / 2
+        move(node, ox * push, oy * push)
+        move(from, -ox * push * (1 - t), -oy * push * (1 - t))
+        move(to, -ox * push * t, -oy * push * t)
+      }
+    }
+  }
+}
+
 /** How far apart, in CSS pixels, the nodes that start on one tag are spread round it. */
 const START_SPREAD = 3
 
@@ -215,6 +264,41 @@ export interface FittedRing {
   margin: number
 }
 
+/** The box a graph at rest takes: every node, and a node's label under it at `sizes.label`. */
+function extentOf(
+  nodes: FittedNode[],
+  sizes: GraphSettings["sizes"],
+  start = { left: Infinity, top: Infinity, right: -Infinity, bottom: -Infinity },
+) {
+  let { left, top, right, bottom } = start
+  for (const { x, y, r, labelWidth } of nodes) {
+    const half = labelWidth === undefined ? r : Math.max(r, labelWidth / 2)
+    const below = labelWidth === undefined ? r : r + 2 + sizes.label
+    ;[left, right, top, bottom] = [Math.min(left, x - half), Math.max(right, x + half), Math.min(top, y - r), Math.max(bottom, y + below)]
+  }
+  return { left, top, right, bottom }
+}
+
+/**
+ * The view centred on one node, `centre`, at the `focus` zoom, or zoomed out as far as it takes for
+ * the whole graph at rest to be in the box, `margin` in from its edges, round that node. A small
+ * graph opens at `focus`; a large one is fitted. A node's place is from the middle of the box.
+ */
+export function focusedView(
+  nodes: FittedNode[],
+  centre: { x: number; y: number },
+  focus: number,
+  { width, height, margin }: { width: number; height: number; margin: number },
+  { sizes }: Pick<GraphSettings, "sizes">,
+): View {
+  const { left, top, right, bottom } = extentOf(nodes, sizes)
+  // How far the graph reaches from the centre node, each way, on each axis.
+  const across = Math.max(centre.x - left, right - centre.x, 1)
+  const down = Math.max(centre.y - top, bottom - centre.y, 1)
+  const k = Math.min(focus, (width / 2 - margin) / across, (height / 2 - margin) / down)
+  return { k, x: width / 2 - k * (centre.x + width / 2), y: height / 2 - k * (centre.y + height / 2) }
+}
+
 /**
  * The view that fits a graph at rest in a box, `margin` in from its edges: every node, a node with
  * a label with the label under it at `sizes.label`, and a shell's ring, round the graph's middle,
@@ -229,13 +313,11 @@ export function fittedView(
   ring?: FittedRing,
 ): View {
   const reach = ring === undefined ? undefined : ring.radius + ring.margin
-  let [left, top, right, bottom] =
-    reach === undefined ? [Infinity, Infinity, -Infinity, -Infinity] : [-reach, -reach, reach, reach]
-  for (const { x, y, r, labelWidth } of nodes) {
-    const half = labelWidth === undefined ? r : Math.max(r, labelWidth / 2)
-    const below = labelWidth === undefined ? r : r + 2 + sizes.label
-    ;[left, right, top, bottom] = [Math.min(left, x - half), Math.max(right, x + half), Math.min(top, y - r), Math.max(bottom, y + below)]
-  }
+  const { left, top, right, bottom } = extentOf(
+    nodes,
+    sizes,
+    reach === undefined ? undefined : { left: -reach, top: -reach, right: reach, bottom: reach },
+  )
   const k = Math.min(1, (width - 2 * margin) / Math.max(right - left, 1), (height - 2 * margin) / Math.max(bottom - top, 1))
   const [middleX, middleY] = [(left + right) / 2 + width / 2, (top + bottom) / 2 + height / 2]
   return { k, x: width / 2 - k * middleX, y: height / 2 - k * middleY }

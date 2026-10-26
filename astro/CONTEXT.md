@@ -294,6 +294,14 @@ _Avoid_: sidebar, sheet
 **Backlinks**:
 The notes that link to a note, an embed counting as a link.
 
+**Forward links**:
+The notes a note links to, an embed counting as a link.
+_Avoid_: outgoing links, outlinks
+
+**Links panel**:
+Under a note, its forward links beside its backlinks, each with its description.
+_Avoid_: backlinks panel (it was only that once)
+
 **Post listing**:
 Posts, newest first: all of them on the home page and the 404 page, a tag's on its tag page.
 _Avoid_: recent posts (its heading), feed (that is the RSS)

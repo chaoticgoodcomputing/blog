@@ -79,7 +79,7 @@ export function shareCardOf(subject: CardSubject): ShareCard {
   const minutes = readingMinutes(note)
   return {
     title: note.title,
-    ...(note.description !== undefined && { description: note.description }),
+    ...(note.summary !== undefined && { description: note.summary }),
     date: formatDate(note.date),
     // A note with no text has its date alone, as its page shows it.
     ...(minutes > 0 && { readingTime: `${minutes} min read` }),

@@ -59,10 +59,16 @@ test("the feed holds the forty newest articles that are posts, newest first", ()
   expect(titles).not.toContain("Home")
 })
 
-test("an item with no description of its own is described by how long it takes to read, as the site's feed has always described one", () => {
+test("an item with no description of its own is described by its first paragraph", () => {
   const plain = feedItems(notes, SITE, { vault }).find((item) => item.title === "Plain")!
-  expect(plain.description).toBe("(1 min read)")
+  expect(plain.description).toBe("No description and no tags.")
   expect(plain.categories).toEqual([])
+})
+
+test("an item with no description and no paragraph is described by how long it takes to read, as the site's feed has always described one", () => {
+  const plain = notes.find((note) => note.title === "Plain")!
+  const [item] = feedItems([{ ...plain, summary: undefined }], SITE, { vault })
+  expect(item!.description).toBe("(1 min read)")
 })
 
 test("an item keeps the identifier the site's feed has always given its note: lower case, and an MDX note's with its extension", () => {

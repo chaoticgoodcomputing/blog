@@ -1,18 +1,17 @@
 ---
-// The backlinks panel: the pages that link to the page's note, an embed counting as a link,
-// public pages first. A private page is left out, or listed with a lock, as `site.private.backlinks`
-// says (src/lib/backlinks.ts). A page nothing links to has no panel.
+// One column of the links panel (./PageLinks.astro), under its heading: pages, each by its title,
+// with its description under it if it has one. A private page is listed with a lock, where
+// `site.private.backlinks` lists one at all (src/lib/backlinks.ts).
 import { Icon } from "astro-icon/components"
-import { backlinksOf } from "../lib/backlinks.ts"
-import type { NoteFacts } from "../lib/notes.ts"
+import type { Backlink } from "../lib/backlinks.ts"
 
 interface Props {
-  /** The note the page shows. A page that shows none has no backlinks. */
-  note: NoteFacts | undefined
+  heading: string
+  links: Backlink[]
+  class: string
 }
 
-const { note } = Astro.props
-const backlinks = note ? backlinksOf(note) : []
+const { heading, links, class: name } = Astro.props
 
 // A private page's mark, in place of a public page's bullet: the icon `mdi:lock`, drawn inline by
 // astro-icon when the site builds, as a tag bubble's icon is (docs/adr/1101), in the link's colour.
@@ -20,11 +19,11 @@ const lock = "mdi:lock"
 ---
 
 {
-  backlinks.length > 0 && (
-    <section class="backlinks">
-      <h2>Backlinks</h2>
+  links.length > 0 && (
+    <section class={name}>
+      <h2>{heading}</h2>
       <ul>
-        {backlinks.map((link) => (
+        {links.map((link) => (
           <li>
             <a href={link.url}>
               <span class="mark">
@@ -36,6 +35,7 @@ const lock = "mdi:lock"
               </span>
               <span>{link.title}</span>
             </a>
+            {link.description && <p class="description">{link.description}</p>}
           </li>
         ))}
       </ul>
@@ -51,7 +51,7 @@ const lock = "mdi:lock"
   }
 
   li + li {
-    margin-top: 0.25rem;
+    margin-top: 0.5rem;
   }
 
   /* Each is set as the headings are, at a heading's weight in their face, as on the Quartz site. */
@@ -76,5 +76,13 @@ const lock = "mdi:lock"
 
   .mark > span {
     color: var(--gray);
+  }
+
+  /* Under the title, in line with it past the mark: the mark's box and the gap after it. */
+  .description {
+    margin: 0;
+    padding-left: 1.5rem;
+    color: var(--darkgray);
+    font-size: 0.9em;
   }
 </style>

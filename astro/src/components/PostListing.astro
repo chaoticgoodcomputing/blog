@@ -37,7 +37,7 @@ const counts = postListing.showTagCounts ? postCounts() : undefined
               </h3>
               <p class="meta">
                 <FormattedDate date={note.date} />
-                {note.description && <span class="description">{` — ${note.description}`}</span>}
+                {note.summary && <span class="description">{` — ${note.summary}`}</span>}
               </p>
               {note.tags.length > 0 && (
                 <ul class="tags">

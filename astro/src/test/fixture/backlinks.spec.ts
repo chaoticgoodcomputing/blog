@@ -14,6 +14,35 @@ test("a note's backlinks panel lists the pages that link to it, an embed countin
   await expect(panel.getByRole("link", { name: "Embeds it", exact: true })).toHaveAttribute("href", "/backlinks/by-embed")
 })
 
+test("a backlink shows its page's description under its title, and a page with none shows only its title", async ({ page }) => {
+  await page.goto(linked)
+  const items = page.locator(".backlinks li")
+  const byLink = items.filter({ has: page.getByRole("link", { name: "Links to it", exact: true }) })
+  await expect(byLink.locator(".description")).toHaveText("A note that links to it.")
+  // The description is not part of the link's name.
+  await expect(byLink.getByRole("link")).toHaveAccessibleName("Links to it")
+  const byEmbed = items.filter({ has: page.getByRole("link", { name: "Embeds it", exact: true }) })
+  await expect(byEmbed.locator(".description")).toHaveCount(0)
+})
+
+test("beside a note's backlinks, its forward links: the pages it links to", async ({ page }) => {
+  await page.goto(linked)
+  const forward = page.locator(".page-links .forward-links")
+  await expect(forward.getByRole("heading", { level: 2 })).toHaveText("Forward links")
+  await expect(forward.getByRole("link")).toHaveCount(1)
+  await expect(forward.getByRole("link", { name: "Embeds it", exact: true })).toHaveAttribute("href", "/backlinks/by-embed")
+  // The forward links on the left, the backlinks on the right, side by side.
+  const [left, right] = [(await forward.boundingBox())!, (await page.locator(".page-links .backlinks").boundingBox())!]
+  expect(left.x + left.width).toBeLessThanOrEqual(right.x)
+  expect(Math.abs(left.y - right.y)).toBeLessThan(1)
+})
+
+test("a note nothing links to has only its forward links, with no backlinks column", async ({ page }) => {
+  await page.goto("/backlinks/by-link")
+  await expect(page.locator(".page-links .backlinks")).toHaveCount(0)
+  await expect(page.locator(".page-links .forward-links").getByRole("link", { name: "A note with backlinks", exact: true })).toBeVisible()
+})
+
 test("a backlink is set as the headings are", async ({ page }) => {
   await page.goto(linked)
   const link = page.locator(".backlinks").getByRole("link", { name: "Links to it", exact: true })

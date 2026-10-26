@@ -12,13 +12,14 @@ import type {
   FrontMatterCache,
   FrontmatterLinkCache,
   LinkCache,
+  TextBlock,
   WikilinkData,
 } from "./types.ts"
 
 /** The key the metadata plugin leaves a note's metadata under, in the compile's data bag. */
 export const METADATA_KEY = "obsidian"
 
-/** The key the metadata plugin leaves a note's text under, beside its metadata. */
+/** The key the metadata plugin leaves a note's text blocks under, beside its metadata. */
 const TEXT_KEY = "obsidianText"
 
 // The blocks whose text a reader reads as one run. Every other block holds these, or no text.
@@ -114,17 +115,21 @@ export function obsidianMetadata() {
       visit(root as unknown as Node)
       ctx.data[METADATA_KEY] = metadata
 
-      // The note's text, a block to a line, so that the last word of one block and the first of
-      // the next stay two words. Frontmatter, a comment and an MDX note's `import` lines are no
-      // block of text, and a link is the text it shows.
-      const lines: string[] = []
-      const read = (node: Node) => {
-        // A code block's or a formula's text is its value, which it holds in place of children.
-        if (TEXT_BLOCKS.has(node.type)) lines.push(node.children ? ctx.textContent(node as never) : (node.value ?? ""))
-        else node.children?.forEach(read)
+      // The note's text, block by block, each with the blocks it is inside. Frontmatter, a comment
+      // and an MDX note's `import` lines are no block of text, and a link is the text it shows.
+      const blocks: TextBlock[] = []
+      const read = (node: Node, within: string[]) => {
+        if (TEXT_BLOCKS.has(node.type)) {
+          // A code block's or a formula's text is its value, which it holds in place of children.
+          const text = node.children ? ctx.textContent(node as never) : (node.value ?? "")
+          blocks.push({ type: node.type, text, within, ...(node.position ? { position: node.position } : {}) })
+        } else {
+          const inside = node.type === "root" ? within : [...within, node.type]
+          node.children?.forEach((child) => read(child, inside))
+        }
       }
-      read(root as unknown as Node)
-      ctx.data[TEXT_KEY] = lines.join("\n")
+      read(root as unknown as Node, [])
+      ctx.data[TEXT_KEY] = blocks
     },
   })
 }
@@ -143,12 +148,13 @@ export async function parseMetadata(source: string, options: ParseOptions = {}):
 
 /**
  * Read one note's metadata, and its text as a reader reads it: the words of its body, without its
- * frontmatter, its comments or its markup. The vault keeps both (`Vault.readText`).
+ * frontmatter, its comments or its markup, whole and block by block. The vault keeps them
+ * (`Vault.readText`, `Vault.readTextBlocks`).
  */
 export async function parseNote(
   source: string,
   options: ParseOptions = {},
-): Promise<{ metadata: CachedMetadata; text: string }> {
+): Promise<{ metadata: CachedMetadata; text: string; blocks: TextBlock[] }> {
   const { format = "md", features, ...syntax } = options
   const data: Record<string, unknown> = {}
   const compile = {
@@ -158,9 +164,12 @@ export async function parseNote(
   }
   if (format === "mdx") await mdxToJs(source, compile)
   else await markdownToHtml(source, compile)
+  const blocks = (data[TEXT_KEY] as TextBlock[] | undefined) ?? []
   return {
     metadata: (data[METADATA_KEY] as CachedMetadata | undefined) ?? {},
-    text: (data[TEXT_KEY] as string | undefined) ?? "",
+    // A block to a line, so that the last word of one block and the first of the next stay two words.
+    text: blocks.map((block) => block.text).join("\n"),
+    blocks,
   }
 }
 

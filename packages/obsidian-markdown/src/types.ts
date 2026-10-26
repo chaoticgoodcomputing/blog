@@ -13,6 +13,21 @@ export interface Position {
   end: Point
 }
 
+/**
+ * One block of a note's text, as a reader reads it (`Vault.readTextBlocks`): a paragraph, a
+ * heading, a code block, a formula, a table's cell or a callout's title. Not in Obsidian's API.
+ */
+export interface TextBlock {
+  /** The block's type in the note's tree: `paragraph`, `heading`, `code`, `math`, `tableCell`, `calloutTitle`. */
+  type: string
+  /** Its words, without markup, and a link as the text it shows. */
+  text: string
+  /** The types of the blocks it is inside, outermost first: none for a block at the note's top. */
+  within: string[]
+  /** Where it is in the note's source. */
+  position?: Position
+}
+
 /** A file in the vault, of any kind. Obsidian's `TFile`. */
 export interface VaultFile {
   /** Path from the vault's root, with `/` separators and no leading one: `content/notes/a.md`. */

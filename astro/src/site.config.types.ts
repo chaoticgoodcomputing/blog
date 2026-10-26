@@ -170,6 +170,12 @@ export interface GraphSettings {
      * `sizes.gap` are pushed apart, from 0, not at all, to 1, the whole way in a tick.
      */
     collision: number
+    /**
+     * The width of the band along a reader's trail, in CSS pixels, half of it each side of the line,
+     * that every node is kept out of by the collision force, as nodes keep `sizes.gap` between them.
+     * At 0, nodes may sit on the trail.
+     */
+    trailThickness: number
   }
   sizes: {
     /** A tag's radius, by how many notes in the graph are under it. */
@@ -232,7 +238,8 @@ export interface LocalGraphSettings extends GraphSettings {
   depth: number
   /**
    * How far the graph opens zoomed in, centred on the note shown, where 1 draws the graph at its
-   * own size. It follows the note as the graph settles, until the reader pans, zooms or drags.
+   * own size: the most, since a trail too long to show whole at it is zoomed out until its notes
+   * fit round the note. What is off the trail may run past the edges. It follows the note as the graph settles, until the reader pans, zooms or drags.
    */
   focusZoom: number
 }

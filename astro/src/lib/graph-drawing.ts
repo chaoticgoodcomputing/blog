@@ -16,7 +16,7 @@ import { select } from "d3-selection"
 import { zoom, zoomIdentity, type ZoomTransform } from "d3-zoom"
 import type { GraphSettings } from "../site.config.types.ts"
 import { edgeOpacity, labelled, litBy, pulseOpacity, type Graph, type GraphEdge, type Lit } from "./graph.ts"
-import { fittedView, labelBox, layOut, LABEL_PAD, type PlacedNode } from "./graph-layout.ts"
+import { fittedView, focusedView, labelBox, layOut, LABEL_PAD, type PlacedNode } from "./graph-layout.ts"
 import { bubbleParts } from "./tag-bubble.ts"
 
 export interface DrawingOptions {
@@ -32,15 +32,22 @@ export interface DrawingOptions {
   label: string
   /**
    * A reader's trail (./trail.ts): the ids of the notes they came through, in order, drawn as one
-   * line through them over the edges. A step between two nodes with no edge is dashed.
+   * solid line through them over the edges, each step with an arrowhead halfway along it that
+   * points the way the reader went.
    */
   path?: string[]
   /**
-   * The zoom to open on, centred on the current node, in place of the
-   * whole graph fitted to the box. The view follows the node as the graph settles, as a fitted view
+   * The most the view zooms in, centred on the current node, in place of the whole graph fitted to
+   * the box: a trail too long to show whole at it is zoomed out until its notes fit round the node.
+   * What is off the trail may run past the box's edges. The view follows the node as the graph settles, as a fitted view
    * follows the graph, until the reader pans, zooms or drags.
    */
   focus?: number
+  /**
+   * Whether, while the pointer is off the canvas, every node off the trail (`path`) is drawn in
+   * grayscale, so the trail's own nodes are the only ones in colour.
+   */
+  grayOffPath?: boolean
 }
 
 export interface DrawnGraph {
@@ -102,6 +109,9 @@ function iconImage(svg: SVGSVGElement, colour: string): HTMLImageElement {
 /** The width of the outline round a label's box, in the label's colour, in the graph's pixels. */
 const LABEL_OUTLINE = 0.5
 
+/** The trail's arrowheads: how long and how wide each is, in CSS pixels at any zoom. */
+const ARROW = { length: 12, width: 12 }
+
 /** How opaque a node is drawn while another is hovered that doesn't light it. */
 const UNLIT = 0.2
 
@@ -155,7 +165,12 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
   // d3-force's own timer is stopped: the frames tick the layout while it is warm. Its tags' labels
   // take the room the canvas measures them at.
   context.font = `${settings.sizes.label}px ${getComputedStyle(container).fontFamily}`
-  const { simulation, nodes, edges, radius, shell, linkDistance, turnShell } = layOut(graph, settings, (label) => context.measureText(label).width)
+  const { simulation, nodes, edges, radius, shell, linkDistance, turnShell } = layOut(
+    graph,
+    settings,
+    (label) => context.measureText(label).width,
+    options.path,
+  )
   let [width, height] = [0, 0]
   const fit = () => {
     const dpr = window.devicePixelRatio || 1
@@ -247,8 +262,17 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
     const box = canvas.getBoundingClientRect()
     return [event.clientX - box.left, event.clientY - box.top]
   }
-  canvas.addEventListener("mousemove", (event) => hover(nodeAt(...point(event))))
-  canvas.addEventListener("mouseleave", () => hover(undefined))
+  // Whether the pointer is on the canvas at all, on a node or not.
+  let pointerOn = false
+  canvas.addEventListener("mousemove", (event) => {
+    pointerOn = true
+    hover(nodeAt(...point(event)))
+  })
+  canvas.addEventListener("mouseleave", () => {
+    pointerOn = false
+    hover(undefined)
+  })
+  const onPath = new Set(options.path ?? [current])
 
   // Until the reader pans, zooms or drags a node, the view follows the graph as it settles, so that
   // the whole of it is in the box, and never drawn larger than it is.
@@ -261,23 +285,28 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
     })
   // What is fitted is the graph at rest, with its tags' labels, so the view doesn't move on a hover:
   // the page's own node as large as it swells.
-  const fitted = (): ZoomTransform => {
-    const placed = nodes.map((node) => ({
+  const atRest = (of = nodes) =>
+    of.map((node) => ({
       x: node.x ?? 0,
       y: node.y ?? 0,
       r: (radius.get(node.id) ?? 0) * (node.id === current ? settings.sizes.current : 1),
       labelWidth: node.kind === "tag" ? context.measureText(node.label).width : undefined,
     }))
+  const fitted = (): ZoomTransform => {
+    const placed = atRest()
     const ring = shell === undefined || !settings.shell ? undefined : { radius: shell, margin: settings.shell.zoomMargin }
     const { k, x, y } = fittedView(placed, { width, height, margin: MARGIN }, settings, ring)
     return zoomIdentity.translate(x, y).scale(k)
   }
 
-  // The view centred on the current node, at `focus`.
-  const centred = (k: number): ZoomTransform => {
+  // The view centred on the current node, at `focus`, or zoomed out until the trail's notes fit
+  // round it.
+  const onTrail = nodes.filter((node) => (options.path ?? [current]).includes(node.id))
+  const centred = (focus: number): ZoomTransform => {
     const node = nodes.find((each) => each.id === current)
-    const [x, y] = [node?.x ?? 0, node?.y ?? 0]
-    return zoomIdentity.translate(width / 2 - k * (x + width / 2), height / 2 - k * (y + height / 2)).scale(k)
+    const centre = { x: node?.x ?? 0, y: node?.y ?? 0 }
+    const { k, x, y } = focusedView(atRest(onTrail), centre, focus, { width, height, margin: MARGIN }, settings)
+    return zoomIdentity.translate(x, y).scale(k)
   }
 
   const selection = select(canvas)
@@ -360,22 +389,35 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
       const placed = new Map(nodes.map((node) => [node.id, node]))
       // The path through the nodes the graph has: a step it doesn't draw is passed over.
       const steps = options.path.flatMap((id) => placed.get(id) ?? [])
-      const linked = (a: string, b: string) =>
-        graph.edges.some((edge) => (edge.source === a && edge.target === b) || (edge.source === b && edge.target === a))
       context.globalAlpha = hovered ? 0.35 : 1
       context.strokeStyle = palette.currentDisc
-      // As wide on screen at any zoom: the global graph is drawn far smaller than a local one.
+      context.fillStyle = palette.currentDisc
+      // As wide on screen at any zoom: the global graph is drawn far smaller than a local one. The
+      // arrowheads too.
       context.lineWidth = 4 / view.k
       context.lineCap = "round"
+      const [arrowLength, arrowWidth] = [ARROW.length / view.k, ARROW.width / view.k]
       for (let i = 1; i < steps.length; i++) {
         const [from, to] = [steps[i - 1]!, steps[i]!]
-        context.setLineDash(linked(from.id, to.id) ? [] : [2 / view.k, 8 / view.k])
+        const [x1, y1, x2, y2] = [from.x ?? 0, from.y ?? 0, to.x ?? 0, to.y ?? 0]
         context.beginPath()
-        context.moveTo(from.x ?? 0, from.y ?? 0)
-        context.lineTo(to.x ?? 0, to.y ?? 0)
+        context.moveTo(x1, y1)
+        context.lineTo(x2, y2)
         context.stroke()
+        // The arrowhead, its tip just past the step's middle, pointing at the later note. A step
+        // too short to hold one goes without.
+        const length = Math.hypot(x2 - x1, y2 - y1)
+        if (length < 2 * arrowLength) continue
+        const [ux, uy] = [(x2 - x1) / length, (y2 - y1) / length]
+        const [tipX, tipY] = [(x1 + x2) / 2 + (ux * arrowLength) / 2, (y1 + y2) / 2 + (uy * arrowLength) / 2]
+        const [baseX, baseY] = [tipX - ux * arrowLength, tipY - uy * arrowLength]
+        context.beginPath()
+        context.moveTo(tipX, tipY)
+        context.lineTo(baseX - (uy * arrowWidth) / 2, baseY + (ux * arrowWidth) / 2)
+        context.lineTo(baseX + (uy * arrowWidth) / 2, baseY - (ux * arrowWidth) / 2)
+        context.closePath()
+        context.fill()
       }
-      context.setLineDash([])
       context.lineCap = "butt"
     }
 
@@ -383,6 +425,7 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
       const [x, y] = [node.x ?? 0, node.y ?? 0]
       // While a node is hovered, what it doesn't light is faded.
       context.globalAlpha = hovered && !lit.nodes.has(node.id) ? UNLIT : 1
+      context.filter = options.grayOffPath && !pointerOn && !onPath.has(node.id) ? "grayscale(1)" : "none"
       let r = radius.get(node.id) ?? 0
       if (node.id === current && !still.matches) {
         r *= 1 + ((1 - Math.cos(((time % SWELL_MS) / SWELL_MS) * 2 * Math.PI)) / 2) * (settings.sizes.current - 1)
@@ -411,6 +454,8 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
         context.drawImage(bubble.icon, x - size / 2, y - size / 2, size, size)
       }
     }
+
+    context.filter = "none"
 
     // A tag's label always shows; while a node is hovered, its own and the lit tags' (`labelled`).
     // Each on a box of the page's background, over every node and edge, and over the labels before it.

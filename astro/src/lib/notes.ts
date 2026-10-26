@@ -12,6 +12,7 @@ import { site } from "../site.config.ts"
 import { modifiedTime, resolveDates, vaultDates } from "./dates.ts"
 import { sourceDate } from "./resume.ts"
 import { tagSlug, tagUrl, underAny, withAncestors } from "./tags.ts"
+import { excerptOf } from "./excerpt.ts"
 import { getVault, pagePath, slugFor } from "./vault.ts"
 
 /** What the site knows of a note, whether or not the note has a page. */
@@ -26,8 +27,14 @@ export interface NoteFacts {
   frontmatter: Record<string, unknown>
   /** Frontmatter's title, else the file's name without its extension. */
   title: string
-  /** Frontmatter's description. A note that writes none has none: nothing is made up from its body. */
+  /** Frontmatter's description, as written: none where it writes none. */
   description: string | undefined
+  /**
+   * What the site describes the note by, wherever it does: its description, else its excerpt, its
+   * first paragraph cut short (./excerpt.ts). A private page has no excerpt: what the site
+   * publishes of it is a stub every private page shares. None for a note with neither.
+   */
+  summary: string | undefined
   /** Its own tags, as tag slugs, in the order written. */
   tags: string[]
   /** Its own tags and every ancestor of each, sorted. */
@@ -171,6 +178,7 @@ export function indexNotes(vault: Vault, rules: Unpublished[] = unpublished): No
       frontmatter,
       title: text(frontmatter.title) ?? file.basename,
       description: text(frontmatter.description),
+      summary: undefined,
       tags,
       tagsWithAncestors: withAncestors(tags),
       ...resolveDates({
@@ -182,6 +190,7 @@ export function indexNotes(vault: Vault, rules: Unpublished[] = unpublished): No
       isPrivate: isPrivate(tags),
       isArticle: site.articleFolders.some((folder) => isUnder(file.path, folder)),
     }
+    facts.summary = facts.description ?? (facts.isPrivate ? undefined : excerptOf(vault.readTextBlocks(file) ?? [], vault.read(file) ?? ""))
 
     const rule = rules.find((each) => each.test(file, cache))
     if (rule) {

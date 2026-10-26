@@ -53,9 +53,9 @@ test("each post shows its title as a link to it, its date, its description and i
   // A tag badge's bubble holds the tag's icon: engineering/ai's robot.
   await expect(badges.last().locator(".tag-bubble svg")).toHaveAttribute("data-icon", "mdi:robot")
 
-  // A post with no description shows none.
+  // A post with no description shows its first paragraph in its place.
   const two = page.locator(".post-listing .post", { has: page.getByRole("heading", { name: "Ledger Two" }) })
-  await expect(two.locator(".description")).toHaveCount(0)
+  await expect(two.locator(".description")).toHaveText(" — Under a tag under the ledger.")
 })
 
 // The listing of `ledger`'s tag page holds this file's six posts and no others: the one long

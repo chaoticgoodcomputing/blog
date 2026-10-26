@@ -78,7 +78,8 @@ export const tags: TagDictionary = {
   "projects/games/roblox": { icon: "custom:roblox" },
   "projects/games/the-neighborhood": { icon: "mdi:city" },
   "projects/homelab": { icon: "mdi:home-sound-out" },
-  "projects/site": { icon: "custom:quartz-filled" },
+  "projects/site": { icon: "custom:cgc-cpu-only" },
+  "projects/site/quartz": { icon: "custom:quartz-filled" },
   "projects/teaching": { icon: "mdi:school" },
   "projects/undergrad": { icon: "custom:uofu" },
   writing: { color: "light-dark(#1A8A1A, #00FF00)", icon: "mdi:pencil" },
@@ -104,9 +105,9 @@ export const footer: FooterConfig = {
   ],
   copyright: [
     { label: "Spencer Elkington", url: "https://chaoticgood.computer/contact" },
-    { label: "Chaotic Good Computing", url: "https://github.com/chaoticgoodcomputing" },
+    // { label: "Chaotic Good Computing", url: "https://github.com/chaoticgoodcomputing" },
   ],
-  notice: "All content on this site is handwritten.",
+  notice: "This site contains writing by humans, for humans.",
 }
 
 export const postListing: PostListingConfig = {
@@ -153,6 +154,7 @@ export const graph: GraphConfig = {
       linkDistance: { tagTag: 0.1, tagNote: 0.1, noteNote: 0.01 },
       linkStrength: { tagTag: 1.0, tagNote: 0.2, noteNote: 0.1 },
       collision: 0.1,
+      trailThickness: 16,
     },
     // Never drawn, with no shell: the unit the link distances are measured in.
     shellSize: { base: 150, scaling: 15 },
@@ -166,8 +168,8 @@ export const graph: GraphConfig = {
     },
     edges: {
       opacity: {
-        tagTag: { min: 0.99, max: 1.0 },
-        tagNote: { min: 0.01, max: 0.2 },
+        tagTag: { min: 0.8, max: 1 },
+        tagNote: { min: 0.8, max: 1 },
         noteNote: { min: 0.8, max: 1 },
       },
       style: { tagTag: "solid", tagNote: "solid", noteNote: "dotted" },
@@ -183,6 +185,7 @@ export const graph: GraphConfig = {
       linkDistance: { tagTag: 0.1, tagNote: 0.1, noteNote: 0.01 },
       linkStrength: { tagTag: 1.0, tagNote: 0.2, noteNote: 0.1 },
       collision: 0.1,
+      trailThickness: 16,
     },
     shellSize: { base: 150, scaling: 13 },
     sizes: {

@@ -5,6 +5,7 @@ import type { Vault } from "@chaoticgoodcomputing/obsidian-markdown"
 import { afterAll, beforeAll, expect, test } from "vitest"
 import { edgeOpacity, graphOf, neighbourhood, radii, type Graph, type GraphIndex } from "../src/lib/graph.ts"
 import { graphIndex } from "../src/lib/graph-index.ts"
+import { focusedView } from "../src/lib/graph-layout.ts"
 import { indexNotes, unpublished, type NoteIndex, type Unpublished } from "../src/lib/notes.ts"
 import { openVault } from "../src/lib/vault.ts"
 import { graph } from "../src/site.config.ts"
@@ -246,4 +247,39 @@ test("an edge is drawn at its most opaque at half its length or nearer, and at i
   expect(edgeOpacity(62.5, 50, range)).toBeCloseTo(0.6, 9)
   expect(edgeOpacity(100, 50, range)).toBeCloseTo(0.2, 9)
   expect(edgeOpacity(400, 50, range)).toBeCloseTo(0.2, 9)
+})
+
+test("a small graph opens at the focus zoom, centred on the note shown", () => {
+  // Both nodes 100 from the middle of a 400 × 400 box, well inside it at 1.5.
+  const nodes = [
+    { x: 50, y: 0, r: 10 },
+    { x: -50, y: 0, r: 10 },
+  ]
+  const view = focusedView(nodes, nodes[0]!, 1.5, { width: 400, height: 400, margin: 8 }, graph.local)
+  expect(view.k).toBe(1.5)
+  // The note shown at the middle of the box.
+  expect(view.k * (50 + 200) + view.x).toBeCloseTo(200, 9)
+  expect(view.k * (0 + 200) + view.y).toBeCloseTo(200, 9)
+})
+
+test("a graph too large for the focus zoom is zoomed out until it fits, still centred on the note shown", () => {
+  // The far node's edge is 310 from the note shown: 192 of room, 8 in from the box's edge.
+  const nodes = [
+    { x: 0, y: 0, r: 10 },
+    { x: 300, y: 0, r: 10 },
+  ]
+  const view = focusedView(nodes, nodes[0]!, 1.5, { width: 400, height: 400, margin: 8 }, graph.local)
+  expect(view.k).toBeCloseTo(192 / 310, 9)
+  expect(view.k * (0 + 200) + view.x).toBeCloseTo(200, 9)
+  expect(view.k * (0 + 200) + view.y).toBeCloseTo(200, 9)
+})
+
+test("a tag's label is fitted with its node", () => {
+  // The label under the tag reaches 10 + 2 + the label's size below it.
+  const nodes = [
+    { x: 0, y: 0, r: 10 },
+    { x: 0, y: 150, r: 10, labelWidth: 20 },
+  ]
+  const view = focusedView(nodes, nodes[0]!, 1.5, { width: 400, height: 400, margin: 8 }, graph.local)
+  expect(view.k).toBeCloseTo(192 / (150 + 12 + graph.local.sizes.label), 9)
 })

@@ -4,10 +4,10 @@ description: |
   I may not have any control about how AI affects me, but I can at least make a policy for how I use it.
 date: 2026-01-04
 tags:
+  - projects/site
   - engineering/ai
   - horticulture/seasons/systems
-  - writing/essays
-  - projects/site
+  - writing/notes
 ---
 
 Since we're now in the era of [[public/content/notes/hostage-negotiations|AI slop]], it feels necessary to have a general AI policy available for this site.

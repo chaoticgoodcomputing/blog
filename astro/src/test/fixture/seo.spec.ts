@@ -24,7 +24,8 @@ test("every page has a title with the site's suffix, a description, a canonical 
       description: "A note on small language models.",
       type: "article",
     },
-    { address: "/content/seo/undescribed", title: "Undescribed", description: SITE_DESCRIPTION, type: "article" },
+    // A note with no description is described by its first paragraph.
+    { address: "/content/seo/undescribed", title: "Undescribed", description: "An article no rule matches, with no description of its own.", type: "article" },
     { address: "/seo/colophon", title: "Colophon", description: "How the site is made.", type: "website" },
     { address: "/404", title: "Not Found", description: SITE_DESCRIPTION, type: "website" },
   ]
@@ -90,7 +91,7 @@ test("an article's JSON-LD type and section are its first matching rule's, with 
   expect(await readStructuredData(page)).toMatchObject([{ "@type": "HowTo", headline: "Planting Tomatoes" }])
   await page.goto("/content/seo/undescribed")
   const [undescribed] = await readStructuredData(page)
-  expect(undescribed).toMatchObject({ "@type": "Article", description: SITE_DESCRIPTION })
+  expect(undescribed).toMatchObject({ "@type": "Article", description: "An article no rule matches, with no description of its own." })
   expect(undescribed).not.toHaveProperty("articleSection")
 })
 

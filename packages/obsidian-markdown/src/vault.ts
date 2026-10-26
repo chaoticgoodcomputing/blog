@@ -11,7 +11,7 @@ import { headingKey, isExternalUrl, parseLinktext } from "./linktext.ts"
 import { getAllTags, parseFrontMatterAliases, parseNote } from "./metadata.ts"
 import type { SyntaxOptions } from "./syntax/index.ts"
 import { blockAnchor } from "./syntax/index.ts"
-import type { BlockCache, CachedMetadata, HeadingCache, LinkCache, VaultFile } from "./types.ts"
+import type { BlockCache, CachedMetadata, HeadingCache, LinkCache, TextBlock, VaultFile } from "./types.ts"
 
 export interface VaultOptions extends SyntaxOptions {
   /** Extensions read as notes. Default `["md"]`; a site that renders MDX adds `"mdx"`. */
@@ -272,14 +272,14 @@ export class Vault {
   readonly #byPath: Map<string, VaultFile>
   readonly #noteExtensions: Set<string>
   readonly #sources: Map<string, string>
-  readonly #texts: Map<string, string>
+  readonly #texts: Map<string, TextBlock[]>
 
   private constructor(
     root: string,
     files: VaultFile[],
     noteExtensions: Set<string>,
     sources: Map<string, string>,
-    texts: Map<string, string>,
+    texts: Map<string, TextBlock[]>,
     caches: Map<string, CachedMetadata>,
     parseOptions: SyntaxOptions & { features?: Features },
     resolveAliases: boolean,
@@ -325,25 +325,25 @@ export class Vault {
     const extensions = new Set(noteExtensions.map((extension) => extension.toLowerCase()))
     const files = walk(absolute, ignore).map(toFile)
     const sources = new Map<string, string>()
-    const texts = new Map<string, string>()
+    const texts = new Map<string, TextBlock[]>()
     const caches = new Map<string, CachedMetadata>()
     for (const file of files) {
       if (!extensions.has(file.extension)) continue
       const source = fs.readFileSync(path.join(absolute, file.path), "utf8")
       sources.set(file.path, source)
       try {
-        const { metadata, text } = await parseNote(source, {
+        const { metadata, blocks } = await parseNote(source, {
           ...syntax,
           ...(features ? { features } : {}),
           format: file.extension === "mdx" ? "mdx" : "md",
         })
         caches.set(file.path, metadata)
-        texts.set(file.path, text)
+        texts.set(file.path, blocks)
       } catch (error) {
         // A note the parser refuses is still a note others can link to.
         console.warn(`[obsidian-markdown] ${file.path}: ${(error as Error).message}`)
         caches.set(file.path, {})
-        texts.set(file.path, "")
+        texts.set(file.path, [])
       }
     }
     return new Vault(
@@ -393,6 +393,15 @@ export class Vault {
    * it shows. What a word count or a reading time is counted from. Not in Obsidian's API.
    */
   readText(file: VaultFile): string | null {
+    return this.readTextBlocks(file)?.map((block) => block.text).join("\n") ?? null
+  }
+
+  /**
+   * A note's text block by block (`TextBlock`), as it was when the vault was read: what `readText`
+   * joins, each with its type, where it is in the source, and the blocks it is inside. Not in
+   * Obsidian's API.
+   */
+  readTextBlocks(file: VaultFile): TextBlock[] | null {
     return this.#texts.get(file.path) ?? null
   }
 }

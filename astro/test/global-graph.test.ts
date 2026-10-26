@@ -196,6 +196,25 @@ test("at rest, nodes keep the gap between them, and clear of every tag's label",
   }
 })
 
+test("at rest, every node is clear of the trail's steps by half the trail's thickness", () => {
+  const whole = globalGraph(INDEX, graph.global, { period: "all", includePrivate: false }, NOW)
+  const settings = { ...graph.local, forces: { ...graph.local.forces, trailThickness: 40 } }
+  const trail = ["/old", "/spring", "/winter"]
+  const { simulation, nodes, radius } = layOut(whole, settings, undefined, trail)
+  simulation.tick(300)
+  const at = (id: string) => nodes.find((node) => node.id === id)!
+  for (const [from, to] of [[at(trail[0]!), at(trail[1]!)], [at(trail[1]!), at(trail[2]!)]] as const) {
+    for (const node of nodes.filter((node) => node !== from && node !== to)) {
+      // The step's nearest point to the node.
+      const [dx, dy] = [to.x! - from.x!, to.y! - from.y!]
+      const t = Math.min(1, Math.max(0, ((node.x! - from.x!) * dx + (node.y! - from.y!) * dy) / (dx * dx + dy * dy)))
+      const distance = Math.hypot(node.x! - (from.x! + t * dx), node.y! - (from.y! + t * dy))
+      // Give or take a pixel: the collisions are forces, not walls.
+      expect(distance - radius.get(node.id)!).toBeGreaterThan(40 / 2 - 1)
+    }
+  }
+})
+
 test("a graph with no shell is laid out with no tag pinned", () => {
   const whole = globalGraph(INDEX, graph.global, { period: "all", includePrivate: false }, NOW)
   const { shell } = layOut(whole, graph.local)
