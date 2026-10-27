@@ -4,7 +4,8 @@ date: 2026-02-08
 tags:
   - projects/games/the-neighborhood
   - economics/policy
-  - writing/annotations/a-pattern-language
+  - projects/a-pattern-language
+  - writing/annotations
 description: How dense is too dense? How sparse is too sparse? Annotations for A Pattern Language's proposals for the density of metro-adjacent country streets for agriculture, recreation, and preservation.
 ---
 ← [[public/content/annotations/a-pattern-language/04-agricultural-valleys|Agricultural Valleys]] | [[private/content/annotations/a-pattern-language/06-country-towns|Country Towns]] →

@@ -4,7 +4,8 @@ date: 2026-02-07
 tags:
   - projects/games/the-neighborhood
   - economics/policy
-  - writing/annotations/a-pattern-language
+  - projects/a-pattern-language
+  - writing/annotations
 description: How close is too close? How far is too far? *A Pattern Language* annotations related to the statistical, economic, and ecologic concerns in balancing how dense human habitats ought to be.
 ---
 ← [[public/content/annotations/a-pattern-language/01-independent-regions|Independent Regions]] | [[public/content/annotations/a-pattern-language/03-city-country-fingers|City Country Fingers]] →

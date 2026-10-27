@@ -5,7 +5,8 @@ tags:
   - projects/games/the-neighborhood
   - economics/markets
   - engineering/data
-  - writing/annotations/a-pattern-language
+  - projects/a-pattern-language
+  - writing/annotations
 description: City, with natural stripes — or nature, with city stripes? Annotations for A Pattern Language, and tracking public opinion of where Americans want to live over the past 50 years.
 ---
 ← [[public/content/annotations/a-pattern-language/02-the-distribution-of-towns|The Distribution of Towns]] | [[public/content/annotations/a-pattern-language/04-agricultural-valleys|Agricultural Valleys]] →

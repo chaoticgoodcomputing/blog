@@ -6,7 +6,8 @@ tags:
   - "engineering/data"
   - "economics/strategy"
   - "writing/fragments"
-  - "writing/annotations/a-pattern-language"
+  - "projects/a-pattern-language"
+  - "writing/annotations"
   - "private"
 ---
 

@@ -4,7 +4,8 @@ tags:
   - "economics/policy"
   - "engineering/data"
   - "projects/games/the-neighborhood"
-  - "writing/annotations/a-pattern-language"
+  - "projects/a-pattern-language"
+  - "writing/annotations"
   - "private"
 ---
 
