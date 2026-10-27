@@ -152,9 +152,9 @@ Wouldn't it be neat if we--
 
 ## Spec-Driven Development
 
-Ope! Turns out that a set of Extreme Programming folks came up with this one in [*Agile Specification-Driven Development*](https://www.eecs.yorku.ca/~jonathan/publications/2004/xp2004.pdf) (Ostroff, Makalsky, Paige) came up with this one back in 2004! Damn you, University of York! They must've been the ones to tip off Whitehall!
+Ope! Turns out that a set of Extreme Programming folks came up with this one in [*Agile Specification-Driven Development*](https://www.eecs.yorku.ca/~jonathan/publications/2004/xp2004.pdf) (Ostroff, Makalsky, Paige) back in 2004! Damn you, University of York! They must've been the ones to tip off Whitehall!
 
-If you've heard spec-driven development (SDD) thrown around a lot recently, you may be shocked to know that it's not a recent development. But why might a school of thought around defining software in strong-yet-readable natural language have had a comeback 22 years in the making?
+If you've heard spec-driven development (SDD) thrown around a lot recently, you may be shocked to know that it's not a recent development. But why might a school of thought around defining software in strong-yet-readable natural language have had a comeback 22 years later?
 
 Oh.
 
