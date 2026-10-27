@@ -85,7 +85,7 @@ def is_month_a_valid_number(month):
   assert((month >= 1) and (month <= 12))
 ```
 
-Cucumber is a philosophy, and code library, for writing better tests. Let's take a look at the kind of notes that a very well-organized project manage or product engineer might right during a meeting about what a product should be able to do[^2]:
+Cucumber is a philosophy, and code library, for writing better tests. Let's take a look at the kind of notes that a very well-organized project manager or product engineer might right during a meeting about what a product should be able to do[^2]:
 
 ```txt
 Feature: Guess the word  
@@ -100,7 +100,7 @@ Feature: Guess the word
     Then the Breaker must guess a word with 5 characters
 ```
 
-It's *organized*, but not *"code"* organized. Solid use of indentation to group concepts that belong together, with lines clearly labelled. There's a philosophy to the structure, but it'd be easy to write out while product owners hash out their visions for what your thing looks like.
+Those are some good, organized notes! They've got a solid use of indentation to group concepts that belong together, with each line clearly labelled. There's a pattern to the structure, yet it's simple enough that you could easily write this out while product owners hash out their visions for what the thing you'll be building for the next six months should look like.
 
 But alas; you've been tricked! These *aren't* just notes! They're *code!*
 
@@ -121,7 +121,7 @@ Feature: Guess the word
 
 *That* is Cucumber's [Gherkin](https://cucumber.io/docs/gherkin/reference) language. It's a structured, yet *very* natural, way to write out tests. The hope with using something like Gherkin is that writing tests for software isn't locked behind the ability to code. If you're willing to follow a few [rules](https://cucumber.io/docs/gherkin/reference#keywords), just about anybody could read *or* write tests for your software.
 
-If you want to see just how easy it can be, one of the best working examples I've found is the [`gov.uk`](https://www.gov.uk/) website. Even if you've never read a lick of code before, you could probably pop into [their Gherkin](https://github.com/alphagov/whitehall/tree/main/features) and understand *exactly* what their tests do:
+Want to see just how easy it can be? Check out the [`gov.uk`](https://www.gov.uk/) website: it's easily the best working example I found while researching Gherkin. Even if you've never read a lick of code before, you could probably pop into [their tests](https://github.com/alphagov/whitehall/tree/main/features) and understand *exactly* what their software does:
 
 ```feature
 Feature: Administering Roles
