@@ -2,10 +2,10 @@
 title: "Raycast Misc"
 date: "2026-10-17T00:00:00.000Z"
 tags:
-  - "writing/fragments"
   - "economics/finance"
   - "engineering/languages/csharp"
   - "projects/dayjob"
+  - "writing/fragments"
   - "private"
 ---
 

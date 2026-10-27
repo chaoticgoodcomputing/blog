@@ -6,11 +6,11 @@ description: |
 date: 2025-07-15
 tags:
   - engineering/ai
-  - writing/essays
   - engineering/languages/csharp
   - engineering/languages/typescript
-  - writing/annotations
   - projects/teaching
+  - writing/essays
+  - writing/annotations
 annotation-target: https://raw.githubusercontent.com/chaoticgoodcomputing/blog/refs/heads/main/content/public/assets/llms.pdf
 ---
 

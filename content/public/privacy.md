@@ -3,8 +3,8 @@ title: Privacy Policy
 date: 2026-02-04
 tags:
   - engineering/data
-  - writing/notes
   - projects/site
+  - writing/notes
 description: When it comes to collecting data, there's a fine line between making a good site and making an invasive product. To make this site more useful, I want to collect enough data to improve, but never enough to undermine anybody's privacy.
 ---
 

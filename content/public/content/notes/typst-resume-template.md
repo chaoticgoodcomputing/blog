@@ -4,9 +4,9 @@ description: |
   A beginner-friendly resume template in Typst — 100% less LaTeX, 100% more opinions.
 date: 2024-04-21
 tags:
-  - writing/notes
   - projects/undergrad
   - projects/teaching
+  - writing/notes
   - writing/essays
 aliases:
   - writing/notes/typst-resume-template

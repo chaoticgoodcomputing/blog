@@ -4,9 +4,9 @@ description: |
   The only market crashing is the market for sanitized language. Stay human. Embrace typos.
 date: 2024-03-01
 tags:
-  - writing/essays
   - engineering/ai
   - projects/site
+  - writing/essays
 ---
 ## GPTinglish
 

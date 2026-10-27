@@ -5,8 +5,8 @@ description: |
 date: 2021-07-28
 tags:
   - engineering/languages/python
-  - writing/essays
   - projects/site
+  - writing/essays
 ---
 
 Look at that - a whole blog, just for me! At this rate, the last thing I need to do to be a *real* tech guru is start a podcast.

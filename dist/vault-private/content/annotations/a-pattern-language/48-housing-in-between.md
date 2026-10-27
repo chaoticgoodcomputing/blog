@@ -1,8 +1,8 @@
 ---
 title: "APL: Pattern 48; Housing In Between"
 tags:
-  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
+  - "writing/annotations/a-pattern-language"
   - "private"
 draft: true
 ---

@@ -1,8 +1,8 @@
 ---
 title: "APL: Pattern 126; Something Roughly in the Middle"
 tags:
-  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
+  - "writing/annotations/a-pattern-language"
   - "private"
 draft: true
 ---

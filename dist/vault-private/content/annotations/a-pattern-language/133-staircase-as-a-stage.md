@@ -1,8 +1,8 @@
 ---
 title: "APL: Pattern 133; Staircase as a Stage"
 tags:
-  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
+  - "writing/annotations/a-pattern-language"
   - "private"
 draft: true
 ---

@@ -1,8 +1,8 @@
 ---
 title: "APL: Pattern 17; Ring Roads"
 tags:
-  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
+  - "writing/annotations/a-pattern-language"
   - "private"
 draft: true
 ---

@@ -1,8 +1,8 @@
 ---
 title: "APL: Pattern 89; Corner Grocery"
 tags:
-  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
+  - "writing/annotations/a-pattern-language"
   - "private"
 draft: true
 ---

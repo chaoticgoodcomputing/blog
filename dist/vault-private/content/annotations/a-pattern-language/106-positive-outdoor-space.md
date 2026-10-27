@@ -1,8 +1,8 @@
 ---
 title: "APL: Pattern 106; Positive Outdoor Space"
 tags:
-  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
+  - "writing/annotations/a-pattern-language"
   - "private"
 draft: true
 ---

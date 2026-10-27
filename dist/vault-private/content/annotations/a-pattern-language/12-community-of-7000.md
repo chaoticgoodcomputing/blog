@@ -1,8 +1,8 @@
 ---
 title: "APL: Pattern 12; Community of 7000"
 tags:
-  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
+  - "writing/annotations/a-pattern-language"
   - "private"
 draft: true
 ---

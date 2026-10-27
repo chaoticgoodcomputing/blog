@@ -1,8 +1,8 @@
 ---
 title: "APL: Pattern 80; Self-governing Workshops and Offices"
 tags:
-  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
+  - "writing/annotations/a-pattern-language"
   - "private"
 draft: true
 ---

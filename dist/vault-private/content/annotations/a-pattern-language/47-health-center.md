@@ -1,8 +1,8 @@
 ---
 title: "APL: Pattern 47; Health Center"
 tags:
-  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
+  - "writing/annotations/a-pattern-language"
   - "private"
 draft: true
 ---

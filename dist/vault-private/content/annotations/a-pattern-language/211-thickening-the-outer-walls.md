@@ -1,8 +1,8 @@
 ---
 title: "APL: Pattern 211; Thickening the Outer Walls"
 tags:
-  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
+  - "writing/annotations/a-pattern-language"
   - "private"
 draft: true
 ---

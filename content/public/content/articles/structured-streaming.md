@@ -8,10 +8,10 @@ tags:
   - engineering/data
   - engineering/devops
   - engineering/languages/python
-  - writing/notes
   - engineering/data
   - economics/finance
   - projects/dayjob
+  - writing/notes
 ---
 
 Let's say that _you_, a ✨ _humble data plumber_ ✨ of the Big Data era, have been tasked to create an analytics solution for [an online retail dataset](https://github.com/databricks/Spark-The-Definitive-Guide/blob/master/data/retail-data/all/online-retail-dataset.csv):

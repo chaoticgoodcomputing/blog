@@ -1,8 +1,8 @@
 ---
 title: "APL: Pattern 123; Pedestrian Density"
 tags:
-  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
+  - "writing/annotations/a-pattern-language"
   - "private"
 draft: true
 ---

@@ -1,8 +1,8 @@
 ---
 title: "APL: Pattern 93; Food Stands"
 tags:
-  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
+  - "writing/annotations/a-pattern-language"
   - "private"
 draft: true
 ---

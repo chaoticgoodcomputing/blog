@@ -1,8 +1,8 @@
 ---
 title: "APL: Pattern 25; Access to Water"
 tags:
-  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
+  - "writing/annotations/a-pattern-language"
   - "private"
 draft: true
 ---

@@ -1,8 +1,8 @@
 ---
 title: "APL: Pattern 235; Soft Inside Walls"
 tags:
-  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
+  - "writing/annotations/a-pattern-language"
   - "private"
 draft: true
 ---

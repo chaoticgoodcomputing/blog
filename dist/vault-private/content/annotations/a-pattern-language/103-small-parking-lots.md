@@ -1,8 +1,8 @@
 ---
 title: "APL: Pattern 103; Small Parking Lots"
 tags:
-  - "writing/annotations/a-pattern-language"
   - "projects/games/the-neighborhood"
+  - "writing/annotations/a-pattern-language"
   - "private"
 draft: true
 ---

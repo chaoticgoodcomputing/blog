@@ -2,8 +2,8 @@
 title: "APL: Pattern 4; Agricultural Valleys"
 date: 2026-02-08
 tags:
-  - writing/annotations/a-pattern-language
   - projects/games/the-neighborhood
+  - writing/annotations/a-pattern-language
 description: "Urban development has the high ground over agricultural and ecological preservation — and it should! *A Pattern Language* annotations on Pattern 4: Agricultural Valleys"
 ---
 ← [[public/content/annotations/a-pattern-language/03-city-country-fingers|City Country Fingers]] | [[public/content/annotations/a-pattern-language/05-lace-of-country-streets|Lace of Country Streets]] →

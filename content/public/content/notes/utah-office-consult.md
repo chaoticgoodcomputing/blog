@@ -9,8 +9,8 @@ tags:
   - economics/management
   - engineering/languages/python
   - engineering/data
-  - writing/annotations
   - projects/undergrad
+  - writing/annotations
 annotation-target: https://raw.githubusercontent.com/chaoticgoodcomputing/blog/refs/heads/main/content/public/assets/utah_office_update.pdf
 ---
 
