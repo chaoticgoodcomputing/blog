@@ -4,6 +4,7 @@
 // Drawn as a button, with GitHub's mark before its words, as on the Quartz site.
 import { Icon } from "astro-icon/components"
 import type { NoteFacts } from "../lib/notes.ts"
+import { newTab } from "../lib/external-links.ts"
 import { sourcePath } from "../lib/source-link.ts"
 import { site } from "../site.config.ts"
 
@@ -16,12 +17,13 @@ const { note } = Astro.props
 const { url, branch } = site.repository
 // Each part of the path is encoded on its own, so a space, a `#` or a `?` in a name stays in it.
 const path = note && sourcePath(note.file).split("/").map(encodeURIComponent).join("/")
+const href = `${url}/blob/${branch}/${path}`
 ---
 
 {
   note && (
     <p class="source-link">
-      <a href={`${url}/blob/${branch}/${path}`}>
+      <a href={href} {...newTab(href, Astro.site!)}>
         <Icon name="mdi:github" is:inline width="16" height="16" fill="currentColor" aria-hidden="true" />
         View source on GitHub
       </a>

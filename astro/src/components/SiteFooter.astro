@@ -1,6 +1,7 @@
 ---
 // What the graph column ends with: the site's notice, how to reach its author, and its copyright.
 // Every value is site configuration's `footer`.
+import { newTab } from "../lib/external-links.ts"
 import { footer } from "../site.config.ts"
 
 // The year the site was last built, which a deploy keeps current.
@@ -13,7 +14,9 @@ const year = new Date().getFullYear()
     {
       footer.contacts.map((link) => (
         <li>
-          <a href={link.url}>{link.label}</a>
+          <a href={link.url} {...newTab(link.url, Astro.site!)}>
+            {link.label}
+          </a>
         </li>
       ))
     }
@@ -24,7 +27,9 @@ const year = new Date().getFullYear()
       footer.copyright.map((holder, index) => (
         <Fragment>
           {index > 0 && " & "}
-          <a href={holder.url}>{holder.label}</a>
+          <a href={holder.url} {...newTab(holder.url, Astro.site!)}>
+            {holder.label}
+          </a>
         </Fragment>
       ))
     }{" "}

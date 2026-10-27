@@ -11,24 +11,36 @@
 // Material Design Icons' `open-in-new`, as the Quartz site drew an icon after such a link.
 //
 // Only a link written in Markdown is seen here: Sätteri passes HTML written in a note through as
-// it is written, and an MDX note's JSX is the writer's too.
+// it is written, and an MDX note's JSX is the writer's too. A component's link to another site takes
+// `newTab`'s attributes, and whatever link none of these reach, the browser gives a new tab as the
+// page loads (ExternalLinks.astro). Each asks `isExternal`.
 
 import { defineHastPlugin } from "satteri"
 import { noteIcon } from "./icons.ts"
 
+/**
+ * Whether `href` is a link to another site: a whole web address, by `https:` or `http:`, on a host
+ * other than `site`'s (`site` in astro.config.ts).
+ */
+export function isExternal(href: string, site: string | URL): boolean {
+  if (!URL.canParse(href)) return false
+  const url = new URL(href)
+  return (url.protocol === "https:" || url.protocol === "http:") && url.host !== new URL(site).host
+}
+
+/** The attributes a component's link to `href` takes: a new tab, opened `noopener`, if it goes to another site. */
+export const newTab = (href: string, site: string | URL): { target?: "_blank"; rel?: "noopener" } =>
+  isExternal(href, site) ? { target: "_blank", rel: "noopener" } : {}
+
 /** `site` is the site's address, `site` in astro.config.ts: a link to its host is no other site's. */
 export function externalLinks(site: string) {
-  const own = new URL(site).host
   return defineHastPlugin({
     name: "external-links",
     element: {
       filter: ["a"],
       visit(node, ctx) {
         const href = node.properties?.href
-        if (typeof href !== "string" || node.properties?.target !== undefined) return
-        if (!URL.canParse(href)) return
-        const url = new URL(href)
-        if ((url.protocol !== "https:" && url.protocol !== "http:") || url.host === own) return
+        if (typeof href !== "string" || node.properties?.target !== undefined || !isExternal(href, site)) return
         ctx.setProperty(node, "target", "_blank")
         ctx.setProperty(node, "rel", "noopener")
         ctx.appendChild(node, {

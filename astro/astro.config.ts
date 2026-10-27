@@ -237,5 +237,9 @@ export default defineConfig({
     // The end-to-end suite's server takes the port it is given or fails, so a spec never reads
     // another checkout's site (docs/adr/0007).
     preview: { strictPort: e2eCache !== undefined },
+    // What the dev server bundles as it starts, though a page only imports it when asked: the QR
+    // code's library (ArticleTitle.astro). Found later, on the first click, it would be bundled
+    // then, and the page asking for it would be answered with the bundle it replaced.
+    optimizeDeps: { include: ["uqr"] },
   },
 })

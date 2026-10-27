@@ -55,3 +55,37 @@ for (const name of [
     await expect(link).not.toHaveAttribute("target", /.*/)
   })
 }
+
+// Each page's links to other sites, by their addresses, that would open in the page's own tab: none,
+// wherever they come from. A link to this site, by its whole address, is no other site's.
+const sameTab = (page: import("@playwright/test").Page) =>
+  page.evaluate(() =>
+    [...document.querySelectorAll<HTMLAnchorElement>("a[href]")]
+      .filter((link) => /^https?:$/.test(link.protocol) && link.host !== location.host && link.host !== "blog.chaoticgood.computer")
+      .filter((link) => link.target !== "_blank" || !link.relList.contains("noopener"))
+      .map((link) => link.href),
+  )
+
+for (const url of ["/", links, "/note-page-furniture/A-note-with-sections", "/tags/ledger"]) {
+  test(`every link to another site on ${url} opens in a new tab: the shell's, the note's, and one written as HTML`, async ({ page }) => {
+    await page.goto(url)
+    expect(await sameTab(page)).toEqual([])
+  })
+}
+
+test("a link written as HTML in a note, which no Markdown plugin sees, opens in a new tab too", async ({ page }) => {
+  await page.goto(links)
+  const link = page.locator(".prose").getByRole("link", { name: "an HTML link" })
+  await expect(link).toHaveAttribute("target", "_blank")
+  await expect(link).toHaveAttribute("rel", "noopener")
+})
+
+test("the footer's links to other sites open in a new tab, and its notice, on this site, stays", async ({ page }) => {
+  await page.goto("/")
+  const footer = page.getByRole("contentinfo")
+  for (const link of await footer.locator('a[href^="http"]').all()) {
+    const href = (await link.getAttribute("href"))!
+    if (new URL(href).host === "blog.chaoticgood.computer") await expect(link).not.toHaveAttribute("target")
+    else await expect(link, href).toHaveAttribute("target", "_blank")
+  }
+})

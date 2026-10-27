@@ -35,6 +35,8 @@ import { hasDiagrams } from "../lib/mermaid.ts"
 // 20 link popovers
 import LinkPopovers from "../components/LinkPopovers.astro"
 
+import ExternalLinks from "../components/ExternalLinks.astro"
+
 type Props = PageProps
 
 const page = Astro.props
@@ -76,5 +78,8 @@ const page = Astro.props
 
     {/* 20 link popovers: every kind */}
     <LinkPopovers />
+
+    {/* Every link to another site opens in a new tab, whatever made it */}
+    <ExternalLinks />
   </body>
 </html>

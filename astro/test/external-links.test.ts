@@ -1,6 +1,6 @@
 import { defineHastPlugin, markdownToHtml } from "satteri"
 import { expect, test } from "vitest"
-import { externalLinks } from "../src/lib/external-links.ts"
+import { externalLinks, isExternal, newTab } from "../src/lib/external-links.ts"
 
 /** A note rendered with the external links plugin alone, for a site at blog.example.com. */
 function render(source: string): string {
@@ -50,4 +50,16 @@ test("a link given a target by a plugin before this one keeps it", () => {
 
 test("a link written as HTML in a note is left as written", () => {
   expect(render('<a href="https://example.org">written</a>')).toBe('<p><a href="https://example.org">written</a></p>')
+})
+
+test("a link is to another site when it is a whole web address on another host", () => {
+  const site = "https://blog.chaoticgood.computer"
+  expect(isExternal("https://github.com/spelkington", site)).toBe(true)
+  expect(isExternal("http://example.org/", site)).toBe(true)
+  // A page of this site by its whole address, a path, a place, an application's link.
+  for (const href of ["https://blog.chaoticgood.computer/ai-policy", "/content/x", "#here", "mailto:a@example.org", "tel:+1555"]) {
+    expect(isExternal(href, site), href).toBe(false)
+  }
+  expect(newTab("https://github.com/", site)).toEqual({ target: "_blank", rel: "noopener" })
+  expect(newTab("/content/x", site)).toEqual({})
 })

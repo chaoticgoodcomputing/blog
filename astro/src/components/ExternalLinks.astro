@@ -1,0 +1,37 @@
+---
+// Every link to another site opens in a new tab, wherever it comes from (docs/adr/3401): a link
+// written in Markdown is given one as the note renders (src/lib/external-links.ts), and a
+// component's by `newTab`. This gives one to whatever link neither reached: one written as HTML in
+// a note, one in an MDX note's JSX or a widget, one a script makes. A link with a `target` of its
+// own keeps it.
+//
+// It runs as the page loads, and again for each link added to the page after, a page the client
+// router brings in among them. Which host is the site's is the site's address (`site`), not the
+// page's, so that on the dev server a link to the published site still stays in the tab.
+const host = new URL(Astro.site!).host
+---
+
+<script is:inline define:vars={{ host }}>
+  // Once for the document: the client router may run the page's inline scripts again on each page
+  // it brings in, and the one observer sees every page.
+  if (!window.__externalLinks) {
+    window.__externalLinks = true
+
+    const external = (link) =>
+      !link.hasAttribute("target") && (link.protocol === "https:" || link.protocol === "http:") && link.host !== host && link.host !== location.host
+
+    const open = (root) => {
+      const links = root instanceof HTMLAnchorElement ? [root] : (root.querySelectorAll?.("a[href]") ?? [])
+      for (const link of links) {
+        if (!external(link)) continue
+        link.target = "_blank"
+        link.relList.add("noopener")
+      }
+    }
+
+    open(document)
+    new MutationObserver((changes) => {
+      for (const change of changes) for (const node of change.addedNodes) open(node)
+    }).observe(document.documentElement, { childList: true, subtree: true })
+  }
+</script>

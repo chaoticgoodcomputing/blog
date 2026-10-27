@@ -17,7 +17,7 @@ description: City, with natural stripes — or nature, with city stripes? Annota
 
 ## Notes
 
-Someday, I'll write APL notes for without [[public/tags/engineering/data|resorting to graphs]] — but not this time!
+Someday, I'll write APL notes without [[public/tags/engineering/data|resorting to graphs]] — but not this time!
 
 ### Public Opinion: Urban & Rural
 
