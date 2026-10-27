@@ -208,7 +208,7 @@ From the Airbus paper:
 > [!QUOTE]
 > "Some theorem proving techniques have been successfully introduced to verify limited software subsets. However, to prove properties of complete real-size programs with these techniques does not seem to be within the reach of software engineers yet."
 > 
-> -- Delmas & Souyris, *Astrée: from Research to Industry* (2007)
+> -- Delmas & Souyris, [*Astrée: from Research to Industry*](https://www.astree.ens.fr/papers/astree_airbus_sas2007.pdf) (2007)
 
 ## Small Pickles & Autopilot
 
