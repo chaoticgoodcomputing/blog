@@ -142,9 +142,9 @@ God, they do it right at Whitehall.
 
 ---
 
-In my career as a software engineer, being able to hear an idea, write it down, then show it *back* to the person who had the idea and ask "Does this look right?" is pretty much a cheat code. It makes *every* part of the job easier.
+Mastering the art of hearing an idea, writing it down, then showing it *back* to the person who had the idea to ask "Does this look right?" is pretty much a cheat code for software engineering. It makes *every* part of the job easier.
 
-Once you get good at it, you'll eventually have a list of tests about the behavior of the thing you're building, and a *very* clear picture of everything that is needed.
+Once you get good at it, you'll eventually be able to crank out a list of tests about the behavior of the thing you're building, and describe a *very* clear picture of everything that'll be needed to build it.
 
 A collection of well-defined requirements, in many other fields, is called a *spec*, or *specification*.
 
