@@ -62,7 +62,7 @@ On [December 2nd, 2024](https://en.wikipedia.org/w/index.php?title=Pickled_cucum
 + length, often with bumpy skin, which are typically used for pickling.
 ```
 
-(Most of the Wikipedia edits on gherkins tend to be focus on they are or are not "baby pickles". For the sake of this essay, I will use [the definition as of September 9th, 2026](https://en.wikipedia.org/w/index.php?title=Pickled_cucumber&oldid=1371939008) and assume that they are not *baby* pickles-- just *very small* ones.)
+(Most of the Wikipedia edits on gherkins tend to be focus on whether they are, or are not, "baby pickles". For the sake of this essay, I will use [the definition as of September 9th, 2026](https://en.wikipedia.org/w/index.php?title=Pickled_cucumber&oldid=1371939008) and assume that they are not *baby* pickles-- just *very small* ones.)
 
 Gherkin is also a term used by the Behavior-Driven Development software testing library [Cucumber](https://cucumber.io/)[^1].
 
@@ -214,3 +214,6 @@ From the Airbus paper:
 I am still a part of the world that has shifted most in the past 18 months, and finding my footing during this shift is still a daily effort. I sympathize with mathematicians, being in a space that is *very* sensitive to the seemingly endless wave of news that, even three years ago, would've been considered once-a-decade events.
 
 Past the immediate anxiety for my own well-being, though, I am excited to see what new capabilities can be done if we, as human beings, broaden our horizons and find new ways to solve problems with new tools and a willingness to keep learning.
+
+[^1]: For the life of me, I do not understand why software developers name things like this, or where they get it from. I will never forgive the Kubernetes team, either for the name itself, or for k8s as the abbreviation.
+[^2]: These examples are taken directly from the Cucumber docs, which are among some of the most helpful docs I have ever read.
