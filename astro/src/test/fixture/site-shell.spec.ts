@@ -65,8 +65,8 @@ test("the note body styles every kind of Markdown, not only Obsidian's", async (
   expect(await style("ul.contains-task-list", "list-style-type")).toBe("none")
   expect(await style("blockquote", "border-left-width")).toBe("3px")
   expect(await style("td", "border-bottom-style")).toBe("solid")
-  expect(await style("pre", "font-family")).toContain("IBM Plex Mono")
-  expect(await style("p > code", "font-family")).toContain("IBM Plex Mono")
+  expect(await style("pre", "font-family")).toContain("Hack")
+  expect(await style("p > code", "font-family")).toContain("Hack")
   expect(await style("pre", "border-top-style")).toBe("solid")
 
   // The footnotes are set apart under the body, smaller, and their heading is for a screen reader.
@@ -128,7 +128,7 @@ test("a callout of a kind with a colour of its own takes it from the palette, in
   await expect(title).toHaveCSS("color", "rgb(1, 2, 3)")
 })
 
-test("Inter and IBM Plex Mono are the site's own files, and no font comes from anywhere else", async ({
+test("Fraunces and Hack are the site's own files, and no font comes from anywhere else", async ({
   page,
   baseURL,
   externalRequests,
@@ -140,7 +140,7 @@ test("Inter and IBM Plex Mono are the site's own files, and no font comes from a
   await page.goto(note)
   await page.evaluate(() => document.fonts.ready)
 
-  expect(await page.locator("body").evaluate((element) => getComputedStyle(element).fontFamily)).toMatch(/^"?Inter/)
+  expect(await page.locator("body").evaluate((element) => getComputedStyle(element).fontFamily)).toMatch(/^"?Fraunces/)
   // Astro names each family it serves after the font, with a hash of its own, and a metric-matched
   // fallback beside it, which is a local font and no file.
   const loaded = await page.evaluate(() =>
@@ -148,7 +148,7 @@ test("Inter and IBM Plex Mono are the site's own files, and no font comes from a
       .filter((font) => font.status === "loaded" && !font.family.includes("fallback"))
       .map((font) => font.family.replaceAll('"', "").replace(/-[0-9a-f]+$/, "")),
   )
-  expect(new Set(loaded)).toEqual(new Set(["Inter", "IBM Plex Mono"]))
+  expect(new Set(loaded)).toEqual(new Set(["Fraunces", "Hack"]))
 
   expect(fonts.length).toBeGreaterThan(0)
   for (const url of fonts) expect(url.startsWith(`${baseURL}/`), url).toBe(true)

@@ -1,6 +1,11 @@
 ---
 // A tag badge: a tag bubble, then `#` and the tag name, as one link to the tag's page. How a tag
 // appears among text.
+//
+// Where the reader has a pointer that hovers, a badge is its bubble alone, and grows to show its
+// name while the pointer is on it or it has the keyboard's focus, pushing the badges after it
+// along. Without such a pointer (a touch screen), the name is always shown. Either way the name is
+// the link's text, and its name for a screen reader.
 import { tagName, tagUrl } from "../lib/tags.ts"
 import TagBubble from "./TagBubble.astro"
 
@@ -17,8 +22,12 @@ const { tag, count } = Astro.props
 <a class="tag-badge" href={tagUrl(tag)} title={tag}>
   <TagBubble tag={tag} />
   {/* `#` and the name as one string, so that they never break apart. */}
-  <span class="name">{`#${tagName(tag)}`}</span>
-  {count !== undefined && <span class="count">({count})</span>}
+  <span class="label">
+    <span class="text">
+      <span class="name">{`#${tagName(tag)}`}</span>
+      {count !== undefined && <span class="count">({count})</span>}
+    </span>
+  </span>
 </a>
 
 <style>
@@ -32,6 +41,8 @@ const { tag, count } = Astro.props
     border-radius: 18px 8px 8px 18px;
     background-color: var(--lightgray);
     color: inherit;
+    /* A tag is set in the code font, wherever the site shows one. */
+    font-family: var(--codeFont);
     text-decoration: none;
     transition: background-color 0.2s ease;
   }
@@ -40,17 +51,72 @@ const { tag, count } = Astro.props
     background-color: var(--gray);
   }
 
+  .label {
+    display: grid;
+    min-width: 0;
+  }
+
+  .text {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
   .name {
     min-width: 0;
-    font-size: 0.95em;
+    font-size: 0.85em;
     font-weight: 500;
     /* A tag name with nowhere to break breaks rather than widen the page. */
     overflow-wrap: anywhere;
   }
 
   .count {
-    margin-left: -0.25rem;
     font-size: 0.85em;
     color: var(--darkgray);
+  }
+
+  /* With a pointer that hovers: the bubble alone, in a circle of the badge's background, the label
+     a column as wide as none of it until the badge is hovered or focused, when it is as wide as all
+     of it. The badge's gap and the room after the name are the label's own, so that they go with it. */
+  @media (hover: hover) {
+    .tag-badge {
+      gap: 0;
+      padding: 0.3rem;
+      border-radius: 21px;
+      transition:
+        background-color 0.2s ease,
+        border-radius 0.2s ease;
+    }
+
+    .tag-badge:is(:hover, :focus-visible) {
+      border-radius: 21px 8px 8px 21px;
+    }
+
+    .label {
+      grid-template-columns: minmax(0, 0fr);
+      overflow: hidden;
+      transition: grid-template-columns 0.2s ease;
+    }
+
+    .tag-badge:is(:hover, :focus-visible) .label {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .text {
+      padding: 0 0.3rem 0 0.5rem;
+      white-space: nowrap;
+    }
+
+    .name {
+      overflow-wrap: normal;
+    }
+  }
+
+  @media (hover: hover) and (prefers-reduced-motion: reduce) {
+    .tag-badge,
+    .label {
+      transition: none;
+    }
   }
 </style>

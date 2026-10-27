@@ -92,3 +92,21 @@ test("the button beside a title copies the page's own address, with none of the 
     "https://blog.chaoticgood.computer/client-side-navigation/destination",
   )
 })
+
+test("the QR button beside a title shows the page's own address as a QR code, with none of the trail, until it is closed", async ({ page }) => {
+  await page.goto(`${destination}?trail=${start}`)
+  await page.getByRole("heading", { level: 1 }).hover()
+  await page.getByRole("button", { name: "Show a QR code for this page" }).click()
+  const dialog = page.getByRole("dialog", { name: "A QR code for this page" })
+  await expect(dialog).toBeVisible()
+  const address = "https://blog.chaoticgood.computer/client-side-navigation/destination"
+  await expect(dialog.getByRole("img", { name: `A QR code for ${address}` }).locator("svg")).toBeVisible()
+  await expect(dialog.locator(".qr-address")).toHaveText(address)
+
+  await page.keyboard.press("Escape")
+  await expect(dialog).toBeHidden()
+  await page.getByRole("heading", { level: 1 }).hover()
+  await page.getByRole("button", { name: "Show a QR code for this page" }).click()
+  await dialog.getByRole("button", { name: "Close" }).click()
+  await expect(dialog).toBeHidden()
+})

@@ -100,8 +100,8 @@ test("a note's dates are its source file's: git's, through the manifest, then it
   expect(sourceOf("notes/uncommitted.md")).toBe(path.join(sources[0]!, "notes/uncommitted.md"))
 
   const index = indexNotes(vault)
-  expect(index.byPath.get("content/Private note.md")?.date.toISOString()).toBe("2026-06-07T08:09:10.000Z")
-  expect(index.byPath.get("notes/uncommitted.md")?.date.toISOString()).toBe("2026-08-09T10:11:12.000Z")
+  expect(index.byPath.get("content/Private note.md")?.modified.toISOString()).toBe("2026-06-07T08:09:10.000Z")
+  expect(index.byPath.get("notes/uncommitted.md")?.modified.toISOString()).toBe("2026-08-09T10:11:12.000Z")
 })
 
 test("a note's source is its source file in the repository, whichever source it came from", () => {
@@ -233,10 +233,10 @@ describe("a link written with a public/ or private/ prefix", () => {
     }
   })
 
-  test("leaves the note's modification time, and so its date, its source's", () => {
+  test("leaves the note's modification time, and so when it last changed, its source's", () => {
     const copy = path.join(assembled, "content/notes/linking.md")
     expect(fs.statSync(copy).mtime.toISOString()).toBe(SOURCE_TIME.toISOString())
-    expect(indexNotes(linked).byPath.get("content/notes/linking.md")?.date.toISOString()).toBe(SOURCE_TIME.toISOString())
+    expect(indexNotes(linked).byPath.get("content/notes/linking.md")?.modified.toISOString()).toBe(SOURCE_TIME.toISOString())
   })
 
   test("is written again only when its mapped contents change, and follows an edit in its source", () => {

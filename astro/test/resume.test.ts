@@ -61,7 +61,7 @@ test("the resume's note is dated by the resume's source, unless it writes a date
     const day = lastCommitDay(RESUME_SOURCE)
     expect(day).toBeDefined()
     expect(index.byPath.get(RESUME_NOTE)?.date).toEqual(day)
-    expect(index.byPath.get("dated.mdx")?.date.toISOString()).toBe("2026-01-04T00:00:00.000Z")
+    expect(index.byPath.get("dated.mdx")?.date?.toISOString()).toBe("2026-01-04T00:00:00.000Z")
   } finally {
     fs.rmSync(root, { recursive: true, force: true })
   }

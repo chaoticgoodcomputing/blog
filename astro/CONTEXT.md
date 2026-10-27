@@ -399,8 +399,8 @@ One use of a component that is hydrated in the reader's browser. Every widget is
 _Avoid_: mount point
 
 **Colour scheme**:
-Light or dark: which of the site's two palettes a reader is seeing: their system's. Anything that
-paints in script paints again when it changes.
+Light or dark: which of the site's two palettes a reader is seeing. The reader's choice, else
+their system's. Anything that paints in script paints again when it changes.
 _Avoid_: theme, mode, dark mode (for the scheme itself)
 
 ### Tests

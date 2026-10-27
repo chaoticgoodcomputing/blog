@@ -36,8 +36,8 @@ const counts = postListing.showTagCounts ? postCounts() : undefined
                 <a href={note.url}>{note.title}</a>
               </h3>
               <p class="meta">
-                <FormattedDate date={note.date} />
-                {note.summary && <span class="description">{` — ${note.summary}`}</span>}
+                {note.date && <FormattedDate date={note.date} />}
+                {note.summary && <span class="description">{`${note.date ? " — " : ""}${note.summary}`}</span>}
               </p>
               {note.tags.length > 0 && (
                 <ul class="tags">
@@ -98,7 +98,6 @@ const counts = postListing.showTagCounts ? postCounts() : undefined
 
   h3 {
     margin: 0;
-    font-size: 1.1rem;
   }
 
   h3 a {
@@ -110,9 +109,11 @@ const counts = postListing.showTagCounts ? postCounts() : undefined
     color: var(--darkgray);
   }
 
+  /* Centred, as the post's title over them is. */
   .tags {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 0.5rem;
     margin-top: 0.5rem;
     font-size: 0.8rem;

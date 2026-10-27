@@ -46,7 +46,8 @@
     connectedCallback() {
       this.#source ||= this.querySelector("pre")?.textContent ?? ""
       // A diagram is painted in the colours of one colour scheme, so it is drawn again when the
-      // page's changes: `themechange`, fired when the reader's system changes (SchemeChange.astro).
+      // page's changes: `themechange`, fired when the reader switches, or when their system changes
+      // while they have chosen none (SchemeBeforePaint.astro).
       document.addEventListener("themechange", this.#redraw)
       void this.#draw()
     }

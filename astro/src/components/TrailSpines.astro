@@ -8,7 +8,8 @@
 // (ClientNavigation.astro) is sent to the address of the trail it makes: following any link on the
 // site, from a note, a search result or a graph, goes on to its note, or back to it if the trail
 // has it, and says which way it goes, for the note's fold (Page.astro): back, to a note the trail
-// has. Back and forward go where history says, trail and all; a link the router doesn't take
+// has. A navigation to the note already shown, such as the site's title on the home page, has no
+// fold: the note isn't going anywhere. Back and forward go where history says, trail and all; a link the router doesn't take
 // (a full page load), one followed from the 404 page, which is no note, and one marked
 // `data-trail-reset` (the site's title, to the home page) start a trail afresh.
 //
@@ -21,7 +22,7 @@
 </trail-spines>
 
 <script>
-  import type { TransitionBeforePreparationEvent } from "astro:transitions/client"
+  import type { TransitionBeforePreparationEvent, TransitionBeforeSwapEvent } from "astro:transitions/client"
   import { graphOf } from "../lib/graph.ts"
   import { loadGraphIndex } from "../lib/graph-index-client.ts"
   import { addressOf, follow, trailOf } from "../lib/trail.ts"
@@ -39,6 +40,13 @@
     const to = new URL(addressOf(trail), navigation.to)
     to.hash = navigation.to.hash
     navigation.to = to
+  })
+
+  // A note's address is its path, and the trail before it the query: the same path is the same note,
+  // which is swapped in place, with no fold.
+  document.addEventListener("astro:before-swap", (event) => {
+    const swap = event as TransitionBeforeSwapEvent
+    if (swap.from.pathname === swap.to.pathname) swap.viewTransition.skipTransition()
   })
 
   // Each note's title, by its address, from the graph index: a note's, or a tag's name.

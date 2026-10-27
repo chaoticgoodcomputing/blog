@@ -39,8 +39,11 @@ export interface NoteFacts {
   tags: string[]
   /** Its own tags and every ancestor of each, sorted. */
   tagsWithAncestors: string[]
-  /** The note's date: frontmatter's `date`, then its last commit's, then its file's. */
-  date: Date
+  /**
+   * The note's date: frontmatter's `date`. An undated note, such as a tag's description note, has
+   * none: when it last changed is no date of its own.
+   */
+  date: Date | undefined
   /** When it last changed: its last commit's time, then its file's, and never before its date. */
   modified: Date
   /** Whether its page is a private page: one under a private tag. */
@@ -274,9 +277,9 @@ export const urlOfPath = (linkpath: string): string | undefined => current().url
  */
 export const getLinksDigest = (): string => current().linksDigest
 
-/** Newest first, then by title. */
-export const newestFirst = (a: NoteFacts, b: NoteFacts): number =>
-  b.date.getTime() - a.date.getTime() || a.title.localeCompare(b.title)
+/** Newest first, then by title, with undated notes after every dated one. */
+export const newestFirst = (a: Pick<NoteFacts, "date" | "title">, b: Pick<NoteFacts, "date" | "title">): number =>
+  (b.date?.getTime() ?? -Infinity) - (a.date?.getTime() ?? -Infinity) || a.title.localeCompare(b.title)
 
 export interface TagUse {
   tag: string

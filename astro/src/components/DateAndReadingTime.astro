@@ -1,6 +1,6 @@
 ---
 // A note's date and how long it takes to read, under its title: "Mar 14, 2026, 3 min read". A note
-// with no body has its date alone.
+// with no body has its date alone, and an undated note, such as a tag's, its reading time alone.
 import { readingMinutes } from "../lib/reading-time.ts"
 import type { NoteFacts } from "../lib/notes.ts"
 import FormattedDate from "./FormattedDate.astro"
@@ -12,12 +12,14 @@ interface Props {
 
 const { note } = Astro.props
 const minutes = note ? readingMinutes(note) : 0
+const date = note?.date
 ---
 
 {
-  note && (
+  (date || minutes > 0) && (
     <p class="date-and-reading-time">
-      <FormattedDate date={note.date} />{minutes > 0 && <span>, {minutes} min read</span>}
+      {date && <FormattedDate date={date} />}
+      {minutes > 0 && <span>{date && ", "}{minutes} min read</span>}
     </p>
   )
 }

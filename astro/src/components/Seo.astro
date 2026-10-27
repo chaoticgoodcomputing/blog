@@ -40,7 +40,7 @@ const scriptSafe = (value: unknown) => JSON.stringify(value).replaceAll("<", "\\
 {
   head.article && (
     <>
-      <meta property="article:published_time" content={head.article.publishedTime} />
+      {head.article.publishedTime && <meta property="article:published_time" content={head.article.publishedTime} />}
       <meta property="article:modified_time" content={head.article.modifiedTime} />
       <meta property="article:author" content={head.article.author} />
       {head.article.section && <meta property="article:section" content={head.article.section} />}

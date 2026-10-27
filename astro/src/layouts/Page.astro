@@ -1,9 +1,9 @@
 ---
 // The site shell: what is around a page's content, on every kind of page. Two columns: the graph
-// column, and the note. The graph column holds the site's title and the search box, the local
-// graph over the reader's trail, and the footer. Beside it are the trail's spines, the notes the
-// reader came through, then the note itself: its header (title, date, tags) over the page's
-// content, and what follows the body under it.
+// column, and the note. The graph column holds the site's title, the search box with the colour
+// scheme switch to the right of it, the local graph over the reader's trail, and the footer.
+// Beside it are the trail's spines, the notes the reader came through, then the note itself: its
+// header (title, date, tags) over the page's content, and what follows the body under it.
 //
 // The window is the one scroll: the graph column and the spines stay in view beside the note. On a
 // phone or a tablet the graph column is a menu instead, opened from a bar over the note, which
@@ -17,6 +17,7 @@ import Base from "./Base.astro"
 
 import SiteTitle from "../components/SiteTitle.astro"
 import Search from "../components/Search.astro"
+import SchemeSwitch from "../components/SchemeSwitch.astro"
 import LocalGraph from "../components/LocalGraph.astro"
 import SiteFooter from "../components/SiteFooter.astro"
 import TrailSpines from "../components/TrailSpines.astro"
@@ -59,10 +60,19 @@ const fold = {
       <a class="menu-bar-title" href="/" data-trail-reset>{site.title}</a>
     </header>
 
-    <aside class="graph-column" id="graph-column" popover transition:name="graph-column" transition:animate="none">
+    <aside
+      class="graph-column"
+      id="graph-column"
+      popover
+      transition:name="graph-column"
+      transition:animate="none"
+    >
       <header>
         <SiteTitle />
-        <Search />
+        <div class="toolbar">
+          <Search />
+          <SchemeSwitch />
+        </div>
       </header>
       <LocalGraph url={page.url} />
       {/* The site's footer, though it is in the graph column: the page's contentinfo landmark. */}
@@ -75,9 +85,13 @@ const fold = {
 
     <main transition:name="note" transition:animate={fold}>
       <header>
-        {on("note", "home", "tag", "annotation") && <ArticleTitle title={page.title} url={page.url} />}
-        {on("note", "tag", "annotation") && <DateAndReadingTime note={page.note} />}
+        {
+          on("note", "home", "tag", "annotation") && (
+            <ArticleTitle title={page.title} url={page.url} />
+          )
+        }
         {on("note", "home", "tag", "annotation") && <TagList tags={page.note?.tags ?? []} />}
+        {on("note", "tag", "annotation") && <DateAndReadingTime note={page.note} />}
       </header>
 
       <slot />
@@ -145,9 +159,13 @@ const fold = {
     border-bottom: 1px solid var(--lightgray);
   }
 
-  .graph-column > header > :global(site-search) {
+  /* The search box, and the scheme switch to the right of it. */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     width: 100%;
-    max-width: 16rem;
+    max-width: 18.5rem;
   }
 
   .graph-column > header :global(.search-button) {
@@ -170,11 +188,22 @@ const fold = {
     padding: 2.5rem max(2rem, calc((100% - 40rem) / 2)) 6rem;
   }
 
+  /* The page's header, its title, date and tags, centred, as every heading is (global.css). */
   main > header {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 0.75rem;
     margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  main > header > :global(*) {
+    max-width: 100%;
+  }
+
+  main > header :global(.tag-list) {
+    justify-content: center;
   }
 
   .after-body {
@@ -192,11 +221,10 @@ const fold = {
     display: none;
   }
 
-  /* A section after the body is headed by an `h2`, which the shell sizes, so that every feature's
+  /* A section after the body is headed by an `h2`, which the shell spaces, so that every feature's
      heading is alike. Written with no specificity: a feature's own styles say otherwise by saying so. */
   .after-body :global(:where(h2)) {
     margin: 0 0 0.25rem;
-    font-size: 1rem;
   }
 
   /* An annotation page whose document opens takes the whole of the note's room: the annotation

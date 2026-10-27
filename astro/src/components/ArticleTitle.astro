@@ -1,15 +1,17 @@
 ---
-// The page's title, over its content: the page's one first-level heading, and beside it a button
-// that copies the page's own address, as a heading's anchor is beside a heading
-// (src/styles/prose/heading-anchors.css): shown while the pointer is on the title. The address is
-// the page's alone, whole, on the site's domain: none of the reader's trail is in it.
+// The page's title, over its content: the page's one first-level heading, and beside it two
+// buttons, as a heading's anchor is beside a heading (src/styles/prose/heading-anchors.css), shown
+// while the pointer is on the title: one copies the page's own address, and one shows it as a QR
+// code, to open the page on a phone. The address is the page's alone, whole, on the site's domain,
+// as the site is published, even on the dev server: none of the reader's trail is in it.
 //
-// The button is beside the heading, not in it, so that the heading's name is the title's.
+// The buttons are beside the heading, not in it, so that the heading's name is the title's. The QR
+// code is drawn in the browser when it is asked for (uqr), so a page carries none of it until then.
 import { Icon } from "astro-icon/components"
 
 interface Props {
   title: string
-  /** The page's address from the site's root, which the button copies. Without one, no button. */
+  /** The page's address from the site's root, which the buttons give. Without one, no buttons. */
   url?: string | undefined
 }
 
@@ -21,11 +23,25 @@ const address = url === undefined ? undefined : new URL(url, Astro.site).href
   <h1>{title}</h1>
   {
     address && (
-      <copy-link data-address={address}>
-        <button type="button" title="Copy a link to this page" aria-label="Copy a link to this page">
-          <Icon name="mdi:link-variant" is:inline width="1em" height="1em" aria-hidden="true" />
-        </button>
-      </copy-link>
+      <div class="actions">
+        <copy-link data-address={address}>
+          <button type="button" title="Copy a link to this page" aria-label="Copy a link to this page">
+            <Icon name="mdi:link-variant" is:inline width="1em" height="1em" aria-hidden="true" />
+          </button>
+        </copy-link>
+        <page-qr data-address={address}>
+          <button type="button" title="Show a QR code for this page" aria-label="Show a QR code for this page" aria-haspopup="dialog">
+            <Icon name="mdi:qrcode" is:inline width="1em" height="1em" aria-hidden="true" />
+          </button>
+          <dialog aria-label="A QR code for this page">
+            <div class="qr" role="img" aria-label={`A QR code for ${address}`}></div>
+            <p class="qr-address">{address}</p>
+            <form method="dialog">
+              <button type="submit" class="close">Close</button>
+            </form>
+          </dialog>
+        </page-qr>
+      </div>
     )
   }
 </div>
@@ -47,19 +63,63 @@ const address = url === undefined ? undefined : new URL(url, Astro.site).href
   }
 
   customElements.define("copy-link", CopyLink)
+
+  /**
+   * Shows its `data-address` as a QR code, in a dialog, when its button is pressed: drawn the first
+   * time, by uqr, loaded then. A click outside the dialog's box, Escape or Close closes it.
+   */
+  class PageQr extends HTMLElement {
+    connectedCallback() {
+      const dialog = this.querySelector("dialog")!
+      this.querySelector("button")!.addEventListener("click", async () => {
+        const code = dialog.querySelector(".qr")!
+        if (!code.firstChild) {
+          const { renderSVG } = await import("uqr")
+          code.innerHTML = renderSVG(this.dataset.address ?? "", { border: 2 })
+        }
+        dialog.showModal()
+      })
+      // A click outside the dialog's box lands on the dialog itself, behind its backdrop.
+      dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) dialog.close()
+      })
+    }
+  }
+
+  customElements.define("page-qr", PageQr)
 </script>
 
 <style>
+  /* The title in the middle column, centred, and the button in the right one: the empty left one
+     balances it, so the title is centred on the page and not on the title and the button. */
   .article-title {
-    display: flex;
+    align-self: stretch;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: 0.4rem;
   }
 
+  .actions {
+    justify-self: start;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 1.3rem;
+    color: var(--darkgray);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .article-title:hover .actions,
+  .actions:focus-within,
+  .actions:has(copy-link[data-copied], dialog[open]) {
+    opacity: 1;
+  }
+
   h1 {
+    grid-column: 2;
     margin: 0;
-    font-size: 1.75rem;
-    line-height: 1.25;
     /* A title with nowhere to break, a tag page's `#a/b/c`, breaks rather than widen the page. */
     overflow-wrap: anywhere;
   }
@@ -69,16 +129,6 @@ const address = url === undefined ? undefined : new URL(url, Astro.site).href
     align-items: center;
     gap: 0.3rem;
     flex: none;
-    font-size: 1.3rem;
-    color: var(--darkgray);
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  .article-title:hover copy-link,
-  copy-link:focus-within,
-  copy-link[data-copied] {
-    opacity: 1;
   }
 
   button {
@@ -103,5 +153,57 @@ const address = url === undefined ? undefined : new URL(url, Astro.site).href
     content: "Copied";
     font-size: 0.6em;
     color: var(--gray);
+  }
+
+  /* The QR code's dialog: the code, dark on the white of paper in either scheme, so that a camera
+     reads it as printed; under it the address it holds, and Close. */
+  dialog {
+    box-sizing: border-box;
+    width: min(20rem, 100% - 2rem);
+    padding: 1.25rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 0.5rem;
+    background: var(--light);
+    color: var(--darkgray);
+    font-size: 1rem;
+    text-align: center;
+    box-shadow: 0 1rem 3rem var(--shadow);
+  }
+
+  dialog::backdrop {
+    background: var(--scrim);
+    backdrop-filter: blur(2px);
+  }
+
+  .qr {
+    border-radius: 0.25rem;
+    background: var(--paper);
+    line-height: 0;
+  }
+
+  .qr :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .qr-address {
+    margin: 0.75rem 0 1rem;
+    font-size: 0.8rem;
+    overflow-wrap: anywhere;
+  }
+
+  .close {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 0.5rem;
+    color: var(--darkgray);
+    font-size: 0.9rem;
+  }
+
+  .close:hover {
+    border-color: var(--gray);
+    color: var(--darkgray);
   }
 </style>

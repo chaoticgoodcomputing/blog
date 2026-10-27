@@ -89,26 +89,43 @@ export default defineConfig({
   ...(e2eCache ? { cacheDir: e2eCache } : {}),
 
   // 07 fonts
-  // Inter for text and IBM Plex Mono for code, downloaded from Google Fonts when the site builds
-  // and served by the site itself (Base.astro). Each is a property under the name the vault's
-  // widgets read it by (docs/adr/0005).
+  // Fraunces, a serif, for text and headings; Lato for whatever asks for a sans; Hack for code and
+  // tags. Fraunces and Lato are downloaded from Google Fonts when the site builds; Hack, which Google
+  // Fonts doesn't have, is the `hack-font` package's files. Each is served by the site itself
+  // (Base.astro), and each is a property under the name the vault's widgets read it by
+  // (docs/adr/0005).
   fonts: [
     {
       provider: fontProviders.google(),
-      name: "Inter",
+      name: "Fraunces",
       cssVariable: "--bodyFont",
-      weights: ["400 700"],
+      // From the text's light 300 to the headings' bold.
+      weights: ["300 700"],
+      styles: ["normal", "italic"],
+      subsets: ["latin", "latin-ext"],
+      fallbacks: ["Georgia", "serif"],
+    },
+    {
+      provider: fontProviders.google(),
+      name: "Lato",
+      cssVariable: "--sansFont",
+      weights: [400, 700],
       styles: ["normal", "italic"],
       subsets: ["latin", "latin-ext"],
       fallbacks: ["system-ui", "sans-serif"],
     },
     {
-      provider: fontProviders.google(),
-      name: "IBM Plex Mono",
+      provider: fontProviders.local(),
+      name: "Hack",
       cssVariable: "--codeFont",
-      weights: [400, 600, 700],
-      styles: ["normal"],
-      subsets: ["latin", "latin-ext"],
+      options: {
+        variants: [
+          { src: ["hack-font/build/web/fonts/hack-regular.woff2"], weight: 400, style: "normal" },
+          { src: ["hack-font/build/web/fonts/hack-italic.woff2"], weight: 400, style: "italic" },
+          { src: ["hack-font/build/web/fonts/hack-bold.woff2"], weight: 700, style: "normal" },
+          { src: ["hack-font/build/web/fonts/hack-bolditalic.woff2"], weight: 700, style: "italic" },
+        ],
+      },
       fallbacks: ["ui-monospace", "monospace"],
     },
   ],

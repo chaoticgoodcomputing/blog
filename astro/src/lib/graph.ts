@@ -14,8 +14,8 @@ export interface IndexedNote {
   /** Its page's address, which is also its node's id. */
   url: string
   title: string
-  /** The note's date, ISO 8601, in UTC. */
-  date: string
+  /** The note's date, ISO 8601, in UTC. None for an undated note. */
+  date?: string
   /** Its own tags, as tag slugs, in the order written. */
   tags: string[]
   /** The addresses of the published notes and tag pages it links to or embeds. */

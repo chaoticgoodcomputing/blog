@@ -11,31 +11,23 @@
   margin-top: 0;
 }
 
-/* Headings, each level a step smaller. Their colour is every heading's (global.css). */
+/* Headings: the room above each, more the higher its level. Their size, colour, weight and
+   alignment are every heading's (global.css). */
 
 .prose :is(h1, h2, h3, h4, h5, h6) {
   margin: 1.5rem 0 1rem;
-  font-weight: 700;
-  line-height: 1.25;
 }
 
 .prose h1 {
   margin-top: 2.25rem;
-  font-size: 1.75rem;
 }
 
 .prose h2 {
   margin-top: 1.9rem;
-  font-size: 1.4rem;
 }
 
 .prose h3 {
   margin-top: 1.62rem;
-  font-size: 1.12rem;
-}
-
-.prose :is(h4, h5, h6) {
-  font-size: 1rem;
 }
 
 /* Text. */
@@ -71,6 +63,12 @@
 .prose mark {
   background: var(--textHighlight);
   color: inherit;
+}
+
+/* A tag written in the text, `#tag`: in the code font, as a tag is wherever the site shows one. */
+.prose a.tag {
+  font-family: var(--codeFont);
+  font-size: 0.85em;
 }
 
 .prose kbd {

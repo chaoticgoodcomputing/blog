@@ -10,7 +10,8 @@
    can't read a property, so they are written out where they are used, as `(width < 1000px)`,
    `(width >= 1000px)` and `(width >= 1300px)`. */
 
-/* The palette: one value per colour scheme. The scheme is the reader's system's. */
+/* The palette: one value per colour scheme. The scheme is the reader's choice, `data-theme` on the
+   root, else their system's (src/components/SchemeSwitch.astro). */
 :root {
   color-scheme: light dark;
   --light: light-dark(#faf8f8, #161618);
@@ -46,22 +47,62 @@
   --paper: white;
 }
 
-/* The fonts, `--bodyFont` (Inter) and `--codeFont` (IBM Plex Mono), are defined by Astro's Fonts
-   API, from astro.config.ts, in the head of every page (src/layouts/Base.astro). */
+/* A reader who has chosen a scheme sees it, and every `light-dark()` on the page, the browser's own
+   controls and scrollbars included, takes that scheme's value. */
+:root[data-theme="light"] {
+  color-scheme: light;
+}
 
-/* The page: its colours, and the text everything inherits. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+/* The fonts, `--bodyFont` (Fraunces, for text and headings), `--sansFont` (Lato) and `--codeFont`
+   (Hack), are defined by Astro's Fonts API, from astro.config.ts, in the head of every page
+   (src/layouts/Base.astro). A serif is the default: the sans is only where something asks for it.
+   `--headerFont` is the headings', which the graphs set a note's label in too. */
+:root {
+  --headerFont: var(--bodyFont);
+}
+
+/* The page: its colours, and the text everything inherits, in a light weight. A heading, bold text
+   and whatever else sets its own weight is heavier. */
 body {
   margin: 0;
   background: var(--light);
   color: var(--darkgray);
   font-family: var(--bodyFont);
+  font-weight: 300;
   line-height: 1.6;
 }
 
-/* What every heading and link on the site shares, in the shell, in a component or in a note. Each
-   is styled further where it is. */
+/* What every heading and link on the site shares, in the shell, in a component or in a note: a
+   heading is centred, a step short of bold over the light text, and its level's size, each level a
+   step smaller. A heading's size is said here alone: where a heading is set apart, it is set apart
+   by its margins, or by being a heading of another level, never by a size of its own, so an h2 is
+   the same size wherever it is (src/test/fixture/headings.spec.ts). */
 :is(h1, h2, h3, h4, h5, h6) {
   color: var(--dark);
+  font-family: var(--headerFont);
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+}
+
+h1 {
+  font-size: 1.75rem;
+}
+
+h2 {
+  font-size: 1.4rem;
+}
+
+h3 {
+  font-size: 1.12rem;
+}
+
+:is(h4, h5, h6) {
+  font-size: 1rem;
 }
 
 a {

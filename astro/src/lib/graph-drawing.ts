@@ -84,7 +84,6 @@ interface Palette {
   disc: string
   /** The page's own note, with no tag. */
   currentDisc: string
-  font: string
 }
 
 /** A colour as the browser resolves it at `element`, for the scheme the page is in now. */
@@ -92,6 +91,15 @@ function resolve(element: Element, colour: string): string {
   const probe = element.appendChild(document.createElement("span"))
   probe.style.color = colour
   const resolved = getComputedStyle(probe).color
+  probe.remove()
+  return resolved
+}
+
+/** A font family as the browser resolves it at `element`: `var(--codeFont)` as the fonts it names. */
+function resolveFont(element: Element, family: string): string {
+  const probe = element.appendChild(document.createElement("span"))
+  probe.style.fontFamily = family
+  const resolved = getComputedStyle(probe).fontFamily
   probe.remove()
   return resolved
 }
@@ -162,13 +170,21 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
   describe(canvas, graph, current, options.label)
   container.append(canvas)
   const context = canvas.getContext("2d")!
+  // A note's label is set in the headings' font, and a tag's in the code font: each is measured in
+  // its own. Read again with the colours, on `repaint()`.
+  const fonts = () => ({ noteFont: resolveFont(container, "var(--headerFont)"), tagFont: resolveFont(container, "var(--codeFont)") })
+  let { noteFont, tagFont } = fonts()
+  const fontOf = (node: { kind: string }) => `${settings.sizes.label}px ${node.kind === "tag" ? tagFont : noteFont}`
+  const labelWidth = (node: { kind: string; label: string }) => {
+    context.font = fontOf(node)
+    return context.measureText(node.label).width
+  }
   // d3-force's own timer is stopped: the frames tick the layout while it is warm. Its tags' labels
   // take the room the canvas measures them at.
-  context.font = `${settings.sizes.label}px ${getComputedStyle(container).fontFamily}`
   const { simulation, nodes, edges, radius, shell, linkDistance, turnShell } = layOut(
     graph,
     settings,
-    (label) => context.measureText(label).width,
+    (label) => labelWidth({ kind: "tag", label }),
     options.path,
   )
   let [width, height] = [0, 0]
@@ -195,8 +211,8 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
       labelBox: resolve(container, "var(--light)"),
       disc: resolve(container, "var(--gray)"),
       currentDisc: resolve(container, "var(--secondary)"),
-      font: getComputedStyle(container).fontFamily,
     }
+    ;({ noteFont, tagFont } = fonts())
     bubbles.clear()
     for (const node of graph.nodes) {
       const bubble = node.tag === undefined ? null : options.bubble(node.tag)
@@ -224,7 +240,7 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
     const [gx, gy] = toGraph(x, y)
     for (const node of nodes.toReversed()) {
       if (!labelled(node, hovered?.id, lit)) continue
-      const width = context.measureText(node.label).width
+      const width = labelWidth(node)
       const box = labelBox(node.x ?? 0, node.y ?? 0, radius.get(node.id) ?? 0, width, settings.sizes.label)
       if (gx >= box.left && gx <= box.right && gy >= box.top && gy <= box.bottom) return node
     }
@@ -290,7 +306,7 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
       x: node.x ?? 0,
       y: node.y ?? 0,
       r: (radius.get(node.id) ?? 0) * (node.id === current ? settings.sizes.current : 1),
-      labelWidth: node.kind === "tag" ? context.measureText(node.label).width : undefined,
+      labelWidth: node.kind === "tag" ? labelWidth(node) : undefined,
     }))
   const fitted = (): ZoomTransform => {
     const placed = atRest()
@@ -341,7 +357,6 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
   const still = window.matchMedia("(prefers-reduced-motion: reduce)")
   let frame = requestAnimationFrame(function draw(time) {
     if (simulation.alpha() >= simulation.alphaMin() || simulation.alphaTarget() > 0) simulation.tick()
-    context.font = `${settings.sizes.label}px ${palette.font}`
     if (following) selection.call(zoomer.transform, options.focus ? centred(options.focus) : fitted())
     context.setTransform(1, 0, 0, 1, 0, 0)
     context.clearRect(0, 0, canvas.width, canvas.height)
@@ -467,7 +482,7 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
     for (const node of nodes) {
       if (!labelled(node, hovered?.id, lit)) continue
       const [x, y, r] = [node.x ?? 0, node.y ?? 0, radius.get(node.id) ?? 0]
-      const box = labelBox(x, y, r, context.measureText(node.label).width, size)
+      const box = labelBox(x, y, r, labelWidth(node), size)
       context.fillStyle = palette.labelBox
       context.beginPath()
       context.roundRect(box.left, box.top, box.right - box.left, box.bottom - box.top, pad)

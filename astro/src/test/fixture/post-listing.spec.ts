@@ -1,4 +1,4 @@
-import type { Page } from "@playwright/test"
+import type { Locator, Page } from "@playwright/test"
 import { expect, test } from "../site.ts"
 
 // test/fixtures/vault/post-listing: `Ledger One` to `Ledger Six`, posts dated the first of each
@@ -92,4 +92,54 @@ test("the 404 page lists the posts too", async ({ page }) => {
 test("a note's page has no listing", async ({ page }) => {
   await page.goto("/post-listing/ledger-one")
   await expect(page.locator(".post-listing")).toHaveCount(0)
+})
+
+// Whether the middle of a badge's name is where a pointer there would land on the name: not while
+// it is clipped away behind its bubble.
+const nameShows = (badge: Locator) =>
+  badge.locator(".name").evaluate((name) => {
+    const box = name.getBoundingClientRect()
+    return document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2) === name
+  })
+
+test("a tag badge is its bubble alone, until the pointer is on it or it has the focus, when it grows to show its name", async ({ page }) => {
+  await page.goto("/")
+  await expand(page)
+  const three = page.locator(".post-listing .post", { has: page.getByRole("heading", { name: "Ledger Three" }) })
+  const badge = three.locator(".tag-badge").first()
+  const next = three.locator(".tag-badge").nth(1)
+  // The tags under a post are centred, as its title is.
+  await expect(three.locator(".tags")).toHaveCSS("justify-content", "center")
+
+  // A circle, as tall as it is wide, its name still its link's.
+  const box = (await badge.boundingBox())!
+  expect(Math.abs(box.width - box.height)).toBeLessThan(1)
+  await expect(three.getByRole("link", { name: "#ledger" })).toBeVisible()
+  expect(await nameShows(badge)).toBe(false)
+
+  const after = (await next.boundingBox())!
+  await badge.hover()
+  await expect.poll(() => nameShows(badge)).toBe(true)
+  // Wider, and the badge after it pushed along.
+  await expect.poll(async () => (await badge.boundingBox())!.width).toBeGreaterThan(box.width * 2)
+  await expect.poll(async () => (await next.boundingBox())!.x).toBeGreaterThan(after.x)
+
+  await page.mouse.move(0, 0)
+  await expect.poll(() => nameShows(badge)).toBe(false)
+  await badge.focus()
+  await expect.poll(() => nameShows(badge)).toBe(true)
+})
+
+test.describe("on a touch screen, with no pointer that hovers", () => {
+  test.use({ hasTouch: true, isMobile: true, viewport: { width: 390, height: 800 } })
+
+  test("a tag badge always shows its name", async ({ page }) => {
+    await page.goto("/")
+    await expand(page)
+    const three = page.locator(".post-listing .post", { has: page.getByRole("heading", { name: "Ledger Three" }) })
+    const badge = three.locator(".tag-badge").first()
+    const box = (await badge.boundingBox())!
+    expect(box.width).toBeGreaterThan(box.height * 2)
+    expect(await nameShows(badge)).toBe(true)
+  })
 })

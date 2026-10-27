@@ -6,11 +6,11 @@ description: |
   notes by Spencer Elkington.
 tags:
   - projects/site
+  - horticulture
+  - engineering
+  - economics
   - writing
   - projects
-  - economics
-  - engineering
-  - horticulture
 ---
 
 This blog is where I publish my [[public/tags/writing/essays|essays]], [[public/tags/writing/notes|notes]] and [[public/tags/writing/fragments|fragments]] about topics that I either specialize in, consult about, or find personally interesting.

@@ -1,10 +1,12 @@
 /* A heading's link to itself (src/lib/heading-anchors.ts): an icon after the heading's text, in the
-   colour of the text around it, shown while the pointer is on the heading. Hidden, it keeps its
-   room, so the heading doesn't shift as the pointer reaches it. */
+   colour of the text around it, shown while the pointer is on the heading. It takes no room, so the
+   heading's text alone is centred, and nothing shifts as the pointer reaches it. */
 
 .prose a.heading-anchor {
   display: inline-block;
   margin-left: 0.4rem;
+  /* As wide as the icon and the gap before it: the line ends where the text does. */
+  margin-right: calc(-1em - 0.4rem);
   color: var(--darkgray);
   font-size: 0.75em;
   vertical-align: middle;

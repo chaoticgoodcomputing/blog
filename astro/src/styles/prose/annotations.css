@@ -22,7 +22,6 @@
   padding-bottom: 0.5rem;
   border-bottom: 2px solid var(--lightgray);
   color: var(--darkgray);
-  font-size: 1.25rem;
 }
 
 /* A card. */
@@ -91,7 +90,8 @@
   border-radius: 0.25rem;
   background: var(--lightgray);
   color: var(--darkgray);
-  font-size: 0.85rem;
+  font-family: var(--codeFont);
+  font-size: 0.8rem;
 }
 
 /* As every date the site prints is (DateAndReadingTime.astro). */

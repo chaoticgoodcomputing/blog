@@ -131,8 +131,8 @@ export function vaultDates(root: string): VaultDates {
 }
 
 export interface NoteDates {
-  /** The note's date: frontmatter's, then git's, then the file system's. */
-  date: Date
+  /** The note's date: frontmatter's, and none where frontmatter gives none it can read. */
+  date: Date | undefined
   /** When the note last changed: git's, then the file system's, and never before its date. */
   modified: Date
 }
@@ -140,8 +140,8 @@ export interface NoteDates {
 /** A note's dates from its three sources. The file system is asked only when it is needed. */
 export function resolveDates(sources: { frontmatter: unknown; git: Date | undefined; filesystem: () => Date }): NoteDates {
   const changed = sources.git ?? sources.filesystem()
-  const date = parseFrontmatterDate(sources.frontmatter) ?? changed
-  return { date, modified: changed < date ? date : changed }
+  const date = parseFrontmatterDate(sources.frontmatter)
+  return { date, modified: date !== undefined && changed < date ? date : changed }
 }
 
 /** A date as the site prints it: `Mar 01, 2024`, in UTC. */

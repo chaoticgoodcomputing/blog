@@ -18,17 +18,26 @@
   width: 100%;
 }
 
-/* A drawing's export for the reader's colour scheme, which is their system's. */
+/* A drawing's export for the reader's colour scheme: their choice, `data-theme` on the root, else
+   their system's (src/components/SchemeSwitch.astro). */
 .prose .excalidraw-dark {
   display: none;
 }
 
 @media (prefers-color-scheme: dark) {
-  .prose .excalidraw-light {
+  :root:not([data-theme="light"]) .prose .excalidraw-light {
     display: none;
   }
 
-  .prose .excalidraw-dark {
+  :root:not([data-theme="light"]) .prose .excalidraw-dark {
     display: block;
   }
+}
+
+:root[data-theme="dark"] .prose .excalidraw-light {
+  display: none;
+}
+
+:root[data-theme="dark"] .prose .excalidraw-dark {
+  display: block;
 }

@@ -57,7 +57,7 @@ export function graphIndex(options: GraphIndexOptions = {}): GraphIndex {
     return {
       url,
       title: note.title,
-      date: note.date.toISOString(),
+      ...(note.date && { date: note.date.toISOString() }),
       tags: note.tags,
       links: [...new Set(links.filter((link): link is string => link !== undefined && link !== url))],
       private: note.isPrivate,

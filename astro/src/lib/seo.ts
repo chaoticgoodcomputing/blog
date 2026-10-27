@@ -32,7 +32,8 @@ export interface PageHead {
   }
   /** On an article's page, what Open Graph says of an article: `article:*`. */
   article?: {
-    publishedTime: string
+    /** None for an undated note. */
+    publishedTime?: string | undefined
     modifiedTime: string
     /** The author's page. */
     author: string
@@ -86,7 +87,7 @@ export function headOf(page: PageProps, context: HeadContext): PageHead {
     },
     ...(article && {
       article: {
-        publishedTime: article.date.toISOString(),
+        ...(article.date && { publishedTime: article.date.toISOString() }),
         modifiedTime: article.modified.toISOString(),
         author: new URL(siteConfig.author.url, site).href,
         section: articleTypeOf(article.tags).section,
@@ -132,7 +133,7 @@ function articleData(note: Note | UnpublishedNote, head: HeadText, context: Head
     mainEntityOfPage: head.canonical,
     description: head.description,
     inLanguage: siteConfig.locale,
-    datePublished: note.date.toISOString(),
+    ...(note.date && { datePublished: note.date.toISOString() }),
     dateModified: note.modified.toISOString(),
     author: { "@type": "Person", name: siteConfig.author.name, url: new URL(siteConfig.author.url, context.site).href },
     publisher: publisher(context),

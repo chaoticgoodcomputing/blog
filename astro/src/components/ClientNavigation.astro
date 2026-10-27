@@ -5,7 +5,8 @@
 // as an ordinary link with scripts off: the router only takes over a click it can handle.
 //
 // An island is torn down by Astro when its page is swapped out, and one on the next page is
-// hydrated there. A custom element starts and stops on its own. Where a navigation goes is the
+// hydrated there. A custom element starts and stops on its own. The reader's colour scheme is
+// carried onto the next page by SchemeBeforePaint.astro, which owns it. Where a navigation goes is the
 // reader's trail's to say (TrailSpines.astro), which sends each one to the address of the trail it
 // makes.
 import { ClientRouter } from "astro:transitions"

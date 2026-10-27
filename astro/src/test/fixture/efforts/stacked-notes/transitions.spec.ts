@@ -42,3 +42,30 @@ test("going back along the trail, by a spine or a link to a note on it, unfolds 
   const byLink = await foldOf(page, () => page.locator(".prose").getByRole("link", { name: "where navigation starts" }).click())
   expect(byLink).toEqual(["note-slide-away", "note-unfold"])
 })
+
+/** Whether the view transition of the navigation `click` starts plays: its animations are ready, or, skipped, never are. */
+async function playedOn(page: Page, click: () => Promise<void>) {
+  const played = page.evaluate(
+    () =>
+      new Promise<boolean>((resolve) =>
+        document.addEventListener(
+          "astro:before-swap",
+          (event) => (event as unknown as { viewTransition: ViewTransition }).viewTransition.ready.then(() => resolve(true), () => resolve(false)),
+          { once: true },
+        ),
+      ),
+  )
+  await click()
+  return played
+}
+
+test("going to the note already shown, as the site's title does on the home page, has no fold", async ({ page }) => {
+  await page.goto("/")
+  expect(await playedOn(page, () => page.locator(".graph-column .site-title").click())).toBe(false)
+  await expectAt(page, "/")
+})
+
+test("going to another note still folds", async ({ page }) => {
+  await page.goto(start)
+  expect(await playedOn(page, () => page.getByRole("link", { name: "To the destination" }).click())).toBe(true)
+})

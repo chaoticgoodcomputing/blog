@@ -10,7 +10,7 @@ import type { NoteFacts } from "./notes.ts"
 import { getVault } from "./vault.ts"
 
 /** Words read in a minute: reading-time's default, and what the site has always counted by. */
-const WORDS_PER_MINUTE = 200
+const WORDS_PER_MINUTE = 300
 
 /**
  * The minutes a note takes to read: the words a reader reads of it, its frontmatter and comments

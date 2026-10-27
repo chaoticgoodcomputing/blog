@@ -164,7 +164,7 @@ test("the filters are drawn over the graph's top corner, in the code font, with 
   expect(over.x + over.width).toBeLessThanOrEqual(graph.x + graph.width)
 
   const font = await dialog(page).getByRole("checkbox", { name: "Include private pages" }).evaluate((box) => getComputedStyle(box.closest("label")!).fontFamily)
-  expect(font).toMatch(/IBM Plex Mono/)
+  expect(font).toMatch(/Hack/)
   await expect(filters.locator(".stops")).toHaveText(["All", "Year", "Month"].join(""))
 })
 

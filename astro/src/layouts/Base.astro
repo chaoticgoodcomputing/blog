@@ -16,7 +16,7 @@ import MathStylesheet from "../components/MathStylesheet.astro"
 // 07 fonts
 import { Font } from "astro:assets"
 
-import SchemeChange from "../components/SchemeChange.astro"
+import SchemeBeforePaint from "../components/SchemeBeforePaint.astro"
 
 // 09 client-side navigation
 import ClientNavigation from "../components/ClientNavigation.astro"
@@ -52,9 +52,11 @@ const page = Astro.props
 
     {/* 07 fonts: the text's is preloaded, since every page sets text in it at once */}
     <Font cssVariable="--bodyFont" preload={[{ subset: "latin", style: "normal" }]} />
+    <Font cssVariable="--sansFont" />
     <Font cssVariable="--codeFont" />
 
-    <SchemeChange />
+    {/* The reader's colour scheme, put on the page before it is painted */}
+    <SchemeBeforePaint />
 
     {/* 09 client-side navigation */}
     <ClientNavigation />

@@ -53,6 +53,19 @@ test("on 29 February, the last year starts on 28 February of the year before", (
   expect(ids(year)).toEqual(["/in"])
 })
 
+test("an undated note is in no period but all time, since it has no date to be within one", () => {
+  const index: GraphIndex = {
+    notes: [
+      { url: "/dated", title: "Dated", date: "2026-06-01T00:00:00.000Z", tags: [], links: [], private: false },
+      { url: "/undated", title: "Undated", tags: [], links: [], private: false },
+    ],
+  }
+  for (const period of ["month", "year"] as const) {
+    expect(ids(globalGraph(index, graph.global, { period, includePrivate: false }, NOW)), period).toEqual(["/dated"])
+  }
+  expect(ids(globalGraph(index, graph.global, { period: "all", includePrivate: false }, NOW))).toEqual(["/dated", "/undated"])
+})
+
 test("over the last year, with private pages, the global graph adds the year's notes and the private page, marked", () => {
   const year = globalGraph(INDEX, graph.global, { period: "year", includePrivate: true }, NOW)
   expect(ids(year)).toEqual(["/recent", "/secret", "/spring", "/tags/engineering", "/tags/engineering/ai", "/tags/writing", "/winter"])

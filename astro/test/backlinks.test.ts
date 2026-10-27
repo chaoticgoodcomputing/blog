@@ -12,14 +12,16 @@ import { openVault } from "../src/lib/vault.ts"
 const FILES: Record<string, { source: string; changed: string }> = {
   "target.md": { source: "---\ntitle: Target\n---\n\nLinked to.\n", changed: "2026-01-01" },
   "lonely.md": { source: "---\ntitle: Lonely\n---\n\nNothing links here.\n", changed: "2026-01-01" },
-  "old.md": { source: "---\ntitle: Old\n---\n\nSee [[target]].\n", changed: "2025-01-01" },
-  "new.md": { source: "---\ntitle: New\ndescription: The newer one.\n---\n\nSee [[target]] and [[target|again]].\n", changed: "2026-06-01" },
-  "embeds.md": { source: "---\ntitle: Embeds\n---\n\n![[target]]\n", changed: "2025-01-01" },
-  "secret.md": { source: "---\ntitle: Secret\ntags: [private]\n---\n\nSee [[target]].\n", changed: "2026-09-01" },
+  "old.md": { source: "---\ntitle: Old\ndate: 2025-01-01\n---\n\nSee [[target]].\n", changed: "2025-01-01" },
+  // Changed after Old, but dated before it: the date is what orders it.
+  "new.md": { source: "---\ntitle: New\ndate: 2024-06-01\ndescription: The newer one.\n---\n\nSee [[target]] and [[target|again]].\n", changed: "2026-06-01" },
+  // Undated, as a tag's description note is, and changed last of all: after every dated page still.
+  "embeds.md": { source: "---\ntitle: Embeds\n---\n\n![[target]]\n", changed: "2026-12-01" },
+  "secret.md": { source: "---\ntitle: Secret\ndate: 2026-09-01\ntags: [private]\n---\n\nSee [[target]].\n", changed: "2026-09-01" },
   "work.md": { source: "---\ntitle: Work\ntags: [private/work]\n---\n\nSee [[target]].\n", changed: "2025-06-01" },
   "drawing.md": { source: "---\nkind: drawing\n---\n\nSee [[target]].\n", changed: "2026-01-01" },
   "out.md": {
-    source: "---\ntitle: Out\n---\n\n[[secret]], [[old]], [[new]], [[old|again]], [[out|itself]], [[drawing]], [[nowhere]] and ![[embeds]].\n",
+    source: "---\ntitle: Out\n---\n\n[[secret]], ![[embeds]], [[new]], [[old]], [[old|again]], [[out|itself]], [[drawing]] and [[nowhere]].\n",
     changed: "2024-01-01",
   },
 }
@@ -44,20 +46,20 @@ afterAll(() => fs.rmSync(root, { recursive: true, force: true }))
 const backlinks = (note: string, treatment: "omit" | "mark") =>
   backlinksOf(index.byId.get(note)!, { treatment, vault, index })
 
-test("a note's backlinks are the pages that link to or embed it, once each, by title, summary and address", () => {
+test("a note's backlinks are the pages that link to or embed it, once each, newest first by date, then the undated", () => {
   // A page's summary is its description, else its first paragraph: none for one that only embeds.
   expect(backlinks("target", "omit")).toEqual([
+    { title: "Old", url: "/old", description: "See target.", isPrivate: false },
     { title: "New", url: "/new", description: "The newer one.", isPrivate: false },
     { title: "Embeds", url: "/embeds", isPrivate: false },
-    { title: "Old", url: "/old", description: "See target.", isPrivate: false },
   ])
 })
 
 test("marked, a private page, under a private tag or a tag under one, is listed after every public one", () => {
   expect(backlinks("target", "mark")).toEqual([
+    { title: "Old", url: "/old", description: "See target.", isPrivate: false },
     { title: "New", url: "/new", description: "The newer one.", isPrivate: false },
     { title: "Embeds", url: "/embeds", isPrivate: false },
-    { title: "Old", url: "/old", description: "See target.", isPrivate: false },
     { title: "Secret", url: "/secret", isPrivate: true },
     { title: "Work", url: "/work", isPrivate: true },
   ])
@@ -70,8 +72,9 @@ test("a note nothing links to has no backlinks", () => {
 const forwardLinks = (note: string, treatment: "omit" | "mark") =>
   forwardLinksOf(index.byId.get(note)!, { treatment, vault, index })
 
-test("a note's forward links are the pages it links to or embeds, once each, in the order it first does", () => {
-  // Not itself, a drawing, which has no page, or a link to no note.
+test("a note's forward links are the pages it links to or embeds, once each, newest first by date, then the undated", () => {
+  // Not itself, a drawing, which has no page, or a link to no note. Not in the order the note links
+  // to them: Embeds, New, then Old.
   expect(forwardLinks("out", "omit")).toEqual([
     { title: "Old", url: "/old", description: "See target.", isPrivate: false },
     { title: "New", url: "/new", description: "The newer one.", isPrivate: false },

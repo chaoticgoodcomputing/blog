@@ -70,7 +70,7 @@ test("a date that is not written as ISO 8601 is no date, since the machine's tim
     expect(parseFrontmatterDate(value)).toBeUndefined()
   }
   const git = new Date("2026-05-05T00:00:00Z")
-  expect(resolveDates({ frontmatter: "2026-3-1", git, filesystem: () => git }).date.toISOString()).toBe("2026-05-05T00:00:00.000Z")
+  expect(resolveDates({ frontmatter: "2026-3-1", git, filesystem: () => git }).date).toBeUndefined()
 })
 
 test("a path's git date is the time of the newest commit to touch it", () => {
@@ -124,10 +124,10 @@ test("a file's modification time is the file system's", () => {
 const git1 = new Date("2026-05-05T00:00:00Z")
 const filesystem = () => new Date("2026-06-06T00:00:00Z")
 
-test("a note's date is frontmatter's, then git's, then the file system's", () => {
-  expect(resolveDates({ frontmatter: "2026-01-04", git: git1, filesystem }).date.toISOString()).toBe("2026-01-04T00:00:00.000Z")
-  expect(resolveDates({ frontmatter: undefined, git: git1, filesystem }).date.toISOString()).toBe("2026-05-05T00:00:00.000Z")
-  expect(resolveDates({ frontmatter: "soon", git: undefined, filesystem }).date.toISOString()).toBe("2026-06-06T00:00:00.000Z")
+test("a note's date is frontmatter's, and with none it can read, the note is undated", () => {
+  expect(resolveDates({ frontmatter: "2026-01-04", git: git1, filesystem }).date?.toISOString()).toBe("2026-01-04T00:00:00.000Z")
+  expect(resolveDates({ frontmatter: undefined, git: git1, filesystem }).date).toBeUndefined()
+  expect(resolveDates({ frontmatter: "soon", git: undefined, filesystem }).date).toBeUndefined()
 })
 
 test("a note was last modified when git says, else when the file system says, and never before its date", () => {

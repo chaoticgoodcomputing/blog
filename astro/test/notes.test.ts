@@ -36,8 +36,8 @@ test("a published note knows its address, title, description, tags and date", ()
     isPrivate: false,
   })
   expect(alpha.file.path).toBe("content/notes/alpha.md")
-  expect(alpha.date.toISOString()).toBe("2026-01-04T00:00:00.000Z")
-  expect(getNote("content/notes/beta")!.date.toISOString()).toBe("2026-03-01T12:00:00.000Z")
+  expect(alpha.date!.toISOString()).toBe("2026-01-04T00:00:00.000Z")
+  expect(getNote("content/notes/beta")!.date!.toISOString()).toBe("2026-03-01T12:00:00.000Z")
 })
 
 test("the index note is the page at the site's root", () => {
@@ -53,14 +53,15 @@ test("a note under a private tag is a private page: published, and not public", 
   expect(getPublicNotes().map((note) => note.id)).toContain("content/notes/alpha")
 })
 
-test("a note with no title is named for its file, one with no description has none, and one with no date still has one", () => {
+test("a note with no title is named for its file, one with no description has none, and one with no date has none", () => {
   const undated = getNote("content/notes/undated")!
   expect(undated.title).toBe("undated")
   expect(undated.description).toBeUndefined()
   // It is summed up by its first paragraph instead.
   expect(undated.summary).toBe("No title and no date.")
-  expect(Number.isNaN(undated.date.getTime())).toBe(false)
-  expect(undated.modified.getTime()).toBeGreaterThanOrEqual(undated.date.getTime())
+  // When it last changed is no date of its own.
+  expect(undated.date).toBeUndefined()
+  expect(Number.isNaN(undated.modified.getTime())).toBe(false)
 })
 
 test("a file of the vault is looked up as the note it is, and a link to it goes to its page", () => {
@@ -154,11 +155,11 @@ test("a note's tags are tag slugs, in the order written", () => {
   })
 })
 
-test("a note git doesn't know, with no date of its own, takes its file's time", () => {
+test("a note git doesn't know last changed when its file did, and with no date of its own is undated", () => {
   const index = indexNotes(vault, [])
-  expect(index.byId.get("index")!.date.toISOString()).toBe("2026-08-09T10:11:12.000Z")
+  expect(index.byId.get("index")!.date).toBeUndefined()
   expect(index.byId.get("index")!.modified.toISOString()).toBe("2026-08-09T10:11:12.000Z")
-  expect(index.byId.get("notes/older")!.date.toISOString()).toBe("2025-12-31T00:00:00.000Z")
+  expect(index.byId.get("notes/older")!.date!.toISOString()).toBe("2025-12-31T00:00:00.000Z")
   expect(index.byId.get("notes/older")!.modified.toISOString()).toBe("2026-08-09T10:11:12.000Z")
 })
 
@@ -242,7 +243,8 @@ test("the tags in use are every tag a note carries and every ancestor of one, ea
   expect(titles(tags.get("private")!.own)).toEqual([])
 })
 
-test("notes are listed newest first, and by title on the same day", () => {
+test("notes are listed newest first, by title on the same day, and undated after every dated one", () => {
+  // Home has no date of its own.
   const titles = [...indexNotes(vault, RULES).notes].sort(newestFirst).map((note) => note.title)
-  expect(titles).toEqual(["Home", "Aardvark", "My Note & Co", "Notes", "Older", "Essay", "Contents"])
+  expect(titles).toEqual(["Aardvark", "My Note & Co", "Notes", "Older", "Essay", "Contents", "Home"])
 })

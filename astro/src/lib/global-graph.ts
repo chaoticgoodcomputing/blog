@@ -37,7 +37,7 @@ function postsOf(index: GraphIndex, { period, includePrivate }: GraphFilter, now
   return index.notes.filter(
     (note) =>
       !isTagPage(note) &&
-      (keep.has(note.url) || ((includePrivate || !note.private) && (start === undefined || new Date(note.date) >= start))),
+      (keep.has(note.url) || ((includePrivate || !note.private) && (start === undefined || (note.date !== undefined && new Date(note.date) >= start)))),
   )
 }
 
