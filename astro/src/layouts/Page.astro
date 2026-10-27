@@ -222,9 +222,10 @@ const fold = {
   }
 
   /* A section after the body is headed by an `h2`, which the shell spaces, so that every feature's
-     heading is alike. Written with no specificity: a feature's own styles say otherwise by saying so. */
+     heading is alike: as much room under it as under a heading in a note (note-body.css). Written
+     with no specificity: a feature's own styles say otherwise by saying so. */
   .after-body :global(:where(h2)) {
-    margin: 0 0 0.25rem;
+    margin: 0 0 1.5rem;
   }
 
   /* An annotation page whose document opens takes the whole of the note's room: the annotation

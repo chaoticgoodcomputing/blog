@@ -175,6 +175,9 @@ export default defineConfig({
     shikiConfig: {
       themes: { light: "github-light", dark: "github-dark" },
       defaultColor: "light-dark()",
+      // A Cucumber `.feature` file's block, written by its extension or its tool's name: Gherkin,
+      // which Shiki has under that name alone.
+      langAlias: { feature: "gherkin", cucumber: "gherkin" },
     },
 
     processor: satteri({

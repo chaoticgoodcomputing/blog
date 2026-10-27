@@ -5,7 +5,7 @@ import path from "node:path"
 import { pathToFileURL } from "node:url"
 import { after, before, test } from "node:test"
 import { markdownToHtml } from "satteri"
-import { Vault, isImageFile, obsidian, obsidianFeatures } from "../src/index.ts"
+import { Vault, isAudioFile, isImageFile, isVideoFile, obsidian, obsidianFeatures } from "../src/index.ts"
 
 const FILES: Record<string, string> = {
   "notes/paper.md": "A note with attachments.\n",
@@ -14,6 +14,9 @@ const FILES: Record<string, string> = {
   "assets/model.pdb": "not really a structure",
   "assets/secret.pdf": "a file the site publishes nowhere",
   "assets/photo.png": "not really a png",
+  "assets/clip.mp4": "not really a video",
+  "assets/song.mp3": "not really audio",
+  "assets/unpublished.mp4": "a video the site publishes nowhere",
 }
 
 let root: string
@@ -37,7 +40,7 @@ const render = async (source: string) =>
       features: obsidianFeatures,
       mdastPlugins: obsidian({
         vault,
-        urlFor: (file) => (file.basename === "secret" ? undefined : `/${encodeURI(file.path)}`),
+        urlFor: (file) => (["secret", "unpublished"].includes(file.basename) ? undefined : `/${encodeURI(file.path)}`),
       }),
       fileURL: pathToFileURL(path.join(vault.root, "notes/paper.md")),
     })
@@ -119,4 +122,32 @@ test("a file is an image when an embed of it is one", () => {
   assert.equal(isImageFile(vault.getFileByPath("assets/photo.png")!), true)
   assert.equal(isImageFile(vault.getFileByPath("assets/model.pdb")!), false)
   assert.equal(isImageFile(vault.getFileByPath("notes/paper.md")!), false)
+})
+
+test("an embedded video is played in place, from its address, as wide as its alias says, with its text inside for a browser that can't", async () => {
+  assert.equal(
+    await render("![[clip.mp4]]"),
+    '<p><video class="internal-embed video-embed" data-src="clip.mp4" src="/assets/clip.mp4" controls preload="metadata" playsinline data-href="clip.mp4">clip.mp4</video></p>',
+  )
+  assert.match(await render("![[clip.mp4|400]]"), /<video [^>]*src="\/assets\/clip.mp4" [^>]*width="400"/)
+  // A time in the clip, as a media fragment.
+  assert.match(await render("![[clip.mp4#t=10]]"), /<video [^>]*src="\/assets\/clip.mp4#t=10"/)
+})
+
+test("embedded audio is played in place, and a link to either is still a link", async () => {
+  assert.equal(
+    await render("![[song.mp3]]"),
+    '<p><audio class="internal-embed audio-embed" data-src="song.mp3" src="/assets/song.mp3" controls preload="metadata" data-href="song.mp3">song.mp3</audio></p>',
+  )
+  assert.match(await render("[[clip.mp4]]"), /^<p><a class="internal-link" href="\/assets\/clip.mp4"/)
+})
+
+test("an embedded video with no address stays an unresolved embed", async () => {
+  assert.match(await render("![[unpublished.mp4]]"), /<a class="internal-embed is-unresolved"/)
+})
+
+test("video and audio are told apart by their extensions", () => {
+  assert.equal(isVideoFile(vault.getFileByPath("assets/clip.mp4")!), true)
+  assert.equal(isAudioFile(vault.getFileByPath("assets/song.mp3")!), true)
+  assert.equal(isVideoFile(vault.getFileByPath("assets/song.mp3")!), false)
 })

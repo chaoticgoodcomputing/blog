@@ -16,7 +16,7 @@ export { obsidianMetadata, parseMetadata, getAllTags, parseFrontMatterAliases, M
 export type { ParseOptions } from "./metadata.ts"
 export { Vault, MetadataCache } from "./vault.ts"
 export type { VaultOptions, LinkCounts, SubpathResult } from "./vault.ts"
-export { obsidian, obsidianResolve, isImageFile } from "./resolve.ts"
+export { obsidian, obsidianResolve, isAudioFile, isImageFile, isVideoFile } from "./resolve.ts"
 export type { ObsidianOptions, ResolveOptions } from "./resolve.ts"
 export { obsidianExcalidraw, isExcalidraw, excalidrawExports, withoutExcalidrawBackground } from "./excalidraw.ts"
 export type { ExcalidrawOptions, ExcalidrawExport } from "./excalidraw.ts"

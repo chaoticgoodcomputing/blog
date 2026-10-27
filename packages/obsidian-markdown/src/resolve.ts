@@ -53,8 +53,18 @@ export interface ResolveOptions {
 
 const IMAGE_EXTENSIONS = new Set(["png", "jpg", "jpeg", "gif", "webp", "avif", "svg", "bmp"])
 
-/** Whether an embed of a file is an image. An embed of any other attachment is a link to it. */
+/** Whether an embed of a file is an image. An embed of an attachment that is no image, video or audio is a link to it. */
 export const isImageFile = (file: VaultFile): boolean => IMAGE_EXTENSIONS.has(file.extension)
+
+// What Obsidian plays in place when a note embeds it (Obsidian's help, "Accepted file formats").
+const VIDEO_EXTENSIONS = new Set(["mp4", "webm", "ogv", "mov", "mkv"])
+const AUDIO_EXTENSIONS = new Set(["mp3", "wav", "m4a", "ogg", "3gp", "flac"])
+
+/** Whether an embed of a file is a video, played in place. */
+export const isVideoFile = (file: VaultFile): boolean => VIDEO_EXTENSIONS.has(file.extension)
+
+/** Whether an embed of a file is audio, played in place. */
+export const isAudioFile = (file: VaultFile): boolean => AUDIO_EXTENSIONS.has(file.extension)
 
 /**
  * The anchor a subpath has on its file's page, with its `#`, given the heading or block the file's
@@ -297,6 +307,31 @@ export function obsidianResolve(options: ResolveOptions) {
           alt: size || !wikilink.alias ? file.basename : wikilink.alias,
           ...(size ? { data: { hProperties: size } } : {}),
         } as never)
+        return
+      }
+
+      // A video or audio, with an address, is played in place, from its address: its controls the
+      // browser's, a video as wide as the alias says, as an image is (`![[clip.mp4|400]]`). Inside
+      // the player is what a browser that plays neither shows: the embed's text.
+      const media = wikilink.embed && file && resolved ? (isVideoFile(file) ? "video" : isAudioFile(file) ? "audio" : undefined) : undefined
+      if (media) {
+        const size = media === "video" ? parseSize(wikilink.alias) : null
+        ctx.setProperty(
+          custom,
+          "data",
+          mergeData(node, {
+            hName: media,
+            hProperties: {
+              src: href,
+              controls: true,
+              preload: "metadata",
+              ...(media === "video" ? { playsInline: true } : {}),
+              ...(size ?? {}),
+              className: ["internal-embed", `${media}-embed`],
+              "data-href": wikilink.link,
+            },
+          }),
+        )
         return
       }
 

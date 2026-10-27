@@ -1,9 +1,11 @@
 ---
 // The page's title, over its content: the page's one first-level heading, and beside it two
 // buttons, as a heading's anchor is beside a heading (src/styles/prose/heading-anchors.css), shown
-// while the pointer is on the title: one copies the page's own address, and one shows it as a QR
-// code, to open the page on a phone. The address is the page's alone, whole, on the site's domain,
-// as the site is published, even on the dev server: none of the reader's trail is in it.
+// while the pointer is on the title (on a phone or a tablet, or without a pointer that hovers,
+// always shown, on a line of their own under it): one copies the page's own address, and one shows
+// it as a QR code, to open the page on a phone. The address is the page's alone, whole, on the
+// site's domain, as the site is published, even on the dev server: none of the reader's trail is in
+// it.
 //
 // The buttons are beside the heading, not in it, so that the heading's name is the title's. The QR
 // code is drawn in the browser when it is asked for (uqr), so a page carries none of it until then.
@@ -117,6 +119,7 @@ const address = url === undefined ? undefined : new URL(url, Astro.site).href
     opacity: 1;
   }
 
+
   h1 {
     grid-column: 2;
     margin: 0;
@@ -205,5 +208,23 @@ const address = url === undefined ? undefined : new URL(url, Astro.site).href
   .close:hover {
     border-color: var(--gray);
     color: var(--darkgray);
+  }
+
+  /* On a phone or a tablet, or wherever nothing hovers to show them: the title alone on its line, so
+     the buttons' column can't push it off the middle, and the buttons always shown, centred under it. */
+  @media (width < 1000px), (hover: none) {
+    .article-title {
+      grid-template-columns: minmax(0, 1fr);
+      justify-items: center;
+    }
+
+    h1 {
+      grid-column: 1;
+    }
+
+    .actions {
+      justify-self: center;
+      opacity: 1;
+    }
   }
 </style>

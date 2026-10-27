@@ -133,13 +133,29 @@ test("a tag badge is its bubble alone, until the pointer is on it or it has the 
 test.describe("on a touch screen, with no pointer that hovers", () => {
   test.use({ hasTouch: true, isMobile: true, viewport: { width: 390, height: 800 } })
 
-  test("a tag badge always shows its name", async ({ page }) => {
+  test("a tag badge is its bubble alone until it is held, when it opens without leaving the page; a tap still goes to the tag's page", async ({ page, context }) => {
     await page.goto("/")
     await expand(page)
     const three = page.locator(".post-listing .post", { has: page.getByRole("heading", { name: "Ledger Three" }) })
     const badge = three.locator(".tag-badge").first()
+    await badge.scrollIntoViewIfNeeded()
     const box = (await badge.boundingBox())!
-    expect(box.width).toBeGreaterThan(box.height * 2)
-    expect(await nameShows(badge)).toBe(true)
+    expect(Math.abs(box.width - box.height)).toBeLessThan(1)
+    expect(await nameShows(badge)).toBe(false)
+
+    // A hold: a touch kept down past the hold's time, through Chromium's own touch input.
+    const touch = await context.newCDPSession(page)
+    const at = { x: box.x + box.width / 2, y: box.y + box.height / 2 }
+    await touch.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [at] })
+    await page.waitForTimeout(700)
+    await touch.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] })
+    await expect.poll(() => nameShows(badge)).toBe(true)
+    expect(new URL(page.url()).pathname).toBe("/")
+
+    // A touch elsewhere closes it, and a tap follows it.
+    await page.touchscreen.tap(5, 5)
+    await expect.poll(() => nameShows(badge)).toBe(false)
+    await page.touchscreen.tap(at.x, at.y)
+    await expect(page).toHaveURL(/\/tags\/ledger(\?|$)/)
   })
 })

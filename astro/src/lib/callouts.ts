@@ -8,6 +8,9 @@
 // written as elements as a heading's anchor is (src/lib/icons.ts, docs/adr/3402), and hidden from a
 // screen reader: the title says what the callout is. It is the site's choice how a callout is drawn,
 // not Obsidian's, so it is the site's plugin and not the library's.
+//
+// A paraphrase is the site's own kind, which Obsidian has not: words given as someone's, though not
+// in their words.
 
 import { defineHastPlugin } from "satteri"
 import { noteIcon } from "./icons.ts"
@@ -27,6 +30,7 @@ const KINDS = {
   bug: "bug-outline",
   example: "format-list-bulleted",
   quote: "format-quote-close",
+  paraphrase: "comment-quote-outline",
 } as const
 type Kind = keyof typeof KINDS
 

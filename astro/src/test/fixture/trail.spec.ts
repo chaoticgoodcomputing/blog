@@ -110,3 +110,19 @@ test("the QR button beside a title shows the page's own address as a QR code, wi
   await dialog.getByRole("button", { name: "Close" }).click()
   await expect(dialog).toBeHidden()
 })
+
+test.describe("on a phone", () => {
+  test.use({ hasTouch: true, isMobile: true, viewport: { width: 390, height: 800 } })
+
+  test("the buttons beside a title are always shown, on a line of their own under it, which stays centred", async ({ page }) => {
+    await page.goto(destination)
+    const title = (await page.getByRole("heading", { level: 1 }).boundingBox())!
+    const buttons = page.locator("main .article-title .actions")
+    await expect(buttons).toHaveCSS("opacity", "1")
+    const row = (await buttons.boundingBox())!
+    expect(row.y).toBeGreaterThanOrEqual(title.y + title.height - 1)
+    const middle = (box: { x: number; width: number }) => box.x + box.width / 2
+    const header = (await page.locator("main .article-title").boundingBox())!
+    expect(Math.abs(middle(row) - middle(header))).toBeLessThan(2)
+  })
+})

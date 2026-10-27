@@ -15,19 +15,19 @@
    alignment are every heading's (global.css). */
 
 .prose :is(h1, h2, h3, h4, h5, h6) {
-  margin: 1.5rem 0 1rem;
+  margin: 2.25rem 0 1.5rem;
 }
 
 .prose h1 {
-  margin-top: 2.25rem;
+  margin-top: 3rem;
 }
 
 .prose h2 {
-  margin-top: 1.9rem;
+  margin-top: 2.65rem;
 }
 
 .prose h3 {
-  margin-top: 1.62rem;
+  margin-top: 2.4rem;
 }
 
 /* Text. */
@@ -112,10 +112,28 @@
 
 /* Quotes and callouts. */
 
+/* A quote, of any kind, is set apart from the text around it by more room than a paragraph is, and
+   a quote or a paraphrase is drawn on a ground a shade off the page's. */
+.prose :is(blockquote, .callout:is([data-callout-kind="quote"], [data-callout-kind="paraphrase"])) {
+  --quote-background: color-mix(in srgb, var(--lightgray) 45%, var(--light));
+  margin-block: 1.5rem;
+}
+
+/* A quote is a rule beside it and a ground a shade off the page's, as GitHub draws one and the
+   vault's Obsidian theme does (AnuPpuccin's, a rule in its accent on half its darkest ground). */
 .prose blockquote {
-  margin: 1rem 0;
-  padding: 0 1rem;
+  padding: 0.75rem 1rem;
   border-left: 3px solid var(--secondary);
+  border-radius: 0 5px 5px 0;
+  background: var(--quote-background);
+}
+
+.prose blockquote > :first-child {
+  margin-top: 0;
+}
+
+.prose blockquote > :last-child {
+  margin-bottom: 0;
 }
 
 /* A callout is a box in its kind's colour (global.css): a border and a background of tints of it, and
@@ -216,6 +234,33 @@
   --callout-color: var(--secondary);
 }
 
+/* A paraphrase: words given as someone's, though not in their words (src/lib/callouts.ts). Drawn as
+   a quote is, by a rule beside it on a ground a shade off the page's, but the rule dashed, for words
+   that are only roughly theirs: a small label over the words, the words a step larger. */
+.prose .callout[data-callout-kind="paraphrase"] {
+  --callout-color: var(--secondary);
+  padding: 0.25rem 1.25rem;
+  border: none;
+  border-left: 3px dashed var(--callout-color);
+  border-radius: 0 5px 5px 0;
+  background: var(--quote-background);
+}
+
+.prose .callout[data-callout-kind="paraphrase"] > .callout-title {
+  padding: 0.25rem 0 0.5rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.prose .callout[data-callout-kind="paraphrase"] > .callout-content {
+  font-size: 1.1rem;
+}
+
+.prose .callout[data-callout-kind="paraphrase"] > .callout-content > :last-child {
+  margin-bottom: 0.25rem;
+}
+
 /* Tables. A table narrower than the column is centred in it, and one wider scrolls inside itself. */
 
 .prose table {
@@ -275,8 +320,23 @@
   max-width: 100%;
 }
 
-.prose img {
+.prose :is(img, video) {
   height: auto;
+}
+
+/* An embedded video or audio, played in place (the library's resolve.ts): a video on a line of its
+   own, centred, its corners rounded as a code block's are; audio as wide as the column. A width the
+   embed gives a video (`![[clip.mp4|400]]`) still holds, short of the column's. */
+.prose video.video-embed {
+  display: block;
+  margin: 1.5rem auto;
+  border-radius: 5px;
+}
+
+.prose audio.audio-embed {
+  display: block;
+  width: 100%;
+  margin: 1rem 0;
 }
 
 /* Footnotes: a reference keeps its line's height, and the notes are set apart under the body. */

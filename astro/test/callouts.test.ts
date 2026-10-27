@@ -32,7 +32,7 @@ test("a callout's title begins with its kind's icon, hidden from a screen reader
 })
 
 test("each kind has an icon of its own", async () => {
-  const kinds = ["note", "abstract", "info", "todo", "tip", "success", "question", "warning", "failure", "danger", "bug", "example", "quote"]
+  const kinds = ["note", "abstract", "info", "todo", "tip", "success", "question", "warning", "failure", "danger", "bug", "example", "quote", "paraphrase"]
   const icons = await Promise.all(kinds.map(iconOf))
   expect(icons.every((d) => d !== undefined)).toBe(true)
   expect(new Set(icons).size).toBe(kinds.length)
@@ -70,4 +70,10 @@ test("a callout inside a callout has its own icon", async () => {
   const html = await render("> [!note] Outer\n> > [!bug] Inner\n> > Body")
   expect(html.match(/class="callout-icon"/g)).toHaveLength(2)
   expect(html).toContain('data-callout="bug" data-callout-kind="bug"')
+})
+
+test("a paraphrase is a kind of its own, its paragraphs as written", async () => {
+  const html = outline(await render("> [!PARAPHRASE]\n>\n> Yes, roughly.\n>\n> -- Someone, *Somewhere* (2026)"))
+  expect(html).toContain('data-callout="paraphrase" data-callout-kind="paraphrase"')
+  expect(html).toContain("<p>Yes, roughly.</p><p>-- Someone, <em>Somewhere</em> (2026)</p>")
 })

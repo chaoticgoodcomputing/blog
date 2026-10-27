@@ -71,8 +71,10 @@ const counts = postListing.showTagCounts ? postCounts() : undefined
     gap: 1rem;
   }
 
-  h2 {
-    margin: 0;
+  /* The listing's gap and this: as much room under the heading as the shell gives every heading
+     after a note's body (Page.astro), whose rule this outweighs. */
+  .post-listing > h2 {
+    margin: 0 0 0.5rem;
   }
 
   .empty {
