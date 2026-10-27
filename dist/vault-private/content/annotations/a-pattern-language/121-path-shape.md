@@ -1,10 +1,11 @@
 ---
 title: "APL: Pattern 121; Path Shape"
 tags:
+  - "economics/policy"
+  - "engineering/data"
   - "projects/games/the-neighborhood"
   - "writing/annotations/a-pattern-language"
   - "private"
-draft: true
 ---
 
 This note is part of my private vault, and isn't published publicly on the site or within the public GitHub.
