@@ -43,7 +43,7 @@ Were humans necessary for the pursuit of knowledge anymore?
 
 Did they invest their youth in a dead art?
 
-Why would OpenAI do this?
+*Why would OpenAI do this?*
 
 ---
 
