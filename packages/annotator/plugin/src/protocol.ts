@@ -3,7 +3,8 @@
 // hands the page one MessagePort when it has loaded, and every request goes over it.
 //
 // The viewer page asks; the plugin answers. The sidebar, inside the viewer page and on its origin,
-// asks through the viewer page.
+// asks through the viewer page. The plugin also tells the page, unasked, when Obsidian's styles
+// change.
 
 import type { ApiRequest, ApiResponse } from "./service.ts"
 
@@ -18,9 +19,33 @@ export interface DocumentReply {
   url: string
 }
 
-export type Request = { id: number; kind: "document" } | { id: number; kind: "api"; request: ApiRequest }
+/** A comment's Markdown, as Obsidian renders it in the annotation note. */
+export interface MarkdownReply {
+  html: string
+}
 
-export type Reply = { id: number; ok: true; value: DocumentReply | ApiResponse } | { id: number; ok: false; error: string }
+/** Obsidian's styles, for the sidebar to show rendered comments as Obsidian does. */
+export interface StylesReply {
+  /** Every rule of Obsidian's stylesheets but fonts, with its theme's variables on `:host`. */
+  css: string
+  /** Obsidian's fonts (`@font-face` rules), which apply only from a document's own stylesheets. */
+  fonts: string
+}
+
+export type Request =
+  | { id: number; kind: "document" }
+  | { id: number; kind: "api"; request: ApiRequest }
+  | { id: number; kind: "markdown"; markdown: string }
+  | { id: number; kind: "styles" }
+  /** A link in a rendered comment, clicked: `internal` for a link to the vault (its link text), else an address. */
+  | { id: number; kind: "open-link"; href: string; internal: boolean }
+
+export type Reply =
+  | { id: number; ok: true; value: DocumentReply | ApiResponse | MarkdownReply | StylesReply | null }
+  | { id: number; ok: false; error: string }
+
+/** What the plugin tells the viewer page unasked: Obsidian's styles, changed. */
+export type Push = { push: "styles"; styles: StylesReply }
 
 /** The query parameter of the viewer page's address that names an annotation to open at. */
 export const ANNOTATION_PARAM = "annotation"

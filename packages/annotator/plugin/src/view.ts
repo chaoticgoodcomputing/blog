@@ -7,7 +7,8 @@ import { DocumentUnavailable } from "@chaoticgoodcomputing/annotator-documents"
 import { FileView, type TFile, type ViewStateResult, type WorkspaceLeaf } from "obsidian"
 import type AnnotatorPlugin from "./main.ts"
 import { formatPageRange, PAGES_PROPERTY, parsePageRange } from "./pages.ts"
-import { ANNOTATION_PARAM, CONNECT, PAGES_PARAM, type Reply, type Request } from "./protocol.ts"
+import { obsidianStyles, renderMarkdown } from "./obsidian-rendering.ts"
+import { ANNOTATION_PARAM, CONNECT, PAGES_PARAM, type Push, type Reply, type Request } from "./protocol.ts"
 import { createService, type Service } from "./service.ts"
 import { addressOf, bytesOf, propertyOf, type Target, targetOf } from "./target.ts"
 
@@ -50,6 +51,13 @@ export class AnnotationView extends FileView {
     await super.setState(state, result)
     // Already showing this note: open it again at the annotation.
     if (reopen && this.file) this.show(this.file)
+  }
+
+  async onOpen() {
+    // Obsidian's styles changed (a theme, a snippet): the sidebar shows comments with the new ones.
+    this.registerEvent(
+      this.app.workspace.on("css-change", () => this.port?.postMessage({ push: "styles", styles: obsidianStyles() } satisfies Push)),
+    )
   }
 
   async onLoadFile(file: TFile) {
@@ -107,7 +115,7 @@ export class AnnotationView extends FileView {
     const frame = this.contentEl.createEl("iframe", { cls: "annotator-frame", attr: { src: page.href } })
     frame.addEventListener("load", () => {
       const channel = new MessageChannel()
-      channel.port1.onmessage = ({ data }: MessageEvent<Request>) => this.answer(channel.port1, data, target, service)
+      channel.port1.onmessage = ({ data }: MessageEvent<Request>) => this.answer(channel.port1, data, note, target, service)
       this.port = channel.port1
       // The page checks the message comes from this frame's parent. Its origin is Obsidian's own
       // for the plugin's folder, and not one to name here.
@@ -126,13 +134,30 @@ export class AnnotationView extends FileView {
     this.contentEl.prepend(bar)
   }
 
-  private async answer(port: MessagePort, request: Request, target: Target, service: Service) {
+  private async answer(port: MessagePort, request: Request, note: TFile, target: Target, service: Service) {
+    const reply = (value: Extract<Reply, { ok: true }>["value"]) => port.postMessage({ id: request.id, ok: true, value } satisfies Reply)
     try {
-      if (request.kind === "document") {
-        const data = await bytesOf(this.app, target, this.plugin.documentStore())
-        port.postMessage({ id: request.id, ok: true, value: { data, url: addressOf(target) } } satisfies Reply, [data])
-      } else {
-        port.postMessage({ id: request.id, ok: true, value: await service(request.request) } satisfies Reply)
+      switch (request.kind) {
+        case "document": {
+          const data = await bytesOf(this.app, target, this.plugin.documentStore())
+          port.postMessage({ id: request.id, ok: true, value: { data, url: addressOf(target) } } satisfies Reply, [data])
+          break
+        }
+        case "api":
+          reply(await service(request.request))
+          break
+        case "markdown":
+          reply({ html: await renderMarkdown(this.app, request.markdown, note.path) })
+          break
+        case "styles":
+          reply(obsidianStyles())
+          break
+        case "open-link":
+          // A link to the vault opens in a tab of its own, so this one keeps annotating.
+          if (request.internal) await this.app.workspace.openLinkText(request.href, note.path, "tab")
+          else window.open(request.href)
+          reply(null)
+          break
       }
     } catch (error) {
       if (error instanceof DocumentUnavailable) this.offerToSupply(error)

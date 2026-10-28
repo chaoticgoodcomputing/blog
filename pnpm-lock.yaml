@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: false
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  hypothesis@1.1769.0: b4281075fe8b3366e0634daa7ea9f28916ec6eb31a2315348d86c746c05a41c9
+
 importers:
 
   .:
@@ -186,7 +189,7 @@ importers:
         version: link:../format
       hypothesis:
         specifier: 1.1769.0
-        version: 1.1769.0
+        version: 1.1769.0(patch_hash=b4281075fe8b3366e0634daa7ea9f28916ec6eb31a2315348d86c746c05a41c9)
       monkey-around:
         specifier: ^2.2.0
         version: 2.3.0
@@ -8555,7 +8558,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  hypothesis@1.1769.0: {}
+  hypothesis@1.1769.0(patch_hash=b4281075fe8b3366e0634daa7ea9f28916ec6eb31a2315348d86c746c05a41c9): {}
 
   iconv-lite@0.6.3:
     dependencies:

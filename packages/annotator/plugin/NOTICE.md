@@ -29,7 +29,7 @@ own licenses. The build copies each one's notices beside it.
 
 | Component | In the build | License | Notice |
 | --- | --- | --- | --- |
-| [Hypothesis client](https://github.com/hypothesis/client), the `hypothesis` npm package, unmodified | `frames/hypothesis/build/` | BSD 2-Clause, © Hypothes.is Project and contributors | `frames/hypothesis/LICENSE` |
+| [Hypothesis client](https://github.com/hypothesis/client), the `hypothesis` npm package, with one patch of ours ([patches/README.md](./patches/README.md)) | `frames/hypothesis/build/` | BSD 2-Clause, © Hypothes.is Project and contributors | `frames/hypothesis/LICENSE` |
 | [PDF.js](https://github.com/mozilla/pdf.js), the `pdfjs-dist` npm package | bundled into `frames/viewer.js`; its worker, styles and data in `frames/pdfjs/` | Apache 2.0, © Mozilla Foundation; its CMaps, standard fonts, ICC profile and WebAssembly decoders under their own licenses | `frames/pdfjs/LICENSE`, and the `LICENSE*` files in each folder of `frames/pdfjs/` |
 | [monkey-around](https://github.com/pjeby/monkey-around) | bundled into `main.js` | ISC, © PJ Eby | `licenses/monkey-around.LICENSE` |
 

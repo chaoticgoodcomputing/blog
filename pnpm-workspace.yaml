@@ -16,3 +16,6 @@ allowBuilds:
   # The Annotator plugin's (packages/annotator/plugin): donation banners its build doesn't need.
   core-js: false
   es5-ext: false
+
+patchedDependencies:
+  hypothesis@1.1769.0: packages/annotator/plugin/patches/hypothesis@1.1769.0.patch

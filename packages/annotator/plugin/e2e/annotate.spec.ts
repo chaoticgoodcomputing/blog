@@ -146,3 +146,31 @@ test("a note's page range shows only its pages, and its passages are annotated i
   const position = annotation.target![0]!.selector!.find((selector) => selector.type === "TextPositionSelector") as { start: number }
   expect(position.start).toBeGreaterThan("The first page of the fixture.Annotate this sentence, please.A line nobody annotates.".length)
 })
+
+test("a comment is shown as Obsidian renders it, with Obsidian's styles, and its links open in Obsidian", async ({ page }) => {
+  const comment = seed("seed1", "Another passage worth a comment.", "The second page of the fixture.", "Read this **twice**. See [[Flatland]].")
+  const note = upsertAnnotation(PREFACE, comment).note
+  const { sidebar } = await open(page, { note })
+  // The harness renders as Obsidian would (e2e/harness/host.ts), into the comment's own shadow root.
+  const rendered = sidebar.locator("annotator-markdown")
+  await expect(rendered.locator("strong")).toHaveText("twice")
+  const link = rendered.locator("a.internal-link")
+  await expect(link).toHaveText("Flatland")
+  await expect(link).toHaveCSS("color", "rgb(1, 2, 3)")
+  // Obsidian's styles reach only the comment: the sidebar's own links keep theirs.
+  expect(await sidebar.evaluate(() => getComputedStyle(document.body).getPropertyValue("--text-accent"))).toBe("")
+  await link.click()
+  await expect.poll(() => page.evaluate(() => (window as any).harness.links)).toEqual([{ href: "Flatland", internal: true }])
+  // The note is untouched by following a link.
+  expect(await noteOf(page)).toBe(note)
+})
+
+test("the same comment is rendered once, however often the sidebar redraws it", async ({ page }) => {
+  const { sidebar } = await open(page, { note: seededNote() })
+  await expect(sidebar.getByText("A comment already in the note.")).toBeVisible()
+  await sidebar.getByRole("button", { name: "Edit" }).click()
+  await sidebar.getByRole("button", { name: "Cancel" }).click()
+  await expect(sidebar.getByText("A comment already in the note.")).toBeVisible()
+  const renders = await page.evaluate(() => (window as any).harness.requests.filter((request: any) => request.kind === "markdown").length)
+  expect(renders).toBe(1)
+})

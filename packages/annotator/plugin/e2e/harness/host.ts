@@ -13,7 +13,26 @@ const harness = {
   note: params.get("note") ?? `---\nannotation-target: ${TARGET}\n---\n\nA preface.\n`,
   /** Every request the viewer page made, for the tests to look at. */
   requests: [] as Request[],
+  /** The links of rendered comments the user followed. */
+  links: [] as { href: string; internal: boolean }[],
 }
+
+const escapeHtml = (text: string) => text.replace(/[&<>"]/g, (character) => `&#${character.charCodeAt(0)};`)
+
+/** Obsidian's renderer, as far as the suite needs it: paragraphs, bold, and wikilinks as Obsidian writes them. */
+const renderMarkdown = (markdown: string) =>
+  markdown
+    .split(/\n\n+/)
+    .map((paragraph) => {
+      const html = escapeHtml(paragraph)
+        .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+        .replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_, target, alias) => `<a class="internal-link" data-href="${target}" href="${target}">${alias ?? target}</a>`)
+      return `<p>${html}</p>`
+    })
+    .join("")
+
+/** Obsidian's styles, as far as the suite needs them: a variable of its theme, and a rule using it. */
+const STYLES = { css: ":host { --text-accent: rgb(1, 2, 3); }\n.internal-link { color: var(--text-accent); }\n", fonts: "" }
 ;(window as any).harness = harness
 
 const service = createService({
@@ -40,11 +59,26 @@ frame.addEventListener("load", () => {
   port.onmessage = async ({ data }: MessageEvent<Request>) => {
     harness.requests.push(data)
     try {
-      if (data.kind === "document") {
-        const bytes = await (await fetch("/fixture.pdf")).arrayBuffer()
-        port.postMessage({ id: data.id, ok: true, value: { data: bytes, url: TARGET } } satisfies Reply, [bytes])
-      } else {
-        port.postMessage({ id: data.id, ok: true, value: await service(data.request) } satisfies Reply)
+      const reply = (value: Extract<Reply, { ok: true }>["value"]) => port.postMessage({ id: data.id, ok: true, value } satisfies Reply)
+      switch (data.kind) {
+        case "document": {
+          const bytes = await (await fetch("/fixture.pdf")).arrayBuffer()
+          port.postMessage({ id: data.id, ok: true, value: { data: bytes, url: TARGET } } satisfies Reply, [bytes])
+          break
+        }
+        case "api":
+          reply(await service(data.request))
+          break
+        case "markdown":
+          reply({ html: renderMarkdown(data.markdown) })
+          break
+        case "styles":
+          reply(STYLES)
+          break
+        case "open-link":
+          harness.links.push({ href: data.href, internal: data.internal })
+          reply(null)
+          break
       }
     } catch (error) {
       port.postMessage({ id: data.id, ok: false, error: String(error) } satisfies Reply)

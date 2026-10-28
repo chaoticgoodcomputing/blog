@@ -9,7 +9,7 @@
 import * as pdfjs from "pdfjs-dist"
 import { EventBus, PDFLinkService, PDFViewer } from "pdfjs-dist/web/pdf_viewer.mjs"
 import { inPageRange, parsePageRange } from "../src/pages.ts"
-import { ANNOTATION_PARAM, CONNECT, type DocumentReply, PAGES_PARAM, type Reply, type Request } from "../src/protocol.ts"
+import { ANNOTATION_PARAM, CONNECT, type DocumentReply, type MarkdownReply, PAGES_PARAM, type Push, type Reply, type Request, type StylesReply } from "../src/protocol.ts"
 import { API_URL, AUTHORITY, GROUP_ID, type ApiRequest, type ApiResponse } from "../src/service.ts"
 
 const here = (path: string) => new URL(path, location.href).href
@@ -26,8 +26,13 @@ const port = new Promise<MessagePort>((resolve) => {
 })
 const waiting = new Map<number, { resolve: (value: unknown) => void; reject: (error: Error) => void }>()
 let next = 0
+const styleListeners = new Set<(styles: StylesReply) => void>()
 port.then((port) => {
-  port.onmessage = ({ data }: MessageEvent<Reply>) => {
+  port.onmessage = ({ data }: MessageEvent<Reply | Push>) => {
+    if ("push" in data) {
+      for (const listener of styleListeners) listener(data.styles)
+      return
+    }
     const request = waiting.get(data.id)
     waiting.delete(data.id)
     if (data.ok) request?.resolve(data.value)
@@ -35,18 +40,34 @@ port.then((port) => {
   }
 })
 
-type Ask = { kind: "document" } | { kind: "api"; request: ApiRequest }
+type Ask = Request extends infer R ? (R extends { id: number } ? Omit<R, "id"> : never) : never
 async function ask<T>(question: Ask): Promise<T> {
   const id = next++
   const answered = new Promise<T>((resolve, reject) => waiting.set(id, { resolve: resolve as (value: unknown) => void, reject }))
-  ;(await port).postMessage({ id, ...question } satisfies Request)
+  ;(await port).postMessage({ id, ...question } as Request)
   return answered
 }
 
-/** What the sidebar page calls: the fake service, through the plugin. */
-;(window as any).annotatorBridge = {
-  api: (request: ApiRequest) => ask<ApiResponse>({ kind: "api", request }),
+/** What the sidebar page calls (frames/sidebar.ts): the plugin's answers, through this page. */
+export interface Bridge {
+  /** The fake service. */
+  api(request: ApiRequest): Promise<ApiResponse>
+  /** A comment's Markdown, as Obsidian renders it in the note. */
+  renderMarkdown(markdown: string): Promise<string>
+  /** Obsidian's styles now, and each time they change. */
+  styles(): Promise<StylesReply>
+  onStyles(listener: (styles: StylesReply) => void): void
+  /** Opens a link of a rendered comment in Obsidian. */
+  openLink(href: string, internal: boolean): Promise<unknown>
 }
+const bridge: Bridge = {
+  api: (request) => ask<ApiResponse>({ kind: "api", request }),
+  renderMarkdown: async (markdown) => (await ask<MarkdownReply>({ kind: "markdown", markdown })).html,
+  styles: () => ask<StylesReply>({ kind: "styles" }),
+  onStyles: (listener) => void styleListeners.add(listener),
+  openLink: (href, internal) => ask({ kind: "open-link", href, internal }),
+}
+;(window as any).annotatorBridge = bridge
 
 // The page as PDF.js's own viewer lays it out, which is what the client's integration looks for:
 // #outerContainer, around the scroll container #viewerContainer, around #viewer.
