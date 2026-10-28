@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es2023",
+    "lib": ["es2023"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    // Sources import each other by their .ts names, which is what Node's type stripping runs.
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    // No Node, and no DOM: the source runs in Obsidian, in the fake service and on the site alike.
+    "types": []
+  },
+  "include": ["src/**/*.ts"]
+}

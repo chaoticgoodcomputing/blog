@@ -1,0 +1,26 @@
+{
+  "name": "@chaoticgoodcomputing/annotator-format",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The Annotator's annotation note format: finding a note's annotation blocks, reading each one's record, writing and removing them, and where the note's preface and epilogue are. No Obsidian, DOM or Node in it.",
+  "//license": "Written to reproduce Upstream's blocks byte for byte, from Upstream's code for them (the plugin's src/annotationUtils.tsx), so under the plugin's license: ../plugin/LICENSE.TXT, ../plugin/NOTICE.md.",
+  "license": "AGPL-3.0-only",
+  "//exports": "Source only: no build and no dist. Whoever uses it compiles it, and Node strips its types for the tests.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "sideEffects": false,
+  "//scripts": "Node strips the types (unflagged only from Node 22.18; the repo's .nvmrc is 22.16), so sources import each other with their .ts extension. The source is checked without Node's types, so that it uses none of Node; the tests with them.",
+  "scripts": {
+    "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning --test --test-reporter=spec \"test/*.test.ts\"",
+    "typecheck": "tsc -p . && tsc -p test"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    // The tests read the vault's notes from disk.
+    "types": ["node"]
+  },
+  "include": ["../src/**/*.ts", "./**/*.ts"]
+}

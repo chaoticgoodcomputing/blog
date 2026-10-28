@@ -1,0 +1,19 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "name": "@chaoticgoodcomputing/annotator-format",
+  "root": "packages/annotator/format",
+  "sourceRoot": "packages/annotator/format/src",
+  "projectType": "library",
+  "tags": ["annotator"],
+  "targets": {
+    "test": {
+      "//": "The format against hand-written notes, and against every annotation note of the vault, read-only. No build target: whoever uses it compiles the source.",
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run test", "cwd": "{projectRoot}" }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run typecheck", "cwd": "{projectRoot}" }
+    }
+  }
+}
