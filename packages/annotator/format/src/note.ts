@@ -109,9 +109,9 @@ function separation(before: string, lineEnding: string): string {
 
 /**
  * Removes an annotation's block from a note, with the blank lines that separated it from the
- * blocks either side, so that a note it is written into again is laid out as it was. Text between
- * blocks, the preface and the epilogue are never removed. A note with no block of the id is
- * returned as it is.
+ * blocks either side, or from the preface when it is the note's only block, so that a note it is
+ * written into again is laid out as it was. Text between blocks, the preface and the epilogue are
+ * never removed. A note with no block of the id is returned as it is.
  */
 export function removeAnnotation(source: string, id: string): string {
   for (;;) {
@@ -129,9 +129,23 @@ export function removeAnnotation(source: string, id: string): string {
         ? { start: previous.end, end }
         : next && blank(end, next.start)
           ? { start, end: next.start }
-          : { start, end }
+          : !previous && !next
+            ? { start: start - separationBefore(source.slice(0, start)), end }
+            : { start, end }
     source = source.slice(0, removed.start) + source.slice(removed.end)
   }
+}
+
+/**
+ * Of the line breaks between a note's preface and its only block, how many a new block's separation
+ * wrote: all but the one ending the preface's last line, when there are exactly the three
+ * `separation` leaves. More than three, the preface's own blank lines are among them, and they stay.
+ */
+function separationBefore(before: string): number {
+  const run = /(?:\r?\n)*$/.exec(before)![0]
+  const breaks = run.split("\n").length - 1
+  if (breaks !== 3 || run.length === before.length) return 0
+  return run.length - (run.startsWith("\r\n") ? 2 : 1)
 }
 
 /** The line break a text uses: its first one, or `\n` when it has none. */

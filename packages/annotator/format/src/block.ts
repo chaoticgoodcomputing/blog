@@ -100,7 +100,7 @@ export function findBlocks(source: string): Block[] {
     while (j < lines.length && text(j).startsWith(">")) j++
     const id = j < lines.length ? ID_LINE.exec(text(j))?.[1] : undefined
     if (id === undefined) continue
-    const quoted = []
+    const quoted: string[] = []
     for (let k = i; k < j; k++) quoted.push(text(k).slice(1))
     const span = { start: lines[i]!.start, end: lines[j]!.next }
     blocks.push({ id, span, ...readBlock(id, quoted) })

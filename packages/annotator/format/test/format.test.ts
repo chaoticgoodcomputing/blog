@@ -256,9 +256,22 @@ test("removing an annotation removes its block and the blank lines that set it a
   assert.equal(removeAnnotation(source, "aaa"), `${FRONTMATTER}${B}\n\n${C}\n\nAfterwards.\n`)
   assert.equal(removeAnnotation(source, "bbb"), `${FRONTMATTER}${A}\n\n${C}\n\nAfterwards.\n`)
   assert.equal(removeAnnotation(source, "ccc"), `${FRONTMATTER}${A}\n\n${B}\n\nAfterwards.\n`)
+  // A note's only block goes with the separation its writing put after the preface.
   const sole = `${FRONTMATTER}${A}\n\nAfterwards.\n`
-  assert.equal(removeAnnotation(sole, "aaa"), `${FRONTMATTER}\n\nAfterwards.\n`)
+  assert.equal(removeAnnotation(sole, "aaa"), "---\nannotation-target: https://example.com/h.pdf\n---\n\n\nAfterwards.\n")
   assert.equal(removeAnnotation(source, "zzz"), source)
+})
+
+test("removing a note's only annotation gives back the note it was written into", () => {
+  const [annotation] = parseNote(A).annotations as [Annotation]
+  for (const note of ["Words.\n", "Words.\n\nMore words.\n", "", "Words.\n\n\n\n"]) {
+    for (const text of [note, crlf(note)]) {
+      assert.equal(removeAnnotation(upsertAnnotation(text, annotation).note, "aaa"), text)
+    }
+  }
+  // With an epilogue after it, which stays as it was.
+  const written = upsertAnnotation("Words.\n", annotation).note + "\nAfterwards.\n"
+  assert.equal(removeAnnotation(written, "aaa"), "Words.\n\nAfterwards.\n")
 })
 
 test("removing an annotation leaves what is written between blocks where it is", () => {
