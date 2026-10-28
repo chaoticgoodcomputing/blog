@@ -39,6 +39,12 @@ What kind of annotated document a note's target is (a PDF, an EPUB, a web page o
 `annotation-target-type` property, or from the extension of its address when the note has none.
 _Avoid_: file type, format
 
+**Page range**:
+The pages of a PDF an annotation note shows, from its `annotation-pages` property: the document is
+opened whole, and only they are shown, so annotations on them name their passages in the whole
+document.
+_Avoid_: excerpt, slice, chapter
+
 **Annotation record**:
 The part of an annotation that is Hypothesis's own JSON for it, in an `annotation-json` block,
 hidden in a comment. The rest of the annotation is written from it, for reading.

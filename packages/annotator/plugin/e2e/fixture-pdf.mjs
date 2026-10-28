@@ -1,11 +1,13 @@
 // A small PDF for the end-to-end suite, written out byte by byte, so the suite needs no PDF of
-// anyone else's: two pages of text in Helvetica, one of PDF's standard fonts, which PDF.js draws
+// anyone else's: four pages of text in Helvetica, one of PDF's standard fonts, which PDF.js draws
 // with the font data it ships.
 
 /** One page's text, as lines from the top. */
 export const PAGES = [
   ["The first page of the fixture.", "Annotate this sentence, please.", "A line nobody annotates."],
   ["The second page of the fixture.", "Another passage worth a comment."],
+  ["The third page of the fixture.", "A passage in the middle of the book."],
+  ["The fourth page of the fixture.", "The last words of all."],
 ]
 
 const escape = (text) => text.replace(/[\\()]/g, (character) => `\\${character}`)

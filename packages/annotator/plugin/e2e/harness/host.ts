@@ -2,7 +2,7 @@
 // the viewer page, hands it its port, and answers it with the fixture PDF and the fake service over
 // a note kept in memory, which the tests read back as `window.harness.note`.
 
-import { ANNOTATION_PARAM, CONNECT, type Reply, type Request } from "../../src/protocol.ts"
+import { ANNOTATION_PARAM, CONNECT, PAGES_PARAM, type Reply, type Request } from "../../src/protocol.ts"
 import { createService } from "../../src/service.ts"
 
 const params = new URL(location.href).searchParams
@@ -29,6 +29,8 @@ const service = createService({
 const page = new URL("/frames/viewer.html", location.href)
 const annotation = params.get(ANNOTATION_PARAM)
 if (annotation) page.searchParams.set(ANNOTATION_PARAM, annotation)
+const pages = params.get(PAGES_PARAM)
+if (pages) page.searchParams.set(PAGES_PARAM, pages)
 
 const frame = document.createElement("iframe")
 frame.src = page.href

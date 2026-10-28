@@ -8,7 +8,8 @@
 
 import * as pdfjs from "pdfjs-dist"
 import { EventBus, PDFLinkService, PDFViewer } from "pdfjs-dist/web/pdf_viewer.mjs"
-import { ANNOTATION_PARAM, CONNECT, type DocumentReply, type Reply, type Request } from "../src/protocol.ts"
+import { inPageRange, parsePageRange } from "../src/pages.ts"
+import { ANNOTATION_PARAM, CONNECT, type DocumentReply, PAGES_PARAM, type Reply, type Request } from "../src/protocol.ts"
 import { API_URL, AUTHORITY, GROUP_ID, type ApiRequest, type ApiResponse } from "../src/service.ts"
 
 const here = (path: string) => new URL(path, location.href).href
@@ -57,8 +58,23 @@ const eventBus = new EventBus()
 const linkService = new PDFLinkService({ eventBus })
 const pdfViewer = new PDFViewer({ container, viewer, eventBus, linkService })
 linkService.setViewer(pdfViewer)
+// The pages the note names, when it names some: the rest of the document is there, for the client
+// to find passages in, but not shown.
+const pageRange = parsePageRange(new URL(location.href).searchParams.get(PAGES_PARAM))
+
 eventBus.on("pagesinit", () => {
   pdfViewer.currentScaleValue = "page-width"
+  if (!pageRange) return
+  for (let index = 0; index < pdfViewer.pagesCount; index++) {
+    pdfViewer.getPageView(index)?.div.classList.toggle("annotator-outside", !inPageRange(pageRange, index + 1))
+  }
+  const first = Math.min(pageRange[0]![0], pdfViewer.pagesCount)
+  pdfViewer.scrollPageIntoView({ pageNumber: first })
+  // PDF.js draws the pages it finds in view on scrolling and on updates. Hiding pages moves the rest
+  // without either, so it is told to look again once the layout has settled, and once every page
+  // has loaded.
+  requestAnimationFrame(() => pdfViewer.update())
+  eventBus.on("pagesloaded", () => pdfViewer.update(), { once: true })
 })
 addEventListener("resize", () => {
   if (["page-width", "page-fit", "auto"].includes(pdfViewer.currentScaleValue)) pdfViewer.currentScaleValue = pdfViewer.currentScaleValue

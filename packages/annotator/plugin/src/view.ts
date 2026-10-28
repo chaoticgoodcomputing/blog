@@ -6,9 +6,10 @@
 import { DocumentUnavailable } from "@chaoticgoodcomputing/annotator-documents"
 import { FileView, type TFile, type ViewStateResult, type WorkspaceLeaf } from "obsidian"
 import type AnnotatorPlugin from "./main.ts"
-import { ANNOTATION_PARAM, CONNECT, type Reply, type Request } from "./protocol.ts"
+import { formatPageRange, PAGES_PROPERTY, parsePageRange } from "./pages.ts"
+import { ANNOTATION_PARAM, CONNECT, PAGES_PARAM, type Reply, type Request } from "./protocol.ts"
 import { createService, type Service } from "./service.ts"
-import { addressOf, bytesOf, type Target, targetOf } from "./target.ts"
+import { addressOf, bytesOf, propertyOf, type Target, targetOf } from "./target.ts"
 
 /** The view's type. Upstream's, so that workspaces saved with upstream's view open in this one. */
 export const VIEW_TYPE = "pdf-annotator"
@@ -98,6 +99,8 @@ export class AnnotationView extends FileView {
 
     const page = new URL(this.plugin.framePage("viewer.html"))
     if (this.annotation) page.searchParams.set(ANNOTATION_PARAM, this.annotation)
+    const pages = parsePageRange(propertyOf(this.app, note, PAGES_PROPERTY))
+    if (pages) page.searchParams.set(PAGES_PARAM, formatPageRange(pages))
     this.annotation = undefined
 
     this.contentEl.addClass("annotator-view")

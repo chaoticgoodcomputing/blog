@@ -24,3 +24,6 @@ export type Reply = { id: number; ok: true; value: DocumentReply | ApiResponse }
 
 /** The query parameter of the viewer page's address that names an annotation to open at. */
 export const ANNOTATION_PARAM = "annotation"
+
+/** The query parameter of the viewer page's address that names the pages to show (src/pages.ts). */
+export const PAGES_PARAM = "pages"

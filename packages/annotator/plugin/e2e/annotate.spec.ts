@@ -29,10 +29,11 @@ function seededNote(...more: ReturnType<typeof seed>[]) {
   return note + EPILOGUE
 }
 
-async function open(page: Page, query: Record<string, string> = {}) {
+/** Opens the harness, and waits for the PDF's text, on the first page or the one with `text`, and the sidebar. */
+async function open(page: Page, query: Record<string, string> = {}, text = "Annotate this sentence") {
   await page.goto(`/?${new URLSearchParams(query)}`)
   const viewer = page.frameLocator('iframe[src*="viewer.html"]')
-  await viewer.locator(".textLayer span", { hasText: "Annotate this sentence" }).waitFor()
+  await viewer.locator(".textLayer span", { hasText: text }).waitFor()
   await expect.poll(() => sidebarOf(page)).toBeTruthy()
   const sidebar = sidebarOf(page)!
   await sidebar.getByText("This note").first().waitFor()
@@ -56,7 +57,7 @@ async function select(viewerFrame: Frame, text: string) {
 
 test("the document opens, with the user logged in to the note's one group", async ({ page }) => {
   const { viewerFrame, sidebar } = await open(page)
-  expect(await viewerFrame.evaluate(() => document.querySelectorAll(".page").length)).toBe(2)
+  expect(await viewerFrame.evaluate(() => document.querySelectorAll(".page").length)).toBe(4)
   await expect(sidebar.getByText("There are no annotations in this group.")).toBeVisible()
   // The client names the document as annotations name it: by its target.
   expect(await viewerFrame.evaluate(() => (window as any).PDFViewerApplication.url)).toBe(TARGET)
@@ -123,4 +124,25 @@ test("opening at an annotation narrows the sidebar to it", async ({ page }) => {
   // With a way back to all of them.
   await sidebar.getByRole("button", { name: /show all annotations/ }).click()
   await expect(sidebar.getByText("Another comment.")).toBeVisible()
+})
+
+test("a note's page range shows only its pages, and its passages are annotated in the whole document", async ({ page }) => {
+  const { viewer, viewerFrame, sidebar } = await open(page, { note: seededNote(), pages: "2-3" }, "Another passage worth a comment.")
+  const shown = () => viewerFrame.evaluate(() => [...document.querySelectorAll<HTMLElement>(".page")].map((page) => page.offsetHeight > 0 && getComputedStyle(page).visibility !== "hidden"))
+  expect(await shown()).toEqual([false, true, true, false])
+  // The annotation on page 2 is highlighted, and page 3 is drawn, with its text to select.
+  await expect.poll(() => viewerFrame.evaluate(() => [...document.querySelectorAll("hypothesis-highlight")].map((highlight) => highlight.textContent).join(""))).toContain("Another passage worth a comment.")
+  await viewer.locator(".textLayer span", { hasText: "A passage in the middle of the book." }).waitFor()
+
+  await select(viewerFrame, "A passage in the middle of the book.")
+  await viewer.getByRole("button", { name: /^Annotate/ }).click()
+  await sidebar.getByRole("textbox", { name: "Enter comment" }).fill("On page three.")
+  await sidebar.getByRole("button", { name: "Post to This note" }).click()
+  await expect.poll(async () => parseNote(await noteOf(page)).annotations.length).toBe(2)
+  const annotation = parseNote(await noteOf(page)).annotations.find((annotation) => annotation.text === "On page three.")!
+  const quote = annotation.target![0]!.selector!.find((selector) => selector.type === "TextQuoteSelector") as { exact: string }
+  expect(quote.exact).toContain("A passage in the middle of the book.")
+  // Its position is in the whole document's text, after the hidden first page's.
+  const position = annotation.target![0]!.selector!.find((selector) => selector.type === "TextPositionSelector") as { start: number }
+  expect(position.start).toBeGreaterThan("The first page of the fixture.Annotate this sentence, please.A line nobody annotates.".length)
 })
