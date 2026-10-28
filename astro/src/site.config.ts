@@ -198,8 +198,8 @@ export const graph: GraphConfig = {
     },
     edges: {
       opacity: {
-        tagTag: { min: 0.99, max: 1.0 },
-        tagNote: { min: 0.01, max: 0.2 },
+        tagTag: { min: 0.8, max: 1 },
+        tagNote: { min: 0.25, max: 1 },
         noteNote: { min: 0.8, max: 1 },
       },
       style: { tagTag: "solid", tagNote: "solid", noteNote: "dotted" },
