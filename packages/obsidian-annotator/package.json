@@ -1,7 +1,8 @@
 {
-  "name": "obsidian-annotator",
+  "name": "@chaoticgoodcomputing/obsidian-annotator",
   "version": "0.2.11",
-  "description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+  "private": true,
+  "description": "A hard fork of Obsidian Annotator (elias-sundqvist/obsidian-annotator): annotate PDFs, EPUBs, web pages and videos in Obsidian with Hypothesis.",
   "main": "main.js",
   "scripts": {
     "prettier-format": "prettier --config .prettierrc.js src/**/*.tsx --write",
@@ -17,7 +18,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "browserslist": [
     "electron >= 18",
     "android >= 5",

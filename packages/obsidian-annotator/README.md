@@ -1,3 +1,9 @@
+> [!NOTE]
+> This is a hard fork of [Obsidian Annotator](https://github.com/elias-sundqvist/obsidian-annotator),
+> modified since 2026-10-28, kept in [chaoticgoodcomputing/blog](https://github.com/chaoticgoodcomputing/blog).
+> The README below is upstream's, as of release 0.2.11. What changed, and the licenses of the work in
+> it, are in [NOTICE.md](./NOTICE.md).
+
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/elias-sundqvist/obsidian-annotator?style=for-the-badge&sort=semver)](https://github.com/elias-sundqvist/obsidian-annotator/releases/latest)
 ![GitHub All Releases](https://img.shields.io/github/downloads/elias-sundqvist/obsidian-annotator/total?style=for-the-badge)
 # Obsidian Annotator

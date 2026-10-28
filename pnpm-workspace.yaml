@@ -1,6 +1,8 @@
 packages:
   - astro
   - packages/*
+  # A hard fork with upstream's own npm setup (packages/obsidian-annotator/project.json).
+  - "!packages/obsidian-annotator"
 
 autoInstallPeers: false
 

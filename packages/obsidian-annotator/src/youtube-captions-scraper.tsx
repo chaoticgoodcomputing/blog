@@ -1,3 +1,5 @@
+// Adapted from youtube-captions-scraper (https://github.com/algolia/youtube-captions-scraper),
+// MIT, Copyright (c) Algolia, Inc. See licenses/youtube-captions-scraper.LICENSE.
 /* @flow */
 
 import he from 'he';
