@@ -1,18 +1,7 @@
-# Intellij
-*.iml
-.idea
-
-# npm
 node_modules
-package-lock.json
-pnpm-lock.yaml
-yarn.lock
 
-# build
-main.js
-*.js.map
+# The build (scripts/build.mjs)
+dist
 
-# obsidian
+# Obsidian's: a plugin's settings, should a vault be opened here
 data.json
-.vault_plugin_dir
-resources/cdn.hypothes.is/hypothesis/build

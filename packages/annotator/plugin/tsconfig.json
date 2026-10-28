@@ -1,28 +1,18 @@
 {
+  "//": "Type-checking only: esbuild compiles (scripts/build.mjs). baseUrl is upstream's, whose sources import each other by bare name ('settings', 'utils').",
   "compilerOptions": {
     "baseUrl": "src",
-    "inlineSourceMap": true,
-    "inlineSources": true,
     "module": "ESNext",
-    "target": "es6",
+    "moduleResolution": "bundler",
+    "target": "ES2021",
+    "lib": ["DOM", "DOM.Iterable", "ES2021"],
+    "jsx": "react",
     "allowJs": true,
     "noImplicitAny": false,
-    "moduleResolution": "node",
-    "esModuleInterop":true,
-    "importHelpers": true,
-    "noEmit": true,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "lib": [
-      "dom",
-      "es5",
-      "scripthost",
-      "es2015",
-      "DOM.Iterable",
-      "ESNext"
-    ],
-    "jsx": "react",
+    "skipLibCheck": true,
+    "noEmit": true
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

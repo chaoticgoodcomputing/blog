@@ -1,32 +1,35 @@
 {
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "name": "@chaoticgoodcomputing/obsidian-annotator",
-  "//": "A hard fork of elias-sundqvist/obsidian-annotator (NOTICE.md). It keeps upstream's own npm and rollup setup and is left out of the repo's pnpm workspace (pnpm-workspace.yaml), so its targets install with npm into its own node_modules. The Hypothesis client it builds is the submodule submodules/hypothesis-client-annotator-fork: `git submodule update --init` it before `build`.",
+  "//": "The Annotator, a hard fork of elias-sundqvist/obsidian-annotator (NOTICE.md): the Obsidian plugin, built with esbuild into dist/.",
   "root": "packages/annotator/plugin",
   "sourceRoot": "packages/annotator/plugin/src",
   "projectType": "application",
-  "tags": ["obsidian"],
+  "tags": ["annotator"],
   "targets": {
-    "install": {
-      "//": "Upstream's dependencies, with npm. Upstream ignores its lockfile, so this resolves afresh.",
-      "executor": "nx:run-commands",
-      "options": { "command": "npm install", "cwd": "{projectRoot}" }
-    },
     "build": {
-      "//": "Upstream's `npm run build`: builds the Hypothesis client from the submodule into resources/, then bundles main.js.",
+      "//": "dist/: main.js and manifest.json, as Obsidian loads a plugin (scripts/build.mjs).",
       "executor": "nx:run-commands",
-      "dependsOn": ["install"],
-      "options": { "command": "npm run build", "cwd": "{projectRoot}" }
+      "cache": true,
+      "inputs": ["production", "^production"],
+      "outputs": ["{projectRoot}/dist"],
+      "options": { "command": "pnpm run build", "cwd": "{projectRoot}" }
     },
-    "test": {
+    "dev": {
+      "//": "Rebuilds dist/ on every change, unminified, with inline source maps.",
       "executor": "nx:run-commands",
-      "dependsOn": ["install"],
-      "options": { "command": "npm test", "cwd": "{projectRoot}" }
+      "continuous": true,
+      "options": { "command": "pnpm run dev", "cwd": "{projectRoot}" }
     },
-    "lint": {
+    "typecheck": {
       "executor": "nx:run-commands",
-      "dependsOn": ["install"],
-      "options": { "command": "npm run lint", "cwd": "{projectRoot}" }
+      "options": { "command": "pnpm run typecheck", "cwd": "{projectRoot}" }
+    },
+    "install-in-vault": {
+      "//": "Run by hand, never by a build: copies dist/ into content/.obsidian/plugins/obsidian-annotator, which git ignores, keeping the plugin's settings (data.json). `--vault=<path>` installs into another vault (scripts/install-in-vault.mjs).",
+      "executor": "nx:run-commands",
+      "dependsOn": ["build"],
+      "options": { "command": "pnpm run install-in-vault", "cwd": "{projectRoot}" }
     }
   }
 }

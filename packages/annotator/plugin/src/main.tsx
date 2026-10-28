@@ -72,7 +72,7 @@ export default class AnnotatorPlugin extends Plugin implements IHasAnnotatorSett
     }
 
     async loadResources() {
-        await loadResourcesZip(jszip.loadAsync(stringEncodedResourcesFolder));
+        await loadResourcesZip(jszip.loadAsync(stringEncodedResourcesFolder, { base64: true }));
         if (this.settings.annotateTvUrl && Platform.isDesktop) {
             try {
                 const response = await fetchUrl(this.settings.annotateTvUrl);
@@ -334,14 +334,16 @@ export default class AnnotatorPlugin extends Plugin implements IHasAnnotatorSett
 
                 setViewState(next) {
                     return function (state: ViewState, ...rest: unknown[]) {
+                        // Obsidian types a view's state as unknown values; a Markdown view's `file` is its path.
+                        const filePath = typeof state.state?.file === 'string' ? state.state.file : undefined;
                         if (
                             self._loaded &&
                             state.type === 'markdown' &&
-                            state.state?.file &&
-                            self.pdfAnnotatorFileModes[this.id || state.state.file] !== 'markdown' &&
+                            filePath &&
+                            self.pdfAnnotatorFileModes[this.id || filePath] !== 'markdown' &&
                             self.settings.annotationMarkdownSettings.annotationModeByDefault === true
                         ) {
-                            const file = self.app.vault.getAbstractFileByPath(state.state.file);
+                            const file = self.app.vault.getAbstractFileByPath(filePath);
 
                             if (file instanceof TFile && self.getPropertyValue(ANNOTATION_TARGET_PROPERTY, file)) {
                                 const newState = {
@@ -349,7 +351,7 @@ export default class AnnotatorPlugin extends Plugin implements IHasAnnotatorSett
                                     type: VIEW_TYPE_PDF_ANNOTATOR
                                 };
 
-                                self.pdfAnnotatorFileModes[state.state.file] = VIEW_TYPE_PDF_ANNOTATOR;
+                                self.pdfAnnotatorFileModes[filePath] = VIEW_TYPE_PDF_ANNOTATOR;
 
                                 return next.apply(this, [newState, ...rest]);
                             }
