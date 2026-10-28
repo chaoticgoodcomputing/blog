@@ -86,7 +86,7 @@ def is_month_a_valid_number(month):
   assert((month >= 1) and (month <= 12))
 ```
 
-Cucumber is a philosophy, and code library, for writing better tests. Let's take a look at the kind of notes that a very well-organized project manager or product engineer might right during a meeting about what a product should be able to do[^2]:
+Cucumber is a philosophy, and code library, for writing better tests. Let's take a look at the kind of notes that a very well-organized project manager or product engineer might write during a meeting about what a product should be able to do[^2]:
 
 ```txt
 Feature: Guess the word  

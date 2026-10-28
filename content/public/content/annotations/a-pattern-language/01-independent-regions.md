@@ -2,8 +2,8 @@
 title: "APL: Pattern 1; Independent Regions"
 date: 2026-02-07
 tags:
-  - projects/games/the-neighborhood
   - economics/policy
+  - projects/games/the-neighborhood
   - projects/a-pattern-language
   - writing/annotations
 description: Home isn't where the heart is — it's a single node on a very, very large graph. Annotations for the "Independent Regions" pattern of *A Pattern Language*.

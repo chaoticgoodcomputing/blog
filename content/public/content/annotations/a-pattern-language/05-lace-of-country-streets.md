@@ -2,8 +2,8 @@
 title: "APL: Pattern 5; Lace of Country Streets"
 date: 2026-02-08
 tags:
-  - projects/games/the-neighborhood
   - economics/policy
+  - projects/games/the-neighborhood
   - projects/a-pattern-language
   - writing/annotations
 description: How dense is too dense? How sparse is too sparse? Annotations for A Pattern Language's proposals for the density of metro-adjacent country streets for agriculture, recreation, and preservation.

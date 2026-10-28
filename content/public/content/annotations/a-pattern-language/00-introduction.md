@@ -2,8 +2,8 @@
 title: "APL: Pattern 0; Introduction"
 date: 2026-02-05
 tags:
-  - projects/games/the-neighborhood
   - economics/policy
+  - projects/games/the-neighborhood
   - projects/a-pattern-language
   - writing/annotations
 description: Can graphs be libertarian? Authoritarian? Annotations for the introductory portion of the 1977 book A Pattern Language.

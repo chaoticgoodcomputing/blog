@@ -2,6 +2,7 @@
 title: "APL: Pattern 4; Agricultural Valleys"
 date: 2026-02-08
 tags:
+  - engineering/data
   - projects/games/the-neighborhood
   - projects/a-pattern-language
   - writing/annotations
