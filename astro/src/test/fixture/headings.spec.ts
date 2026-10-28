@@ -4,7 +4,7 @@ import { expect, test } from "../site.ts"
 // Every heading is its level's size, wherever it is: one in a note's text, the post listing's, and
 // the links panel's (src/styles/global.css). A note with sections, whose text has an h2 and an h3;
 // the home page, whose post listing is headed by an h2 and lists each post under an h3; and a note
-// with forward links and backlinks, each column headed by an h2.
+// with outlinks and backlinks, each column headed by an h2.
 const sections = "/note-page-furniture/A-note-with-sections"
 const linked = "/backlinks/linked"
 
@@ -25,7 +25,7 @@ test("an h2 is the same size, weight, font and alignment in a note, over the pos
   const note = await at(page, sections, (page) => page.locator(".prose h2"))
   expect(note.textAlign).toBe("center")
   expect(await at(page, "/", (page) => page.locator(".post-listing > h2"))).toEqual(note)
-  expect(await at(page, linked, (page) => page.locator(".forward-links h2"))).toEqual(note)
+  expect(await at(page, linked, (page) => page.locator(".outlinks h2"))).toEqual(note)
   expect(await at(page, linked, (page) => page.locator(".backlinks h2"))).toEqual(note)
 })
 

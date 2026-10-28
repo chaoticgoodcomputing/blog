@@ -1,9 +1,9 @@
 ---
-// The links panel: the pages the page's note links to, its forward links, beside the pages that
+// The links panel: the pages the page's note links to, its outlinks, beside the pages that
 // link to it, its backlinks, an embed counting as a link (src/lib/backlinks.ts). Each column keeps
 // its side when the other has nothing, and has no heading when it has nothing itself; a page with
 // neither has no panel. Where the panel is too narrow for two, the backlinks go under.
-import { backlinksOf, forwardLinksOf } from "../lib/backlinks.ts"
+import { backlinksOf, outlinksOf } from "../lib/backlinks.ts"
 import type { NoteFacts } from "../lib/notes.ts"
 import LinkList from "./LinkList.astro"
 
@@ -13,15 +13,15 @@ interface Props {
 }
 
 const { note } = Astro.props
-const forward = note ? forwardLinksOf(note) : []
+const out = note ? outlinksOf(note) : []
 const back = note ? backlinksOf(note) : []
 ---
 
 {
-  (forward.length > 0 || back.length > 0) && (
+  (out.length > 0 || back.length > 0) && (
     <div class="page-links">
       <div class="columns">
-        <LinkList heading="Forward links" links={forward} class="forward-links" />
+        <LinkList heading="Outlinks" links={out} class="outlinks" />
         <LinkList heading="Backlinks" links={back} class="backlinks" />
       </div>
     </div>
@@ -40,7 +40,7 @@ const back = note ? backlinksOf(note) : []
     gap: 1.5rem 2rem;
   }
 
-  .columns > :global(.forward-links) {
+  .columns > :global(.outlinks) {
     grid-column: 1;
   }
 
@@ -53,7 +53,7 @@ const back = note ? backlinksOf(note) : []
       grid-template-columns: minmax(0, 1fr);
     }
 
-    .columns > :global(.forward-links),
+    .columns > :global(.outlinks),
     .columns > :global(.backlinks) {
       grid-column: 1;
     }

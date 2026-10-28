@@ -3,7 +3,7 @@ import os from "node:os"
 import path from "node:path"
 import type { Vault } from "@chaoticgoodcomputing/obsidian-markdown"
 import { afterAll, beforeAll, expect, test } from "vitest"
-import { backlinksOf, forwardLinksOf } from "../src/lib/backlinks.ts"
+import { backlinksOf, outlinksOf } from "../src/lib/backlinks.ts"
 import { indexNotes, type NoteIndex, type Unpublished } from "../src/lib/notes.ts"
 import { openVault } from "../src/lib/vault.ts"
 
@@ -49,18 +49,18 @@ const backlinks = (note: string, treatment: "omit" | "mark") =>
 test("a note's backlinks are the pages that link to or embed it, once each, newest first by date, then the undated", () => {
   // A page's summary is its description, else its first paragraph: none for one that only embeds.
   expect(backlinks("target", "omit")).toEqual([
-    { title: "Old", url: "/old", description: "See target.", isPrivate: false },
-    { title: "New", url: "/new", description: "The newer one.", isPrivate: false },
+    { title: "Old", url: "/old", date: new Date("2025-01-01"), description: "See target.", isPrivate: false },
+    { title: "New", url: "/new", date: new Date("2024-06-01"), description: "The newer one.", isPrivate: false },
     { title: "Embeds", url: "/embeds", isPrivate: false },
   ])
 })
 
 test("marked, a private page, under a private tag or a tag under one, is listed after every public one", () => {
   expect(backlinks("target", "mark")).toEqual([
-    { title: "Old", url: "/old", description: "See target.", isPrivate: false },
-    { title: "New", url: "/new", description: "The newer one.", isPrivate: false },
+    { title: "Old", url: "/old", date: new Date("2025-01-01"), description: "See target.", isPrivate: false },
+    { title: "New", url: "/new", date: new Date("2024-06-01"), description: "The newer one.", isPrivate: false },
     { title: "Embeds", url: "/embeds", isPrivate: false },
-    { title: "Secret", url: "/secret", isPrivate: true },
+    { title: "Secret", url: "/secret", date: new Date("2026-09-01"), isPrivate: true },
     { title: "Work", url: "/work", isPrivate: true },
   ])
 })
@@ -69,28 +69,28 @@ test("a note nothing links to has no backlinks", () => {
   expect(backlinks("lonely", "mark")).toEqual([])
 })
 
-const forwardLinks = (note: string, treatment: "omit" | "mark") =>
-  forwardLinksOf(index.byId.get(note)!, { treatment, vault, index })
+const outlinks = (note: string, treatment: "omit" | "mark") =>
+  outlinksOf(index.byId.get(note)!, { treatment, vault, index })
 
-test("a note's forward links are the pages it links to or embeds, once each, newest first by date, then the undated", () => {
+test("a note's outlinks are the pages it links to or embeds, once each, newest first by date, then the undated", () => {
   // Not itself, a drawing, which has no page, or a link to no note. Not in the order the note links
   // to them: Embeds, New, then Old.
-  expect(forwardLinks("out", "omit")).toEqual([
-    { title: "Old", url: "/old", description: "See target.", isPrivate: false },
-    { title: "New", url: "/new", description: "The newer one.", isPrivate: false },
+  expect(outlinks("out", "omit")).toEqual([
+    { title: "Old", url: "/old", date: new Date("2025-01-01"), description: "See target.", isPrivate: false },
+    { title: "New", url: "/new", date: new Date("2024-06-01"), description: "The newer one.", isPrivate: false },
     { title: "Embeds", url: "/embeds", isPrivate: false },
   ])
 })
 
 test("marked, a private page a note links to is listed after every public one", () => {
-  expect(forwardLinks("out", "mark")).toEqual([
-    { title: "Old", url: "/old", description: "See target.", isPrivate: false },
-    { title: "New", url: "/new", description: "The newer one.", isPrivate: false },
+  expect(outlinks("out", "mark")).toEqual([
+    { title: "Old", url: "/old", date: new Date("2025-01-01"), description: "See target.", isPrivate: false },
+    { title: "New", url: "/new", date: new Date("2024-06-01"), description: "The newer one.", isPrivate: false },
     { title: "Embeds", url: "/embeds", isPrivate: false },
-    { title: "Secret", url: "/secret", isPrivate: true },
+    { title: "Secret", url: "/secret", date: new Date("2026-09-01"), isPrivate: true },
   ])
 })
 
-test("a note that links nowhere has no forward links", () => {
-  expect(forwardLinks("target", "mark")).toEqual([])
+test("a note that links nowhere has no outlinks", () => {
+  expect(outlinks("target", "mark")).toEqual([])
 })

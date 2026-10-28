@@ -1,4 +1,4 @@
-// A note's backlinks, the pages that link to it, and its forward links, the pages it links to, an
+// A note's backlinks, the pages that link to it, and its outlinks, the pages it links to, an
 // embed counting as a link, as the vault's metadata cache has them. Which of them a reader is shown,
 // and in what order, is the site's: a private page is left out or marked, as site configuration's
 // `private.backlinks` says, for both.
@@ -13,6 +13,8 @@ import { getVault } from "./vault.ts"
 export interface Backlink {
   title: string
   url: string
+  /** Its date, which the panel shows under its title, before its summary. Undated pages have none. */
+  date?: Date | undefined
   /** Its summary (its description, else its first paragraph), which the panel shows under its title. */
   description?: string | undefined
   /** Whether it is a private page, which the panel marks. */
@@ -41,7 +43,7 @@ export function backlinksOf(note: NoteFacts, options: BacklinkOptions = {}): Bac
  * The pages a note links to or embeds, each once, in the panel's order (`listed`). Itself, and a
  * note it links to that has no address of its own, such as a drawing, are not among them.
  */
-export function forwardLinksOf(note: NoteFacts, options: BacklinkOptions = {}): Backlink[] {
+export function outlinksOf(note: NoteFacts, options: BacklinkOptions = {}): Backlink[] {
   const vault = options.vault ?? getVault()
   const files = Object.keys(vault.metadataCache.resolvedLinks[note.file.path] ?? {})
   return listed(files.filter((file) => file !== note.file.path), options)
@@ -67,6 +69,7 @@ function listed(files: string[], { treatment = site.private.backlinks, index }: 
 const linkTo = (note: NoteFacts, url: string): Backlink => ({
   title: note.title,
   url,
+  date: note.date,
   description: note.summary,
   isPrivate: note.isPrivate,
 })

@@ -1,9 +1,11 @@
 ---
 // One column of the links panel (./PageLinks.astro), under its heading: pages, each by its title,
-// with its description under it if it has one. A private page is listed with a lock, where
-// `site.private.backlinks` lists one at all (src/lib/backlinks.ts).
+// with its date and its description under it, where it has them, as the post listing sets them. A
+// private page is listed with a lock, where `site.private.backlinks` lists one at all
+// (src/lib/backlinks.ts).
 import { Icon } from "astro-icon/components"
 import type { Backlink } from "../lib/backlinks.ts"
+import FormattedDate from "./FormattedDate.astro"
 
 interface Props {
   heading: string
@@ -35,7 +37,12 @@ const lock = "mdi:lock"
               </span>
               <span>{link.title}</span>
             </a>
-            {link.description && <p class="description">{link.description}</p>}
+            {(link.date || link.description) && (
+              <p class="meta">
+                {link.date && <FormattedDate date={link.date} />}
+                {link.description && <span class="description">{`${link.date ? " — " : ""}${link.description}`}</span>}
+              </p>
+            )}
           </li>
         ))}
       </ul>
@@ -79,7 +86,7 @@ const lock = "mdi:lock"
   }
 
   /* Under the title, in line with it past the mark: the mark's box and the gap after it. */
-  .description {
+  .meta {
     margin: 0;
     padding-left: 1.5rem;
     color: var(--darkgray);

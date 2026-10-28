@@ -294,12 +294,12 @@ _Avoid_: sidebar, sheet
 **Backlinks**:
 The notes that link to a note, an embed counting as a link.
 
-**Forward links**:
+**Outlinks**:
 The notes a note links to, an embed counting as a link.
-_Avoid_: outgoing links, outlinks
+_Avoid_: outgoing links, forward links
 
 **Links panel**:
-Under a note, its forward links beside its backlinks, each with its description.
+Under a note, its outlinks beside its backlinks, each with its date and description.
 _Avoid_: backlinks panel (it was only that once)
 
 **Post listing**:
