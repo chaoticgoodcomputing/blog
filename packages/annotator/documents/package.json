@@ -4,13 +4,15 @@
   "private": true,
   "type": "module",
   "description": "Where an annotated document's bytes come from: a saved copy, the web, or a file the user supplies, each checked to be a PDF. Storage and fetching are passed in. No Obsidian, DOM or Node in it.",
+  "//license": "Licensed on its own under the AGPL-3.0, in its own copy: LICENSE.md.",
   "license": "AGPL-3.0-only",
   "//exports": "Source only: no build and no dist. Whoever uses it compiles it, and Node strips its types for the tests.",
   "exports": {
     ".": "./src/index.ts"
   },
   "files": [
-    "src"
+    "src",
+    "LICENSE.md"
   ],
   "sideEffects": false,
   "scripts": {
