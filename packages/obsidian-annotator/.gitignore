@@ -1,0 +1,18 @@
+# Intellij
+*.iml
+.idea
+
+# npm
+node_modules
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# build
+main.js
+*.js.map
+
+# obsidian
+data.json
+.vault_plugin_dir
+resources/cdn.hypothes.is/hypothesis/build

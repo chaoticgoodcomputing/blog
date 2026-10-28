@@ -1,0 +1,18 @@
+[
+    {
+        "id": "__world__",
+        "groupid": null,
+        "name": "Only Me",
+        "organization": null,
+        "public": false,
+        "scoped": false,
+        "type": "private",
+        "scopes": {
+            "enforced": false,
+            "uri_patterns": []
+        },
+        "links": {
+            "html": "app://obsidian.md/"
+        }
+    }
+]
