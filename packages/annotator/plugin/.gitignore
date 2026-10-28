@@ -5,3 +5,7 @@ dist
 
 # Obsidian's: a plugin's settings, should a vault be opened here
 data.json
+
+# The end-to-end suite's output (playwright.config.ts)
+test-results
+playwright-report

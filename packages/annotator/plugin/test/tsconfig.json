@@ -1,0 +1,6 @@
+{
+  "//": "The unit tests and the end-to-end suite, with Node's types; the source, without them (../tsconfig.json).",
+  "extends": "../tsconfig.json",
+  "compilerOptions": { "types": ["node"] },
+  "include": [".", "../e2e", "../playwright.config.ts"]
+}

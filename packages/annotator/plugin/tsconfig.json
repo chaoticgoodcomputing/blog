@@ -1,18 +1,15 @@
 {
-  "//": "Type-checking only: esbuild compiles (scripts/build.mjs). baseUrl is upstream's, whose sources import each other by bare name ('settings', 'utils').",
+  "//": "Type-checking only: esbuild compiles (scripts/build.mjs). Sources import each other with their .ts extension, as Node's type stripping needs for the tests.",
   "compilerOptions": {
-    "baseUrl": "src",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "target": "ES2021",
-    "lib": ["DOM", "DOM.Iterable", "ES2021"],
-    "jsx": "react",
-    "allowJs": true,
-    "noImplicitAny": false,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "target": "ES2022",
+    "lib": ["DOM", "DOM.Iterable", "ES2023"],
+    "types": [],
+    "strict": true,
+    "allowImportingTsExtensions": true,
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"]
+  "include": ["src", "frames"]
 }

@@ -1,40 +1,29 @@
 {
   "name": "@chaoticgoodcomputing/obsidian-annotator",
-  "version": "0.2.11",
+  "version": "0.3.0",
   "private": true,
-  "description": "A hard fork of Obsidian Annotator (elias-sundqvist/obsidian-annotator): annotate PDFs in Obsidian with Hypothesis, keeping the annotations in a note.",
+  "description": "A hard fork of Obsidian Annotator (elias-sundqvist/obsidian-annotator): annotate PDFs in Obsidian with Hypothesis's own client, keeping the annotations in a note.",
   "license": "AGPL-3.0-only",
   "type": "module",
-  "//scripts": "Nx runs these (project.json). build.mjs bundles src/main.tsx with esbuild into dist/, beside manifest.json; install-in-vault.mjs copies dist/ into a vault's plugin folder.",
+  "//scripts": "Nx runs these (project.json). build.mjs bundles the plugin (src/) and its pages (frames/) with esbuild into dist/, with the Hypothesis client and PDF.js files the pages load; install-in-vault.mjs copies dist/ into a vault's plugin folder.",
   "scripts": {
     "build": "node scripts/build.mjs",
     "dev": "node scripts/build.mjs --watch",
-    "typecheck": "tsc -p .",
-    "install-in-vault": "node scripts/install-in-vault.mjs"
+    "typecheck": "tsc -p . && tsc -p test",
+    "install-in-vault": "node scripts/install-in-vault.mjs",
+    "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning --test --test-reporter=spec \"test/*.test.ts\""
   },
   "dependencies": {
-    "cheerio": "^1.0.0-rc.10",
-    "core-js": "^3.17.2",
-    "epubjs": "^0.3.93",
-    "he": "^1.1.1",
+    "@chaoticgoodcomputing/annotator-format": "workspace:*",
     "hypothesis": "1.1769.0",
-    "jszip": "^3.7.1",
-    "lodash": "^4.17.4",
-    "mime": "^3.0.0",
     "monkey-around": "^2.2.0",
-    "pdfjs-dist": "5.4.530",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-offline-iframe": "^0.5.0",
-    "striptags": "^3.2.0"
+    "pdfjs-dist": "5.4.530"
   },
   "devDependencies": {
     "@codemirror/state": "6.7.6",
     "@codemirror/view": "6.43.13",
-    "@types/mime": "^2.0.3",
+    "@playwright/test": "1.63.0",
     "@types/node": "^22.15.0",
-    "@types/react": "^17.0.4",
-    "@types/react-dom": "^17.0.3",
     "esbuild": "0.28.2",
     "obsidian": "1.14.4",
     "typescript": "^5.9.3"

@@ -1,88 +1,109 @@
-// Builds the plugin into dist/: src/main.tsx bundled by esbuild as main.js, as Obsidian loads a
-// plugin, beside a copy of manifest.json. `--watch` rebuilds on every change.
+// Builds the plugin into dist/, laid out as its folder in a vault is:
 //
-// `import x from "./<folder>!zipStringEncoded"` imports a folder of the package as a zip, encoded as
-// base64: how the plugin carries the files it serves its frames (src/resourcesFolder.tsx). It
-// replaces upstream's rollup plugin of the same name, which encoded the zip as a binary string.
+//   main.js, manifest.json     the plugin, as Obsidian loads one (src/main.ts, bundled)
+//   frames/viewer.html, .js    the viewer page: the PDF, with the Hypothesis client in it (frames/)
+//   frames/sidebar.html, .js   the sidebar page, with the fake service's fetch
+//   frames/hypothesis/build/   the Hypothesis client, as the `hypothesis` package publishes it
+//   frames/pdfjs/              PDF.js's worker, viewer styles, and the data it loads (CMaps, fonts, …)
+//   LICENSE.TXT, NOTICE.md,    the plugin's license, and the notices of the work in it
+//   licenses/
+//
+// Obsidian serves files of a plugin's folder by resource URL, which is how the plugin opens its
+// pages (src/view.ts). `--watch` rebuilds on every change, unminified, with source maps.
 
 import fs from "node:fs"
 import path from "node:path"
+import { createRequire } from "node:module"
 import { fileURLToPath } from "node:url"
 import esbuild from "esbuild"
-import JSZip from "jszip"
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)))
 const dist = path.join(root, "dist")
+const frames = path.join(dist, "frames")
 const watch = process.argv.includes("--watch")
+const require = createRequire(path.join(root, "package.json"))
+
+/** A package's folder, as this package resolves it. */
+const packageDir = (name) => path.dirname(require.resolve(`${name}/package.json`))
 
 // The modules Obsidian provides to a plugin at run time, which are never bundled.
 const provided = ["obsidian", "electron", "@codemirror/*", "@lezer/*"]
 
-const ZIP_SUFFIX = "!zipStringEncoded"
-const FIXED_DATE = new Date("2000-01-01T00:00:00Z")
-
-/** Every file under `folder`, as paths relative to it, with `/` between their parts. */
-function filesUnder(folder) {
-  return fs
-    .readdirSync(folder, { recursive: true, withFileTypes: true })
-    .filter((entry) => entry.isFile())
-    .map((entry) => path.relative(folder, path.join(entry.parentPath, entry.name)).split(path.sep).join("/"))
+/** Copies files and folders into dist/, as [from, to] pairs, `to` relative to dist/. */
+function copy(pairs) {
+  for (const [from, to] of pairs) {
+    const target = path.join(dist, to)
+    fs.mkdirSync(path.dirname(target), { recursive: true })
+    fs.cpSync(from, target, { recursive: true })
+  }
 }
 
-const zippedFolders = {
-  name: "zip-string-encoded",
-  setup(build) {
-    build.onResolve({ filter: /!zipStringEncoded$/ }, (args) => ({
-      path: path.resolve(root, args.path.slice(0, -ZIP_SUFFIX.length)),
-      namespace: "zipped-folder",
-    }))
-    build.onLoad({ filter: /.*/, namespace: "zipped-folder" }, async (args) => {
-      const zip = new JSZip()
-      const files = filesUnder(args.path).sort()
-      // A fixed date for every entry, so that the same files make the same zip, and the same build.
-      for (const file of files) zip.file(file, fs.readFileSync(path.join(args.path, file)), { date: FIXED_DATE, createFolders: false })
-      const base64 = await zip.generateAsync({ type: "base64", compression: "DEFLATE", compressionOptions: { level: 9 } })
-      return {
-        contents: `export default ${JSON.stringify(base64)}`,
-        loader: "js",
-        watchFiles: files.map((file) => path.join(args.path, file)),
-        watchDirs: [args.path],
-      }
-    })
-  },
+const hypothesis = packageDir("hypothesis")
+const pdfjs = packageDir("pdfjs-dist")
+
+function copyAssets() {
+  const clientBuild = path.join(hypothesis, "build")
+  copy([
+    [path.join(root, "manifest.json"), "manifest.json"],
+    [path.join(root, "LICENSE.TXT"), "LICENSE.TXT"],
+    [path.join(root, "NOTICE.md"), "NOTICE.md"],
+    [path.join(root, "licenses"), "licenses"],
+    ...["viewer.html", "viewer.css", "sidebar.html"].map((page) => [path.join(root, "frames", page), `frames/${page}`]),
+    // The client, with its license; not its source maps, which are most of its size.
+    ...fs
+      .readdirSync(clientBuild, { recursive: true })
+      .filter((file) => !file.endsWith(".map") && fs.statSync(path.join(clientBuild, file)).isFile())
+      .map((file) => [path.join(clientBuild, file), `frames/hypothesis/build/${file}`]),
+    [path.join(hypothesis, "LICENSE"), "frames/hypothesis/LICENSE"],
+    // PDF.js: the worker, the viewer's styles and images, and the data a document may need. Each
+    // folder carries its own licenses.
+    [path.join(pdfjs, "build", "pdf.worker.min.mjs"), "frames/pdfjs/build/pdf.worker.min.mjs"],
+    [path.join(pdfjs, "web", "pdf_viewer.css"), "frames/pdfjs/web/pdf_viewer.css"],
+    [path.join(pdfjs, "web", "images"), "frames/pdfjs/web/images"],
+    ...["cmaps", "standard_fonts", "wasm", "iccs"].map((folder) => [path.join(pdfjs, folder), `frames/pdfjs/${folder}`]),
+    [path.join(pdfjs, "LICENSE"), "frames/pdfjs/LICENSE"],
+  ])
 }
 
-const copyManifest = {
-  name: "copy-manifest",
-  setup(build) {
-    build.onEnd(() => {
-      fs.mkdirSync(dist, { recursive: true })
-      fs.copyFileSync(path.join(root, "manifest.json"), path.join(dist, "manifest.json"))
-    })
-  },
-}
-
-const options = {
+const shared = {
   absWorkingDir: root,
-  entryPoints: ["src/main.tsx"],
-  outfile: path.join(dist, "main.js"),
   bundle: true,
-  format: "cjs",
-  platform: "browser",
-  target: "es2021",
-  external: provided,
-  define: { "process.env.NODE_ENV": JSON.stringify(watch ? "development" : "production") },
   minify: !watch,
   sourcemap: watch ? "inline" : false,
   legalComments: "eof",
   logLevel: "info",
-  plugins: [zippedFolders, copyManifest],
+  define: { "process.env.NODE_ENV": JSON.stringify(watch ? "development" : "production") },
 }
 
+const builds = [
+  // The plugin, as Obsidian loads one: CommonJS, Obsidian's own modules left out.
+  {
+    ...shared,
+    entryPoints: ["src/main.ts"],
+    outfile: path.join(dist, "main.js"),
+    format: "cjs",
+    platform: "browser",
+    target: "es2022",
+    external: provided,
+    plugins: [{ name: "copy-assets", setup: (build) => build.onEnd(copyAssets) }],
+  },
+  // The pages' scripts, loaded as classic scripts in Obsidian's Chromium.
+  {
+    ...shared,
+    entryPoints: { viewer: "frames/viewer.ts", sidebar: "frames/sidebar.ts" },
+    // Bundling drops PDF.js's license comments, which esbuild doesn't know to keep; its license is
+    // copied beside the page (frames/pdfjs/LICENSE), and named here.
+    banner: { js: "/*! The Annotator's viewer page. Includes PDF.js (pdfjs-dist), Apache-2.0, (c) Mozilla Foundation: see pdfjs/LICENSE. */" },
+    outdir: frames,
+    format: "iife",
+    platform: "browser",
+    target: "chrome120",
+  },
+]
+
 if (watch) {
-  const context = await esbuild.context(options)
-  await context.watch()
+  for (const options of builds) await (await esbuild.context(options)).watch()
 } else {
   fs.rmSync(dist, { recursive: true, force: true })
-  await esbuild.build(options)
+  await Promise.all(builds.map((options) => esbuild.build(options)))
 }

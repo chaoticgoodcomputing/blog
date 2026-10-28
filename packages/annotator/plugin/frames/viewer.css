@@ -1,0 +1,33 @@
+/* The viewer page: the PDF fills the frame, and scrolls in #viewerContainer, which PDF.js's
+   PDFViewer requires to be absolutely positioned. Colours follow the plugin's theme when it
+   passes them; until then, PDF.js's own. */
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--annotator-background, #525659);
+}
+
+#outerContainer {
+  position: absolute;
+  inset: 0;
+}
+
+#viewerContainer {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+}
+
+.annotator-error {
+  position: relative;
+  z-index: 1;
+  margin: 1em;
+  padding: 0.75em 1em;
+  border-radius: 4px;
+  background: #fff;
+  color: #b00020;
+  font: 14px/1.4 system-ui, sans-serif;
+}

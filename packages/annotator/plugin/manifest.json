@@ -1,10 +1,10 @@
 {
 	"id": "obsidian-annotator",
 	"name": "Annotator",
-	"version": "0.2.11",
-	"minAppVersion": "1.0.3",
-	"description": "This is a sample plugin for Obsidian. It allows you to open and annotate PDF and EPUB files.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md/about",
-	"isDesktopOnly": false
+	"version": "0.3.0",
+	"minAppVersion": "1.1.0",
+	"description": "Annotate PDFs with Hypothesis, keeping every annotation in a note. A hard fork of Elias Sundqvist's Obsidian Annotator.",
+	"author": "Chaotic Good Computing, from Obsidian Annotator by Elias Sundqvist and contributors",
+	"authorUrl": "https://github.com/chaoticgoodcomputing/blog",
+	"isDesktopOnly": true
 }

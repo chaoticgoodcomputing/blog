@@ -5,31 +5,71 @@
   "root": "packages/annotator/plugin",
   "sourceRoot": "packages/annotator/plugin/src",
   "projectType": "application",
-  "tags": ["annotator"],
+  "tags": [
+    "annotator"
+  ],
   "targets": {
     "build": {
       "//": "dist/: main.js and manifest.json, as Obsidian loads a plugin (scripts/build.mjs).",
       "executor": "nx:run-commands",
       "cache": true,
-      "inputs": ["production", "^production"],
-      "outputs": ["{projectRoot}/dist"],
-      "options": { "command": "pnpm run build", "cwd": "{projectRoot}" }
+      "inputs": [
+        "production",
+        "^production"
+      ],
+      "outputs": [
+        "{projectRoot}/dist"
+      ],
+      "options": {
+        "command": "pnpm run build",
+        "cwd": "{projectRoot}"
+      }
     },
     "dev": {
       "//": "Rebuilds dist/ on every change, unminified, with inline source maps.",
       "executor": "nx:run-commands",
       "continuous": true,
-      "options": { "command": "pnpm run dev", "cwd": "{projectRoot}" }
+      "options": {
+        "command": "pnpm run dev",
+        "cwd": "{projectRoot}"
+      }
     },
     "typecheck": {
       "executor": "nx:run-commands",
-      "options": { "command": "pnpm run typecheck", "cwd": "{projectRoot}" }
+      "options": {
+        "command": "pnpm run typecheck",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test": {
+      "//": "The fake service, on Node's test runner (test/).",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm run test",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "e2e": {
+      "//": "Hypothesis's own client in the built pages, in Chromium, against the fake service, with a harness page in Obsidian's place (e2e/, playwright.config.ts).",
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        "build"
+      ],
+      "options": {
+        "command": "pnpm exec playwright test",
+        "cwd": "{projectRoot}"
+      }
     },
     "install-in-vault": {
       "//": "Run by hand, never by a build: copies dist/ into content/.obsidian/plugins/obsidian-annotator, which git ignores, keeping the plugin's settings (data.json). `--vault=<path>` installs into another vault (scripts/install-in-vault.mjs).",
       "executor": "nx:run-commands",
-      "dependsOn": ["build"],
-      "options": { "command": "pnpm run install-in-vault", "cwd": "{projectRoot}" }
+      "dependsOn": [
+        "build"
+      ],
+      "options": {
+        "command": "pnpm run install-in-vault",
+        "cwd": "{projectRoot}"
+      }
     }
   }
 }

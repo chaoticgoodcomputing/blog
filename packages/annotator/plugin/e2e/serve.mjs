@@ -1,0 +1,65 @@
+// The end-to-end suite's server: the built plugin's pages (dist/frames, from `build`) under
+// /frames/, the harness page that stands in for Obsidian at /, and the fixture PDF.
+//
+//   node e2e/serve.mjs [port]
+
+import fs from "node:fs"
+import http from "node:http"
+import path from "node:path"
+import { fileURLToPath } from "node:url"
+import esbuild from "esbuild"
+import { fixturePdf } from "./fixture-pdf.mjs"
+
+const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)))
+const frames = path.join(root, "dist", "frames")
+const port = Number(process.argv[2] ?? 4317)
+
+if (!fs.existsSync(path.join(frames, "viewer.html"))) {
+  console.error("No build in dist/: build the plugin first.")
+  process.exit(1)
+}
+
+const host = await esbuild.build({
+  absWorkingDir: root,
+  entryPoints: ["e2e/harness/host.ts"],
+  bundle: true,
+  format: "iife",
+  target: "chrome120",
+  write: false,
+})
+
+const TYPES = {
+  ".html": "text/html; charset=utf-8",
+  ".js": "text/javascript",
+  ".mjs": "text/javascript",
+  ".css": "text/css",
+  ".json": "application/json",
+  ".svg": "image/svg+xml",
+  ".wasm": "application/wasm",
+}
+
+const routes = {
+  "/": ["text/html; charset=utf-8", '<!doctype html><meta charset="utf-8"><title>Harness</title><style>html,body{margin:0;height:100%}iframe{border:0;width:100%;height:100%}</style><body><script src="/host.js"></script></body>'],
+  "/host.js": ["text/javascript", host.outputFiles[0].contents],
+  "/fixture.pdf": ["application/pdf", fixturePdf()],
+}
+
+http
+  .createServer((request, response) => {
+    const { pathname } = new URL(request.url, "http://localhost")
+    const route = routes[pathname]
+    if (route) {
+      response.writeHead(200, { "Content-Type": route[0] }).end(route[1])
+      return
+    }
+    if (pathname.startsWith("/frames/")) {
+      const file = path.join(frames, decodeURIComponent(pathname.slice("/frames/".length)))
+      if (file.startsWith(frames) && fs.existsSync(file) && fs.statSync(file).isFile()) {
+        response.writeHead(200, { "Content-Type": TYPES[path.extname(file)] ?? "application/octet-stream" })
+        fs.createReadStream(file).pipe(response)
+        return
+      }
+    }
+    response.writeHead(404).end()
+  })
+  .listen(port, () => console.log(`Serving the end-to-end harness on http://localhost:${port}/`))

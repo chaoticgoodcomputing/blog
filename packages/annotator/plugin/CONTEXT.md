@@ -59,16 +59,12 @@ The Hypothesis client as the Annotator runs it, beside the annotated document, w
 annotations are made and read.
 _Avoid_: panel, Hypothesis
 
-### Working offline
+### Running the client
 
-**Saved resource**:
-A page, script or response of the Hypothesis services, or a library they serve, saved with the
-Annotator so it runs without them. Each keeps its own license.
-_Avoid_: asset, vendored file, cache
-
-**Modified resource**:
-A saved resource that upstream changed from the copy it saved, as `Modified Resources.md` lists.
-A change to one has to be made again whenever it is saved afresh.
+**Viewer page**:
+The page annotation mode shows: the annotated document, drawn by PDF.js, with the Hypothesis client
+loaded into it. Its sidebar is a page of its own inside it.
+_Avoid_: frame, viewer (PDF.js's), Via (upstream's)
 
 **Fake service**:
 The Annotator's stand-in for the Hypothesis API, which answers the sidebar from the annotation note
