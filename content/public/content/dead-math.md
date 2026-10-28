@@ -137,7 +137,7 @@ Feature: Administering Roles
     Then I should be able to appoint "Terence Traffic" to the new role
 ```
 
-*Terrence Traffic*.
+*Terence Traffic*.
 
 God, they do it right at Whitehall.
 
