@@ -1,6 +1,7 @@
 // Builds the plugin into dist/, laid out as its folder in a vault is:
 //
-//   main.js, manifest.json     the plugin, as Obsidian loads one (src/main.ts, bundled)
+//   main.js, manifest.json,    the plugin, as Obsidian loads one (src/main.ts, bundled), and
+//   styles.css                 its styles in Obsidian
 //   frames/viewer.html, .js    the viewer page: the PDF, with the Hypothesis client in it (frames/)
 //   frames/sidebar.html, .js   the sidebar page, with the fake service's fetch
 //   frames/hypothesis/build/   the Hypothesis client, as the `hypothesis` package publishes it
@@ -45,6 +46,7 @@ function copyAssets() {
   const clientBuild = path.join(hypothesis, "build")
   copy([
     [path.join(root, "manifest.json"), "manifest.json"],
+    [path.join(root, "styles.css"), "styles.css"],
     [path.join(root, "LICENSE.TXT"), "LICENSE.TXT"],
     [path.join(root, "NOTICE.md"), "NOTICE.md"],
     [path.join(root, "licenses"), "licenses"],

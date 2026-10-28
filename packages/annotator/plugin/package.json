@@ -14,6 +14,7 @@
     "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning --test --test-reporter=spec \"test/*.test.ts\""
   },
   "dependencies": {
+    "@chaoticgoodcomputing/annotator-documents": "workspace:*",
     "@chaoticgoodcomputing/annotator-format": "workspace:*",
     "hypothesis": "1.1769.0",
     "monkey-around": "^2.2.0",

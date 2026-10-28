@@ -3,11 +3,12 @@
 // (frames/), and the end of the port the page asks over (src/protocol.ts): for the document, and for
 // the fake service, which reads and writes the note.
 
+import { DocumentUnavailable } from "@chaoticgoodcomputing/annotator-documents"
 import { FileView, type TFile, type ViewStateResult, type WorkspaceLeaf } from "obsidian"
 import type AnnotatorPlugin from "./main.ts"
 import { ANNOTATION_PARAM, CONNECT, type Reply, type Request } from "./protocol.ts"
 import { createService, type Service } from "./service.ts"
-import { addressOf, bytesOf, targetOf } from "./target.ts"
+import { addressOf, bytesOf, type Target, targetOf } from "./target.ts"
 
 /** The view's type. Upstream's, so that workspaces saved with upstream's view open in this one. */
 export const VIEW_TYPE = "pdf-annotator"
@@ -62,6 +63,12 @@ export class AnnotationView extends FileView {
     this.close()
   }
 
+  /** Opens the view again, when it annotates the document at `url`: a copy of it has just been supplied. */
+  reopenFor(url: string) {
+    const target = this.file && targetOf(this.app, this.file, this.plugin.settings.customDefaultPath)
+    if (this.file && target?.kind === "url" && target.url === url) this.show(this.file)
+  }
+
   private close() {
     this.port?.close()
     this.port = undefined
@@ -106,16 +113,27 @@ export class AnnotationView extends FileView {
     this.frame = frame
   }
 
-  private async answer(port: MessagePort, request: Request, target: NonNullable<ReturnType<typeof targetOf>>, service: Service) {
+  /** Says above the document that the web won't give it, with a way to supply it by hand. */
+  private offerToSupply(error: DocumentUnavailable) {
+    this.contentEl.querySelector(".annotator-unavailable")?.remove()
+    const bar = createDiv({ cls: "annotator-unavailable" })
+    bar.createSpan({ text: `Annotator couldn't get this note's PDF: ${error.message}. If you have it, supply it here. ` })
+    const button = bar.createEl("button", { text: "Choose the PDF…", cls: "mod-cta" })
+    button.addEventListener("click", () => void this.plugin.supplyDocument(error.url))
+    this.contentEl.prepend(bar)
+  }
+
+  private async answer(port: MessagePort, request: Request, target: Target, service: Service) {
     try {
       if (request.kind === "document") {
-        const data = await bytesOf(this.app, target)
+        const data = await bytesOf(this.app, target, this.plugin.documentStore())
         port.postMessage({ id: request.id, ok: true, value: { data, url: addressOf(target) } } satisfies Reply, [data])
       } else {
         port.postMessage({ id: request.id, ok: true, value: await service(request.request) } satisfies Reply)
       }
     } catch (error) {
-      console.error("Annotator:", error)
+      if (error instanceof DocumentUnavailable) this.offerToSupply(error)
+      else console.error("Annotator:", error)
       port.postMessage({ id: request.id, ok: false, error: error instanceof Error ? error.message : String(error) } satisfies Reply)
     }
   }

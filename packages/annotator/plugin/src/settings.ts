@@ -9,6 +9,11 @@ export interface AnnotatorSettings {
   customDefaultPath: string
   /** The user's name, as the sidebar shows it on annotations. */
   displayName: string
+  /**
+   * Where saved copies of documents on the web are kept: a folder of the vault, or an absolute path.
+   * Empty, the plugin's own folder's `documents/`, which git and the vault's index leave alone.
+   */
+  documentFolder: string
   annotationMarkdownSettings: {
     /** Open annotation notes in annotation mode, not as Markdown. */
     annotationModeByDefault: boolean
@@ -24,6 +29,7 @@ export interface AnnotatorSettings {
 export const DEFAULT_SETTINGS: AnnotatorSettings = {
   customDefaultPath: "",
   displayName: "Me",
+  documentFolder: "",
   annotationMarkdownSettings: {
     annotationModeByDefault: true,
     includePrefix: true,
@@ -38,6 +44,7 @@ export function settingsFrom(saved: unknown): AnnotatorSettings {
   return {
     customDefaultPath: data.customDefaultPath ?? DEFAULT_SETTINGS.customDefaultPath,
     displayName: data.displayName ?? DEFAULT_SETTINGS.displayName,
+    documentFolder: data.documentFolder ?? DEFAULT_SETTINGS.documentFolder,
     annotationMarkdownSettings: { ...DEFAULT_SETTINGS.annotationMarkdownSettings, ...data.annotationMarkdownSettings },
   }
 }
@@ -71,6 +78,14 @@ export class AnnotatorSettingTab extends PluginSettingTab {
       .setName("Default path")
       .setDesc("Looked in for an annotation target that names no file of the vault: put before the target, it names one.")
       .addText((text) => text.setPlaceholder("Attachments/").setValue(settings.customDefaultPath).onChange((value) => ((settings.customDefaultPath = value), save())))
+
+    new Setting(containerEl)
+      .setName("Where documents are kept")
+      .setDesc(
+        "A PDF on the web is saved the first time it is opened, and opened from its copy after; one supplied by hand is kept here too. " +
+          "A folder of the vault, or an absolute path to one anywhere. Empty, the plugin's own folder, which the vault doesn't index.",
+      )
+      .addText((text) => text.setPlaceholder(this.plugin.defaultDocumentFolder()).setValue(settings.documentFolder).onChange((value) => ((settings.documentFolder = value.trim()), save())))
 
     containerEl.createEl("h3", { text: "How annotations are written into the note" })
     new Setting(containerEl)

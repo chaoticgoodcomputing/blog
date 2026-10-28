@@ -1,0 +1,8 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    // The tests run on Node.
+    "types": ["node"]
+  },
+  "include": ["../src/**/*.ts", "./**/*.ts"]
+}

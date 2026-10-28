@@ -158,6 +158,15 @@ importers:
         specifier: ^5.3.0
         version: 5.3.0(@types/node@22.20.4)
 
+  packages/annotator/documents:
+    devDependencies:
+      '@types/node':
+        specifier: ^22.15.0
+        version: 22.20.4
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   packages/annotator/format:
     devDependencies:
       '@types/node':
@@ -169,6 +178,9 @@ importers:
 
   packages/annotator/plugin:
     dependencies:
+      '@chaoticgoodcomputing/annotator-documents':
+        specifier: workspace:*
+        version: link:../documents
       '@chaoticgoodcomputing/annotator-format':
         specifier: workspace:*
         version: link:../format

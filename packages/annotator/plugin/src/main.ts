@@ -1,10 +1,12 @@
 // The Annotator: annotation notes opened as their annotated PDF, annotated with Hypothesis's own
 // client, every annotation kept in the note.
 
+import { NotAPdf, supplyDocument } from "@chaoticgoodcomputing/annotator-documents"
 import { around } from "monkey-around"
-import { type MarkdownPostProcessorContext, MarkdownView, parseLinktext, Plugin, TFile, type ViewState, WorkspaceLeaf } from "obsidian"
+import { type MarkdownPostProcessorContext, MarkdownView, Notice, parseLinktext, Plugin, TFile, type ViewState, WorkspaceLeaf } from "obsidian"
+import { documentStore } from "./documents.ts"
 import { type AnnotatorSettings, AnnotatorSettingTab, settingsFrom } from "./settings.ts"
-import { isAnnotationNote } from "./target.ts"
+import { isAnnotationNote, targetOf } from "./target.ts"
 import { AnnotationView, VIEW_TYPE } from "./view.ts"
 
 export default class AnnotatorPlugin extends Plugin {
@@ -35,6 +37,19 @@ export default class AnnotatorPlugin extends Plugin {
       },
     })
 
+    this.addCommand({
+      id: "supply-document",
+      name: "Supply this note's PDF from a file",
+      checkCallback: (checking) => {
+        const view = this.app.workspace.getMostRecentLeaf()?.view
+        const file = view instanceof AnnotationView || view instanceof MarkdownView ? view.file : null
+        const target = isAnnotationNote(this.app, file) ? targetOf(this.app, file, this.settings.customDefaultPath) : undefined
+        if (target?.kind !== "url") return false
+        if (!checking) void this.supplyDocument(target.url)
+        return true
+      },
+    })
+
     this.registerEvent(
       this.app.workspace.on("file-menu", (menu, file, _source, leaf) => {
         if (!(leaf?.view instanceof MarkdownView) || !isAnnotationNote(this.app, file instanceof TFile ? file : null)) return
@@ -45,6 +60,34 @@ export default class AnnotatorPlugin extends Plugin {
 
   async saveSettings() {
     await this.saveData(this.settings)
+  }
+
+  /** Where saved copies of documents are kept when the setting names nowhere: the plugin's own folder. */
+  defaultDocumentFolder() {
+    return `${this.manifest.dir}/documents`
+  }
+
+  /** The store of documents' saved copies, in the folder the settings name. */
+  documentStore() {
+    return documentStore(this.app, this.settings.documentFolder || this.defaultDocumentFolder())
+  }
+
+  /**
+   * Asks the user for a PDF to keep as the saved copy of the document at `url`, for when the web
+   * won't give it. Reopens the views annotating it. Resolves to whether one was kept.
+   */
+  async supplyDocument(url: string): Promise<boolean> {
+    const file = await chooseFile(".pdf,application/pdf")
+    if (!file) return false
+    try {
+      await supplyDocument(url, new Uint8Array(await file.arrayBuffer()), this.documentStore())
+    } catch (error) {
+      new Notice(error instanceof NotAPdf ? `${file.name} is not a PDF.` : `Annotator could not keep ${file.name}: ${error}`)
+      return false
+    }
+    new Notice(`Annotator will open ${file.name} for ${url}.`)
+    for (const leaf of this.app.workspace.getLeavesOfType(VIEW_TYPE)) (leaf.view as AnnotationView).reopenFor(url)
+    return true
   }
 
   /** How a block's view is written, from the settings. */
@@ -119,3 +162,15 @@ export default class AnnotatorPlugin extends Plugin {
 
 /** A leaf's key in markdownLeaves: its id, where Obsidian gives one, else the note's path. */
 const leafKey = (leaf: WorkspaceLeaf, path: string) => (leaf as { id?: string }).id ?? path
+
+/** Asks the user for a file, as a file input does; resolves to none if they cancel. */
+function chooseFile(accept: string): Promise<File | undefined> {
+  return new Promise((resolve) => {
+    const input = document.createElement("input")
+    input.type = "file"
+    input.accept = accept
+    input.addEventListener("change", () => resolve(input.files?.[0]), { once: true })
+    input.addEventListener("cancel", () => resolve(undefined), { once: true })
+    input.click()
+  })
+}

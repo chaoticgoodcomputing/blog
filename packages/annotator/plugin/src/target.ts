@@ -1,6 +1,8 @@
 // An annotation note's annotation target: where the annotated document is, and its bytes.
 
-import { type App, requestUrl, TFile } from "obsidian"
+import { type DocumentStore, documentFor } from "@chaoticgoodcomputing/annotator-documents"
+import { type App, TFile } from "obsidian"
+import { obsidianFetch } from "./documents.ts"
 
 export const TARGET_PROPERTY = "annotation-target"
 
@@ -53,9 +55,13 @@ export function targetOf(app: App, note: TFile, defaultPath = ""): Target | unde
  */
 export const addressOf = (target: Target) => (target.kind === "url" ? target.url : `vault:/${target.file.path}`)
 
-/** The annotated document's bytes. A document on the web is fetched by Obsidian, which no site's CORS rules stop. */
-export async function bytesOf(app: App, target: Target): Promise<ArrayBuffer> {
+/**
+ * The annotated document's bytes: a file of the vault's own; a document on the web's saved copy in
+ * `store`, or else fetched and saved there. Throws annotator-documents' DocumentUnavailable when
+ * the web won't give it, for the user to supply it.
+ */
+export async function bytesOf(app: App, target: Target, store: DocumentStore): Promise<ArrayBuffer> {
   if (target.kind === "file") return app.vault.readBinary(target.file)
-  const response = await requestUrl({ url: target.url })
-  return response.arrayBuffer
+  const { bytes } = await documentFor(target.url, { store, fetch: obsidianFetch })
+  return bytes.slice().buffer
 }

@@ -1,0 +1,19 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "name": "@chaoticgoodcomputing/annotator-documents",
+  "root": "packages/annotator/documents",
+  "sourceRoot": "packages/annotator/documents/src",
+  "projectType": "library",
+  "tags": ["annotator"],
+  "targets": {
+    "test": {
+      "//": "Saved copies, fetching and supplying, against a store and a fetch kept in memory. No build target: whoever uses it compiles the source.",
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run test", "cwd": "{projectRoot}" }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run typecheck", "cwd": "{projectRoot}" }
+    }
+  }
+}

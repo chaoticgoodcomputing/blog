@@ -1,0 +1,35 @@
+/* The Annotator's styles in Obsidian: annotation mode's frame fills the view, below a bar when the
+   document couldn't be had. */
+
+.annotator-view {
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+.annotator-frame {
+  flex: 1;
+  width: 100%;
+  border: none;
+}
+
+.annotator-unavailable {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  padding: var(--size-4-2) var(--size-4-4);
+  border-bottom: var(--border-width) solid var(--background-modifier-border);
+  background: var(--background-secondary);
+  color: var(--text-normal);
+  font-size: var(--font-ui-small);
+}
+
+.annotator-unavailable span {
+  flex: 1;
+}
+
+.annotator-message {
+  padding: var(--size-4-4);
+  color: var(--text-muted);
+}
