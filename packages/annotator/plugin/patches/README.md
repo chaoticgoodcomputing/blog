@@ -29,5 +29,5 @@ the only `"{math:"` in the bundle, just before it. Its minified name changes bet
    `if(window.__annotatorRenderMarkdown)return window.__annotatorRenderMarkdown(e);`
 3. `pnpm patch-commit <folder> --patches-dir packages/annotator/plugin/patches`, from the
    repository's root, and delete the old version's patch.
-4. `pnpm nx run @chaoticgoodcomputing/obsidian-annotator:test`: `test/patches.test.ts` checks the
+4. `pnpm nx run annotator:test`: `test/patches.test.ts` checks the
    installed client has the hook, and the end-to-end suite that the sidebar uses it.

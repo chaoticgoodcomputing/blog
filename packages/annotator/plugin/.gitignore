@@ -9,3 +9,6 @@ data.json
 # The end-to-end suite's output (playwright.config.ts)
 test-results
 playwright-report
+
+# The logs of a running Obsidian (scripts/obsidian-logs.mjs)
+logs

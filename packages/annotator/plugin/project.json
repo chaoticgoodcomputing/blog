@@ -1,6 +1,6 @@
 {
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "name": "@chaoticgoodcomputing/obsidian-annotator",
+  "name": "annotator",
   "//": "The Annotator, a hard fork of elias-sundqvist/obsidian-annotator (NOTICE.md): the Obsidian plugin, built with esbuild into dist/.",
   "root": "packages/annotator/plugin",
   "sourceRoot": "packages/annotator/plugin/src",
@@ -60,7 +60,7 @@
         "cwd": "{projectRoot}"
       }
     },
-    "install-in-vault": {
+    "install": {
       "//": "Run by hand, never by a build: copies dist/ into content/.obsidian/plugins/obsidian-annotator, which git ignores, keeping the plugin's settings (data.json). `--vault=<path>` installs into another vault (scripts/install-in-vault.mjs).",
       "executor": "nx:run-commands",
       "dependsOn": [
@@ -68,6 +68,23 @@
       ],
       "options": {
         "command": "pnpm run install-in-vault",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "obsidian": {
+      "//": "Run by hand: quits Obsidian and starts it again with remote debugging on 127.0.0.1, which `logs` attaches to (scripts/obsidian-debug.mjs). macOS. `--port=<n>`, else 9222.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node scripts/obsidian-debug.mjs",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "logs": {
+      "//": "Streams a running Obsidian's console and errors, its window's and its frames' (the viewer and sidebar pages), to the terminal and logs/obsidian.log (scripts/obsidian-logs.mjs). Needs Obsidian started by `obsidian`. `--reload` reloads Obsidian once attached, to log the plugins starting; `--open=<note>` opens a note; `--seconds=<n>` stops after n seconds.",
+      "executor": "nx:run-commands",
+      "continuous": true,
+      "options": {
+        "command": "node scripts/obsidian-logs.mjs",
         "cwd": "{projectRoot}"
       }
     }
