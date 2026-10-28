@@ -1,8 +1,8 @@
 packages:
   - astro
   - packages/*
-  # A hard fork with upstream's own npm setup (packages/obsidian-annotator/project.json).
-  - "!packages/obsidian-annotator"
+  # The Annotator: the Obsidian plugin and its libraries (packages/annotator/plugin/CONTEXT.md).
+  - packages/annotator/*
 
 autoInstallPeers: false
 
@@ -13,3 +13,6 @@ allowBuilds:
   esbuild: true
   sharp: true
   nx: false
+  # The Annotator plugin's (packages/annotator/plugin): donation banners its build doesn't need.
+  core-js: false
+  es5-ext: false

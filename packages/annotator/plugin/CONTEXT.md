@@ -23,10 +23,10 @@ _Avoid_: original, parent
 **Fork point**:
 The upstream release the fork was taken from, 0.2.11, and nothing after it.
 
-**Hypothesis client fork**:
-Elias Sundqvist's fork of the Hypothesis client, changed for local annotation, which the Annotator
-builds its sidebar from. Kept as a submodule, at the commit upstream pinned.
-_Avoid_: Hypothesis (that is the service it was made for), the client
+**Hypothesis client**:
+Hypothesis's own annotation client, as it publishes it, which the Annotator runs as its sidebar.
+Upstream ran a fork of it; the Annotator runs it unforked.
+_Avoid_: Hypothesis (that is the service it was made for), the client fork
 
 ### Annotating
 
@@ -55,7 +55,7 @@ Markdown. A note opens in one or the other.
 _Avoid_: annotator view, PDF mode
 
 **Sidebar**:
-The Hypothesis client fork as the Annotator runs it, beside the annotated document, where
+The Hypothesis client as the Annotator runs it, beside the annotated document, where
 annotations are made and read.
 _Avoid_: panel, Hypothesis
 

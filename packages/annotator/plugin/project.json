@@ -1,9 +1,9 @@
 {
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "name": "@chaoticgoodcomputing/obsidian-annotator",
   "//": "A hard fork of elias-sundqvist/obsidian-annotator (NOTICE.md). It keeps upstream's own npm and rollup setup and is left out of the repo's pnpm workspace (pnpm-workspace.yaml), so its targets install with npm into its own node_modules. The Hypothesis client it builds is the submodule submodules/hypothesis-client-annotator-fork: `git submodule update --init` it before `build`.",
-  "root": "packages/obsidian-annotator",
-  "sourceRoot": "packages/obsidian-annotator/src",
+  "root": "packages/annotator/plugin",
+  "sourceRoot": "packages/annotator/plugin/src",
   "projectType": "application",
   "tags": ["obsidian"],
   "targets": {

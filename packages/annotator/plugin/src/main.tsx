@@ -14,7 +14,10 @@ import {
 } from 'obsidian';
 
 import StyleObserver from 'styleObserver';
-import { getAPI as getDataviewApi } from 'obsidian-dataview';
+// Dataview's API, as obsidian-dataview's getAPI() finds it with no app: the global it installs on
+// the window. Read here so the plugin needn't depend on obsidian-dataview for one line.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getDataviewApi = (): any => (window as any).DataviewAPI;
 
 import definePdfAnnotation from './definePdfAnnotation';
 import { around } from 'monkey-around';

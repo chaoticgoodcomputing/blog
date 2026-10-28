@@ -7,8 +7,8 @@ by Elias Sundqvist and contributors, hard-forked into this repository on **2026-
   [`3647dd92d0d803bae9a3f34a1aac19eacb2fd52d`](https://github.com/elias-sundqvist/obsidian-annotator/commit/3647dd92d0d803bae9a3f34a1aac19eacb2fd52d),
   release 0.2.11, 2024-01-08.
 - **How it came in**: as a verbatim snapshot, without upstream's history, in one commit. Every change
-  since is in this repository's history under `packages/obsidian-annotator/`
-  (`git log -- packages/obsidian-annotator`).
+  since is in this repository's history under `packages/annotator/plugin/`
+  (`git log --follow -- packages/annotator/plugin`).
 - **Upstream contributors**, from its history (2021-04-30 to 2024-01-08): Elias Sundqvist,
   Andrey Aleksandrov, Vacodwave, Hardway, Jonas Schumacher, Matthew Turk, Riccardo Di Maio, Sam Xie.
 
@@ -29,7 +29,6 @@ it covers.
 
 | Component | Where | License | Notice |
 | --- | --- | --- | --- |
-| Hypothesis client, as forked for Annotator by Elias Sundqvist | `submodules/hypothesis-client-annotator-fork` (a git submodule); its build goes to `resources/cdn.hypothes.is/hypothesis/build` | BSD 2-Clause, © Hypothes.is Project and contributors | the submodule's `LICENSE` |
 | Hypothesis web pages and API responses, saved from hypothes.is, including the EPUB.js demo | `resources/hypothes.is`, `resources/cdn.hypothes.is` | BSD 2-Clause, © Hypothes.is Project and contributors | `LICENCE` in each folder |
 | Via, Hypothesis's proxy, saved from via.hypothes.is | `resources/via.hypothes.is` | BSD 2-Clause, © Hypothes.is Project and contributors | `resources/via.hypothes.is/LICENCE` |
 | PDF.js 3.17.2 and 2.3.160, as Via ships them | `resources/via.hypothes.is/static/*/vendor/pdfjs-2` | Apache 2.0, © Mozilla Foundation; its CMaps and standard fonts under their own licenses | `LICENSE` in each `pdfjs-2`, and `LICENSE*` in `web/cmaps` and, where it exists, `web/standard_fonts` |
