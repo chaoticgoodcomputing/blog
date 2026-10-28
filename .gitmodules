@@ -1,3 +1,6 @@
 [submodule "content/private"]
 	path = content/private
 	url = git@gitlab.com:spelkington/content.git
+[submodule "packages/obsidian-annotator/submodules/hypothesis-client-annotator-fork"]
+	path = packages/obsidian-annotator/submodules/hypothesis-client-annotator-fork
+	url = https://github.com/elias-sundqvist/hypothesis-client-annotator-fork.git
