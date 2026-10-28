@@ -11,6 +11,8 @@
 //   which fills itself in when the rendering comes, in a shadow root of its own, with Obsidian's
 //   styles, so that neither Obsidian's styles nor the sidebar's reach the other.
 
+// First, before the client adds its stylesheets.
+import "./stylesheets.ts"
 import type { Bridge } from "./viewer.ts"
 import type { StylesReply } from "../src/protocol.ts"
 import { API_URL } from "../src/service.ts"
@@ -112,7 +114,8 @@ function followLink(event: MouseEvent) {
   if (href) void bridge.openLink(href, internal)
 }
 
-const here = (path: string) => new URL(path, location.href).href
+// A `blob:` document whose `<base>` is the plugin's folder of pages (src/frame-page.ts).
+const here = (path: string) => new URL(path, document.baseURI).href
 
 // The settings the sidebar reads from its page (ConfigFromSidebar in the client). `authDomain` is
 // other than the service's authority, which makes the client a third party's, with no login of

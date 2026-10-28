@@ -4,8 +4,54 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Annotator</title>
-<link rel="stylesheet" href="pdfjs/web/pdf_viewer.css">
-<link rel="stylesheet" href="viewer.css">
+<!-- Inline: the page lives under Obsidian's Content Security Policy, which allows no stylesheet
+     from the plugin's folder (frames/stylesheets.ts). PDF.js's own is added inlined by viewer.ts. -->
+<style>
+/* The viewer page: the PDF fills the frame, and scrolls in #viewerContainer, which PDF.js's
+   PDFViewer requires to be absolutely positioned. Colours follow the plugin's theme when it
+   passes them; until then, PDF.js's own. */
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--annotator-background, #525659);
+}
+
+#outerContainer {
+  position: absolute;
+  inset: 0;
+}
+
+#viewerContainer {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+}
+
+.annotator-error {
+  position: relative;
+  z-index: 1;
+  margin: 1em;
+  padding: 0.75em 1em;
+  border-radius: 4px;
+  background: #fff;
+  color: #b00020;
+  font: 14px/1.4 system-ui, sans-serif;
+}
+
+/* Pages outside the note's page range (frames/viewer.ts): collapsed, not taken out of the layout.
+   PDF.js finds the pages in view by a binary search over their positions, which must keep their
+   order; a page with display: none has none, and stops every page after it being drawn. */
+.pdfViewer .page.annotator-outside {
+  height: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  overflow: hidden;
+  visibility: hidden;
+}
+</style>
 </head>
 <body>
 <!-- PDF.js's own viewer layout, which the Hypothesis client's PDF integration looks for. -->

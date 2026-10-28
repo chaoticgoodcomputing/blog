@@ -30,17 +30,29 @@ function seededNote(...more: ReturnType<typeof seed>[]) {
 }
 
 /** Opens the harness, and waits for the PDF's text, on the first page or the one with `text`, and the sidebar. */
+/** What the harness's Content Security Policy refused, as Obsidian's would (e2e/serve.mjs). */
+const refused = new WeakMap<Page, string[]>()
+
 async function open(page: Page, query: Record<string, string> = {}, text = "Annotate this sentence") {
+  const messages: string[] = []
+  refused.set(page, messages)
+  page.on("console", (message) => message.text().includes("Content Security Policy") && messages.push(message.text()))
   await page.goto(`/?${new URLSearchParams(query)}`)
-  const viewer = page.frameLocator('iframe[src*="viewer.html"]')
+  // The pages are `blob:` documents, as the plugin frames them: the viewer is the harness's frame,
+  // and the sidebar is the viewer's.
+  const viewer = page.frameLocator("iframe").first()
   await viewer.locator(".textLayer span", { hasText: text }).waitFor()
   await expect.poll(() => sidebarOf(page)).toBeTruthy()
   const sidebar = sidebarOf(page)!
   await sidebar.getByText("This note").first().waitFor()
-  return { viewer, viewerFrame: page.frames().find((frame) => frame.url().includes("viewer.html"))!, sidebar }
+  return { viewer, viewerFrame: viewerOf(page)!, sidebar }
 }
 
-const sidebarOf = (page: Page): Frame | undefined => page.frames().find((frame) => frame.url().includes("sidebar.html"))
+const viewerOf = (page: Page): Frame | undefined => page.frames().find((frame) => frame.parentFrame() === page.mainFrame())
+const sidebarOf = (page: Page): Frame | undefined => {
+  const viewer = viewerOf(page)
+  return page.frames().find((frame) => viewer && frame.parentFrame() === viewer && frame.url().startsWith("blob:"))
+}
 const noteOf = (page: Page) => page.evaluate(() => (window as any).harness.note as string)
 
 /** Selects a line of the PDF's text, as a user dragging over it would. */
@@ -61,6 +73,8 @@ test("the document opens, with the user logged in to the note's one group", asyn
   await expect(sidebar.getByText("There are no annotations in this group.")).toBeVisible()
   // The client names the document as annotations name it: by its target.
   expect(await viewerFrame.evaluate(() => (window as any).PDFViewerApplication.url)).toBe(TARGET)
+  // Every stylesheet is inlined: Obsidian's Content Security Policy refuses them from the plugin's folder.
+  expect(refused.get(page)).toEqual([])
   // And finds the text to annotate: it warns of none when it counts no pages.
   await viewerFrame.waitForTimeout(500)
   expect(await viewerFrame.evaluate(() => document.querySelector("hypothesis-banner")?.shadowRoot?.textContent ?? "")).not.toContain("does not contain selectable text")

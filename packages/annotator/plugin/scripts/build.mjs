@@ -50,7 +50,7 @@ function copyAssets() {
     [path.join(root, "LICENSE.TXT"), "LICENSE.TXT"],
     [path.join(root, "NOTICE.md"), "NOTICE.md"],
     [path.join(root, "licenses"), "licenses"],
-    ...["viewer.html", "viewer.css", "sidebar.html"].map((page) => [path.join(root, "frames", page), `frames/${page}`]),
+    ...["viewer.html", "sidebar.html"].map((page) => [path.join(root, "frames", page), `frames/${page}`]),
     // The client, with its license; not its source maps, which are most of its size.
     ...fs
       .readdirSync(clientBuild, { recursive: true })

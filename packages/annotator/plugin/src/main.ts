@@ -5,6 +5,7 @@ import { NotAPdf, supplyDocument } from "@chaoticgoodcomputing/annotator-documen
 import { around } from "monkey-around"
 import { type MarkdownPostProcessorContext, MarkdownView, Notice, parseLinktext, Plugin, TFile, type ViewState, WorkspaceLeaf } from "obsidian"
 import { documentStore } from "./documents.ts"
+import { folderOf } from "./frame-page.ts"
 import { type AnnotatorSettings, AnnotatorSettingTab, settingsFrom } from "./settings.ts"
 import { isAnnotationNote, targetOf } from "./target.ts"
 import { AnnotationView, VIEW_TYPE } from "./view.ts"
@@ -96,9 +97,14 @@ export default class AnnotatorPlugin extends Plugin {
     return { prefix: includePrefix, suffix: includePostfix, highlight: highlightHighlightedText }
   }
 
-  /** The address of one of the plugin's pages (frames/), as Obsidian serves files of the plugin's folder. */
-  framePage(name: string): string {
-    return this.app.vault.adapter.getResourcePath(`${this.manifest.dir}/frames/${name}`)
+  /** The address of the plugin's folder of pages (frames/), as Obsidian serves the plugin's files. */
+  framesFolder(): string {
+    return folderOf(this.app.vault.adapter.getResourcePath(`${this.manifest.dir}/frames/viewer.html`))
+  }
+
+  /** One of the plugin's pages, as HTML. */
+  readFrame(name: string): Promise<string> {
+    return this.app.vault.adapter.read(`${this.manifest.dir}/frames/${name}`)
   }
 
   /** Opens a note in annotation mode, at an annotation when one is named. */

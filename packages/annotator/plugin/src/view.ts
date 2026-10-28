@@ -8,7 +8,8 @@ import { FileView, type TFile, type ViewStateResult, type WorkspaceLeaf } from "
 import type AnnotatorPlugin from "./main.ts"
 import { formatPageRange, PAGES_PROPERTY, parsePageRange } from "./pages.ts"
 import { obsidianStyles, renderMarkdown } from "./obsidian-rendering.ts"
-import { ANNOTATION_PARAM, CONNECT, PAGES_PARAM, type Push, type Reply, type Request } from "./protocol.ts"
+import { blobPage, framePage, type PageOptions } from "./frame-page.ts"
+import { CONNECT, type Push, type Reply, type Request } from "./protocol.ts"
 import { createService, type Service } from "./service.ts"
 import { addressOf, bytesOf, propertyOf, type Target, targetOf } from "./target.ts"
 
@@ -20,6 +21,10 @@ export class AnnotationView extends FileView {
   private port?: MessagePort
   /** The annotation to open at, from the view's state; once opened, it is forgotten. */
   private annotation?: string
+  /** The viewer page's `blob:` address, released when its frame goes. */
+  private pageUrl?: string
+  /** Counts the times the view was shown, so a frame read for an earlier time is dropped. */
+  private generation = 0
 
   constructor(
     leaf: WorkspaceLeaf,
@@ -79,6 +84,9 @@ export class AnnotationView extends FileView {
   }
 
   private close() {
+    this.generation++
+    if (this.pageUrl) URL.revokeObjectURL(this.pageUrl)
+    this.pageUrl = undefined
     this.port?.close()
     this.port = undefined
     this.frame?.remove()
@@ -105,20 +113,28 @@ export class AnnotationView extends FileView {
       view: this.plugin.viewOptions(),
     })
 
-    const page = new URL(this.plugin.framePage("viewer.html"))
-    if (this.annotation) page.searchParams.set(ANNOTATION_PARAM, this.annotation)
     const pages = parsePageRange(propertyOf(this.app, note, PAGES_PROPERTY))
-    if (pages) page.searchParams.set(PAGES_PARAM, formatPageRange(pages))
+    const options = { annotation: this.annotation, pages: pages && formatPageRange(pages) }
     this.annotation = undefined
+    void this.frameViewer(note, target, service, options)
+  }
 
+  /**
+   * Frames the viewer page, as a `blob:` document (src/frame-page.ts), and hands it its port when
+   * it has loaded. A later `show` supersedes this one, should it come before the page is read.
+   */
+  private async frameViewer(note: TFile, target: Target, service: Service, options: PageOptions) {
+    const generation = ++this.generation
+    const html = await this.plugin.readFrame("viewer.html")
+    if (generation !== this.generation) return
+    this.pageUrl = blobPage(framePage(html, this.plugin.framesFolder(), options))
     this.contentEl.addClass("annotator-view")
-    const frame = this.contentEl.createEl("iframe", { cls: "annotator-frame", attr: { src: page.href } })
+    const frame = this.contentEl.createEl("iframe", { cls: "annotator-frame", attr: { src: this.pageUrl } })
     frame.addEventListener("load", () => {
       const channel = new MessageChannel()
       channel.port1.onmessage = ({ data }: MessageEvent<Request>) => this.answer(channel.port1, data, note, target, service)
       this.port = channel.port1
-      // The page checks the message comes from this frame's parent. Its origin is Obsidian's own
-      // for the plugin's folder, and not one to name here.
+      // The page checks the message comes from this frame's parent.
       frame.contentWindow?.postMessage({ type: CONNECT }, "*", [channel.port2])
     })
     this.frame = frame

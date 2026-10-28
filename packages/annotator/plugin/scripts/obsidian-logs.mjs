@@ -45,9 +45,10 @@ try {
 /** A frame's name in the log: the page it shows, shortened to what tells the frames apart. */
 const nameOf = (frame) => {
   const url = frame.url()
-  if (url.includes("/frames/viewer.html")) return "viewer"
-  if (url.includes("/frames/sidebar.html")) return "sidebar"
   if (url.startsWith("app://obsidian.md")) return "obsidian"
+  // The Annotator's pages are `blob:` documents (src/frame-page.ts): the viewer is framed by
+  // Obsidian's window, and the sidebar by the viewer.
+  if (url.startsWith("blob:")) return frame.parentFrame()?.url().startsWith("blob:") ? "sidebar" : "viewer"
   return url.slice(0, 60) || "frame"
 }
 

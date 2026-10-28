@@ -2,7 +2,8 @@
 // the viewer page, hands it its port, and answers it with the fixture PDF and the fake service over
 // a note kept in memory, which the tests read back as `window.harness.note`.
 
-import { ANNOTATION_PARAM, CONNECT, PAGES_PARAM, type Reply, type Request } from "../../src/protocol.ts"
+import { blobPage, framePage } from "../../src/frame-page.ts"
+import { CONNECT, type Reply, type Request } from "../../src/protocol.ts"
 import { createService } from "../../src/service.ts"
 
 const params = new URL(location.href).searchParams
@@ -45,45 +46,46 @@ const service = createService({
   displayName: "Tester",
 })
 
-const page = new URL("/frames/viewer.html", location.href)
-const annotation = params.get(ANNOTATION_PARAM)
-if (annotation) page.searchParams.set(ANNOTATION_PARAM, annotation)
-const pages = params.get(PAGES_PARAM)
-if (pages) page.searchParams.set(PAGES_PARAM, pages)
-
-const frame = document.createElement("iframe")
-frame.src = page.href
-frame.addEventListener("load", () => {
-  const channel = new MessageChannel()
-  const port = channel.port1
-  port.onmessage = async ({ data }: MessageEvent<Request>) => {
-    harness.requests.push(data)
-    try {
-      const reply = (value: Extract<Reply, { ok: true }>["value"]) => port.postMessage({ id: data.id, ok: true, value } satisfies Reply)
-      switch (data.kind) {
-        case "document": {
-          const bytes = await (await fetch("/fixture.pdf")).arrayBuffer()
-          port.postMessage({ id: data.id, ok: true, value: { data: bytes, url: TARGET } } satisfies Reply, [bytes])
-          break
+async function frameViewer() {
+  // As the plugin frames it (src/view.ts): a `blob:` document whose `<base>` is the folder of pages,
+  // opened with the annotation and the page range the harness's own address names.
+  const frame = document.createElement("iframe")
+  const html = await (await fetch("/frames/viewer.html")).text()
+  frame.src = blobPage(framePage(html, `${location.protocol}//127.0.0.1:${location.port}/frames/`, { annotation: params.get("annotation") ?? undefined, pages: params.get("pages") ?? undefined }))
+  frame.addEventListener("load", () => {
+    const channel = new MessageChannel()
+    const port = channel.port1
+    port.onmessage = async ({ data }: MessageEvent<Request>) => {
+      harness.requests.push(data)
+      try {
+        const reply = (value: Extract<Reply, { ok: true }>["value"]) => port.postMessage({ id: data.id, ok: true, value } satisfies Reply)
+        switch (data.kind) {
+          case "document": {
+            const bytes = await (await fetch("/fixture.pdf")).arrayBuffer()
+            port.postMessage({ id: data.id, ok: true, value: { data: bytes, url: TARGET } } satisfies Reply, [bytes])
+            break
+          }
+          case "api":
+            reply(await service(data.request))
+            break
+          case "markdown":
+            reply({ html: renderMarkdown(data.markdown) })
+            break
+          case "styles":
+            reply(STYLES)
+            break
+          case "open-link":
+            harness.links.push({ href: data.href, internal: data.internal })
+            reply(null)
+            break
         }
-        case "api":
-          reply(await service(data.request))
-          break
-        case "markdown":
-          reply({ html: renderMarkdown(data.markdown) })
-          break
-        case "styles":
-          reply(STYLES)
-          break
-        case "open-link":
-          harness.links.push({ href: data.href, internal: data.internal })
-          reply(null)
-          break
+      } catch (error) {
+        port.postMessage({ id: data.id, ok: false, error: String(error) } satisfies Reply)
       }
-    } catch (error) {
-      port.postMessage({ id: data.id, ok: false, error: String(error) } satisfies Reply)
     }
-  }
-  frame.contentWindow!.postMessage({ type: CONNECT }, "*", [channel.port2])
-})
-document.body.append(frame)
+    frame.contentWindow!.postMessage({ type: CONNECT }, "*", [channel.port2])
+  })
+  document.body.append(frame)
+}
+
+void frameViewer()

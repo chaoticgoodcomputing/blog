@@ -2,6 +2,7 @@
 // Obsidian's styles to show it with.
 
 import { type App, Component, MarkdownRenderer } from "obsidian"
+import { absoluteUrls } from "./css-urls.ts"
 import type { StylesReply } from "./protocol.ts"
 
 /** A comment's Markdown, rendered as Obsidian renders it in the annotation note at `sourcePath`. */
@@ -60,14 +61,3 @@ function lightThemeVariables(): string {
     probe.remove()
   }
 }
-
-/** A rule's `url(…)`s, made absolute against `base`. */
-const absoluteUrls = (text: string, base: string) =>
-  text.replace(/url\((["']?)([^)"']+)\1\)/g, (whole, quote: string, url: string) => {
-    if (/^(data|blob|[a-z][a-z0-9+.-]*):/i.test(url) && !url.startsWith("//")) return whole
-    try {
-      return `url(${quote}${new URL(url, base).href}${quote})`
-    } catch {
-      return whole
-    }
-  })

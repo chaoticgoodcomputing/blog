@@ -1,5 +1,7 @@
 // The end-to-end suite's server: the built plugin's pages (dist/frames, from `build`) under
-// /frames/, the harness page that stands in for Obsidian at /, and the fixture PDF.
+// /frames/, the harness page that stands in for Obsidian at /, and the fixture PDF. The harness is
+// opened at localhost and reads the pages' files at 127.0.0.1, another origin, as Obsidian's window
+// reads the plugin's folder at an `app://` origin of its own.
 //
 //   node e2e/serve.mjs [port]
 
@@ -39,7 +41,9 @@ const TYPES = {
 }
 
 const routes = {
-  "/": ["text/html; charset=utf-8", '<!doctype html><meta charset="utf-8"><title>Harness</title><style>html,body{margin:0;height:100%}iframe{border:0;width:100%;height:100%}</style><body><script src="/host.js"></script></body>'],
+  // With Obsidian's own Content Security Policy (its index.html), which the pages, made by this one
+  // as `blob:` documents, live under as they do in Obsidian.
+  "/": ["text/html; charset=utf-8", '<!doctype html><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="style-src \'unsafe-inline\' \'self\' https://fonts.googleapis.com"><title>Harness</title><style>html,body{margin:0;height:100%}iframe{border:0;width:100%;height:100%}</style><body><script src="/host.js"></script></body>'],
   "/host.js": ["text/javascript", host.outputFiles[0].contents],
   "/fixture.pdf": ["application/pdf", fixturePdf()],
 }
@@ -55,7 +59,8 @@ http
     if (pathname.startsWith("/frames/")) {
       const file = path.join(frames, decodeURIComponent(pathname.slice("/frames/".length)))
       if (file.startsWith(frames) && fs.existsSync(file) && fs.statSync(file).isFile()) {
-        response.writeHead(200, { "Content-Type": TYPES[path.extname(file)] ?? "application/octet-stream" })
+        // The pages' files are read from another origin than the harness's, as in Obsidian.
+        response.writeHead(200, { "Content-Type": TYPES[path.extname(file)] ?? "application/octet-stream", "Access-Control-Allow-Origin": "*" })
         fs.createReadStream(file).pipe(response)
         return
       }

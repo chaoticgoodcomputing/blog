@@ -6,15 +6,25 @@
 // It is also the bridge between the plugin and the sidebar: the plugin answers over the port it
 // hands this page (src/protocol.ts), and the sidebar, on this page's origin, calls `annotatorBridge`.
 
+// First, before anything else adds a stylesheet.
+import { addStylesheet } from "./stylesheets.ts"
 import * as pdfjs from "pdfjs-dist"
 import { EventBus, PDFLinkService, PDFViewer } from "pdfjs-dist/web/pdf_viewer.mjs"
 import { inPageRange, parsePageRange } from "../src/pages.ts"
-import { ANNOTATION_PARAM, CONNECT, type DocumentReply, type MarkdownReply, PAGES_PARAM, type Push, type Reply, type Request, type StylesReply } from "../src/protocol.ts"
+import { blobPage, framePage, optionsOf } from "../src/frame-page.ts"
+import { CONNECT, type DocumentReply, type MarkdownReply, type Push, type Reply, type Request, type StylesReply } from "../src/protocol.ts"
 import { API_URL, AUTHORITY, GROUP_ID, type ApiRequest, type ApiResponse } from "../src/service.ts"
 
-const here = (path: string) => new URL(path, location.href).href
+// The page is a `blob:` document whose `<base>` is the plugin's folder of pages (src/frame-page.ts):
+// its files are found from there, and what it was opened with is in its options.
+const here = (path: string) => new URL(path, document.baseURI).href
+const options = optionsOf(document)
 
-pdfjs.GlobalWorkerOptions.workerSrc = here("pdfjs/build/pdf.worker.min.mjs")
+/** A script of the plugin's folder, as a `blob:` address of this page's origin, from which alone a page may start a worker. */
+async function sameOriginScript(path: string) {
+  const source = await (await fetch(here(path))).text()
+  return URL.createObjectURL(new Blob([source], { type: "text/javascript" }))
+}
 
 // The plugin's port, once it has handed it over, and the requests waiting on it.
 const port = new Promise<MessagePort>((resolve) => {
@@ -81,7 +91,7 @@ const pdfViewer = new PDFViewer({ container, viewer, eventBus, linkService })
 linkService.setViewer(pdfViewer)
 // The pages the note names, when it names some: the rest of the document is there, for the client
 // to find passages in, but not shown.
-const pageRange = parsePageRange(new URL(location.href).searchParams.get(PAGES_PARAM))
+const pageRange = parsePageRange(options.pages)
 
 eventBus.on("pagesinit", () => {
   pdfViewer.currentScaleValue = "page-width"
@@ -117,7 +127,7 @@ const app = {
 }
 ;(window as any).PDFViewerApplication = app
 
-const annotation = new URL(location.href).searchParams.get(ANNOTATION_PARAM)
+const annotation = options.annotation
 
 // The client's settings for the page it annotates (src/annotator/config in the client).
 ;(window as any).hypothesisConfig = () => ({
@@ -145,14 +155,17 @@ const annotation = new URL(location.href).searchParams.get(ANNOTATION_PARAM)
  * page's `#annotations:` fragment, is the only place the client reads it from (its
  * src/annotator/config/settings.ts), not `hypothesisConfig`.
  */
-function bootClient() {
+async function bootClient() {
+  // The sidebar page, made a `blob:` document of this page's origin, as this one was.
+  const sidebarHtml = await (await fetch(here("sidebar.html"))).text()
+  const sidebarAppUrl = blobPage(framePage(sidebarHtml, here("")))
   const config = document.createElement("script")
   config.type = "application/json"
   config.className = "js-hypothesis-config"
   config.textContent = JSON.stringify({
     ...(annotation ? { annotations: annotation } : {}),
     assetRoot: here("hypothesis/"),
-    sidebarAppUrl: here("sidebar.html"),
+    sidebarAppUrl,
     // Never opened (the account menu is off), but the client parses them as addresses.
     notebookAppUrl: here("sidebar.html#notebook"),
     profileAppUrl: here("sidebar.html#profile"),
@@ -163,6 +176,9 @@ function bootClient() {
 }
 
 async function open() {
+  pdfjs.GlobalWorkerOptions.workerSrc = await sameOriginScript("pdfjs/build/pdf.worker.min.mjs")
+  // PDF.js's text layer is placed by its stylesheet, which must apply before pages are drawn.
+  await addStylesheet(here("pdfjs/web/pdf_viewer.css"))
   const reply = await ask<DocumentReply>({ kind: "document" })
   app.url = reply.url
   const document = await pdfjs.getDocument({
@@ -172,6 +188,9 @@ async function open() {
     standardFontDataUrl: here("pdfjs/standard_fonts/"),
     wasmUrl: here("pdfjs/wasm/"),
     iccUrl: here("pdfjs/iccs/"),
+    // Fetched by this page, not by PDF.js's worker: Obsidian lets a request for the plugin's files
+    // through only from a frame of its own origin, and a worker's request comes from no frame.
+    useWorkerFetch: false,
   }).promise
   // Ready once the viewer has made its pages: the client counts them (pdfViewer.pagesCount) to
   // decide whether the PDF has text to annotate, and would find none before.
@@ -182,7 +201,7 @@ async function open() {
   documentLoaded(document)
 }
 
-bootClient()
+bootClient().catch((error) => console.error("Annotator: could not load the Hypothesis client", error))
 open().catch((error) => {
   console.error("Annotator: could not open the document", error)
   const message = document.createElement("p")
