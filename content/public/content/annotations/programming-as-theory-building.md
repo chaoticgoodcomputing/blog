@@ -10,8 +10,20 @@ tags:
 description: Do humans have a role in software development anymore? Absolutely — but we need to rethink what it means to program. An modern review of Peter Naur's 1985 essay "Programming as Theory Building"
 annotation-target: https://pablo.rauzy.name/dev/naur1985programming.pdf
 ---
+If you ever need an endorsement of trying to chase citations all the way back to their sources, look no further! I recently read a post by [Steve Krouse,](https://bsky.app/profile/stevekrouse.com) [*Vibe code is legacy code*](https://blog.val.town/vibe-code), where it mentions the refrain:
 
+> [!QUOTE]
+> Programming is fundamentally theory building,
 
+That one has been rattling around my brain for weeks, now. My industry is still in a massive shake-up brought on by [[public/content/notes/hostage-negotiations|how good LLM agents have gotten at producing code]]. Needless to say, there are a *lot* of opinions on LLM usage. Trying to negotiate out my own relationship with the technology and overcome a growing pit in my stomach that represents the question "Am I cooked?" is something I'm actively working on.
+
+Steve Krouse's quote digs into this citation — a paper by [Peter Naur](https://en.wikipedia.org/wiki/Peter_Naur), who was influential in the earliest years of computer science as a forming discipline, and was married to [Christiane Floyd](https://en.wikipedia.org/wiki/Christiane_Floyd), who was heavily involved in the production of the first coding IDEs.
+
+(I did just attach his name to the term "computer science", but it *is* worth noting that he didn't like that term. He preferred — and coined — the term "datalogy", which [still sticks as the term for the discipline](https://www.researchgate.net/publication/220657031_Datalogy_-_The_Copenhagen_Tradition_of_Computer_Science) in his native Denmark.)
+
+Lemme level with ya — this is going to get real heady, real fast. As background, Naur rejected the idea that computer science was itself a direct descendant from raw mathematics. This paper builds on that idea, and talks about the interface between actual programmatic processes/development and the human beings who create them. Many of the citations on this paper are philosophical essays and excerpts — one of them seeks to distinguish human thought from hydrogen atoms.
+
+Stick around, though! If you share my anxiety about the role of humans in a world where LLMs have pretty much beaten us out in the act of writing code, this paper may be as cathartic for you as it has been for myself.
 
 >%%
 >```annotation-json
@@ -708,33 +720,6 @@ annotation-target: https://pablo.rauzy.name/dev/naur1985programming.pdf
 
 >%%
 >```annotation-json
->{"text":"If you ever need an endorsement of trying to chase citations all the way back to their sources, look no further! I recently read a post by [Steve Krouse,](https://bsky.app/profile/stevekrouse.com) [*Vibe code is legacy code*](https://blog.val.town/vibe-code), where it mentions the refrain:\n\n> [!QUOTE]\n> Programming is fundamentally theory building,\n\nThat one has been rattling around my brain for weeks, now. My industry is still in a massive shake-up brought on by [[public/content/notes/hostage-negotiations|how good LLM agents have gotten at producing code]]. Needless to say, there are a *lot* of opinions on LLM usage. Trying to negotiate out my own relationship with the technology and overcome a growing pit in my stomach that represents the question \"Am I cooked?\" is something I'm actively working on.\n\nSteve Krouse's quote digs into this citation — a paper by [Peter Naur](https://en.wikipedia.org/wiki/Peter_Naur), who was influential in the earliest years of computer science as a forming discipline, and was married to [Christiane Floyd](https://en.wikipedia.org/wiki/Christiane_Floyd), who was heavily involved in the production of the first coding IDEs.\n\n(I did just attach his name to the term \"computer science\", but it *is* worth noting that he didn't like that term. He preferred — and coined — the term \"datalogy\", which [still sticks as the term for the discipline](https://www.researchgate.net/publication/220657031_Datalogy_-_The_Copenhagen_Tradition_of_Computer_Science) in his native Denmark.)\n\nLemme level with ya — this is going to get real heady, real fast. As background, Naur rejected the idea that computer science was itself a direct descendant from raw mathematics. This paper builds on that idea, and talks about the interface between actual programmatic processes/development and the human beings who create them. Many of the citations on this paper are philosophical essays and excerpts — one of them seeks to distinguish human thought from hydrogen atoms.\n\nStick around, though! If you share my anxiety about the role of humans in a world where LLMs have pretty much beaten us out in the act of writing code, this paper may be as cathartic for you as it has been for myself.","target":[{"source":"https://pablo.rauzy.name/dev/naur1985programming.pdf","selector":[{"type":"TextPositionSelector","start":0,"end":30},{"type":"TextQuoteSelector","exact":"Programming as Theory Building","prefix":"th50%75%100%125%150%200%300%400%","suffix":"Peter Naur1985Peter Naur’s class"}]}],"created":"2026-02-15T21:01:15.507Z","updated":"2026-02-15T21:01:15.507Z","document":{"title":"Programming as Theory Building","link":[{"href":"urn:x-pdf:90bce12dc08df51c58c2476dee0c7107"},{"href":"https://pablo.rauzy.name/dev/naur1985programming.pdf"}],"documentFingerprint":"90bce12dc08df51c58c2476dee0c7107"},"uri":"https://pablo.rauzy.name/dev/naur1985programming.pdf"}
->```
->%%
->*%%PREFIX%%th50%75%100%125%150%200%300%400%%%HIGHLIGHT%% ==Programming as Theory Building== %%POSTFIX%%Peter Naur1985Peter Naur’s class*
->%%LINK%%[[#^q2yc8bq3n7s|show annotation]]
->%%COMMENT%%
->If you ever need an endorsement of trying to chase citations all the way back to their sources, look no further! I recently read a post by [Steve Krouse,](https://bsky.app/profile/stevekrouse.com) [*Vibe code is legacy code*](https://blog.val.town/vibe-code), where it mentions the refrain:
->
->> [!QUOTE]
->> Programming is fundamentally theory building,
->
->That one has been rattling around my brain for weeks, now. My industry is still in a massive shake-up brought on by [[public/content/notes/hostage-negotiations|how good LLM agents have gotten at producing code]]. Needless to say, there are a *lot* of opinions on LLM usage. Trying to negotiate out my own relationship with the technology and overcome a growing pit in my stomach that represents the question "Am I cooked?" is something I'm actively working on.
->
->Steve Krouse's quote digs into this citation — a paper by [Peter Naur](https://en.wikipedia.org/wiki/Peter_Naur), who was influential in the earliest years of computer science as a forming discipline, and was married to [Christiane Floyd](https://en.wikipedia.org/wiki/Christiane_Floyd), who was heavily involved in the production of the first coding IDEs.
->
->(I did just attach his name to the term "computer science", but it *is* worth noting that he didn't like that term. He preferred — and coined — the term "datalogy", which [still sticks as the term for the discipline](https://www.researchgate.net/publication/220657031_Datalogy_-_The_Copenhagen_Tradition_of_Computer_Science) in his native Denmark.)
->
->Lemme level with ya — this is going to get real heady, real fast. As background, Naur rejected the idea that computer science was itself a direct descendant from raw mathematics. This paper builds on that idea, and talks about the interface between actual programmatic processes/development and the human beings who create them. Many of the citations on this paper are philosophical essays and excerpts — one of them seeks to distinguish human thought from hydrogen atoms.
->
->Stick around, though! If you share my anxiety about the role of humans in a world where LLMs have pretty much beaten us out in the act of writing code, this paper may be as cathartic for you as it has been for myself.
->%%TAGS%%
->
-^q2yc8bq3n7s
-
-
->%%
->```annotation-json
 >{"text":"Among the engineers I've talked to, I feel that this distinction is precisely the thing that freaked them out. Imagine you're a software engineer in 2020, and you gauge your productivity in terms of \"Today, I made X pull requests with Y lines of code!\"\n\nNow, today, agentic systems are able to write code, *and* submit pull requests. You'd certainly feel at risk, wouldn't you?\n\nWhen I run into this form of anxiety, my go-to has been that our job is *not* writing code — it's architecting systems. I feel that this paper expresses a more mature and material backbone to that sentiment.","target":[{"source":"https://pablo.rauzy.name/dev/naur1985programming.pdf","selector":[{"type":"TextPositionSelector","start":713,"end":878},{"type":"TextQuoteSelector","exact":"This sugges-tion is in contrast to what appears to be a more commonnotion, that programming should be regarded as a pro-duction of a program and certain other texts.","prefix":"theory, of the matters at hand.","suffix":"Some of the background of the vi"}]}],"created":"2026-02-15T21:01:55.758Z","updated":"2026-02-15T21:01:55.758Z","document":{"title":"Programming as Theory Building","link":[{"href":"urn:x-pdf:90bce12dc08df51c58c2476dee0c7107"},{"href":"https://pablo.rauzy.name/dev/naur1985programming.pdf"}],"documentFingerprint":"90bce12dc08df51c58c2476dee0c7107"},"uri":"https://pablo.rauzy.name/dev/naur1985programming.pdf"}
 >```
 >%%
@@ -909,3 +894,8 @@ annotation-target: https://pablo.rauzy.name/dev/naur1985programming.pdf
 >%%TAGS%%
 >
 ^teupzfur7oa
+
+
+### Takeaways
+
+TODO

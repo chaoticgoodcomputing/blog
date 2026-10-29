@@ -7,7 +7,6 @@
   "obsidian-languagetool-plugin",
   "obsidian-dangling-links",
   "calendar",
-  "obsidian-annotator",
   "obsidian-advanced-uri",
   "obsidian-style-settings",
   "obsidian-shellcommands",
@@ -15,5 +14,6 @@
   "obsidian-link-converter",
   "dataview",
   "obsidian-excalidraw-plugin",
-  "excalidraw-extras"
+  "excalidraw-extras",
+  "obsidian-annotator"
 ]
