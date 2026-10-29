@@ -1,4 +1,4 @@
-// A note's page range: which of its PDF's pages annotation mode shows, from the note's
+// A note's page range: which of its PDF's pages the annotator shows, from the note's
 // `annotation-pages` property. The PDF is opened whole and only those pages are shown, so the
 // annotations made on them name their passages in the whole document, as every other annotation
 // does.

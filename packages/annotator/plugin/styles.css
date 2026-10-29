@@ -1,17 +1,68 @@
-/* The Annotator's styles in Obsidian: annotation mode's frame fills the view, below a bar when the
-   document couldn't be had. */
+/* The Annotator's styles in Obsidian: the annotator in an annotation note's editor
+   (src/editor/annotator.ts). */
 
-.annotator-view {
+/* The editor's scroller holds the annotator's layer, placed in its coordinates. */
+.annotator-scroller {
+  position: relative;
+}
+
+/* Where the annotator goes, in the note: as tall as the annotator, with its handle below. */
+.annotator-placeholder {
+  position: relative;
+  margin-block: var(--size-4-3);
+}
+
+.annotator-resize {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(-1 * var(--size-4-3));
+  height: var(--size-4-3);
+  cursor: ns-resize;
+}
+
+.annotator-resize::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 48px;
+  height: 4px;
+  transform: translate(-50%, -50%);
+  border-radius: 2px;
+  background: var(--background-modifier-border);
+}
+
+.annotator-resize:hover::after {
+  background: var(--interactive-accent);
+}
+
+/* The annotator itself, over the placeholder, the editor's full width. */
+.annotator-layer {
+  position: absolute;
+  z-index: 2;
+  overflow: hidden;
+  border: var(--border-width) solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background: var(--background-secondary);
+}
+
+.annotator-session {
   display: flex;
   flex-direction: column;
-  padding: 0 !important;
-  overflow: hidden !important;
+  width: 100%;
+  height: 100%;
 }
 
 .annotator-frame {
   flex: 1;
   width: 100%;
   border: none;
+}
+
+/* While resizing, the frame mustn't take the pointer from the handle. */
+.annotator-layer.is-resizing .annotator-frame {
+  pointer-events: none;
 }
 
 .annotator-unavailable {

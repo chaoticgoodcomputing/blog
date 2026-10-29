@@ -1,6 +1,6 @@
 {
   "name": "@chaoticgoodcomputing/obsidian-annotator",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "description": "A hard fork of Obsidian Annotator (elias-sundqvist/obsidian-annotator): annotate PDFs in Obsidian with Hypothesis's own client, keeping the annotations in a note.",
   "license": "AGPL-3.0-only",

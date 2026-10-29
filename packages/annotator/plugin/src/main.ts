@@ -1,62 +1,49 @@
-// The Annotator: annotation notes opened as their annotated PDF, annotated with Hypothesis's own
-// client, every annotation kept in the note.
+// The Annotator: an annotation note opens in Obsidian's editor with its annotations shown as the
+// annotated PDF and Hypothesis's own client, between its preface and its epilogue; every
+// annotation is kept in the note.
 
 import { NotAPdf, supplyDocument } from "@chaoticgoodcomputing/annotator-documents"
+import type { EditorView } from "@codemirror/view"
 import { around } from "monkey-around"
-import { type MarkdownPostProcessorContext, MarkdownView, Notice, parseLinktext, Plugin, TFile, type ViewState, WorkspaceLeaf } from "obsidian"
+import { ItemView, MarkdownView, Notice, Plugin, type ViewStateResult } from "obsidian"
 import { documentStore } from "./documents.ts"
+import { annotatorInEditor, openAtAnnotation } from "./editor/annotator.ts"
 import { folderOf } from "./frame-page.ts"
+import type { AnnotatorSession } from "./session.ts"
 import { type AnnotatorSettings, AnnotatorSettingTab, settingsFrom } from "./settings.ts"
 import { isAnnotationNote, targetOf } from "./target.ts"
-import { AnnotationView, VIEW_TYPE } from "./view.ts"
+
+/** The view type of upstream's annotation mode, and of this plugin's until 0.4. */
+const LEGACY_VIEW_TYPE = "pdf-annotator"
 
 export default class AnnotatorPlugin extends Plugin {
   // Obsidian's own field for a plugin's settings (Plugin.settings), typed here.
   declare settings: AnnotatorSettings
 
-  /** Leaves (or note paths) the user switched to Markdown, which stay Markdown until closed. */
-  private markdownLeaves = new Set<string>()
+  /** The annotators open in editors. */
+  readonly sessions = new Set<AnnotatorSession>()
 
   async onload() {
     this.settings = settingsFrom(await this.loadData())
-    this.registerView(VIEW_TYPE, (leaf) => new AnnotationView(leaf, this))
     this.addSettingTab(new AnnotatorSettingTab(this.app, this))
-    this.openAnnotationNotesInAnnotationMode()
-    this.registerMarkdownPostProcessor((el, ctx) => this.openLinksToAnnotations(el, ctx))
+    this.registerEditorExtension(annotatorInEditor(this))
+    this.registerView(LEGACY_VIEW_TYPE, (leaf) => new LegacyAnnotationView(leaf))
+    this.openLinksToAnnotationsAtThem()
 
-    this.addCommand({
-      id: "toggle-annotation-mode",
-      name: "Toggle annotation mode",
-      checkCallback: (checking) => {
-        const leaf = this.app.workspace.getMostRecentLeaf()
-        const view = leaf?.view
-        const annotating = view instanceof AnnotationView
-        const file = annotating || view instanceof MarkdownView ? view.file : null
-        if (!leaf || !isAnnotationNote(this.app, file)) return false
-        if (!checking) void (annotating ? this.showAsMarkdown(leaf) : this.showAnnotating(leaf, file))
-        return true
-      },
-    })
+    // Obsidian's styles changed (a theme, a snippet): the sidebars show comments with the new ones.
+    this.registerEvent(this.app.workspace.on("css-change", () => this.sessions.forEach((session) => session.stylesChanged())))
 
     this.addCommand({
       id: "supply-document",
       name: "Supply this note's PDF from a file",
       checkCallback: (checking) => {
-        const view = this.app.workspace.getMostRecentLeaf()?.view
-        const file = view instanceof AnnotationView || view instanceof MarkdownView ? view.file : null
+        const file = this.app.workspace.getActiveViewOfType(MarkdownView)?.file ?? null
         const target = isAnnotationNote(this.app, file) ? targetOf(this.app, file, this.settings.customDefaultPath) : undefined
         if (target?.kind !== "url") return false
         if (!checking) void this.supplyDocument(target.url)
         return true
       },
     })
-
-    this.registerEvent(
-      this.app.workspace.on("file-menu", (menu, file, _source, leaf) => {
-        if (!(leaf?.view instanceof MarkdownView) || !isAnnotationNote(this.app, file instanceof TFile ? file : null)) return
-        menu.addItem((item) => item.setTitle("Annotate").setIcon("highlighter").onClick(() => this.showAnnotating(leaf, file as TFile)))
-      }),
-    )
   }
 
   async saveSettings() {
@@ -75,7 +62,7 @@ export default class AnnotatorPlugin extends Plugin {
 
   /**
    * Asks the user for a PDF to keep as the saved copy of the document at `url`, for when the web
-   * won't give it. Reopens the views annotating it. Resolves to whether one was kept.
+   * won't give it. Restarts the annotators of it. Resolves to whether one was kept.
    */
   async supplyDocument(url: string): Promise<boolean> {
     const file = await chooseFile(".pdf,application/pdf")
@@ -87,7 +74,7 @@ export default class AnnotatorPlugin extends Plugin {
       return false
     }
     new Notice(`Annotator will open ${file.name} for ${url}.`)
-    for (const leaf of this.app.workspace.getLeavesOfType(VIEW_TYPE)) (leaf.view as AnnotationView).reopenFor(url)
+    for (const session of this.sessions) session.restartFor(url)
     return true
   }
 
@@ -107,67 +94,56 @@ export default class AnnotatorPlugin extends Plugin {
     return this.app.vault.adapter.read(`${this.manifest.dir}/frames/${name}`)
   }
 
-  /** Opens a note in annotation mode, at an annotation when one is named. */
-  async showAnnotating(leaf: WorkspaceLeaf, file: TFile, annotation?: string) {
-    this.markdownLeaves.delete(leafKey(leaf, file.path))
-    await leaf.setViewState({ type: VIEW_TYPE, state: { file: file.path, ...(annotation ? { annotation } : {}) }, active: true })
-  }
-
-  async showAsMarkdown(leaf: WorkspaceLeaf) {
-    const file = (leaf.view as AnnotationView).file
-    if (file) this.markdownLeaves.add(leafKey(leaf, file.path))
-    await leaf.setViewState({ type: "markdown", state: leaf.view.getState(), active: true })
-  }
-
-  /** Opening an annotation note as Markdown opens it in annotation mode instead, unless the setting is off or the user chose Markdown for it. */
-  private openAnnotationNotesInAnnotationMode() {
-    const plugin = this
+  /**
+   * A link to an annotation (`[[note#^id]]`), from anywhere, opens its note at its annotator, opened
+   * at the annotation. Obsidian opens a link to a block by telling the note's view where to go (its
+   * ephemeral state), so that is where the plugin hears of it.
+   */
+  private openLinksToAnnotationsAtThem() {
     this.register(
-      around(WorkspaceLeaf.prototype, {
-        setViewState(next) {
-          return function (this: WorkspaceLeaf, state: ViewState, eState?: unknown) {
-            const path = typeof state.state?.file === "string" ? state.state.file : undefined
-            if (state.type === "markdown" && path && plugin.settings.annotationMarkdownSettings.annotationModeByDefault && !plugin.markdownLeaves.has(leafKey(this, path))) {
-              const file = plugin.app.vault.getAbstractFileByPath(path)
-              if (isAnnotationNote(plugin.app, file instanceof TFile ? file : null)) {
-                return next.call(this, { ...state, type: VIEW_TYPE }, eState)
-              }
-            }
-            return next.call(this, state, eState)
-          }
-        },
-        detach(next) {
-          return function (this: WorkspaceLeaf) {
-            const path = (this.view as { file?: TFile } | undefined)?.file?.path
-            if (path) plugin.markdownLeaves.delete(leafKey(this, path))
-            return next.apply(this)
+      around(MarkdownView.prototype, {
+        setEphemeralState(next) {
+          return function (this: MarkdownView, state: unknown) {
+            const result = next.call(this, state)
+            const subpath = (state as { subpath?: unknown } | null)?.subpath
+            const editor = (this.editor as { cm?: EditorView } | undefined)?.cm
+            if (typeof subpath === "string" && subpath.startsWith("#^") && editor) openAtAnnotation(editor, subpath.slice(2))
+            return result
           }
         },
       }),
     )
   }
-
-  /** A link to an annotation (`[[note#^id]]`, a block's own "show annotation") opens its note in annotation mode, at it. */
-  private openLinksToAnnotations(el: HTMLElement, ctx: MarkdownPostProcessorContext) {
-    for (const link of Array.from(el.querySelectorAll<HTMLAnchorElement>("a.internal-link"))) {
-      const href = link.getAttribute("data-href") ?? link.getAttribute("href")
-      if (!href) continue
-      const { path, subpath } = parseLinktext(href)
-      if (!subpath.startsWith("#^")) continue
-      const file = path ? this.app.metadataCache.getFirstLinkpathDest(path, ctx.sourcePath) : this.app.vault.getAbstractFileByPath(ctx.sourcePath)
-      if (!isAnnotationNote(this.app, file instanceof TFile ? file : null)) continue
-      link.addEventListener("click", (event) => {
-        event.preventDefault()
-        event.stopPropagation()
-        const leaf = this.app.workspace.getLeaf(event.ctrlKey || event.metaKey ? "tab" : false)
-        void this.showAnnotating(leaf, file as TFile, subpath.slice(2))
-      }, { capture: true })
-    }
-  }
 }
 
-/** A leaf's key in markdownLeaves: its id, where Obsidian gives one, else the note's path. */
-const leafKey = (leaf: WorkspaceLeaf, path: string) => (leaf as { id?: string }).id ?? path
+/**
+ * Upstream's annotation mode, as a workspace saved with it names it: opens its note in the editor,
+ * where the annotator is now.
+ */
+class LegacyAnnotationView extends ItemView {
+  getViewType() {
+    return LEGACY_VIEW_TYPE
+  }
+
+  getDisplayText() {
+    return "Annotator"
+  }
+
+  async setState(state: unknown, result: ViewStateResult) {
+    await super.setState(state, result)
+    const file = (state as { file?: unknown } | null)?.file
+    if (typeof file === "string") await this.leaf.setViewState({ type: "markdown", state: { file } })
+  }
+
+  // A tab whose state names no note, which can't be turned into one.
+  async onOpen() {
+    this.contentEl.empty()
+    this.contentEl.createEl("p", {
+      cls: "annotator-message",
+      text: "Annotator now shows in an annotation note's own editor, between its preface and its epilogue. This tab can be closed.",
+    })
+  }
+}
 
 /** Asks the user for a file, as a file input does; resolves to none if they cancel. */
 function chooseFile(accept: string): Promise<File | undefined> {

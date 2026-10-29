@@ -55,10 +55,11 @@ The text of the annotated document an annotation was made on, with a little of t
 of it to find it again by.
 _Avoid_: highlight (that is the passage as a reader marks it), selection, quote
 
-**Annotation mode**:
-An annotation note shown as its annotated document with the sidebar beside it, in place of its
-Markdown. A note opens in one or the other.
-_Avoid_: annotator view, PDF mode
+**Annotator region**:
+Where an annotation note's editor shows the annotated document and the sidebar: in place of the
+note's run of annotation blocks, between its preface and its epilogue, which are edited as any
+note's text.
+_Avoid_: annotation mode (upstream's view of its own, gone), widget, embed
 
 **Sidebar**:
 The Hypothesis client as the Annotator runs it, beside the annotated document, where
@@ -68,7 +69,7 @@ _Avoid_: panel, Hypothesis
 ### Running the client
 
 **Viewer page**:
-The page annotation mode shows: the annotated document, drawn by PDF.js, with the Hypothesis client
+The page the annotator region shows: the annotated document, drawn by PDF.js, with the Hypothesis client
 loaded into it. Its sidebar is a page of its own inside it.
 _Avoid_: frame, viewer (PDF.js's), Via (upstream's)
 

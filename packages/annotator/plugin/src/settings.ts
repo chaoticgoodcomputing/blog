@@ -14,9 +14,9 @@ export interface AnnotatorSettings {
    * Empty, the plugin's own folder's `documents/`, which git and the vault's index leave alone.
    */
   documentFolder: string
+  /** The annotator's height in each note that was given one, by the note's path. */
+  annotatorHeights: Record<string, number>
   annotationMarkdownSettings: {
-    /** Open annotation notes in annotation mode, not as Markdown. */
-    annotationModeByDefault: boolean
     /** A block's view writes the text before its passage. */
     includePrefix: boolean
     /** A block's view marks its passage as highlighted. */
@@ -30,8 +30,8 @@ export const DEFAULT_SETTINGS: AnnotatorSettings = {
   customDefaultPath: "",
   displayName: "Me",
   documentFolder: "",
+  annotatorHeights: {},
   annotationMarkdownSettings: {
-    annotationModeByDefault: true,
     includePrefix: true,
     highlightHighlightedText: true,
     includePostfix: true,
@@ -45,7 +45,12 @@ export function settingsFrom(saved: unknown): AnnotatorSettings {
     customDefaultPath: data.customDefaultPath ?? DEFAULT_SETTINGS.customDefaultPath,
     displayName: data.displayName ?? DEFAULT_SETTINGS.displayName,
     documentFolder: data.documentFolder ?? DEFAULT_SETTINGS.documentFolder,
-    annotationMarkdownSettings: { ...DEFAULT_SETTINGS.annotationMarkdownSettings, ...data.annotationMarkdownSettings },
+    annotatorHeights: { ...data.annotatorHeights },
+    annotationMarkdownSettings: {
+      includePrefix: data.annotationMarkdownSettings?.includePrefix ?? DEFAULT_SETTINGS.annotationMarkdownSettings.includePrefix,
+      highlightHighlightedText: data.annotationMarkdownSettings?.highlightHighlightedText ?? DEFAULT_SETTINGS.annotationMarkdownSettings.highlightHighlightedText,
+      includePostfix: data.annotationMarkdownSettings?.includePostfix ?? DEFAULT_SETTINGS.annotationMarkdownSettings.includePostfix,
+    },
   }
 }
 
@@ -63,11 +68,6 @@ export class AnnotatorSettingTab extends PluginSettingTab {
     const markdown = settings.annotationMarkdownSettings
     const save = () => this.plugin.saveSettings()
     containerEl.empty()
-
-    new Setting(containerEl)
-      .setName("Open annotation notes in annotation mode")
-      .setDesc("Show a note with an annotation target as its document, with the annotations beside it. Off, it opens as Markdown.")
-      .addToggle((toggle) => toggle.setValue(markdown.annotationModeByDefault).onChange((value) => ((markdown.annotationModeByDefault = value), save())))
 
     new Setting(containerEl)
       .setName("Your name")
