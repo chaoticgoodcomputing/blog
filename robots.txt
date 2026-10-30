@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+# Third-party documents served only for the annotation viewer.
+Disallow: /assets/annotated-documents/
+
+Sitemap: https://blog.chaoticgood.computer/sitemap.xml
