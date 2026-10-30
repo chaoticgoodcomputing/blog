@@ -49,9 +49,12 @@ export const annotationDate = (date: Date): string => formatDate(date, site.loca
 const named = (target: string): string => (URL.canParse(target) ? new URL(target).host : (target.split("/").at(-1) ?? target))
 
 /**
- * Opens an annotation page with where the annotated document comes from, a link to it at its
- * target address, and heads the annotations. The link is a Markdown link, so the resolver after it
- * gives a document kept in the vault the address the site publishes it at.
+ * Lays out an annotation page's body: its preface and its epilogue each in a column of their own,
+ * read as a note is (annotation-viewer.css centres them beside a wide document), then where the
+ * annotated document comes from, a link to it at its target address, just before the annotations,
+ * so it stands over the document once the viewer draws it; and heads the annotations. The link is
+ * a Markdown link, so the resolver after it gives a document kept in the vault the address the
+ * site publishes it at.
  */
 export function annotatedDocument() {
   return defineMdastPlugin({
@@ -68,14 +71,25 @@ export function annotatedDocument() {
         data: { hProperties: { className: ["annotations-heading"] } },
         children: [{ type: "text", value: "Annotations" }],
       })
-      ctx.prependChild(parent, {
+      const source = {
         type: "paragraph",
         data: { hProperties: { className: ["annotated-document"] } },
         children: [
           { type: "text", value: "Source document: " },
           { type: "link", url: encodeURI(decodeURI(target)), children: [{ type: "text", value: named(target) }] },
         ],
-      })
+      }
+      const children = [...parent.children]
+      const at = ctx.indexOf(node)
+      if (at === undefined) return
+      const column = (className: string, nodes: typeof children) =>
+        nodes.length ? [{ type: className, data: { hName: "div", hProperties: { className: [className] } }, children: nodes }] : []
+      ctx.setProperty(parent, "children", [
+        ...column("annotation-preface", children.slice(0, at)),
+        source,
+        node,
+        ...column("annotation-epilogue", children.slice(at + 1)),
+      ] as never)
     },
   })
 }

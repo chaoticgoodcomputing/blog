@@ -5,7 +5,8 @@ import { afterAll, beforeAll, expect, test } from "vitest"
 import { findPassage, highlightBoxes, pageText } from "../src/lib/highlights.ts"
 import { annotatedPassages, documentFileName } from "../src/lib/annotations.ts"
 import { getNote } from "../src/lib/notes.ts"
-import { MIRRORS_ROOT, defaultMirrorsRoot, workspaceRoot, isPdf, mirrorFile, mirrorName, mirrorOf, mirrorsToSave } from "../src/lib/mirrors.ts"
+import { createHash } from "node:crypto"
+import { MIRRORS_ROOT, defaultMirrorsRoot, workspaceRoot, isPdf, mirrorFile, mirrorName, mirrorOf, mirrorsToSave, mirrorText, mirrorTextFile, mirrorTextOf } from "../src/lib/mirrors.ts"
 
 test("a mirror is named by its document's file name, a space written as -", () => {
   expect(mirrorName("https://media.steampowered.com/apps/valve/Valve_Handbook_LowRes.pdf")).toBe("Valve_Handbook_LowRes.pdf")
@@ -59,6 +60,31 @@ test("the repository is found from any folder in it, so the mirror directory is 
     expect(workspaceRoot(path.parse(repo).root)).toBeUndefined()
   } finally {
     fs.rmSync(repo, { recursive: true, force: true })
+  }
+})
+
+// A text file as astro:mirrors writes one, for the bytes `of`, with `pages`.
+const textFileFor = (of: string, pages: Record<string, unknown>) =>
+  JSON.stringify({ format: "pdf-ocr/1", source: { sha256: createHash("sha256").update(of).digest("hex"), pages: 1 }, engine: {}, pages })
+
+test("a scanned mirror's text file is served beside it, while it is that mirror's", () => {
+  const target = "https://media.steampowered.com/apps/valve/Valve_Handbook_LowRes.pdf"
+  const file = mirrorTextFile("Valve_Handbook_LowRes.pdf", root)
+  expect(file).toBe(path.join(root, "Valve_Handbook_LowRes.pdf.text.json"))
+  expect(mirrorTextOf(target, root)).toBeUndefined()
+  try {
+    fs.writeFileSync(file, textFileFor("%PDF-1.4", { "1": { lines: [] } }))
+    expect(mirrorTextOf(target, root)).toBe("/assets/annotated-documents/Valve_Handbook_LowRes.pdf.text.json")
+    // Made from another copy of the document: not this mirror's text, and not served.
+    fs.writeFileSync(file, textFileFor("%PDF-1.7 another", { "1": { lines: [] } }))
+    expect(mirrorText("Valve_Handbook_LowRes.pdf", root)).toBeUndefined()
+    expect(mirrorTextOf(target, root)).toBeUndefined()
+    // The mirror's own, with no scanned pages: looked at, and nothing to serve.
+    fs.writeFileSync(file, textFileFor("%PDF-1.4", {}))
+    expect(mirrorText("Valve_Handbook_LowRes.pdf", root)).toBeDefined()
+    expect(mirrorTextOf(target, root)).toBeUndefined()
+  } finally {
+    fs.rmSync(file, { force: true })
   }
 })
 

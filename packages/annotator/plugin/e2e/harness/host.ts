@@ -5,6 +5,8 @@
 import { blobPage, framePage } from "../../src/frame-page.ts"
 import { CONNECT, type Reply, type Request } from "../../src/protocol.ts"
 import { createService } from "../../src/service.ts"
+import { recognizePdf } from "../../src/ocr.ts"
+import type { TextFile } from "@chaoticgoodcomputing/pdf-ocr"
 
 const params = new URL(location.href).searchParams
 const TARGET = "https://example.org/fixture.pdf"
@@ -16,6 +18,29 @@ const harness = {
   requests: [] as Request[],
   /** The links of rendered comments the user followed. */
   links: [] as { href: string; internal: boolean }[],
+  /** The text file the plugin's OCR made, when the viewer said its PDF has no text. */
+  textFile: undefined as TextFile | undefined,
+  /** Pages recognized, as the progress said. */
+  progress: [] as [number, number][],
+}
+
+/** The PDF: the plugin's fixture, or, with `?fixture=scanned`, pdf-ocr's scanned one. */
+const PDF = params.get("fixture") === "scanned" ? "/scanned.pdf" : "/fixture.pdf"
+const files = `${location.protocol}//127.0.0.1:${location.port}`
+
+/** Recognizes the PDF's text as the plugin does (src/ocr.ts), and shows it again with the text. */
+async function recognize() {
+  const read = async (path: string) => (await fetch(`${files}${path}`)).text()
+  const [worker, core, data, pdfWorker] = await Promise.all([
+    read("/ocr/ocr-worker.js"),
+    read("/ocr/tesseract-core-simd-lstm.wasm.js"),
+    fetch(`${files}/ocr/eng.traineddata`).then(async (response) => new Uint8Array(await response.arrayBuffer())),
+    read("/frames/pdfjs/build/pdf.worker.min.mjs"),
+  ])
+  const bytes = new Uint8Array(await (await fetch(PDF)).arrayBuffer())
+  harness.textFile = await recognizePdf(bytes, { worker, core, data, pdfWorker }, { workers: 2, onProgress: (done, total) => harness.progress.push([done, total]) })
+  document.querySelector("iframe")?.remove()
+  void frameViewer()
 }
 
 const escapeHtml = (text: string) => text.replace(/[&<>"]/g, (character) => `&#${character.charCodeAt(0)};`)
@@ -61,10 +86,14 @@ async function frameViewer() {
         const reply = (value: Extract<Reply, { ok: true }>["value"]) => port.postMessage({ id: data.id, ok: true, value } satisfies Reply)
         switch (data.kind) {
           case "document": {
-            const bytes = await (await fetch("/fixture.pdf")).arrayBuffer()
-            port.postMessage({ id: data.id, ok: true, value: { data: bytes, url: TARGET } } satisfies Reply, [bytes])
+            const bytes = await (await fetch(PDF)).arrayBuffer()
+            port.postMessage({ id: data.id, ok: true, value: { data: bytes, url: TARGET, text: harness.textFile?.pages } } satisfies Reply, [bytes])
             break
           }
+          case "scanned":
+            reply(null)
+            void recognize()
+            break
           case "api":
             reply(await service(data.request))
             break

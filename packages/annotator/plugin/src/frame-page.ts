@@ -14,6 +14,13 @@ export interface PageOptions {
   annotation?: string
   /** The page range to show, as text (src/pages.ts). */
   pages?: string
+  /**
+   * The plugin's files' version, put on the page's own scripts' addresses. Obsidian's Chromium
+   * keeps a script it has loaded, by its address, for as long as it runs, in every frame: without
+   * a new address, a page would run the script of the plugin as it was first loaded, not as it was
+   * installed since.
+   */
+  version?: string
 }
 
 const OPTIONS_ID = "annotator-options"
@@ -25,8 +32,13 @@ const OPTIONS_ID = "annotator-options"
 export function framePage(html: string, folder: string, options: PageOptions = {}): string {
   const json = JSON.stringify(options).replace(/</g, "\\u003c")
   const head = `<base href="${folder.replace(/"/g, "&quot;")}"><script type="application/json" id="${OPTIONS_ID}">${json}</script>`
-  return /<head[^>]*>/i.test(html) ? html.replace(/<head[^>]*>/i, (tag) => `${tag}${head}`) : head + html
+  const versioned = options.version ? withVersion(html, options.version) : html
+  return /<head[^>]*>/i.test(versioned) ? versioned.replace(/<head[^>]*>/i, (tag) => `${tag}${head}`) : head + versioned
 }
+
+/** A page's own scripts (those beside it, by a relative address), at the plugin's version. */
+const withVersion = (html: string, version: string) =>
+  html.replace(/(<script\b[^>]*\bsrc=")([\w./-]+\.js)(")/g, (_, before, src, after) => `${before}${src}?v=${encodeURIComponent(version)}${after}`)
 
 /** A page's options, as `framePage` gave them. */
 export function optionsOf(document: Document): PageOptions {

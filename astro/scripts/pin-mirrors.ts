@@ -8,6 +8,11 @@
 // no mirror is built with its annotations alone. A document that can't be fetched is reported and
 // left, and the script still succeeds, so a host that refuses one reader can't stop a deploy.
 //
+// Then gives each mirror with no text file of its own one (src/lib/mirrors.ts): its scanned pages'
+// text, recognized by @chaoticgoodcomputing/pdf-ocr as the Annotator plugin recognizes it, or, for a
+// mirror with none, a text file with no pages, so it is looked at once. Recognizing a scanned book
+// takes a minute or two; a text file, like the mirror, is never made again while it is the mirror's.
+//
 // Reads the vault VAULT_ROOT names, else the assembled one (`astro:vault`), and writes only into the
 // mirror directory, MIRRORS_ROOT, else the repository's dist/mirrors (src/lib/mirrors.ts): never
 // into the vault.
@@ -16,7 +21,8 @@ import fs from "node:fs"
 import http from "node:http"
 import https from "node:https"
 import path from "node:path"
-import { isPdf, mirrorFile, mirrorName, mirrorsToSave, unmirroredDocuments } from "../src/lib/mirrors.ts"
+import { recognizePdf } from "@chaoticgoodcomputing/pdf-ocr/node"
+import { isPdf, mirrorFile, mirrorName, mirrorsToRecognize, mirrorsToSave, mirrorTextFile, unmirroredDocuments } from "../src/lib/mirrors.ts"
 
 const TIMEOUT = 60_000
 const MAX_REDIRECTS = 10
@@ -91,3 +97,20 @@ for (const target of save) {
   }
 }
 console.log(`${targets.length - failed} of ${targets.length} documents with no mirror saved.`)
+
+// The text of the mirrors' scanned pages. A mirror that can't be read is reported and left, as a
+// document that can't be fetched is.
+for (const name of mirrorsToRecognize()) {
+  const started = Date.now()
+  try {
+    const text = await recognizePdf(new Uint8Array(fs.readFileSync(mirrorFile(name))))
+    const file = mirrorTextFile(name)
+    const partial = `${file}.${process.pid}.partial`
+    fs.writeFileSync(partial, JSON.stringify(text))
+    fs.renameSync(partial, file)
+    const pages = Object.keys(text.pages).length
+    console.log(pages ? `✓ ${name}: the text of ${pages} scanned pages recognized, in ${Math.round((Date.now() - started) / 1000)}s` : `✓ ${name}: no scanned pages`)
+  } catch (error) {
+    console.warn(`✗ ${name}: its scanned pages could not be recognized: ${(error as Error).message}`)
+  }
+}

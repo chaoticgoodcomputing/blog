@@ -1,8 +1,13 @@
-/* An annotation page (src/lib/annotations.ts): where the annotated document comes from, then the
-   preface, the annotations under their heading, and the epilogue. Each annotation is a card, as the
+/* An annotation page (src/lib/annotations.ts): the preface, then where the annotated document comes
+   from, the annotations under their heading, and the epilogue. Each annotation is a card, as the
    Quartz annotator draws one: its passage, quoted, then the comment written on it, its tags and its
    date. The cards are one column, in the order of the document. How the annotation viewer lays them
    out beside the document is in annotation-viewer.css. */
+
+/* The preface opens the note, as a note's first paragraph does (note-body.css). */
+.prose > .annotation-preface > :first-child {
+  margin-top: 0;
+}
 
 .prose .annotated-document {
   color: var(--darkgray);

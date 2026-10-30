@@ -1,0 +1,33 @@
+{
+  "name": "@chaoticgoodcomputing/pdf-ocr",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Text for scanned PDFs: each textless page's scan, as the PDF stores it, recognized by a pinned Tesseract, kept as a text file beside the PDF, and given to PDF.js as its text. The Annotator plugin and the site run the same code, so they get the same text.",
+  "//license": "Not under packages/annotator: the site imports it, and nothing AGPL may reach the site. Its dependencies are Apache-2.0.",
+  "//exports": "Source only: no build and no dist. Whoever uses it compiles it, and Node strips its types. `.` runs anywhere (a page, a Web Worker, Node); `./node` is Node's way to run it, with worker threads; `./text` is reading a text file only, for a page that shows one.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./node": "./src/node.ts",
+    "./text": "./src/text-file.ts",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning --test --test-reporter=spec \"test/*.test.ts\"",
+    "typecheck": "tsc -p . && tsc -p test",
+    "recognize": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/recognize.ts"
+  },
+  "dependencies": {
+    "@tesseract.js-data/eng": "1.0.0",
+    "pdfjs-dist": "5.4.530",
+    "tesseract.js-core": "7.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "typescript": "^5.9.3"
+  }
+}

@@ -6,6 +6,8 @@
 //   frames/sidebar.html, .js   the sidebar page, with the fake service's fetch
 //   frames/hypothesis/build/   the Hypothesis client, as the `hypothesis` package publishes it
 //   frames/pdfjs/              PDF.js's worker, viewer styles, and the data it loads (CMaps, fonts, …)
+//   ocr/                       recognizing scanned PDFs (@chaoticgoodcomputing/pdf-ocr): the worker,
+//                              Tesseract's pinned build, and its English data, unzipped
 //   LICENSE.TXT, NOTICE.md,    the plugin's license, and the notices of the work in it
 //   licenses/
 //
@@ -16,6 +18,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { createRequire } from "node:module"
 import { fileURLToPath } from "node:url"
+import { gunzipSync } from "node:zlib"
 import esbuild from "esbuild"
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)))
@@ -41,6 +44,11 @@ function copy(pairs) {
 
 const hypothesis = packageDir("hypothesis")
 const pdfjs = packageDir("pdfjs-dist")
+// The engine and its data, as pdf-ocr pins them (its src/engine.ts: BUILD_FILE, DATA_FILE).
+const ocrRequire = createRequire(require.resolve("@chaoticgoodcomputing/pdf-ocr/package.json"))
+const ocrPackageDir = (name) => path.dirname(ocrRequire.resolve(`${name}/package.json`))
+const tesseractCore = ocrPackageDir("tesseract.js-core")
+const tesseractData = ocrPackageDir("@tesseract.js-data/eng")
 
 function copyAssets() {
   const clientBuild = path.join(hypothesis, "build")
@@ -64,7 +72,13 @@ function copyAssets() {
     [path.join(pdfjs, "web", "images"), "frames/pdfjs/web/images"],
     ...["cmaps", "standard_fonts", "wasm", "iccs"].map((folder) => [path.join(pdfjs, folder), `frames/pdfjs/${folder}`]),
     [path.join(pdfjs, "LICENSE"), "frames/pdfjs/LICENSE"],
+    // Tesseract's SIMD, LSTM-only build, its WebAssembly inside it, and its license.
+    [path.join(tesseractCore, "tesseract-core-simd-lstm.wasm.js"), "ocr/tesseract-core-simd-lstm.wasm.js"],
+    [path.join(tesseractCore, "LICENSE"), "ocr/tesseract.js-core.LICENSE"],
+    [path.join(root, "licenses", "tesseract.js-data.NOTICE.md"), "ocr/tesseract.js-data.NOTICE.md"],
   ])
+  // English, unzipped: the worker has no gunzip of its own.
+  fs.writeFileSync(path.join(dist, "ocr", "eng.traineddata"), gunzipSync(fs.readFileSync(path.join(tesseractData, "4.0.0_best_int", "eng.traineddata.gz"))))
 }
 
 const shared = {
@@ -97,6 +111,16 @@ const builds = [
     // copied beside the page (frames/pdfjs/LICENSE), and named here.
     banner: { js: "/*! The Annotator's viewer page. Includes PDF.js (pdfjs-dist), Apache-2.0, (c) Mozilla Foundation: see pdfjs/LICENSE. */" },
     outdir: frames,
+    format: "iife",
+    platform: "browser",
+    target: "chrome120",
+  },
+  // The OCR worker: a classic worker, which importScripts the engine's build.
+  {
+    ...shared,
+    entryPoints: { "ocr-worker": "frames/ocr-worker.ts" },
+    banner: { js: "/*! The Annotator's OCR worker. Includes PDF.js (pdfjs-dist), Apache-2.0, (c) Mozilla Foundation: see ../frames/pdfjs/LICENSE. */" },
+    outdir: path.join(dist, "ocr"),
     format: "iife",
     platform: "browser",
     target: "chrome120",

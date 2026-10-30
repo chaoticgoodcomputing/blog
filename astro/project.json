@@ -20,11 +20,11 @@
       "outputs": [ "{workspaceRoot}/dist/vault" ],
       "cache": false
     },
-    "serve": {
-      "//": "Astro's dev server over the assembled vault, dist/vault. The vault's sources are watched, and the vault assembled and read again whenever a file in one changes, so a new or renamed note's links follow without a restart.",
+    "dev": {
+      "//": "Astro's dev server over the assembled vault, dist/vault. First the tasks git:commit runs before a commit (vault:precommit: the private notes' stubs published, then checked), then the vault assembled from them, then the server, with its content cache cleared (`--force`): the cache keeps each note as it was rendered, and a changed Markdown plugin would otherwise show only in notes edited since. The vault's sources are watched, and the vault assembled and read again whenever a file in one changes, so a new or renamed note's links follow without a restart.",
       "executor": "nx:run-commands",
-      "options": { "command": "pnpm run dev", "cwd": "{projectRoot}" },
-      "dependsOn": [ "vault" ],
+      "options": { "command": "pnpm run vault && pnpm run dev --force", "cwd": "{projectRoot}" },
+      "dependsOn": [ "vault:precommit" ],
       "continuous": true
     },
     "build": {
@@ -59,7 +59,7 @@
       "options": { "command": "pnpm run test", "cwd": "{projectRoot}" }
     },
     "mirrors": {
-      "//": "Saves a mirror of each annotated document that has none into the mirror directory, the repository's dist/mirrors (MIRRORS_ROOT overrides it), never into the vault; the site serves each under assets/annotated-documents (docs/adr/2801). A saved mirror is pinned and never fetched again; delete it to fetch it afresh. The only target that reaches the network for the vault: run it before a build that should have every mirror, as the deploy does. A document that can't be fetched is reported, and its page is built with its annotations alone.",
+      "//": "Saves a mirror of each annotated document that has none into the mirror directory, the repository's dist/mirrors (MIRRORS_ROOT overrides it), never into the vault; the site serves each under assets/annotated-documents (docs/adr/2801). A saved mirror is pinned and never fetched again; delete it to fetch it afresh. The only target that reaches the network for the vault: run it before a build that should have every mirror, as the deploy does. A document that can't be fetched is reported, and its page is built with its annotations alone. Then recognizes the scanned pages of each mirror with no text file of its own (@chaoticgoodcomputing/pdf-ocr), and keeps their text beside it.",
       "executor": "nx:run-commands",
       "options": { "command": "pnpm run mirrors", "cwd": "{projectRoot}" },
       "dependsOn": [ "vault" ],

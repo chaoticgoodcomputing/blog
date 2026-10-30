@@ -3,14 +3,15 @@
 // it, with each annotation's passage highlighted, and the page's annotations, its cards, laid out
 // around it as the Quartz annotator lays them out (docs/cutover/annotations-audit.md, ADR 3701).
 //
-// The page's body is this component's slot: the source of the document, the preface, the
+// The page's body is this component's slot: the preface, the source of the document, the
 // annotations and the epilogue, which the Markdown pipeline makes (ADR 2701). As built, and for good
 // where the document can't be shown, the cards are the page, in one column (`data-layout="static"`).
 // Once the document opens, the element's script lays the page out by the room it has, and never by
 // a media query:
 // - **the margin**, where the document fits beside a column of cards: each card level with its
 //   passage, or just below the card above; every card whole until one is selected, and then all
-//   but the selected one shortened. Cards whose passage
+//   but the selected one shortened, to two lines. Where whole cards would run on more than a
+//   screen past the end of the document, they are short from the start. Cards whose passage
 //   isn't in the document go last, under "Not found in the document". The bar's toggle hides and
 //   shows the margin, and the browser remembers which.
 // - **the drawer**, where it doesn't: the document takes the column, and the cards come in from the
@@ -44,9 +45,11 @@ interface Props {
   note: Note
   /** The mirror's address, from the site's root and not encoded: `mirrorFor(note)`. */
   mirror: string
+  /** Its text file's address, for a scanned mirror: `mirrorTextFor(note)`. */
+  text?: string | undefined
 }
 
-const { note, mirror } = Astro.props
+const { note, mirror, text } = Astro.props
 const target = annotationTarget(note.frontmatter)!
 const name = documentFileName(target) ?? target
 const passages = annotatedPassages(note)
@@ -57,6 +60,7 @@ const href = encodeURI(decodeURI(target))
   class="annotation-viewer"
   data-layout="static"
   data-src={encodeURI(mirror)}
+  data-text={text && encodeURI(text)}
   data-passages={JSON.stringify(passages)}
   data-margin-width={MARGIN_WIDTH}
   data-min-document-width={MIN_DOCUMENT_WIDTH}
@@ -225,7 +229,7 @@ const href = encodeURI(decodeURI(target))
         this.#shown = show(this.dataset.src!, this.#pages, passages, {
           opened: (places) => this.#opened(places),
           failed,
-        })
+        }, this.dataset.text)
       } catch {
         failed()
       }
@@ -332,20 +336,42 @@ const href = encodeURI(decodeURI(target))
       this.#restore()
     }
 
-    // Marks the selected annotation's card and highlights, and, while one is selected, shortens
-    // every other card once the document is beside them.
+    // Marks the selected annotation's card and highlights, and, once the document is beside the
+    // cards, shortens every other card while one is selected, or from the start where the cards
+    // are crowded.
     #mark() {
       for (const highlight of this.querySelectorAll<HTMLElement>(".highlight")) {
         highlight.classList.toggle("selected", highlight.dataset.annotation === this.#selected)
       }
+      const crowded = this.#crowded()
       for (const card of this.#cards()) {
         const selected = idOf(card) === this.#selected
         card.toggleAttribute("data-selected", selected)
-        // Every card is whole until one is selected.
-        card.classList.toggle("short", !selected && this.#layout !== "static" && this.#selected !== undefined)
+        // Every card is whole until one is selected, unless the cards are crowded.
+        card.classList.toggle("short", !selected && this.#layout !== "static" && (crowded || this.#selected !== undefined))
         if (selected) card.setAttribute("aria-current", "true")
         else card.removeAttribute("aria-current")
       }
+    }
+
+    // Whether the cards in the margin, every one whole, each beside its passage or below the card
+    // above, would run on more than a screen past the end of the document.
+    #crowded(): boolean {
+      if (this.#layout !== "margin" || this.#marginHidden || !this.#section) return false
+      const cards = this.#cards()
+      for (const card of cards) card.classList.remove("short")
+      const sectionTop = this.#section.getBoundingClientRect().top
+      const placed = cards.filter((card) => this.#placeOf(card))
+      if (!placed.length) return false
+      const heights = placed.map((card) => card.offsetHeight)
+      const tops = stack(
+        placed.map((card) => this.#passageY(this.#placeOf(card)!)! - sectionTop),
+        heights,
+        -1,
+        CARD_GAP,
+      )
+      const end = this.#pages.getBoundingClientRect().bottom - sectionTop
+      return tops.at(-1)! + heights.at(-1)! > end + window.innerHeight
     }
 
     // Puts every card where it goes: in the margin, beside its passage; elsewhere, in the flow.

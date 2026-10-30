@@ -264,6 +264,12 @@ assets/annotated-documents. Saved in the mirror directory, the repository's dist
 in the vault, under the document's file name, and never fetched again once saved.
 _Avoid_: download, cached PDF
 
+**Mirror's text file**:
+The text of a scanned mirror's pages, which they don't have of their own, recognized once beside the
+mirror (`packages/pdf-ocr/CONTEXT.md`): the text the Annotator plugin recognized the same scans to,
+in which the annotations' passages are found. Served beside the mirror while it is that mirror's.
+_Avoid_: OCR, transcript
+
 **Annotation viewer**:
 The island on an annotation page that draws the mirror with its highlights, and lays the page's
 cards out around it: in its margin, or in a drawer. A page whose document has no mirror has none.

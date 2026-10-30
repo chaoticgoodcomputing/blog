@@ -21,6 +21,7 @@
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
     "@chaoticgoodcomputing/obsidian-markdown": "workspace:*",
+    "@chaoticgoodcomputing/pdf-ocr": "workspace:*",
     "@fontsource/inter": "^5.3.0",
     "@iconify-json/mdi": "1.2.3",
     "approx-string-match": "^2.0.0",

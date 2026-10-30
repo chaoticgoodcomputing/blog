@@ -29,6 +29,8 @@ export default defineConfig({
     outDir: builtSite(site),
     cacheDir: `${root}.e2e/${site}/cache`,
     port,
-    env: site === "fixture" ? { VAULT_ROOT: `${root}test/fixtures/vault`, MIRRORS_ROOT: `${root}test/fixtures/mirrors` } : {},
+    // The fixture's mirrors, with a scanned one and its text file made for the run (scripts/fixture-mirrors.ts).
+    env: site === "fixture" ? { VAULT_ROOT: `${root}test/fixtures/vault`, MIRRORS_ROOT: `${root}.e2e/fixture/mirrors` } : {},
+    before: site === "fixture" ? `node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/fixture-mirrors.ts ${root}.e2e/fixture/mirrors` : undefined,
   }),
 })

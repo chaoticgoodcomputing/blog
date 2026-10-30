@@ -12,5 +12,5 @@ export default defineConfig({
   reporter: process.env.CI ? "github" : "list",
   use: { baseURL: `http://localhost:${PORT}/`, viewport: { width: 1400, height: 900 }, trace: "retain-on-failure" },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"], viewport: { width: 1400, height: 900 } } }],
-  webServer: { command: `node e2e/serve.mjs ${PORT}`, port: PORT, reuseExistingServer: false },
+  webServer: { command: `node --experimental-strip-types --disable-warning=ExperimentalWarning e2e/serve.mjs ${PORT}`, port: PORT, reuseExistingServer: false },
 })

@@ -6,16 +6,18 @@ import { expect, expectAt, test } from "../site.ts"
 
 const PAGE = "/annotations/handbook"
 
-test("an annotation page is its link to the document, its preface, its annotations in the document's order, and its epilogue", async ({
+test("an annotation page is its preface, its link to the document, its annotations in the document's order, and its epilogue", async ({
   page,
 }) => {
   await page.goto(PAGE)
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("An annotated handbook")
   const body = page.locator("article.prose")
   await expect(body.locator(":scope > *")).toHaveCount(4)
-  await expect(body.locator(":scope > :nth-child(1)")).toHaveClass("annotated-document")
-  await expect(body.locator(":scope > :nth-child(2)")).toHaveText("Why I read the handbook.")
+  await expect(body.locator(":scope > :nth-child(1)")).toHaveClass("annotation-preface")
+  await expect(body.locator(":scope > :nth-child(1)")).toHaveText("Why I read the handbook.")
+  await expect(body.locator(":scope > :nth-child(2)")).toHaveClass("annotated-document")
   await expect(body.locator(":scope > :nth-child(3)")).toHaveClass("annotations")
+  await expect(body.locator(":scope > :nth-child(4)")).toHaveClass("annotation-epilogue")
   await expect(body.locator(":scope > :nth-child(4)")).toHaveText("What I took from the handbook.")
 
   // The cover (character 0), the adventure (162), the small print (2707): the order of the

@@ -5,13 +5,14 @@
 import { NotAPdf, supplyDocument } from "@chaoticgoodcomputing/annotator-documents"
 import type { EditorView } from "@codemirror/view"
 import { around } from "monkey-around"
-import { ItemView, MarkdownView, Notice, Plugin, type ViewStateResult } from "obsidian"
+import { type Events, ItemView, MarkdownView, Notice, Plugin, TFile, type ViewStateResult } from "obsidian"
 import { documentStore } from "./documents.ts"
+import { type OcrFiles, recognizePdf } from "./ocr.ts"
 import { annotatorInEditor, openAtAnnotation } from "./editor/annotator.ts"
 import { folderOf } from "./frame-page.ts"
 import type { AnnotatorSession } from "./session.ts"
 import { type AnnotatorSettings, AnnotatorSettingTab, settingsFrom } from "./settings.ts"
-import { isAnnotationNote, targetOf } from "./target.ts"
+import { addressOf, bytesOf, isAnnotationNote, type Target, targetOf, textFileOf } from "./target.ts"
 
 /** The view type of upstream's annotation mode, and of this plugin's until 0.4. */
 const LEGACY_VIEW_TYPE = "pdf-annotator"
@@ -23,6 +24,9 @@ export default class AnnotatorPlugin extends Plugin {
   /** The annotators open in editors. */
   readonly sessions = new Set<AnnotatorSession>()
 
+  /** The version of the plugin's files, for the pages' addresses (src/frame-page.ts): new each time it loads. */
+  readonly filesVersion = `${Date.now().toString(36)}`
+
   async onload() {
     this.settings = settingsFrom(await this.loadData())
     this.addSettingTab(new AnnotatorSettingTab(this.app, this))
@@ -32,6 +36,33 @@ export default class AnnotatorPlugin extends Plugin {
 
     // Obsidian's styles changed (a theme, a snippet): the sidebars show comments with the new ones.
     this.registerEvent(this.app.workspace.on("css-change", () => this.sessions.forEach((session) => session.stylesChanged())))
+
+    // A note's target or page range changed: its annotators show the new ones. Obsidian's index
+    // and Dataview's each say so when they have the change.
+    const propertiesChanged = (file: unknown) => {
+      if (!(file instanceof TFile)) return
+      for (const session of this.sessions) if (session.note.path === file.path) session.propertiesChanged()
+    }
+    this.registerEvent(this.app.metadataCache.on("changed", propertiesChanged))
+    this.registerEvent(
+      // Dataview's own event, on Obsidian's metadata cache: (kind, file, old path).
+      (this.app.metadataCache as Events).on("dataview:metadata-change", (_kind: unknown, file: unknown) => propertiesChanged(file)),
+    )
+
+    this.addCommand({
+      id: "recognize-text",
+      name: "Recognize the text of this note's scanned PDF",
+      checkCallback: (checking) => {
+        const file = this.app.workspace.getActiveViewOfType(MarkdownView)?.file ?? null
+        const target = isAnnotationNote(this.app, file) ? targetOf(this.app, file, this.settings.customDefaultPath) : undefined
+        if (!target) return false
+        if (!checking) {
+          const notice = new Notice("Recognizing this PDF's text…", 0)
+          void this.recognizeText(target, (done, total) => notice.setMessage(`Recognizing this PDF's text: ${done} of ${total} pages…`)).finally(() => notice.hide())
+        }
+        return true
+      },
+    })
 
     this.addCommand({
       id: "supply-document",
@@ -44,6 +75,55 @@ export default class AnnotatorPlugin extends Plugin {
         return true
       },
     })
+  }
+
+  /** Documents whose text is being recognized, by address, so one isn't recognized twice at once. */
+  private recognizing = new Set<string>()
+
+  /**
+   * Recognizes the text of a document's scanned pages, once, and keeps it as the document's text
+   * file in the store, beside its saved copy; then shows the annotators of it again, with the text.
+   * Resolves to whether it did.
+   */
+  async recognizeText(target: Target, onProgress?: (done: number, total: number) => void): Promise<boolean> {
+    const address = addressOf(target)
+    if (this.recognizing.has(address)) {
+      new Notice("Annotator is already recognizing this PDF's text.")
+      return false
+    }
+    this.recognizing.add(address)
+    try {
+      const store = this.documentStore()
+      const bytes = new Uint8Array(await bytesOf(this.app, target, store))
+      const text = await recognizePdf(bytes, await this.ocrFiles(), { onProgress })
+      if (!Object.keys(text.pages).length) {
+        new Notice("This PDF has no scanned pages: there is nothing to recognize.")
+        return false
+      }
+      await store.write(textFileOf(target), new TextEncoder().encode(JSON.stringify(text)))
+      new Notice(`Annotator recognized the text of ${Object.keys(text.pages).length} pages.`)
+      for (const session of this.sessions) session.restartFor(address)
+      return true
+    } catch (error) {
+      console.error("Annotator: recognizing text", error)
+      new Notice(`Annotator could not recognize this PDF's text: ${error instanceof Error ? error.message : error}`)
+      return false
+    } finally {
+      this.recognizing.delete(address)
+    }
+  }
+
+  /** The OCR worker's files, from the plugin's folder (dist/ocr/, and PDF.js's worker). */
+  private async ocrFiles(): Promise<OcrFiles> {
+    const adapter = this.app.vault.adapter
+    const dir = this.manifest.dir
+    const [worker, core, data, pdfWorker] = await Promise.all([
+      adapter.read(`${dir}/ocr/ocr-worker.js`),
+      adapter.read(`${dir}/ocr/tesseract-core-simd-lstm.wasm.js`),
+      adapter.readBinary(`${dir}/ocr/eng.traineddata`),
+      adapter.read(`${dir}/frames/pdfjs/build/pdf.worker.min.mjs`),
+    ])
+    return { worker, core, data: new Uint8Array(data), pdfWorker }
   }
 
   async saveSettings() {

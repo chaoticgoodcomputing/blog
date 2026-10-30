@@ -8,12 +8,12 @@
    width of a note's. */
 annotation-viewer[data-layout="static"] .layout {
   max-width: 40rem;
+  margin-inline: auto;
 }
 
-/* With the document, the body is laid out with it in one grid: what comes before the annotations
-   (where the document comes from, the preface) across the top, then the document, then the cards in
-   its margin or its drawer, then what comes after them (the epilogue). The body's own article
-   leaves its children to the grid. */
+/* With the document, the body is laid out with it in one grid: the preface across the top, then
+   where the document comes from, over the document, then the document, then the cards in its margin
+   or its drawer, then the epilogue. The body's own article leaves its children to the grid. */
 annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -35,23 +35,34 @@ annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .prose {
 
 annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .prose > * {
   grid-column: 1 / -1;
-  max-width: 40rem;
+}
+
+/* The preface and the epilogue read as a note does: a column as wide as a note's, in the middle of
+   the room, however wide the document beside the cards. */
+annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .prose > :is(.annotation-preface, .annotation-epilogue) {
+  justify-self: center;
+  box-sizing: border-box;
+  width: min(100%, 40rem);
+}
+
+annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .prose > .annotated-document {
+  order: 1;
+  margin: 0 0 0.75rem;
 }
 
 annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .document {
   grid-column: 1;
-  order: 1;
+  order: 2;
   margin-bottom: 2rem;
 }
 
 annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .prose > .annotations {
-  order: 2;
-  max-width: none;
+  order: 3;
   margin: 0;
 }
 
 annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .prose > .annotations ~ * {
-  order: 3;
+  order: 4;
 }
 
 /* A card selects its annotation once the document is beside it. */
@@ -108,18 +119,27 @@ annotation-viewer .unplaced {
   font-size: 1rem;
 }
 
-/* Beside the document, every card but the selected one is shortened: two lines of its passage,
-   about four of its comment, faded where it is cut. */
+/* Beside the document, every card but the selected one is shortened to two lines: one of its
+   passage, one of its comment, faded where it is cut, so that even a document's closely annotated
+   passages keep their cards near them. Its tags and date are the whole card's. */
 annotation-viewer .annotation.short .annotation-highlight > p {
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
+}
+
+annotation-viewer .annotation.short .annotation-highlight {
+  margin: 0 0 0.5rem;
 }
 
 annotation-viewer .annotation.short .annotation-comment {
-  max-height: 6.4em;
+  max-height: 1.6em;
   overflow: hidden;
+}
+
+annotation-viewer .annotation.short :is(.annotation-tags, .annotation-date) {
+  display: none;
 }
 
 annotation-viewer .annotation.short .annotation-comment.clipped {

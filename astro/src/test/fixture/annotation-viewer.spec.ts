@@ -162,10 +162,13 @@ test("every card is whole beside the document until one is selected, which then 
 
   await card(page, "cancel").locator(".annotation-comment").click()
   await expect(card(page, "cancel")).toHaveAttribute("data-selected")
-  // Every other card is cut, at about four lines, and fades where it is.
+  // Every other card is cut to two lines, one of its passage and one of its comment, which fades
+  // where it is cut; its tags and date are left for the whole card.
   await expect(promise).toHaveClass(/\bshort\b/)
   await expect(comment).toHaveClass(/\bclipped\b/)
-  await expect.poll(async () => (await comment.boundingBox())!.height).toBeLessThan(100)
+  await expect.poll(async () => (await comment.boundingBox())!.height).toBeLessThan(30)
+  await expect.poll(async () => (await promise.locator(".annotation-highlight").boundingBox())!.height).toBeLessThan(45)
+  await expect(promise.locator(".annotation-date")).toBeHidden()
 
   await comment.click()
   await expect(promise).toHaveAttribute("data-selected")
@@ -173,6 +176,30 @@ test("every card is whole beside the document until one is selected, which then 
   await expect(promise).toHaveCSS("border-color", "rgb(40, 75, 99)")
   await expect.poll(async () => (await comment.boundingBox())!.height).toBeGreaterThan(100)
   for (const id of ["cancel", "minutes"]) await expect(card(page, id)).toHaveClass(/\bshort\b/)
+})
+
+test("where the cards, whole, would run on more than a screen past the end of the document, every one is short from the start", async ({ page }) => {
+  const viewer = await opened(page, DESKTOP)
+  const document = viewer.locator(".document")
+  // Zoomed out, and on a short screen, the cards run on well past the document.
+  await page.setViewportSize({ width: DESKTOP.width, height: 400 })
+  for (let i = 0; i < 4; i++) await page.keyboard.press("-")
+  await expect(viewer).toHaveAttribute("data-layout", "margin")
+  for (const id of ["promise", "cancel", "minutes"]) await expect(card(page, id)).toHaveClass(/\bshort\b/)
+  // The last card the document has a place for (^draft's passage it hasn't, and goes after it).
+  const bottom = async (locator: Locator) => {
+    const box = (await locator.boundingBox())!
+    return box.y + box.height
+  }
+  await expect.poll(async () => (await bottom(card(page, "minutes"))) - (await bottom(document))).toBeLessThanOrEqual(0)
+
+  // A selected card is whole, the others still short; zoomed back in, they are whole again.
+  await card(page, "cancel").click()
+  await expect(card(page, "cancel")).not.toHaveClass(/\bshort\b/)
+  await expect(card(page, "promise")).toHaveClass(/\bshort\b/)
+  await page.keyboard.press("Escape")
+  await page.keyboard.press("0")
+  for (const id of ["promise", "cancel", "minutes"]) await expect(card(page, id)).not.toHaveClass(/\bshort\b/)
 })
 
 test("a card takes the document to its passage, marks its highlights, and puts its address in place of the page's", async ({ page }) => {
@@ -471,3 +498,50 @@ async function touch(page: Page, fingers: { x: number; y: number }[][], steps = 
   await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] })
   await cdp.detach()
 }
+
+// test/fixtures/vault/annotation-viewer/garden.md: a scanned document, whose pages are pictures of
+// text. Its mirror and text file are made for the run (scripts/fixture-mirrors.ts), the text
+// recognized from the scans as the Annotator plugin recognizes it.
+const GARDEN = "/annotation-viewer/garden"
+const GARDEN_TEXT = "/assets/annotated-documents/Garden.pdf.text.json"
+
+test("a scanned document's passages are found in its text file, the text the plugin recognized, and highlighted", async ({ page }) => {
+  const text = page.waitForResponse((response) => new URL(response.url()).pathname === GARDEN_TEXT)
+  const viewer = await opened(page, DESKTOP, GARDEN)
+  expect((await text).status()).toBe(200)
+  // The passage is on the first page, a scan, and its highlight is a link to its card.
+  const highlight = highlights(page, "bench")
+  await expect(highlight.first()).toBeVisible()
+  await expect(highlight.first()).toHaveAttribute("href", "#^bench")
+  expect(await viewer.locator('.document-page[data-page="1"] .highlight[data-annotation="bench"]').count()).toBeGreaterThan(0)
+  // Its text is in the page's text layer, to select, though the page has none of its own.
+  await expect(viewer.locator('.document-page[data-page="1"] .text-layer')).toContainText("surprise.")
+})
+
+test("a document with text of its own has no text file to fetch", async ({ page }) => {
+  const requested: string[] = []
+  page.on("request", (request) => requested.push(new URL(request.url()).pathname))
+  await opened(page, DESKTOP)
+  expect(requested.filter((path) => path.endsWith(".text.json"))).toEqual([])
+})
+
+test("beside the document, the preface and the epilogue read as a note does, and the document's source is just over it", async ({ page }) => {
+  const viewer = await opened(page, DESKTOP, GARDEN)
+  await expect(viewer).toHaveAttribute("data-layout", "margin")
+  const main = (await page.locator("main").boundingBox())!
+  // A note's column: 40rem, in the middle of the note's room.
+  for (const part of [".annotation-preface", ".annotation-epilogue"]) {
+    const box = (await page.locator(`article.prose > ${part}`).boundingBox())!
+    expect(box.width, part).toBeCloseTo(640, 0)
+    expect(box.x + box.width / 2, part).toBeCloseTo(main.x + main.width / 2, 0)
+  }
+  await expect(page.locator(".annotation-epilogue h3")).toHaveText("What it found")
+  // The source, then the document under it, at its left edge; the preface above both.
+  const preface = (await page.locator(".annotation-preface").boundingBox())!
+  const source = (await page.locator(".annotated-document").boundingBox())!
+  const document = (await viewer.locator(".document").boundingBox())!
+  expect(source.y).toBeGreaterThanOrEqual(preface.y + preface.height)
+  expect(document.y - (source.y + source.height)).toBeGreaterThanOrEqual(0)
+  expect(document.y - (source.y + source.height)).toBeLessThan(24)
+  expect(source.x).toBeCloseTo(document.x, 0)
+})

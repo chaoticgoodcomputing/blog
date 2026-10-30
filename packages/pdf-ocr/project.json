@@ -1,0 +1,24 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "@chaoticgoodcomputing/pdf-ocr",
+  "root": "packages/pdf-ocr",
+  "sourceRoot": "packages/pdf-ocr/src",
+  "projectType": "library",
+  "tags": ["astro:lib", "annotator"],
+  "targets": {
+    "test": {
+      "//": "Recognition of a generated scanned PDF: its text, the same in any order and in any worker, and the same as the text it was pinned with (test/fixtures/expected.text.json). No build target: whoever uses it compiles the source.",
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run test", "cwd": "{projectRoot}" }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run typecheck", "cwd": "{projectRoot}" }
+    },
+    "recognize": {
+      "//": "Recognizes a PDF's textless pages and writes its text file beside it: `nx run @chaoticgoodcomputing/pdf-ocr:recognize --args=<file.pdf>`.",
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run recognize", "cwd": "{projectRoot}" }
+    }
+  }
+}

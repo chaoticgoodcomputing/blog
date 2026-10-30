@@ -18,6 +18,7 @@ import {
 import type { TextContent } from "pdfjs-dist/types/src/display/api"
 import workerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url"
 import { findPassage, highlightBoxes, pageText, type AnnotatedPassage, type TextRun } from "../../lib/highlights.ts"
+import { type TextFile, textContentOf } from "@chaoticgoodcomputing/pdf-ocr/text"
 
 GlobalWorkerOptions.workerSrc ||= workerUrl
 
@@ -60,9 +61,10 @@ interface Page {
 /**
  * Shows the PDF at `src` in `into`, with each passage of `passages` that is found in it highlighted
  * by a link to its annotation, `#^id`. The page is the one scroll: the pages are drawn as they come
- * near the window.
+ * near the window. A scanned PDF's text is its text file's, at `textSrc`: the text the Annotator
+ * plugin recognized the same scans to, so the passages annotated there are found here.
  */
-export function show(src: string, into: HTMLElement, passages: AnnotatedPassage[], on: Callbacks): Shown {
+export function show(src: string, into: HTMLElement, passages: AnnotatedPassage[], on: Callbacks, textSrc?: string): Shown {
   const task = getDocument({ url: new URL(src, document.baseURI).href, verbosity: VerbosityLevel.ERRORS })
   let destroyed = false
   let pdf: PDFDocumentProxy | undefined
@@ -155,16 +157,23 @@ export function show(src: string, into: HTMLElement, passages: AnnotatedPassage[
     page.el.prepend(canvas, text)
   }
 
+  const recognized = textSrc
+    ? fetch(new URL(textSrc, document.baseURI)).then(async (response) => (response.ok ? ((await response.json()) as TextFile).pages : {}))
+    : Promise.resolve({} as TextFile["pages"])
+
   const open = async () => {
     pdf = await task.promise
     if (destroyed) return
+    // A scanned page's text is its text file's; without one, the page has none to find passages in.
+    const recognizedPages = await recognized.catch(() => ({}) as TextFile["pages"])
     // Every page's size and text, once: neither changes with the size it is drawn at. The text is
     // what the passages are found in, where on its page each one is, and what the text layer sets.
     const sizes = []
     for (let n = 1; n <= pdf.numPages; n++) {
       const page = await pdf.getPage(n)
       sizes.push(page.getViewport({ scale: 1 }))
-      texts.push(await page.getTextContent())
+      const scanned = recognizedPages[String(n)]
+      texts.push(scanned ? (textContentOf(scanned) as unknown as TextContent) : await page.getTextContent())
       if (destroyed) return
     }
     const runs = texts.map((text) => text.items as TextRun[])

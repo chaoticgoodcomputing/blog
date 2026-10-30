@@ -11,7 +11,7 @@ import type { PageKind } from "../lib/page.ts"
 import { isAnnotationPage } from "../lib/annotations.ts"
 
 import AnnotationViewer from "../components/annotation-viewer/AnnotationViewer.astro"
-import { mirrorFor } from "../lib/mirrors.ts"
+import { mirrorFor, mirrorTextFor } from "../lib/mirrors.ts"
 
 export const getStaticPaths = (async () =>
   (await getNoteEntries())
@@ -30,12 +30,14 @@ const { Content, headings } = await render(entry)
 const kind: PageKind = isAnnotationPage(note) ? "annotation" : "note"
 // An annotation page whose document the site mirrors has the document drawn beside its body.
 const mirror = kind === "annotation" ? mirrorFor(note) : undefined
+// And a scanned one's text, which its pages don't have (src/lib/mirrors.ts).
+const mirrorText = mirror ? mirrorTextFor(note) : undefined
 ---
 
 <Page kind={kind} title={note.title} description={note.summary} url={note.url} note={note} headings={headings}>
   {
     mirror ? (
-      <AnnotationViewer note={note} mirror={mirror}>
+      <AnnotationViewer note={note} mirror={mirror} text={mirrorText}>
         <Prose>
           <Content />
         </Prose>

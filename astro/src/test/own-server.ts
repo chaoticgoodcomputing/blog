@@ -45,20 +45,22 @@ export interface OwnBuild {
   port: number
   /** More of the build's environment: `VAULT_ROOT` and `MIRRORS_ROOT`, for a vault other than the real one. */
   env?: Record<string, string>
+  /** A command run before the build, from `root`: making what the build reads. */
+  before?: string
 }
 
 /**
  * The `webServer` that builds this site and serves it, from `root`: a build of its own, with
  * `--force` and a cache of its own, on a port of its own, never a server that is already there.
  */
-export function ownServer(root: string, { outDir, cacheDir, port, env = {} }: OwnBuild) {
+export function ownServer(root: string, { outDir, cacheDir, port, env = {}, before }: OwnBuild) {
   // Called by its path: under `pnpm exec` the server outlives the run. `--force` because the build's
   // cache keeps a note's rendered HTML, and nothing in it knows that a Markdown plugin's code has
   // changed: nothing is ever tested on HTML an older build rendered. `--ignore-lock` because Astro
   // allows a project one preview server, and puts it in the background when an agent starts it.
   const astro = "./node_modules/.bin/astro"
   return {
-    command: `${astro} build --force --outDir ${outDir} && ${astro} preview --outDir ${outDir} --port ${port} --ignore-lock`,
+    command: `${before ? `${before} && ` : ""}${astro} build --force --outDir ${outDir} && ${astro} preview --outDir ${outDir} --port ${port} --ignore-lock`,
     cwd: root,
     url: `http://localhost:${port}`,
     // E2E_CACHE_DIR also holds the preview server to its port (`preview.strictPort`, astro.config.ts).

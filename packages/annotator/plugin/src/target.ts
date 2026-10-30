@@ -1,6 +1,7 @@
 // An annotation note's annotation target: where the annotated document is, and its bytes.
 
-import { type DocumentStore, documentFor } from "@chaoticgoodcomputing/annotator-documents"
+import { type DocumentStore, documentFor, savedName } from "@chaoticgoodcomputing/annotator-documents"
+import { textFileName } from "@chaoticgoodcomputing/pdf-ocr"
 import { type App, TFile } from "obsidian"
 import { obsidianFetch } from "./documents.ts"
 
@@ -65,3 +66,10 @@ export async function bytesOf(app: App, target: Target, store: DocumentStore): P
   const { bytes } = await documentFor(target.url, { store, fetch: obsidianFetch })
   return bytes.slice().buffer
 }
+
+/**
+ * The name of the target's text file in the store of saved copies (@chaoticgoodcomputing/pdf-ocr):
+ * beside its saved copy, for a document on the web; under `vault/`, for a file of the vault, which
+ * is kept out of the vault itself.
+ */
+export const textFileOf = (target: Target) => textFileName(target.kind === "url" ? savedName(target.url) : `vault/${target.file.path}`)

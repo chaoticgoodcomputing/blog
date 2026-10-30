@@ -1,6 +1,7 @@
 // Annotating a PDF with Hypothesis's own client, in the plugin's pages, against the fake service:
 // what the user does in the sidebar, and what it does to the annotation note.
 
+import { readFileSync } from "node:fs"
 import { expect, type Frame, type Page, test } from "@playwright/test"
 import { parseNote, upsertAnnotation } from "@chaoticgoodcomputing/annotator-format"
 
@@ -161,6 +162,17 @@ test("a note's page range shows only its pages, and its passages are annotated i
   expect(position.start).toBeGreaterThan("The first page of the fixture.Annotate this sentence, please.A line nobody annotates.".length)
 })
 
+test("each page shows its number as a page range counts it, from 1, whatever the range", async ({ page }) => {
+  const { viewerFrame } = await open(page, { note: seededNote(), pages: "2-3" }, "Another passage worth a comment.")
+  const numbers = () =>
+    viewerFrame.evaluate(() =>
+      [...document.querySelectorAll<HTMLElement>(".page")]
+        .filter((page) => getComputedStyle(page).visibility !== "hidden")
+        .map((page) => getComputedStyle(page, "::before").content),
+    )
+  expect(await numbers()).toEqual(['"2"', '"3"'])
+})
+
 test("a comment is shown as Obsidian renders it, with Obsidian's styles, and its links open in Obsidian", async ({ page }) => {
   const comment = seed("seed1", "Another passage worth a comment.", "The second page of the fixture.", "Read this **twice**. See [[Flatland]].")
   const note = upsertAnnotation(PREFACE, comment).note
@@ -187,4 +199,40 @@ test("the same comment is rendered once, however often the sidebar redraws it", 
   await expect(sidebar.getByText("A comment already in the note.")).toBeVisible()
   const renders = await page.evaluate(() => (window as any).harness.requests.filter((request: any) => request.kind === "markdown").length)
   expect(renders).toBe(1)
+})
+
+/** Whether the client's banner says the PDF has no text to select. */
+const saysNoText = (viewerFrame: Frame) =>
+  viewerFrame.evaluate(() => [...document.querySelectorAll("*")].some((element) => element.shadowRoot?.textContent?.includes("does not contain selectable text")))
+
+test("a scanned PDF's text is recognized in the browser, to the text Node recognizes, and is annotated as any PDF's", async ({ page }) => {
+  test.setTimeout(120_000)
+  await page.goto("/?fixture=scanned")
+  // The viewer finds scanned pages, with no text, and says so; the harness recognizes it as the plugin does, in Web Workers.
+  await expect.poll(() => page.evaluate(() => (window as any).harness.requests.some((request: { kind: string }) => request.kind === "scanned")), { timeout: 30_000 }).toBe(true)
+  await expect.poll(() => page.evaluate(() => Boolean((window as any).harness.textFile)), { timeout: 90_000 }).toBe(true)
+  // The same text file, to the byte, as pdf-ocr's Node workers make of the same PDF (its pinned one).
+  const expected = JSON.parse(readFileSync(new URL("../../../pdf-ocr/test/fixtures/expected.text.json", import.meta.url), "utf8"))
+  expect(await page.evaluate(() => (window as any).harness.textFile)).toEqual(expected)
+  // Every page without text of its own was looked at: the two scans, and the blank page.
+  expect(await page.evaluate(() => (window as any).harness.progress.at(-1))).toEqual([3, 3])
+
+  // Shown again, with the text: in the text layer, for the client, and no banner.
+  const viewer = page.frameLocator("iframe").first()
+  await viewer.locator(".textLayer span", { hasText: "garden" }).first().waitFor({ timeout: 30_000 })
+  await expect.poll(() => sidebarOf(page)).toBeTruthy()
+  const viewerFrame = viewerOf(page)!
+  const sidebar = sidebarOf(page)!
+  await sidebar.getByText("This note").first().waitFor()
+  expect(await saysNoText(viewerFrame)).toBe(false)
+
+  await select(viewerFrame, "surprise.")
+  await viewer.getByRole("button", { name: /^Annotate/ }).click()
+  await sidebar.getByRole("textbox", { name: "Enter comment" }).fill("On a recognized word.")
+  await sidebar.getByRole("button", { name: "Post to This note" }).click()
+  await expect.poll(async () => parseNote(await noteOf(page)).annotations.length).toBe(1)
+  const [annotation] = parseNote(await noteOf(page)).annotations
+  const quote = annotation!.target![0]!.selector!.find((selector) => selector.type === "TextQuoteSelector") as { exact: string; prefix: string }
+  expect(quote.exact).toBe("surprise.")
+  expect(quote.prefix).toContain("bench by")
 })

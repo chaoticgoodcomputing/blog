@@ -21,7 +21,7 @@
 			// Monitors for "Started a Quartz server listening at" to signal ready
 			"label": "_serve-server",
 			"type": "shell",
-			"command": "nx run site:serve",
+			"command": "nx run site:dev",
 			"isBackground": true,
 			"options": {
 				"shell": {

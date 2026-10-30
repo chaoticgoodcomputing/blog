@@ -10,6 +10,7 @@
 import { addStylesheet } from "./stylesheets.ts"
 import * as pdfjs from "pdfjs-dist"
 import { EventBus, PDFLinkService, PDFViewer } from "pdfjs-dist/web/pdf_viewer.mjs"
+import { hasScan, type TextFile, textContentOf } from "@chaoticgoodcomputing/pdf-ocr"
 import { inPageRange, parsePageRange } from "../src/pages.ts"
 import { blobPage, framePage, optionsOf } from "../src/frame-page.ts"
 import { CONNECT, type DocumentReply, type MarkdownReply, type Push, type Reply, type Request, type StylesReply } from "../src/protocol.ts"
@@ -22,7 +23,7 @@ const options = optionsOf(document)
 
 /** A script of the plugin's folder, as a `blob:` address of this page's origin, from which alone a page may start a worker. */
 async function sameOriginScript(path: string) {
-  const source = await (await fetch(here(path))).text()
+  const source = await (await fetch(here(path), { cache: "no-cache" })).text()
   return URL.createObjectURL(new Blob([source], { type: "text/javascript" }))
 }
 
@@ -157,8 +158,8 @@ const annotation = options.annotation
  */
 async function bootClient() {
   // The sidebar page, made a `blob:` document of this page's origin, as this one was.
-  const sidebarHtml = await (await fetch(here("sidebar.html"))).text()
-  const sidebarAppUrl = blobPage(framePage(sidebarHtml, here("")))
+  const sidebarHtml = await (await fetch(here("sidebar.html"), { cache: "no-cache" })).text()
+  const sidebarAppUrl = blobPage(framePage(sidebarHtml, here(""), { version: options.version }))
   const config = document.createElement("script")
   config.type = "application/json"
   config.className = "js-hypothesis-config"
@@ -192,6 +193,7 @@ async function open() {
     // through only from a frame of its own origin, and a worker's request comes from no frame.
     useWorkerFetch: false,
   }).promise
+  if (reply.text) withRecognizedText(document, reply.text)
   // Ready once the viewer has made its pages: the client counts them (pdfViewer.pagesCount) to
   // decide whether the PDF has text to annotate, and would find none before.
   const pagesMade = new Promise<void>((resolve) => eventBus.on("pagesinit", () => resolve(), { once: true }))
@@ -199,6 +201,44 @@ async function open() {
   linkService.setDocument(document)
   await pagesMade
   documentLoaded(document)
+  if (!reply.text && (await hasScannedPage(document))) await ask({ kind: "scanned" })
+}
+
+/**
+ * Gives PDF.js the recognized text of a scanned document's pages, as if the pages had it: each
+ * page's `streamTextContent`, which its `getTextContent` reads too, so the text layer, PDF.js's find
+ * and the client's anchoring all have the same text, the text the site has.
+ */
+function withRecognizedText(document: pdfjs.PDFDocumentProxy, text: TextFile["pages"]) {
+  const getPage = document.getPage.bind(document)
+  document.getPage = async (number: number) => {
+    const page = await getPage(number)
+    const pageText = text[String(number)]
+    if (pageText) {
+      const content = textContentOf(pageText)
+      page.streamTextContent = () =>
+        new ReadableStream({
+          start(controller) {
+            controller.enqueue({ items: content.items, styles: content.styles, lang: content.lang })
+            controller.close()
+          },
+        }) as ReturnType<typeof page.streamTextContent>
+    }
+    return page
+  }
+}
+
+/**
+ * Whether any page is a scan, with no text of its own, looking no further than the first. Pages
+ * with no text are often just blank; a scan has an image as large as a page.
+ */
+async function hasScannedPage(document: pdfjs.PDFDocumentProxy) {
+  for (let number = 1; number <= document.numPages; number++) {
+    const page = await document.getPage(number)
+    const { items } = await page.getTextContent()
+    if (!items.some((item) => "str" in item && item.str.trim() !== "") && (await hasScan(page))) return true
+  }
+  return false
 }
 
 bootClient().catch((error) => console.error("Annotator: could not load the Hypothesis client", error))

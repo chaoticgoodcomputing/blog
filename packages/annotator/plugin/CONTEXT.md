@@ -45,6 +45,12 @@ opened whole, and only they are shown, so annotations on them name their passage
 document.
 _Avoid_: excerpt, slice, chapter
 
+**Recognizing a document**:
+Reading the text of a PDF's scanned pages, once, when the user asks, and keeping it as its text file
+beside its saved copy (`packages/pdf-ocr/CONTEXT.md`), so its scans can be annotated as any text.
+The site recognizes the same scans to the same text.
+_Avoid_: OCR, converting
+
 **Annotation record**:
 The part of an annotation that is Hypothesis's own JSON for it, in an `annotation-json` block,
 hidden in a comment. The rest of the annotation is written from it, for reading.

@@ -6,6 +6,7 @@
 // asks through the viewer page. The plugin also tells the page, unasked, when Obsidian's styles
 // change.
 
+import type { TextFile } from "@chaoticgoodcomputing/pdf-ocr"
 import type { ApiRequest, ApiResponse } from "./service.ts"
 
 /** The message that hands the viewer page its port, posted to it by the plugin. */
@@ -17,6 +18,8 @@ export interface DocumentReply {
   data: ArrayBuffer
   /** The address the client names the document by: the annotation target, as annotations name it. */
   url: string
+  /** The text of its scanned pages, from its text file, when it has one that is this PDF's. */
+  text?: TextFile["pages"]
 }
 
 /** A comment's Markdown, as Obsidian renders it in the annotation note. */
@@ -39,6 +42,8 @@ export type Request =
   | { id: number; kind: "styles" }
   /** A link in a rendered comment, clicked: `internal` for a link to the vault (its link text), else an address. */
   | { id: number; kind: "open-link"; href: string; internal: boolean }
+  /** The document has a scanned page, with no text, and no text file: to recognize. */
+  | { id: number; kind: "scanned" }
 
 export type Reply =
   | { id: number; ok: true; value: DocumentReply | ApiResponse | MarkdownReply | StylesReply | null }

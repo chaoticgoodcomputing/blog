@@ -32,6 +32,9 @@ own licenses. The build copies each one's notices beside it.
 | [Hypothesis client](https://github.com/hypothesis/client), the `hypothesis` npm package, with one patch of ours ([patches/README.md](./patches/README.md)) | `frames/hypothesis/build/` | BSD 2-Clause, © Hypothes.is Project and contributors | `frames/hypothesis/LICENSE` |
 | [PDF.js](https://github.com/mozilla/pdf.js), the `pdfjs-dist` npm package | bundled into `frames/viewer.js`; its worker, styles and data in `frames/pdfjs/` | Apache 2.0, © Mozilla Foundation; its CMaps, standard fonts, ICC profile and WebAssembly decoders under their own licenses | `frames/pdfjs/LICENSE`, and the `LICENSE*` files in each folder of `frames/pdfjs/` |
 | [monkey-around](https://github.com/pjeby/monkey-around) | bundled into `main.js` | ISC, © PJ Eby | `licenses/monkey-around.LICENSE` |
+| [Tesseract](https://github.com/tesseract-ocr/tesseract), as [tesseract.js-core](https://github.com/naptha/tesseract.js-core) builds it to WebAssembly | `ocr/tesseract-core-simd-lstm.wasm.js` | Apache 2.0 | `ocr/tesseract.js-core.LICENSE` |
+| Tesseract's English model, from the `@tesseract.js-data/eng` npm package | `ocr/eng.traineddata` | Apache 2.0 (the model); MIT (the package) | `ocr/tesseract.js-data.NOTICE.md` |
+| PDF.js, again, and `@chaoticgoodcomputing/pdf-ocr` | bundled into `ocr/ocr-worker.js` | as above | `frames/pdfjs/LICENSE` |
 
 ## History
 

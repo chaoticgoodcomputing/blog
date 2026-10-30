@@ -30,7 +30,8 @@ const BLOCK =
   ">\n" +
   "^abc123\n"
 
-const note = (target: string) => `---\nannotation-target: ${target}\n---\nThe preface.\n\n${BLOCK.replace("TARGET", target)}`
+const note = (target: string) =>
+  `---\nannotation-target: ${target}\n---\nThe preface.\n\n${BLOCK.replace("TARGET", target)}\n\nThe epilogue.\n`
 
 const FILES: Record<string, string> = {
   "on-the-web.md": note("https://media.example.com/apps/Valve_Handbook%20LowRes.pdf"),
@@ -79,9 +80,11 @@ test("a note's page is an annotation page when the note has an annotation target
 
 const documentLink = (html: string) => /<p class="annotated-document">.*?<\/p>/.exec(html)?.[0]
 
-test("an annotation page opens with the annotated document's source, a link to it named by its host", async () => {
+test("an annotation page's preface is followed by the annotated document's source, a link to it named by its host, then its annotations", async () => {
   const html = await render("on-the-web.md")
-  expect(html.startsWith('<p class="annotated-document">')).toBe(true)
+  expect(html).toMatch(/^<div class="annotation-preface">.*<\/div><p class="annotated-document">.*?<\/p><section class="annotations"/s)
+  expect(html).toMatch(/<\/section><div class="annotation-epilogue"><p>The epilogue.<\/p><\/div>$/)
+  expect(html.match(/class="annotation-preface"/g)).toHaveLength(1)
   expect(documentLink(html)).toBe(
     '<p class="annotated-document">Source document: ' +
       '<a href="https://media.example.com/apps/Valve_Handbook%20LowRes.pdf">media.example.com</a></p>',

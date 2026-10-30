@@ -16,6 +16,7 @@
   "dependencies": {
     "@chaoticgoodcomputing/annotator-documents": "workspace:*",
     "@chaoticgoodcomputing/annotator-format": "workspace:*",
+    "@chaoticgoodcomputing/pdf-ocr": "workspace:*",
     "hypothesis": "1.1769.0",
     "monkey-around": "^2.2.0",
     "pdfjs-dist": "5.4.530"

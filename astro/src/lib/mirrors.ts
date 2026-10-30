@@ -7,11 +7,18 @@
 // crawlers to skip. They are no files of the vault, so the mirrors integration
 // (src/integrations/mirrors.ts) publishes them, as the attachments integration publishes the vault's
 // own files.
+//
+// A scanned mirror has a text file beside it, `<mirror>.text.json`: its scanned pages' text, which
+// `astro:mirrors` recognizes once (@chaoticgoodcomputing/pdf-ocr), as the Annotator plugin does, so
+// that the passages annotated in the plugin are found in the same text here. It is published beside
+// the mirror while it is that mirror's.
 
+import { createHash } from "node:crypto"
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { annotationTarget } from "@chaoticgoodcomputing/obsidian-markdown"
+import { isTextFileOf, textFileName } from "@chaoticgoodcomputing/pdf-ocr/text"
 import { documentFileName } from "./annotations.ts"
 import { getNotes, type Note } from "./notes.ts"
 import { slugFor } from "./vault.ts"
@@ -85,17 +92,75 @@ export function mirrorFor(note: Pick<Note, "frontmatter">): string | undefined {
   return target === undefined ? undefined : mirrorOf(target)
 }
 
+/** Where a mirror's text file is kept, beside it. */
+export const mirrorTextFile = (name: string, root: string = MIRRORS_ROOT): string => textFileName(mirrorFile(name, root))
+
+// Each file's SHA-256, kept while the file is unchanged: the dev server asks on every request.
+const hashes = new Map<string, { mtimeMs: number; size: number; hash: string }>()
+function hashOf(file: string): string {
+  const { mtimeMs, size } = fs.statSync(file)
+  const known = hashes.get(file)
+  if (known?.mtimeMs === mtimeMs && known.size === size) return known.hash
+  const hash = createHash("sha256").update(fs.readFileSync(file)).digest("hex")
+  hashes.set(file, { mtimeMs, size, hash })
+  return hash
+}
+
+/**
+ * A mirror's text file, read, when it has one that is its own: made from this mirror, byte for byte,
+ * as the hash in it says. Undefined for none, or for one made from another copy of the document.
+ */
+export function mirrorText(name: string, root: string = MIRRORS_ROOT) {
+  const file = mirrorTextFile(name, root)
+  if (!fs.existsSync(file) || !fs.existsSync(mirrorFile(name, root))) return undefined
+  try {
+    const text: unknown = JSON.parse(fs.readFileSync(file, "utf8"))
+    return isTextFileOf(text, hashOf(mirrorFile(name, root))) ? text : undefined
+  } catch {
+    return undefined
+  }
+}
+
+/**
+ * The address the site serves a document's text file at, beside its mirror, when the mirror has
+ * one of its own with text in it. Undefined for a mirror with no scanned pages, or none recognized.
+ */
+export function mirrorTextOf(target: string, root: string = MIRRORS_ROOT): string | undefined {
+  const name = mirrorName(target)
+  const text = name === undefined ? undefined : mirrorText(name, root)
+  return text && Object.keys(text.pages).length ? `/${MIRRORS}/${textFileName(name!)}` : undefined
+}
+
+/** The address of a note's document's text file, when it has one to serve: `mirrorTextOf`. */
+export function mirrorTextFor(note: Pick<Note, "frontmatter">): string | undefined {
+  const target = annotationTarget(note.frontmatter)
+  return target === undefined ? undefined : mirrorTextOf(target)
+}
+
 /**
  * The mirrors the site publishes, by address, each with its file: those of the annotated documents
- * of the published notes, that are saved in the mirror directory.
+ * of the published notes, that are saved in the mirror directory, and the text files of those that
+ * have one to serve.
  */
 export function publishedMirrors(): Map<string, string> {
   const published = new Map<string, string>()
   for (const note of getNotes()) {
     const address = mirrorFor(note)
-    if (address) published.set(address, mirrorFile(path.posix.basename(address)))
+    if (!address) continue
+    published.set(address, mirrorFile(path.posix.basename(address)))
+    const text = mirrorTextFor(note)
+    if (text) published.set(text, mirrorTextFile(path.posix.basename(address)))
   }
   return published
+}
+
+/**
+ * The saved mirrors of the published notes' documents that have no text file of their own yet, by
+ * name: those `astro:mirrors` looks at for scanned pages to recognize.
+ */
+export function mirrorsToRecognize(root: string = MIRRORS_ROOT): string[] {
+  const names = getNotes().map((note) => annotationTarget(note.frontmatter)).map((target) => (target === undefined ? undefined : mirrorName(target)))
+  return [...new Set(names)].filter((name): name is string => name !== undefined && fs.existsSync(mirrorFile(name, root)) && !mirrorText(name, root))
 }
 
 /**

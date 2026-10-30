@@ -41,6 +41,23 @@ body {
   font: 14px/1.4 system-ui, sans-serif;
 }
 
+/* Each page's number, in its corner: as a page range counts pages (src/pages.ts), from 1, not as
+   the book prints them, so the number on a page is the one to put in `annotation-pages`. PDF.js
+   numbers its pages so already; its loading icon has the page's ::after. */
+.pdfViewer .page::before {
+  content: attr(data-page-number);
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 10;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgb(0 0 0 / 0.55);
+  color: #fff;
+  font: 11px/1.4 system-ui, sans-serif;
+  pointer-events: none;
+}
+
 /* Pages outside the note's page range (frames/viewer.ts): collapsed, not taken out of the layout.
    PDF.js finds the pages in view by a binary search over their positions, which must keep their
    order; a page with display: none has none, and stops every page after it being drawn. */
