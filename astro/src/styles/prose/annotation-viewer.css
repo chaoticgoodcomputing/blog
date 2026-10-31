@@ -25,10 +25,6 @@ annotation-viewer[data-layout="margin"] .layout {
   column-gap: 3rem;
 }
 
-annotation-viewer[data-layout="margin"][data-margin="hidden"] .layout {
-  grid-template-columns: var(--document-width);
-}
-
 annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .prose {
   display: contents;
 }
@@ -90,10 +86,6 @@ annotation-viewer .annotation-highlight[role="button"] {
 annotation-viewer[data-layout="margin"] .annotations {
   grid-column: 2;
   position: relative;
-}
-
-annotation-viewer[data-layout="margin"][data-margin="hidden"] .annotations {
-  display: none;
 }
 
 annotation-viewer[data-layout="margin"] .annotations-heading {

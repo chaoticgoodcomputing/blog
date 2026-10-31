@@ -12,21 +12,21 @@
 //   passage, or just below the card above; every card whole until one is selected, and then all
 //   but the selected one shortened, to two lines. Where whole cards would run on more than a
 //   screen past the end of the document, they are short from the start. Cards whose passage
-//   isn't in the document go last, under "Not found in the document". The bar's toggle hides and
-//   shows the margin, and the browser remembers which.
+//   isn't in the document go last, under "Not found in the document".
 // - **the drawer**, where it doesn't: the document takes the column, and the cards come in from the
 //   right, in order. On a tablet the drawer is a card's width and the document stays usable beside
 //   it; on a phone, where that would cover more than half the screen, it is most of the screen, and
-//   modal. It opens from its tab on the right edge, tapped or dragged, from the bar's toggle, or
-//   from a tapped highlight, at its card. It always starts closed.
+//   modal. It opens from its tab on the right edge, tapped or dragged, or from a tapped highlight,
+//   at its card. It always starts closed.
 // The page is the one scroll: the document is never a box that scrolls by itself, and pans
-// sideways in its column only when it is zoomed wider than it.
+// sideways in its column only when it is zoomed wider than it. Where the page has a preface, a link
+// over it goes past it, to the document, and gives it the focus.
 //
 // Selecting an annotation marks its card and its highlights, and writes its address, `#^id`, in
 // place of the page's (history.replaceState), so the back button isn't cluttered. A card, a
 // highlight, `j` and `k` select; `Esc` clears; a page opened at an annotation's address opens with
-// it selected. Zoom is the viewer's, not the browser's: the bar's control, `+`, `-` and `0`, or a
-// pinch of the document; 100% is the fitted width, and the browser remembers the zoom. None of the
+// it selected. Zoom is the viewer's, not the browser's: `+`, `-` and `0`, or a pinch of the
+// document; 100% is the fitted width, and the browser remembers the zoom. None of the
 // keys act while the reader is typing, or a dialog is open.
 //
 // PDF.js is loaded by the element's script as the page loads (./document.ts), so a page of another
@@ -54,6 +54,8 @@ const target = annotationTarget(note.frontmatter)!
 const name = documentFileName(target) ?? target
 const passages = annotatedPassages(note)
 const href = encodeURI(decodeURI(target))
+// The document's id, which the link over the preface goes to.
+const DOCUMENT = "annotated-document"
 ---
 
 <annotation-viewer
@@ -66,19 +68,12 @@ const href = encodeURI(decodeURI(target))
   data-min-document-width={MIN_DOCUMENT_WIDTH}
   style={`--margin-width: ${MARGIN_WIDTH}`}
 >
-  <div class="bar" role="toolbar" aria-label="The annotated document">
-    <div class="zoom" role="group" aria-label="Zoom">
-      <button class="zoom-out" type="button" aria-label="Zoom out">−</button>
-      <button class="zoom-level" type="button" aria-label="Reset the zoom" title="Reset the zoom">100%</button>
-      <button class="zoom-in" type="button" aria-label="Zoom in">+</button>
-    </div>
-    <button class="toggle" type="button" aria-label="Annotations">
-      <Icon name="mdi:comment-outline" is:inline width="20" height="20" fill="currentColor" aria-hidden="true" />
-      <span class="count"></span>
-    </button>
-  </div>
+  <a class="to-document" href={`#${DOCUMENT}`}>
+    <Icon name="mdi:arrow-down" is:inline width="16" height="16" fill="currentColor" aria-hidden="true" />
+    Go to the annotated document
+  </a>
   <div class="layout">
-    <div class="document" role="region" aria-label={`The annotated document, ${name}`} data-pagefind-ignore>
+    <div class="document" id={DOCUMENT} tabindex="-1" role="region" aria-label={`The annotated document, ${name}`} data-pagefind-ignore>
       <p class="status" data-loading>Loading the document…</p>
       <p class="status" data-failed hidden>
         We couldn't show the PDF here, but you can read along at <a href={href}>{decodeURI(target)}</a>.
@@ -110,11 +105,11 @@ const href = encodeURI(decodeURI(target))
   const SWIPE = 40
   /** The space between two cards in the margin, in pixels. */
   const CARD_GAP = 12
-  /** How far below the bar a passage that is gone to sits, in pixels. */
+  /** How far below the top of the window, or of a phone's menu bar, a passage gone to sits, in pixels. */
   const BELOW_BAR = 32
   /** What the browser remembers for the reader, in local storage (ADR 3701). */
-  const KEPT = { zoom: "annotation-viewer:zoom", marginHidden: "annotation-viewer:margin-hidden" }
-  /** The id the script gives the page's section of annotations, which the bar and the tab control. */
+  const KEPT = { zoom: "annotation-viewer:zoom" }
+  /** The id the script gives the page's section of annotations, which the tab controls. */
   const CARDS = "annotation-cards"
 
   // An annotation's block id from an address's fragment, `#^id`, without its `^`.
@@ -154,7 +149,6 @@ const href = encodeURI(decodeURI(target))
     #pending: string | undefined
     #drawerOpen = false
     #returnFocus: HTMLElement | null = null
-    #marginHidden = false
     #zoom = 1
     #dragged = false
     #queued = 0
@@ -172,8 +166,9 @@ const href = encodeURI(decodeURI(target))
     get #pages() {
       return this.querySelector<HTMLElement>(".pages")!
     }
-    get #bar() {
-      return this.querySelector<HTMLElement>(".bar")!
+    // What covers the top of the window: a phone's or a tablet's menu bar (src/layouts/Page.astro).
+    get #covered() {
+      return document.querySelector<HTMLElement>(".menu-bar")?.offsetHeight ?? 0
     }
     #cards() {
       return [...this.querySelectorAll<HTMLElement>("section.annotations > .annotation")]
@@ -184,18 +179,13 @@ const href = encodeURI(decodeURI(target))
 
     connectedCallback() {
       this.#disconnected = false
-      this.#marginHidden = recall(KEPT.marginHidden) === "true"
       this.#zoom = clampZoom(parseFloat(recall(KEPT.zoom) ?? "1"))
       const section = this.#section
       if (section) {
         section.id = CARDS
         section.tabIndex = -1
       }
-      const count = this.#cards().length
-      this.querySelector(".count")!.textContent = String(count)
-      const toggle = this.querySelector<HTMLElement>(".toggle")!
-      toggle.setAttribute("aria-label", `Annotations (${count})`)
-      for (const control of this.querySelectorAll(".toggle, .tab")) control.setAttribute("aria-controls", CARDS)
+      this.querySelector(".tab")!.setAttribute("aria-controls", CARDS)
 
       this.#listen()
       // The annotation the address names, selected as the page opens: its card is gone to now, and
@@ -312,7 +302,6 @@ const href = encodeURI(decodeURI(target))
           rem,
         },
         this.#zoom,
-        this.#marginHidden,
       )
       if (next.layout !== this.#layout) {
         if (this.#drawerOpen) this.#setDrawer(false, false)
@@ -323,14 +312,10 @@ const href = encodeURI(decodeURI(target))
       this.#fit = next
       this.#layout = next.layout
       this.dataset.layout = next.layout
-      this.dataset.margin = this.#marginHidden ? "hidden" : "shown"
       if (next.layout === "drawer") this.dataset.drawer = next.mobile ? "mobile" : "tablet"
       else delete this.dataset.drawer
       this.style.setProperty("--document-width", `${next.documentWidth}px`)
       this.querySelector(".tab")!.setAttribute("tabindex", next.layout === "drawer" ? "0" : "-1")
-      this.querySelector(".zoom-level")!.textContent = `${Math.round(this.#zoom * 100)}%`
-      const toggle = this.querySelector(".toggle")!
-      toggle.setAttribute("aria-expanded", String(next.layout === "margin" ? !this.#marginHidden : this.#drawerOpen))
       this.#mark()
       this.#place()
       this.#restore()
@@ -357,7 +342,7 @@ const href = encodeURI(decodeURI(target))
     // Whether the cards in the margin, every one whole, each beside its passage or below the card
     // above, would run on more than a screen past the end of the document.
     #crowded(): boolean {
-      if (this.#layout !== "margin" || this.#marginHidden || !this.#section) return false
+      if (this.#layout !== "margin" || !this.#section) return false
       const cards = this.#cards()
       for (const card of cards) card.classList.remove("short")
       const sectionTop = this.#section.getBoundingClientRect().top
@@ -380,7 +365,7 @@ const href = encodeURI(decodeURI(target))
       if (!section) return
       const cards = this.#cards()
       const heading = section.querySelector<HTMLElement>(":scope > .unplaced")
-      if (this.#layout !== "margin" || this.#marginHidden) {
+      if (this.#layout !== "margin") {
         for (const card of cards) card.style.top = ""
         if (heading) heading.style.top = ""
         section.style.height = ""
@@ -417,10 +402,20 @@ const href = encodeURI(decodeURI(target))
       section.style.height = `${y}px`
     }
 
-    // Scrolls the page so that a point `y` down the window sits a little below the bar.
+    // Scrolls the page so that a point `y` down the window sits a little below its top, or a phone's
+    // menu bar.
     #reveal(y: number, smoothly: boolean) {
-      const bar = this.#layout === "static" ? 0 : this.#bar.offsetHeight
-      window.scrollTo({ top: Math.max(0, window.scrollY + y - bar - BELOW_BAR), behavior: smoothly ? "smooth" : "instant" })
+      window.scrollTo({ top: Math.max(0, window.scrollY + y - this.#covered - BELOW_BAR), behavior: smoothly ? "smooth" : "instant" })
+    }
+
+    // Goes past the preface to the document, with its source just over it, and gives it the focus,
+    // so the keys and the next Tab start there.
+    #toDocument() {
+      const region = this.querySelector<HTMLElement>(".document")!
+      const source = this.querySelector<HTMLElement>(".prose > .annotated-document") ?? region
+      const smoothly = !matchMedia("(prefers-reduced-motion: reduce)").matches
+      this.#reveal(source.getBoundingClientRect().top + BELOW_BAR - 16, smoothly)
+      region.focus({ preventScroll: true })
     }
 
     // Goes to an annotation: its passage where the document is shown and has one, its card otherwise.
@@ -454,7 +449,6 @@ const href = encodeURI(decodeURI(target))
       this.#drawerOpen = open
       this.dataset.drawerOpen = String(open)
       this.querySelector(".tab")!.setAttribute("aria-expanded", String(open))
-      if (this.#layout === "drawer") this.querySelector(".toggle")!.setAttribute("aria-expanded", String(open))
       const section = this.#section
       if (open && this.#modal() && focus) {
         this.#returnFocus = document.activeElement as HTMLElement | null
@@ -546,8 +540,8 @@ const href = encodeURI(decodeURI(target))
     #zoomTo(zoom: number, around?: { x: number; y: number }) {
       const next = clampZoom(zoom)
       if (Math.abs(next - this.#zoom) < 0.001 || this.#layout === "static") return
-      const bar = this.#bar.getBoundingClientRect().bottom
-      this.#holdAt(around?.x ?? window.innerWidth / 2, around?.y ?? bar + (window.innerHeight - bar) / 2)
+      const top = this.#covered
+      this.#holdAt(around?.x ?? window.innerWidth / 2, around?.y ?? top + (window.innerHeight - top) / 2)
       this.#zoom = next
       remember(KEPT.zoom, Math.abs(next - 1) < 0.001 ? null : String(Math.round(next * 1000) / 1000))
       this.#apply()
@@ -620,18 +614,11 @@ const href = encodeURI(decodeURI(target))
         }
       })
 
-      // The bar's toggle hides and shows the margin, or opens and closes the drawer.
-      this.#on(this.querySelector(".toggle")!, "click", () => {
-        if (this.#layout === "drawer") return this.#setDrawer(!this.#drawerOpen)
-        this.#marginHidden = !this.#marginHidden
-        remember(KEPT.marginHidden, this.#marginHidden ? "true" : null)
-        this.#apply()
-        if (this.#selected) this.#go(this.#selected, false)
+      // The link over the preface, which leaves the page's address as it is.
+      this.#on(this.querySelector(".to-document")!, "click", (event: MouseEvent) => {
+        event.preventDefault()
+        this.#toDocument()
       })
-
-      this.#on(this.querySelector(".zoom-out")!, "click", () => this.#zoomTo(steppedZoom(this.#zoom, -1)))
-      this.#on(this.querySelector(".zoom-level")!, "click", () => this.#zoomTo(1))
-      this.#on(this.querySelector(".zoom-in")!, "click", () => this.#zoomTo(steppedZoom(this.#zoom, 1)))
 
       this.#on(document, "keydown", (event: KeyboardEvent) => {
         if (event.key === "Tab" && this.#drawerOpen && this.#modal()) return this.#trapTab(event)
@@ -704,65 +691,30 @@ const href = encodeURI(decodeURI(target))
     display: block;
   }
 
-  /* The bar: the zoom, and the annotations' toggle with their count. At the top of the window while
-     the document is on the page, as the Quartz annotator's bar is; nothing of it before the document
-     opens. */
-  .bar {
+  /* The link past the preface to the document: a line of the note's column, over the preface, once
+     the document is beside the cards. None where there is no preface to go past. */
+  .to-document {
     display: none;
   }
 
-  .annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .bar {
-    position: sticky;
-    top: 0;
-    z-index: 3;
+  .annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]):has(.annotation-preface) .to-document {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    box-sizing: border-box;
-    height: 3rem;
-    margin-bottom: 1rem;
-    padding: 0 0.5rem;
-    border-bottom: 1px solid var(--lightgray);
-    background: var(--light);
-  }
-
-  .zoom {
-    display: flex;
-    align-items: center;
-  }
-
-  .bar button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
     gap: 0.25rem;
-    min-width: 2.25rem;
-    height: 2.25rem;
-    padding: 0 0.5rem;
-    border: 0;
-    border-radius: 0.375rem;
-    background: transparent;
+    box-sizing: border-box;
+    width: min(100%, 40rem);
+    margin: 0 auto 1rem;
     color: var(--darkgray);
-    font: inherit;
-    cursor: pointer;
-  }
-
-  .bar button:hover,
-  .bar button[aria-expanded="true"] {
-    background: var(--highlight);
-    color: var(--dark);
-  }
-
-  .zoom-level {
-    min-width: 3.5rem;
-    font-size: 0.85rem;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .count {
     font-size: 0.9rem;
-    font-variant-numeric: tabular-nums;
+  }
+
+  .to-document:hover {
+    color: var(--secondary);
+  }
+
+  /* The document is given the focus by that link, as a place to start from: no ring. */
+  .document:focus {
+    outline: none;
   }
 
   /* The document: out of sight until it opens, or a notice says it can't. It pans sideways in its

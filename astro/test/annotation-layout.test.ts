@@ -7,32 +7,27 @@ const measures = (available: number) => ({ available, margin: 320, minDocument: 
 
 test("where the document fits beside a column of cards, they are its margin, and the document takes the rest", () => {
   // The site shell's content column on a desktop, 1440px wide.
-  expect(fit(measures(1072), 1, false)).toEqual({ layout: "margin", documentWidth: 1072 - 320 - 48, mobile: false })
-  expect(fit(measures(944), 1, false)).toEqual({ layout: "margin", documentWidth: 576, mobile: false })
+  expect(fit(measures(1072), 1)).toEqual({ layout: "margin", documentWidth: 1072 - 320 - 48, mobile: false })
+  expect(fit(measures(944), 1)).toEqual({ layout: "margin", documentWidth: 576, mobile: false })
 })
 
 test("the document beside the margin is never wider than 60rem", () => {
-  expect(fit(measures(2000), 1, false).documentWidth).toBe(960)
+  expect(fit(measures(2000), 1).documentWidth).toBe(960)
 })
 
 test("where it doesn't, the cards are a drawer, and the document takes the column", () => {
   // A tablet's column: the drawer is a card's width, and covers less than half of it.
-  expect(fit(measures(700), 1, false)).toEqual({ layout: "drawer", documentWidth: 700, mobile: false })
+  expect(fit(measures(700), 1)).toEqual({ layout: "drawer", documentWidth: 700, mobile: false })
   // A phone's: a card's width would cover more than half the screen, so the drawer is a phone's.
-  expect(fit(measures(358), 1, false)).toEqual({ layout: "drawer", documentWidth: 358, mobile: true })
+  expect(fit(measures(358), 1)).toEqual({ layout: "drawer", documentWidth: 358, mobile: true })
 })
 
 test("zoomed, the document is that many times as wide, and zoomed past the margin it turns into the drawer", () => {
-  expect(fit(measures(1072), 0.5, false)).toEqual({ layout: "margin", documentWidth: 352, mobile: false })
+  expect(fit(measures(1072), 0.5)).toEqual({ layout: "margin", documentWidth: 352, mobile: false })
   // 704 × 1.25 = 880, and 880 + 320 + 48 is wider than the column.
-  expect(fit(measures(1072), 1.25, false)).toEqual({ layout: "drawer", documentWidth: 1072, mobile: false })
-  expect(fit(measures(1072), 2, false)).toEqual({ layout: "drawer", documentWidth: 1408, mobile: false })
-  expect(fit(measures(700), 2, false).documentWidth).toBe(1400)
-})
-
-test("with the margin hidden, the document takes the column, and the cards stay out of the drawer", () => {
-  expect(fit(measures(1072), 1, true)).toEqual({ layout: "margin", documentWidth: 1072, mobile: false })
-  expect(fit(measures(700), 1, true)).toEqual({ layout: "drawer", documentWidth: 700, mobile: false })
+  expect(fit(measures(1072), 1.25)).toEqual({ layout: "drawer", documentWidth: 1072, mobile: false })
+  expect(fit(measures(1072), 2)).toEqual({ layout: "drawer", documentWidth: 1408, mobile: false })
+  expect(fit(measures(700), 2).documentWidth).toBe(1400)
 })
 
 test("each card is level with its passage, or just below the card above it", () => {

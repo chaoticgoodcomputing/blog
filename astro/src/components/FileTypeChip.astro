@@ -1,0 +1,28 @@
+---
+// The kind of file a page annotates, after its title wherever the site lists it, as a search
+// engine marks a result that is a PDF: a small chip, `.pdf` (annotatedFileType, src/lib/annotations.ts).
+interface Props {
+  type: string
+}
+
+const { type } = Astro.props
+---
+
+{/* A space before it, not a margin, so that the link's name reads "An annotated handbook .pdf". */}
+{" "}<span class="file-type">.{type}</span>
+
+<style>
+  .file-type {
+    display: inline-block;
+    flex-shrink: 0;
+    padding: 0.05em 0.35em;
+    border: 1px solid var(--gray);
+    border-radius: 0.25rem;
+    color: var(--darkgray);
+    font-family: var(--codeFont);
+    font-size: 0.7em;
+    font-weight: 600;
+    line-height: 1.4;
+    vertical-align: 0.15em;
+  }
+</style>

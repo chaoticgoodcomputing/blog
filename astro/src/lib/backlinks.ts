@@ -6,6 +6,7 @@
 import type { Vault } from "@chaoticgoodcomputing/obsidian-markdown"
 import { site } from "../site.config.ts"
 import type { PrivateTreatment } from "../site.config.types.ts"
+import { annotatedFileType } from "./annotations.ts"
 import { newestFirst, noteOf, type NoteFacts, type NoteIndex } from "./notes.ts"
 import { getVault } from "./vault.ts"
 
@@ -19,6 +20,8 @@ export interface Backlink {
   description?: string | undefined
   /** Whether it is a private page, which the panel marks. */
   isPrivate: boolean
+  /** For an annotation page, the kind of file it annotates, which the panel marks: `pdf`. */
+  fileType?: string | undefined
 }
 
 export interface BacklinkOptions {
@@ -72,4 +75,5 @@ const linkTo = (note: NoteFacts, url: string): Backlink => ({
   date: note.date,
   description: note.summary,
   isPrivate: note.isPrivate,
+  fileType: annotatedFileType(note),
 })

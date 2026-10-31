@@ -5,6 +5,7 @@
 // (src/lib/backlinks.ts).
 import { Icon } from "astro-icon/components"
 import type { Backlink } from "../lib/backlinks.ts"
+import FileTypeChip from "./FileTypeChip.astro"
 import FormattedDate from "./FormattedDate.astro"
 
 interface Props {
@@ -35,7 +36,10 @@ const lock = "mdi:lock"
                   <span aria-hidden="true">•</span>
                 )}
               </span>
-              <span>{link.title}</span>
+              <span>
+                {link.title}
+                {link.fileType && <FileTypeChip type={link.fileType} />}
+              </span>
             </a>
             {(link.date || link.description) && (
               <p class="meta">

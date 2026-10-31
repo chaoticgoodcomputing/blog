@@ -152,3 +152,20 @@ test("an annotation page is an article in the site shell: its type, its date, it
   await expect(result).toHaveAttribute("href", ARTICLE)
   await expect(result.locator("mark")).toHaveText("quodlibet")
 })
+
+test("an annotation page is marked as the kind of file it annotates, a .pdf, after its title wherever the site lists it", async ({ page }) => {
+  // In the post listing, its name read with it.
+  await page.goto("/")
+  await page.locator(".post-listing details summary").click()
+  await expect(page.locator(".post-listing").getByRole("link", { name: "An annotated handbook .pdf" })).toBeVisible()
+  // In a note's links: Flatland links to the handbook, which links back.
+  await page.goto("/annotations/flatland")
+  await expect(page.locator(".outlinks li", { hasText: "An annotated handbook" }).locator(".file-type")).toHaveText(".pdf")
+  await page.goto(PAGE)
+  await expect(page.locator(".backlinks li", { hasText: "Flatland" })).toBeVisible()
+  await expect(page.locator(".backlinks .file-type")).toHaveCount(0)
+  // And nothing else is.
+  await page.goto("/")
+  const marked = await page.locator(".post-listing .post:has(.file-type) h3").evaluateAll((titles) => titles.map((title) => title.textContent!))
+  expect(marked.every((title) => /annotat/i.test(title))).toBe(true)
+})

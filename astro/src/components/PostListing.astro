@@ -7,6 +7,8 @@
 // browser's own disclosure, which needs no script (docs/adr/1301).
 import { listedPosts, postCounts } from "../lib/post-listing.ts"
 import { postListing } from "../site.config.ts"
+import { annotatedFileType } from "../lib/annotations.ts"
+import FileTypeChip from "./FileTypeChip.astro"
 import FormattedDate from "./FormattedDate.astro"
 import TagBadge from "./TagBadge.astro"
 
@@ -33,7 +35,10 @@ const counts = postListing.showTagCounts ? postCounts() : undefined
           {posts.map((note) => (
             <li class="post">
               <h3>
-                <a href={note.url}>{note.title}</a>
+                <a href={note.url}>
+                  {note.title}
+                  {annotatedFileType(note) && <FileTypeChip type={annotatedFileType(note)!} />}
+                </a>
               </h3>
               <p class="meta">
                 {note.date && <FormattedDate date={note.date} />}

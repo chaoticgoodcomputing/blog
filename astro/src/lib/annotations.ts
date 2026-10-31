@@ -17,6 +17,17 @@ import { site } from "../site.config.ts"
 export const isAnnotationPage = (note: Pick<Note, "frontmatter">): boolean => annotationTarget(note.frontmatter) !== undefined
 
 /**
+ * The kind of file a page's annotated document is, by its file name's extension, as a search
+ * engine marks a result that is one: `pdf`. None for a note that isn't an annotation page, a private
+ * page, which says nothing of what it is, or a document whose address names no extension.
+ */
+export function annotatedFileType(note: Pick<Note, "frontmatter" | "isPrivate">): string | undefined {
+  const target = annotationTarget(note.frontmatter)
+  if (note.isPrivate || !target) return undefined
+  return /\.([a-z0-9]+)$/i.exec(documentFileName(target) ?? "")?.[1]?.toLowerCase()
+}
+
+/**
  * The file name a document's address ends in, decoded: `On Meetings.pdf`. Undefined for an
  * address that is no URL, or whose path names no file.
  */

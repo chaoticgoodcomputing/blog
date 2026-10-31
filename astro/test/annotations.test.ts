@@ -11,7 +11,7 @@ import {
 } from "@chaoticgoodcomputing/obsidian-markdown"
 import { markdownToHtml } from "satteri"
 import { afterAll, beforeAll, expect, test } from "vitest"
-import { annotatedDocument, annotationDate, isAnnotationPage } from "../src/lib/annotations.ts"
+import { annotatedDocument, annotatedFileType, annotationDate, isAnnotationPage } from "../src/lib/annotations.ts"
 import { indexNotes } from "../src/lib/notes.ts"
 import { openVault } from "../src/lib/vault.ts"
 
@@ -107,4 +107,15 @@ test("the annotations are headed as such", async () => {
 
 test("an annotation's date is written as the site writes dates", () => {
   expect(annotationDate(new Date("2026-03-26T16:24:56.949Z"))).toBe("Mar 26, 2026")
+})
+
+test("an annotation page is marked by the kind of file it annotates, from the extension its address ends in", () => {
+  const page = (target: unknown, isPrivate = false) => ({ frontmatter: { "annotation-target": target }, isPrivate })
+  expect(annotatedFileType(page("https://example.com/papers/On%20Meetings.pdf"))).toBe("pdf")
+  expect(annotatedFileType(page("https://cdn.example.com/a/Triad.PDF?ex=69d5&hm=b7be"))).toBe("pdf")
+  expect(annotatedFileType(page("https://example.com/papers/"))).toBeUndefined()
+  expect(annotatedFileType(page(""))).toBeUndefined()
+  expect(annotatedFileType({ frontmatter: {}, isPrivate: false })).toBeUndefined()
+  // A private page says nothing of what it is.
+  expect(annotatedFileType(page("https://example.com/papers/On%20Meetings.pdf", true))).toBeUndefined()
 })

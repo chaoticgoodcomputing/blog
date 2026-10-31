@@ -45,20 +45,19 @@ export const CAP = 60
  * What fits the viewer at `zoom`. 100% is the fitted width: what the margin leaves the document, up
  * to the cap, where the margin fits beside `minDocument`, and the column's width otherwise. At zoom
  * `z` the document is `z` times that, and once the zoomed document and the margin no longer fit
- * side by side, the cards go to the drawer, where the document takes at least the column. A hidden
- * margin gives the document the column.
+ * side by side, the cards go to the drawer, where the document takes at least the column.
  */
-export function fit(m: Measures, zoom: number, marginHidden: boolean): Fit {
+export function fit(m: Measures, zoom: number): Fit {
   const mobile = m.margin > m.available / 2
   const gap = GAP * m.rem
   const desktop = m.minDocument + m.margin + gap <= m.available
-  if (desktop && !marginHidden) {
+  if (desktop) {
     const width = zoom * Math.min(CAP * m.rem, m.available - m.margin - gap)
     if (width + m.margin + gap <= m.available) return { layout: "margin", documentWidth: width, mobile }
     // Zoomed out of the margin: the drawer's document takes the column, or more.
     return { layout: "drawer", documentWidth: Math.max(width, m.available), mobile }
   }
-  return { layout: desktop ? "margin" : "drawer", documentWidth: zoom * m.available, mobile }
+  return { layout: "drawer", documentWidth: zoom * m.available, mobile }
 }
 
 /**

@@ -260,50 +260,57 @@ test("hovering a card tints its highlights", async ({ page }) => {
   await expect(highlights(page, "cancel")).not.toHaveClass(/\bhovered\b/)
 })
 
-test("the bar's toggle hides the margin, giving the document the column, and a reload remembers it", async ({ page }) => {
-  const viewer = await opened(page, DESKTOP)
-  const toggle = viewer.getByRole("button", { name: "Annotations (5)" })
-  await expect(toggle).toHaveAttribute("aria-expanded", "true")
-  const before = (await viewer.locator(".pages").boundingBox())!.width
-  await toggle.click()
-  await expect(viewer).toHaveAttribute("data-margin", "hidden")
-  await expect(page.locator("section.annotations")).toBeHidden()
-  expect((await viewer.locator(".pages").boundingBox())!.width).toBeGreaterThan(before)
+test("a link over the preface goes past it to the document, gives the document the focus, and leaves the address as it is", async ({ page }) => {
+  const viewer = await opened(page, DESKTOP, GARDEN)
+  const link = viewer.getByRole("link", { name: "Go to the annotated document" })
+  // Over the preface, in the note's column.
+  const preface = (await page.locator(".annotation-preface").boundingBox())!
+  const box = (await link.boundingBox())!
+  expect(box.y + box.height).toBeLessThanOrEqual(preface.y)
+  expect(box.x).toBeCloseTo(preface.x, 0)
 
-  await page.reload()
-  await expect(viewer).toHaveAttribute("data-margin", "hidden")
-  await viewer.getByRole("button", { name: "Annotations (5)" }).click()
-  await expect(page.locator("section.annotations")).toBeVisible()
+  await link.click()
+  const region = viewer.getByRole("region", { name: /^The annotated document/ })
+  await expect(region).toBeFocused()
+  // The document's source at the top of the window, and the document under it.
+  await expect.poll(async () => (await page.locator(".annotated-document").boundingBox())!.y).toBeLessThan(40)
+  await expect.poll(async () => (await page.locator(".annotated-document").boundingBox())!.y).toBeGreaterThanOrEqual(0)
+  expect(new URL(page.url()).hash).toBe("")
+  // The keys start from it.
+  await page.keyboard.press("j")
+  await expect(card(page, "bench")).toHaveAttribute("data-selected")
 })
 
-test("the zoom is the bar's and the keyboard's: zoomed past the margin the cards go to the drawer, and a reload remembers it", async ({ page }) => {
+test("a page with no preface has no link to go past it", async ({ page }) => {
   const viewer = await opened(page, DESKTOP)
-  const level = viewer.getByRole("button", { name: "Reset the zoom" })
-  await expect(level).toHaveText("100%")
+  await expect(viewer.getByRole("link", { name: "Go to the annotated document" })).toBeHidden()
+})
+
+test("the zoom is the keyboard's: zoomed past the margin the cards go to the drawer, and a reload remembers it", async ({ page }) => {
+  const viewer = await opened(page, DESKTOP)
   const width = async () => (await viewer.locator(".document-page").first().boundingBox())!.width
   const at100 = await width()
 
-  await viewer.getByRole("button", { name: "Zoom out" }).click()
-  await expect(level).toHaveText("90%")
+  await page.keyboard.press("-")
   await expect.poll(width).toBeCloseTo(at100 * 0.9, 0)
   await page.keyboard.press("0")
-  await expect(level).toHaveText("100%")
+  await expect.poll(width).toBeCloseTo(at100, 0)
 
   await page.keyboard.press("+")
   await page.keyboard.press("+")
-  await expect(level).toHaveText("125%")
   await expect(viewer).toHaveAttribute("data-layout", "drawer")
   // Wider than the column, it pans sideways in it, and the page never does.
   await page.keyboard.press("+")
   await page.keyboard.press("+")
-  await expect(level).toHaveText("175%")
   await expect.poll(() => viewer.locator(".document").evaluate((el) => el.scrollWidth > el.clientWidth)).toBe(true)
   expect(await sideways(page)).toBe(0)
+  const at175 = await width()
 
   await page.reload()
-  await expect(viewer.getByRole("button", { name: "Reset the zoom" })).toHaveText("175%")
+  await expect(viewer).toHaveAttribute("data-layout", "drawer")
+  await expect.poll(width).toBeCloseTo(at175, 0)
   expect(await page.evaluate(() => location.href)).not.toContain("175")
-  await viewer.getByRole("button", { name: "Reset the zoom" }).click()
+  await page.keyboard.press("0")
   await expect(viewer).toHaveAttribute("data-layout", "margin")
 })
 
@@ -338,7 +345,7 @@ test("on a phone a highlight opens the drawer at its card, which holds the focus
   await page.keyboard.press("Escape")
   await expect(cards).toBeHidden()
   // A tap on the dimmed page closes it too.
-  await viewer.getByRole("button", { name: "Annotations (5)" }).click()
+  await viewer.getByRole("button", { name: "Annotations", exact: true }).click()
   await expect(cards).toBeVisible()
   await page.mouse.click(20, 400)
   await expect(cards).toBeHidden()
@@ -355,7 +362,7 @@ test("on a phone a card in the drawer takes the document to its passage, and the
 test("on a tablet the drawer is a card's width, nothing is dimmed, and the document stays usable beside it", async ({ page }) => {
   const viewer = await opened(page, TABLET)
   await expect(viewer).toHaveAttribute("data-drawer", "tablet")
-  await viewer.getByRole("button", { name: "Annotations (5)" }).click()
+  await viewer.getByRole("button", { name: "Annotations", exact: true }).click()
   const cards = page.locator("section.annotations")
   await expect(cards).toBeVisible()
   expect((await cards.boundingBox())!.width).toBeCloseTo(320, 0)
@@ -387,7 +394,7 @@ test("narrowing the window past where the margin fits turns it into the drawer, 
 test.describe("by touch", () => {
   test.use({ hasTouch: true, isMobile: true })
 
-  test("two fingers pinch the document, not the page, and the zoom is the one the bar shows", async ({ page }) => {
+  test("two fingers pinch the document, not the page", async ({ page }) => {
     const viewer = await opened(page, PHONE)
     // Where the reader pinches it: on the document, scrolled to.
     await viewer.locator(".document-page").first().scrollIntoViewIfNeeded()
@@ -403,7 +410,6 @@ test.describe("by touch", () => {
         { x: x + 60, y },
       ],
     ])
-    await expect(viewer.getByRole("button", { name: "Reset the zoom" })).not.toHaveText("100%")
     await expect.poll(async () => (await viewer.locator(".document-page").first().boundingBox())!.width).toBeGreaterThan(before * 1.5)
     // The page itself is never zoomed, and never scrolls sideways.
     expect(await page.evaluate(() => visualViewport?.scale ?? 1)).toBe(1)
