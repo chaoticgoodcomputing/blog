@@ -18,10 +18,16 @@
 //           excerpt finds the new one. GitHub Pages takes a minute or so after the push.
 // --dry-run prints what would be sent, finding no endpoints.
 //
-// A target whose site has no webmention endpoint is skipped; most have none. A receiver that
-// refuses one, or can't be reached, is reported, and the script fails once it has tried the rest.
+// A target whose site has no webmention endpoint is skipped; most have none. So is one that can't
+// be reached to look for one: a link out is often slow, gone or not a page at all, and is no fault
+// of the site's. A send that times out or meets a server error is tried once more, after a pause.
+//
+// None of these fails the job: each is someone else's server, and a failed deploy job would read as
+// a failed deploy. What an endpoint refused, or never got, is a warning on the run instead, and the
+// job's summary lists every send. Nothing tries it again on a later deploy, which compares with
+// this one's manifest; --all sends everything again. Only the script's own errors fail the job.
 
-import { existsSync, readFileSync } from "node:fs"
+import { appendFileSync, existsSync, readFileSync } from "node:fs"
 import { join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 import { waitForLive } from "./indexnow.mjs"
@@ -104,6 +110,84 @@ export async function discover(target) {
   return fromHtml === undefined ? undefined : new URL(fromHtml, base).href
 }
 
+/**
+ * Delivers `mentions`, looking for each target's endpoint once. Each send is one of `result.sends`,
+ * `{ source, target, outcome, detail }`, its outcome `sent` or `failed`; a target with no endpoint
+ * is counted in `without`, and one not reached to look for one is in `unreachable`. A send whose
+ * error `isTransient` is tried once more after `wait`.
+ */
+export async function deliver(
+  mentions,
+  { find = discover, post = send, log = console.log, wait = () => new Promise((done) => setTimeout(done, RETRY_AFTER_MS)) } = {},
+) {
+  const endpoints = new Map()
+  const result = { sent: 0, without: 0, unreachable: [], failed: [], sends: [] }
+  for (const { source, target } of mentions) {
+    if (!endpoints.has(target)) {
+      try {
+        const endpoint = await find(target)
+        endpoints.set(target, endpoint)
+        if (!endpoint) result.without++
+      } catch (error) {
+        endpoints.set(target, undefined)
+        result.unreachable.push(target)
+        log(`·  ${target}: not reached to look for an endpoint (${error instanceof Error ? error.message : error})`)
+      }
+    }
+    const endpoint = endpoints.get(target)
+    if (!endpoint) continue
+    let status
+    let failure
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        status = await post(endpoint, source, target)
+        failure = undefined
+        break
+      } catch (error) {
+        failure = error
+        if (attempt === 1 && isTransient(error)) {
+          log(`↻  ${target}: ${error instanceof Error ? error.message : error}; trying again`)
+          await wait()
+        } else break
+      }
+    }
+    if (failure === undefined) {
+      log(`✅ ${target} took it (${status})`)
+      result.sent++
+      result.sends.push({ source, target, outcome: "sent", detail: String(status) })
+    } else {
+      const detail = failure instanceof Error ? failure.message : String(failure)
+      log(`⚠️  ${target}: ${detail}`)
+      result.failed.push(target)
+      result.sends.push({ source, target, outcome: "failed", detail })
+    }
+  }
+  return result
+}
+
+/** A GitHub Actions warning annotation: one line, its title and message escaped as the runner asks. */
+export function warning(title, message) {
+  const escape = (text) => text.replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A")
+  return `::warning title=${escape(title).replace(/,/g, "%2C").replace(/:/g, "%3A")}::${escape(message)}`
+}
+
+/** The job's summary, in Markdown: each send and how it went, and how many targets took none. */
+export function summary(result, owedCount) {
+  const cell = (text) => text.replace(/\|/g, "\\|").replace(/\s+/g, " ")
+  const lines = [
+    "## Webmentions",
+    "",
+    `${owedCount} owed: ${result.sent} sent, ${result.failed.length} failed, ${result.without} target(s) with no endpoint, ${result.unreachable.length} not reached.`,
+  ]
+  if (result.sends.length > 0) {
+    lines.push("", "| | Target | Source | Answer |", "|---|---|---|---|")
+    for (const { source, target, outcome, detail } of result.sends) {
+      lines.push(`| ${outcome === "sent" ? "✅" : "⚠️"} | ${cell(target)} | ${cell(source)} | ${cell(detail)} |`)
+    }
+  }
+  return `${lines.join("\n")}\n`
+}
+
 /** Sends one webmention. Any 2xx is taken. */
 export async function send(endpoint, source, target) {
   const response = await fetch(endpoint, {
@@ -113,10 +197,18 @@ export async function send(endpoint, source, target) {
     signal: AbortSignal.timeout(TIMEOUT_MS),
   })
   if (response.status < 200 || response.status >= 300) {
-    throw new Error(`${response.status} ${response.statusText}: ${(await response.text()).slice(0, 200)}`)
+    const error = new Error(`${response.status} ${response.statusText}: ${(await response.text()).slice(0, 200)}`)
+    error.status = response.status
+    throw error
   }
   return response.status
 }
+
+/** Whether a send's error may pass if tried again: no answer at all, a 429, or a server error. */
+export const isTransient = (error) => error?.status === undefined || error.status === 429 || error.status >= 500
+
+/** How long a send waits before it is tried again. */
+const RETRY_AFTER_MS = 10_000
 
 // ─── Main ───────────────────────────────────────────────────────────────────────────────────────
 
@@ -144,25 +236,13 @@ async function main() {
 
   if (args.includes("--wait")) await waitForLive(next, [MANIFEST])
 
-  const endpoints = new Map()
-  const failed = []
-  let sent = 0
-  for (const { source, target } of mentions) {
-    try {
-      if (!endpoints.has(target)) endpoints.set(target, await discover(target))
-      const endpoint = endpoints.get(target)
-      if (!endpoint) continue
-      const status = await send(endpoint, source, target)
-      console.log(`✅ ${target} took it (${status})`)
-      sent++
-    } catch (error) {
-      console.log(`⚠️  ${target}: ${error instanceof Error ? error.message : error}`)
-      failed.push(target)
-    }
+  const result = await deliver(mentions)
+  const { sent, without, unreachable, failed } = result
+  console.log(`📬 ${sent} sent, ${without} target(s) with no endpoint, ${unreachable.length} not reached, ${failed.length} failed`)
+  for (const { source, target, outcome, detail } of result.sends) {
+    if (outcome === "failed") console.log(warning("Webmention not delivered", `${target} (from ${source}): ${detail}`))
   }
-  const without = [...endpoints.values()].filter((endpoint) => !endpoint).length
-  console.log(`📬 ${sent} sent, ${without} target(s) with no endpoint, ${failed.length} failed`)
-  if (failed.length > 0) process.exitCode = 1
+  if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary(result, mentions.length))
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
