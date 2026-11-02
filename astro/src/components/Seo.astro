@@ -30,6 +30,7 @@ const scriptSafe = (value: unknown) => JSON.stringify(value).replaceAll("<", "\\
 <meta name="description" content={head.description} />
 <link rel="canonical" href={head.canonical} />
 {!head.indexable && <meta name="robots" content="noindex" />}
+{head.markdown && <link rel="alternate" type="text/markdown" href={head.markdown} />}
 
 <meta property="og:type" content={head.openGraph.type} />
 <meta property="og:site_name" content={head.openGraph.siteName} />

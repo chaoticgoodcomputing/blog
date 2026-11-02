@@ -2,9 +2,10 @@
 // address, whether it asks to be indexed, its Open Graph tags, and its JSON-LD. The head prints it
 // (src/components/Seo.astro).
 
-import { seo, site as siteConfig } from "../site.config.ts"
+import { footer, seo, site as siteConfig } from "../site.config.ts"
 import type { ArticleType, SeoConfig } from "../site.config.types.ts"
 import type { Note, UnpublishedNote } from "./notes.ts"
+import { markdownCopyUrl } from "./markdown-copies.ts"
 import { isIndexable, type PageProps } from "./page.ts"
 import { shareCardUrl } from "./share-card.ts"
 import { isUnderTag } from "./tags.ts"
@@ -41,6 +42,8 @@ export interface PageHead {
     /** Its tags, as tag slugs. */
     tags: string[]
   }
+  /** The whole address of its Markdown copy, on an indexable note's page (./markdown-copies.ts). */
+  markdown?: string
   /** Its JSON-LD: an article's on an article's page, the website's on the home page, else none. */
   structuredData?: Record<string, unknown>
 }
@@ -72,11 +75,16 @@ export function headOf(page: PageProps, context: HeadContext): PageHead {
   const article = (page.kind === "note" || page.kind === "annotation") && page.note?.isArticle ? page.note : undefined
   const head = { title: page.title, description, canonical }
 
+  const indexable = isIndexable(page)
+  // A note's page, the home page among them, has a copy when it is indexable; a tag's page has none.
+  const copied = indexable && page.note !== undefined && page.kind !== "tag"
+
   return {
     title: `${page.title}${siteConfig.titleSuffix}`,
     description,
     canonical,
-    indexable: isIndexable(page),
+    indexable,
+    ...(copied && { markdown: new URL(markdownCopyUrl(page.url), site).href }),
     openGraph: {
       type: article ? "article" : "website",
       siteName: siteConfig.title,
@@ -111,6 +119,35 @@ export function articleTypeOf(tags: string[], config: SeoConfig = seo): { type: 
 
 type HeadText = Pick<PageHead, "title" | "description" | "canonical">
 
+/**
+ * The author's profiles on other sites, from the footer's contacts: what lets a search engine tie
+ * the author to the same person elsewhere (https://schema.org/sameAs). The site's own links, a feed
+ * and a `mailto:` address are none.
+ */
+export function sameAsOf(contacts: { url: string }[], site: URL): string[] {
+  return contacts
+    .map((contact) => {
+      try {
+        return new URL(contact.url, site)
+      } catch {
+        return undefined
+      }
+    })
+    .filter((url): url is URL => url !== undefined && /^https?:$/.test(url.protocol) && url.host !== site.host)
+    .map((url) => url.href)
+}
+
+// The site's author.
+function author({ site }: HeadContext) {
+  const sameAs = sameAsOf(footer.contacts, site)
+  return {
+    "@type": "Person",
+    name: siteConfig.author.name,
+    url: new URL(siteConfig.author.url, site).href,
+    ...(sameAs.length > 0 && { sameAs }),
+  }
+}
+
 // The site's publisher, with its logo. The logo's size is left out: schema.org gives an image's
 // `width` as a QuantitativeValue, not a number of pixels, and a search engine reads it from the image.
 function publisher({ site, logo }: HeadContext) {
@@ -135,7 +172,7 @@ function articleData(note: Note | UnpublishedNote, head: HeadText, context: Head
     inLanguage: siteConfig.locale,
     ...(note.date && { datePublished: note.date.toISOString() }),
     dateModified: note.modified.toISOString(),
-    author: { "@type": "Person", name: siteConfig.author.name, url: new URL(siteConfig.author.url, context.site).href },
+    author: author(context),
     publisher: publisher(context),
     ...(section && ARTICLES.has(type) && { articleSection: section }),
     ...(note.tags.length > 0 && { keywords: note.tags }),

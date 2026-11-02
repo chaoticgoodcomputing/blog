@@ -44,6 +44,8 @@ import { getTrailingSlashRedirects } from "./src/lib/trailing-slashes.ts"
 
 import { search } from "./src/integrations/search.ts"
 
+import { markdownCopies } from "./src/integrations/markdown-copies.ts"
+
 import { mentionExcerpts } from "./src/integrations/mention-excerpts.ts"
 
 import { obsidianAnnotator } from "@chaoticgoodcomputing/obsidian-markdown"
@@ -177,6 +179,10 @@ export default defineConfig({
 
     // The search index: the indexable pages, each as the build wrote it (docs/adr/1901).
     search(),
+
+    // A Markdown copy of each indexable note's page, at its address with `.md` after it, and
+    // llms.txt, which lists them for agents (src/lib/markdown-copies.ts).
+    markdownCopies(),
 
     // For each site a note links to, the page of its paragraphs that link there, which the deploy
     // sends as a webmention, and the manifest of them all (src/lib/mention-excerpts.ts).

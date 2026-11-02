@@ -63,15 +63,13 @@ async function fetchUrlMetadata(url) {
 }
 
 /**
- * Get OG image path from pages checkout
- * Converts URL slug to local filesystem path for index-og-image.webp
- * e.g., https://blog.chaoticgood.computer/content/notes/example
- * becomes PAGES_DIR/content/notes/example/index-og-image.webp
+ * A note's share card in the pages checkout, the image its og:image names
+ * (astro/src/lib/share-card.ts): https://blog.chaoticgood.computer/content/notes/example
+ * has PAGES_DIR/share-cards/content/notes/example.png.
  */
 function getOgImagePath(url) {
-  const urlObj = new URL(url)
-  const slug = urlObj.pathname.replace(/\/$/, "") // Remove trailing slash
-  return join(PAGES_DIR, slug, "index-og-image.webp")
+  const slug = new URL(url).pathname.replace(/\/$/, "")
+  return join(PAGES_DIR, "share-cards", `${slug}.png`)
 }
 
 /**
@@ -81,7 +79,7 @@ function getOgImagePath(url) {
 async function uploadImageBlob(accessJwt, did, imageSource) {
   try {
     let imageData
-    let contentType = "image/webp"
+    let contentType = imageSource.endsWith(".png") ? "image/png" : "image/webp"
 
     // Check if it's a local file path
     if (!imageSource.startsWith("http")) {
@@ -313,6 +311,7 @@ async function main() {
     for (const item of unpostedItems) {
       const link = item.link[0]
       const title = item.title[0]
+      const description = item.description?.[0] || ""
 
       console.log(`Posting item ${newPosts + 1}/${unpostedItems.length}: ${title}`)
       console.log(`  URL: ${link}`)
@@ -320,7 +319,7 @@ async function main() {
       const postText = `New blog post: "${title}"`
 
       try {
-        await createPost(accessJwt, did, postText, link, title)
+        await createPost(accessJwt, did, postText, link, title, description)
         newPosts++
         console.log(`  ✓ Posted successfully`)
 

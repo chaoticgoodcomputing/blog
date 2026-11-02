@@ -51,7 +51,7 @@ test("an article's head says when it was published, who wrote it, its section an
   await page.goto("/content/seo/planting-tomatoes")
   expect(await head(page, 'meta[property="article:published_time"]')).toBe("2026-03-04T10:00:00.000Z")
   expect(await head(page, 'meta[property="article:modified_time"]')).toMatch(/^\d{4}-\d\d-\d\dT/)
-  expect(await head(page, 'meta[property="article:author"]')).toBe(`${SITE}/about`)
+  expect(await head(page, 'meta[property="article:author"]')).toBe(`${SITE}/contact`)
   expect(await head(page, 'meta[property="article:section"]')).toBe("Tutorials")
   const tags = await page
     .locator('head meta[property="article:tag"]')
@@ -79,8 +79,13 @@ test("an article's JSON-LD type and section are its first matching rule's, with 
     "@type": "TechArticle",
     articleSection: "Engineering",
     headline: "Small Models",
-    author: { "@type": "Person", name: "Spencer Elkington", url: `${SITE}/about` },
-    publisher: { "@type": "Organization", name: "Chaotic Good Computing", url: `${SITE}/about` },
+    author: {
+      "@type": "Person",
+      name: "Spencer Elkington",
+      url: `${SITE}/contact`,
+      sameAs: ["https://github.com/spelkington", "https://www.linkedin.com/in/spelkington", "https://bsky.app/profile/speen.us"],
+    },
+    publisher: { "@type": "Organization", name: "Chaotic Good Computing", url: `${SITE}/contact` },
   })
   // The publisher's logo is the site's icon, served by the site.
   const logo = (models!.publisher as { logo: { url: string } }).logo.url

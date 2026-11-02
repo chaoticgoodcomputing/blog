@@ -13,7 +13,8 @@
     "test": "vitest run",
     "e2e": "playwright test",
     "mirrors": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/pin-mirrors.ts",
-    "mock-mentions": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/mock-mentions.ts"
+    "mock-mentions": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/mock-mentions.ts",
+    "seo-check": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/seo-check.ts"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.4.2",
@@ -25,6 +26,7 @@
     "@chaoticgoodcomputing/pdf-ocr": "workspace:*",
     "@fontsource/inter": "^5.3.0",
     "@iconify-json/mdi": "1.2.3",
+    "@joplin/turndown-plugin-gfm": "^1.0.68",
     "approx-string-match": "^2.0.0",
     "astro": "^7.3.5",
     "astro-icon": "^1.2.0",
@@ -45,6 +47,7 @@
     "satteri": "^0.10.5",
     "sharp": "^0.35.5",
     "sirv": "^3.0.2",
+    "turndown": "^7.2.4",
     "uqr": "0.1.3"
   },
   "devDependencies": {
@@ -55,6 +58,8 @@
     "@types/d3-selection": "^3.0.11",
     "@types/d3-zoom": "^3.0.8",
     "@types/node": "^22.15.0",
+    "@types/turndown": "^5.0.6",
+    "@unlighthouse/cli": "^0.19.1",
     "typescript": "^5.9.3",
     "vitest": "^5.0.3",
     "xmllint-wasm": "^5.3.0"

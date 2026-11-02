@@ -126,6 +126,13 @@ A page the site asks search engines to index, and lists in its sitemap. Every pa
 private page, a private tag page and the 404 page.
 _Avoid_: public page, listed page
 
+**Markdown copy**:
+An indexable note's page as Markdown, for agents, at its address with `.md` after it (the home
+page's is `/index.md`): what the note is, then the page's text as built. A tag page has none.
+`/llms.txt` lists every copy. Search engines' crawlers are asked not to fetch copies (robots.txt),
+so a copy is never a search result in its page's place.
+_Avoid_: raw page, source (a copy is made from the page, not the note's source)
+
 **Private tag page**:
 The tag page of a private tag, or of a tag under one: `tags/private`, `tags/private/work`. Not a
 private page, since it is no note's, and kept out of search engines the same way.

@@ -59,6 +59,13 @@
       "dependsOn": [ "build" ],
       "continuous": true
     },
+    "seo-check": {
+      "//": "Lighthouse, through Unlighthouse, on every page of the sitemap of the site as built, served by `astro preview` on a free port of its own (scripts/seo-check.ts). Prints each category's lowest and mean score and the SEO audits that fail, on which pages; Unlighthouse's report is dist/seo-check/index.html. SEO_CHECK_BUDGET (1-100) fails it when a page scores under the budget in any category; without it, it only reports. Not yet run in CI.",
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run seo-check", "cwd": "{projectRoot}" },
+      "dependsOn": [ "build" ],
+      "cache": false
+    },
     "check": {
       "dependsOn": [ "vault" ],
       "executor": "nx:run-commands",

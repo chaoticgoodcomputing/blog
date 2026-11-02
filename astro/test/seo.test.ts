@@ -1,6 +1,6 @@
 import { expect, test } from "vitest"
 import { getNote } from "../src/lib/notes.ts"
-import { articleTypeOf, headOf } from "../src/lib/seo.ts"
+import { articleTypeOf, headOf, sameAsOf } from "../src/lib/seo.ts"
 import { seo } from "../src/site.config.ts"
 import type { SeoConfig } from "../src/site.config.types.ts"
 
@@ -72,7 +72,7 @@ test("an article is an article to Open Graph: its dates, its author, its section
   expect(head.openGraph.type).toBe("article")
   expect(head.article).toMatchObject({
     publishedTime: "2026-03-04T10:00:00.000Z",
-    author: "https://example.com/about",
+    author: "https://example.com/contact",
     section: "Tutorials",
     tags: ["horticulture", "writing/notes"],
   })
@@ -90,7 +90,7 @@ test("an article is an article to Open Graph: its dates, its author, its section
 const PUBLISHER = {
   "@type": "Organization",
   name: "Chaotic Good Computing",
-  url: "https://example.com/about",
+  url: "https://example.com/contact",
   logo: { "@type": "ImageObject", url: "https://example.com/_astro/icon.png" },
 }
 
@@ -110,7 +110,12 @@ test("an article's JSON-LD is its type and section, its headline, dates, tags an
     inLanguage: "en-US",
     datePublished: "2026-03-05T00:00:00.000Z",
     dateModified: expect.stringMatching(/^2026-|^20[3-9]\d-/),
-    author: { "@type": "Person", name: "Spencer Elkington", url: "https://example.com/about" },
+    author: {
+      "@type": "Person",
+      name: "Spencer Elkington",
+      url: "https://example.com/contact",
+      sameAs: ["https://github.com/spelkington", "https://www.linkedin.com/in/spelkington", "https://bsky.app/profile/speen.us"],
+    },
     publisher: PUBLISHER,
     articleSection: "Engineering",
     keywords: ["engineering/ai", "garden"],
@@ -202,4 +207,16 @@ test("the default type and the rules are configuration's, the first rule that ma
   expect(articleTypeOf(["kitchen"], config)).toEqual({ type: "BlogPosting" })
   expect(articleTypeOf(["garden/herbs/basil"], config)).toEqual({ type: "HowTo", section: "Herbs" })
   expect(articleTypeOf(["garden/trees"], config)).toEqual({ type: "Report", section: "Garden" })
+})
+
+test("the author's sameAs is each profile the footer links to on another site, and no feed or address of the site's own", () => {
+  const site = new URL("https://example.com")
+  const contacts = [
+    { url: "https://github.com/someone" },
+    { url: "/index.xml" },
+    { url: "https://example.com/contact" },
+    { url: "mailto:someone@example.com" },
+    { url: "https://bsky.app/profile/someone" },
+  ]
+  expect(sameAsOf(contacts, site)).toEqual(["https://github.com/someone", "https://bsky.app/profile/someone"])
 })
