@@ -4,7 +4,6 @@ date: 2026-10-26
 tags:
   - engineering
   - engineering/ai
-  - projects/teaching
   - economics/management
   - writing/essays
 description: To understand why OpenAI completely upended the world of mathematics with its proof that Navier-Stokes is not smooth in three dimensions, you must first understand that cucumbers of any size can be properly pickled.
