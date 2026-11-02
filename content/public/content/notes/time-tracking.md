@@ -1,7 +1,7 @@
 ---
 title: Some initial thoughts about time tracking
 description: |
-  TODO.
+  Initial thoughts on using tools like Apple Shortcuts and Timery/Toggle for tracking how I spend my time -- every minute of every day.
 date: 2024-02-27
 updated: 2026-01-28
 tags:
