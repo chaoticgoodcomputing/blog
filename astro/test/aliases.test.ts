@@ -132,3 +132,27 @@ test("a link written to an alias goes to the note's page", () => {
   expect(linked && urlOf(linked)).toBe("/aliases/renamed")
   expect([...metadataCache.getBacklinksForFile("aliases/renamed.md").keys()]).toEqual(["aliases/links.md"])
 })
+
+test("each alias of a tag description note redirects to its tag's page, while no note carries the old tag", () => {
+  const description = (file: string, aliases: string[], url: string | undefined) => ({
+    file: { path: file } as Note["file"],
+    frontmatter: { aliases },
+    url,
+  })
+  const { redirects, collisions } = aliasRedirects(notes, [], [], [
+    // A renamed tag: its description note moved, and keeps the old tag's address as an alias.
+    description("tags/garden/seasons.md", ["tags/seasons"], "/tags/garden/seasons"),
+    // A tag no published note carries has no page to forward to.
+    description("tags/gone.md", ["tags/went"], undefined),
+    // A tag a note still carries keeps its page.
+    description("tags/garden.md", ["tags/garden/seasons"], "/tags/garden"),
+  ])
+  expect(redirects["/tags/seasons"]).toBe("/tags/garden/seasons")
+  expect(redirects).not.toHaveProperty("/tags/went")
+  expect(collisions).toContainEqual({
+    file: "tags/garden.md",
+    alias: "tags/garden/seasons",
+    address: "/tags/garden/seasons",
+    holder: "the page of the tag garden/seasons",
+  })
+})

@@ -39,6 +39,17 @@
         "cwd": "content"
       }
     },
+    "alias-moves": {
+      "//": "Gives each public note that the next commit moves, a rename or a deleted note and an added one of the same name, its old path as an alias, so its old address forwards to the new one; a moved tag description note's alias forwards the old tag's page. Edits the staged copy and the working tree's apart, so an unstaged change stays unstaged. Reports a deleted note no move accounts for, and a note that moves into the private vault at a new address, without stopping the commit (utils/alias-moves.ts). Run by the git pre-commit hook.",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "node --experimental-strip-types --disable-warning=ExperimentalWarning utils/alias-moves.ts"
+        ],
+        "parallel": false,
+        "cwd": "content"
+      }
+    },
     "test": {
       "//": "The vault's script tests, with Node's test runner.",
       "executor": "nx:run-commands",

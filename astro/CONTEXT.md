@@ -366,8 +366,15 @@ The image a page's `og:image` names, drawn when the site builds.
 _Avoid_: social card, OG image, thumbnail
 
 **Alias redirect**:
-A small page at one of a note's old names, which forwards the reader to the note.
+A small page at one of a note's old names, which forwards the reader to the note. A tag description
+note's aliases are its tag's old names, and forward to its tag's page. The vault's pre-commit hook
+gives a moved public note its old path as an alias (`content/utils/alias-moves.ts`).
 _Avoid_: alias page
+
+**Trailing-slash redirect**:
+A small page at a page's or an alias's address with a `/` after it, `a/index.html`, which forwards
+the reader to the address without it: GitHub Pages answers `/a/` only from a folder's index.
+_Avoid_: slash redirect
 
 **Former address**:
 The address the Quartz site served a page or an attachment at: a note's address in lower case, and

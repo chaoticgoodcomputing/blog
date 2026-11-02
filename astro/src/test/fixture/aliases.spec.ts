@@ -63,3 +63,8 @@ test("no alias redirect is in the sitemap or the feed", async ({ request }) => {
     expect(body, file).not.toContain("/aliases/Old-Name")
   }
 })
+
+test("an alias of a tag's description note is the tag's old name, whose page forwards to the tag's page", async ({ page }) => {
+  await page.goto("/tags/rose-keeper")
+  await expectAt(page, /\/tags\/rosarian$/)
+})

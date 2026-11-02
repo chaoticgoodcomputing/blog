@@ -1,8 +1,8 @@
 // Former addresses: where the Quartz site served a page or a file that this site serves at another
 // address. The Quartz site wrote a note's address in lower case, and an MDX note's with `.mdx` after
-// it, an alias's in lower case, and an attachment's path slugged and in lower case; this site keeps a
-// name's case (docs/adr/0003), gives an MDX note the address a Markdown note has, and publishes an
-// attachment at its path in the vault (docs/adr/0101). Each former address forwards the reader to
+// it, an alias's in lower case (an MDX note's, with `.mdx` after it), and an attachment's path
+// slugged and in lower case; this site keeps a name's case (docs/adr/0003), gives an MDX note the
+// address a Markdown note has, and publishes an attachment at its path in the vault (docs/adr/0101). Each former address forwards the reader to
 // the page or the file, through Astro's `redirects` (astro.config.ts), so a link to the old site
 // keeps working.
 //
@@ -11,7 +11,7 @@
 
 import { aliasRedirects, publishedFiles, staticPages } from "./aliases.ts"
 import { publishedAttachments } from "./attachments.ts"
-import { getNotes, type Note } from "./notes.ts"
+import { getNotes, getUnpublished, type Note } from "./notes.ts"
 import { resumeAddresses } from "./resume.ts"
 import { TAGS_INDEX } from "./tags.ts"
 import { slugFor } from "./vault.ts"
@@ -45,7 +45,8 @@ function redirectRoute(former: string, file: string): string {
 
 /**
  * Astro's `redirects` for the former addresses that are not where the page or file is now: each
- * note's, each of `aliases`'s (Astro's `redirects` for the aliases, src/lib/aliases.ts), each of
+ * note's, each of `aliases`'s (Astro's `redirects` for the aliases, src/lib/aliases.ts), and with
+ * `.mdx` after it where the alias's note is MDX, as an MDX note's old address had, each of
  * `attachments`'s (the published attachments' addresses), and the tags index's. An attachment that
  * GitHub Pages would serve at its former address, as it serves `/a` from `a.html`, needs none.
  */
@@ -60,8 +61,11 @@ export function formerAddressRedirects(
     if (former === note.url) continue
     redirects[redirectRoute(former, `${note.url}.html`)] = note.url
   }
+  // An alias is a note's old path, and an MDX note was most likely MDX there too.
+  const mdx = new Set(notes.filter((note) => note.file.extension === "mdx").map((note) => note.url))
   for (const [alias, page] of Object.entries(aliases)) {
     const former = alias.toLowerCase()
+    if (mdx.has(page)) redirects[`${former}.mdx`] = page
     if (former === alias) continue
     redirects[redirectRoute(former, `${alias}.html`)] = page
   }
@@ -79,7 +83,8 @@ export function formerAddressRedirects(
 export function getFormerAddressRedirects(): Record<string, string> {
   const notes = getNotes()
   // The aliases' redirects as `getAliasRedirects()` gives them, without reporting its collisions again.
-  const aliases = aliasRedirects(notes, staticPages(), publishedFiles()).redirects
+  const descriptions = getUnpublished("tag description")
+  const aliases = aliasRedirects(notes, staticPages(), publishedFiles(), descriptions).redirects
   // The resume was an attachment of the vault's, and keeps its former address (./resume.ts).
   return formerAddressRedirects(notes, aliases, [...publishedAttachments().keys(), ...resumeAddresses()])
 }

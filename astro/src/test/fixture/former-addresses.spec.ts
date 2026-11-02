@@ -14,6 +14,8 @@ test("each former address is where GitHub Pages finds a redirect to the page or 
     "/former-addresses/weekly-note": "/former-addresses/Weekly-Note",
     // An alias's address in lower case: to the alias's note, not by way of the alias.
     "/former-addresses/old-name": "/former-addresses/renamed",
+    // An MDX note's alias, with `.mdx` after it, as the Quartz site served the note where it was.
+    "/former-addresses/old-moved.mdx": "/former-addresses/moved",
     // An attachment's path as the Quartz site slugged it.
     "/former-addresses/field-notes.txt": "/former-addresses/Field%20Notes.txt",
   }

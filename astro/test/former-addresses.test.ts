@@ -94,3 +94,14 @@ test("an attachment's former address that only differs in case from an HTML atta
     "/tags/index": "/tags",
   })
 })
+
+test("an alias of an MDX note has a former address with .mdx after it too, as the note had where it was", () => {
+  const aliases = {
+    "/archive/old-widget": "/notes/widget",
+    "/Archive/Old-Widget": "/notes/widget",
+    "/archive/old-plain": "/notes/plain",
+  }
+  const redirects = formerAddressRedirects(notes, aliases)
+  expect(redirects["/archive/old-widget.mdx"]).toBe("/notes/widget")
+  expect(redirects).not.toHaveProperty("/archive/old-plain.mdx")
+})

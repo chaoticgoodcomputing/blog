@@ -1,5 +1,6 @@
 // Alias redirects: each alias in a note's frontmatter is an address that forwards the reader to the
-// note, so a note's old names keep working. The redirects themselves are Astro's own, its
+// note, so a note's old names keep working. A tag description note's aliases forward to its tag's
+// page, so a renamed tag's old page keeps working too. The redirects themselves are Astro's own, its
 // `redirects` setting (astro.config.ts), and this module says what they are.
 //
 // An alias redirect is no note, so nothing that asks the notes query ever lists one: not a post
@@ -11,7 +12,7 @@ import { fileURLToPath } from "node:url"
 import { parseFrontMatterAliases } from "@chaoticgoodcomputing/obsidian-markdown"
 import { publishedAttachments } from "./attachments.ts"
 import { getDrawingExports } from "./drawings.ts"
-import { getNotes, tagsOf, type Note } from "./notes.ts"
+import { getNotes, getUnpublished, tagsOf, type Note, type UnpublishedNote } from "./notes.ts"
 import { resumeAddresses } from "./resume.ts"
 import { tagUrl } from "./tags.ts"
 import { pagePath, slugFor } from "./vault.ts"
@@ -44,9 +45,14 @@ export function aliasAddress(alias: string): string {
   return `/${pagePath(slugFor(fromRoot.replace(/^\/+|\/+$/g, "")))}`
 }
 
+/** A note whose aliases forward somewhere: a published note to its page, a tag description note to its tag's. */
+type Aliased = Pick<UnpublishedNote, "file" | "frontmatter" | "url">
+
 /**
- * The alias redirects of the published notes. An alias whose address is a page's keeps no redirect,
- * and the page wins: a published note's, a tag's, or one of `pages`, the site's other pages. So
+ * The alias redirects of the published notes, and of `tagDescriptions`, the tag description notes,
+ * each of which forwards to its tag's page, when the tag has one (its `url`). An alias whose address
+ * is a page's keeps no redirect, and the page wins: a published note's, a tag's (so the old tag's
+ * page stays while a note still carries the tag), or one of `pages`, the site's other pages. So
  * does one whose address is one of `files`, the files the site publishes, and one that an earlier
  * note's alias already has. The comparison ignores case, since a build writes files, and not every
  * file system tells `A.html` from `a.html`.
@@ -55,6 +61,7 @@ export function aliasRedirects(
   notes: Note[],
   pages: Iterable<string> = [],
   files: Iterable<string> = [],
+  tagDescriptions: Aliased[] = [],
 ): AliasRedirects {
   const holders = new Map<string, string>()
   const hold = (address: string, holder: string) => {
@@ -66,7 +73,9 @@ export function aliasRedirects(
   for (const file of files) hold(file, "a file the site publishes")
 
   const result: AliasRedirects = { redirects: {}, collisions: [] }
-  for (const note of notes) {
+  const aliased: Aliased[] = [...notes, ...tagDescriptions]
+  for (const note of aliased) {
+    if (note.url === undefined) continue
     for (const alias of parseFrontMatterAliases(note.frontmatter) ?? []) {
       const address = aliasAddress(alias)
       const holder = holders.get(address.toLowerCase())
@@ -121,7 +130,8 @@ export function publishedFiles(
  * config loads, and its page or file keeps the address.
  */
 export function getAliasRedirects(): Record<string, string> {
-  const { redirects, collisions } = aliasRedirects(getNotes(), staticPages(), publishedFiles())
+  const descriptions = getUnpublished("tag description")
+  const { redirects, collisions } = aliasRedirects(getNotes(), staticPages(), publishedFiles(), descriptions)
   for (const { file, alias, address, holder } of collisions) {
     console.warn(`[aliases] ${file}: the alias "${alias}" has no redirect, since ${address} is ${holder}.`)
   }
