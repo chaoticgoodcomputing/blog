@@ -1,4 +1,0 @@
----
-title: "#projects/magic-atlas"
----
-
