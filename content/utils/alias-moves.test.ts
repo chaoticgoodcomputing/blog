@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import { test } from "node:test"
-import { addressOf, parseNameStatus, planAliases, withAlias, type Change } from "./alias-moves.ts"
+import { addressOf, aliasFor, parseNameStatus, planAliases, withAlias, type Change } from "./alias-moves.ts"
 
 const published = () => true
 const plan = (changes: Change[], wasPublished: (file: string) => boolean = published) =>
@@ -10,6 +10,12 @@ test("an address is a path's slug, in lower case, with a folder's index as the f
   assert.equal(addressOf("content/notes/Move to Boston.mdx"), "/content/notes/move-to-boston")
   assert.equal(addressOf("tags/projects/college/index.md"), "/tags/projects/college")
   assert.equal(addressOf("index.md"), "/")
+})
+
+test("an alias is a path without its extension, and a folder's index as the folder", () => {
+  assert.equal(aliasFor("content/notes/old.mdx"), "content/notes/old")
+  assert.equal(aliasFor("tags/seasons/index.md"), "tags/seasons")
+  assert.equal(aliasFor("index.md"), "index")
 })
 
 test("git's -z name-status output is read as renames, deletions and additions", () => {

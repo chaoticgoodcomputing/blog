@@ -47,8 +47,8 @@ export function addressOf(file: string): string {
   return `/${slug === "index" ? "" : slug.replace(/\/index$/, "")}`.toLowerCase()
 }
 
-/** The alias a note's old path in the vault is: the path without its extension. */
-export const aliasFor = (file: string): string => file.replace(/\.mdx?$/i, "")
+/** The alias a note's old path in the vault is: the path without its extension, and a folder's `index` as the folder. */
+export const aliasFor = (file: string): string => file.replace(/\.mdx?$/i, "").replace(/(.)\/index$/, "$1")
 
 /** One staged change, from `git diff --name-status -z`. */
 export interface Change {
