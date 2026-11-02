@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Corner Doors](content/annotations/a-pattern-language/196-corner-doors)
 - [133-staircase-as-a-stage](content/annotations/a-pattern-language/133-staircase-as-a-stage)
 - [158-open-stairs](content/annotations/a-pattern-language/158-open-stairs)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/projects/a-pattern-language)

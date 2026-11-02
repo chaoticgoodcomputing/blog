@@ -28,4 +28,4 @@ This note originally contained the following links:
 - [185-sitting-circle](content/annotations/a-pattern-language/185-sitting-circle)
 - [251-different-chairs](content/annotations/a-pattern-language/251-different-chairs)
 - [250-warm-colors](content/annotations/a-pattern-language/250-warm-colors)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/projects/a-pattern-language)

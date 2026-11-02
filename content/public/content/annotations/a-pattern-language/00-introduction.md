@@ -14,7 +14,7 @@ description: Can graphs be libertarian? Authoritarian? Annotations for the intro
 > [!QUOTE]
 > The elements of this language are entities called *patterns.* Each pattern describes a problem which occurs over and over again in our environment, and then describes the core of the solution to that problem, in such a way that you can still use this solution a million times over, without ever doing it the same way twice.
 > 
-> — [[public/tags/writing/annotations/a-pattern-language|A Pattern Language]] 
+> — [[public/tags/projects/a-pattern-language|A Pattern Language]] 
 
 ## Notes
 

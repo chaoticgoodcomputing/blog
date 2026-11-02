@@ -28,8 +28,8 @@ export const site: SiteConfig = {
   title: "Chaotic Good Computing",
   titleSuffix: " | Spencer Elkington",
   locale: "en-US",
-  author: { name: "Spencer Elkington", url: "/about" },
-  publisher: { name: "Chaotic Good Computing", url: "/about" },
+  author: { name: "Spencer Elkington", url: "/contact" },
+  publisher: { name: "Chaotic Good Computing", url: "/contact" },
   repository: {
     url: "https://github.com/chaoticgoodcomputing/blog",
     branch: "main",

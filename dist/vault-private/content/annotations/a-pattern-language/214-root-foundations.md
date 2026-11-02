@@ -23,4 +23,4 @@ This note originally contained the following links:
 - [213-final-column-distribution](content/annotations/a-pattern-language/213-final-column-distribution)
 - [104-site-repair](content/annotations/a-pattern-language/104-site-repair)
 - [168-connection-to-the-earth](content/annotations/a-pattern-language/168-connection-to-the-earth)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/projects/a-pattern-language)

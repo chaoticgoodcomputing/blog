@@ -15,7 +15,7 @@ description: Amaze (or bore) your friends and family by picking up on a hot new 
 >
 > Some of these annotations may reference the [pre-print version of this paper](https://www.biorxiv.org/content/10.1101/2021.08.15.456425v1.full.pdf)
 
-We'll be taking a minor detour from the usual riveting topics — [[public/content/annotations/programming-as-theory-building|the philosophy of computer programming]],  [[public/tags/writing/annotations/a-pattern-language|the graph theory behind urban design]], etc — to visit a new and exciting subject: folding proteins in the comfort of your own home!
+We'll be taking a minor detour from the usual riveting topics — [[public/content/annotations/programming-as-theory-building|the philosophy of computer programming]],  [[public/tags/projects/a-pattern-language|the graph theory behind urban design]], etc — to visit a new and exciting subject: folding proteins in the comfort of your own home!
 
 The heaviest of disclaimers — I am ***absolutely not*** a computational biologist. The words "proteins" and "sugars" mean almost nothing to me, save for two adjectives that might describe a steak dinner and dessert. These annotations are part of a favor to a friend, who has found the need to set up and run [ColabFold](https://github.com/sokrypton/ColabFold) for some investigative digging into something she's working on.
 

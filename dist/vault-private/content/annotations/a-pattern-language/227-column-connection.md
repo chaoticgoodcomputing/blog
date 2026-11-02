@@ -27,4 +27,4 @@ This note originally contained the following links:
 - [167-six-foot-balcony](content/annotations/a-pattern-language/167-six-foot-balcony)
 - [226-column-place](content/annotations/a-pattern-language/226-column-place)
 - [225-frames-as-thickened-edges](content/annotations/a-pattern-language/225-frames-as-thickened-edges)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/projects/a-pattern-language)

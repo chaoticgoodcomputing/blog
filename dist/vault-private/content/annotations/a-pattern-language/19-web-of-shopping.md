@@ -23,4 +23,4 @@ This note originally contained the following links:
 - [13-subculture-boundary](/content/annotations/a-pattern-language/13-subculture-boundary)
 - [09-scattered-work](/content/annotations/a-pattern-language/09-scattered-work)
 - [11-local-transport-areas](/content/annotations/a-pattern-language/11-local-transport-areas)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/projects/a-pattern-language)

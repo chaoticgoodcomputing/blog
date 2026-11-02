@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Low Doorway](content/annotations/a-pattern-language/224-low-doorway)
 - [159-light-on-two-sides-of-every-room](content/annotations/a-pattern-language/159-light-on-two-sides-of-every-room)
 - [225-frames-as-thickened-edges](content/annotations/a-pattern-language/225-frames-as-thickened-edges)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/projects/a-pattern-language)

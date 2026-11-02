@@ -25,4 +25,4 @@ This note originally contained the following links:
 - [137-childrens-realm](content/annotations/a-pattern-language/137-childrens-realm)
 - [138-sleeping-to-the-east](content/annotations/a-pattern-language/138-sleeping-to-the-east)
 - [143-bed-cluster](content/annotations/a-pattern-language/143-bed-cluster)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/projects/a-pattern-language)

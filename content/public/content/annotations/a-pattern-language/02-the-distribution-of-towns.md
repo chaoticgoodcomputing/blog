@@ -14,7 +14,7 @@ description: How close is too close? How far is too far? *A Pattern Language* an
 > [!QUOTE]
 > ... consider now the character of settlements within the region: what balance of villages, towns, and cities is in keeping with the independence of the region—[[public/content/annotations/a-pattern-language/01-independent-regions|01-independent-regions]]?
 > 
-> — *[[public/tags/writing/annotations/a-pattern-language|A Pattern Language]]*
+> — *[[public/tags/projects/a-pattern-language|A Pattern Language]]*
 
 ## Notes
 

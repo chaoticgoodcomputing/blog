@@ -21,4 +21,4 @@ This note originally contained the following links:
 - [Perimeter Beams](content/annotations/a-pattern-language/217-perimeter-beams)
 - [214-root-foundations](content/annotations/a-pattern-language/214-root-foundations)
 - [213-final-column-distribution](content/annotations/a-pattern-language/213-final-column-distribution)
-- [A Pattern Language](tags/writing/annotations/a-pattern-language)
+- [A Pattern Language](tags/projects/a-pattern-language)
