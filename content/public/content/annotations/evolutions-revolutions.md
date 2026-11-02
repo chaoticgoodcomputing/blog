@@ -4,36 +4,22 @@ date: 2026-01-28
 tags:
   - economics/management
   - writing/annotations
-annotation-target: https://ils.unc.edu/daniel/131/cco4/Greiner.pdf
+annotation-target: https://pantherspassionpolitics.com/wp-content/uploads/2026/06/greiner-organisational-growth.pdf
 description: Annotations for Greiner's 1972 paper "Evolution and Revolution as Organizations Grow", about the structural composition of organizations at different sizes and requirements.
 ---
+I pulled up this paper because of how prevalent some of its terminology is among managers I've worked with. It's always best to go back to the horse's mouth, and — as far as I can tell — this is the original source of the terminology around phases of an organization's growth; namely:
 
+1. Creativity Phase (founder)
+2. Direction Phase (startup)
+3. Delegation Phase (tiered management)
+4. Coordination Phase (centralizing new systems)
+5. Collaboration Phase (...fantasy land. more on this later).
 
->%%
->```annotation-json
->{"text":"I pulled up this paper because of how prevalent some of its terminology is among managers I've worked with. It's always best to go back to the horse's mouth, and — as far as I can tell — this is the original source of the terminology around phases of an organization's growth; namely:\n\n1. Creativity Phase (founder)\n2. Direction Phase (startup)\n3. Delegation Phase (tiered management)\n4. Coordination Phase (centralizing new systems)\n5. Collaboration Phase (...fantasy land, more on this later).\n\nI have often found myself working at small-ish companies (or, at the very least, smaller subsidiaries of much larger organizations), and a lot of these come up in engineering systems for project management and developer experience.\n\nI've read this a few times before, and mulled over the concepts. I want to record them here and — perhaps — do another run through this document a few years down the road, as I experience more of companies through time, growth, and these phases.\n\nAlso, I've had this in my bookmarks for a year, now, and need to clean that sucker out.","target":[{"source":"https://ils.unc.edu/daniel/131/cco4/Greiner.pdf","selector":[{"type":"TextPositionSelector","start":195,"end":242},{"type":"TextQuoteSelector","exact":"Evolution and Revolution as Organizations Grow ","prefix":"2d ed. 1994), pp. 322-329.","suffix":"Larry E. Greiner    A  small"}]}],"created":"2026-01-28T22:12:34.025Z","updated":"2026-01-28T22:12:34.025Z","document":{"title":"Greiner","link":[{"href":"urn:x-pdf:e713b03d726100197b7dfd8ddd96f9f1"},{"href":"https://ils.unc.edu/daniel/131/cco4/Greiner.pdf"}],"documentFingerprint":"e713b03d726100197b7dfd8ddd96f9f1"},"uri":"https://ils.unc.edu/daniel/131/cco4/Greiner.pdf"}
->```
->%%
->*%%PREFIX%%2d ed. 1994), pp. 322-329.%%HIGHLIGHT%% ==Evolution and Revolution as Organizations Grow== %%POSTFIX%%Larry E. Greiner    A  small*
->%%LINK%%[[#^vo23ldawcep|show annotation]]
->%%COMMENT%%
->I pulled up this paper because of how prevalent some of its terminology is among managers I've worked with. It's always best to go back to the horse's mouth, and — as far as I can tell — this is the original source of the terminology around phases of an organization's growth; namely:
->
->1. Creativity Phase (founder)
->2. Direction Phase (startup)
->3. Delegation Phase (tiered management)
->4. Coordination Phase (centralizing new systems)
->5. Collaboration Phase (...fantasy land, more on this later).
->
->I have often found myself working at small-ish companies (or, at the very least, smaller subsidiaries of much larger organizations), and a lot of these come up in engineering systems for project management and developer experience.
->
->I've read this a few times before, and mulled over the concepts. I want to record them here and — perhaps — do another run through this document a few years down the road, as I experience more of companies through time, growth, and these phases.
->
->Also, I've had this in my bookmarks for a year, now, and need to clean that sucker out.
->%%TAGS%%
->
-^vo23ldawcep
+I have often found myself working at small-ish companies (or, at the very least, smaller subsidiaries of much larger organizations), and a lot of these come up in engineering systems for project management and developer experience.
 
+I've read this a few times before, and mulled over the concepts. I want to record them here and — perhaps — do another run through this document a few years down the road, as I experience more of companies through time, growth, and these phases.
+
+Also, I've had this in my bookmarks for a year, now, and need to clean that sucker out.
 
 >%%
 >```annotation-json

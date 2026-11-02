@@ -1,5 +1,5 @@
 ---
-title: "College Admissions and the Stability of Marriage"
+title: College Admissions and the Stability of Marriage
 description: |
   A dive into the hottest algorithm of the 1960s: Gale-Shapley matchmaking. Who knew that the mysteries of the heart could be solved with a matrix?
 date: 2024-03-14
@@ -7,24 +7,11 @@ tags:
   - economics/markets
   - writing/annotations
 annotation-target: https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf
+annotation-pages: 2-8
 ---
+This is a little test of something I'd like to do - keeping annotations of papers I've read on the CGC website, provided that they are open-access (which, unfortunately, is not always the case.)
 
-
->%%
->```annotation-json
->{"text":"This is a little test of something I'd like to do - keeping annotations of papers I've read on the CGC website, provided that they are open-access (which, unfortunately, is not always the case.)\n\nThis is being done with the [Obsidian Annotator](https://github.com/elias-sundqvist/obsidian-annotator) plugin. I have *absolutely no idea* how quartz is going to handle this, so... we'll see! There's a very real chance that this is going to end up being a substantially heavier lift on the frontend and design side than my feeble backend brain can handle. So, if you're seeing this, feel free to pat me on the back for figuring it out (☞ﾟヮﾟ)☞","target":[{"source":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","selector":[{"type":"TextPositionSelector","start":0,"end":48},{"type":"TextQuoteSelector","exact":"College Admissions and the Stability of Marriage","prefix":"th50%75%100%125%150%200%300%400%","suffix":"Author(s): D. Gale and L. S. Sha"}]}],"created":"2024-03-14T22:23:53.656Z","updated":"2024-03-14T22:23:53.656Z","document":{"title":"College Admissions and the Stability of Marriage","link":[{"href":"urn:x-pdf:dd0c1fc592ad4dea981aaf84679261c3"},{"href":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf"}],"documentFingerprint":"dd0c1fc592ad4dea981aaf84679261c3"},"uri":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf"}
->```
->%%
->*%%PREFIX%%th50%75%100%125%150%200%300%400%%%HIGHLIGHT%% ==College Admissions and the Stability of Marriage== %%POSTFIX%%Author(s): D. Gale and L. S. Sha*
->%%LINK%%[[#^vmh5jlenjap|show annotation]]
->%%COMMENT%%
->This is a little test of something I'd like to do - keeping annotations of papers I've read on the CGC website, provided that they are open-access (which, unfortunately, is not always the case.)
->
->This is being done with the [Obsidian Annotator](https://github.com/elias-sundqvist/obsidian-annotator) plugin. I have *absolutely no idea* how quartz is going to handle this, so... we'll see! There's a very real chance that this is going to end up being a substantially heavier lift on the frontend and design side than my feeble backend brain can handle. So, if you're seeing this, feel free to pat me on the back for figuring it out (☞ﾟヮﾟ)☞
->%%TAGS%%
->
-^vmh5jlenjap
-
+This is being done with the [Obsidian Annotator](https://github.com/elias-sundqvist/obsidian-annotator) plugin. I have *absolutely no idea* how quartz is going to handle this, so... we'll see! There's a very real chance that this is going to end up being a substantially heavier lift on the frontend and design side than my feeble backend brain can handle. So, if you're seeing this, feel free to pat me on the back for figuring it out (☞ﾟヮﾟ)☞
 
 >%%
 >```annotation-json

@@ -10,44 +10,17 @@ tags:
 annotation-target: https://www.nature.com/articles/s41592-022-01488-1.pdf
 description: Amaze (or bore) your friends and family by picking up on a hot new hobby that's all the rage — protein folding! An annotated starter to the 2021 paper "ColabFold - Making protein folding accessible to all"
 ---
-
-
->%%
->```annotation-json
->{"text":"> [!NOTE]\n>\n> Some of these annotations may reference the [pre-print version of this paper](https://www.biorxiv.org/content/10.1101/2021.08.15.456425v1.full.pdf)\n\nWe'll be taking a minor detour from the usual riveting topics — [[public/content/annotations/programming-as-theory-building|the philosophy of computer programming]],  [[public/tags/writing/annotations/a-pattern-language|the graph theory behind urban design]], etc — to visit a new and exciting subject: folding proteins in the comfort of your own home!\n\nThe heaviest of disclaimers — I am ***absolutely not*** a computational biologist. The words \"proteins\" and \"sugars\" mean almost nothing to me, save for two adjectives that might describe a steak dinner and dessert. These annotations are part of a favor to a friend, who has found the need to set up and run [ColabFold](https://github.com/sokrypton/ColabFold) for some investigative digging into something she's working on.\n\nWhile I know next-to-nothing about biology, I know *just* enough about machine learning models to get a branch of the project, [localcolabfold](https://github.com/YoshitakaMo/localcolabfold?tab=readme-ov-file), running on my [[public/tags/projects/homelab|homelab server]] to generate an initial proof-of-concept.\n\nA good second step to using a new piece of software (after, of course, actually getting it to run) is to make sure you're using it right. While reading a single paper is no substitute for actual training, or a Ph.D. in computational biology, I'd like to at least be able to semi-accurately convey good practices for driving AlphaFold (as well as other related models), to make sure she gets the information she needs to carry out a thorough investigation.","target":[{"source":"https://www.biorxiv.org/content/10.1101/2021.08.15.456425v1.full.pdf","selector":[{"type":"TextPositionSelector","start":0,"end":52},{"type":"TextQuoteSelector","exact":"ColabFold - Making protein folding accessible to all","prefix":"th50%75%100%125%150%200%300%400%","suffix":"Milot Mirdita,1, ∗Sergey Ovchinn"}]}],"created":"2026-02-26T06:44:35.236Z","updated":"2026-02-26T06:44:35.236Z","document":{"title":"ColabFold - Making protein folding accessible to all","link":[{"href":"urn:x-pdf:d2fa9c07d2c671e4e5250f9ba9cbe1c4"},{"href":"https://www.biorxiv.org/content/10.1101/2021.08.15.456425v1.full.pdf"}],"documentFingerprint":"d2fa9c07d2c671e4e5250f9ba9cbe1c4"},"uri":"https://www.biorxiv.org/content/10.1101/2021.08.15.456425v1.full.pdf"}
->```
->%%
->*%%PREFIX%%th50%75%100%125%150%200%300%400%%%HIGHLIGHT%% ==ColabFold - Making protein folding accessible to all== %%POSTFIX%%Milot Mirdita,1, ∗Sergey Ovchinn*
->%%LINK%%[[#^6cjkwc9toov|show annotation]]
->%%COMMENT%%
->> [!NOTE]
->>
->> Some of these annotations may reference the [pre-print version of this paper](https://www.biorxiv.org/content/10.1101/2021.08.15.456425v1.full.pdf)
+> [!NOTE]
 >
->We'll be taking a minor detour from the usual riveting topics — [[public/content/annotations/programming-as-theory-building|the philosophy of computer programming]],  [[public/tags/writing/annotations/a-pattern-language|the graph theory behind urban design]], etc — to visit a new and exciting subject: folding proteins in the comfort of your own home!
->
->The heaviest of disclaimers — I am ***absolutely not*** a computational biologist. The words "proteins" and "sugars" mean almost nothing to me, save for two adjectives that might describe a steak dinner and dessert. These annotations are part of a favor to a friend, who has found the need to set up and run [ColabFold](https://github.com/sokrypton/ColabFold) for some investigative digging into something she's working on.
->
->While I know next-to-nothing about biology, I know *just* enough about machine learning models to get a branch of the project, [localcolabfold](https://github.com/YoshitakaMo/localcolabfold?tab=readme-ov-file), running on my [[public/tags/projects/homelab|homelab server]] to generate an initial proof-of-concept.
->
->A good second step to using a new piece of software (after, of course, actually getting it to run) is to make sure you're using it right. While reading a single paper is no substitute for actual training, or a Ph.D. in computational biology, I'd like to at least be able to semi-accurately convey good practices for driving AlphaFold (as well as other related models), to make sure she gets the information she needs to carry out a thorough investigation.
->%%TAGS%%
->
-^6cjkwc9toov
+> Some of these annotations may reference the [pre-print version of this paper](https://www.biorxiv.org/content/10.1101/2021.08.15.456425v1.full.pdf)
 
+We'll be taking a minor detour from the usual riveting topics — [[public/content/annotations/programming-as-theory-building|the philosophy of computer programming]],  [[public/tags/writing/annotations/a-pattern-language|the graph theory behind urban design]], etc — to visit a new and exciting subject: folding proteins in the comfort of your own home!
 
+The heaviest of disclaimers — I am ***absolutely not*** a computational biologist. The words "proteins" and "sugars" mean almost nothing to me, save for two adjectives that might describe a steak dinner and dessert. These annotations are part of a favor to a friend, who has found the need to set up and run [ColabFold](https://github.com/sokrypton/ColabFold) for some investigative digging into something she's working on.
 
+While I know next-to-nothing about biology, I know *just* enough about machine learning models to get a branch of the project, [localcolabfold](https://github.com/YoshitakaMo/localcolabfold?tab=readme-ov-file), running on my [[public/tags/projects/homelab|homelab server]] to generate an initial proof-of-concept.
 
-
-
-
-
-
-
-
-
-
-
+A good second step to using a new piece of software (after, of course, actually getting it to run) is to make sure you're using it right. While reading a single paper is no substitute for actual training, or a Ph.D. in computational biology, I'd like to at least be able to semi-accurately convey good practices for driving AlphaFold (as well as other related models), to make sure she gets the information she needs to carry out a thorough investigation.
 
 >%%
 >```annotation-json
@@ -279,16 +252,8 @@ description: Amaze (or bore) your friends and family by picking up on a hot new 
 >
 ^4mjy2nqoee9
 
+## Light Conclusions
 
->%%
->```annotation-json
->{"created":"2026-02-28T19:42:21.854Z","text":"While I was hoping for a bit more information on how best to read the output graphs, and how best to tune the hyperparameters of the model to try and actually answer the investigatory questions, I think this was a good contextual primer for ColabFold, and a nice opportunity to gush about the nerds out there competing in the world's strangest, but possibly most beneficial, sport. Why curl when you can fold?","updated":"2026-02-28T19:42:21.854Z","document":{"title":"ColabFold: making protein folding accessible to all","link":[{"href":"urn:x-pdf:b0d95d316e03bf4cbca8a70942f0ab6a"},{"href":"https://www.nature.com/articles/s41592-022-01488-1.pdf"}],"documentFingerprint":"b0d95d316e03bf4cbca8a70942f0ab6a"},"uri":"https://www.nature.com/articles/s41592-022-01488-1.pdf","target":[{"source":"https://www.nature.com/articles/s41592-022-01488-1.pdf","selector":[{"type":"TextPositionSelector","start":50418,"end":50434},{"type":"TextQuoteSelector","exact":"acknowledgements","prefix":". PLoS  One 11, e0161879 (2016).","suffix":"The authors thank J. Söding for "}]}]}
->```
->%%
->*%%PREFIX%%. PLoS  One 11, e0161879 (2016).%%HIGHLIGHT%% ==acknowledgements== %%POSTFIX%%The authors thank J. Söding for*
->%%LINK%%[[#^axgjn9vorub|show annotation]]
->%%COMMENT%%
->While I was hoping for a bit more information on how best to read the output graphs, and how best to tune the hyperparameters of the model to try and actually answer the investigatory questions, I think this was a good contextual primer for ColabFold, and a nice opportunity to gush about the nerds out there competing in the world's strangest, but possibly most beneficial, sport. Why curl when you can fold?
->%%TAGS%%
->
-^axgjn9vorub
+While I was hoping for a bit more information on how best to read the output graphs, and how best to tune the hyperparameters of the model to try and actually answer the investigatory questions, I think this was a good contextual primer for ColabFold, and a nice opportunity to gush about the nerds out there competing in the world's strangest, but possibly most beneficial, sport.
+
+Why curl when you can fold?

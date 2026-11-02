@@ -1,0 +1,207 @@
+---
+// The ways to share a page, under its header: "Share on:", then an icon for each (src/lib/share.ts).
+//
+// Two are buttons, the page's own: one copies the page's address and says so for a moment, and one
+// shows it as a QR code, to open the page on a phone, drawn in the browser when it is asked for
+// (uqr), so a page carries none of it until then. The rest are links to a service's share intent,
+// in a new tab, or the service's app on a phone. The address is the page's alone, whole, on the
+// site's domain, as the site is published, even on the dev server: none of the reader's trail is in it.
+import { Icon } from "astro-icon/components"
+import { iconName } from "../lib/icons.ts"
+import { shareMethods } from "../lib/share.ts"
+
+interface Props {
+  title: string
+  /** The page's address from the site's root. */
+  url: string
+}
+
+const { title, url } = Astro.props
+const address = new URL(url, Astro.site).href
+const methods = shareMethods({ title, address })
+---
+
+<share-links data-address={address}>
+  <div class="share">
+    <span class="lead" id="share-lead">Share on:</span>
+    <ul aria-labelledby="share-lead">
+      {
+        methods.map((method) => {
+          const icon = <Icon name={iconName(method.icon)} is:inline width="1em" height="1em" aria-hidden="true" />
+          return (
+            <li>
+              {method.href ? (
+                <a href={method.href} target="_blank" rel="noopener noreferrer" title={method.name} aria-label={method.name}>
+                  {icon}
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  title={method.name}
+                  aria-label={method.name}
+                  data-action={method.action}
+                  aria-haspopup={method.action === "qr" ? "dialog" : undefined}
+                >
+                  {icon}
+                </button>
+              )}
+            </li>
+          )
+        })
+      }
+    </ul>
+    <span class="copied" role="status"></span>
+  </div>
+  <dialog aria-label="A QR code for this page">
+    <div class="qr" role="img" aria-label={`A QR code for ${address}`}></div>
+    <p class="qr-address">{address}</p>
+    <form method="dialog">
+      <button type="submit" class="close">Close</button>
+    </form>
+  </dialog>
+</share-links>
+
+<script>
+  /** How long the copy badge says it has copied. */
+  const COPIED_MS = 1500
+
+  /**
+   * The page's own buttons: copying its `data-address`, then saying so for a moment; and showing it
+   * as a QR code, in a dialog, drawn the first time by uqr, loaded then. A click outside the
+   * dialog's box, Escape or Close closes it.
+   */
+  class ShareLinks extends HTMLElement {
+    #timer: ReturnType<typeof setTimeout> | undefined
+
+    connectedCallback() {
+      const address = this.dataset.address ?? ""
+      const status = this.querySelector(".copied")!
+
+      this.querySelector('[data-action="copy"]')!.addEventListener("click", () => {
+        void navigator.clipboard.writeText(address).then(() => {
+          status.textContent = "Copied"
+          clearTimeout(this.#timer)
+          this.#timer = setTimeout(() => (status.textContent = ""), COPIED_MS)
+        })
+      })
+
+      const dialog = this.querySelector("dialog")!
+      this.querySelector('[data-action="qr"]')!.addEventListener("click", async () => {
+        const code = dialog.querySelector(".qr")!
+        if (!code.firstChild) {
+          const { renderSVG } = await import("uqr")
+          code.innerHTML = renderSVG(address, { border: 2 })
+        }
+        dialog.showModal()
+      })
+      // A click outside the dialog's box lands on the dialog itself, behind its backdrop.
+      dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) dialog.close()
+      })
+    }
+  }
+
+  customElements.define("share-links", ShareLinks)
+</script>
+
+<style>
+  /* "Share on:" and the icons in a row, centred as the rest of the header is. */
+  .share {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: var(--gray);
+    font-size: 0.9rem;
+  }
+
+  ul {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 1.15rem;
+  }
+
+  ul :is(a, button) {
+    display: block;
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--darkgray);
+    font: inherit;
+    line-height: 0;
+    cursor: pointer;
+  }
+
+  ul :is(a, button):hover {
+    color: var(--tertiary);
+  }
+
+  ul :global(svg) {
+    display: block;
+    fill: currentColor;
+  }
+
+  .copied:empty {
+    display: none;
+  }
+
+  /* The QR code's dialog: the code, dark on the white of paper in either scheme, so that a camera
+     reads it as printed; under it the address it holds, and Close. */
+  dialog {
+    box-sizing: border-box;
+    width: min(20rem, 100% - 2rem);
+    padding: 1.25rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 0.5rem;
+    background: var(--light);
+    color: var(--darkgray);
+    font-size: 1rem;
+    text-align: center;
+    box-shadow: 0 1rem 3rem var(--shadow);
+  }
+
+  dialog::backdrop {
+    background: var(--scrim);
+    backdrop-filter: blur(2px);
+  }
+
+  .qr {
+    border-radius: 0.25rem;
+    background: var(--paper);
+    line-height: 0;
+  }
+
+  .qr :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .qr-address {
+    margin: 0.75rem 0 1rem;
+    font-size: 0.8rem;
+    overflow-wrap: anywhere;
+  }
+
+  .close {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 0.5rem;
+    background: none;
+    color: var(--darkgray);
+    font: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+
+  .close:hover {
+    border-color: var(--gray);
+  }
+
+</style>

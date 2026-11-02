@@ -3,7 +3,7 @@
 // column, and the note. The graph column holds the site's title, the search box with the colour
 // scheme switch to the right of it, the local graph over the reader's trail, and the footer.
 // Beside it are the trail's spines, the notes the reader came through, then the note itself: its
-// header (title, date, tags) over the page's content, and what follows the body under it.
+// header (title, tags, date, and the ways to share it) over the page's content, and what follows the body under it.
 //
 // The window is the one scroll: the graph column and the spines stay in view beside the note. On a
 // phone or a tablet the graph column is a menu instead, opened from a bar over the note, which
@@ -23,6 +23,7 @@ import SiteFooter from "../components/SiteFooter.astro"
 import TrailSpines from "../components/TrailSpines.astro"
 
 import ArticleTitle from "../components/ArticleTitle.astro"
+import ShareLinks from "../components/ShareLinks.astro"
 import DateAndReadingTime from "../components/DateAndReadingTime.astro"
 import TagList from "../components/TagList.astro"
 import PostListing from "../components/PostListing.astro"
@@ -87,11 +88,12 @@ const fold = {
       <header>
         {
           on("note", "home", "tag", "annotation") && (
-            <ArticleTitle title={page.title} url={page.url} />
+            <ArticleTitle title={page.title} />
           )
         }
         {on("note", "home", "tag", "annotation") && <TagList tags={page.note?.tags ?? []} />}
         {on("note", "tag", "annotation") && <DateAndReadingTime note={page.note} />}
+        {on("note", "home", "tag", "annotation") && <ShareLinks title={page.title} url={page.url} />}
       </header>
 
       <slot />

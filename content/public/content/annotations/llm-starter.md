@@ -13,20 +13,11 @@ tags:
   - writing/annotations
 annotation-target: https://raw.githubusercontent.com/chaoticgoodcomputing/blog/refs/heads/main/content/public/assets/llms.pdf
 ---
+This is a presentation I wrote up about LLMs back in early 2025 to try and help other developers understand them mechanically and dispel a some of the doom-and-gloom, fear-of-the-unknown resistance to new tooling I was seeing at the time.
 
->%%
->```annotation-json
->{"created":"2026-01-23T10:40:19.130Z","text":"Presentation I wrote up about LLMs back in 2025 to try and help other developers understand them mechanically and dispel a whole lot of the doom-and-gloom, kneejerk resistance to new tooling I was seeing at the time.","updated":"2026-01-23T10:40:19.130Z","document":{"title":"Untitled","link":[{"href":"urn:x-pdf:3d2ae60b665b2d4e8b5a549d8fef77ba"},{"href":"https://raw.githubusercontent.com/chaoticgoodcomputing/chaoticgoodcomputing.github.io/refs/heads/main/content/public/assets/llms.pdf"}],"documentFingerprint":"3d2ae60b665b2d4e8b5a549d8fef77ba"},"uri":"https://raw.githubusercontent.com/chaoticgoodcomputing/chaoticgoodcomputing.github.io/refs/heads/main/content/public/assets/llms.pdf","target":[{"source":"https://raw.githubusercontent.com/chaoticgoodcomputing/chaoticgoodcomputing.github.io/refs/heads/main/content/public/assets/llms.pdf","selector":[{"type":"TextPositionSelector","start":0,"end":4},{"type":"TextQuoteSelector","exact":"LLMs","prefix":"th50%75%100%125%150%200%300%400%","suffix":"they actually work,they can (and"}]}]}
->```
->%%
->*%%PREFIX%%th50%75%100%125%150%200%300%400%%%HIGHLIGHT%% ==LLMs== %%POSTFIX%%they actually work,they can (and*
->%%LINK%%[[#^dd1imul0u2|show annotation]]
->%%COMMENT%%
->Presentation I wrote up about LLMs back in 2025 to try and help other developers understand them mechanically and dispel a whole lot of the doom-and-gloom, kneejerk resistance to new tooling I was seeing at the time.
->%%TAGS%%
->
-^dd1imul0u2
-
+> [!NOTE]
+> 
+> If you're looking to fast-forward into the future, and see my response to "why", [[public/content/notes/software-gardening.mdx|Software Gardening]] is the area where I continue this presentation with an extra two years of experience.
 
 >%%
 >```annotation-json

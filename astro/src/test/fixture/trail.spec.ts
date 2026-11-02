@@ -83,20 +83,22 @@ test("on a phone, the site's name in the bar is a fresh start too", async ({ pag
   expect(new URL(page.url()).search).toBe("")
 })
 
-test("the button beside a title copies the page's own address, with none of the trail", async ({ page, context }) => {
+test("the copy-link button copies the page's own address, with none of the trail, and says so", async ({ page, context }) => {
   await context.grantPermissions(["clipboard-read", "clipboard-write"])
   await page.goto(`${destination}?trail=${start}`)
-  await page.getByRole("heading", { level: 1 }).hover()
-  await page.getByRole("button", { name: "Copy a link to this page" }).click()
+  const copy = page.getByRole("button", { name: "Copy link" })
+  await copy.click()
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
     "https://blog.chaoticgood.computer/client-side-navigation/destination",
   )
+  await expect(page.getByRole("status")).toHaveText("Copied")
+  await expect(page.getByRole("status")).toBeHidden()
 })
 
-test("the QR button beside a title shows the page's own address as a QR code, with none of the trail, until it is closed", async ({ page }) => {
+test("the QR code button shows the page's own address as a QR code, with none of the trail, until it is closed", async ({ page }) => {
   await page.goto(`${destination}?trail=${start}`)
-  await page.getByRole("heading", { level: 1 }).hover()
-  await page.getByRole("button", { name: "Show a QR code for this page" }).click()
+  const badge = page.getByRole("button", { name: "QR code" })
+  await badge.click()
   const dialog = page.getByRole("dialog", { name: "A QR code for this page" })
   await expect(dialog).toBeVisible()
   const address = "https://blog.chaoticgood.computer/client-side-navigation/destination"
@@ -105,24 +107,34 @@ test("the QR button beside a title shows the page's own address as a QR code, wi
 
   await page.keyboard.press("Escape")
   await expect(dialog).toBeHidden()
-  await page.getByRole("heading", { level: 1 }).hover()
-  await page.getByRole("button", { name: "Show a QR code for this page" }).click()
+  await badge.click()
   await dialog.getByRole("button", { name: "Close" }).click()
   await expect(dialog).toBeHidden()
 })
 
-test.describe("on a phone", () => {
-  test.use({ hasTouch: true, isMobile: true, viewport: { width: 390, height: 800 } })
+test("the services' share links go to their share intents for the page's own address, in a new tab", async ({ page }) => {
+  await page.goto(`${destination}?trail=${start}`)
+  const address = "https://blog.chaoticgood.computer/client-side-navigation/destination"
+  const shares = page.getByRole("list", { name: "Share on:" })
+  for (const [name, origin] of [
+    ["Bluesky", "https://bsky.app"],
+    ["LinkedIn", "https://www.linkedin.com"],
+    ["X", "https://x.com"],
+  ] as const) {
+    const link = shares.getByRole("link", { name, exact: true })
+    await expect(link).toHaveAttribute("target", "_blank")
+    const href = new URL((await link.getAttribute("href"))!)
+    expect(href.origin).toBe(origin)
+    expect([...href.searchParams.values()].join(" ")).toContain(address)
+  }
+})
 
-  test("the buttons beside a title are always shown, on a line of their own under it, which stays centred", async ({ page }) => {
-    await page.goto(destination)
-    const title = (await page.getByRole("heading", { level: 1 }).boundingBox())!
-    const buttons = page.locator("main .article-title .actions")
-    await expect(buttons).toHaveCSS("opacity", "1")
-    const row = (await buttons.boundingBox())!
-    expect(row.y).toBeGreaterThanOrEqual(title.y + title.height - 1)
-    const middle = (box: { x: number; width: number }) => box.x + box.width / 2
-    const header = (await page.locator("main .article-title").boundingBox())!
-    expect(Math.abs(middle(row) - middle(header))).toBeLessThan(2)
-  })
+test("the title is centred on the note, with nothing beside it", async ({ page }) => {
+  await page.goto(destination)
+  const middle = (box: { x: number; width: number }) => box.x + box.width / 2
+  const title = (await page.getByRole("heading", { level: 1 }).boundingBox())!
+  const header = (await page.locator("main > header").boundingBox())!
+  expect(Math.abs(middle(title) - middle(header))).toBeLessThan(2)
+  const shares = (await page.getByRole("list", { name: "Share on:" }).boundingBox())!
+  expect(shares.y).toBeGreaterThanOrEqual(title.y + title.height - 1)
 })

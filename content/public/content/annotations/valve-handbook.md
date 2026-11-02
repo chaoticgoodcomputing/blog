@@ -11,28 +11,17 @@ tags:
 annotation-target: https://media.steampowered.com/apps/valve/Valve_Handbook_LowRes.pdf
 description: Many an engineer has heard tales of Valve's "flat" organization structure — what is fact, what is fiction, and how does it actually work? An annotated copy of the 2012 First Edition of Valve's Employee Handbook.
 ---
+It's seems a bit out of left field to annotate a random company's employee handbook. I'm not an employee at Valve — never have been, likely never will be — but among engineers, Valve has a somewhat mythic status as a company with an unorthodox approach to management: just... *don't manage.*
 
+This annotation relates specifically to [[public/content/annotations/evolutions-revolutions|Evolutions and Revolutions as Organizations Grow]], which pertains to general management structures across companies. The entire field of management research is an investigation into how best to coordinate human efforts and enterprise, and there are many solutions across that spectrum that work well. Take a look at two successful companies, and you'd certainly find differences in the structure of their org charts — sometimes subtle, sometimes not, but differences nonetheless.
 
->%%
->```annotation-json
->{"text":"I'll fully admit: this seems out of left field. I'm not an employee at Valve — I think I applied there once out of college, to no response — but among engineers, Valve has a somewhat mythic status as a company with an unorthodox approach to management: simply don't manage.\n\nThis annotation relates specifically to [[public/content/annotations/evolutions-revolutions|Evolutions and Revolutions as Organizations Grow]], which pertains to general management structures across companies, in general. The entire field of management research is an investigation into how best to coordinate human efforts and enterprise, and there are many solutions across that spectrum that work well. Take a look at two successful companies, and you'd certainly find differences in their organizational — sometimes subtle, sometimes not, but certainly there.\n\nHowever, it's obvious that Valve's solution to management (\"simply don't manage\") is novel, to say the least. I've seen it hailed in a few places, now, of the potential for decentralized teams. It's no secret that [tech companies have spent the last few years \"flattening\" their hierarchies](https://www.businessinsider.com/microsoft-amazon-google-embrace-flatter-structure-fewer-managers-boost-efficiency-2025-5?op=1), *specifically* trimming out mid-level management.\n\nHowever, it has to be appreciated that Valve's solution is not to simply *not* have managers. If you, running your current company, think that you can flatten your organizational hierarchy for efficiency by shitcanning the entire middle management of your company, close your laptop, and come back tomorrow to an efficient paradise? You've got another thing coming.\n\n","target":[{"source":"https://media.steampowered.com/apps/valve/Valve_Handbook_LowRes.pdf","selector":[{"type":"TextPositionSelector","start":0,"end":51},{"type":"TextQuoteSelector","exact":"H A N D B O O K   F O R  N E W   E M P L O Y E E S ","prefix":"0%50%75%100%125%150%200%300%400%","suffix":"================================"}]}],"created":"2026-03-26T16:06:25.649Z","updated":"2026-03-26T16:06:25.649Z","document":{"title":"Valve_Handbook_LowRes.pdf","link":[{"href":"urn:x-pdf:80d89e744b9b40929171b78a3028c3a2"},{"href":"https://media.steampowered.com/apps/valve/Valve_Handbook_LowRes.pdf"}],"documentFingerprint":"80d89e744b9b40929171b78a3028c3a2"},"uri":"https://media.steampowered.com/apps/valve/Valve_Handbook_LowRes.pdf"}
->```
->%%
->*%%PREFIX%%0%50%75%100%125%150%200%300%400%%%HIGHLIGHT%% ==H A N D B O O K   F O R  N E W   E M P L O Y E E S== %%POSTFIX%%================================*
->%%LINK%%[[#^yx67hjphtyd|show annotation]]
->%%COMMENT%%
->I'll fully admit: this seems out of left field. I'm not an employee at Valve — I think I applied there once out of college, to no response — but among engineers, Valve has a somewhat mythic status as a company with an unorthodox approach to management: simply don't manage.
->
->This annotation relates specifically to [[public/content/annotations/evolutions-revolutions|Evolutions and Revolutions as Organizations Grow]], which pertains to general management structures across companies, in general. The entire field of management research is an investigation into how best to coordinate human efforts and enterprise, and there are many solutions across that spectrum that work well. Take a look at two successful companies, and you'd certainly find differences in their organizational — sometimes subtle, sometimes not, but certainly there.
->
->However, it's obvious that Valve's solution to management ("simply don't manage") is novel, to say the least. I've seen it hailed in a few places, now, of the potential for decentralized teams. It's no secret that [tech companies have spent the last few years "flattening" their hierarchies](https://www.businessinsider.com/microsoft-amazon-google-embrace-flatter-structure-fewer-managers-boost-efficiency-2025-5?op=1), *specifically* trimming out mid-level management.
->
->However, it has to be appreciated that Valve's solution is not to simply *not* have managers. If you, running your current company, think that you can flatten your organizational hierarchy for efficiency by shitcanning the entire middle management of your company, close your laptop, and come back tomorrow to an efficient paradise? You've got another thing coming.
->
->
->%%TAGS%%
->
-^yx67hjphtyd
+However, it's obvious that Valve's solution to management ("manage yourselves!") is novel on the surface, to say the least. I've seen it hailed in a few places, now, of the potential for decentralized teams. It's no secret that [tech companies have spent the last few years "flattening" their hierarchies](https://www.businessinsider.com/microsoft-amazon-google-embrace-flatter-structure-fewer-managers-boost-efficiency-2025-5?op=1), usually by [[public/content/notes/software-gardening.mdx|gutting management roles]].
+
+Reading through the handbook, though, you see that Valve's solution is *not* the colloquial "no managers!" 
+
+Are you hoping you can flatten your organizational hierarchy for efficiency by shitcanning the entire middle management of your company, close your laptop, and come back tomorrow to an efficient paradise? 
+
+You've got another thing coming.
 
 
 >%%
