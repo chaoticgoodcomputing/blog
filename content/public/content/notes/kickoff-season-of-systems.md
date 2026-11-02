@@ -4,6 +4,7 @@ description: |
   I'm learning to live with the systems that stole my beloved em-dash.
   A season dedicated to negotiating how to live with the agentic models that have turned my career upside-down.
 date: 2026-01-04
+updated: 2026-01-23
 tags:
   - horticulture/seasons/systems
   - engineering/ai

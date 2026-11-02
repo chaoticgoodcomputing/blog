@@ -3,6 +3,7 @@ title: Some initial thoughts about time tracking
 description: |
   TODO.
 date: 2024-02-27
+updated: 2026-01-28
 tags:
   - horticulture/seasons/rhythm
   - engineering/data

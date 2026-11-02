@@ -4,6 +4,7 @@ description: |
   How over-engineering killed a 3-month remaster of an old ROBLOX game.
   Looking back at the depth of Dunning-Kruger, and how good code doesn't make a good game.
 date: 2024-02-25
+updated: 2026-01-10
 tags:
   - projects/games/roblox
   - engineering/languages/lua

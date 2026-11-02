@@ -4,6 +4,7 @@ description: |
   My college presentation on the Gale-Shapley paper, recorded on an iPad, like a true professional.
   Non-market environments, matchmaking lattices, and gratitude for good professors.
 date: 2020-11-01
+updated: 2026-01-28
 tags:
   - economics/markets
   - engineering/languages/python

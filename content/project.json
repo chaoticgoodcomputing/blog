@@ -50,6 +50,24 @@
         "cwd": "content"
       }
     },
+    "updated-dates": {
+      "//": "Stamps `updated:`, the day in UTC, into each staged public note whose content the next commit changes: its title, its description, or its body with each link reduced to what it shows, so a tag rename, an alias or a moved link target changes nothing. Edits the staged copy and the working tree's apart, so an unstaged change stays unstaged. The site takes `updated` as when the note last changed, for the sitemap's lastmod (utils/updated-dates.ts). Run by the git pre-commit hook. The `backfill` configuration stamps each public note with none from its history instead, the newest commit that changed its content, into the working tree only.",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "node --experimental-strip-types --disable-warning=ExperimentalWarning utils/updated-dates.ts"
+        ],
+        "parallel": false,
+        "cwd": "content"
+      },
+      "configurations": {
+        "backfill": {
+          "commands": [
+            "node --experimental-strip-types --disable-warning=ExperimentalWarning utils/updated-dates.ts --backfill"
+          ]
+        }
+      }
+    },
     "test": {
       "//": "The vault's script tests, with Node's test runner.",
       "executor": "nx:run-commands",

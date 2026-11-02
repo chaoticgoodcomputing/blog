@@ -4,6 +4,7 @@ description: |
   Stop reprocessing your entire dataset every time new data arrives.
   A practical guide to Spark Structured Streaming with code examples and cost logic.
 date: 2022-07-14
+updated: 2026-01-10
 tags:
   - engineering/data
   - engineering/devops

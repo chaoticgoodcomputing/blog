@@ -1,6 +1,7 @@
 ---
 title: "APL: Pattern 2; The Distribution of Towns"
 date: 2026-02-07
+updated: 2026-02-08
 tags:
   - economics/policy
   - projects/games/the-neighborhood

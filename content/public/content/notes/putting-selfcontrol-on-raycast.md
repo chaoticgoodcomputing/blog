@@ -4,6 +4,7 @@ description: |
   Building a Raycast plugin to schedule website blocks — because checking news "just one more time" destroys flow.
   Automate SelfControl and self control: take your laptop back.
 date: 2024-02-28
+updated: 2026-01-10
 tags:
   - engineering/languages/typescript
   - horticulture/seasons/rhythm

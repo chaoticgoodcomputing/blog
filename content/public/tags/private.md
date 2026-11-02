@@ -1,5 +1,6 @@
 ---
 title: "#private"
+updated: 2026-01-23
 ---
 
 In the era of AI consuming everything publicly available on the Internet, I made a call during my Season of Systems to take some of the more personal notes — primarily the periodic notes, like dailies and weeklies — private. I keep the metadata, like tags and links, available. However, most of them are stashed away separate from this site and repository.

@@ -4,6 +4,7 @@ description: |
   LLMs: Are we doomed to die, or born to garden?
   I'd like to make the case that AI is less like Terminator, and more like tomatoes.
 date: 2026-01-10
+updated: 2026-01-22
 tags:
   - engineering/ai
   - writing/essays

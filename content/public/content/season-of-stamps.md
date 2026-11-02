@@ -1,6 +1,7 @@
 ---
 title: The Season of Stamps
 date: 2026-10-22
+updated: 2026-10-26
 tags:
   - horticulture/seasons/stamps
   - writing/notes

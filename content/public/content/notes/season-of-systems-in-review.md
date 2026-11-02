@@ -2,6 +2,7 @@
 title: "Closing Time: Season of Systems"
 description: "Retrospective of my Season of Systems: agents, frameworks, and other attempts to structure the messiness of day-to-day life."
 date: 2026-10-16
+updated: 2026-10-17
 tags:
   - horticulture/seasons/systems
   - engineering/ai

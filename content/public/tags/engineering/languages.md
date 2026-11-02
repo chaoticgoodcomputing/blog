@@ -1,5 +1,6 @@
 ---
 title: "#languages"
+updated: 2026-09-27
 ---
 I'm certainly not a person who has [[public/content/notes/strong-and-weak-opinions|strong opinions]] about programming languages. My personal and professional decision graph around language choice is:
 

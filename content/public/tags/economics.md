@@ -1,5 +1,6 @@
 ---
 title: "#economics"
+updated: 2026-10-22
 ---
 Economics is where I spent my [[public/content/notes/qamo|actual undergraduate studies]], and I worked as a fintech data analyst and engineer in the early years of my career. While I work professionally as a more general software engineer and project manager at this point, I still like to keep up with more econometrics and policy-focused topics.
 

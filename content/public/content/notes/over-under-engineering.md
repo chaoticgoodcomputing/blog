@@ -4,6 +4,7 @@ description: |
   I've learned so much in my career — so why do I finish fewer projects than I used to?
   Over-engineering: it's easier to be bad at something on accident than on purpose.
 date: 2024-02-25
+updated: 2026-01-28
 tags:
   - engineering
   - horticulture/seasons/rhythm

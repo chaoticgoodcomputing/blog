@@ -1,6 +1,7 @@
 ---
 title: "#systems"
 date: 2025-12-20
+updated: 2026-02-01
 aliases:
   - tags/seasons/systems
 ---

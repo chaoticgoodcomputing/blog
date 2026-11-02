@@ -1,6 +1,7 @@
 ---
 title: "#rhythm"
 date: 2024-02-27
+updated: 2026-02-01
 aliases:
   - tags/seasons/rhythm
 ---

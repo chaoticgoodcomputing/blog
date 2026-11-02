@@ -1,5 +1,6 @@
 ---
 title: "#a-pattern-language"
+updated: 2026-02-12
 ---
 `#a-pattern-language` is a collection of notes and annotations about [A Pattern Language](https://www.patternlanguage.com/) (by C. Alexander, S. Ishikawa, M. Silverstein et al.), a manual published in 1977 setting up a design language for urban planning and development.
 

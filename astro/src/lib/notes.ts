@@ -187,6 +187,7 @@ export function indexNotes(vault: Vault, rules: Unpublished[] = unpublished): No
       ...resolveDates({
         // The resume's note is dated by the resume's source, outside the vault (./resume.ts).
         frontmatter: frontmatter.date ?? sourceDate(file.path),
+        updated: frontmatter.updated,
         git: git.get(file.path),
         filesystem: () => modifiedTime(sourceOf(file.path)),
       }),

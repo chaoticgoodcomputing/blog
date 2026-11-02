@@ -1,6 +1,7 @@
 ---
 title: "APL: Pattern 3; City Country Fingers"
 date: 2026-02-07
+updated: 2026-10-27
 tags:
   - economics/markets
   - projects/games/the-neighborhood

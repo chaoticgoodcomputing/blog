@@ -1,6 +1,7 @@
 ---
 title: "#stamps"
 date: 2026-10-22
+updated: 2026-10-22
 ---
 The [[public/content/season-of-stamps|Season of Stamps]] is my follow-up to [[public/tags/horticulture/seasons/systems|Systems]]. In this season, I have a few different things that I'll focus on:
 

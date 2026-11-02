@@ -4,6 +4,7 @@ description: |-
   Looking back at my year-long attempt to build up long-lasting habits.
   A retrospective on routines, remote work transitions, and learning the art of slow-and-steady.
 date: 2025-12-26
+updated: 2026-01-21
 tags:
   - horticulture/seasons/rhythm
   - projects/site

@@ -4,6 +4,7 @@ description: |
   I'm embracing being wrong on the internet in an effort to learn in public.
   A disclaimer on digital gardening, dead pixels, and the fear of terminal online-ness.
 date: 2024-02-27
+updated: 2026-01-10
 tags:
   - horticulture/seasons/rhythm
   - projects/site

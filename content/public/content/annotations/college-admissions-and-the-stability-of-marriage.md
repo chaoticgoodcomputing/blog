@@ -1,8 +1,9 @@
 ---
-title: College Admissions and the Stability of Marriage
+title: "Annotations: College Admissions and the Stability of Marriage"
 description: |
   A dive into the hottest algorithm of the 1960s: Gale-Shapley matchmaking. Who knew that the mysteries of the heart could be solved with a matrix?
 date: 2024-03-14
+updated: 2026-11-02
 tags:
   - economics/markets
   - writing/annotations

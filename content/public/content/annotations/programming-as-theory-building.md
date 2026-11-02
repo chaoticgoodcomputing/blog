@@ -1,6 +1,7 @@
 ---
 title: Agentic Programming as Theory Building
 date: 2026-02-12
+updated: 2026-10-29
 tags:
   - economics/management
   - engineering/ai

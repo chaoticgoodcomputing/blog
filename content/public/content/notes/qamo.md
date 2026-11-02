@@ -4,6 +4,7 @@ description: |
   My time at the University of Utah was longer than I'd planned, cut shorter than expected by COVID-19.
   I was very lucky to have mentorship to push me across the finish line.
 date: 2024-02-26
+updated: 2026-01-10
 tags:
   - economics
   - projects/undergrad

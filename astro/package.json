@@ -12,7 +12,8 @@
     "check": "astro check",
     "test": "vitest run",
     "e2e": "playwright test",
-    "mirrors": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/pin-mirrors.ts"
+    "mirrors": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/pin-mirrors.ts",
+    "mock-mentions": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/mock-mentions.ts"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.4.2",

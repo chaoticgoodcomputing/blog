@@ -3,6 +3,7 @@ title: Entries to SOME 1
 description: |
   Stable matching, optimal stopping, and Bachelor analysis - visualized with some care.
 date: 2021-05-25
+updated: 2026-01-10
 tags:
   - engineering/data
   - engineering/languages/python

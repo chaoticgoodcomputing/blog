@@ -136,6 +136,22 @@ test("a note was last modified when git says, else when the file system says, an
   expect(resolveDates({ frontmatter: "2026-09-30", git: git1, filesystem }).modified.toISOString()).toBe("2026-09-30T00:00:00.000Z")
 })
 
+test("a note stamped `updated` was last modified then, whatever git says, and never before its date", () => {
+  const never = () => {
+    throw new Error("asked the file system")
+  }
+  expect(resolveDates({ frontmatter: "2026-01-04", updated: "2026-03-02", git: git1, filesystem: never }).modified.toISOString()).toBe(
+    "2026-03-02T00:00:00.000Z",
+  )
+  expect(resolveDates({ frontmatter: "2026-01-04", updated: new Date("2026-03-02T00:00:00Z"), git: git1, filesystem }).modified.toISOString()).toBe(
+    "2026-03-02T00:00:00.000Z",
+  )
+  expect(resolveDates({ frontmatter: "2026-09-30", updated: "2026-03-02", git: git1, filesystem }).modified.toISOString()).toBe(
+    "2026-09-30T00:00:00.000Z",
+  )
+  expect(resolveDates({ frontmatter: "2026-01-04", updated: "soon", git: git1, filesystem }).modified.toISOString()).toBe("2026-05-05T00:00:00.000Z")
+})
+
 test("the file system is not asked when git has the answer", () => {
   const never = () => {
     throw new Error("asked the file system")

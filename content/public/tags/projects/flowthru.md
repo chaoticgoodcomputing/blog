@@ -1,6 +1,7 @@
 ---
 title: "#flowthru"
 repo: https://github.com/chaoticgoodcomputing/flowthru
+updated: 2026-05-13
 ---
 A [[public/tags/engineering/data|data engineering project]] that attempts to use a Kedro-style API surface to create data pipelines in [[public/tags/engineering/languages/csharp|.NET]] that will catch errors at compile time, instead of at runtime.
 

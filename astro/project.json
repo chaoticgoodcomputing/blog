@@ -21,10 +21,14 @@
       "cache": false
     },
     "dev": {
-      "//": "Astro's dev server over the assembled vault, dist/vault. First the tasks git:commit runs before a commit (vault:precommit: the private notes' stubs published, then checked), then the vault assembled from them, then the server, with its content cache cleared (`--force`): the cache keeps each note as it was rendered, and a changed Markdown plugin would otherwise show only in notes edited since. The vault's sources are watched, and the vault assembled and read again whenever a file in one changes, so a new or renamed note's links follow without a restart.",
+      "//": "Astro's dev server over the assembled vault, dist/vault. First the tasks git:commit runs before a commit (vault:precommit: the private notes' stubs published, then checked), then the vault assembled from them, then the server, with its content cache cleared (`--force`): the cache keeps each note as it was rendered, and a changed Markdown plugin would otherwise show only in notes edited since. The vault's sources are watched, and the vault assembled and read again whenever a file in one changes, so a new or renamed note's links follow without a restart. Its mentions are made up, by `mock-mentions`, and read from WEBMENTIONS_FILE, never webmention.io's.",
       "executor": "nx:run-commands",
-      "options": { "command": "pnpm run vault && pnpm run dev --force", "cwd": "{projectRoot}" },
-      "dependsOn": [ "vault:precommit" ],
+      "options": {
+        "command": "pnpm run vault && pnpm run dev --force",
+        "cwd": "{projectRoot}",
+        "env": { "WEBMENTIONS_FILE": "../dist/mock-mentions.json" }
+      },
+      "dependsOn": [ "vault:precommit", "mock-mentions" ],
       "continuous": true
     },
     "build": {
@@ -41,6 +45,13 @@
       ],
       "outputs": [ "{projectRoot}/dist" ],
       "parallelism": false
+    },
+    "mock-mentions": {
+      "//": "Writes made-up webmentions, as webmention.io's API gives them, to dist/mock-mentions.json, for the dev server to show (scripts/mock-mentions.ts): the three newest public posts mentioned, and a note by an alias. Run after `vault`, from the notes it assembled; never cached, since which notes are newest changes with the vault.",
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run mock-mentions", "cwd": "{projectRoot}" },
+      "dependsOn": [ "vault" ],
+      "cache": false
     },
     "preview": {
       "executor": "nx:run-commands",

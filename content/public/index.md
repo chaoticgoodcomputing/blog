@@ -1,6 +1,7 @@
 ---
 title: Chaotic Good Computing
 date: "2025-12-20"
+updated: 2026-11-02
 description: |
   Articles for the data and engineering consulting practice Chaotic Good Computing, as well as personal
   notes by Spencer Elkington.

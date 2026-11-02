@@ -4,6 +4,7 @@ description: |
   Notes from learning Event Storming for domain-driven design. Thoughts on phases,
   color-coded chaos, and how to transition from fast pitches to full products.
 date: 2026-01-06
+updated: 2026-01-10
 tags:
   - engineering
   - projects/dayjob

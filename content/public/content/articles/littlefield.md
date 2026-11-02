@@ -4,6 +4,7 @@ description: |
   Efficiency: spending six hours building a web scraper to avoid five minutes of daily work.
   Automating a business simulation because checking in is for chumps.
 date: 2021-08-28
+updated: 2026-01-10
 tags:
   - engineering/languages/python
   - engineering/data

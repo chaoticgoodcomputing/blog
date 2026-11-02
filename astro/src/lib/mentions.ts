@@ -8,6 +8,7 @@
 // paragraphs that link to the note, as the site's own mention excerpts are (./mention-excerpts.ts),
 // as text: what another site wrote is never put on a page as HTML.
 
+import fs from "node:fs"
 import type { Loader } from "astro/loaders"
 import { z } from "astro/zod"
 import { parse } from "node-html-parser"
@@ -192,17 +193,43 @@ async function fetchAll(api: string, token: string): Promise<Jf2Entry[]> {
  * from webmention.io's API with the token in `WEBMENTION_IO_TOKEN`. Without the token, as on a
  * machine that has none, the collection is empty. Read afresh on each build, all of them: there
  * are few, and one the sender deleted should go.
+ *
+ * With `WEBMENTIONS_FILE`, they are read from that file instead, a JF2 feed as the API gives one:
+ * the dev server's made-up webmentions (scripts/mock-mentions.ts).
  */
 export function mentionsLoader(api: string): Loader {
   return {
     name: "webmentions",
     async load({ store, logger, parseData }) {
       const token = process.env.WEBMENTION_IO_TOKEN
+      const file = process.env.WEBMENTIONS_FILE
       store.clear()
+      if (file) {
+        if (!fs.existsSync(file)) {
+          logger.warn(`No mentions are shown: WEBMENTIONS_FILE names ${file}, which is not there.`)
+          return
+        }
+        await keep(JSON.parse(fs.readFileSync(file, "utf8")).children ?? [])
+        logger.info(`Read from ${file}.`)
+        return
+      }
       if (!token) {
         logger.info("No WEBMENTION_IO_TOKEN: no mentions are shown.")
         return
       }
+      async function keep(entries: Jf2Entry[]) {
+        const redirects = getNoteRedirects()
+        let kept = 0
+        for (const entry of entries) {
+          const mention = toMention(entry, redirects)
+          if (!mention || entry["wm-id"] === undefined) continue
+          const id = String(entry["wm-id"])
+          store.set({ id, data: await parseData({ id, data: mention }) })
+          kept++
+        }
+        logger.info(`${kept} mentions, of ${entries.length} webmentions.`)
+      }
+
       let entries: Jf2Entry[]
       try {
         entries = await fetchAll(api, token)
@@ -212,16 +239,7 @@ export function mentionsLoader(api: string): Loader {
         logger.warn(`No mentions are shown: ${(error as Error).message}`)
         return
       }
-      const redirects = getNoteRedirects()
-      let kept = 0
-      for (const entry of entries) {
-        const mention = toMention(entry, redirects)
-        if (!mention || entry["wm-id"] === undefined) continue
-        const id = String(entry["wm-id"])
-        store.set({ id, data: await parseData({ id, data: mention }) })
-        kept++
-      }
-      logger.info(`${kept} mentions, of ${entries.length} webmentions.`)
+      await keep(entries)
     },
   }
 }

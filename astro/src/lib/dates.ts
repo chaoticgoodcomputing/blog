@@ -1,5 +1,6 @@
 // A note's date: what its frontmatter says, then the last commit to touch its file, then the
-// file's modification time. Git is asked once for each of the vault's sources, not once per note.
+// file's modification time. When it last changed: its frontmatter's `updated`, then the same. Git
+// is asked once for each of the vault's sources, not once per note.
 //
 // Every date is an instant, read and printed in UTC, so a note shows the same day wherever the
 // site is built. Nothing here reads the build machine's time zone.
@@ -133,13 +134,22 @@ export function vaultDates(root: string): VaultDates {
 export interface NoteDates {
   /** The note's date: frontmatter's, and none where frontmatter gives none it can read. */
   date: Date | undefined
-  /** When the note last changed: git's, then the file system's, and never before its date. */
+  /**
+   * When the note's content last changed: frontmatter's `updated`, which the vault's pre-commit
+   * hook stamps only when a commit changes what a reader sees (content/utils/updated-dates.ts); for
+   * a note not yet stamped, git's, then the file system's. Never before its date.
+   */
   modified: Date
 }
 
-/** A note's dates from its three sources. The file system is asked only when it is needed. */
-export function resolveDates(sources: { frontmatter: unknown; git: Date | undefined; filesystem: () => Date }): NoteDates {
-  const changed = sources.git ?? sources.filesystem()
+/** A note's dates from its sources. Git and the file system are asked only when `updated` gives no date. */
+export function resolveDates(sources: {
+  frontmatter: unknown
+  updated?: unknown
+  git: Date | undefined
+  filesystem: () => Date
+}): NoteDates {
+  const changed = parseFrontmatterDate(sources.updated) ?? sources.git ?? sources.filesystem()
   const date = parseFrontmatterDate(sources.frontmatter)
   return { date, modified: date !== undefined && changed < date ? date : changed }
 }

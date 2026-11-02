@@ -3,6 +3,7 @@ title: "Scratch Piano Application"
 description: |
   An educational waveform visualizer written in everybody's favorite programming language: Scratch.
 date: 2018-07-18
+updated: 2026-01-10
 tags:
   - engineering/languages/scratch
   - projects/teaching

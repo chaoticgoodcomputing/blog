@@ -1,5 +1,6 @@
 ---
 title: "#scratch"
+updated: 2026-09-27
 ---
 
 [Scratch](https://scratch.mit.edu/) is a massively beginner-friendly code editor. Back in [[public/tags/projects/undergrad|my undergrad at the University of Utah]], I worked a couple of summers as a programming camp instructor. I doubt it'll come up often, but when it does, you'll find those posts marked here.

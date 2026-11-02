@@ -1,6 +1,7 @@
 ---
 title: An Annotated Guide to Hobbyist Protein Folding
 date: 2026-02-25
+updated: 2026-11-02
 tags:
   - engineering/bio
   - engineering/data

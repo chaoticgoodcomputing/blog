@@ -1,5 +1,6 @@
 ---
 title: "#lua"
+updated: 2026-02-01
 ---
 
 Lua is a language that I rarely use anymore — that chunk of my development has largely switched over to [[public/tags/engineering/languages/typescript|TypeScript]] — but it does still come up from time to time. When the occasions arise, those posts will be tagged here.

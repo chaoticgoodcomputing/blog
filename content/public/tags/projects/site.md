@@ -1,5 +1,6 @@
 ---
 title: "#site"
+updated: 2026-09-27
 ---
 `#projects/site` is a tag dedicated to the mechanical work done on this website. In general, this site is grown up in two places:
 

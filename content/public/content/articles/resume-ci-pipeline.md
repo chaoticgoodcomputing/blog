@@ -3,6 +3,7 @@ title: "Say Goodbye to Untitled (5) — GitHub Actions for Resumes"
 description: |
   Set up continuous integration to auto-update your resume everywhere. Overleaf, GitHub, and LaTeX automation for the perpetually disorganized.
 date: 2021-07-29
+updated: 2026-01-10
 tags:
   - engineering/devops
   - projects/undergrad

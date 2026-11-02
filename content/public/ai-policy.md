@@ -3,6 +3,7 @@ title: AI Policy
 description: |
   I may not have any control about how AI affects me, but I can at least make a policy for how I use it.
 date: 2026-01-04
+updated: 2026-01-23
 tags:
   - projects/site
   - engineering/ai

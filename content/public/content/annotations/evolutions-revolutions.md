@@ -1,6 +1,7 @@
 ---
 title: Evolution and Revolution as Organizations Grow
 date: 2026-01-28
+updated: 2026-11-02
 tags:
   - economics/management
   - writing/annotations

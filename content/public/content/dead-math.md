@@ -1,6 +1,7 @@
 ---
 title: On Dead Math and Small Pickles
 date: 2026-10-26
+updated: 2026-10-28
 tags:
   - engineering
   - engineering/ai

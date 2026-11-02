@@ -4,6 +4,7 @@ description: |
   PSA: Check if your laptop needs an LCD for POST before removing the screen.
   Learned this the hard way after 5 hours and a fried motherboard. Learn from my dumb mistakes.
 date: 2024-03-03
+updated: 2026-01-10
 tags:
   - projects/homelab
   - engineering/devops

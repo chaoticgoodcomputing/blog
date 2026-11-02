@@ -4,6 +4,7 @@ description: |
   Classifying opinions as "strong" or "weak" to stop wasting hours in fruitless engineering debates.
   How consensus can beat being "right", and an open letter for the tactically apathetic.
 date: 2024-03-05
+updated: 2026-01-28
 tags:
   - engineering
   - horticulture/seasons/rhythm

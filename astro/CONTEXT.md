@@ -86,8 +86,10 @@ _Avoid_: image (any picture), render, preview
 **Note's date**:
 The one date a note has: its frontmatter's `date`, else the time of the last commit to touch its
 file, else the file's modification time. Read and printed in UTC: a frontmatter date is written as
-ISO 8601, and one with no zone is UTC. A note also has the time it was last modified, from git and
-then the file system, which is never before its date.
+ISO 8601, and one with no zone is UTC. A note also has the time it was last modified: its
+frontmatter's `updated`, which the vault's pre-commit hook stamps only when a commit changes what a
+reader sees of the note (content/utils/updated-dates.ts), then git, then the file system. Never
+before its date. It is the sitemap's `lastmod`.
 _Avoid_: created date, published date (the vault writes neither)
 
 **Reading time**:

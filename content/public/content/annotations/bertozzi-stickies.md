@@ -1,6 +1,7 @@
 ---
 title: Hyperparameter verification of StcE protein folds in Pedram et al., 2023
 date: 2026-02-28
+updated: 2026-11-02
 tags:
   - engineering/bio
   - engineering/data

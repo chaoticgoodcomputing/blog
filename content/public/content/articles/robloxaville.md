@@ -3,6 +3,7 @@ title: The Unbearable Weight of ROBLOX Celebrity
 description: |
   Being famous online in 2009 is the highest high I'll ever reach. A love letter to the coolest dork I know, hatemail for client-side exploits, and a limitless supply of Monopoly dollars.
 date: 2021-08-05
+updated: 2026-10-20
 tags:
   - projects/games/roblox
   - engineering/languages/lua

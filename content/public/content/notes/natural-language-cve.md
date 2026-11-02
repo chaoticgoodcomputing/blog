@@ -1,6 +1,7 @@
 ---
 title: "Security Alert: Softlock and ACE via Natural Language Overload"
 date: 2026-09-26
+updated: 2026-09-27
 tags:
   - engineering
   - engineering/ai

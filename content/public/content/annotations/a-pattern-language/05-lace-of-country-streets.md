@@ -1,6 +1,7 @@
 ---
 title: "APL: Pattern 5; Lace of Country Streets"
 date: 2026-02-08
+updated: 2026-02-08
 tags:
   - economics/policy
   - projects/games/the-neighborhood

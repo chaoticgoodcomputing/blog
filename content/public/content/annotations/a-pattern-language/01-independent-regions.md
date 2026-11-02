@@ -1,6 +1,7 @@
 ---
 title: "APL: Pattern 1; Independent Regions"
 date: 2026-02-07
+updated: 2026-02-07
 tags:
   - economics/policy
   - projects/games/the-neighborhood

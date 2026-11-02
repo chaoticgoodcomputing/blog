@@ -1,6 +1,7 @@
 ---
-title: The Theory of Stupidity (and the graph inside you)
+title: It's All Graphs, Dummy
 date: 2026-03-12
+updated: 2026-11-02
 tags:
   - economics/markets
   - horticulture/seasons/systems

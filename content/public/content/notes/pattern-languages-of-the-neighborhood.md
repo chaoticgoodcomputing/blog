@@ -1,6 +1,7 @@
 ---
 title: A Pattern Language, and a Beautiful Day in the Neighborhood
 date: 2026-02-01
+updated: 2026-02-04
 tags:
   - projects/games/the-neighborhood
   - engineering/data

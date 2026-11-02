@@ -4,6 +4,7 @@ description: |
   Why I stopped hoarding 60%-done drafts and started publishing messy thoughts instead.
   Embracing digital gardening, from-chaos-to-cultivated, and a healthy dose of imperfection.
 date: 2024-02-25
+updated: 2026-01-10
 tags:
   - horticulture
   - projects/site

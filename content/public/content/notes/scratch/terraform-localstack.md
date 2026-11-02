@@ -4,6 +4,7 @@ description: |
     $70/mo/seat? Just using live AWS may be cheaper.
     An evaluation of LocalStack as a testbed for Account Factory Terraform.
 date: 2024-04-18
+updated: 2026-01-21
 tags:
   - engineering/devops
   - writing/annotations

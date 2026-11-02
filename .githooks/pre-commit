@@ -2,10 +2,13 @@
 # Before a commit, on the files as staged:
 #   1. gives each public note the commit moves an alias at its old path, so its old address forwards
 #      to its new one (content/utils/alias-moves.ts);
-#   2. refuses a commit whose private-note stubs, dist/vault-private, publish more than the
+#   2. stamps `updated:` into each public note whose content, what a reader sees of it, the commit
+#      changes, so the sitemap's lastmod moves only then (content/utils/updated-dates.ts);
+#   3. refuses a commit whose private-note stubs, dist/vault-private, publish more than the
 #      placeholder (content/utils/guard-private.ts).
 # git uses this folder's hooks once `pnpm install` has run `git config core.hooksPath .githooks`
 # (git:postinstall).
 set -e
 node --experimental-strip-types --disable-warning=ExperimentalWarning content/utils/alias-moves.ts
+node --experimental-strip-types --disable-warning=ExperimentalWarning content/utils/updated-dates.ts
 exec node --experimental-strip-types --disable-warning=ExperimentalWarning content/utils/guard-private.ts --staged

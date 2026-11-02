@@ -1,6 +1,7 @@
 ---
 title: 'Working with Valves: Understanding the Structure of "Flat" Organizations'
 date: 2026-03-26
+updated: 2026-11-02
 tags:
   - economics/management
   - economics/strategy

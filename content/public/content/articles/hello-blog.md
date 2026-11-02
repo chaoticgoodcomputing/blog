@@ -3,6 +3,7 @@ title: "Hello, Blog! (Posts by a dummy, for other dummies)"
 description: |
   The obligatory "Hello!" post to suss out what this site will be. Python examples as unnecessary as the post itself.
 date: 2021-07-28
+updated: 2026-01-10
 tags:
   - engineering/languages/python
   - projects/site

@@ -1,6 +1,7 @@
 ---
 title: Privacy Policy
 date: 2026-02-04
+updated: 2026-02-07
 tags:
   - engineering/data
   - projects/site

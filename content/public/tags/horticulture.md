@@ -1,5 +1,6 @@
 ---
 title: "#horticulture"
+updated: 2026-10-22
 ---
 
 Horticulture is my catch-all term for the practice of [[public/content/notes/digital-gardening-with-quartz|digital gardening]]-- maintaining my knowledge, notes, and projects like tending a garden.
