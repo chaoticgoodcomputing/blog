@@ -1,5 +1,7 @@
 ---
 title: "#python"
+aliases:
+  - tags/engineering/python
 ---
 
 For much of my [[public/tags/projects/dayjob|early career]], I worked primarily in Python for [[public/tags/engineering/data|data science, analysis, and engineering]]. While I don't use it as much anymore, it's a handy tool for quick prototyping and data projects, especially in [[public/tags/engineering/ai|AI, LLM, and machine learning projects]]. It'll come up from time to time, and those projects will show up here.

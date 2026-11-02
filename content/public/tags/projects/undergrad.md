@@ -1,5 +1,7 @@
 ---
 title: "#undergrad"
+aliases:
+  - tags/projects/college
 ---
 
 In 2022, I graduated with an undergraduate degree in Quantitative Analysis of Markets and Organizations (it's just [[public/tags/economics|economics]] with a fancy name) and [[public/tags/engineering|Computer Science]]. The start of this blog and the end of the degree overlapped a bit — any of those posts will be marked here.

@@ -1,5 +1,7 @@
 ---
 title: "#csharp"
+aliases:
+  - tags/engineering/csharp
 ---
 
 I had done a few projects in C# back in [[public/tags/projects/undergrad|college]], especially through trying my hand at [[public/tags/projects/games|trying my hand at broader game development]]. That has picked up substantially since starting a [[public/tags/projects/dayjob|dayjob]] at a C# and TypeScript shop.

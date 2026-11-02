@@ -1,6 +1,8 @@
 ---
 title: "#rhythm"
 date: 2024-02-27
+aliases:
+  - tags/seasons/rhythm
 ---
 The [[public/content/notes/kickoff-season-of-rhythm|Season of Rhythm]] is my first season, when I adopted a personal practice of trying to focus blocks of time around specific tasks. Season of Rhythm is focused around developing a strong habits and routines, which I need to redevelop after graduating from my undergraduate and starting full-time remote work. It's also the start of [[public/tags/horticulture|the habit of blogging/digital gardening]]
 
