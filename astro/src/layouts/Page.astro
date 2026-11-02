@@ -28,6 +28,7 @@ import DateAndReadingTime from "../components/DateAndReadingTime.astro"
 import TagList from "../components/TagList.astro"
 import PostListing from "../components/PostListing.astro"
 import PageLinks from "../components/PageLinks.astro"
+import Mentions from "../components/Mentions.astro"
 import SourceLink from "../components/SourceLink.astro"
 
 type Props = PageProps
@@ -102,6 +103,7 @@ const fold = {
         {/* On a tag page, the posts under `page.tag`. */}
         {on("home", "tag", "404") && <PostListing tag={page.tag} />}
         {on("note", "tag", "annotation") && <PageLinks note={page.note} />}
+        {on("note", "annotation") && <Mentions note={page.note} />}
         {on("note") && <SourceLink note={page.note} />}
       </div>
     </main>

@@ -44,6 +44,8 @@ import { getTrailingSlashRedirects } from "./src/lib/trailing-slashes.ts"
 
 import { search } from "./src/integrations/search.ts"
 
+import { mentionExcerpts } from "./src/integrations/mention-excerpts.ts"
+
 import { obsidianAnnotator } from "@chaoticgoodcomputing/obsidian-markdown"
 import { annotatedDocument, annotationDate } from "./src/lib/annotations.ts"
 
@@ -175,6 +177,10 @@ export default defineConfig({
 
     // The search index: the indexable pages, each as the build wrote it (docs/adr/1901).
     search(),
+
+    // For each site a note links to, the page of its paragraphs that link there, which the deploy
+    // sends as a webmention, and the manifest of them all (src/lib/mention-excerpts.ts).
+    mentionExcerpts(),
   ],
   markdown: {
     // 08 code themes

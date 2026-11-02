@@ -4,6 +4,8 @@ import { glob, type Loader, type LoaderContext } from "astro/loaders"
 import { z } from "astro/zod"
 import { assembleVault, readManifest } from "./lib/assembly.ts"
 import { getLinksDigest } from "./lib/notes.ts"
+import { mentionSchema, mentionsLoader } from "./lib/mentions.ts"
+import { webmentions } from "./site.config.ts"
 import { VAULT_ROOT, refreshVault, slugFor } from "./lib/vault.ts"
 
 /**
@@ -90,4 +92,10 @@ const notes = defineCollection({
   schema: z.looseObject({}),
 })
 
-export const collections = { notes }
+// The webmentions webmention.io received for the site's pages, each as a mention (src/lib/mentions.ts).
+const mentions = defineCollection({
+  loader: mentionsLoader(webmentions.api),
+  schema: mentionSchema,
+})
+
+export const collections = { notes, mentions }

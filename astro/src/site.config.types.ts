@@ -69,6 +69,11 @@ export interface TagListConfig {
 export interface SiteLink {
   label: string
   url: string
+  /**
+   * Whether the page is the author's own profile, which the link says with `rel="me"`. A profile
+   * that links back to the site is how webmention.io's sign-in, IndieLogin, knows the site is theirs.
+   */
+  me?: boolean
 }
 /**
  * The footer: its links, in order, and who the copyright line names. The holders are `site.author`
@@ -76,7 +81,7 @@ export interface SiteLink {
  * `url`, the page that says who they are.
  */
 export interface FooterConfig {
-  /** How to reach the site's author: a page, a profile, a `mailto:` address. */
+  /** How to reach the site's author, or follow it: a page, a profile, a `mailto:` address, the feed. */
   contacts: SiteLink[]
   /** Who the copyright is held by, each linked. */
   copyright: SiteLink[]
@@ -276,6 +281,22 @@ export interface GraphConfig {
    * how a private page is drawn when the reader has asked for them.
    */
   global: GlobalGraphSettings
+}
+
+/**
+ * Webmentions: where other sites send theirs, and which of them a note's mentions leave out. The
+ * site sends its own from the deploy (.github/workflows/scripts/webmention.mjs).
+ */
+export interface WebmentionsConfig {
+  /** The webmention endpoint every page names in its head, `<link rel="webmention">`. */
+  endpoint: string
+  /**
+   * Where the build reads the webmentions the endpoint received, as JF2, with the token in
+   * `WEBMENTION_IO_TOKEN`. A build without the token shows none.
+   */
+  api: string
+  /** Sites whose mentions are never shown: a host, and every host under it. */
+  blockedDomains: string[]
 }
 
 /**

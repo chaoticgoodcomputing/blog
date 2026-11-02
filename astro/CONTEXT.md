@@ -304,6 +304,18 @@ The notes that link to a note, an embed counting as a link.
 The notes a note links to, an embed counting as a link.
 _Avoid_: outgoing links, forward links
 
+**Mention**:
+A page on another site that links to a note and told the site so, by webmention: received by
+webmention.io and read back as the site builds. Under a note, its mentions, each with what its
+page says of the note: its paragraphs that link there. A like or a repost is no mention.
+_Avoid_: reply, comment, web backlink
+
+**Mention excerpt**:
+The page the site sends as a webmention's source when a note links to another site: only the
+note's paragraphs that link there, as one h-entry, at `/mentions/<the note's slug>/<a hash of the
+page>`. A reader who comes to one is sent on to the note, at the first of them.
+_Avoid_: reply page, source page
+
 **Links panel**:
 Under a note, its outlinks beside its backlinks, each with its date and description.
 _Avoid_: backlinks panel (it was only that once)

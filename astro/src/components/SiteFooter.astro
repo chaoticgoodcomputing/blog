@@ -3,6 +3,14 @@
 // Every value is site configuration's `footer`.
 import { newTab } from "../lib/external-links.ts"
 import { footer } from "../site.config.ts"
+import type { SiteLink } from "../site.config.types.ts"
+
+// A contact's new tab, if it is on another site, and `rel="me"` if it is the author's own profile.
+const withMe = (link: SiteLink) => {
+  const { rel, ...tab } = newTab(link.url, Astro.site!)
+  const rels = [rel, link.me && "me"].filter(Boolean).join(" ")
+  return rels ? { ...tab, rel: rels } : tab
+}
 
 // The year the site was last built, which a deploy keeps current.
 const year = new Date().getFullYear()
@@ -14,7 +22,7 @@ const year = new Date().getFullYear()
     {
       footer.contacts.map((link) => (
         <li>
-          <a href={link.url} {...newTab(link.url, Astro.site!)}>
+          <a href={link.url} {...withMe(link)}>
             {link.label}
           </a>
         </li>

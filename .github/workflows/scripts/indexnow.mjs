@@ -84,14 +84,14 @@ export function batches(items, size = BATCH_SIZE) {
   return out
 }
 
-/** Waits until the live site serves each of the built sitemaps as built. */
-async function waitForLive(dir, files) {
+/** Waits until the live site serves each of `files`, at the site's root, as `dir` holds it. */
+export async function waitForLive(dir, files) {
   const deadline = Date.now() + WAIT_LIMIT_MS
   // A query no cache has seen, so the CDN in front of Pages asks for the file afresh.
   const fresh = () => `?indexnow=${Date.now()}`
   for (;;) {
     const pending = []
-    for (const file of ["sitemap-index.xml", ...files]) {
+    for (const file of files) {
       const response = await fetch(`${SITE}/${file}${fresh()}`).catch(() => undefined)
       const live = response?.ok ? await response.text() : undefined
       if (live !== readFileSync(join(dir, file), "utf8")) pending.push(file)
@@ -139,7 +139,7 @@ async function main() {
   for (const url of urls) console.log(`   ${url}`)
   if (urls.length === 0 || args.includes("--dry-run")) return
 
-  if (args.includes("--wait")) await waitForLive(next, after.files)
+  if (args.includes("--wait")) await waitForLive(next, ["sitemap-index.xml", ...after.files])
   for (const batch of batches(urls)) {
     const status = await submit(batch, key)
     console.log(`✅ IndexNow took ${batch.length} URL(s) (${status})`)

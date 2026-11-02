@@ -1,0 +1,7 @@
+---
+// Where another site sends a webmention of one of the site's pages: webmention.io's endpoint, named
+// on every page. The build reads back what it received (src/lib/mentions.ts).
+import { webmentions } from "../site.config.ts"
+---
+
+<link rel="webmention" href={webmentions.endpoint} />

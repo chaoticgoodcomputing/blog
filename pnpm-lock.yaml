@@ -102,6 +102,9 @@ importers:
       mermaid:
         specifier: ^12.0.0
         version: 12.0.0
+      node-html-parser:
+        specifier: ^6.1.13
+        version: 6.1.13
       pagefind:
         specifier: ^1.5.2
         version: 1.5.2
@@ -151,9 +154,6 @@ importers:
       '@types/node':
         specifier: ^22.15.0
         version: 22.20.4
-      node-html-parser:
-        specifier: ^6.1.13
-        version: 6.1.13
       typescript:
         specifier: ^5.9.3
         version: 5.9.3

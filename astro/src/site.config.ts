@@ -21,6 +21,7 @@ import type {
   TagDictionary,
   TagListConfig,
   TrailConfig,
+  WebmentionsConfig,
 } from "./site.config.types.ts"
 
 export const site: SiteConfig = {
@@ -98,10 +99,12 @@ export const tagList: TagListConfig = {
 
 export const footer: FooterConfig = {
   contacts: [
-    { label: "GitHub", url: "https://github.com/spelkington" },
-    { label: "Email", url: "mailto:spencer@chaoticgood.computer" },
+    // Says `rel="me"`: the GitHub profile links back to the site, which signs in to webmention.io.
+    { label: "GitHub", url: "https://github.com/spelkington", me: true },
     { label: "LinkedIn", url: "https://www.linkedin.com/in/spelkington" },
     { label: "Bluesky", url: "https://bsky.app/profile/speen.us" },
+    // The feed (src/pages/index.xml.ts).
+    { label: "RSS", url: "/index.xml" },
   ],
   copyright: [
     { label: "Spencer Elkington", url: "https://chaoticgood.computer/contact" },
@@ -212,6 +215,13 @@ export const graph: GraphConfig = {
     hoverPulse: { on: 800, off: 1000, delay: 200 },
     filters: { timePeriod: "month", includePrivate: false, minPosts: 3 },
   },
+}
+
+// webmention.io receives the site's webmentions; the build reads them back (src/lib/mentions.ts).
+export const webmentions: WebmentionsConfig = {
+  endpoint: "https://webmention.io/blog.chaoticgood.computer/webmention",
+  api: "https://webmention.io/api/mentions.jf2",
+  blockedDomains: [],
 }
 
 export const analytics: AnalyticsConfig = {

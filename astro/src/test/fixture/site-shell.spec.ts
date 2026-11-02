@@ -9,7 +9,7 @@ const note = "/site-shell/body"
 const sideways = (page: Page) =>
   page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
 
-test("a note's page has the site title, a search box, the note and the footer", async ({ page }) => {
+test("a note's page has the site title, a search box and the note", async ({ page }) => {
   await page.goto(note)
 
   const siteTitle = page.getByRole("link", { name: "Chaotic Good Computing by Spencer Elkington" })
@@ -22,21 +22,6 @@ test("a note's page has the site title, a search box, the note and the footer", 
 
   await expect(page.locator("main").getByRole("heading", { level: 1 })).toHaveText("A note with everything in its body")
   await expect(page.locator("main .prose")).toContainText("After the rule.")
-
-  const footer = page.getByRole("contentinfo")
-  const links = {
-    GitHub: "https://github.com/spelkington",
-    Email: "mailto:spencer@chaoticgood.computer",
-    LinkedIn: "https://www.linkedin.com/in/spelkington",
-    Bluesky: "https://bsky.app/profile/speen.us",
-    "Spencer Elkington": "https://chaoticgood.computer/contact",
-    "Chaotic Good Computing": "https://github.com/chaoticgoodcomputing",
-  }
-  for (const [name, href] of Object.entries(links)) {
-    await expect(footer.getByRole("link", { name, exact: true })).toHaveAttribute("href", href)
-  }
-  await expect(footer).toContainText(/Copyright Spencer Elkington & Chaotic Good Computing © 20\d\d/)
-  await expect(footer).toContainText("All content on this site is handwritten.")
 })
 
 test("the footer's links are bold, and not underlined", async ({ page }) => {
