@@ -1,5 +1,5 @@
 import { expect, test } from "vitest"
-import { excerptOf, isBlocked, mentionsOf, noteAddressOf, pageKey, toMention, type Mention } from "../src/lib/mentions.ts"
+import { excerptOf, isBlocked, mentionCounts, mentionsOf, noteAddressOf, pageKey, toMention, type Mention } from "../src/lib/mentions.ts"
 
 const SITE = "https://blog.example.com/"
 
@@ -81,4 +81,18 @@ test("a note's mentions are newest first, one for each page, none from a blocked
     ["https://one.example/p/", "2026-03-01"],
     ["https://two.example/p", "2026-02-01"],
   ])
+})
+
+test("a note's mention count is one for each page, none from a blocked domain, as its mentions are", () => {
+  const counts = mentionCounts(
+    [
+      mention("https://one.example/p", "/content/a"),
+      mention("https://one.example/p/", "/content/a"),
+      mention("https://two.example/p", "/content/a"),
+      mention("https://spam.example/p", "/content/a"),
+      mention("https://three.example/p", "/content/b"),
+    ],
+    ["spam.example"],
+  )
+  expect(counts).toEqual(new Map([["/content/a", 2], ["/content/b", 1]]))
 })

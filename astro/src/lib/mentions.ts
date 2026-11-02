@@ -157,6 +157,21 @@ export function mentionsOf(noteUrl: string, mentions: Mention[], blocked: string
 }
 
 /**
+ * How many mentions each note has, as `mentionsOf` counts them: one for each page, and none from a
+ * blocked domain. Keyed by the note's address; a note with none has no entry.
+ */
+export function mentionCounts(mentions: Mention[], blocked: string[]): Map<string, number> {
+  const pages = new Map<string, Set<string>>()
+  for (const mention of mentions) {
+    if (isBlocked(mention.url, blocked)) continue
+    const seen = pages.get(mention.note) ?? new Set<string>()
+    seen.add(pageKey(mention.url) ?? mention.url)
+    pages.set(mention.note, seen)
+  }
+  return new Map([...pages].map(([note, seen]) => [note, seen.size]))
+}
+
+/**
  * The site's redirects to notes, an alias's and a former address's, by the address they redirect
  * from, as `noteAddressOf` follows them. Read where the Astro config reads them, as it loads: they
  * look for the site's own pages on disk, which a rendered page can't.

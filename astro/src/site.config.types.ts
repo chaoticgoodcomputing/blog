@@ -90,12 +90,32 @@ export interface FooterConfig {
 }
 
 /**
- * The post listing, after the body of the home page, a tag page and the 404 page: posts, newest
- * first. A private page is in none (src/lib/post-listing.ts).
+ * An order a post listing can put its posts in: `recent`, newest first; `central`, the posts most
+ * linked to by other posts first (src/lib/post-listing.ts).
+ */
+export type PostOrder = "recent" | "central"
+
+/** One post listing of the carousel: the order its posts are in, and its heading. */
+export interface PostListingOrder {
+  order: PostOrder
+  title: string
+}
+
+/**
+ * The post listings, after the body of the home page, a tag page and the 404 page, as a carousel
+ * the reader moves through. A private page is in none (src/lib/post-listing.ts).
  */
 export interface PostListingConfig {
-  /** Its heading. */
-  title: string
+  /**
+   * The carousel's listings, in order. One with no posts is left out, unless every one has none:
+   * then the first is shown, saying `emptyText`.
+   */
+  listings: PostListingOrder[]
+  /**
+   * What one mention of a post is worth beside one backlink from another post, in how central the
+   * post is: `3`, and a mention counts as three backlinks.
+   */
+  mentionWeight: number
   /** How many posts a listing shows until the reader asks for the rest. */
   collapsedItemCount: number
   /** Whether each post's tag badges say how many posts are under the tag. */

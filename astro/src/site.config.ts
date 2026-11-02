@@ -114,7 +114,11 @@ export const footer: FooterConfig = {
 }
 
 export const postListing: PostListingConfig = {
-  title: "Recent Posts",
+  listings: [
+    { order: "recent", title: "Recent Posts" },
+    { order: "central", title: "Central Posts" },
+  ],
+  mentionWeight: 3,
   collapsedItemCount: 5,
   showTagCounts: false,
   emptyText: "No posts found.",
