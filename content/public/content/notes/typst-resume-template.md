@@ -5,8 +5,8 @@ description: |
 date: 2022-04-21
 updated: 2026-01-28
 tags:
-  - projects/undergrad
   - projects/teaching
+  - projects/undergrad
   - writing/notes
   - writing/essays
 aliases:
