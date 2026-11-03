@@ -551,3 +551,14 @@ test("beside the document, the preface and the epilogue read as a note does, and
   expect(document.y - (source.y + source.height)).toBeLessThan(24)
   expect(source.x).toBeCloseTo(document.x, 0)
 })
+
+test("what follows an annotation page's body is as wide as a note's text, though the viewer takes the whole room", async ({ page }) => {
+  await page.setViewportSize(DESKTOP)
+  await page.goto(PAGE)
+  await expect(viewerOf(page)).not.toHaveAttribute("data-state", "failed")
+  const [after, main] = [(await page.locator(".after-body").boundingBox())!, (await page.locator("main").boundingBox())!]
+  const noteWidth = await page.evaluate(() => parseFloat(getComputedStyle(document.documentElement).fontSize) * 40)
+  expect(after.width).toBeLessThanOrEqual(noteWidth + 1)
+  // Centred in the note's room.
+  expect(Math.abs(after.x + after.width / 2 - (main.x + main.width / 2))).toBeLessThan(2)
+})

@@ -221,10 +221,15 @@ const fold = {
     justify-content: center;
   }
 
+  /* As wide as the note's text, --noteWidth, and centred: on an annotation page, whose note takes
+     the whole of its room (below), as on any other. */
   .after-body {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    box-sizing: border-box;
+    width: min(100%, var(--noteWidth));
+    margin-inline: auto;
     margin-top: 2.5rem;
     padding-top: 1.5rem;
     border-top: 1px solid var(--lightgray);
