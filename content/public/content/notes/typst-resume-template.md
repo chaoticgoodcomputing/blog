@@ -1,7 +1,7 @@
 ---
-title: Typst Resume Template
+title: How to Write a Resume in Typst
 description: |
-  A beginner-friendly resume template in Typst — 100% less LaTeX, 100% more opinions.
+  A beginner-friendly and guided resume starter for Typst users! Great for anybody looking to easily maintain and adapt their resume to new applications.
 date: 2022-04-21
 updated: 2026-01-28
 tags:
