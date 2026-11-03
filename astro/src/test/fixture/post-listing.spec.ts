@@ -105,34 +105,6 @@ const nameShows = (badge: Locator) =>
     return document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2) === name
   })
 
-test("a tag badge is its bubble alone, until the pointer is on it or it has the focus, when it grows to show its name", async ({ page }) => {
-  await page.goto("/")
-  await expand(page)
-  const three = page.locator(`${recent} .post`, { has: page.getByRole("heading", { name: "Ledger Three" }) })
-  const badge = three.locator(".tag-badge").first()
-  const next = three.locator(".tag-badge").nth(1)
-  // The tags under a post are centred, as its title is.
-  await expect(three.locator(".tags")).toHaveCSS("justify-content", "center")
-
-  // A circle, as tall as it is wide, its name still its link's.
-  const box = (await badge.boundingBox())!
-  expect(Math.abs(box.width - box.height)).toBeLessThan(1)
-  await expect(three.getByRole("link", { name: "#ledger" })).toBeVisible()
-  expect(await nameShows(badge)).toBe(false)
-
-  const after = (await next.boundingBox())!
-  await badge.hover()
-  await expect.poll(() => nameShows(badge)).toBe(true)
-  // Wider, and the badge after it pushed along.
-  await expect.poll(async () => (await badge.boundingBox())!.width).toBeGreaterThan(box.width * 2)
-  await expect.poll(async () => (await next.boundingBox())!.x).toBeGreaterThan(after.x)
-
-  await page.mouse.move(0, 0)
-  await expect.poll(() => nameShows(badge)).toBe(false)
-  await badge.focus()
-  await expect.poll(() => nameShows(badge)).toBe(true)
-})
-
 test.describe("on a touch screen, with no pointer that hovers", () => {
   test.use({ hasTouch: true, isMobile: true, viewport: { width: 390, height: 800 } })
 

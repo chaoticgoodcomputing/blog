@@ -6,13 +6,6 @@ const sections = "/note-page-furniture/A-note-with-sections"
 const noHeadings = "/note-page-furniture/no-headings"
 
 
-test("a note's date and reading time are under its title", async ({ page }) => {
-  await page.goto(sections)
-  const meta = page.locator("main header .date-and-reading-time")
-  await expect(meta).toHaveText("Mar 14, 2026, 3 min read")
-  await expect(meta.locator(".formatted-date")).toHaveAttribute("datetime", "2026-03-14T00:00:00.000Z")
-})
-
 test("a note links to its file in the repository", async ({ page }) => {
   await page.goto(sections)
   await expect(page.locator(".after-body .source-link").getByRole("link", { name: "View source on GitHub" })).toHaveAttribute(

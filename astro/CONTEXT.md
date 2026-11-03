@@ -332,6 +332,24 @@ webmention.io and read back as the site builds. Under a note, its mentions, each
 page says of the note: its paragraphs that link there. A like or a repost is no mention.
 _Avoid_: reply, comment, web backlink
 
+**Discussion**:
+Under a public note, after its links panel: the ways to answer it, its Bluesky post or a
+webmention sent from the reader's own site, then its mentions. A reply on Bluesky reaches it as a
+mention, by Bridgy.
+_Avoid_: comments, comments section
+
+**Bluesky post**:
+The site's Bluesky account's first post that links to a note, made by the deploy once the note is
+in the feed, and read back as the site builds. A note's discussion links to it, or to the account
+while the note has none; the note's h-entry names it as its copy (`u-syndication`).
+_Avoid_: syndication, cross-post, skeet
+
+**Feed content**:
+A feed item's HTML: its note's page's body as built, as plain HTML for wherever the feed is read.
+A callout is a quote, and what only works on the page (a widget, a diagram, an annotated
+document's annotations) is a quote that links to the page. It ends with a link to the page.
+_Avoid_: full text, feed body
+
 **Mention excerpt**:
 The page the site sends as a webmention's source when a note links to another site: only the
 note's paragraphs that link there, as one h-entry, at `/mentions/<the note's slug>/<a hash of the

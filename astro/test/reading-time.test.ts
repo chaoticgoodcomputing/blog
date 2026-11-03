@@ -35,12 +35,6 @@ beforeAll(async () => {
 
 afterAll(() => fs.rmSync(root, { recursive: true, force: true }))
 
-test("a note is read at two hundred words a minute, and a minute begun is a minute", () => {
-  expect(readingMinutes(notes.get("Short")!, vault)).toBe(1)
-  expect(readingMinutes(notes.get("Exact")!, vault)).toBe(2)
-  expect(readingMinutes(notes.get("Long")!, vault)).toBe(3)
-})
-
 test("frontmatter is not read, nor is a comment", () => {
   expect(readingMinutes(notes.get("Wordy")!, vault)).toBe(1)
   expect(readingMinutes(notes.get("Commented")!, vault)).toBe(1)

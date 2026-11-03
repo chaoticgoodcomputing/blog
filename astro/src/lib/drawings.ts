@@ -28,7 +28,16 @@ export const drawingExportUrl = (file: VaultFile): string => `/drawings/${slugFo
 
 export interface PublishedExport extends ExcalidrawExport {
   url: string
+  /**
+   * The PNG the plugin exports beside the SVG, where it has one, and its address: what the feed
+   * shows in the SVG's place (src/lib/feed-content.ts). A page shows the SVG.
+   */
+  png?: { file: VaultFile; url: string }
 }
+
+/** The PNG the plugin exports beside an SVG export, `x.light.png` beside `x.light.svg`, if there is one. */
+export const pngExportOf = (vault: Vault, file: VaultFile): VaultFile | null =>
+  vault.getFileByPath(file.path.replace(/\.svg$/, ".png"))
 
 export interface UnexportedDrawing {
   /** The drawing's note. */
@@ -84,7 +93,10 @@ export function drawingExports(
     )
   }
   return drawings.flatMap((drawing) =>
-    excalidrawExports(vault, drawing.file).map((each) => ({ ...each, url: drawingExportUrl(each.file) })),
+    excalidrawExports(vault, drawing.file).map((each) => {
+      const png = pngExportOf(vault, each.file)
+      return { ...each, url: drawingExportUrl(each.file), ...(png && { png: { file: png, url: drawingExportUrl(png) } }) }
+    }),
   )
 }
 
@@ -95,3 +107,7 @@ export const getDrawingExports = (options: DrawingExportOptions = {}): Published
 /** An export as the site publishes it: the vault's SVG, without its canvas. */
 export const readDrawingExport = (file: VaultFile): string =>
   withoutExcalidrawBackground(fs.readFileSync(path.join(getVault().root, file.path), "utf8"))
+
+/** Each SVG export's address that has a PNG beside it, and the PNG's address. */
+export const getDrawingPngs = (): Map<string, string> =>
+  new Map(getDrawingExports({ strict: false }).flatMap(({ url, png }) => (png ? [[url, png.url] as const] : [])))

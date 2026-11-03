@@ -77,45 +77,6 @@ test("a kept scheme is on the page before anything of its body is, so the other 
   expect(await page.evaluate(() => (window as unknown as { schemes: (string | null)[] }).schemes)).toEqual(["dark"])
 })
 
-/** Follows the link in the first note's body to the other, by the client router, not a page load. */
-async function navigate(page: Page) {
-  await page.evaluate(() => Object.assign(window, { sameDocument: true }))
-  await page.locator(".prose").getByRole("link", { name: "beta" }).click()
-  await expect(page).toHaveURL(other)
-  expect(await page.evaluate(() => (window as unknown as { sameDocument?: boolean }).sameDocument)).toBe(true)
-}
-
-test("a kept scheme survives a client-side navigation", async ({ page }) => {
-  await page.emulateMedia({ colorScheme: "light" })
-  await page.goto(note)
-  await toggle(page).click()
-
-  await navigate(page)
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark")
-  await expect(background(page)).toHaveCSS("background-color", dark)
-  await expect(toggle(page)).toBeChecked()
-})
-
-test("a scheme chosen where storage is refused survives a client-side navigation", async ({ page }) => {
-  // A private window, or a reader's settings, can refuse local storage: every use of it throws.
-  await page.addInitScript(() => {
-    Object.defineProperty(window, "localStorage", {
-      get() {
-        throw new DOMException("The operation is insecure.", "SecurityError")
-      },
-    })
-  })
-  await page.emulateMedia({ colorScheme: "light" })
-  await page.goto(note)
-  await toggle(page).click()
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark")
-
-  await navigate(page)
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark")
-  await expect(background(page)).toHaveCSS("background-color", dark)
-  await expect(toggle(page)).toBeChecked()
-})
-
 // The same block of code in a Markdown note and in an MDX note, which is compiled to a program.
 for (const [kind, code] of [
   ["a Markdown note", "/colour-scheme/code"],

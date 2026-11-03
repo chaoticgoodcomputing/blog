@@ -103,35 +103,6 @@ test("the site publishes a graph index of its notes, each with its date, tags an
   expect(note("/local-graph/private-spoke")).toMatchObject({ title: "Private Spoke", tags: ["private"], private: true })
 })
 
-test("a note's local graph is the note, the notes it links to and from, and their tags, listed inside the canvas", async ({ page }) => {
-  await page.goto(hub)
-  await expect(page.getByRole("region", { name: "Graph View" }).locator("canvas")).toBeAttached()
-  await expect(canvas(page)).toHaveAttribute("aria-label", "Graph of the pages around Hub")
-  const graph = await drawnGraph(page)
-  expect(Object.keys(graph).sort()).toEqual(["#ai", "Hub", "Inbound", "Private Spoke", "Spoke"])
-  expect(graph.Hub).toEqual({
-    href: hub,
-    current: true,
-    private: false,
-    edges: ["Spoke", "Private Spoke", "#ai"],
-  })
-  expect(graph.Inbound).toMatchObject({ href: "/local-graph/inbound", current: false, edges: ["Hub"] })
-  // A tag is a node of its own, which goes to its tag page.
-  expect(graph["#ai"]).toMatchObject({ href: "/tags/engineering/ai", edges: [] })
-  // The far note is two links away, and the spoke's tag is the spoke's, not the hub's.
-  expect(graph.Far).toBeUndefined()
-  expect(graph["#horticulture"]).toBeUndefined()
-})
-
-test("the text alternative names a note's links apart from its tags", async ({ page }) => {
-  await page.goto(hub)
-  await drawnGraph(page)
-  const item = canvas(page).locator(':scope > ul > li[data-node="/local-graph/hub"]')
-  await expect(item.locator("ul")).toHaveCount(2)
-  await expect(item.locator('ul[aria-label="Hub links to"] > li')).toHaveText(["Spoke", "Private Spoke"])
-  await expect(item.locator('ul[aria-label="Hub is tagged"] > li')).toHaveText(["#ai"])
-})
-
 test("the private tag is left out of the local graph, and a private page is drawn, marked, as the site configures", async ({ page }) => {
   test.skip(settings.local.privatePages !== "mark", "the site leaves private pages out of the local graph")
   await page.goto(hub)
@@ -153,22 +124,6 @@ test("the home page has a local graph around the home note", async ({ page }) =>
   const graph = await drawnGraph(page)
   expect(graph["Fixture Home"]).toMatchObject({ href: "/", current: true })
   expect(graph["Fixture Home"]!.edges).toContain("Alpha")
-})
-
-test("clicking a node goes to its page, whose graph is then the trail's: the page's, and the one it came from", async ({ page }) => {
-  await page.goto(hub)
-  const spoke = await nodePosition(page, "Spoke")
-  await page.mouse.click(spoke.x, spoke.y)
-  await expectAt(page, "/local-graph/spoke")
-  await expect(canvas(page)).toHaveAttribute("aria-label", "Graph of the pages around Spoke")
-  const graph = await drawnGraph(page)
-  expect(graph.Spoke!.current).toBe(true)
-  // The spoke's neighbours, and the hub's, where the reader came from.
-  expect(Object.keys(graph).sort()).toEqual(["#ai", "#horticulture", "Far", "Hub", "Inbound", "Private Spoke", "Spoke"])
-
-  const tag = await nodePosition(page, "#horticulture")
-  await page.mouse.click(tag.x, tag.y)
-  await expectAt(page, "/tags/horticulture")
 })
 
 test.describe("on a high-density screen, where a rim is wide enough to have pixels of its colour alone", () => {

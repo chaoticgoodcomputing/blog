@@ -5,7 +5,8 @@
 # engines which pages it changed, the webmention job sends the webmentions it owes the sites its
 # notes link to, the Bluesky job posts each feed item @chaoticgood.computer hasn't yet, and after a
 # push's deploy, the email job drafts a Buttondown email from each note it made an email. A daily
-# deploy shows the mentions webmention.io received since the last.
+# deploy shows the mentions webmention.io received since the last. When the Bluesky job posted, it
+# deploys again, so that the new notes' pages link to their posts.
 name: Deploy to GitHub Pages
 
 on:
@@ -243,13 +244,17 @@ jobs:
   # note's share card (.github/workflows/scripts/post-to-bluesky.mjs). Bridgy follows the replies,
   # likes and reposts back to the note as webmentions. It runs after every deploy, the daily one
   # too: the script skips what the account already posted, so a deploy that added nothing posts
-  # nothing. A failure here leaves the deploy in place.
+  # nothing. A failure here leaves the deploy in place. When it posted, it deploys again, so that
+  # each new note's discussion links to its post (astro/src/lib/bluesky-posts.ts); that deploy
+  # posts nothing, and so deploys no further.
   bluesky:
     name: Post to Bluesky
     needs: deploy
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      # To start that deploy. A run the workflow's own token starts by `workflow_dispatch` runs.
+      actions: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -280,12 +285,19 @@ jobs:
           path: pages-content
 
       - name: Post the new feed items
+        id: post
         env:
           ATPROTO_POST_KEY: ${{ secrets.ATPROTO_POST_KEY }}
           ATPROTO_IDENTIFIER: chaoticgood.computer
           RSS_FILE: pages-content/index.xml
           PAGES_DIR: pages-content
         run: node .github/workflows/scripts/post-to-bluesky.mjs
+
+      - name: Deploy again, to link the new posts
+        if: steps.post.outputs.posted != '' && steps.post.outputs.posted != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yaml --repo "$GITHUB_REPOSITORY" --ref main
 
   # Each public note the push made an email (tagged `writing/notes/emails`, not a draft) becomes a
   # Buttondown draft, after the deploy so its links reach live pages. Only ever a draft: it is sent

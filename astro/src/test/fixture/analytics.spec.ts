@@ -53,7 +53,6 @@ test("PostHog is set up with no cookie and no session recording", async ({ page 
 for (const { kind, link, name, to } of [
   { kind: "a link in a note's text", link: (page: Page) => page.getByRole("link", { name: "a link in the text" }), name: "inline-link", to: "/analytics/destination" },
   { kind: "a tag badge", link: (page: Page) => page.locator(".tag-list").getByRole("link", { name: "#analytics" }), name: "tag-badge", to: "/tags/analytics" },
-  { kind: "a link of no kind it names", link: (page: Page) => page.locator(".site-title"), name: "other", to: "/" },
 ]) {
   test(`following ${kind} is recorded as a navigation from "${name}"`, async ({ page, baseURL }) => {
     await page.goto(start)

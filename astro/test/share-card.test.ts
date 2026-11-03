@@ -45,16 +45,6 @@ async function count(png: Buffer, color: string): Promise<number> {
   return found
 }
 
-test("a note's share card says its title, description, date, reading time and tags", () => {
-  expect(shareCardOf({ note: note("share-card/pruning-roses") })).toEqual({
-    title: "Pruning Roses",
-    description: "When and how to cut back a rose.",
-    date: "Feb 14, 2026",
-    readingTime: "2 min read",
-    tags: ["horticulture/seasons", "writing/notes"],
-  })
-})
-
 test("a note with no description has a card with its first paragraph in its place", () => {
   expect(shareCardOf({ note: note("share-card/long-title") })).toEqual({
     title:

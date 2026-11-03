@@ -83,9 +83,14 @@ test("an article's JSON-LD type and section are its first matching rule's, with 
       "@type": "Person",
       name: "Spencer Elkington",
       url: `${SITE}/contact`,
-      sameAs: ["https://github.com/spelkington", "https://www.linkedin.com/in/spelkington", "https://bsky.app/profile/speen.us"],
+      sameAs: ["https://github.com/spelkington", "https://www.linkedin.com/in/spelkington"],
     },
-    publisher: { "@type": "Organization", name: "Chaotic Good Computing", url: `${SITE}/contact` },
+    publisher: {
+      "@type": "Organization",
+      name: "Chaotic Good Computing",
+      url: `${SITE}/contact`,
+      sameAs: ["https://bsky.app/profile/chaoticgood.computer"],
+    },
   })
   // The publisher's logo is the site's icon, served by the site.
   const logo = (models!.publisher as { logo: { url: string } }).logo.url

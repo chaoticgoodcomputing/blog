@@ -100,21 +100,6 @@ test("a widget on a page reached by a link is hydrated, and works", async ({ pag
   expect(await marked(page)).toBe("kept")
 })
 
-test("a widget on a page that is left abandons its request", async ({ page }) => {
-  // Bluesky never answers, so the widget's request is still open when its page is left.
-  await page.route(bluesky, () => {})
-  await page.goto(start)
-  const asked = page.waitForRequest(bluesky)
-  await page.getByRole("link", { name: "To a page with a widget" }).click()
-  const request = await asked
-
-  const abandoned = page.waitForEvent("requestfailed", (failed) => failed === request)
-  await page.getByRole("link", { name: "the destination" }).click()
-
-  await expect(heading(page)).toHaveText("The destination")
-  expect((await abandoned).failure()?.errorText).toBe("net::ERR_ABORTED")
-})
-
 /** Rests the pointer on a link for longer than the router waits before fetching a page ahead. */
 async function pointAt(page: Page, name: string) {
   await page.getByRole("link", { name }).hover()

@@ -5,7 +5,8 @@ import { z } from "astro/zod"
 import { assembleVault, readManifest } from "./lib/assembly.ts"
 import { getLinksDigest } from "./lib/notes.ts"
 import { mentionSchema, mentionsLoader } from "./lib/mentions.ts"
-import { webmentions } from "./site.config.ts"
+import { blueskyPostSchema, blueskyPostsLoader } from "./lib/bluesky-posts.ts"
+import { bluesky, webmentions } from "./site.config.ts"
 import { VAULT_ROOT, refreshVault, slugFor } from "./lib/vault.ts"
 
 /**
@@ -98,4 +99,11 @@ const mentions = defineCollection({
   schema: mentionSchema,
 })
 
-export const collections = { notes, mentions }
+// Each note's Bluesky post: the site's account's first post of it (src/lib/bluesky-posts.ts). The
+// site's address is astro.config.ts's, which a collection can't read, so it is named here too.
+const blueskyPosts = defineCollection({
+  loader: blueskyPostsLoader({ site: "https://blog.chaoticgood.computer", handle: bluesky.handle }),
+  schema: blueskyPostSchema,
+})
+
+export const collections = { notes, mentions, blueskyPosts }

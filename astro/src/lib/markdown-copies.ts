@@ -30,8 +30,9 @@ export function copiedNotes(notes: Note[]): Note[] {
 }
 
 // What is no part of a page's text: the furniture under its title (its tags, date, reading time and
-// share panel), what follows its body, and what only a pointer or a script uses.
-const NOT_TEXT = [
+// share panel), what follows its body, and what only a pointer or a script uses. The feed's content
+// leaves out the same (src/lib/feed-content.ts).
+export const NOT_TEXT = [
   "script",
   "style",
   "svg",
@@ -133,12 +134,15 @@ export function markdownCopy(note: Note, html: string, site: URL): string {
   const body: HTMLElement | null = root.querySelector("main article.prose") ?? root.querySelector("main")
   if (!body) throw new Error(`${note.url} has no main element to copy`)
   for (const selector of NOT_TEXT) for (const element of body.querySelectorAll(selector)) element.remove()
-  const text = converter(site)
-    .turndown(body.innerHTML)
+  return `${frontOf(note, site)}\n\n---\n\n${toMarkdown(body.innerHTML, site)}\n`
+}
+
+/** HTML of a page's text as Markdown, as a copy writes it: its links and images whole addresses. */
+export const toMarkdown = (html: string, site: URL): string =>
+  converter(site)
+    .turndown(html)
     .replace(/\n{3,}/g, "\n\n")
     .trim()
-  return `${frontOf(note, site)}\n\n---\n\n${text}\n`
-}
 
 // ─── llms.txt ───────────────────────────────────────────────────────────────────────────────────
 

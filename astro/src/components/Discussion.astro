@@ -1,0 +1,173 @@
+---
+// A note's discussion, under its links panel: the ways to answer it, then its mentions as replies,
+// newest first (src/lib/mentions.ts). A reader answers on Bluesky, at the site's account's post of
+// the note (src/lib/bluesky-posts.ts), or at the account where it has posted none yet; or from a
+// page of their own that links to the note, which they send here as a webmention. Bridgy sends a
+// reply on Bluesky back as a webmention too, so every reply is a mention.
+//
+// Each mention by who wrote it, where, and when, over what it says of the note. A private page has
+// no discussion: what it publishes is a stub.
+import { Icon } from "astro-icon/components"
+import { profileUrl } from "../lib/bluesky-posts.ts"
+import { newTab } from "../lib/external-links.ts"
+import { iconName } from "../lib/icons.ts"
+import { mentionsOf } from "../lib/mentions.ts"
+import { getBlueskyPost } from "../lib/note-bluesky-posts.ts"
+import { getMentions } from "../lib/note-mentions.ts"
+import type { NoteFacts } from "../lib/notes.ts"
+import { bluesky, webmentions } from "../site.config.ts"
+import FormattedDate from "./FormattedDate.astro"
+
+interface Props {
+  /** The note the page shows, with the address it has. */
+  note: (NoteFacts & { url?: string | undefined }) | undefined
+}
+
+const { note } = Astro.props
+const site = Astro.site!.href
+const shown = note?.url !== undefined && !note.isPrivate
+const mentions = shown ? mentionsOf(note.url!, await getMentions(), webmentions.blockedDomains) : []
+const post = shown ? await getBlueskyPost(note.url!) : undefined
+const target = shown ? new URL(note.url!, site).href : ""
+const hostOf = (url: string) => new URL(url).host.replace(/^www\./, "")
+---
+
+{
+  shown && (
+    <section class="discussion" id="discussion">
+      <h2>Discussion</h2>
+      <div class="ways">
+        {/* The post is the note's copy on Bluesky, which its h-entry says (`u-syndication`). */}
+        <a
+          class:list={["bluesky", post && "u-syndication"]}
+          href={post?.url ?? profileUrl(bluesky.handle)}
+          {...newTab("https://bsky.app", site)}
+        >
+          <Icon name={iconName("custom:bluesky")} is:inline width="1em" height="1em" aria-hidden="true" />
+          Discuss on Bluesky
+        </a>
+        <form class="send-webmention" action={webmentions.endpoint} method="post" target="_blank">
+          <label for="webmention-source">Replied from your own site? Send the address of your reply:</label>
+          <div class="row">
+            <input type="hidden" name="target" value={target} />
+            <input id="webmention-source" type="url" name="source" required placeholder="https://" />
+            <button type="submit">Send</button>
+          </div>
+        </form>
+      </div>
+      {mentions.length > 0 && (
+        <ul class="mentions">
+          {mentions.map((mention) => (
+            <li>
+              <p class="byline">
+                {mention.author.name &&
+                  (mention.author.url ? (
+                    <a class="author" href={mention.author.url} {...newTab(mention.author.url, site)}>
+                      {mention.author.name}
+                    </a>
+                  ) : (
+                    <span class="author">{mention.author.name}</span>
+                  ))}
+                {mention.author.name && " on "}
+                <a href={mention.url} {...newTab(mention.url, site)}>
+                  {mention.title ?? hostOf(mention.url)}
+                </a>
+                {mention.published && (
+                  <Fragment>
+                    {" · "}
+                    <FormattedDate date={mention.published} />
+                  </Fragment>
+                )}
+              </p>
+              {mention.excerpt.map((paragraph) => (
+                <p class="excerpt">{paragraph}</p>
+              ))}
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  )
+}
+
+<style>
+  .ways {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .bluesky {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    align-self: flex-start;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .send-webmention {
+    color: var(--darkgray);
+    font-size: 0.9em;
+  }
+
+  .send-webmention .row {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+  }
+
+  .send-webmention input[type="url"] {
+    flex: 1;
+    min-width: 0;
+    padding: 0.3rem 0.5rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 4px;
+    background: var(--light);
+    color: var(--dark);
+    font: inherit;
+  }
+
+  .send-webmention button {
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 4px;
+    background: var(--highlight);
+    color: var(--dark);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .mentions {
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .mentions li {
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--lightgray);
+  }
+
+  .mentions li + li {
+    margin-top: 1rem;
+  }
+
+  .byline {
+    margin: 0;
+    color: var(--darkgray);
+    font-size: 0.9em;
+  }
+
+  /* Who wrote it, at a heading's weight, as the links panel's titles are. */
+  .author,
+  .byline a {
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .excerpt {
+    margin: 0.25rem 0 0;
+    overflow-wrap: anywhere;
+  }
+</style>

@@ -6,9 +6,11 @@ import { site } from "../site.config.ts"
 
 interface Props {
   date: Date
+  /** Classes besides its own: a microformat's property, `dt-published`. */
+  class?: string
 }
 
-const { date } = Astro.props
+const { date, class: className } = Astro.props
 ---
 
-<time class="formatted-date" datetime={date.toISOString()}>{formatDate(date, site.locale)}</time>
+<time class:list={["formatted-date", className]} datetime={date.toISOString()}>{formatDate(date, site.locale)}</time>

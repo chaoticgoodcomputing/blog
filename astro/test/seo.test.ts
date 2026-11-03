@@ -92,6 +92,7 @@ const PUBLISHER = {
   name: "Chaotic Good Computing",
   url: "https://example.com/contact",
   logo: { "@type": "ImageObject", url: "https://example.com/_astro/icon.png" },
+  sameAs: ["https://bsky.app/profile/chaoticgood.computer"],
 }
 
 test("an article's JSON-LD is its type and section, its headline, dates, tags and share card, and the site's author and publisher", () => {
@@ -114,7 +115,7 @@ test("an article's JSON-LD is its type and section, its headline, dates, tags an
       "@type": "Person",
       name: "Spencer Elkington",
       url: "https://example.com/contact",
-      sameAs: ["https://github.com/spelkington", "https://www.linkedin.com/in/spelkington", "https://bsky.app/profile/speen.us"],
+      sameAs: ["https://github.com/spelkington", "https://www.linkedin.com/in/spelkington"],
     },
     publisher: PUBLISHER,
     articleSection: "Engineering",
@@ -219,4 +220,14 @@ test("the author's sameAs is each profile the footer links to on another site, a
     { url: "https://bsky.app/profile/someone" },
   ]
   expect(sameAsOf(contacts, site)).toEqual(["https://github.com/someone", "https://bsky.app/profile/someone"])
+})
+
+test("a profile the footer says is the publisher's is the publisher's sameAs, and not the author's", () => {
+  const site = new URL("https://example.com")
+  const contacts = [
+    { url: "https://github.com/someone" },
+    { url: "https://bsky.app/profile/example.com", of: "publisher" as const },
+  ]
+  expect(sameAsOf(contacts, site)).toEqual(["https://github.com/someone"])
+  expect(sameAsOf(contacts, site, "publisher")).toEqual(["https://bsky.app/profile/example.com"])
 })

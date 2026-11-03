@@ -28,6 +28,7 @@ const { Content, headings } = await render(entry)
 // A note with an annotation target is an annotation page: its body is its preface, its annotations
 // and its epilogue (src/lib/annotations.ts).
 const kind: PageKind = isAnnotationPage(note) ? "annotation" : "note"
+// The body is the note's h-entry's content (EntryMeta.astro).
 // An annotation page whose document the site mirrors has the document drawn beside its body.
 const mirror = kind === "annotation" ? mirrorFor(note) : undefined
 // And a scanned one's text, which its pages don't have (src/lib/mirrors.ts).
@@ -38,12 +39,12 @@ const mirrorText = mirror ? mirrorTextFor(note) : undefined
   {
     mirror ? (
       <AnnotationViewer note={note} mirror={mirror} text={mirrorText}>
-        <Prose>
+        <Prose class="e-content">
           <Content />
         </Prose>
       </AnnotationViewer>
     ) : (
-      <Prose>
+      <Prose class="e-content">
         <Content />
       </Prose>
     )

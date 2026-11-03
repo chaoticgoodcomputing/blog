@@ -1,0 +1,17 @@
+{
+  "feed": [
+    {
+      "post": {
+        "uri": "at://did:plc:fixture/app.bsky.feed.post/3fixturealpha",
+        "record": {
+          "createdAt": "2026-07-04T00:00:00.000Z",
+          "text": "New blog post: \"Alpha\"",
+          "embed": {
+            "$type": "app.bsky.embed.external",
+            "external": { "uri": "https://blog.chaoticgood.computer/content/notes/alpha" }
+          }
+        }
+      }
+    }
+  ]
+}

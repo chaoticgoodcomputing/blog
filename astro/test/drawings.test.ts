@@ -68,6 +68,7 @@ const FILES: Record<string, string> = {
   "index.md": "---\ntitle: Home\ntags: [garden]\n---\n\n![[sketch]] and [[sketch]].\n",
   "art/sketch.md": DRAWING,
   "art/sketch.svg": "<svg xmlns='http://www.w3.org/2000/svg'/>",
+  "art/sketch.png": "not really a PNG",
   "art/about-excalidraw.md": "---\ntitle: About Excalidraw\ntags: [excalidraw]\n---\n\nA note about drawing, which is no drawing.\n",
   "art/draft.md": DRAWING,
   "art/unfinished.md": DRAWING,
@@ -117,4 +118,12 @@ test("where nothing is to fail, as on the dev server, the exports there are list
   expect(drawingExports(vault, drawings, { strict: false }).map((each) => [each.file.path, each.url])).toEqual([
     ["art/sketch.svg", "/drawings/art/sketch.svg"],
   ])
+})
+
+test("an export's PNG, beside it, is published at its address with .png for .svg", () => {
+  const sketch = vault.getFileByPath("art/sketch.md")!
+  const index = indexNotes(vault)
+  const [only] = drawingExports(vault, index.unpublished.get("drawing")!.filter((note) => note.file === sketch), { strict: false })
+  expect(only).toMatchObject({ url: "/drawings/art/sketch.svg", png: { url: "/drawings/art/sketch.png" } })
+  expect(only!.png!.file.path).toBe("art/sketch.png")
 })

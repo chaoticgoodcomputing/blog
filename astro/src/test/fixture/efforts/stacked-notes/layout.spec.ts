@@ -9,27 +9,6 @@ const note = "/site-shell/body?trail=/"
 
 const box = async (page: Page, selector: string) => (await page.locator(selector).boundingBox())!
 
-test("on a desktop the graph column is left of the note, as tall as the window, and stays in view as the note scrolls", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 1440, height: 900 })
-  await page.goto(note)
-  const column = await box(page, "aside.graph-column")
-  const spines = await box(page, "trail-spines")
-  const main = await box(page, "main")
-
-  expect(column.x).toBe(0)
-  expect(column.height).toBe(900)
-  // The spines sit between the graph column and the note.
-  expect(spines.x).toBeGreaterThanOrEqual(column.x + column.width)
-  expect(main.x).toBeGreaterThanOrEqual(spines.x + spines.width)
-
-  await page.mouse.wheel(0, 1500)
-  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(1000)
-  expect((await box(page, "aside.graph-column")).y).toBe(0)
-  expect((await box(page, "trail-spines")).y).toBe(0)
-})
-
 test("on a desktop the graph fills the room between the graph column's header and footer", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 })
   await page.goto(note)

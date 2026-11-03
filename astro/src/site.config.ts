@@ -12,6 +12,7 @@
 
 import type {
   AnalyticsConfig,
+  BlueskyConfig,
   FeedConfig,
   FooterConfig,
   GraphConfig,
@@ -103,7 +104,8 @@ export const footer: FooterConfig = {
     // Says `rel="me"`: the GitHub profile links back to the site, which signs in to webmention.io.
     { label: "GitHub", url: "https://github.com/spelkington", me: true },
     { label: "LinkedIn", url: "https://www.linkedin.com/in/spelkington" },
-    { label: "Bluesky", url: "https://bsky.app/profile/speen.us" },
+    // The site's own account, which posts each new note (`bluesky` below).
+    { label: "Bluesky", url: "https://bsky.app/profile/chaoticgood.computer", of: "publisher" },
     // The feed (src/pages/index.xml.ts).
     { label: "RSS", url: "/index.xml" },
   ],
@@ -232,6 +234,10 @@ export const webmentions: WebmentionsConfig = {
   endpoint: "https://webmention.io/blog.chaoticgood.computer/webmention",
   api: "https://webmention.io/api/mentions.jf2",
   blockedDomains: [],
+}
+
+export const bluesky: BlueskyConfig = {
+  handle: "chaoticgood.computer",
 }
 
 export const analytics: AnalyticsConfig = {

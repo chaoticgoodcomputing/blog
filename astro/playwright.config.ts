@@ -30,7 +30,15 @@ export default defineConfig({
     cacheDir: `${root}.e2e/${site}/cache`,
     port,
     // The fixture's mirrors, with a scanned one and its text file made for the run (scripts/fixture-mirrors.ts).
-    env: site === "fixture" ? { VAULT_ROOT: `${root}test/fixtures/vault`, MIRRORS_ROOT: `${root}.e2e/fixture/mirrors` } : {},
+    // The fixture's Bluesky posts too, one of them, so that the run asks nothing of Bluesky (src/lib/bluesky-posts.ts).
+    env:
+      site === "fixture"
+        ? {
+            VAULT_ROOT: `${root}test/fixtures/vault`,
+            MIRRORS_ROOT: `${root}.e2e/fixture/mirrors`,
+            BLUESKY_POSTS_FILE: `${root}test/fixtures/bluesky/author-feed.json`,
+          }
+        : {},
     before: site === "fixture" ? `node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/fixture-mirrors.ts ${root}.e2e/fixture/mirrors` : undefined,
   }),
 })

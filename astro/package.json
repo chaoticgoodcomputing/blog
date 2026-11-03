@@ -14,6 +14,7 @@
     "e2e": "playwright test",
     "mirrors": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/pin-mirrors.ts",
     "mock-mentions": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/mock-mentions.ts",
+    "crosspost": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/crosspost.ts",
     "seo-check": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/seo-check.ts"
   },
   "dependencies": {

@@ -74,6 +74,11 @@ export interface SiteLink {
    * that links back to the site is how webmention.io's sign-in, IndieLogin, knows the site is theirs.
    */
   me?: boolean
+  /**
+   * Whose profile on another site the page is, which their JSON-LD names it as (`sameAs`): the
+   * author's, unless it says the publisher's.
+   */
+  of?: "author" | "publisher"
 }
 /**
  * The footer: its links, in order, and who the copyright line names. The holders are `site.author`
@@ -326,6 +331,16 @@ export interface WebmentionsConfig {
   api: string
   /** Sites whose mentions are never shown: a host, and every host under it. */
   blockedDomains: string[]
+}
+
+/**
+ * The site's Bluesky account, which the deploy posts each new feed item from
+ * (.github/workflows/scripts/post-to-bluesky.mjs). Under a note, its discussion links to the
+ * account's first post of the note, or to the account where it has none yet (src/lib/bluesky-posts.ts).
+ */
+export interface BlueskyConfig {
+  /** The account's handle, without the `@`. */
+  handle: string
 }
 
 /**

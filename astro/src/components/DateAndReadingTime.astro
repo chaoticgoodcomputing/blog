@@ -1,6 +1,7 @@
 ---
 // A note's date and how long it takes to read, under its title: "Mar 14, 2026, 3 min read". A note
 // with no body has its date alone, and an undated note, such as a tag's, its reading time alone.
+// The date is the note's h-entry's `dt-published` (EntryMeta.astro).
 import { readingMinutes } from "../lib/reading-time.ts"
 import type { NoteFacts } from "../lib/notes.ts"
 import FormattedDate from "./FormattedDate.astro"
@@ -18,7 +19,7 @@ const date = note?.date
 {
   (date || minutes > 0) && (
     <p class="date-and-reading-time">
-      {date && <FormattedDate date={date} />}
+      {date && <FormattedDate date={date} class="dt-published" />}
       {minutes > 0 && <span>{date && ", "}{minutes} min read</span>}
     </p>
   )

@@ -48,6 +48,8 @@ import { markdownCopies } from "./src/integrations/markdown-copies.ts"
 
 import { mentionExcerpts } from "./src/integrations/mention-excerpts.ts"
 
+import { feedContentIntegration } from "./src/integrations/feed-content.ts"
+
 import { obsidianAnnotator } from "@chaoticgoodcomputing/obsidian-markdown"
 import { annotatedDocument, annotationDate } from "./src/lib/annotations.ts"
 
@@ -187,6 +189,9 @@ export default defineConfig({
     // For each site a note links to, the page of its paragraphs that link there, which the deploy
     // sends as a webmention, and the manifest of them all (src/lib/mention-excerpts.ts).
     mentionExcerpts(),
+
+    // The feed, written again with each item's content, from its page (src/lib/feed-content.ts).
+    feedContentIntegration(),
   ],
   markdown: {
     // 08 code themes

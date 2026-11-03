@@ -3,6 +3,7 @@
 import { readFile, writeFile, mkdir } from "fs/promises"
 import { existsSync, readFileSync } from "fs"
 import { join } from "path"
+import { pathToFileURL } from "url"
 import { parseStringPromise } from "xml2js"
 
 const ATPROTO_IDENTIFIER = process.env.ATPROTO_IDENTIFIER
@@ -11,6 +12,29 @@ const RSS_FILE = process.env.RSS_FILE
 const PAGES_DIR = process.env.PAGES_DIR || "pages-content"
 const DRY_RUN_DIR = "content/public/assets/bsky-tests"
 const BSKY_HANDLE = "chaoticgood.computer"
+
+/** The most a post's text holds, in graphemes: Bluesky's limit. */
+export const POST_LIMIT = 300
+
+const graphemes = (text) => [...new Intl.Segmenter("en", { granularity: "grapheme" }).segment(text)].map(({ segment }) => segment)
+
+/**
+ * A feed item's post text: its title, then as much of its description as fits under Bluesky's
+ * limit, cut at a word and ended with an ellipsis where it doesn't all fit. The link card under it
+ * says the rest.
+ */
+export function postText(title, description = "", limit = POST_LIMIT) {
+  const head = `New blog post: "${title}"`
+  const body = description.replace(/\s+/g, " ").trim()
+  if (!body) return graphemes(head).slice(0, limit).join("")
+  const whole = `${head}\n\n${body}`
+  if (graphemes(whole).length <= limit) return whole
+  const room = limit - graphemes(head).length - 2 - 1
+  if (room < 20) return graphemes(head).slice(0, limit).join("")
+  const cut = graphemes(body).slice(0, room).join("")
+  const atWord = cut.replace(/\s+\S*$/, "")
+  return `${head}\n\n${(atWord.length > room / 2 ? atWord : cut).replace(/[\s.,;:!?-]+$/, "")}…`
+}
 
 /**
  * Authenticate with Bluesky and get an access token
@@ -187,15 +211,24 @@ function parseRSS(filePath) {
  * Fetch already posted URLs from Bluesky account feed
  */
 async function getPostedUrls() {
-  const response = await fetch(
-    `https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(BSKY_HANDLE)}&limit=50`,
-  )
+  // Every post of the account, a page at a time, so that a feed item posted long ago is never
+  // posted again.
+  const feed = []
+  let cursor
+  do {
+    const response = await fetch(
+      `https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=${encodeURIComponent(BSKY_HANDLE)}&filter=posts_no_replies&limit=100${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ""}`,
+    )
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch Bluesky feed: ${response.status}`)
-  }
+    if (!response.ok) {
+      throw new Error(`Failed to fetch Bluesky feed: ${response.status}`)
+    }
 
-  const { feed } = await response.json()
+    const page = await response.json()
+    feed.push(...(page.feed ?? []))
+    cursor = page.feed?.length ? page.cursor : undefined
+  } while (cursor)
+
   const postedUrls = new Set()
 
   for (const item of feed) {
@@ -273,7 +306,7 @@ async function main() {
         const link = item.link[0]
         const title = item.title[0]
         const description = item.description?.[0] || ""
-        const text = `New blog post: "${title}"`
+        const text = postText(title, description)
         const ogImagePath = getOgImagePath(link)
 
         // Build the exact record that would be posted to Bluesky
@@ -316,10 +349,8 @@ async function main() {
       console.log(`Posting item ${newPosts + 1}/${unpostedItems.length}: ${title}`)
       console.log(`  URL: ${link}`)
 
-      const postText = `New blog post: "${title}"`
-
       try {
-        await createPost(accessJwt, did, postText, link, title, description)
+        await createPost(accessJwt, did, postText(title, description), link, title, description)
         newPosts++
         console.log(`  ✓ Posted successfully`)
 
@@ -336,10 +367,15 @@ async function main() {
     }
 
     console.log(`\nPosted ${newPosts} new items to Bluesky`)
+    // The deploy's next job deploys again when this one posted, so the new notes' pages link to
+    // their posts (astro/src/lib/bluesky-posts.ts).
+    if (process.env.GITHUB_OUTPUT) await writeFile(process.env.GITHUB_OUTPUT, `posted=${newPosts}\n`, { flag: "a" })
   }
 }
 
-main().catch((error) => {
-  console.error("Fatal error:", error)
-  process.exit(1)
-})
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((error) => {
+    console.error("Fatal error:", error)
+    process.exit(1)
+  })
+}

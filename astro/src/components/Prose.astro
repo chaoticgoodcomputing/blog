@@ -24,8 +24,15 @@ import "../styles/prose/annotation-viewer.css"
 import "../styles/prose/heading-anchors.css"
 
 import "../styles/prose/external-links.css"
+
+interface Props {
+  /** Classes besides its own: a microformat's property, `e-content`. */
+  class?: string
+}
+
+const { class: className } = Astro.props
 ---
 
-<article class="prose">
+<article class:list={["prose", className]}>
   <slot />
 </article>

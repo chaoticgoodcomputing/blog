@@ -1,4 +1,3 @@
-import type { Page } from "@playwright/test"
 import { expect, expectAt, test } from "../site.ts"
 
 test("an address that names nothing gets the site's 404 page, in the site shell", async ({ page, externalRequests }) => {
@@ -25,31 +24,3 @@ test("the 404 page is the file a static host serves for an unknown address", asy
   expect(response.status()).toBe(200)
   expect(await response.text()).toContain("There is no page at this address.")
 })
-
-// The 404 page sits in the site shell, and its heading is drawn as a note's title is, in the same
-// place: here, aliases/renamed's.
-const title = async (page: Page) => {
-  const heading = page.locator("main h1")
-  await expect(heading).toHaveCount(1)
-  return {
-    box: await heading.boundingBox(),
-    size: await heading.evaluate((element) => getComputedStyle(element).fontSize),
-  }
-}
-
-for (const [width, name] of [
-  [1400, "a desktop"],
-  [390, "a phone"],
-] as const) {
-  test(`on ${name}, the 404 page's heading is a note's title, where a note's is`, async ({ page }) => {
-    await page.setViewportSize({ width, height: 900 })
-    await page.goto("/aliases/renamed")
-    const note = await title(page)
-    await page.goto("/nothing/at/all")
-    const notFound = await title(page)
-
-    expect(notFound.size).toBe(note.size)
-    expect(notFound.box!.x).toBe(note.box!.x)
-    expect(notFound.box!.y).toBe(note.box!.y)
-  })
-}

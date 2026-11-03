@@ -120,12 +120,18 @@ export function articleTypeOf(tags: string[], config: SeoConfig = seo): { type: 
 type HeadText = Pick<PageHead, "title" | "description" | "canonical">
 
 /**
- * The author's profiles on other sites, from the footer's contacts: what lets a search engine tie
- * the author to the same person elsewhere (https://schema.org/sameAs). The site's own links, a feed
- * and a `mailto:` address are none.
+ * The profiles on other sites of `whose`, the author or the publisher, from the footer's contacts:
+ * what lets a search engine tie them to the same person or organization elsewhere
+ * (https://schema.org/sameAs). A contact is the author's unless it says otherwise. The site's own
+ * links, a feed and a `mailto:` address are none.
  */
-export function sameAsOf(contacts: { url: string }[], site: URL): string[] {
+export function sameAsOf(
+  contacts: { url: string; of?: "author" | "publisher" }[],
+  site: URL,
+  whose: "author" | "publisher" = "author",
+): string[] {
   return contacts
+    .filter((contact) => (contact.of ?? "author") === whose)
     .map((contact) => {
       try {
         return new URL(contact.url, site)
@@ -151,11 +157,13 @@ function author({ site }: HeadContext) {
 // The site's publisher, with its logo. The logo's size is left out: schema.org gives an image's
 // `width` as a QuantitativeValue, not a number of pixels, and a search engine reads it from the image.
 function publisher({ site, logo }: HeadContext) {
+  const sameAs = sameAsOf(footer.contacts, site, "publisher")
   return {
     "@type": "Organization",
     name: siteConfig.publisher.name,
     url: new URL(siteConfig.publisher.url, site).href,
     logo: { "@type": "ImageObject", url: logo },
+    ...(sameAs.length > 0 && { sameAs }),
   }
 }
 

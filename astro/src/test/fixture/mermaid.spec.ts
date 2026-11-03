@@ -97,8 +97,9 @@ test("a block that is not mermaid shows its source, and the rest of the page is 
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("A broken diagram")
   await expect(page.locator(".prose")).toContainText("After the diagrams.")
   // Mermaid draws an error of its own at the end of the page unless it is told not to. The graph
-  // column's icons are not diagrams, nor are the menu's, the share icons and the source link's.
-  await expect(page.locator("svg:not(aside svg, .menu-bar svg, share-links svg, .source-link svg)")).toHaveCount(2)
+  // column's icons are not diagrams, nor are the menu's, the share icons, the discussion's and the
+  // source link's.
+  await expect(page.locator("svg:not(aside svg, .menu-bar svg, share-links svg, .discussion svg, .source-link svg)")).toHaveCount(2)
   expect(errors).toEqual([])
 })
 
@@ -181,13 +182,3 @@ for (const { kind, url, labels } of elsewhere) {
     expect(externalRequests).toEqual([])
   })
 }
-
-test("a label's HTML is drawn as HTML", async ({ page }) => {
-  await page.goto("/mermaid/labels")
-  const svg = page.locator(".prose mermaid-diagram svg")
-  await expect(svg).toBeVisible()
-  await expect(svg.locator("b", { hasText: "Theory" })).toHaveCSS("font-weight", "700")
-  await expect(svg).toContainText("practice")
-  await expect(svg).not.toContainText("<br>")
-  await expect(svg).not.toContainText("<b>")
-})

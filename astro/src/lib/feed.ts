@@ -1,9 +1,10 @@
-// The feed's items: the site's newest articles that are posts, as @astrojs/rss takes them. The
-// feed itself is the endpoint src/pages/index.xml.ts.
+// The feed's items: the site's newest articles that are posts, as @astrojs/rss takes them, and the
+// feed they are in. The endpoint src/pages/index.xml.ts serves the feed; once the build has written
+// the pages, src/integrations/feed-content.ts writes it again, each item with its page's content.
 
-import type { RSSFeedItem } from "@astrojs/rss"
+import type { RSSFeedItem, RSSOptions } from "@astrojs/rss"
 import type { Vault } from "@chaoticgoodcomputing/obsidian-markdown"
-import { feed } from "../site.config.ts"
+import { feed, site as siteConfig } from "../site.config.ts"
 import { formerAddress } from "./former-addresses.ts"
 import { newestFirst, type Note } from "./notes.ts"
 import { readingMinutes } from "./reading-time.ts"
@@ -19,21 +20,30 @@ export function feedIdentifier(note: Note, site: URL): string {
   return new URL(formerAddress(note), site).href.replace(/\/$/, "")
 }
 
+/** The notes the feed holds, newest first: each article whose page is not private, up to `limit`. */
+export const feedNotes = (notes: Note[], limit = feed.limit): Note[] =>
+  notes
+    .filter((note) => note.isArticle && !note.isPrivate)
+    .sort(newestFirst)
+    .slice(0, limit)
+
 /**
- * The feed's items from `notes`, newest first: each article among them whose page is not private,
- * up to `limit`. `site` is the site's address, which an item's identifier is written against, and
- * `vault` the vault the notes are of.
+ * The feed's items from `notes`, newest first: each of `feedNotes`. `site` is the site's address,
+ * which an item's identifier is written against, and `vault` the vault the notes are of. With
+ * `content`, an item has its note's page's content where `content` gives it some.
  */
 export function feedItems(
   notes: Note[],
   site: URL,
-  { limit = feed.limit, vault = getVault() }: { limit?: number; vault?: Vault } = {},
+  {
+    limit = feed.limit,
+    vault = getVault(),
+    content,
+  }: { limit?: number; vault?: Vault; content?: (note: Note) => string | undefined } = {},
 ): RSSFeedItem[] {
-  return notes
-    .filter((note) => note.isArticle && !note.isPrivate)
-    .sort(newestFirst)
-    .slice(0, limit)
+  return feedNotes(notes, limit)
     .map((note) => {
+      const html = content?.(note)
       const identifier = feedIdentifier(note, site)
       return {
         title: note.title,
@@ -43,6 +53,7 @@ export function feedItems(
         // the site's feed has always described one, so that a reader has a line under its title.
         description: note.summary ?? `(${readingMinutes(note, vault)} min read)`,
         categories: note.tags,
+        ...(html !== undefined && { content: html }),
         // @astrojs/rss writes an item's link as its identifier, which is right wherever the two
         // are the same. Where they are not, the item says its own, and that it is no address.
         ...(identifier === new URL(note.url, site).href
@@ -50,4 +61,21 @@ export function feedItems(
           : { customData: `<guid isPermaLink="false">${identifier.replace(/&/g, "&amp;")}</guid>` }),
       }
     })
+}
+
+/** The feed: the site's, with `feedItems`'s items, and their content where `content` gives it. */
+export function feedOptions(
+  notes: Note[],
+  site: URL,
+  content?: (note: Note) => string | undefined,
+): RSSOptions {
+  return {
+    title: siteConfig.title,
+    description: `Last ${feed.limit} notes on ${siteConfig.title}`,
+    site,
+    items: feedItems(notes, site, content ? { content } : {}),
+    customData: `<language>${siteConfig.locale.toLowerCase()}</language>`,
+    // A page's address has no trailing slash (docs/adr/0003), and neither has an item's link.
+    trailingSlash: false,
+  }
 }
