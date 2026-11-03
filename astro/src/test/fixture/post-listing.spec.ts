@@ -135,14 +135,14 @@ test.describe("on a touch screen, with no pointer that hovers", () => {
   })
 })
 
-// The carousel: the home page's posts newest first, then the posts other posts link to most
+// The carousel: the posts other posts link to most, then the home page's posts newest first
 // (test/central-posts.test.ts says how they are counted).
 const inView = (page: Page) =>
   page.locator(".post-listings .track").evaluate((track) => Math.round(track.scrollLeft / track.clientWidth))
 
-test("the home page's listings are a carousel: newest first, then the most central posts", async ({ page }) => {
+test("the home page's listings are a carousel: the most central posts first, then the newest", async ({ page }) => {
   await page.goto("/")
-  await expect(page.locator(".post-listing > h2")).toHaveText(["Recent Posts", "Central Posts"])
+  await expect(page.locator(".post-listing > h2")).toHaveText(["Central Posts", "Recent Posts"])
   await expect(page.locator('.post-listing[data-order="central"] .post h3', { hasText: "A note with backlinks" })).toBeVisible()
 })
 
@@ -159,7 +159,7 @@ test("the arrows step through the listings, wrapping round at either end, and th
   await expect.poll(() => inView(page)).toBe(0)
   await page.getByRole("button", { name: "Previous listing" }).click()
   await expect.poll(() => inView(page)).toBe(1)
-  await page.getByRole("button", { name: "Recent Posts" }).click()
+  await page.getByRole("button", { name: "Central Posts" }).click()
   await expect.poll(() => inView(page)).toBe(0)
 })
 

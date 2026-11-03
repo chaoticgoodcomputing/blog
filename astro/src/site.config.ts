@@ -121,9 +121,10 @@ export const footer: FooterConfig = {
 }
 
 export const postListing: PostListingConfig = {
+  // The most central posts first, then the newest.
   listings: [
-    { order: "recent", title: "Recent Posts" },
     { order: "central", title: "Central Posts" },
+    { order: "recent", title: "Recent Posts" },
   ],
   mentionWeight: 3,
   collapsedItemCount: 5,
