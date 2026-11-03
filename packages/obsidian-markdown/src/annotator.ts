@@ -38,6 +38,39 @@ export function annotationTarget(frontmatter: Record<string, unknown> | null | u
   return typeof target === "string" && target.trim() !== "" ? target.trim() : undefined
 }
 
+/** Pages of a document, numbered from 1 as a PDF reader numbers them: runs `[first, last]`, both included. */
+export type PageRange = [number, number][]
+
+/**
+ * The pages of its document a note's annotations are on: its `annotation-pages` property, which the
+ * plugin shows alone. `12-40`, `3-5, 9`, `7`, or a list of those, read in order with the runs that
+ * overlap or touch made one, so one set of pages is always the same range. Undefined for none, or
+ * for one that can't be read: every page.
+ */
+export function annotationPages(frontmatter: Record<string, unknown> | null | undefined): PageRange | undefined {
+  const value = frontmatter?.["annotation-pages"]
+  const parts = (Array.isArray(value) ? value : [value]).flatMap((item) =>
+    typeof item === "number" ? [String(item)] : typeof item === "string" ? item.split(",") : [undefined],
+  )
+  const runs: PageRange = []
+  for (const part of parts) {
+    const match = part === undefined ? null : /^\s*(\d+)\s*(?:[-–]\s*(\d+)\s*)?$/.exec(part)
+    if (!match) return undefined
+    const first = Number(match[1])
+    const last = match[2] === undefined ? first : Number(match[2])
+    if (first < 1 || last < first) return undefined
+    runs.push([first, last])
+  }
+  runs.sort(([a], [b]) => a - b)
+  const range: PageRange = []
+  for (const [first, last] of runs) {
+    const previous = range.at(-1)
+    if (previous && first <= previous[1] + 1) previous[1] = Math.max(previous[1], last)
+    else range.push([first, last])
+  }
+  return range.length ? range : undefined
+}
+
 /** One annotation: a passage of the annotated document, and what was written about it. */
 export interface Annotation {
   /** The block id Annotator gives it, without its `^`. */

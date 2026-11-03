@@ -35,7 +35,7 @@
 //
 // What the script sets on the body's annotations, and how they are laid out in the margin and the
 // drawer, is styled in src/styles/prose/annotation-viewer.css: scoped styles never reach a slot.
-import { annotationTarget } from "@chaoticgoodcomputing/obsidian-markdown"
+import { annotationPages, annotationTarget } from "@chaoticgoodcomputing/obsidian-markdown"
 import { Icon } from "astro-icon/components"
 import { MARGIN_WIDTH, MIN_DOCUMENT_WIDTH } from "../../lib/annotation-layout.ts"
 import { annotatedPassages, documentFileName } from "../../lib/annotations.ts"
@@ -52,7 +52,11 @@ interface Props {
 const { note, mirror, text } = Astro.props
 const target = annotationTarget(note.frontmatter)!
 const name = documentFileName(target) ?? target
-const passages = annotatedPassages(note)
+// A note with a page range is shown its mirror's slice of those pages (src/lib/mirrors.ts), where a
+// passage's place, counted in characters from the start of the whole document, is no guide: it is
+// found by its quote alone.
+const sliced = annotationPages(note.frontmatter) !== undefined
+const passages = annotatedPassages(note).map(({ start, ...passage }) => (sliced ? passage : { ...passage, start }))
 const href = encodeURI(decodeURI(target))
 // The document's id, which the link over the preface goes to.
 const DOCUMENT = "annotated-document"

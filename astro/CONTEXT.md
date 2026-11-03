@@ -273,6 +273,19 @@ assets/annotated-documents. Saved in the mirror directory, the repository's dist
 in the vault, under the document's file name, and never fetched again once saved.
 _Avoid_: download, cached PDF
 
+**Page range**:
+The pages of its annotated document a note's annotations are on, which its `annotation-pages`
+property holds (`12-40`, `3-5, 9`), and which the Annotator plugin shows alone. A note with none
+is on every page.
+_Avoid_: chapter (what a range often is, not what it is called)
+
+**Slice**:
+A mirror cut down to a page range: those pages alone, cut from the saved mirror by `astro:mirrors`,
+kept beside it and named for them (`Book.p12-40.pdf`), and shown in its place by every note with
+that range. A document is downloaded once however many slices are cut from it, and a mirror no note
+shows whole is neither recognized nor published.
+_Avoid_: excerpt, chapter PDF
+
 **Mirror's text file**:
 The text of a scanned mirror's pages, which they don't have of their own, recognized once beside the
 mirror (`packages/pdf-ocr/CONTEXT.md`): the text the Annotator plugin recognized the same scans to,

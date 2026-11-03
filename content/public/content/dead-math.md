@@ -26,11 +26,11 @@ OpenAI's answer to this question-- *also* in the most advanced terms I can under
 > 
 > -- OpenAI, [*Finite Time Blowup for Navier-Stokes*](https://cdn.openai.com/pdf/32d9f210-8b73-45e0-91bc-82a30aef8a9a/navier-stokes.pdf) (2026)
 
-Some friends of mine-- both engineers who specialize in fluids, and who are Very Into This™ type of thing-- have told me that this answer doesn't really mean a whole lot. The world on the morning of September 9th was, *physically*, pretty much the same. They all woke up, went to their jobs (typically in aviation or defense), and continued using the same fluid dynamics simulations that they did the day before.
+Some friends of mine-- both engineers who specialize in fluids, and who are Very Into™ this type of thing-- have told me that this answer doesn't really mean a whole lot. The world on the morning of September 9th was, *physically*, pretty much the same. They all woke up, went to their jobs (typically in aviation or defense), and continued using the same fluid dynamics simulations that they did the day before.
 
 Planes did not fall from the sky. Missiles, presumably, still exploded. My shower turned on! Fluids seemed to behave as they always have.
 
-Some *other* friends of mine-- mathematicians who specialize in proofs and are also Very Into This™ type of thing-- their reaction was (paraphrasing again):
+Some *other* friends of mine-- mathematicians who specialize in proofs and are also Very Into™ this type of thing-- their reaction was (paraphrasing again):
 
 > [!PARAPHRASE]
 > 

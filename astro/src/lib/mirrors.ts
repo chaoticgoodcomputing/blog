@@ -12,12 +12,18 @@
 // `astro:mirrors` recognizes once (@chaoticgoodcomputing/pdf-ocr), as the Annotator plugin does, so
 // that the passages annotated in the plugin are found in the same text here. It is published beside
 // the mirror while it is that mirror's.
+//
+// A note with a page range (`annotation-pages`) is shown a slice of its mirror: those pages alone,
+// cut from the saved mirror by `astro:mirrors` (src/lib/slices.ts) and kept beside it, named for
+// them. The document is downloaded once however many notes show it in slices, and a mirror no note
+// shows whole is neither recognized nor published: a book read a chapter at a time is served a
+// chapter at a time. A slice has a text file of its own, recognized from its own pages.
 
 import { createHash } from "node:crypto"
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
-import { annotationTarget } from "@chaoticgoodcomputing/obsidian-markdown"
+import { annotationPages, annotationTarget, type PageRange } from "@chaoticgoodcomputing/obsidian-markdown"
 import { isTextFileOf, textFileName } from "@chaoticgoodcomputing/pdf-ocr/text"
 import { documentFileName } from "./annotations.ts"
 import { getNotes, type Note } from "./notes.ts"
@@ -73,6 +79,28 @@ export function mirrorName(target: string): string | undefined {
   return file ? slugFor(file) : undefined
 }
 
+/**
+ * What a mirror's slice of the pages `range` is called: the mirror's name with the pages before its
+ * extension, `Book.p12-40.pdf`, each run after the first after a `_`: `Book.p3-5_9.pdf`.
+ */
+export function sliceName(name: string, range: PageRange): string {
+  const pages = range.map(([first, last]) => (first === last ? `${first}` : `${first}-${last}`)).join("_")
+  const dot = name.lastIndexOf(".")
+  return dot > 0 ? `${name.slice(0, dot)}.p${pages}${name.slice(dot)}` : `${name}.p${pages}`
+}
+
+/**
+ * What the mirror a note's annotation viewer draws is called: its document's mirror, or, for a
+ * note with a page range, that mirror's slice of those pages. Undefined for a note whose document
+ * can have no mirror.
+ */
+export function shownMirrorName(frontmatter: Note["frontmatter"]): string | undefined {
+  const target = annotationTarget(frontmatter)
+  const name = target === undefined ? undefined : mirrorName(target)
+  const range = annotationPages(frontmatter)
+  return name && range ? sliceName(name, range) : name
+}
+
 /** Where a mirror is kept, in the mirror directory `root`. */
 export const mirrorFile = (name: string, root: string = MIRRORS_ROOT): string => path.join(root, name)
 
@@ -80,17 +108,18 @@ export const mirrorFile = (name: string, root: string = MIRRORS_ROOT): string =>
  * The address the site serves a document's mirror at, from the site's root and not encoded, when
  * the mirror directory `root` has one saved. Undefined when it has none.
  */
-export function mirrorOf(target: string, root: string = MIRRORS_ROOT): string | undefined {
-  const name = mirrorName(target)
-  if (!name || !fs.existsSync(mirrorFile(name, root))) return undefined
-  return `/${MIRRORS}/${name}`
-}
+export const mirrorOf = (target: string, root: string = MIRRORS_ROOT): string | undefined => servedAt(mirrorName(target), root)
 
-/** The address of the mirror of a note's annotated document, when it is an annotation page and its mirror is saved. */
-export function mirrorFor(note: Pick<Note, "frontmatter">): string | undefined {
-  const target = annotationTarget(note.frontmatter)
-  return target === undefined ? undefined : mirrorOf(target)
-}
+// The address a mirror or a slice called `name` is served at, when it is saved.
+const servedAt = (name: string | undefined, root: string): string | undefined =>
+  name && fs.existsSync(mirrorFile(name, root)) ? `/${MIRRORS}/${name}` : undefined
+
+/**
+ * The address of the mirror a note's annotation viewer draws, when it is an annotation page and
+ * that mirror is saved: its document's, or its slice of the note's page range.
+ */
+export const mirrorFor = (note: Pick<Note, "frontmatter">, root: string = MIRRORS_ROOT): string | undefined =>
+  servedAt(shownMirrorName(note.frontmatter), root)
 
 /** Where a mirror's text file is kept, beside it. */
 export const mirrorTextFile = (name: string, root: string = MIRRORS_ROOT): string => textFileName(mirrorFile(name, root))
@@ -125,42 +154,73 @@ export function mirrorText(name: string, root: string = MIRRORS_ROOT) {
  * The address the site serves a document's text file at, beside its mirror, when the mirror has
  * one of its own with text in it. Undefined for a mirror with no scanned pages, or none recognized.
  */
-export function mirrorTextOf(target: string, root: string = MIRRORS_ROOT): string | undefined {
-  const name = mirrorName(target)
+export const mirrorTextOf = (target: string, root: string = MIRRORS_ROOT): string | undefined => textServedAt(mirrorName(target), root)
+
+function textServedAt(name: string | undefined, root: string): string | undefined {
   const text = name === undefined ? undefined : mirrorText(name, root)
   return text && Object.keys(text.pages).length ? `/${MIRRORS}/${textFileName(name!)}` : undefined
 }
 
-/** The address of a note's document's text file, when it has one to serve: `mirrorTextOf`. */
-export function mirrorTextFor(note: Pick<Note, "frontmatter">): string | undefined {
-  const target = annotationTarget(note.frontmatter)
-  return target === undefined ? undefined : mirrorTextOf(target)
-}
+/** The address of the text file of the mirror a note's viewer draws, when it has one to serve: `mirrorTextOf`. */
+export const mirrorTextFor = (note: Pick<Note, "frontmatter">, root: string = MIRRORS_ROOT): string | undefined =>
+  textServedAt(shownMirrorName(note.frontmatter), root)
 
 /**
  * The mirrors the site publishes, by address, each with its file: those of the annotated documents
  * of the published notes, that are saved in the mirror directory, and the text files of those that
  * have one to serve.
  */
-export function publishedMirrors(): Map<string, string> {
+export function publishedMirrors(root: string = MIRRORS_ROOT, notes: Pick<Note, "frontmatter">[] = getNotes()): Map<string, string> {
   const published = new Map<string, string>()
-  for (const note of getNotes()) {
-    const address = mirrorFor(note)
+  for (const note of notes) {
+    const address = mirrorFor(note, root)
     if (!address) continue
-    published.set(address, mirrorFile(path.posix.basename(address)))
-    const text = mirrorTextFor(note)
-    if (text) published.set(text, mirrorTextFile(path.posix.basename(address)))
+    published.set(address, mirrorFile(path.posix.basename(address), root))
+    const text = mirrorTextFor(note, root)
+    if (text) published.set(text, mirrorTextFile(path.posix.basename(address), root))
   }
   return published
 }
 
+// The names of the mirrors and slices the published notes' viewers draw, each once.
+const shownNames = (notes: Pick<Note, "frontmatter">[]): string[] =>
+  [...new Set(notes.map((note) => shownMirrorName(note.frontmatter)))].filter((name): name is string => name !== undefined)
+
 /**
- * The saved mirrors of the published notes' documents that have no text file of their own yet, by
- * name: those `astro:mirrors` looks at for scanned pages to recognize.
+ * The saved mirrors and slices the published notes' viewers draw that have no text file of their
+ * own yet, by name: those `astro:mirrors` looks at for scanned pages to recognize. A mirror only
+ * sliced is not among them: its slices are.
  */
-export function mirrorsToRecognize(root: string = MIRRORS_ROOT): string[] {
-  const names = getNotes().map((note) => annotationTarget(note.frontmatter)).map((target) => (target === undefined ? undefined : mirrorName(target)))
-  return [...new Set(names)].filter((name): name is string => name !== undefined && fs.existsSync(mirrorFile(name, root)) && !mirrorText(name, root))
+export function mirrorsToRecognize(root: string = MIRRORS_ROOT, notes: Pick<Note, "frontmatter">[] = getNotes()): string[] {
+  return shownNames(notes).filter((name) => fs.existsSync(mirrorFile(name, root)) && !mirrorText(name, root))
+}
+
+/**
+ * The mirrors and slices the published notes' viewers draw that are not saved, by name: each one's
+ * page shows its annotations without it.
+ */
+export const missingMirrors = (root: string = MIRRORS_ROOT, notes: Pick<Note, "frontmatter">[] = getNotes()): string[] =>
+  shownNames(notes).filter((name) => !fs.existsSync(mirrorFile(name, root)))
+
+/** A slice still to make: the pages `range` of the saved mirror `mirror`, saved as `slice`. */
+export interface SliceToMake {
+  slice: string
+  mirror: string
+  range: PageRange
+}
+
+/** The slices the published notes' viewers draw that are not saved, and whose mirror is: each once. */
+export function slicesToMake(root: string = MIRRORS_ROOT, notes: Pick<Note, "frontmatter">[] = getNotes()): SliceToMake[] {
+  const slices = new Map<string, SliceToMake>()
+  for (const { frontmatter } of notes) {
+    const target = annotationTarget(frontmatter)
+    const mirror = target === undefined ? undefined : mirrorName(target)
+    const range = annotationPages(frontmatter)
+    if (!mirror || !range || !fs.existsSync(mirrorFile(mirror, root))) continue
+    const slice = sliceName(mirror, range)
+    if (!fs.existsSync(mirrorFile(slice, root))) slices.set(slice, { slice, mirror, range })
+  }
+  return [...slices.values()]
 }
 
 /**
@@ -181,10 +241,14 @@ export function mirrorsToSave(targets: string[]): { save: string[]; clashing: [s
 }
 
 /**
- * The annotated documents of the published notes that could be mirrored and are not: on the web,
- * with a file name, and with no mirror saved. Each one's page shows its annotations without it.
+ * The annotated documents of the published notes to download: on the web, with a file name, with
+ * no mirror saved, and shown by a note whose mirror or slice is not saved either. A document whose
+ * notes all have their slices needs no mirror of its own.
  */
-export function unmirroredDocuments(): string[] {
-  const targets = getNotes().map((note) => annotationTarget(note.frontmatter))
-  return [...new Set(targets)].filter((target): target is string => target !== undefined && mirrorName(target) !== undefined && !mirrorOf(target))
+export function unmirroredDocuments(root: string = MIRRORS_ROOT, notes: Pick<Note, "frontmatter">[] = getNotes()): string[] {
+  const missing = new Set(missingMirrors(root, notes))
+  const targets = notes
+    .filter((note) => missing.has(shownMirrorName(note.frontmatter)!))
+    .map((note) => annotationTarget(note.frontmatter)!)
+  return [...new Set(targets)].filter((target) => !mirrorOf(target, root))
 }

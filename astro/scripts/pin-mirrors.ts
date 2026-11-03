@@ -8,7 +8,12 @@
 // no mirror is built with its annotations alone. A document that can't be fetched is reported and
 // left, and the script still succeeds, so a host that refuses one reader can't stop a deploy.
 //
-// Then gives each mirror with no text file of its own one (src/lib/mirrors.ts): its scanned pages'
+// Then cuts the slices the notes with a page range show from the mirrors saved (src/lib/slices.ts):
+// a document is downloaded once, however many notes show it in slices, and a document whose notes
+// all have their slices is not downloaded at all. A slice, like a mirror, is never made again while
+// it is saved: delete a mirror's slices with it to have them made afresh from the new one.
+//
+// Then gives each mirror and slice the notes show that has no text file of its own one (src/lib/mirrors.ts): its scanned pages'
 // text, recognized by @chaoticgoodcomputing/pdf-ocr as the Annotator plugin recognizes it, or, for a
 // mirror with none, a text file with no pages, so it is looked at once. Recognizing a scanned book
 // takes a minute or two; a text file, like the mirror, is never made again while it is the mirror's.
@@ -22,7 +27,8 @@ import http from "node:http"
 import https from "node:https"
 import path from "node:path"
 import { recognizePdf } from "@chaoticgoodcomputing/pdf-ocr/node"
-import { isPdf, mirrorFile, mirrorName, mirrorsToRecognize, mirrorsToSave, mirrorTextFile, unmirroredDocuments } from "../src/lib/mirrors.ts"
+import { isPdf, mirrorFile, mirrorName, mirrorsToRecognize, mirrorsToSave, mirrorTextFile, slicesToMake, unmirroredDocuments } from "../src/lib/mirrors.ts"
+import { slicePdf } from "../src/lib/slices.ts"
 
 const TIMEOUT = 60_000
 const MAX_REDIRECTS = 10
@@ -73,12 +79,16 @@ async function pin(target: string): Promise<string> {
     throw new Unfetchable((error as NodeJS.ErrnoException).code ?? (error as Error).message)
   }
   if (!isPdf(bytes)) throw new Unfetchable("not a PDF")
-  // Written beside it and renamed into place, so a run stopped halfway never pins half a document.
+  writeInPlace(file, bytes)
+  return file
+}
+
+// Written beside it and renamed into place, so a run stopped halfway never saves half a file.
+function writeInPlace(file: string, bytes: Uint8Array | string) {
   fs.mkdirSync(path.dirname(file), { recursive: true })
   const partial = `${file}.${process.pid}.partial`
   fs.writeFileSync(partial, bytes)
   fs.renameSync(partial, file)
-  return file
 }
 
 const targets = unmirroredDocuments()
@@ -98,16 +108,30 @@ for (const target of save) {
 }
 console.log(`${targets.length - failed} of ${targets.length} documents with no mirror saved.`)
 
-// The text of the mirrors' scanned pages. A mirror that can't be read is reported and left, as a
+// The slices, from the mirrors saved. A mirror that can't be cut, or that has none of a range's
+// pages, is reported and left, and the notes on those pages are shown their annotations alone.
+for (const { slice, mirror, range } of slicesToMake()) {
+  try {
+    const cut = await slicePdf(new Uint8Array(fs.readFileSync(mirrorFile(mirror))), range)
+    if (!cut) {
+      console.warn(`✗ ${slice}: ${mirror} has none of these pages`)
+      continue
+    }
+    writeInPlace(mirrorFile(slice), cut.bytes)
+    const short = cut.missing ? `; ${cut.missing} pages of the range are past the end of ${mirror}` : ""
+    console.log(`✓ ${slice}: ${cut.pages} pages of ${mirror}${short}`)
+  } catch (error) {
+    console.warn(`✗ ${slice}: ${mirror} could not be cut: ${(error as Error).message}`)
+  }
+}
+
+// The text of the scanned pages of the mirrors and slices the notes show. A mirror that can't be read is reported and left, as a
 // document that can't be fetched is.
 for (const name of mirrorsToRecognize()) {
   const started = Date.now()
   try {
     const text = await recognizePdf(new Uint8Array(fs.readFileSync(mirrorFile(name))))
-    const file = mirrorTextFile(name)
-    const partial = `${file}.${process.pid}.partial`
-    fs.writeFileSync(partial, JSON.stringify(text))
-    fs.renameSync(partial, file)
+    writeInPlace(mirrorTextFile(name), JSON.stringify(text))
     const pages = Object.keys(text.pages).length
     console.log(pages ? `✓ ${name}: the text of ${pages} scanned pages recognized, in ${Math.round((Date.now() - started) / 1000)}s` : `✓ ${name}: no scanned pages`)
   } catch (error) {

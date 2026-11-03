@@ -1,7 +1,9 @@
 // The fixture vault's mirror directory, for the end-to-end suite (playwright.config.ts): the mirrors
 // kept in test/fixtures/mirrors, and a scanned one made here, so no more PDFs are kept in the
 // repository: Garden.pdf, pdf-ocr's scanned fixture (packages/pdf-ocr/test/fixture-pdf.ts), with its
-// text file, recognized as `astro:mirrors` recognizes a mirror's.
+// text file, recognized as `astro:mirrors` recognizes a mirror's; and the slices the fixture vault's
+// notes with a page range show, cut as `astro:mirrors` cuts them. Run with VAULT_ROOT naming the
+// fixture vault, as the suite runs it.
 //
 //   node --experimental-strip-types scripts/fixture-mirrors.ts <directory>
 
@@ -11,6 +13,8 @@ import { fileURLToPath } from "node:url"
 import { recognizePdf } from "@chaoticgoodcomputing/pdf-ocr/node"
 import { textFileName } from "@chaoticgoodcomputing/pdf-ocr/text"
 import { scannedPdf } from "../../packages/pdf-ocr/test/fixture-pdf.ts"
+import { slicesToMake } from "../src/lib/mirrors.ts"
+import { slicePdf } from "../src/lib/slices.ts"
 
 const into = process.argv[2]
 if (!into) throw new Error("usage: fixture-mirrors <directory>")
@@ -21,4 +25,9 @@ for (const file of fs.readdirSync(kept)) fs.copyFileSync(path.join(kept, file), 
 const garden = scannedPdf()
 fs.writeFileSync(path.join(into, "Garden.pdf"), garden)
 fs.writeFileSync(path.join(into, textFileName("Garden.pdf")), JSON.stringify(await recognizePdf(garden)))
+for (const { slice, mirror, range } of slicesToMake(into)) {
+  const cut = await slicePdf(new Uint8Array(fs.readFileSync(path.join(into, mirror))), range)
+  if (!cut) throw new Error(`${mirror} has none of the pages of ${slice}`)
+  fs.writeFileSync(path.join(into, slice), cut.bytes)
+}
 console.log(`The fixture's mirrors, with a scanned one, in ${into}`)

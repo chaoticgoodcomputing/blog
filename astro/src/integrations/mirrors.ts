@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url"
 import type { AstroIntegration } from "astro"
 import sirv from "sirv"
 import { attachmentAddressOf, copyIntoBuild } from "../lib/attachments.ts"
-import { MIRRORS, MIRRORS_ROOT, publishedMirrors, unmirroredDocuments } from "../lib/mirrors.ts"
+import { MIRRORS, MIRRORS_ROOT, missingMirrors, publishedMirrors } from "../lib/mirrors.ts"
 
 export function mirrors(): AstroIntegration {
   return {
@@ -30,12 +30,13 @@ export function mirrors(): AstroIntegration {
         // integration has copied.
         const { copied } = await copyIntoBuild(publishedMirrors(), fileURLToPath(dir))
         logger.info(`${copied} mirrors copied from the mirror directory.`)
-        // A page whose document has no mirror is built all the same, with its annotations alone.
-        const unmirrored = unmirroredDocuments()
-        if (unmirrored.length) {
+        // A page whose document has no mirror, or no slice of its pages, is built all the same,
+        // with its annotations alone.
+        const missing = missingMirrors()
+        if (missing.length) {
           logger.warn(
-            `${unmirrored.length} annotated documents have no mirror, and their pages no viewer; ` +
-              `\`pnpm nx run astro:mirrors\` saves them: ${unmirrored.join(", ")}`,
+            `${missing.length} mirrors and slices the annotation pages show are not saved, and those pages have no viewer; ` +
+              `\`pnpm nx run astro:mirrors\` saves them: ${missing.join(", ")}`,
           )
         }
       },

@@ -551,3 +551,25 @@ test("beside the document, the preface and the epilogue read as a note does, and
   expect(document.y - (source.y + source.height)).toBeLessThan(24)
   expect(source.x).toBeCloseTo(document.x, 0)
 })
+
+// test/fixtures/vault/annotation-viewer/on-meetings-chapter.md: a note on the second page of "On
+// Meetings" alone (`annotation-pages: 2`), with an annotation on that page and one on the first.
+// Its mirror is cut down to that page for the run (scripts/fixture-mirrors.ts), as `astro:mirrors`
+// cuts it.
+const CHAPTER = "/annotation-viewer/on-meetings-chapter"
+const SLICE = "/assets/annotated-documents/On-Meetings.p2.pdf"
+
+test("a note with a page range is shown those pages alone, cut from the mirror, and never the whole document", async ({ page }) => {
+  const requested: string[] = []
+  page.on("request", (request) => requested.push(new URL(request.url()).pathname))
+  const slice = page.waitForResponse((response) => new URL(response.url()).pathname === SLICE)
+  const viewer = await opened(page, DESKTOP, CHAPTER)
+  expect((await slice).status()).toBe(200)
+  expect(requested).not.toContain(MIRROR)
+  await expect(viewer.locator(".document-page")).toHaveCount(1)
+  // The passage on the page it shows is highlighted there; the one on the page it doesn't is not found.
+  await expect(highlights(page, "cancel").first()).toBeVisible()
+  await expect(highlights(page, "promise")).toHaveCount(0)
+  await expect(page.locator("section.annotations > .unplaced")).toHaveText("Not found in the document")
+  expect((await card(page, "promise").boundingBox())!.y).toBeGreaterThan((await page.locator("section.annotations > .unplaced").boundingBox())!.y)
+})

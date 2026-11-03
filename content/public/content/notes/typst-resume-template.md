@@ -2,7 +2,7 @@
 title: Typst Resume Template
 description: |
   A beginner-friendly resume template in Typst — 100% less LaTeX, 100% more opinions.
-date: 2024-04-21
+date: 2022-04-21
 updated: 2026-01-28
 tags:
   - projects/undergrad
@@ -21,7 +21,7 @@ Welcome to the 2.0 version of the Super Cool Resume Template: now with 100% less
 
 This is a second major iteration of the Resume Template made by Spencer Elkington, originally created for the University of Utah's Triangle Engineering Professional Education students. It is now also used for Chaotic Good Computing professional development mentoring & consulting. You can find more resources at https://blog.chaoticgood.computer
 
-If you have any questions, feedback, or advice, please feel free to contact me at spencer@chaoticgood.computer
+If you have any questions, feedback, or advice, please feel free to contact me there!
 
 If you publicly post or share the source code to your resume, you're totally allowed (and I would encourage you) to delete all of the commented sections in the template.
 

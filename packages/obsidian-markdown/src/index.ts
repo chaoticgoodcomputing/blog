@@ -20,8 +20,8 @@ export { obsidian, obsidianResolve, isAudioFile, isImageFile, isVideoFile } from
 export type { ObsidianOptions, ResolveOptions } from "./resolve.ts"
 export { obsidianExcalidraw, isExcalidraw, excalidrawExports, withoutExcalidrawBackground } from "./excalidraw.ts"
 export type { ExcalidrawOptions, ExcalidrawExport } from "./excalidraw.ts"
-export { obsidianAnnotator, annotationTarget, parseAnnotations, ANNOTATION, ANNOTATIONS } from "./annotator.ts"
-export type { AnnotatorOptions, Annotation, ParsedAnnotations } from "./annotator.ts"
+export { obsidianAnnotator, annotationPages, annotationTarget, parseAnnotations, ANNOTATION, ANNOTATIONS } from "./annotator.ts"
+export type { AnnotatorOptions, Annotation, PageRange, ParsedAnnotations } from "./annotator.ts"
 export {
   parseLinktext,
   getLinkpath,

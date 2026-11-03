@@ -7,6 +7,7 @@ import { after, before, test } from "node:test"
 import { markdownToHtml } from "satteri"
 import {
   Vault,
+  annotationPages,
   annotationTarget,
   type AnnotatorOptions,
   obsidianAnnotator,
@@ -41,6 +42,21 @@ test("a note's annotation target is its non-empty annotation-target property", (
   assert.equal(annotationTarget({ "annotation-target": null }), undefined)
   assert.equal(annotationTarget({ title: "A note" }), undefined)
   assert.equal(annotationTarget(undefined), undefined)
+})
+
+test("a note's page range is its annotation-pages property: pages numbered from 1, in order, each run of them once", () => {
+  assert.deepEqual(annotationPages({ "annotation-pages": "12-40" }), [[12, 40]])
+  assert.deepEqual(annotationPages({ "annotation-pages": 7 }), [[7, 7]])
+  assert.deepEqual(annotationPages({ "annotation-pages": "3-5, 9" }), [[3, 5], [9, 9]])
+  assert.deepEqual(annotationPages({ "annotation-pages": ["9", "3–5"] }), [[3, 5], [9, 9]])
+  // Runs that overlap or touch are one run, so one set of pages is always written the same way.
+  assert.deepEqual(annotationPages({ "annotation-pages": "12-20, 21-30, 25-40" }), [[12, 40]])
+})
+
+test("a page range that can't be read, or none, is every page", () => {
+  for (const value of ["", "twelve", "0-3", "5-2", "3-", [], null, ["4", "x"]]) assert.equal(annotationPages({ "annotation-pages": value }), undefined, String(value))
+  assert.equal(annotationPages({ title: "A note" }), undefined)
+  assert.equal(annotationPages(undefined), undefined)
 })
 
 test("an annotation is read from the record Annotator keeps as JSON: its passage, its place, its comment and its tags", () => {

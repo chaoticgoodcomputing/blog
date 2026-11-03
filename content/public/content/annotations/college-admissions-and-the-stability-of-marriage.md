@@ -14,23 +14,13 @@ This is a little test of something I'd like to do - keeping annotations of paper
 
 This is being done with the [Obsidian Annotator](https://github.com/elias-sundqvist/obsidian-annotator) plugin. I have *absolutely no idea* how quartz is going to handle this, so... we'll see! There's a very real chance that this is going to end up being a substantially heavier lift on the frontend and design side than my feeble backend brain can handle. So, if you're seeing this, feel free to pat me on the back for figuring it out (☞ﾟヮﾟ)☞
 
->%%
->```annotation-json
->{"text":"Without further ado! College Admissions and the Stability of Marriage was the second paper(ish) that I read related to market design and non-market environments that got me interested in the subject. The first, Dr. Kenneth Arrow's [Social Choice and Individual Values](https://cowles.yale.edu/sites/default/files/2022-09/m12-2-all.pdf), was related more to voting systems - something that comes up every four years in America and then somewhat drifts into a hibernation until the next worthy national debate over the merits of first-past-the-post.\n\nThis one caught my attention, though, as it was the first technical analysis I'd seen of a topic that had some *weight* to it in my own life, and in the lives of others - partnership, romance, all the fun ones. If Arrow turned the handle on the door into this specific interest, it was Gale and Shapley that kicked it wide-open.\n\nIt was especially fun to present a summary of this paper in [[stability-of-marriage#^635c68|Dr. Allison Stashko]]'s Non-Market Environments course. I was proud to cap off the end of the term talking to my fellow early-20s undergraduates about something we could all understand at the deepest of levels: Being Horny™","target":[{"source":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","selector":[{"type":"TextPositionSelector","start":960,"end":1015},{"type":"TextQuoteSelector","exact":"COLLEGE  ADMISSIONS  AND  THE  STABILITY  OF  MARRIAGE ","prefix":"cal Monthly.http://www.jstor.org","suffix":"D. GALE* AND L. S. SHAPLEY, Brow"}]}],"created":"2024-03-14T22:24:15.633Z","updated":"2024-03-14T22:24:15.633Z","document":{"title":"College Admissions and the Stability of Marriage","link":[{"href":"urn:x-pdf:dd0c1fc592ad4dea981aaf84679261c3"},{"href":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf"}],"documentFingerprint":"dd0c1fc592ad4dea981aaf84679261c3"},"uri":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf"}
->```
->%%
->*%%PREFIX%%cal Monthly.http://www.jstor.org%%HIGHLIGHT%% ==COLLEGE  ADMISSIONS  AND  THE  STABILITY  OF  MARRIAGE== %%POSTFIX%%D. GALE* AND L. S. SHAPLEY, Brow*
->%%LINK%%[[#^18iax7g01jo|show annotation]]
->%%COMMENT%%
->Without further ado! College Admissions and the Stability of Marriage was the second paper(ish) that I read related to market design and non-market environments that got me interested in the subject. The first, Dr. Kenneth Arrow's [Social Choice and Individual Values](https://cowles.yale.edu/sites/default/files/2022-09/m12-2-all.pdf), was related more to voting systems - something that comes up every four years in America and then somewhat drifts into a hibernation until the next worthy national debate over the merits of first-past-the-post.
->
->This one caught my attention, though, as it was the first technical analysis I'd seen of a topic that had some *weight* to it in my own life, and in the lives of others - partnership, romance, all the fun ones. If Arrow turned the handle on the door into this specific interest, it was Gale and Shapley that kicked it wide-open.
->
->It was especially fun to present a summary of this paper in [[public/content/notes/stability-of-marriage#^635c68|Dr. Allison Stashko]]'s Non-Market Environments course. I was proud to cap off the end of the term talking to my fellow early-20s undergraduates about something we could all understand at the deepest of levels: Being Horny™
->%%TAGS%%
->
-^18iax7g01jo
+---
 
+Without further ado! College Admissions and the Stability of Marriage was the second paper(ish) that I read related to market design and non-market environments that got me interested in the subject. The first, Dr. Kenneth Arrow's [Social Choice and Individual Values](https://cowles.yale.edu/sites/default/files/2022-09/m12-2-all.pdf), was related more to voting systems - something that comes up every four years in America and then somewhat drifts into a hibernation until the next worthy national debate over the merits of first-past-the-post.
+
+This one caught my attention, though, as it was the first technical analysis I'd seen of a topic that had some *weight* to it in my own life, and in the lives of others - partnership, romance, all the fun ones. If Arrow turned the handle on the door into this specific interest, it was Gale and Shapley that kicked it wide-open.
+
+It was especially fun to present a summary of this paper in [[public/content/notes/stability-of-marriage#^635c68|Dr. Allison Stashko]]'s Non-Market Environments course. I was proud to cap off the end of the term talking to my fellow early-20s undergraduates about something we could all understand at the deepest of levels: Being Horny™
 
 >%%
 >```annotation-json
