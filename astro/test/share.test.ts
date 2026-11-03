@@ -18,10 +18,10 @@ test("each way is the page's own action or a service's intent, never both", () =
   for (const method of methods) expect(method.action === undefined).toBe(method.href !== undefined)
 })
 
-test("Bluesky's composer opens with the title and the address as the post's text", () => {
+test("Bluesky's composer opens with the title in quotes, a mention of the site's account, and the address as the post's text", () => {
   const url = intent("Bluesky")
   expect(url.origin + url.pathname).toBe("https://bsky.app/intent/compose")
-  expect(url.searchParams.get("text")).toBe(`${page.title}\n\n${page.address}`)
+  expect(url.searchParams.get("text")).toBe(`"${page.title}" by @chaoticgood.computer\n\n${page.address}`)
 })
 
 test("Hacker News's submit form opens with the address and the title", () => {

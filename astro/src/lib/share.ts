@@ -4,6 +4,8 @@
 // address in it. On a phone, the service's app opens it, where it is installed: the intents are
 // addresses the apps claim, so a link to one needs no script.
 
+import { bluesky } from "../site.config.ts"
+
 /** A way to share a page: what it is called, and the icon id it is drawn with. */
 export interface ShareMethod {
   /** What it is called: its tooltip, and its name for a screen reader. */
@@ -39,8 +41,10 @@ export function shareMethods({ title, address }: SharedPage): ShareMethod[] {
     {
       name: "Bluesky",
       icon: "custom:bluesky",
-      // The composer takes the post's text alone, and makes a card of the address in it.
-      href: withQuery("https://bsky.app/intent/compose", { text: `${title}\n\n${address}` }),
+      // The composer takes the post's text alone, and makes a card of the address in it. It names
+      // the site's account, which Bluesky makes a mention of as the post is made, so that the
+      // account hears of it.
+      href: withQuery("https://bsky.app/intent/compose", { text: `"${title}" by @${bluesky.handle}\n\n${address}` }),
     },
     {
       name: "Hacker News",
