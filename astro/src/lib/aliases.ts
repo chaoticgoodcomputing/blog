@@ -3,6 +3,9 @@
 // page, so a renamed tag's old page keeps working too. The redirects themselves are Astro's own, its
 // `redirects` setting (astro.config.ts), and this module says what they are.
 //
+// A nested tag's name is an alias of its page too: `/tags/ai` forwards to `/tags/engineering/ai`
+// (src/lib/tag-names.ts).
+//
 // An alias redirect is no note, so nothing that asks the notes query ever lists one: not a post
 // listing, the feed, the sitemap, search or the graph.
 
@@ -14,6 +17,7 @@ import { publishedAttachments } from "./attachments.ts"
 import { getDrawingExports } from "./drawings.ts"
 import { getNotes, getUnpublished, tagsOf, type Note, type UnpublishedNote } from "./notes.ts"
 import { resumeAddresses } from "./resume.ts"
+import { tagNameAddresses } from "./tag-names.ts"
 import { tagUrl } from "./tags.ts"
 import { pagePath, slugFor } from "./vault.ts"
 
@@ -55,7 +59,8 @@ type Aliased = Pick<UnpublishedNote, "file" | "frontmatter" | "url">
  * page stays while a note still carries the tag), or one of `pages`, the site's other pages. So
  * does one whose address is one of `files`, the files the site publishes, and one that an earlier
  * note's alias already has. The comparison ignores case, since a build writes files, and not every
- * file system tells `A.html` from `a.html`.
+ * file system tells `A.html` from `a.html`. Then each nested tag's name forwards to its tag's page,
+ * where nothing else has the address: a note's alias written there wins.
  */
 export function aliasRedirects(
   notes: Note[],
@@ -86,6 +91,9 @@ export function aliasRedirects(
       result.redirects[address] = note.url
       hold(address, `an alias of ${note.file.path}`)
     }
+  }
+  for (const [address, page] of tagNameAddresses(tagsOf(notes).keys())) {
+    if (!holders.has(address.toLowerCase())) result.redirects[address] = page
   }
   return result
 }

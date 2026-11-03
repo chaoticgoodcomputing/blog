@@ -129,6 +129,8 @@ export const postListing: PostListingConfig = {
 
 export const feed: FeedConfig = {
   limit: 40,
+  // Every post is writing.
+  excludedCategories: ["writing"],
 }
 
 export const seo: SeoConfig = {

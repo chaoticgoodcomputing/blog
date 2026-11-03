@@ -136,6 +136,11 @@ export interface PostListingConfig {
 export interface FeedConfig {
   /** The most articles it holds. */
   limit: number
+  /**
+   * Parts of tags never written as an item's category: those nearly every post has, which say
+   * nothing of one (src/lib/feed.ts, `feedCategories`).
+   */
+  excludedCategories: string[]
 }
 
 /**

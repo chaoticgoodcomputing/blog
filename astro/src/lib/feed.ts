@@ -20,6 +20,31 @@ export function feedIdentifier(note: Note, site: URL): string {
   return new URL(formerAddress(note), site).href.replace(/\/$/, "")
 }
 
+/**
+ * An item's categories: every part of each of its note's tags, each once, the explicit first. A
+ * tag's last part is explicit, the tag the note names, and each part above it implicit, the less
+ * specific the farther above: `horticulture/seasons/stamps` names `stamps`, and implies `seasons`,
+ * then `horticulture`. So the explicit parts come first, then the parts one above an explicit one,
+ * then two above, and parts alike keep the note's order. A part both named and implied is explicit.
+ * A part in `excluded` is none.
+ *
+ * A site that imports the feed reads them as tags of its own, which have no hierarchy, and may keep
+ * only the first few: DEV keeps four, and a category's letters and digits alone, so `engineering/ai`
+ * would be `engineeringai` there.
+ */
+export function feedCategories(tags: string[], excluded: string[] = feed.excludedCategories): string[] {
+  // How far each part is above the part a tag names: none for the named part itself.
+  const above = new Map<string, number>()
+  for (const tag of tags) {
+    const parts = tag.split("/")
+    parts.forEach((part, index) => {
+      if (!excluded.includes(part)) above.set(part, Math.min(above.get(part) ?? Infinity, parts.length - index - 1))
+    })
+  }
+  // A sort is stable: parts alike keep the order they were met in, the note's.
+  return [...above.keys()].sort((a, b) => above.get(a)! - above.get(b)!)
+}
+
 /** The notes the feed holds, newest first: each article whose page is not private, up to `limit`. */
 export const feedNotes = (notes: Note[], limit = feed.limit): Note[] =>
   notes
@@ -52,7 +77,7 @@ export function feedItems(
         // An item with no description of its own is described by how long it takes to read, as
         // the site's feed has always described one, so that a reader has a line under its title.
         description: note.summary ?? `(${readingMinutes(note, vault)} min read)`,
-        categories: note.tags,
+        categories: feedCategories(note.tags),
         ...(html !== undefined && { content: html }),
         // @astrojs/rss writes an item's link as its identifier, which is right wherever the two
         // are the same. Where they are not, the item says its own, and that it is no address.

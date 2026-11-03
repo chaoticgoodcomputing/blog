@@ -3,7 +3,7 @@ import os from "node:os"
 import path from "node:path"
 import type { Vault } from "@chaoticgoodcomputing/obsidian-markdown"
 import { afterAll, beforeAll, expect, test } from "vitest"
-import { feedItems } from "../src/lib/feed.ts"
+import { feedItems, feedCategories } from "../src/lib/feed.ts"
 import { indexNotes, type Note } from "../src/lib/notes.ts"
 import { openVault } from "../src/lib/vault.ts"
 
@@ -46,7 +46,7 @@ test("an article is an item with its title, its page's address, its date, its de
     link: "/content/essay",
     pubDate: new Date("2026-02-01T08:30:00Z"),
     description: "An essay.",
-    categories: ["writing/essays", "garden"],
+    categories: ["essays", "garden"],
   })
 })
 
@@ -83,4 +83,19 @@ test("an item keeps the identifier the site's feed has always given its note: lo
   })
   // Where that identifier is the page's own address, the item's link is its identifier.
   expect(byTitle.get("Essay")!.customData).toBeUndefined()
+})
+
+test("an item's categories are the parts its note's tags name, then those they imply, the nearest first", () => {
+  expect(feedCategories(["horticulture/seasons/stamps", "writing/notes"], ["writing"])).toEqual([
+    "stamps",
+    "notes",
+    "seasons",
+    "horticulture",
+  ])
+  // `engineering` is named as well as implied: it is explicit, in the note's order.
+  const tags = ["engineering", "engineering/ai", "economics/management", "writing/essays"]
+  expect(feedCategories(tags, ["writing"])).toEqual(["engineering", "ai", "management", "essays", "economics"])
+  expect(feedCategories(tags, [])).toEqual(["engineering", "ai", "management", "essays", "economics", "writing"])
+  expect(feedCategories(["engineering/ai"], [])).toEqual(["ai", "engineering"])
+  expect(feedCategories([], [])).toEqual([])
 })

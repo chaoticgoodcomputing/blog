@@ -46,6 +46,13 @@
       "outputs": [ "{projectRoot}/dist" ],
       "parallelism": false
     },
+    "tag-names": {
+      "//": "Read-only: fails when two tags share a name, the last level of each, whatever the case (scripts/check-tag-names.ts): the feed lists a note's tags by name alone, and each nested tag's page is also at /tags/<name> (src/lib/tag-names.ts). First the private notes' stubs published (vault:precommit), then the vault assembled from them. Run by git:commit, so no such vault is committed.",
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run vault && pnpm run tag-names", "cwd": "{projectRoot}" },
+      "dependsOn": [ "vault:precommit" ],
+      "cache": false
+    },
     "mock-mentions": {
       "//": "Writes made-up webmentions, as webmention.io's API gives them, to dist/mock-mentions.json, for the dev server to show (scripts/mock-mentions.ts): the three newest public posts mentioned, and a note by an alias. Run after `vault`, from the notes it assembled; never cached, since which notes are newest changes with the vault.",
       "executor": "nx:run-commands",

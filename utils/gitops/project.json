@@ -5,7 +5,7 @@
   "projectType": "library",
   "targets": {
     "commit": {
-      "//": "Commit changes to both main repo and private submodule with synchronized commit messages. Usage: nx run git:commit \"message\"",
+      "//": "Commit changes to both main repo and private submodule with synchronized commit messages. Usage: nx run git:commit \"message\". First the vault's pre-commit tasks, then the check that no two tags share a name (site:tag-names).",
       "executor": "nx:run-commands",
       "options": {
         "commands": [
@@ -14,7 +14,7 @@
         "parallel": false,
         "cwd": "{workspaceRoot}"
       },
-      "dependsOn": [ "vault:precommit" ]
+      "dependsOn": [ "vault:precommit", "site:tag-names" ]
     },
     "push": {
       "//": "Push both repositories (submodule first, then main repo)",

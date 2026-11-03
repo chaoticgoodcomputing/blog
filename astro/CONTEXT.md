@@ -350,6 +350,19 @@ A callout is a quote, and what only works on the page (a widget, a diagram, an a
 document's annotations) is a quote that links to the page. It ends with a link to the page.
 _Avoid_: full text, feed body
 
+**Feed category**:
+One of a feed item's categories: a part of one of its note's tags, flattened, since a site that
+imports the feed has no tag hierarchy. Explicit parts first (the part a tag names, `stamps` of
+`horticulture/seasons/stamps`), then implicit ones, nearest first (`seasons`, then `horticulture`).
+Site configuration names parts that are never one. Each is a **Tag name**, so each names one tag.
+_Avoid_: feed tag
+
+**Tag name**:
+The last level of a tag: `ai` of `engineering/ai`. No two tags share one, whatever the case, and
+`site:tag-names`, which git:commit runs, refuses a vault where two do. A nested tag's page is also
+at its name's address: `/tags/ai` forwards to `/tags/engineering/ai`.
+_Avoid_: leaf tag, terminal tag
+
 **Mention excerpt**:
 The page the site sends as a webmention's source when a note links to another site: only the
 note's paragraphs that link there, as one h-entry, at `/mentions/<the note's slug>/<a hash of the

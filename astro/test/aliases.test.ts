@@ -53,13 +53,28 @@ test("each alias of a note is an address that redirects to the note", () => {
   })
 })
 
+test("a nested tag's name redirects to its page, and a note's alias there wins", () => {
+  expect(aliasRedirects(notes).redirects["/tags/seasons"]).toBe("/tags/garden/seasons")
+  const taken = notes.map((note) =>
+    note.file.path === "notes/plain.md" ? { ...note, frontmatter: { aliases: ["tags/seasons"] } } : note,
+  )
+  expect(aliasRedirects(taken).redirects["/tags/seasons"]).toBe("/notes/plain")
+})
+
 test("a note with no page has no address to redirect to", () => {
   expect(aliasRedirects(notes).redirects).not.toHaveProperty("/sketch")
 })
 
 test("an alias that is the address of a page gets no redirect, and is reported", () => {
   const { redirects, collisions } = aliasRedirects(notes, ["/404"])
-  expect(Object.keys(redirects).sort()).toEqual(["/Old-Name", "/archive/moved", "/first", "/fresh", "/second/name"])
+  expect(Object.keys(redirects).sort()).toEqual([
+    "/Old-Name",
+    "/archive/moved",
+    "/first",
+    "/fresh",
+    "/second/name",
+    "/tags/seasons",
+  ])
   expect(redirects["/Old-Name"]).toBe("/notes/moved")
   expect(collisions).toEqual([
     { file: "notes/taker.md", alias: "notes/plain", address: "/notes/plain", holder: "the page of notes/plain.md" },
