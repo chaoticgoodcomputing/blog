@@ -85,28 +85,30 @@ const fold = {
 
     <TrailSpines />
 
-    <main transition:name="note" transition:animate={fold}>
-      <header>
-        {
-          on("note", "home", "tag", "annotation") && (
-            <ArticleTitle title={page.title} />
-          )
-        }
-        {on("note", "home", "tag", "annotation") && <TagList tags={page.note?.tags ?? []} />}
-        {on("note", "tag", "annotation") && <DateAndReadingTime note={page.note} />}
-        {on("note", "home", "tag", "annotation") && <ShareLinks title={page.title} url={page.url} />}
-      </header>
+    <div class="note-room">
+      <main transition:name="note" transition:animate={fold}>
+        <header>
+          {
+            on("note", "home", "tag", "annotation") && (
+              <ArticleTitle title={page.title} />
+            )
+          }
+          {on("note", "home", "tag", "annotation") && <TagList tags={page.note?.tags ?? []} />}
+          {on("note", "tag", "annotation") && <DateAndReadingTime note={page.note} />}
+          {on("note", "home", "tag", "annotation") && <ShareLinks title={page.title} url={page.url} />}
+        </header>
 
-      <slot />
+        <slot />
 
-      <div class="after-body">
-        {/* On a tag page, the posts under `page.tag`. */}
-        {on("home", "tag", "404") && <PostListing tag={page.tag} />}
-        {on("note", "tag", "annotation") && <PageLinks note={page.note} />}
-        {on("note", "annotation") && <Mentions note={page.note} />}
-        {on("note") && <SourceLink note={page.note} />}
-      </div>
-    </main>
+        <div class="after-body">
+          {/* On a tag page, the posts under `page.tag`. */}
+          {on("home", "tag", "404") && <PostListing tag={page.tag} />}
+          {on("note", "tag", "annotation") && <PageLinks note={page.note} />}
+          {on("note", "annotation") && <Mentions note={page.note} />}
+          {on("note") && <SourceLink note={page.note} />}
+        </div>
+      </main>
+    </div>
   </div>
 </Base>
 
@@ -124,8 +126,13 @@ const fold = {
     grid-area: spines;
   }
 
-  main {
+  /* The note's room: the note's column of the grid, as wide as the note and its margins together.
+     A size container, so a wide block in the note can measure it (note-body.css); the note itself,
+     padded to its 40rem, can't be measured for that. */
+  .note-room {
     grid-area: note;
+    min-width: 0;
+    container: note-room / inline-size;
   }
 
   .menu-bar {

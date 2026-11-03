@@ -101,6 +101,17 @@
         "cwd": "content"
       }
     },
+    "writing-stats": {
+      "//": "Measures the prose of each note, private notes as numbers and a title, with no path or text (words, dashes by kind, sentence and paragraph lengths) and writes the numbers to public/widgets/writing-stats/corpus.json, which the WritingStats widget charts (utils/writing-stats.ts). Run by the git pre-commit hook (with --stage); without the private vault it leaves the committed file as it is.",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "node --experimental-strip-types --disable-warning=ExperimentalWarning utils/writing-stats.ts"
+        ],
+        "parallel": false,
+        "cwd": "content"
+      }
+    },
     "list-non-private": {
       "//": "List all markdown files in content/public without 'private' tag or description field.",
       "executor": "nx:run-commands",

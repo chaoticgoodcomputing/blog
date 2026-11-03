@@ -1,6 +1,6 @@
 ---
 title: "Raycast Misc"
-date: "2026-10-17T00:00:00.000Z"
+date: "2026-05-01T00:00:00.000Z"
 tags:
   - "projects/site"
   - "engineering/languages/typescript"

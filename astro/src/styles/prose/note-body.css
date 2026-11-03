@@ -374,3 +374,15 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* A wide block: a chart, a table or a diagram that needs more room than the text's 40rem. It grows
+   into the margins on either side of the text, centred on it, up to 64rem, and keeps 2rem from the
+   edges of the note's room (Page.astro). Where there is no margin to grow into, as on a phone, it is
+   as wide as the text. Any element may be one: a widget takes the class itself. */
+.prose .wide {
+  --wide: max(100%, min(64rem, 100cqi - 4rem));
+  box-sizing: border-box;
+  width: var(--wide);
+  max-width: none;
+  margin-inline: calc((100% - var(--wide)) / 2);
+}
