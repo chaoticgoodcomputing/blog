@@ -5,8 +5,10 @@ import { expect, test } from "../site.ts"
 // month from January to June 2024 and under `ledger` or `ledger/accounts`, and `Locked Ledger`, a
 // private page under `ledger`. Other features' notes are listed beside them, so what is asked here
 // is asked of these.
-// The home page's listings are in a carousel; these tests ask of its first, the posts newest first.
+// The 404 page lists every post, in a carousel; these tests ask of its newest-first listing. The home
+// page lists only a few, one listing under the other (the tests at the end).
 const recent = '.post-listing[data-order="recent"]'
+const everything = "/nothing/at/all"
 
 const ledger = ["Ledger Six", "Ledger Five", "Ledger Four", "Ledger Three", "Ledger Two", "Ledger One"]
 
@@ -20,29 +22,21 @@ const expand = async (page: Page) => {
   if ((await more.count()) > 0) await more.locator("summary").click()
 }
 
-test("the home page shows the index note, and under it the site's posts, newest first", async ({ page }) => {
-  await page.goto("/")
-  const note = page.locator("main .prose")
-  await expect(note).toContainText("The home note.")
-  const listing = page.locator(`main .after-body ${recent}`)
-  await expect(listing.getByRole("heading", { level: 2 })).toHaveText("Recent Posts")
-  // The listing comes after the note.
-  expect(
-    await note.evaluate((body, after) => !!(body.compareDocumentPosition(after!) & Node.DOCUMENT_POSITION_FOLLOWING), await listing.elementHandle()),
-  ).toBe(true)
-
+test("the 404 page lists the site's posts, newest first", async ({ page }) => {
+  await page.goto(everything)
+  await expect(page.locator(`main .after-body ${recent}`).getByRole("heading", { level: 2 })).toHaveText("Recent Posts")
   await expand(page)
   expect(await ledgerTitles(page)).toEqual(ledger)
 })
 
 test("a private page is in no listing", async ({ page }) => {
-  await page.goto("/")
+  await page.goto(everything)
   await expand(page)
   await expect(page.locator(recent)).not.toContainText("Locked Ledger")
 })
 
 test("each post shows its title as a link to it, its date, its description and its tags as tag badges", async ({ page }) => {
-  await page.goto("/")
+  await page.goto(everything)
   await expand(page)
   const three = page.locator(`${recent} .post`, { has: page.getByRole("heading", { name: "Ledger Three" }) })
   await expect(three.getByRole("link", { name: "Ledger Three" })).toHaveAttribute("href", "/post-listing/ledger-three")
@@ -86,12 +80,6 @@ test.describe("with no script", () => {
   })
 })
 
-test("the 404 page lists the posts too", async ({ page }) => {
-  await page.goto("/nothing/at/all")
-  await expand(page)
-  expect(await ledgerTitles(page)).toEqual(ledger)
-})
-
 test("a note's page has no listing", async ({ page }) => {
   await page.goto("/post-listing/ledger-one")
   await expect(page.locator(".post-listing")).toHaveCount(0)
@@ -109,7 +97,7 @@ test.describe("on a touch screen, with no pointer that hovers", () => {
   test.use({ hasTouch: true, isMobile: true, viewport: { width: 390, height: 800 } })
 
   test("a tag badge is its bubble alone until it is held, when it opens without leaving the page; a tap still goes to the tag's page", async ({ page, context }) => {
-    await page.goto("/")
+    await page.goto(everything)
     await expand(page)
     const three = page.locator(`${recent} .post`, { has: page.getByRole("heading", { name: "Ledger Three" }) })
     const badge = three.locator(".tag-badge").first()
@@ -125,7 +113,7 @@ test.describe("on a touch screen, with no pointer that hovers", () => {
     await page.waitForTimeout(700)
     await touch.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] })
     await expect.poll(() => nameShows(badge)).toBe(true)
-    expect(new URL(page.url()).pathname).toBe("/")
+    expect(new URL(page.url()).pathname).toBe(everything)
 
     // A touch elsewhere closes it, and a tap follows it.
     await page.touchscreen.tap(5, 5)
@@ -135,19 +123,19 @@ test.describe("on a touch screen, with no pointer that hovers", () => {
   })
 })
 
-// The carousel: the posts other posts link to most, then the home page's posts newest first
+// The carousel, on the 404 page: the posts other posts link to most, then every post newest first
 // (test/central-posts.test.ts says how they are counted).
 const inView = (page: Page) =>
   page.locator(".post-listings .track").evaluate((track) => Math.round(track.scrollLeft / track.clientWidth))
 
-test("the home page's listings are a carousel: the most central posts first, then the newest", async ({ page }) => {
-  await page.goto("/")
+test("the 404 page's listings are a carousel: the most central posts first, then the newest", async ({ page }) => {
+  await page.goto(everything)
   await expect(page.locator(".post-listing > h2")).toHaveText(["Central Posts", "Recent Posts"])
   await expect(page.locator('.post-listing[data-order="central"] .post h3', { hasText: "A note with backlinks" })).toBeVisible()
 })
 
 test("the arrows step through the listings, wrapping round at either end, and the dots say which is in view", async ({ page }) => {
-  await page.goto("/")
+  await page.goto(everything)
   const dots = page.locator(".post-listings .dot")
   const next = page.getByRole("button", { name: "Next listing" })
   await expect(dots.first()).toHaveAttribute("aria-current", "true")
@@ -170,7 +158,7 @@ test("a tag page whose posts no post links to has only the newest-first listing,
 })
 
 test("a swipe stops at the next listing however hard, and every listing is as tall as the tallest", async ({ page }) => {
-  await page.goto("/")
+  await page.goto(everything)
   const listings = page.locator(".post-listings .post-listing")
   await expect(listings.first()).toHaveCSS("scroll-snap-stop", "always")
   const heights = await listings.evaluateAll((each) => each.map((listing) => listing.getBoundingClientRect().height))
@@ -181,9 +169,32 @@ test.describe("with no script, the carousel", () => {
   test.use({ javaScriptEnabled: false })
 
   test("has no buttons, and scrolls sideways to its other listings", async ({ page }) => {
-    await page.goto("/")
+    await page.goto(everything)
     await expect(page.locator(".post-listings .controls")).toBeHidden()
     await page.locator(".post-listings .track").evaluate((track) => track.scrollTo({ left: track.clientWidth, behavior: "instant" }))
     await expect.poll(() => inView(page)).toBe(1)
   })
+})
+
+// The home page: no carousel, but the three most central posts, then the five newest, one listing
+// under the other (`postListing.home`).
+test("the home page shows the index note, and under it the three most central posts, then the five newest", async ({ page }) => {
+  await page.goto("/")
+  const note = page.locator("main .prose")
+  await expect(note).toContainText("The home note.")
+  await expect(page.locator(".post-listing > h2")).toHaveText(["Central Posts", "Recent Posts"])
+  await expect(page.locator('.post-listing[data-order="central"] .post')).toHaveCount(3)
+  await expect(page.locator(`${recent} .post`)).toHaveCount(5)
+  await expect(page.locator('.post-listing[data-order="central"] .post h3').first()).toHaveText("A note with backlinks")
+  // Both in view, one under the other, after the note, with no carousel and nothing more to show.
+  const [central, newest] = [
+    (await page.locator('.post-listing[data-order="central"]').boundingBox())!,
+    (await page.locator(recent).boundingBox())!,
+  ]
+  expect(newest.y).toBeGreaterThanOrEqual(central.y + central.height)
+  expect(
+    await note.evaluate((body, after) => !!(body.compareDocumentPosition(after!) & Node.DOCUMENT_POSITION_FOLLOWING), await page.locator(".post-listings").elementHandle()),
+  ).toBe(true)
+  await expect(page.locator(".post-listings .controls")).toHaveCount(0)
+  await expect(page.locator(".post-listings details")).toHaveCount(0)
 })

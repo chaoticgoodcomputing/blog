@@ -107,7 +107,7 @@ const fold = {
 
         <div class="after-body">
           {/* On a tag page, the posts under `page.tag`. */}
-          {on("home", "tag", "404") && <PostListing tag={page.tag} />}
+          {on("home", "tag", "404") && <PostListing tag={page.tag} home={on("home")} />}
           {on("note", "tag", "annotation") && <RelatedContent note={page.note} discussion={on("note", "annotation")} />}
           {on("note") && site.sourceLink && <SourceLink note={page.note} />}
         </div>

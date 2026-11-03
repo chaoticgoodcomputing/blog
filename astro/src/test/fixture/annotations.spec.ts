@@ -154,8 +154,8 @@ test("an annotation page is an article in the site shell: its type, its date, it
 })
 
 test("an annotation page is marked as the kind of file it annotates, a .pdf, after its title wherever the site lists it", async ({ page }) => {
-  // In the post listing, its name read with it.
-  await page.goto("/")
+  // In the post listing, its name read with it: the 404 page's, which lists every post.
+  await page.goto("/nothing/at/all")
   await page.locator('.post-listing[data-order="recent"] details summary').click()
   await expect(page.locator('.post-listing[data-order="recent"]').getByRole("link", { name: "An annotated handbook .pdf" })).toBeVisible()
   // In a note's links: Flatland links to the handbook, which links back.

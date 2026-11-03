@@ -108,9 +108,15 @@ export interface PostListingOrder {
   title: string
 }
 
+/** A listing of the home page's: an order, and how many posts it shows, with no more to ask for. */
+export interface HomeListing extends PostListingOrder {
+  limit: number
+}
+
 /**
- * The post listings, after the body of the home page, a tag page and the 404 page, as a carousel
- * the reader moves through. A private page is in none (src/lib/post-listing.ts).
+ * The post listings, after the body of the home page, a tag page and the 404 page: on a tag page
+ * and the 404 page, a carousel the reader moves through; on the home page, a few of each, one
+ * listing under the other. A private page is in none (src/lib/post-listing.ts).
  */
 export interface PostListingConfig {
   /**
@@ -118,6 +124,11 @@ export interface PostListingConfig {
    * then the first is shown, saying `emptyText`.
    */
   listings: PostListingOrder[]
+  /**
+   * The home page's listings, one under the other in place of a carousel, each its first `limit`
+   * posts. One with no posts is left out, as in the carousel.
+   */
+  home: HomeListing[]
   /**
    * What one mention of a post is worth beside one backlink from another post, in how central the
    * post is: `3`, and a mention counts as three backlinks.

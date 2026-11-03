@@ -121,10 +121,15 @@ export const footer: FooterConfig = {
 }
 
 export const postListing: PostListingConfig = {
-  // The most central posts first, then the newest.
+  // On a tag page and the 404 page, a carousel: the most central posts first, then the newest.
   listings: [
     { order: "central", title: "Central Posts" },
     { order: "recent", title: "Recent Posts" },
+  ],
+  // On the home page, one under the other: the three most central posts, then the five newest.
+  home: [
+    { order: "central", title: "Central Posts", limit: 3 },
+    { order: "recent", title: "Recent Posts", limit: 5 },
   ],
   mentionWeight: 3,
   collapsedItemCount: 5,
