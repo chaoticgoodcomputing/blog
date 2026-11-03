@@ -4,6 +4,7 @@ import { excerptOf, isBlocked, mentionCounts, mentionsOf, noteAddressOf, pageKey
 const SITE = "https://blog.example.com/"
 
 const mention = (url: string, note: string, published?: string): Mention => ({
+  source: "webmentions",
   url,
   target: `${SITE}${note.slice(1)}`,
   note,
@@ -49,6 +50,7 @@ test("a like, a repost and a private webmention are no mention", () => {
   expect(toMention({ ...base, "wm-property": "repost-of" })).toBeUndefined()
   expect(toMention({ ...base, "wm-property": "mention-of", "wm-private": true })).toBeUndefined()
   expect(toMention({ ...base, "wm-property": "in-reply-to", name: " A reply ", author: { name: "Them" }, published: "2026-01-02T00:00:00Z" }, { "/a": "/content/a" })).toEqual({
+    source: "webmentions",
     target: `${SITE}a`,
     note: "/content/a",
     url: "https://other.example/p",

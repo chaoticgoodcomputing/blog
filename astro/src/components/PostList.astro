@@ -1,0 +1,155 @@
+---
+// A list of pages as the post listings set them (PostListing.astro), and as what is related to a
+// note sets its links and the other sites that mention it (RelatedContent.astro): each by its
+// title, a heading, with who wrote it and where under that for another site's, its date and its
+// description, and its tags as tag badges. A
+// private page is marked with a lock. A page on another site opens in a new tab.
+//
+// The first few are shown, and the rest in a `<details>` the reader opens: the browser's own
+// disclosure, which needs no script (docs/adr/1301).
+import { Icon } from "astro-icon/components"
+import { newTab } from "../lib/external-links.ts"
+import { postListing } from "../site.config.ts"
+import FileTypeChip from "./FileTypeChip.astro"
+import FormattedDate from "./FormattedDate.astro"
+import TagBadge from "./TagBadge.astro"
+
+/** A page as a list shows it. */
+export interface ListedPage {
+  url: string
+  title: string
+  date?: Date | undefined
+  /** Who wrote it and where, under its title: another site's page's `<author> at <site>`. */
+  byline?: string | undefined
+  description?: string | undefined
+  tags?: string[] | undefined
+  /** For an annotation page, the kind of file it annotates: `pdf`. */
+  fileType?: string | undefined
+  isPrivate?: boolean | undefined
+}
+
+interface Props {
+  pages: ListedPage[]
+  /** What the rest are called, in the button that shows them: `post`, `posts`. */
+  noun: [one: string, many: string]
+  /** How many posts are under each tag, which its badge says, where it says. */
+  counts?: Map<string, number> | undefined
+}
+
+const { pages, noun, counts } = Astro.props
+const site = Astro.site!.href
+const lists = [
+  { pages: pages.slice(0, postListing.collapsedItemCount), collapsed: false },
+  { pages: pages.slice(postListing.collapsedItemCount), collapsed: true },
+].filter((list) => list.pages.length > 0)
+// A private page's mark: the icon `mdi:lock`, drawn inline by astro-icon when the site builds, as a
+// tag bubble's icon is (docs/adr/1101), in the link's colour.
+const lock = "mdi:lock"
+---
+
+{
+  lists.map(({ pages, collapsed }) => {
+    const list = (
+      <ul class="posts">
+        {pages.map((page) => (
+          <li class="post">
+            <h3>
+              <a href={page.url} {...newTab(page.url, site)}>
+                {page.isPrivate && (
+                  <Icon name={lock} is:inline role="img" aria-label="Private page" width="0.75em" height="0.75em" fill="currentColor" />
+                )}
+                {page.isPrivate && " "}
+                {page.title}
+                {page.fileType && <FileTypeChip type={page.fileType} />}
+              </a>
+            </h3>
+            {page.byline && <p class="byline">{page.byline}</p>}
+            {(page.date || page.description) && (
+              <p class="meta">
+                {page.date && <FormattedDate date={page.date} />}
+                {page.description && <span class="description">{`${page.date ? " — " : ""}${page.description}`}</span>}
+              </p>
+            )}
+            {page.tags && page.tags.length > 0 && (
+              <ul class="tags">
+                {page.tags.map((tag) => (
+                  <li>
+                    <TagBadge tag={tag} count={counts?.get(tag)} />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    )
+    return collapsed ? (
+      <details>
+        <summary>{`Show ${pages.length} more ${pages.length === 1 ? noun[0] : noun[1]}`}</summary>
+        {list}
+      </details>
+    ) : (
+      list
+    )
+  })
+}
+
+<style>
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .posts {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  details .posts {
+    margin-top: 1.5rem;
+  }
+
+  h3 {
+    margin: 0;
+  }
+
+  h3 a {
+    text-decoration: none;
+  }
+
+  .meta {
+    margin: 0.25rem 0 0;
+    color: var(--darkgray);
+  }
+
+  /* Under the title, centred as it is, and quieter. */
+  .byline {
+    margin: 0.1rem 0 0;
+    color: var(--darkgray);
+    font-size: 0.9em;
+    font-style: italic;
+    text-align: center;
+  }
+
+  /* Centred, as the post's title over them is. */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .tags li {
+    max-width: 100%;
+  }
+
+  summary {
+    cursor: pointer;
+    color: var(--secondary);
+    font-weight: 600;
+  }
+</style>

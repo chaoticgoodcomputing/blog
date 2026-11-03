@@ -3,7 +3,7 @@
 // its address, its author, its summary, when it was last changed, and its tags. The page's `main`
 // is the h-entry; its title is the entry's name (ArticleTitle.astro), its date its `dt-published`
 // (DateAndReadingTime.astro), its body its content ([...slug].astro), and its Bluesky post its
-// `u-syndication` (Discussion.astro). Bridgy reads it to know what a reply on Bluesky answers, as do
+// `u-syndication` (RelatedContent.astro). Bridgy reads it to know what a reply on Bluesky answers, as do
 // the IndieWeb's readers and a site the note sends a webmention to.
 import type { NoteFacts } from "../lib/notes.ts"
 import { site } from "../site.config.ts"

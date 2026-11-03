@@ -54,7 +54,7 @@ export function mentionTarget(href: string): string {
 /**
  * A note page's external links, each target with the blocks of the note's body that link to it,
  * in the order the note has them, as HTML. The body is the page's `.prose` in `main`; a link the
- * site shell or the links panel holds is not the note's. `site` is the site's address.
+ * site shell or the related content holds is not the note's. `site` is the site's address.
  */
 export function linkingBlocks(html: string, site: string): Map<string, HTMLElement[]> {
   const page = parse(html)

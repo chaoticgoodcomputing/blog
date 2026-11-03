@@ -1,0 +1,30 @@
+{
+  "hits": [
+    {
+      "objectID": "9000001",
+      "url": "https://blog.chaoticgood.computer/backlinks/linked",
+      "points": 42,
+      "num_comments": 3,
+      "created_at": "2026-10-30T12:00:00Z"
+    },
+    {
+      "objectID": "9000009",
+      "url": "https://elsewhere.example/alpha",
+      "points": 7,
+      "num_comments": 1,
+      "created_at": "2026-10-30T12:00:00Z"
+    }
+  ],
+  "items": {
+    "9000001": { "id": 9000001, "type": "story", "by": "submitter", "time": 1793361600, "kids": [9000002, 9000003, 9000004] },
+    "9000002": {
+      "id": 9000002,
+      "type": "comment",
+      "by": "first_reader",
+      "time": 1793365200,
+      "text": "The first paragraph of a comment.<p>And a second, with an &quot;entity&quot; and <i>markup</i>."
+    },
+    "9000003": { "id": 9000003, "type": "comment", "deleted": true },
+    "9000004": { "id": 9000004, "type": "comment", "by": "second_reader", "time": 1793368800, "text": "Short and sweet." }
+  }
+}

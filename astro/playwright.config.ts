@@ -30,13 +30,17 @@ export default defineConfig({
     cacheDir: `${root}.e2e/${site}/cache`,
     port,
     // The fixture's mirrors, with a scanned one and its text file made for the run (scripts/fixture-mirrors.ts).
-    // The fixture's Bluesky posts too, one of them, so that the run asks nothing of Bluesky (src/lib/bluesky-posts.ts).
+    // The fixture's Bluesky posts too, one of them, so that the run asks nothing of Bluesky (src/lib/bluesky-posts.ts),
+    // and its Hacker News thread and a webmention, both of "A note with backlinks", already the most central post, so
+    // that it asks nothing of Hacker News or webmention.io (src/lib/hacker-news.ts, src/lib/mentions.ts).
     env:
       site === "fixture"
         ? {
             VAULT_ROOT: `${root}test/fixtures/vault`,
             MIRRORS_ROOT: `${root}.e2e/fixture/mirrors`,
             BLUESKY_POSTS_FILE: `${root}test/fixtures/bluesky/author-feed.json`,
+            HACKER_NEWS_FILE: `${root}test/fixtures/hacker-news/threads.json`,
+            WEBMENTIONS_FILE: `${root}test/fixtures/webmentions/mentions.json`,
           }
         : {},
     before: site === "fixture" ? `node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/fixture-mirrors.ts ${root}.e2e/fixture/mirrors` : undefined,

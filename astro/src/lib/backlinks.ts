@@ -10,7 +10,7 @@ import { annotatedFileType } from "./annotations.ts"
 import { newestFirst, noteOf, type NoteFacts, type NoteIndex } from "./notes.ts"
 import { getVault } from "./vault.ts"
 
-/** One page that links to a note, or that a note links to, as the links panel lists it. */
+/** One page that links to a note, or that a note links to, as the related content lists it. */
 export interface Backlink {
   title: string
   url: string
@@ -22,6 +22,8 @@ export interface Backlink {
   isPrivate: boolean
   /** For an annotation page, the kind of file it annotates, which the panel marks: `pdf`. */
   fileType?: string | undefined
+  /** Its own tags, which the panel shows as tag badges, as the post listings do. */
+  tags: string[]
 }
 
 export interface BacklinkOptions {
@@ -76,4 +78,5 @@ const linkTo = (note: NoteFacts, url: string): Backlink => ({
   description: note.summary,
   isPrivate: note.isPrivate,
   fileType: annotatedFileType(note),
+  tags: note.tags,
 })

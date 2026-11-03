@@ -4,23 +4,18 @@
 // with its title, its date, its description and its tags as tag badges. Every post on the home page
 // and the 404 page; on a tag page, the posts under its tag (src/lib/post-listing.ts).
 //
-// The carousel is a row of listings that scrolls sideways and snaps to each: with no script, the
-// reader swipes or scrolls it. With script, buttons step through it, wrapping round at either end,
-// and it is as tall as the listing in view.
-//
-// A long listing shows its first few posts, and the rest in a `<details>` the reader opens: the
-// browser's own disclosure, which needs no script (docs/adr/1301).
-import { Icon } from "astro-icon/components"
+// The carousel is the site's own (Carousel.astro): with no script, the reader swipes or scrolls it;
+// with script, buttons step through it.
+// Each listing's posts are set by PostList.astro, which shows the first few and the rest on asking.
+import Carousel from "./Carousel.astro"
 import { centralPosts, listedPosts, postCounts } from "../lib/post-listing.ts"
 import type { Note } from "../lib/notes.ts"
 import type { PostOrder } from "../site.config.types.ts"
 import { mentionCounts } from "../lib/mentions.ts"
-import { getMentions } from "../lib/note-mentions.ts"
+import { getMentions } from "../lib/note-discussion.ts"
 import { postListing, webmentions } from "../site.config.ts"
 import { annotatedFileType } from "../lib/annotations.ts"
-import FileTypeChip from "./FileTypeChip.astro"
-import FormattedDate from "./FormattedDate.astro"
-import TagBadge from "./TagBadge.astro"
+import PostList from "./PostList.astro"
 
 interface Props {
   /** On a tag page, the tag whose posts are listed. */
@@ -39,294 +34,30 @@ const listings = withPosts.length > 0 ? withPosts : all.slice(0, 1)
 const counts = postListing.showTagCounts ? postCounts() : undefined
 ---
 
-<post-listings class="post-listings">
+<Carousel
+  class="post-listings"
+  slideClass="post-listing"
+  noun="listing"
+  id="post-listing"
+  slides={listings.map(({ order, title }) => ({ key: order, title, attributes: { "data-order": order } }))}
+>
   {
-    listings.length > 1 && (
-      <div class="controls">
-        <button type="button" data-step="-1" aria-label="Previous listing" title="Previous listing">
-          <Icon name="mdi:chevron-left" is:inline width="20" height="20" aria-hidden="true" />
-        </button>
-        <div class="dots">
-          {listings.map((listing, index) => (
-            <button type="button" class="dot" data-index={index} aria-label={listing.title} title={listing.title} />
-          ))}
-        </div>
-        <button type="button" data-step="1" aria-label="Next listing" title="Next listing">
-          <Icon name="mdi:chevron-right" is:inline width="20" height="20" aria-hidden="true" />
-        </button>
-      </div>
-    )
+    listings.map(({ order, posts }) => (
+      <Fragment slot={order}>
+        {posts.length === 0 && <p class="empty">{postListing.emptyText}</p>}
+        <PostList
+          pages={posts.map((note) => ({ ...note, description: note.summary, fileType: annotatedFileType(note) }))}
+          noun={["post", "posts"]}
+          counts={counts}
+        />
+      </Fragment>
+    ))
   }
-  <div class="track">
-    {
-      listings.map(({ order, title, posts }) => {
-        const lists = [
-          { posts: posts.slice(0, postListing.collapsedItemCount), collapsed: false },
-          { posts: posts.slice(postListing.collapsedItemCount), collapsed: true },
-        ].filter((list) => list.posts.length > 0)
-        return (
-          <section class="post-listing" data-order={order} aria-labelledby={`post-listing-${order}`}>
-            <h2 id={`post-listing-${order}`}>{title}</h2>
-            {posts.length === 0 && <p class="empty">{postListing.emptyText}</p>}
-            {lists.map(({ posts, collapsed }) => {
-              const list = (
-                <ul class="posts">
-                  {posts.map((note) => (
-                    <li class="post">
-                      <h3>
-                        <a href={note.url}>
-                          {note.title}
-                          {annotatedFileType(note) && <FileTypeChip type={annotatedFileType(note)!} />}
-                        </a>
-                      </h3>
-                      <p class="meta">
-                        {note.date && <FormattedDate date={note.date} />}
-                        {note.summary && <span class="description">{`${note.date ? " — " : ""}${note.summary}`}</span>}
-                      </p>
-                      {note.tags.length > 0 && (
-                        <ul class="tags">
-                          {note.tags.map((tag) => (
-                            <li>
-                              <TagBadge tag={tag} count={counts?.get(tag)} />
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              )
-              return collapsed ? (
-                <details>
-                  <summary>{`Show ${posts.length} more ${posts.length === 1 ? "post" : "posts"}`}</summary>
-                  {list}
-                </details>
-              ) : (
-                list
-              )
-            })}
-          </section>
-        )
-      })
-    }
-  </div>
-</post-listings>
-
-<script>
-  /**
-   * The carousel's buttons: the arrows step to the listing before or after the one in view, wrapping
-   * round, and each dot goes to its listing. Whichever way the reader gets to a listing, its dot is
-   * marked, and the row is as tall as it is, so a short listing leaves no gap under it.
-   */
-  class PostListings extends HTMLElement {
-    #resize: ResizeObserver | undefined
-
-    connectedCallback() {
-      const track = this.querySelector<HTMLElement>(".track")!
-      const listings = [...track.children] as HTMLElement[]
-      if (listings.length < 2) return
-      const dots = [...this.querySelectorAll<HTMLButtonElement>(".dot")]
-      const current = () => Math.min(listings.length - 1, Math.max(0, Math.round(track.scrollLeft / track.clientWidth)))
-      const go = (index: number) => {
-        const to = (index + listings.length) % listings.length
-        track.scrollTo({ left: to * track.clientWidth })
-      }
-      const update = () => {
-        const index = current()
-        dots.forEach((dot, at) => dot.setAttribute("aria-current", String(at === index)))
-        track.style.height = `${listings[index]!.offsetHeight}px`
-      }
-
-      this.querySelectorAll<HTMLButtonElement>("[data-step]").forEach((button) =>
-        button.addEventListener("click", () => go(current() + Number(button.dataset.step))),
-      )
-      dots.forEach((dot, index) => dot.addEventListener("click", () => go(index)))
-      let frame = 0
-      track.addEventListener("scroll", () => {
-        cancelAnimationFrame(frame)
-        frame = requestAnimationFrame(update)
-      })
-      // A listing's height changes when the reader shows the rest of it.
-      this.#resize = new ResizeObserver(update)
-      listings.forEach((listing) => this.#resize!.observe(listing))
-      update()
-    }
-
-    disconnectedCallback() {
-      this.#resize?.disconnect()
-    }
-  }
-
-  customElements.define("post-listings", PostListings)
-</script>
+</Carousel>
 
 <style>
-  post-listings {
-    display: block;
-    position: relative;
-  }
-
-  /* The listings side by side, each as wide as the carousel, one in view at a time. */
-  .track {
-    display: flex;
-    align-items: flex-start;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .track {
-      scroll-behavior: smooth;
-    }
-  }
-
-  /* With script, the buttons are the way across, and the scroll bar is only in the way. */
-  post-listings:defined .track {
-    scrollbar-width: none;
-  }
-
-  .track::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Over the listings' headings: an arrow at either side, level with them, and the dots centred
-     under them, in the room a heading leaves. Only the buttons take the pointer. */
-  .controls {
-    position: absolute;
-    inset: 0 0 auto;
-    z-index: 1;
-    pointer-events: none;
-  }
-
-  .controls button {
-    pointer-events: auto;
-  }
-
-  .controls [data-step] {
-    position: absolute;
-    top: 0;
-  }
-
-  .controls [data-step="-1"] {
-    left: 0;
-  }
-
-  .controls [data-step="1"] {
-    right: 0;
-  }
-
-  .dots {
-    position: absolute;
-    top: 2.5rem;
-    left: 50%;
-    translate: -50% 0;
-    display: flex;
-  }
-
-  post-listings:not(:defined) .controls {
-    display: none;
-  }
-
-  .controls button {
-    display: grid;
-    place-items: center;
-    padding: 0.25rem;
-    border: none;
-    border-radius: 999px;
-    background: none;
-    color: var(--darkgray);
-    cursor: pointer;
-  }
-
-  .controls button:hover,
-  .controls button:focus-visible {
-    color: var(--secondary);
-  }
-
-  .controls .dot {
-    width: 0.5rem;
-    height: 0.5rem;
-    padding: 0;
-    margin: 0.25rem;
-    background: var(--lightgray);
-  }
-
-  .controls .dot[aria-current="true"] {
-    background: var(--secondary);
-  }
-
-  .post-listing {
-    flex: 0 0 100%;
-    min-width: 0;
-    scroll-snap-align: start;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  /* The listing's gap and this: as much room under the heading as the shell gives every heading
-     after a note's body (Page.astro), whose rule this outweighs. */
-  .post-listing > h2 {
-    margin: 0 0 0.5rem;
-  }
-
-  post-listings:defined:has(.controls) .post-listing > h2 {
-    margin-bottom: 1.5rem;
-    padding: 0 2.5rem;
-  }
-
   .empty {
     margin: 0;
     color: var(--darkgray);
-  }
-
-  ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .posts {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  details .posts {
-    margin-top: 1.5rem;
-  }
-
-  h3 {
-    margin: 0;
-  }
-
-  h3 a {
-    text-decoration: none;
-  }
-
-  .meta {
-    margin: 0.25rem 0 0;
-    color: var(--darkgray);
-  }
-
-  /* Centred, as the post's title over them is. */
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-    font-size: 0.8rem;
-  }
-
-  .tags li {
-    max-width: 100%;
-  }
-
-  summary {
-    cursor: pointer;
-    color: var(--secondary);
-    font-weight: 600;
   }
 </style>

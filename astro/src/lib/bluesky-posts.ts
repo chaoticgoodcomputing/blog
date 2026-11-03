@@ -1,7 +1,7 @@
 // Each note's Bluesky post: the site's Bluesky account's first post that links to the note, which
 // the deploy made when the note reached the feed (.github/workflows/scripts/post-to-bluesky.mjs).
 // The `blueskyPosts` collection reads them from Bluesky's public API as the site builds
-// (src/content.config.ts), and a note's discussion links to its own (Discussion.astro).
+// (src/content.config.ts), and a note's discussion links to its own (RelatedContent.astro).
 //
 // A note is posted after the deploy that publishes it, so that deploy's page has no post to link
 // to. The Bluesky job then deploys again when it has posted (.github/workflows/deploy.yaml), and
@@ -95,14 +95,27 @@ async function fetchAll(handle: string): Promise<AuthorFeedItem[]> {
  * The `blueskyPosts` collection's loader: each note's Bluesky post, read afresh on each build from
  * the account's posts on Bluesky's public API, which needs no sign-in. With `BLUESKY_POSTS_FILE`,
  * they are read from that file instead, an author feed as the API gives one: the end-to-end suite's
- * (playwright.config.ts). Where the posts can't be read, the collection is empty, and every note's
- * discussion links to the account.
+ * (playwright.config.ts), and the dev server's made-up one (scripts/mock-mentions.ts). Where the posts can't be read, the collection is empty, and every note's
+ * discussion links to the account. With `enabled` false, the discussion's Bluesky source is off,
+ * and it reads nothing.
  */
-export function blueskyPostsLoader({ site, handle }: { site: string; handle: string }): Loader {
+export function blueskyPostsLoader({
+  site,
+  handle,
+  enabled = true,
+}: {
+  site: string
+  handle: string
+  enabled?: boolean
+}): Loader {
   return {
     name: "bluesky-posts",
     async load({ store, logger, parseData }) {
       store.clear()
+      if (!enabled) {
+        logger.info("The discussion's Bluesky source is off: no Bluesky posts are read.")
+        return
+      }
       const file = process.env.BLUESKY_POSTS_FILE
       let feed: AuthorFeedItem[]
       try {

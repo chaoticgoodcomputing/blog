@@ -1,0 +1,278 @@
+---
+// A carousel of slides, one in view at a time, each under its own heading: the post listings
+// (PostListing.astro) and what is related to a note (RelatedContent.astro). Each slide's content is
+// the slot named by its key; its heading may carry an action beside its title, a link drawn as an
+// icon, such as the `+` that takes a reader to where they answer.
+//
+// The slides are a row that scrolls sideways and snaps to each, one at a time however hard the
+// reader swipes: with no script, the reader swipes or scrolls it. With script, buttons step through
+// it, wrapping round at either end. With one slide, there are no buttons. The row is as tall as its
+// tallest slide, so that moving to a shorter one never changes the page's height under the reader.
+import { Icon } from "astro-icon/components"
+import { newTab } from "../lib/external-links.ts"
+import { iconName } from "../lib/icons.ts"
+
+/** A link beside a slide's title, drawn as its icon alone. */
+export interface SlideAction {
+  href: string
+  /** Its name, for a screen reader and as its tooltip. */
+  label: string
+  /** An icon id: `mdi:plus`. */
+  icon: string
+  /** Its classes, beside `action`: a microformat's, as `u-syndication`. */
+  class?: string | undefined
+}
+
+export interface Slide {
+  /** Its slot's name, and its heading's id, after `id`. */
+  key: string
+  title: string
+  /** Its classes, beside `slideClass`. */
+  class?: string | undefined
+  /** Its attributes, as `data-order`. */
+  attributes?: Record<string, string> | undefined
+  action?: SlideAction | undefined
+}
+
+interface Props {
+  /** The carousel's own class. */
+  class: string
+  /** The class of each slide. */
+  slideClass: string
+  /** What a slide is called, in the arrows' names: `Next listing`. */
+  noun: string
+  /** Each heading's id is this and the slide's key. */
+  id: string
+  slides: Slide[]
+}
+
+const { class: name, slideClass, noun, id, slides } = Astro.props
+const site = Astro.site!.href
+const bodies = await Promise.all(slides.map((slide) => (Astro.slots.has(slide.key) ? Astro.slots.render(slide.key) : "")))
+---
+
+<content-carousel class={name}>
+  {
+    slides.length > 1 && (
+      <div class="controls">
+        <button type="button" data-step="-1" aria-label={`Previous ${noun}`} title={`Previous ${noun}`}>
+          <Icon name="mdi:chevron-left" is:inline width="20" height="20" aria-hidden="true" />
+        </button>
+        <div class="dots">
+          {slides.map((slide, index) => (
+            <button type="button" class="dot" data-index={index} aria-label={slide.title} title={slide.title} />
+          ))}
+        </div>
+        <button type="button" data-step="1" aria-label={`Next ${noun}`} title={`Next ${noun}`}>
+          <Icon name="mdi:chevron-right" is:inline width="20" height="20" aria-hidden="true" />
+        </button>
+      </div>
+    )
+  }
+  <div class="track">
+    {
+      slides.map((slide, index) => (
+        <section class:list={["slide", slideClass, slide.class]} aria-labelledby={`${id}-${slide.key}`} {...slide.attributes}>
+          <h2 id={`${id}-${slide.key}`}>
+            <span class="title">
+            {slide.title}
+            {slide.action && (
+              <a
+                class:list={["action", slide.action.class]}
+                href={slide.action.href}
+                aria-label={slide.action.label}
+                title={slide.action.label}
+                {...newTab(slide.action.href, site)}
+              >
+                <Icon name={iconName(slide.action.icon)} is:inline width="0.8em" height="0.8em" aria-hidden="true" />
+              </a>
+            )}
+            </span>
+          </h2>
+          <Fragment set:html={bodies[index]} />
+        </section>
+      ))
+    }
+  </div>
+</content-carousel>
+
+<script>
+  /**
+   * The carousel's buttons: the arrows step to the slide before or after the one in view, wrapping
+   * round, and each dot goes to its slide. Whichever way the reader gets to a slide, its dot is
+   * marked.
+   */
+  class ContentCarousel extends HTMLElement {
+    connectedCallback() {
+      const track = this.querySelector<HTMLElement>(":scope > .track")!
+      const slides = [...track.children] as HTMLElement[]
+      if (slides.length < 2) return
+      const dots = [...this.querySelectorAll<HTMLButtonElement>(":scope > .controls .dot")]
+      const current = () => Math.min(slides.length - 1, Math.max(0, Math.round(track.scrollLeft / track.clientWidth)))
+      const go = (index: number) => {
+        const to = (index + slides.length) % slides.length
+        track.scrollTo({ left: to * track.clientWidth })
+      }
+      const update = () => {
+        const index = current()
+        dots.forEach((dot, at) => dot.setAttribute("aria-current", String(at === index)))
+      }
+
+      this.querySelectorAll<HTMLButtonElement>(":scope > .controls [data-step]").forEach((button) =>
+        button.addEventListener("click", () => go(current() + Number(button.dataset.step))),
+      )
+      dots.forEach((dot, index) => dot.addEventListener("click", () => go(index)))
+      let frame = 0
+      track.addEventListener("scroll", () => {
+        cancelAnimationFrame(frame)
+        frame = requestAnimationFrame(update)
+      })
+      update()
+    }
+  }
+
+  customElements.define("content-carousel", ContentCarousel)
+</script>
+
+<style>
+  content-carousel {
+    display: block;
+    position: relative;
+  }
+
+  /* The slides side by side, each as wide as the carousel, one in view at a time, and each as tall
+     as the tallest: the row's height stays the same whichever is in view. */
+  .track {
+    display: flex;
+    align-items: stretch;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .track {
+      scroll-behavior: smooth;
+    }
+  }
+
+  /* With script, the buttons are the way across, and the scroll bar is only in the way. */
+  content-carousel:defined .track {
+    scrollbar-width: none;
+  }
+
+  .track::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Over the slides' headings: an arrow at either side, level with them, and the dots centred
+     under them, in the room a heading leaves. Only the buttons take the pointer. */
+  .controls {
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .controls button {
+    pointer-events: auto;
+  }
+
+  .controls [data-step] {
+    position: absolute;
+    top: 0;
+  }
+
+  .controls [data-step="-1"] {
+    left: 0;
+  }
+
+  .controls [data-step="1"] {
+    right: 0;
+  }
+
+  .dots {
+    position: absolute;
+    top: 2.5rem;
+    left: 50%;
+    translate: -50% 0;
+    display: flex;
+  }
+
+  content-carousel:not(:defined) .controls {
+    display: none;
+  }
+
+  .controls button {
+    display: grid;
+    place-items: center;
+    padding: 0.25rem;
+    border: none;
+    border-radius: 999px;
+    background: none;
+    color: var(--darkgray);
+    cursor: pointer;
+  }
+
+  .controls button:hover,
+  .controls button:focus-visible {
+    color: var(--secondary);
+  }
+
+  .controls .dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    padding: 0;
+    margin: 0.25rem;
+    background: var(--lightgray);
+  }
+
+  .controls .dot[aria-current="true"] {
+    background: var(--secondary);
+  }
+
+  /* A swipe stops at the next slide, however hard: none is scrolled past. */
+  .slide {
+    flex: 0 0 100%;
+    min-width: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* The slide's gap and this: as much room under the heading as the shell gives every heading
+     after a note's body (Page.astro), whose rule this outweighs. */
+  .slide > h2 {
+    margin: 0 0 0.5rem;
+  }
+
+  content-carousel:defined:has(> .controls) > .track > .slide > h2 {
+    margin-bottom: 1.5rem;
+    padding: 0 2.5rem;
+  }
+
+  /* Beside the title, smaller than it, in the links' colour, hung after it so that the title stays
+     centred. */
+  .title {
+    position: relative;
+  }
+
+  .action {
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    translate: 0 -50%;
+    display: inline-flex;
+    margin-left: 0.3em;
+    padding: 0.1em;
+    border-radius: 999px;
+    text-decoration: none;
+  }
+
+  .action:hover,
+  .action:focus-visible {
+    background: var(--highlight);
+  }
+</style>

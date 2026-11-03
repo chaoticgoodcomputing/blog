@@ -169,6 +169,14 @@ test("a tag page whose posts no post links to has only the newest-first listing,
   await expect(page.locator(".post-listings .controls")).toHaveCount(0)
 })
 
+test("a swipe stops at the next listing however hard, and every listing is as tall as the tallest", async ({ page }) => {
+  await page.goto("/")
+  const listings = page.locator(".post-listings .post-listing")
+  await expect(listings.first()).toHaveCSS("scroll-snap-stop", "always")
+  const heights = await listings.evaluateAll((each) => each.map((listing) => listing.getBoundingClientRect().height))
+  expect(new Set(heights).size).toBe(1)
+})
+
 test.describe("with no script, the carousel", () => {
   test.use({ javaScriptEnabled: false })
 

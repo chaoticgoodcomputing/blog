@@ -6,17 +6,17 @@ import { expect, test } from "../site.ts"
 // page runs is the site's setting, `site.private.backlinks`: change it, and the other one does.
 const linked = "/backlinks/linked"
 
-test("a note's backlinks panel lists the pages that link to it, an embed counting as a link", async ({ page }) => {
+test("a note's incoming links panel lists the pages that link to it, an embed counting as a link", async ({ page }) => {
   await page.goto(linked)
   const panel = page.locator(".backlinks")
-  await expect(panel.getByRole("heading", { level: 2 })).toHaveText("Backlinks")
+  await expect(panel.getByRole("heading", { level: 2 })).toHaveText("Incoming Links")
   await expect(panel.getByRole("link", { name: "Links to it", exact: true })).toHaveAttribute("href", "/backlinks/by-link")
   await expect(panel.getByRole("link", { name: "Embeds it", exact: true })).toHaveAttribute("href", "/backlinks/by-embed")
 })
 
 test("a backlink shows its page's date and description under its title, an undated page its description alone", async ({ page }) => {
   await page.goto(linked)
-  const items = page.locator(".backlinks li")
+  const items = page.locator(".backlinks li.post")
   const byLink = items.filter({ has: page.getByRole("link", { name: "Links to it", exact: true }) })
   await expect(byLink.locator("time")).toHaveAttribute("datetime", "2025-01-15T00:00:00.000Z")
   await expect(byLink.locator(".description")).toHaveText("— A note that links to it.")
@@ -27,22 +27,21 @@ test("a backlink shows its page's date and description under its title, an undat
   await expect(byEmbed.locator(".description")).toHaveText("The note embedded, and not linked to:")
 })
 
-test("beside a note's backlinks, its outlinks: the pages it links to", async ({ page }) => {
+test("before a note's incoming links, its outgoing links: the pages it links to", async ({ page }) => {
   await page.goto(linked)
-  const out = page.locator(".page-links .outlinks")
-  await expect(out.getByRole("heading", { level: 2 })).toHaveText("Outlinks")
+  const out = page.locator(".related-content .outlinks")
+  await expect(out.getByRole("heading", { level: 2 })).toHaveText("Outgoing Links")
   await expect(out.getByRole("link")).toHaveCount(1)
   await expect(out.getByRole("link", { name: "Embeds it", exact: true })).toHaveAttribute("href", "/backlinks/by-embed")
-  // The outlinks on the left, the backlinks on the right, side by side.
-  const [left, right] = [(await out.boundingBox())!, (await page.locator(".page-links .backlinks").boundingBox())!]
-  expect(left.x + left.width).toBeLessThanOrEqual(right.x)
-  expect(Math.abs(left.y - right.y)).toBeLessThan(1)
+  // The outgoing links first, in view; the incoming links the next panel of the carousel, beside it.
+  const [outgoing, incoming] = [(await out.boundingBox())!, (await page.locator(".related-content .backlinks").boundingBox())!]
+  expect(outgoing.x + outgoing.width).toBeLessThanOrEqual(incoming.x + 1)
 })
 
-test("a note nothing links to has only its outlinks, with no backlinks column", async ({ page }) => {
+test("a note nothing links to has its outgoing links, with no incoming links panel", async ({ page }) => {
   await page.goto("/backlinks/by-link")
-  await expect(page.locator(".page-links .backlinks")).toHaveCount(0)
-  await expect(page.locator(".page-links .outlinks").getByRole("link", { name: "A note with backlinks", exact: true })).toBeVisible()
+  await expect(page.locator(".related-content .backlinks")).toHaveCount(0)
+  await expect(page.locator(".related-content .outlinks").getByRole("link", { name: "A note with backlinks", exact: true })).toBeVisible()
 })
 
 test("a backlink is set as the headings are", async ({ page }) => {
@@ -67,7 +66,7 @@ test("left out, a private page that links to a note is not among its backlinks",
 test("marked, a private page that links to a note is listed after the public ones, with a lock", async ({ page }) => {
   test.skip(site.private.backlinks !== "mark", "the site leaves private backlinks out")
   await page.goto(linked)
-  const items = page.locator(".backlinks li")
+  const items = page.locator(".backlinks li.post")
   await expect(items).toHaveCount(3)
   const last = items.last()
   await expect(last.getByRole("link")).toHaveAttribute("href", "/backlinks/by-private-page")
@@ -77,7 +76,7 @@ test("marked, a private page that links to a note is listed after the public one
   await expect(page.locator(".backlinks").getByRole("img", { name: "Private page" })).toHaveCount(1)
 })
 
-test("a note nothing links to has no backlinks panel, and nor does the home page", async ({ page }) => {
+test("a note nothing links to has no incoming links panel, and nor does the home page", async ({ page }) => {
   await page.goto("/backlinks/alone")
   await expect(page.locator("main .prose")).toContainText("No other note links here.")
   await expect(page.locator(".backlinks")).toHaveCount(0)

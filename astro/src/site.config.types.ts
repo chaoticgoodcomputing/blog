@@ -28,6 +28,8 @@ export interface SiteConfig {
    * (src/lib/source-link.ts); in any other vault, `<vaultPath>/<its path in the vault>`.
    */
   repository: { url: string; branch: string; vaultPath: string }
+  /** Whether a note's page ends with a link to its file in `repository` (SourceLink.astro). */
+  sourceLink: boolean
   /** A note under one of these folders of the vault is an article: what the feed holds. */
   articleFolders: string[]
   private: {
@@ -346,6 +348,29 @@ export interface WebmentionsConfig {
 export interface BlueskyConfig {
   /** The account's handle, without the `@`. */
   handle: string
+}
+
+/** A source of a note's discussion: what it links to under the note, and the mentions it gives. */
+export type DiscussionSourceId = "webmentions" | "bluesky" | "hackerNews"
+
+/**
+ * A note's discussion (src/lib/discussion.ts): which of its sources are on. A source that is off
+ * shows no link and no mentions, and its loader reads nothing, so one that becomes unmanageable is
+ * turned off here alone.
+ */
+export interface DiscussionConfig {
+  /**
+   * Each source, on or off: `webmentions`, the webmentions other sites send (and the form a reader
+   * sends one with); `bluesky`, the site's account's post of the note and the replies to it, which
+   * Bridgy sends as webmentions; `hackerNews`, the note's Hacker News thread and its top comments.
+   */
+  sources: Record<DiscussionSourceId, boolean>
+}
+
+/** A note's Hacker News thread, read as the site builds (src/lib/hacker-news.ts). */
+export interface HackerNewsConfig {
+  /** How many of its top-level comments are shown as mentions, in Hacker News's own order. */
+  comments: number
 }
 
 /**

@@ -22,6 +22,13 @@ export interface SharedPage {
   address: string
 }
 
+/**
+ * Hacker News's submit form for a page, with its address and title filled in. Its form reads a `+`
+ * as a `+`, not a space, so each value is percent-encoded, a space as `%20`.
+ */
+export const hackerNewsSubmitUrl = ({ title, address }: SharedPage): string =>
+  `https://news.ycombinator.com/submitlink?u=${encodeURIComponent(address)}&t=${encodeURIComponent(title)}`
+
 const withQuery = (base: string, query: Record<string, string>) => `${base}?${new URLSearchParams(query)}`
 
 /** The ways to share a page, in the order they are drawn. */
@@ -34,6 +41,13 @@ export function shareMethods({ title, address }: SharedPage): ShareMethod[] {
       icon: "custom:bluesky",
       // The composer takes the post's text alone, and makes a card of the address in it.
       href: withQuery("https://bsky.app/intent/compose", { text: `${title}\n\n${address}` }),
+    },
+    {
+      name: "Hacker News",
+      icon: "mdi:hackernews",
+      // Its submit form, with the address and the title filled in. An address submitted lately
+      // goes to that submission's thread instead, as an upvote of it.
+      href: hackerNewsSubmitUrl({ title, address }),
     },
     {
       name: "LinkedIn",

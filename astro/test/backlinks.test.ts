@@ -3,7 +3,7 @@ import os from "node:os"
 import path from "node:path"
 import type { Vault } from "@chaoticgoodcomputing/obsidian-markdown"
 import { afterAll, beforeAll, expect, test } from "vitest"
-import { backlinksOf, outlinksOf } from "../src/lib/backlinks.ts"
+import { backlinksOf, outlinksOf, type Backlink } from "../src/lib/backlinks.ts"
 import { indexNotes, type NoteIndex, type Unpublished } from "../src/lib/notes.ts"
 import { openVault } from "../src/lib/vault.ts"
 
@@ -43,8 +43,11 @@ beforeAll(async () => {
 
 afterAll(() => fs.rmSync(root, { recursive: true, force: true }))
 
+// Each without its tags, which a test of their own asks of.
+const untagged = ({ tags: _, ...link }: Backlink) => link
+
 const backlinks = (note: string, treatment: "omit" | "mark") =>
-  backlinksOf(index.byId.get(note)!, { treatment, vault, index })
+  backlinksOf(index.byId.get(note)!, { treatment, vault, index }).map(untagged)
 
 test("a note's backlinks are the pages that link to or embed it, once each, newest first by date, then the undated", () => {
   // A page's summary is its description, else its first paragraph: none for one that only embeds.
@@ -70,7 +73,7 @@ test("a note nothing links to has no backlinks", () => {
 })
 
 const outlinks = (note: string, treatment: "omit" | "mark") =>
-  outlinksOf(index.byId.get(note)!, { treatment, vault, index })
+  outlinksOf(index.byId.get(note)!, { treatment, vault, index }).map(untagged)
 
 test("a note's outlinks are the pages it links to or embeds, once each, newest first by date, then the undated", () => {
   // Not itself, a drawing, which has no page, or a link to no note. Not in the order the note links
@@ -93,4 +96,10 @@ test("marked, a private page a note links to is listed after every public one", 
 
 test("a note that links nowhere has no outlinks", () => {
   expect(outlinks("target", "mark")).toEqual([])
+})
+
+test("a link carries its page's own tags, which the panel shows as tag badges", () => {
+  const tags = backlinksOf(index.byId.get("target")!, { treatment: "mark", vault, index }).map((link) => [link.title, link.tags])
+  expect(tags).toContainEqual(["Old", []])
+  expect(tags).toContainEqual(["Work", ["private/work"]])
 })

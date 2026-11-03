@@ -21,12 +21,16 @@
       "cache": false
     },
     "dev": {
-      "//": "Astro's dev server over the assembled vault, dist/vault. First the tasks git:commit runs before a commit (vault:precommit: the private notes' stubs published, then checked), then the vault assembled from them and its mirrors and slices saved (`mirrors`, which downloads only documents with no mirror yet, so a run after the first stays offline), then the server, with its content cache cleared (`--force`): the cache keeps each note as it was rendered, and a changed Markdown plugin would otherwise show only in notes edited since. The vault's sources are watched, and the vault assembled and read again whenever a file in one changes, so a new or renamed note's links follow without a restart. Its mentions are made up, by `mock-mentions`, and read from WEBMENTIONS_FILE, never webmention.io's.",
+      "//": "Astro's dev server over the assembled vault, dist/vault. First the tasks git:commit runs before a commit (vault:precommit: the private notes' stubs published, then checked), then the vault assembled from them and its mirrors and slices saved (`mirrors`, which downloads only documents with no mirror yet, so a run after the first stays offline), then the server, with its content cache cleared (`--force`): the cache keeps each note as it was rendered, and a changed Markdown plugin would otherwise show only in notes edited since. The vault's sources are watched, and the vault assembled and read again whenever a file in one changes, so a new or renamed note's links follow without a restart. Its discussion is made up, by `mock-mentions`, a file for each source of it: its webmentions read from WEBMENTIONS_FILE, never webmention.io's; its Bluesky posts from BLUESKY_POSTS_FILE, never Bluesky's; its Hacker News thread from HACKER_NEWS_FILE, never Hacker News's.",
       "executor": "nx:run-commands",
       "options": {
         "command": "pnpm run vault && pnpm run dev --force",
         "cwd": "{projectRoot}",
-        "env": { "WEBMENTIONS_FILE": "../dist/mock-mentions.json" }
+        "env": {
+          "WEBMENTIONS_FILE": "../dist/mock-mentions.json",
+          "BLUESKY_POSTS_FILE": "../dist/mock-bluesky.json",
+          "HACKER_NEWS_FILE": "../dist/mock-hacker-news.json"
+        }
       },
       "dependsOn": [ "vault:precommit", "mock-mentions", "mirrors" ],
       "continuous": true
@@ -54,10 +58,10 @@
       "cache": false
     },
     "mock-mentions": {
-      "//": "Writes made-up webmentions, as webmention.io's API gives them, to dist/mock-mentions.json, for the dev server to show (scripts/mock-mentions.ts): the three newest public posts mentioned, and a note by an alias. Run after `vault`, from the notes it assembled; never cached, since which notes are newest changes with the vault.",
+      "//": "Writes a made-up discussion for the dev server to show, a file in dist for each source, as its API gives it (scripts/mock-mentions.ts): webmentions (a Bluesky reply by Bridgy among them), the site's Bluesky post of the newest public post, and a Hacker News thread of it; the three newest public posts mentioned, and a note by an alias. First the private notes' stubs published (vault:precommit), then the vault assembled from them, so that a note made private since is never one of them. Run after `vault`, from the notes it assembled; never cached, since which notes are newest changes with the vault.",
       "executor": "nx:run-commands",
-      "options": { "command": "pnpm run mock-mentions", "cwd": "{projectRoot}" },
-      "dependsOn": [ "vault" ],
+      "options": { "command": "pnpm run vault && pnpm run mock-mentions", "cwd": "{projectRoot}" },
+      "dependsOn": [ "vault:precommit" ],
       "cache": false
     },
     "preview": {

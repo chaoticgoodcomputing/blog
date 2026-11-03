@@ -320,23 +320,37 @@ _Avoid_: sidebar, sheet
 ### Features
 
 **Backlinks**:
-The notes that link to a note, an embed counting as a link.
+The notes that link to a note, an embed counting as a link. Headed "Incoming Links" for readers.
 
 **Outlinks**:
-The notes a note links to, an embed counting as a link.
-_Avoid_: outgoing links, forward links
+The notes a note links to, an embed counting as a link. Headed "Outgoing Links" for readers.
+_Avoid_: forward links
 
 **Mention**:
 A page on another site that links to a note and told the site so, by webmention: received by
-webmention.io and read back as the site builds. Under a note, its mentions, each with what its
-page says of the note: its paragraphs that link there. A like or a repost is no mention.
+webmention.io and read back as the site builds. A top comment of its Hacker News thread is one
+too. Under a note, its mentions, each with what its page says of the note: its paragraphs that
+link there. A like or a repost is no mention.
 _Avoid_: reply, comment, web backlink
 
 **Discussion**:
-Under a public note, after its links panel: the ways to answer it, its Bluesky post or a
-webmention sent from the reader's own site, then its mentions. A reply on Bluesky reaches it as a
-mention, by Bridgy.
+A public note's panels of **Related content** after its links: one for each **Discussion source**,
+each with its mentions and a `+` to where a reader answers there, its Bluesky post or its Hacker
+News thread. A reply on Bluesky reaches it as a mention, by Bridgy.
 _Avoid_: comments, comments section
+
+**Discussion source**:
+Where a note's discussion comes from, each on or off in site configuration: `webmentions` (other
+sites' webmentions, "Around the Web"), `bluesky` (the note's Bluesky post, and the replies
+Bridgy sends back) and `hackerNews` (the note's Hacker News thread). One that is off has no panel,
+and reads nothing as the site builds.
+_Avoid_: provider, integration
+
+**Hacker News thread**:
+The submission of a note's page to Hacker News with the most comments, read as the site builds. A
+note's discussion links to it, with its count of comments, and shows its top comments as mentions.
+A note with none has no link: there is no account to send a reader to.
+_Avoid_: HN post
 
 **Bluesky post**:
 The site's Bluesky account's first post that links to a note, made by the deploy once the note is
@@ -369,9 +383,10 @@ note's paragraphs that link there, as one h-entry, at `/mentions/<the note's slu
 page>`. A reader who comes to one is sent on to the note, at the first of them.
 _Avoid_: reply page, source page
 
-**Links panel**:
-Under a note, its outlinks beside its backlinks, each with its date and description.
-_Avoid_: backlinks panel (it was only that once)
+**Related content**:
+Under a note, one carousel, a panel at a time: its backlinks, its outlinks, each with its date and
+description, then its discussion. A panel with nothing in it is left out.
+_Avoid_: links panel (it was two columns once), backlinks panel
 
 **Post listing**:
 Posts, newest first: all of them on the home page and the 404 page, a tag's on its tag page.

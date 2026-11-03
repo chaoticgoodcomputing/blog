@@ -14,9 +14,12 @@ import { z } from "astro/zod"
 import { parse } from "node-html-parser"
 import { getAliasRedirects } from "./aliases.ts"
 import { getFormerAddressRedirects } from "./former-addresses.ts"
+import { mentionSourceOf } from "./discussion.ts"
 
 /** A mention, as the collection holds it. */
 export const mentionSchema = z.object({
+  /** The source of the discussion it came from (src/lib/discussion.ts). */
+  source: z.enum(["webmentions", "bluesky", "hackerNews"]),
   /** The page on the site it mentions, as the sender wrote it. */
   target: z.string(),
   /**
@@ -54,10 +57,11 @@ export interface Jf2Entry {
 const SILENT = new Set(["like-of", "repost-of"])
 
 /** The most a mention's excerpt holds: its paragraphs, each cut at this many characters. */
-const EXCERPT_BLOCKS = 3
+export const EXCERPT_BLOCKS = 3
 const EXCERPT_CHARS = 400
 
-const cut = (text: string): string => {
+/** A block of a mention's excerpt, its space squeezed and cut at the most an excerpt holds. */
+export const cut = (text: string): string => {
   const squeezed = text.replace(/\s+/g, " ").trim()
   return squeezed.length <= EXCERPT_CHARS ? squeezed : `${squeezed.slice(0, EXCERPT_CHARS - 1).trimEnd()}…`
 }
@@ -108,6 +112,7 @@ export function toMention(entry: Jf2Entry, redirects: Record<string, string> = {
   const note = noteAddressOf(target, redirects)
   if (note === undefined) return undefined
   return {
+    source: mentionSourceOf(url, entry["wm-source"]),
     target,
     note,
     url,
@@ -134,6 +139,15 @@ export function noteAddressOf(target: string, redirects: Record<string, string>)
   return address
 }
 
+/**
+ * A mentioning page as two mentions are told apart by: its `pageKey` and its query, since a page of
+ * some sites is named by its query alone, as Hacker News's comments are (`item?id=…`).
+ */
+function mentionKey(url: string): string {
+  const key = pageKey(url)
+  return key === undefined ? url : `${key}${new URL(url).search}`
+}
+
 /** Whether a page is on a blocked domain: a host in `blocked`, or a host under one. */
 export function isBlocked(url: string, blocked: string[]): boolean {
   if (!URL.canParse(url)) return true
@@ -149,7 +163,7 @@ export function mentionsOf(noteUrl: string, mentions: Mention[], blocked: string
   const byPage = new Map<string, Mention>()
   for (const mention of mentions) {
     if (mention.note !== noteUrl || isBlocked(mention.url, blocked)) continue
-    const page = pageKey(mention.url) ?? mention.url
+    const page = mentionKey(mention.url)
     const kept = byPage.get(page)
     if (!kept || (mention.published?.getTime() ?? 0) > (kept.published?.getTime() ?? 0)) byPage.set(page, mention)
   }
@@ -165,7 +179,7 @@ export function mentionCounts(mentions: Mention[], blocked: string[]): Map<strin
   for (const mention of mentions) {
     if (isBlocked(mention.url, blocked)) continue
     const seen = pages.get(mention.note) ?? new Set<string>()
-    seen.add(pageKey(mention.url) ?? mention.url)
+    seen.add(mentionKey(mention.url))
     pages.set(mention.note, seen)
   }
   return new Map([...pages].map(([note, seen]) => [note, seen.size]))
@@ -211,14 +225,21 @@ async function fetchAll(api: string, token: string): Promise<Jf2Entry[]> {
  *
  * With `WEBMENTIONS_FILE`, they are read from that file instead, a JF2 feed as the API gives one:
  * the dev server's made-up webmentions (scripts/mock-mentions.ts).
+ *
+ * With `enabled` false, it reads nothing, and the collection is empty: no source of the discussion
+ * that comes by webmention is on (src/lib/discussion.ts).
  */
-export function mentionsLoader(api: string): Loader {
+export function mentionsLoader(api: string, { enabled = true }: { enabled?: boolean } = {}): Loader {
   return {
     name: "webmentions",
     async load({ store, logger, parseData }) {
       const token = process.env.WEBMENTION_IO_TOKEN
       const file = process.env.WEBMENTIONS_FILE
       store.clear()
+      if (!enabled) {
+        logger.info("The discussion's webmention sources are off: no webmentions are read.")
+        return
+      }
       if (file) {
         if (!fs.existsSync(file)) {
           logger.warn(`No mentions are shown: WEBMENTIONS_FILE names ${file}, which is not there.`)

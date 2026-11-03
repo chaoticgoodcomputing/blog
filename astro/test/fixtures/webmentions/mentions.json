@@ -1,0 +1,15 @@
+{
+  "type": "feed",
+  "children": [
+    {
+      "wm-id": 1,
+      "wm-property": "mention-of",
+      "wm-target": "https://blog.chaoticgood.computer/backlinks/linked",
+      "url": "https://www.ada.example/2026/a-reply",
+      "name": "A reply from elsewhere",
+      "author": { "name": "Ada", "url": "https://ada.example/" },
+      "published": "2026-10-31T12:00:00Z",
+      "content": { "text": "A reply from a site of its own." }
+    }
+  ]
+}

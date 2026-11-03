@@ -118,6 +118,7 @@ test("the services' share links go to their share intents for the page's own add
   const shares = page.getByRole("list", { name: "Share on:" })
   for (const [name, origin] of [
     ["Bluesky", "https://bsky.app"],
+    ["Hacker News", "https://news.ycombinator.com"],
     ["LinkedIn", "https://www.linkedin.com"],
     ["X", "https://x.com"],
   ] as const) {

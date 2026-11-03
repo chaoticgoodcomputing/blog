@@ -13,9 +13,11 @@
 import type {
   AnalyticsConfig,
   BlueskyConfig,
+  DiscussionConfig,
   FeedConfig,
   FooterConfig,
   GraphConfig,
+  HackerNewsConfig,
   LayoutConfig,
   PostListingConfig,
   SeoConfig,
@@ -37,6 +39,8 @@ export const site: SiteConfig = {
     branch: "main",
     vaultPath: "content/public",
   },
+  // Off for now: a note's page has no "View source on GitHub" button.
+  sourceLink: false,
   articleFolders: ["content"],
   private: {
     tags: ["private"],
@@ -240,6 +244,15 @@ export const webmentions: WebmentionsConfig = {
 
 export const bluesky: BlueskyConfig = {
   handle: "chaoticgood.computer",
+}
+
+export const hackerNews: HackerNewsConfig = {
+  comments: 5,
+}
+
+// A note's discussion: each source on or off (src/lib/discussion.ts).
+export const discussion: DiscussionConfig = {
+  sources: { webmentions: true, bluesky: true, hackerNews: true },
 }
 
 export const analytics: AnalyticsConfig = {

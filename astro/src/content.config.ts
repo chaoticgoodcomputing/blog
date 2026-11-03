@@ -6,7 +6,8 @@ import { assembleVault, readManifest } from "./lib/assembly.ts"
 import { getLinksDigest } from "./lib/notes.ts"
 import { mentionSchema, mentionsLoader } from "./lib/mentions.ts"
 import { blueskyPostSchema, blueskyPostsLoader } from "./lib/bluesky-posts.ts"
-import { bluesky, webmentions } from "./site.config.ts"
+import { hackerNewsLoader, hackerNewsThreadSchema } from "./lib/hacker-news.ts"
+import { bluesky, discussion, hackerNews, webmentions } from "./site.config.ts"
 import { VAULT_ROOT, refreshVault, slugFor } from "./lib/vault.ts"
 
 /**
@@ -93,17 +94,27 @@ const notes = defineCollection({
   schema: z.looseObject({}),
 })
 
-// The webmentions webmention.io received for the site's pages, each as a mention (src/lib/mentions.ts).
+// The webmentions webmention.io received for the site's pages, each as a mention (src/lib/mentions.ts):
+// other sites', and Bluesky's, by Bridgy, so they are read while either source is on
+// (src/lib/discussion.ts).
+const { sources } = discussion
 const mentions = defineCollection({
-  loader: mentionsLoader(webmentions.api),
+  loader: mentionsLoader(webmentions.api, { enabled: sources.webmentions || sources.bluesky }),
   schema: mentionSchema,
 })
 
 // Each note's Bluesky post: the site's account's first post of it (src/lib/bluesky-posts.ts). The
 // site's address is astro.config.ts's, which a collection can't read, so it is named here too.
+const SITE = "https://blog.chaoticgood.computer"
 const blueskyPosts = defineCollection({
-  loader: blueskyPostsLoader({ site: "https://blog.chaoticgood.computer", handle: bluesky.handle }),
+  loader: blueskyPostsLoader({ site: SITE, handle: bluesky.handle, enabled: sources.bluesky }),
   schema: blueskyPostSchema,
 })
 
-export const collections = { notes, mentions, blueskyPosts }
+// Each note's Hacker News thread, and its top comments (src/lib/hacker-news.ts).
+const hackerNewsThreads = defineCollection({
+  loader: hackerNewsLoader({ site: SITE, comments: hackerNews.comments, enabled: sources.hackerNews }),
+  schema: hackerNewsThreadSchema,
+})
+
+export const collections = { notes, mentions, blueskyPosts, hackerNewsThreads }

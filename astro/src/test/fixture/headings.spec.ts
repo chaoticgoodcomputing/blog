@@ -2,7 +2,7 @@ import type { Locator, Page } from "@playwright/test"
 import { expect, test } from "../site.ts"
 
 // Every heading is its level's size, wherever it is: one in a note's text, the post listing's, and
-// the links panel's (src/styles/global.css). A note with sections, whose text has an h2 and an h3;
+// the related content's (src/styles/global.css). A note with sections, whose text has an h2 and an h3;
 // the home page, whose post listing is headed by an h2 and lists each post under an h3; and a note
 // with outlinks and backlinks, each column headed by an h2.
 const sections = "/note-page-furniture/A-note-with-sections"
@@ -19,7 +19,7 @@ async function at(page: Page, url: string, heading: (page: Page) => Locator) {
   return style(heading(page).first())
 }
 
-test("an h2 is the same size, weight, font and alignment in a note, over the post listing and over the links panel", async ({
+test("an h2 is the same size, weight, font and alignment in a note, over the post listing and over the related content", async ({
   page,
 }) => {
   const note = await at(page, sections, (page) => page.locator(".prose h2"))

@@ -6,8 +6,8 @@ const page = { title: "Pruning roses & more", address: "https://blog.chaoticgood
 const methods = shareMethods(page)
 const intent = (name: string) => new URL(methods.find((method) => method.name === name)!.href!)
 
-test("a page is shared by copying its address, its QR code, Bluesky, LinkedIn and X, in that order", () => {
-  expect(methods.map((method) => method.name)).toEqual(["Copy link", "QR code", "Bluesky", "LinkedIn", "X"])
+test("a page is shared by copying its address, its QR code, Bluesky, Hacker News, LinkedIn and X, in that order", () => {
+  expect(methods.map((method) => method.name)).toEqual(["Copy link", "QR code", "Bluesky", "Hacker News", "LinkedIn", "X"])
 })
 
 test("every way to share is drawn with an icon some collection has", () => {
@@ -22,6 +22,15 @@ test("Bluesky's composer opens with the title and the address as the post's text
   const url = intent("Bluesky")
   expect(url.origin + url.pathname).toBe("https://bsky.app/intent/compose")
   expect(url.searchParams.get("text")).toBe(`${page.title}\n\n${page.address}`)
+})
+
+test("Hacker News's submit form opens with the address and the title", () => {
+  const url = intent("Hacker News")
+  expect(url.origin + url.pathname).toBe("https://news.ycombinator.com/submitlink")
+  expect(url.searchParams.get("u")).toBe(page.address)
+  expect(url.searchParams.get("t")).toBe(page.title)
+  // A `+` would be filled in as one: Hacker News reads no `+` as a space.
+  expect(url.search).toContain("t=Pruning%20roses%20%26%20more")
 })
 
 test("LinkedIn is given the address alone", () => {
