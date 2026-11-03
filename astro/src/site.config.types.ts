@@ -288,6 +288,15 @@ export interface GlobalGraphSettings extends GraphSettings {
  * whether private pages are shown, which neither "omit" nor "mark" says.
  */
 /** A reader's trail: the notes they came through to the note shown (src/lib/trail.ts). */
+/** How the page is laid out. */
+export interface LayoutConfig {
+  /**
+   * How wide a note's text is: any CSS length, as wide as a line reads well. Where the window is
+   * narrower, the text is as wide as the window, less its gutters. Pages read it as `--noteWidth`.
+   */
+  noteWidth: string
+}
+
 export interface TrailConfig {
   /** The most notes a trail holds, the note shown among them. Following a link past it lets the oldest go. */
   length: number

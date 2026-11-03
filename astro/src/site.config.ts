@@ -15,6 +15,7 @@ import type {
   FeedConfig,
   FooterConfig,
   GraphConfig,
+  LayoutConfig,
   PostListingConfig,
   SeoConfig,
   SiteConfig,
@@ -141,6 +142,11 @@ export const seo: SeoConfig = {
     { tag: "projects", type: "Report", section: "Projects" },
   ],
   defaultArticleType: "Article",
+}
+
+export const layout: LayoutConfig = {
+  // About 70 characters to a line of the body font.
+  noteWidth: "40rem",
 }
 
 export const trail: TrailConfig = {

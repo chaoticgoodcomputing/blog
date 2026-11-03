@@ -7,7 +7,7 @@
 // included, so that branches written side by side merge (README.md, "Working in parallel"). What a
 // feature needs to know of the page it reads from `page`.
 import type { PageProps } from "../lib/page.ts"
-import { site } from "../site.config.ts"
+import { layout, site } from "../site.config.ts"
 import "../styles/global.css"
 
 // 05 math stylesheet
@@ -45,7 +45,7 @@ const page = Astro.props
 ---
 
 <!doctype html>
-<html lang={site.locale}>
+<html lang={site.locale} style={`--noteWidth: ${layout.noteWidth}`}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

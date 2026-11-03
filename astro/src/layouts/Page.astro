@@ -128,7 +128,7 @@ const fold = {
 
   /* The note's room: the note's column of the grid, as wide as the note and its margins together.
      A size container, so a wide block in the note can measure it (note-body.css); the note itself,
-     padded to its 40rem, can't be measured for that. */
+     padded to its --noteWidth, can't be measured for that. */
   .note-room {
     grid-area: note;
     min-width: 0;
@@ -188,7 +188,7 @@ const fold = {
     border-top: 1px solid var(--lightgray);
   }
 
-  /* The note: its text as wide as reads well, 40rem, in the middle of the room it has. The note
+  /* The note: its text as wide as reads well, --noteWidth (global.css), in the middle of the room it has. The note
      itself fills that room, the same box on every page, so its fold from one page to the next is
      one box's (the global style below). A wide table or a long line of code scrolls inside it, and
      the page stays as wide as the window. */
@@ -196,7 +196,7 @@ const fold = {
     box-sizing: border-box;
     width: 100%;
     min-width: 0;
-    padding: 2.5rem max(2rem, calc((100% - 40rem) / 2)) 6rem;
+    padding: 2.5rem max(2rem, calc((100% - var(--noteWidth)) / 2)) 6rem;
   }
 
   /* The page's header, its title, date and tags, centred, as every heading is (global.css). */
@@ -321,8 +321,9 @@ const fold = {
       background: var(--scrim);
     }
 
+    /* The text keeps its --noteWidth where the window has room for it, with a narrower gutter. */
     main {
-      padding: 1.5rem 1rem 4rem;
+      padding: 1.5rem max(1rem, calc((100% - var(--noteWidth)) / 2)) 4rem;
     }
   }
 

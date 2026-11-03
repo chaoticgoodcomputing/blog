@@ -65,6 +65,9 @@
   --headerFont: var(--bodyFont);
 }
 
+/* `--noteWidth`, how wide a note's text is, is the site config's `layout.noteWidth`, put on the root
+   by src/layouts/Base.astro. */
+
 /* The page: its colours, and the text everything inherits, in a light weight. A heading, bold text
    and whatever else sets its own weight is heavier. */
 body {

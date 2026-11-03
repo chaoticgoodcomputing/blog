@@ -375,7 +375,7 @@
   white-space: nowrap;
 }
 
-/* A wide block: a chart, a table or a diagram that needs more room than the text's 40rem. It grows
+/* A wide block: a chart, a table or a diagram that needs more room than the text's --noteWidth. It grows
    into the margins on either side of the text, centred on it, up to 64rem, and keeps 2rem from the
    edges of the note's room (Page.astro). Where there is no margin to grow into, as on a phone, it is
    as wide as the text. Any element may be one: a widget takes the class itself. */

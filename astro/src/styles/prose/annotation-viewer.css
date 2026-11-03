@@ -7,7 +7,7 @@
 /* As built, and where the document couldn't be shown, the cards are the page: one column, at the
    width of a note's. */
 annotation-viewer[data-layout="static"] .layout {
-  max-width: 40rem;
+  max-width: var(--noteWidth);
   margin-inline: auto;
 }
 
@@ -38,7 +38,7 @@ annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .prose > * 
 annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .prose > :is(.annotation-preface, .annotation-epilogue) {
   justify-self: center;
   box-sizing: border-box;
-  width: min(100%, 40rem);
+  width: min(100%, var(--noteWidth));
 }
 
 annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .prose > .annotated-document {
