@@ -10,6 +10,7 @@ from __future__ import annotations
 import logging
 from collections import Counter
 from datetime import date
+from urllib.parse import urlsplit
 
 import pandas as pd
 from flowthru import step
@@ -20,20 +21,25 @@ from Flows.Crawl.Steps.parsing import has_h_card, host_of, probe_candidates, web
 logger = logging.getLogger(__name__)
 
 
-def _home(fetcher: Fetcher, host: str) -> tuple[object | None, bool]:
+def _home(fetcher: Fetcher, host: str, cached_only: bool = False) -> tuple[object | None, bool]:
     """
     A host's home page, at its bare host or else at `www.`, and whether robots.txt forbids both:
-    (None, False) where neither answers.
+    (None, False) where neither answers. Cached only, from the HTTP cache alone, with no request.
     """
     forbidden = True
     for address in (f"https://{host}/", f"https://www.{host}/"):
-        if not fetcher.allowed(address):
+        if cached_only and not fetcher.cached(address):
+            continue
+        # Its home page was fetched, so robots.txt allowed it then; it is asked again only where
+        # its answer is cached too.
+        robots = f"https://{urlsplit(address).netloc}/robots.txt"
+        if (not cached_only or fetcher.cached(robots)) and not fetcher.allowed(address):
             continue
         forbidden = False
         response = fetcher.get(address, check_robots=False)
         if response is not None:
             return response, False
-    return None, forbidden
+    return None, forbidden and not cached_only
 
 
 HOST_COLUMNS = ["host", "endpoint", "h_card", "probed"]
@@ -47,10 +53,11 @@ def _signs(response) -> tuple[str | None, bool]:
 
 
 @step(
-    inputs=["LinkSchema", "MentionSchema", "SeedSchema", "BlockedHostSchema", "HostSchema", "CrawlOptions"],
+    inputs=["PageSchema", "LinkSchema", "MentionSchema", "SeedSchema", "BlockedHostSchema", "HostSchema", "CrawlOptions"],
     outputs=["BlockedHostSchema", "HostSchema"],
 )
 def probe_hosts(
+    pages: pd.DataFrame,
     links: pd.DataFrame,
     mentions: pd.DataFrame,
     seeds: pd.DataFrame,
@@ -62,30 +69,40 @@ def probe_hosts(
     today = date.today().isoformat()
     known = {row["host"]: row for row in hosts[HOST_COLUMNS].to_dict("records")}
 
-    # The seeds, at their own addresses: a blog under a path announces its endpoint there.
+    # The seeds, at their own addresses: a blog under a path announces its endpoint there. Or else
+    # at a post the crawl fetched: WordPress's Webmention plugin announces it on posts alone.
+    first_pages = pages.groupby("site", sort=False)["url"].first()
     seed_hosts = set()
     for url in seeds["url"]:
         host = host_of(url)
         seed_hosts.add(host)
         response = fetcher.get(url)
-        if response is not None:
-            endpoint, h_card = _signs(response)
-            known[host] = {"host": host, "endpoint": endpoint, "h_card": h_card, "probed": today}
+        if response is None:
+            continue
+        endpoint, h_card = _signs(response)
+        if endpoint is None and host in first_pages and first_pages[host] != url:
+            post = fetcher.get(first_pages[host])
+            if post is not None:
+                endpoint, _ = _signs(post)
+        known[host] = {"host": host, "endpoint": endpoint, "h_card": h_card, "probed": today}
 
     blocked = [(str(host).strip().lower(), bool(subdomains)) for host, subdomains in zip(blocklist["host"], blocklist["subdomains"])]
     counts = Counter(links["target_host"]) + Counter(mentions["source_host"])
     candidates = [host for host in probe_candidates(counts, seed_hosts, blocked) if host not in known]
     # Only a probe the HTTP cache can't answer counts against the limit: one an earlier run made,
-    # before hosts were recorded, is recorded again for nothing.
+    # before hosts were recorded, is recorded again for nothing, however many there are.
     limit = int(options["MaxProbesPerRun"])
     fetched, probed, added = 0, 0, []
     for host in candidates:
-        if fetched >= limit:
-            break
-        if not (fetcher.cached(f"https://{host}/") or fetcher.cached(f"https://www.{host}/")):
+        cached = fetcher.cached(f"https://{host}/") or fetcher.cached(f"https://www.{host}/")
+        if not cached:
+            if fetched >= limit:
+                continue
             fetched += 1
         probed += 1
-        response, forbidden = _home(fetcher, host)
+        # One the cache holds is read from it alone: no request for the address that didn't answer
+        # last time.
+        response, forbidden = _home(fetcher, host, cached_only=cached)
         # Its own host only, either way: a probe saw nothing of its subdomains, which may be
         # members' own sites.
         if forbidden:

@@ -46,7 +46,7 @@ public static class CrawlFlow
         label: "ProbeHosts",
         module: "Flows.Crawl.Steps.probe_hosts",
         function: "probe_hosts",
-        input: (catalog.Links, catalog.Mentions, catalog.Seeds, catalog.Blocklist, catalog.Hosts, catalog.CrawlOptions),
+        input: (catalog.Pages, catalog.Links, catalog.Mentions, catalog.Seeds, catalog.Blocklist, catalog.Hosts, catalog.CrawlOptions),
         output: (catalog.ProbedBlocklist, catalog.ProbedHosts),
         executor: executor
       );

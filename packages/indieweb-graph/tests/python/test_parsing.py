@@ -169,3 +169,8 @@ def test_mention_targets_are_a_page_and_its_slash_twin():
     assert mention_targets("https://a.example/") == ["https://a.example/"]
     assert mention_targets("https://a.example/feed.xml") == ["https://a.example/feed.xml"]
     assert mention_targets("https://a.example/p?id=1") == ["https://a.example/p?id=1"]
+
+
+def test_probe_candidates_leave_out_what_is_no_host_name():
+    counts = {"a.example": 2, "why i went back to work https": 1, "localhost": 1, "10.0.0.1": 1, "b-c.example": 1}
+    assert probe_candidates(counts, set(), []) == ["a.example", "b-c.example"]

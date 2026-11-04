@@ -260,12 +260,19 @@ def has_h_card(html: str) -> bool:
     return BeautifulSoup(html, "html.parser").select_one(".h-card") is not None
 
 
+# A host name: dot-separated labels of letters, digits and hyphens, the last not all digits.
+HOST_NAME = re.compile(r"^(?=.{1,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z][a-z0-9-]*[a-z0-9]$")
+
+
 def probe_candidates(counts: dict[str, int], seeds: set[str], blocked: list[tuple[str, bool]]) -> list[str]:
     """
     The hosts to probe, the most linked and mentioned first: every one the crawl saw but a seed's,
-    and those already blocked.
+    those already blocked, and what a malformed link left that is no host name.
     """
-    hosts = [host for host in counts if host and host not in seeds and not is_blocked(host, blocked)]
+    hosts = [
+        host for host in counts
+        if host and HOST_NAME.match(host) and host not in seeds and not is_blocked(host, blocked)
+    ]
     return sorted(hosts, key=lambda host: (-counts[host], host))
 
 

@@ -71,11 +71,17 @@ flowchart TB
     %% External Data Inputs
     Blocklist[("Blocklist")]
     CrawlOptions{{"CrawlOptions"}}
+    Hosts[("Hosts")]
     Seeds[("Seeds")]
 
     subgraph Analysis["Analysis"]
         BuildEdges["BuildEdges"]
         Edges[("Edges")]
+        BuildMentionGraph["BuildMentionGraph"]
+        Blogs[("Blogs")]
+        Posts[("Posts")]
+        BlogHasPost[("BlogHasPost")]
+        PostHasMention[("PostHasMention")]
         SummarizeSites["SummarizeSites"]
         SiteSummaries[("SiteSummaries")]
     end
@@ -89,6 +95,7 @@ flowchart TB
         Mentions[("Mentions")]
         ProbeHosts["ProbeHosts<br>──<br>IPythonExecutor"]
         ProbedBlocklist[("ProbedBlocklist")]
+        ProbedHosts[("ProbedHosts")]
     end
 
     %% Service legend
@@ -109,16 +116,28 @@ flowchart TB
     Pages --> FetchMentions
     CrawlOptions --> FetchMentions
     FetchMentions --> Mentions
+    Pages --> ProbeHosts
     Links --> ProbeHosts
     Mentions --> ProbeHosts
     Seeds --> ProbeHosts
     Blocklist --> ProbeHosts
+    Hosts --> ProbeHosts
     CrawlOptions --> ProbeHosts
     ProbeHosts --> ProbedBlocklist
+    ProbeHosts --> ProbedHosts
     Links --> BuildEdges
     Mentions --> BuildEdges
     ProbedBlocklist --> BuildEdges
     BuildEdges --> Edges
+    Seeds --> BuildMentionGraph
+    Pages --> BuildMentionGraph
+    Links --> BuildMentionGraph
+    Mentions --> BuildMentionGraph
+    ProbedHosts --> BuildMentionGraph
+    BuildMentionGraph --> Blogs
+    BuildMentionGraph --> Posts
+    BuildMentionGraph --> BlogHasPost
+    BuildMentionGraph --> PostHasMention
     Edges --> SummarizeSites
     SummarizeSites --> SiteSummaries
 
@@ -148,11 +167,16 @@ indieweb-graph/
 │   │   └── seeds.sample.json
 │   └── Schemas/
 │       ├── BlockedHostSchema.cs
+│       ├── BlogHasPostSchema.cs
+│       ├── BlogSchema.cs
 │       ├── CrawlOptions.cs
 │       ├── EdgeSchema.cs
+│       ├── HostSchema.cs
 │       ├── LinkSchema.cs
 │       ├── MentionSchema.cs
 │       ├── PageSchema.cs
+│       ├── PostHasMentionSchema.cs
+│       ├── PostSchema.cs
 │       ├── SeedSchema.cs
 │       └── SiteSummarySchema.cs
 ├── Flows/
@@ -160,6 +184,7 @@ indieweb-graph/
 │   │   ├── AnalysisFlow.cs
 │   │   └── Steps/
 │   │       ├── BuildEdgesStep.cs
+│   │       ├── BuildMentionGraphStep.cs
 │   │       └── SummarizeSitesStep.cs
 │   └── Crawl/
 │       ├── CrawlFlow.cs
