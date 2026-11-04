@@ -111,7 +111,7 @@ const fold = {
         <div class="after-body">
           {/* On a tag page, the posts under `page.tag`. */}
           {(page.kind === "home" || page.kind === "tag" || page.kind === "404") && <PostListing kind={page.kind} tag={page.tag} />}
-          {on("note", "tag", "annotation") && <Connections note={page.note} discussion={on("note", "annotation")} />}
+          {on("note", "annotation") && <Connections note={page.note} />}
           {on("note") && site.sourceLink && <SourceLink note={page.note} />}
         </div>
       </main>

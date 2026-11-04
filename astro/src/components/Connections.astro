@@ -31,15 +31,13 @@ import PostList from "./PostList.astro"
 interface Props {
   /** The note the page shows, with the address it has. A page that shows none has none. */
   note: (NoteFacts & { url?: string | undefined }) | undefined
-  /** Whether the page shows the note's discussion: a note's and an annotation's do, a tag's doesn't. */
-  discussion: boolean
 }
 
-const { note, discussion } = Astro.props
+const { note } = Astro.props
 const site = Astro.site!.href
 const links = { outlinks: note ? outlinksOf(note) : [], backlinks: note ? backlinksOf(note) : [] }
 const discussionPanels: DiscussionPanel[] =
-  discussion && note?.url !== undefined && !note.isPrivate ? await getDiscussionPanels(note.url, note.title, site) : []
+  note?.url !== undefined && !note.isPrivate ? await getDiscussionPanels(note.url, note.title, site) : []
 
 // Another site's page, as a post: its title, or its site's name with none; who wrote it and where,
 // `<author> at <site>`, or the site alone with no author; and what it says of the note.
