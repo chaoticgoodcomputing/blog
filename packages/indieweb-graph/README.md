@@ -36,7 +36,13 @@ your own list of seeds, which isn't committed. The graph lands in `Data/_02_Prim
 each site's summary in `Data/_03_Reporting/sites.csv`. The mention graph, of webmention-compatible
 blogs only, is four tables in `Data/_02_Primary`: `blogs.csv` and `posts.csv`, its nodes, and
 `blog_has_post.csv` and `post_has_mention.csv`, its edges, the latter from the mentioning post to
-the mentioned.
+the mentioned. ExportGraph lays it out, blog to blog, and writes it to
+`Data/_03_Reporting/mention-graph.json` and `mention-graph.svg`, which are committed; `copy-to-blog`
+copies both beside the blog's `IndiewebGraph` widget (`content/public/widgets/indieweb-graph`):
+
+```bash
+pnpm nx run @chaoticgoodcomputing/indieweb-graph:copy-to-blog
+```
 
 ## Concepts
 
@@ -49,14 +55,19 @@ the mentioned.
   [SummarizeSites](./Flows/Analysis/Steps/SummarizeSitesStep.cs) and
   [BuildMentionGraph](./Flows/Analysis/Steps/BuildMentionGraphStep.cs), one step with four outputs,
   whose tests sit beside them (Flowthru.FUnit).
-- **Hand-kept data as catalog items:** the [seeds](./Data/Schemas/SeedSchema.cs) and the
-  hand-kept rows of the blocklist are inputs in the [catalog](./Data/Catalog.cs) like any
+- **Hand-kept data as catalog items:** the [seeds](./Data/Schemas/SeedSchema.cs), the
+  hand-kept rows of the blocklist and the [utilities](./Data/_01_Raw/utilities.csv) are inputs in the [catalog](./Data/Catalog.cs) like any
   crawled data, so a change to either reruns what depends on it.
 - **A file read and written by one run:** the [blocklist](./Data/_01_Raw/blocklist.csv) is two
   catalog items, `Blocklist` and `ProbedBlocklist`, so [ProbeHosts](./Flows/Crawl/Steps/probe_hosts.py)
   reads it and writes it back with its findings, which BuildEdges and the next run read. The
   hosts it probed, with their webmention endpoints, are kept the same way, in `Hosts` and
   `ProbedHosts`.
+- **Python steps in both flows:** [ExportGraph](./Flows/Analysis/Steps/export_graph.py) is the
+  Analysis flow's one Python step, between C#'s: it reads the mention graph's tables and returns
+  two strings, the JSON and the SVG, to two text catalog items. Its drawing is
+  [pure functions](./Flows/Analysis/Steps/drawing.py), tested without Flowthru, as the crawl's
+  parsing is.
 - **Options bound from configuration:** how politely to crawl is
   [`CrawlOptions`](./Data/Schemas/CrawlOptions.cs), from [`appsettings.json`](./appsettings.json).
 
@@ -73,6 +84,7 @@ flowchart TB
     CrawlOptions{{"CrawlOptions"}}
     Hosts[("Hosts")]
     Seeds[("Seeds")]
+    Utilities[("Utilities")]
 
     subgraph Analysis["Analysis"]
         BuildEdges["BuildEdges"]
@@ -84,6 +96,9 @@ flowchart TB
         PostHasMention[("PostHasMention")]
         SummarizeSites["SummarizeSites"]
         SiteSummaries[("SiteSummaries")]
+        ExportGraph["ExportGraph<br>──<br>IPythonExecutor"]
+        MentionGraphJson[("MentionGraphJson")]
+        MentionGraphSvg[("MentionGraphSvg")]
     end
 
     subgraph Crawl["Crawl"]
@@ -140,6 +155,11 @@ flowchart TB
     BuildMentionGraph --> PostHasMention
     Edges --> SummarizeSites
     SummarizeSites --> SiteSummaries
+    Blogs --> ExportGraph
+    PostHasMention --> ExportGraph
+    Utilities --> ExportGraph
+    ExportGraph --> MentionGraphJson
+    ExportGraph --> MentionGraphSvg
 
 ```
 <!-- flowthru:mermaid:end -->
@@ -164,7 +184,11 @@ indieweb-graph/
 │   ├── Catalog.cs
 │   ├── _01_Raw/
 │   │   ├── blocklist.csv
-│   │   └── seeds.sample.json
+│   │   ├── seeds.sample.json
+│   │   └── utilities.csv
+│   ├── _03_Reporting/
+│   │   ├── mention-graph.json
+│   │   └── mention-graph.svg
 │   └── Schemas/
 │       ├── BlockedHostSchema.cs
 │       ├── BlogHasPostSchema.cs
@@ -178,13 +202,17 @@ indieweb-graph/
 │       ├── PostHasMentionSchema.cs
 │       ├── PostSchema.cs
 │       ├── SeedSchema.cs
-│       └── SiteSummarySchema.cs
+│       ├── SiteSummarySchema.cs
+│       └── UtilitySchema.cs
 ├── Flows/
 │   ├── Analysis/
 │   │   ├── AnalysisFlow.cs
 │   │   └── Steps/
+│   │       ├── __init__.py
 │   │       ├── BuildEdgesStep.cs
 │   │       ├── BuildMentionGraphStep.cs
+│   │       ├── drawing.py
+│   │       ├── export_graph.py
 │   │       └── SummarizeSitesStep.cs
 │   └── Crawl/
 │       ├── CrawlFlow.cs
@@ -200,6 +228,7 @@ indieweb-graph/
 │   └── sync-readme.mjs
 └── tests/
     └── python/
+        ├── test_drawing.py
         └── test_parsing.py
 ```
 <!-- flowthru:filetree:end -->

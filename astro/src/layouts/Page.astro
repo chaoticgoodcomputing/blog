@@ -30,6 +30,7 @@ import TagList from "../components/TagList.astro"
 import PostListing from "../components/PostListing.astro"
 import Connections from "../components/Connections.astro"
 import EntryMeta from "../components/EntryMeta.astro"
+import HomeCard from "../components/HomeCard.astro"
 import SourceLink from "../components/SourceLink.astro"
 
 type Props = PageProps
@@ -91,6 +92,8 @@ const fold = {
 
     <div class="note-room">
       <main class:list={[entry && "h-entry"]} transition:name="note" transition:animate={fold}>
+        {/* The home page says who the site is: its author's representative h-card. */}
+        {on("home") && <HomeCard />}
         <header>
           {entry && <EntryMeta note={page.note!} url={page.url} />}
           {

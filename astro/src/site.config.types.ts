@@ -170,6 +170,12 @@ export interface FeedConfig {
    * nothing of one (src/lib/feed.ts, `feedCategories`).
    */
   excludedCategories: string[]
+  /**
+   * The WebSub hub the feed names (https://www.w3.org/TR/websub/): a reader subscribed there hears
+   * of a new note when the deploy tells the hub the feed changed
+   * (.github/workflows/scripts/websub.mjs), rather than when it next polls.
+   */
+  hub: string
 }
 
 /**

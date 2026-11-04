@@ -8,10 +8,13 @@ _generated/
 .flowthru/
 Metadata/
 # What a crawl fetched and what the flows made of it: run `crawl` and `analyze` to rebuild them.
-# The catalog's code, the hand-kept blocklist and the sample seeds are the only data committed:
-# seeds.json is each crawler's own.
+# The catalog's code, the hand-kept blocklist and utilities, the sample seeds and the exported mention graph, which
+# the blog copies, are the only data committed: seeds.json is each crawler's own.
 Data/**
 !Data/**/
 !Data/**/*.cs
 !Data/_01_Raw/blocklist.csv
+!Data/_01_Raw/utilities.csv
 !Data/_01_Raw/seeds.sample.json
+!Data/_03_Reporting/mention-graph.json
+!Data/_03_Reporting/mention-graph.svg

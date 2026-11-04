@@ -43,6 +43,13 @@ test("a block that links to a site twice is in its excerpt once", () => {
   expect(blocksOf(html)["https://a.example/x"]).toHaveLength(1)
 })
 
+test("a link inside what is marked data-no-webmention is no mention, as a widget's links to the sites it charts", () => {
+  const html = page(`
+    <p>See <a href="https://a.example/post">her post</a>.</p>
+    <figure data-no-webmention><svg><a href="https://a.example/"><circle r="4"></circle></a><a href="https://b.example/"><circle r="4"></circle></a></svg></figure>`)
+  expect(Object.keys(blocksOf(html))).toEqual(["https://a.example/post"])
+})
+
 test("a page with no note body has no mentions", () => {
   expect(linkingBlocks("<main><p><a href='https://a.example/'>x</a></p></main>", SITE).size).toBe(0)
 })

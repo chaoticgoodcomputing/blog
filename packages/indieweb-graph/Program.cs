@@ -55,8 +55,8 @@ public static class Program
         .RegisterFlow<Catalog, IPythonExecutor>("Crawl", CrawlFlow.Create)
         .WithDescription("Lists the seeds' pages, and fetches their links and the webmentions they received");
       flowthru
-        .RegisterFlow<Catalog>("Analysis", AnalysisFlow.Create)
-        .WithDescription("Makes a graph of sites of the crawl, and summarizes each site's place in it");
+        .RegisterFlow<Catalog, IPythonExecutor>("Analysis", AnalysisFlow.Create)
+        .WithDescription("Makes a graph of sites of the crawl, summarizes each site's place in it, and exports the mention graph for the blog");
     });
   }
 }

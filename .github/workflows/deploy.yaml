@@ -2,11 +2,12 @@
 # serves at blog.chaoticgood.computer (#81; astro/docs/adr/3001). Deliberately minimal for now: no
 # tests, no affected check; every push to main rebuilds and redeploys the whole site
 # (astro/docs/cutover/deploy.md). After a deploy, the IndexNow job tells Bing and the other IndexNow
-# engines which pages it changed, the webmention job sends the webmentions it owes the sites its
-# notes link to, the Bluesky job posts each feed item @chaoticgood.computer hasn't yet, and after a
-# push's deploy, the email job drafts a Buttondown email from each note it made an email. A daily
-# deploy shows the mentions webmention.io received since the last. When the Bluesky job posted, it
-# deploys again, so that the new notes' pages link to their posts.
+# engines which pages it changed, the WebSub job tells the feed's hub when the feed changed, the
+# webmention job sends the webmentions it owes the sites its notes link to, the Bluesky job posts
+# each feed item @chaoticgood.computer hasn't yet, and after a push's deploy, the email job drafts a
+# Buttondown email from each note it made an email. A daily deploy shows the mentions webmention.io
+# received since the last. When the Bluesky job posted, it deploys again, so that the new notes'
+# pages link to their posts.
 name: Deploy to GitHub Pages
 
 on:
@@ -169,6 +170,21 @@ jobs:
           path: webmentions/
           retention-days: 7
 
+      # The feed the site has now, and the build's: the WebSub job tells the feed's hub when they
+      # differ (.github/workflows/scripts/websub.mjs).
+      - name: Keep the deployed feed
+        run: |
+          mkdir -p websub/previous websub/next
+          git show origin/pages:index.xml > websub/previous/index.xml 2>/dev/null || rm -f websub/previous/index.xml
+          cp astro/dist/index.xml websub/next/
+
+      - name: Upload the feeds for WebSub
+        uses: actions/upload-artifact@v7
+        with:
+          name: websub-feeds
+          path: websub/
+          retention-days: 7
+
       # force_orphan: the branch holds exactly this build. peaceiris adds .nojekyll, without which
       # Pages' Jekyll would drop `_astro/`, where the site's scripts and stylesheets are; the build
       # carries CNAME and the site's other root files, from astro/public.
@@ -239,6 +255,36 @@ jobs:
 
       - name: Send the owed webmentions
         run: node .github/workflows/scripts/webmention.mjs --previous webmentions/previous --next webmentions/next --wait ${{ inputs.send_all_webmentions && '--all' || '' }}
+
+  # The feed's WebSub hub, told that the feed changed once the live site serves the new one, so a
+  # reader subscribed there hears of a new note at once (.github/workflows/scripts/websub.mjs). A
+  # deploy that changed no item tells it nothing. A failure here leaves the deploy in place.
+  websub:
+    name: Notify the WebSub hub
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      # The script needs Node alone, no dependencies.
+      - name: Checkout the script
+        uses: actions/checkout@v6
+        with:
+          sparse-checkout: .github/workflows/scripts
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Download the feeds
+        uses: actions/download-artifact@v8
+        with:
+          name: websub-feeds
+          path: websub
+
+      - name: Tell the hub
+        run: node .github/workflows/scripts/websub.mjs --previous websub/previous --next websub/next --wait
 
   # Each item in the feed that @chaoticgood.computer hasn't posted yet, posted oldest first, with the
   # note's share card (.github/workflows/scripts/post-to-bluesky.mjs). Bridgy follows the replies,

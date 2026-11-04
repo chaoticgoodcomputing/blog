@@ -2,7 +2,10 @@ using Flowthru.Data.Schema;
 
 namespace IndiewebGraph.Data.Schemas;
 
-/// <summary>A webmention a crawled page received, as webmention.io has it.</summary>
+/// <summary>
+/// A webmention a crawled page received: as webmention.io has it, or, for a site whose endpoint is
+/// its own, as the page shows it among its comments.
+/// </summary>
 [FlowthruSchema]
 public partial record MentionSchema
 {
@@ -23,7 +26,10 @@ public partial record MentionSchema
   [SerializedLabel("source_host")]
   public required string SourceHost { get; init; }
 
-  /// <summary>What sent it, where that isn't the source: Bridgy's address for a backfed one.</summary>
+  /// <summary>
+  /// What sent it, where that isn't the source: Bridgy's address for a backfed one; or <c>page</c>
+  /// for one read from the page's own comments.
+  /// </summary>
   [SerializedLabel("via")]
   public string? Via { get; init; }
 

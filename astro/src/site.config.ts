@@ -144,6 +144,8 @@ export const feed: FeedConfig = {
   limit: 40,
   // Every post is writing.
   excludedCategories: ["writing"],
+  // Superfeedr's public hub: free, and the one feed readers such as Feedly and Inoreader subscribe through.
+  hub: "https://pubsubhubbub.superfeedr.com/",
 }
 
 export const seo: SeoConfig = {

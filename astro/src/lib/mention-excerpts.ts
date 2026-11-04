@@ -15,6 +15,12 @@ import { isExternal } from "./external-links.ts"
 /** Where a mention excerpt's blocks are cut from: the nearest of these around a link. */
 const BLOCKS = "p, li, blockquote, dd, dt, td, th, figcaption"
 
+/**
+ * The attribute that marks what in a note's body sends no webmention for its links: a widget that
+ * links to every site it charts, say, which doesn't mention them in the note's words.
+ */
+export const NO_WEBMENTION = "data-no-webmention"
+
 /** The address mention excerpts are under, from the site's root. */
 export const MENTION_EXCERPTS = "/mentions"
 
@@ -54,7 +60,8 @@ export function mentionTarget(href: string): string {
 /**
  * A note page's external links, each target with the blocks of the note's body that link to it,
  * in the order the note has them, as HTML. The body is the page's `.prose` in `main`; a link the
- * site shell or the related content holds is not the note's. `site` is the site's address.
+ * site shell or the related content holds is not the note's, nor is one inside what is marked
+ * `NO_WEBMENTION`. `site` is the site's address.
  */
 export function linkingBlocks(html: string, site: string): Map<string, HTMLElement[]> {
   const page = parse(html)
@@ -64,6 +71,7 @@ export function linkingBlocks(html: string, site: string): Map<string, HTMLEleme
   for (const link of body.querySelectorAll("a[href]")) {
     const href = link.getAttribute("href")!
     if (!isExternal(href, site)) continue
+    if (link.closest(`[${NO_WEBMENTION}]`)) continue
     const target = mentionTarget(href)
     const near = link.closest(BLOCKS)
     // A link outside any block, such as one on its own in a callout's title, is its own block.

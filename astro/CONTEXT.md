@@ -400,10 +400,23 @@ The last level of a tag: `ai` of `engineering/ai`. No two tags share one, whatev
 at its name's address: `/tags/ai` forwards to `/tags/engineering/ai`.
 _Avoid_: leaf tag, terminal tag
 
+**Feed hub**:
+The WebSub hub the feed names, beside its own address, so a reader subscribed there hears of a new
+note at once rather than when it next polls. After a deploy that changed the feed, the deploy tells
+it, once the live site serves the new feed. Site configuration's `feed.hub`.
+_Avoid_: ping server, push
+
+**Home card**:
+The home page's representative h-card: who the site is, for the IndieWeb's readers and for the sites
+a note sends a webmention to, which show its author by it. The author's name, the home page's
+address, the site's icon and the author's own profiles (`rel="me"`). Not shown.
+_Avoid_: profile, author card (a note's author is its h-entry's)
+
 **Mention excerpt**:
 The page the site sends as a webmention's source when a note links to another site: only the
 note's paragraphs that link there, as one h-entry, at `/mentions/<the note's slug>/<a hash of the
-page>`. A reader who comes to one is sent on to the note, at the first of them.
+page>`. A reader who comes to one is sent on to the note, at the first of them. A link inside
+what is marked `data-no-webmention`, such as a widget's links to the sites it charts, has none.
 _Avoid_: reply page, source page
 
 **Connections**:

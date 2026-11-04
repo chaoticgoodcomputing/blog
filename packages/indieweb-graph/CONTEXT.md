@@ -30,9 +30,11 @@ A link in a page's content (its `e-content`, `article` or `main`, never its navi
 site. Its kind is its microformats class's: a reply, like, repost or bookmark, or a plain link.
 
 **Mention**:
-A webmention a page received, as webmention.io has it: who sent it and its kind. A Bluesky post's
-author whose handle is a domain is credited to that domain. A site whose endpoint isn't
-webmention.io has none here.
+A webmention a page received: who sent it and its kind. Asked of webmention.io for a site whose
+endpoint is webmention.io's, under each name its account goes by; read from the page's own comments
+for a site whose endpoint is its own, where each is an h-cite or h-entry marked as a comment, like,
+mention, repost or bookmark, with a source post of its own. A Bluesky post's author whose handle is
+a domain is credited to that domain.
 _Avoid_: backlink (a link the target only learns of by crawling)
 
 **Blocklist**:
@@ -76,9 +78,24 @@ pointing site, or as a webmention, received by the other.
 A site's place in the graph: how much it points at others and they at it, how many sites it is
 connected to, and how many of those it is mutual with, pointing both ways.
 
+**Utility**:
+A canonical utility of the IndieWeb: a blog of the mention graph that is a shared resource rather
+than someone's own, such as its wiki, indieweb.org, or the IndieNews aggregator. Kept by hand in
+`Data/_01_Raw/utilities.csv`, committed, since the crawl can't tell one apart: only the seeds'
+outgoing mentions are known, so most blogs look as if they only receive. The map draws them as
+stars, always named.
+_Avoid_: hub (a hub may be a person's blog)
+
+**Mention graph export**:
+The mention graph, blog to blog, laid out once, with a fixed seed, so that each run with the same
+data draws the same picture: as JSON for the blog's widget, and as an SVG of the same picture for
+where no script runs. A link's direction is a seed's point of view: out of a seed, into one, or
+between two. It names the seeds and every blog more than one seed is linked to, where a label fits.
+
 ## Data
 
 `Data/_00_Cache` holds the crawl's HTTP cache, `_01_Raw` the seeds, the blocklist and what it fetched,
 `_02_Primary` the edges and the mention graph's four tables (`blogs.csv`, `posts.csv`,
-`blog_has_post.csv`, `post_has_mention.csv`), and `_03_Reporting` the summary. Only the blocklist
-and the sample seeds are committed.
+`blog_has_post.csv`, `post_has_mention.csv`), and `_03_Reporting` the summary and the exported
+mention graph. Only the blocklist, the utilities, the sample seeds and the exported graph are
+committed.

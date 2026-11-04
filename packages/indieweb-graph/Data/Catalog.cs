@@ -47,6 +47,13 @@ public class Catalog(string basePath, IConfiguration configuration) : CatalogAbs
 
   private string BlocklistPath => $"{basePath}/_01_Raw/blocklist.csv";
 
+  /// <summary>The IndieWeb's canonical utilities, such as its wiki, kept by hand and committed, as the blocklist is.</summary>
+  public IItem<IEnumerable<UtilitySchema>> Utilities =>
+    CreateItem(() => Item.Of<IEnumerable<UtilitySchema>>("Utilities")
+      .Csv()
+      .AtPath($"{basePath}/_01_Raw/utilities.csv")
+      .Build());
+
   /// <summary>
   /// The hosts earlier runs probed, and what each one's home page showed: a webmention endpoint, an
   /// h-card. Not committed, as what a crawl fetched isn't; the setup target starts it empty.
@@ -116,6 +123,23 @@ public class Catalog(string basePath, IConfiguration configuration) : CatalogAbs
     CreateItem(() => Item.Of<IEnumerable<PostHasMentionSchema>>("PostHasMention")
       .Csv()
       .AtPath($"{basePath}/_02_Primary/post_has_mention.csv")
+      .Build());
+
+  /// <summary>
+  /// The mention graph, blog to blog and laid out, as the blog's widget reads it. Committed, to be
+  /// copied beside the widget.
+  /// </summary>
+  public IItem<string> MentionGraphJson =>
+    CreateItem(() => Item.Of<string>("MentionGraphJson")
+      .Text()
+      .AtPath($"{basePath}/_03_Reporting/mention-graph.json")
+      .Build());
+
+  /// <summary>The same picture as an SVG, for where no script runs. Committed, as the JSON is.</summary>
+  public IItem<string> MentionGraphSvg =>
+    CreateItem(() => Item.Of<string>("MentionGraphSvg")
+      .Text()
+      .AtPath($"{basePath}/_03_Reporting/mention-graph.svg")
       .Build());
 
   public IItem<IEnumerable<SiteSummarySchema>> SiteSummaries =>

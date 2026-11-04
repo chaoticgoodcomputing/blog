@@ -10,6 +10,7 @@ dependencies = [
   "requests-cache>=1.2",
   "beautifulsoup4>=4.12",
   "pip>=24",
+  "networkx>=3.4",
 ]
 
 [dependency-groups]

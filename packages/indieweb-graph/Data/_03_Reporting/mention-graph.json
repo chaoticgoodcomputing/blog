@@ -1,0 +1,7479 @@
+{
+ "generated": "2026-11-04",
+ "width": 960,
+ "height": 760,
+ "nodes": [
+  {
+   "id": "11d.im",
+   "label": "11d.im",
+   "seed": false,
+   "x": 58.4,
+   "y": 553.1,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 2,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "200666.xyz",
+   "label": "200666.xyz",
+   "seed": false,
+   "x": 141.6,
+   "y": 582.8,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 3,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "aaronparecki.com",
+   "label": "aaronparecki.com",
+   "seed": false,
+   "x": 655.4,
+   "y": 274.8,
+   "r": 6.4,
+   "weight": 5,
+   "outgoing": 2,
+   "incoming": 3,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 655.4,
+   "label_y": 264.4,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "aboutmonica.com",
+   "label": "aboutmonica.com",
+   "seed": false,
+   "x": 892.3,
+   "y": 419.1,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 0,
+   "incoming": 3,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "adactio.com",
+   "label": "Jeremy Keith",
+   "seed": true,
+   "x": 547.8,
+   "y": 445.9,
+   "r": 11.3,
+   "weight": 49,
+   "outgoing": 15,
+   "incoming": 34,
+   "seeds_linked": 3,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 563.1,
+   "label_y": 450.2,
+   "label_anchor": "start"
+  },
+  {
+   "id": "alexhyett.com",
+   "label": "alexhyett.com",
+   "seed": false,
+   "x": 145.6,
+   "y": 657.0,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 2,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "alexsirac.com",
+   "label": "alexsirac.com",
+   "seed": false,
+   "x": 866.9,
+   "y": 378.2,
+   "r": 5.4,
+   "weight": 4,
+   "outgoing": 4,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "alongtheray.com",
+   "label": "alongtheray.com",
+   "seed": false,
+   "x": 110.2,
+   "y": 626.1,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 2,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "amberwilson.co.uk",
+   "label": "amberwilson.co.uk",
+   "seed": false,
+   "x": 824.4,
+   "y": 403.3,
+   "r": 5.4,
+   "weight": 7,
+   "outgoing": 0,
+   "incoming": 7,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "artlung.com",
+   "label": "artlung.com",
+   "seed": false,
+   "x": 495.6,
+   "y": 412.5,
+   "r": 8.4,
+   "weight": 27,
+   "outgoing": 26,
+   "incoming": 1,
+   "seeds_linked": 5,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 495.6,
+   "label_y": 431.9,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "awfulwoman.com",
+   "label": "awfulwoman.com",
+   "seed": false,
+   "x": 653.1,
+   "y": 552.7,
+   "r": 6.4,
+   "weight": 5,
+   "outgoing": 3,
+   "incoming": 2,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 653.1,
+   "label_y": 570.1,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "beesbuzz.biz",
+   "label": "beesbuzz.biz",
+   "seed": false,
+   "x": 684.3,
+   "y": 392.2,
+   "r": 6.4,
+   "weight": 5,
+   "outgoing": 3,
+   "incoming": 2,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 684.3,
+   "label_y": 409.6,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "beko.famkos.net",
+   "label": "beko.famkos.net",
+   "seed": false,
+   "x": 606.6,
+   "y": 354.3,
+   "r": 7.2,
+   "weight": 6,
+   "outgoing": 6,
+   "incoming": 0,
+   "seeds_linked": 3,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 606.6,
+   "label_y": 343.1,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "blog.chaoticgood.computer",
+   "label": "Chaotic Good Computing",
+   "seed": true,
+   "x": 186.3,
+   "y": 620.5,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 2,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 186.3,
+   "label_y": 611.1,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "blog.frankmeeuwsen.com",
+   "label": "blog.frankmeeuwsen.com",
+   "seed": false,
+   "x": 505.0,
+   "y": 48.0,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 0,
+   "incoming": 3,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "blog.glasp.co",
+   "label": "blog.glasp.co",
+   "seed": false,
+   "x": 176.1,
+   "y": 399.9,
+   "r": 6.4,
+   "weight": 8,
+   "outgoing": 8,
+   "incoming": 0,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 176.1,
+   "label_y": 417.3,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "blog.muni.town",
+   "label": "blog.muni.town",
+   "seed": false,
+   "x": 48.0,
+   "y": 510.1,
+   "r": 5.4,
+   "weight": 8,
+   "outgoing": 8,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "blog.voss.co",
+   "label": "blog.voss.co",
+   "seed": false,
+   "x": 647.9,
+   "y": 313.7,
+   "r": 6.4,
+   "weight": 5,
+   "outgoing": 4,
+   "incoming": 1,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 658.3,
+   "label_y": 317.4,
+   "label_anchor": "start"
+  },
+  {
+   "id": "boffosocko.com",
+   "label": "Chris Aldrich",
+   "seed": true,
+   "x": 536.2,
+   "y": 385.1,
+   "r": 11.0,
+   "weight": 47,
+   "outgoing": 17,
+   "incoming": 30,
+   "seeds_linked": 4,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 551.2,
+   "label_y": 389.4,
+   "label_anchor": "start"
+  },
+  {
+   "id": "cagrimmett.com",
+   "label": "cagrimmett.com",
+   "seed": false,
+   "x": 443.2,
+   "y": 374.1,
+   "r": 7.2,
+   "weight": 9,
+   "outgoing": 8,
+   "incoming": 1,
+   "seeds_linked": 3,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 432.0,
+   "label_y": 377.8,
+   "label_anchor": "end"
+  },
+  {
+   "id": "calumryan.com",
+   "label": "calumryan.com",
+   "seed": false,
+   "x": 840.6,
+   "y": 494.7,
+   "r": 5.4,
+   "weight": 9,
+   "outgoing": 1,
+   "incoming": 8,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "carol.gg",
+   "label": "carol.gg",
+   "seed": false,
+   "x": 912.0,
+   "y": 540.7,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 1,
+   "incoming": 1,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "carolgilabert.me",
+   "label": "carolgilabert.me",
+   "seed": false,
+   "x": 734.8,
+   "y": 628.5,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 0,
+   "incoming": 3,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "chrisburnell.com",
+   "label": "chrisburnell.com",
+   "seed": false,
+   "x": 747.5,
+   "y": 703.6,
+   "r": 5.4,
+   "weight": 7,
+   "outgoing": 5,
+   "incoming": 2,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "citationneeded.news",
+   "label": "citationneeded.news",
+   "seed": false,
+   "x": 507.8,
+   "y": 579.9,
+   "r": 6.4,
+   "weight": 4,
+   "outgoing": 2,
+   "incoming": 2,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 518.2,
+   "label_y": 583.6,
+   "label_anchor": "start"
+  },
+  {
+   "id": "clarale.com",
+   "label": "clarale.com",
+   "seed": false,
+   "x": 844.7,
+   "y": 449.3,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 1,
+   "incoming": 2,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "commonplace.doubleloop.net",
+   "label": "commonplace.doubleloop.net",
+   "seed": false,
+   "x": 598.7,
+   "y": 81.7,
+   "r": 5.4,
+   "weight": 1,
+   "outgoing": 0,
+   "incoming": 1,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "cote.io",
+   "label": "cote.io",
+   "seed": false,
+   "x": 235.3,
+   "y": 344.4,
+   "r": 6.4,
+   "weight": 3,
+   "outgoing": 3,
+   "incoming": 0,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 235.3,
+   "label_y": 334.0,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "css-irl.info",
+   "label": "css-irl.info",
+   "seed": false,
+   "x": 681.8,
+   "y": 712.0,
+   "r": 5.4,
+   "weight": 14,
+   "outgoing": 0,
+   "incoming": 14,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "cydstumpel.nl",
+   "label": "cydstumpel.nl",
+   "seed": false,
+   "x": 709.4,
+   "y": 439.4,
+   "r": 6.4,
+   "weight": 4,
+   "outgoing": 0,
+   "incoming": 4,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 709.4,
+   "label_y": 429.0,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "danielcorin.com",
+   "label": "danielcorin.com",
+   "seed": false,
+   "x": 201.2,
+   "y": 477.1,
+   "r": 6.4,
+   "weight": 6,
+   "outgoing": 6,
+   "incoming": 0,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 201.2,
+   "label_y": 466.7,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "danielsantos.org",
+   "label": "danielsantos.org",
+   "seed": false,
+   "x": 193.1,
+   "y": 359.1,
+   "r": 6.4,
+   "weight": 7,
+   "outgoing": 7,
+   "incoming": 0,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 203.5,
+   "label_y": 362.8,
+   "label_anchor": "start"
+  },
+  {
+   "id": "darekkay.com",
+   "label": "darekkay.com",
+   "seed": false,
+   "x": 906.3,
+   "y": 459.9,
+   "r": 5.4,
+   "weight": 5,
+   "outgoing": 1,
+   "incoming": 4,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "david.garden",
+   "label": "david.garden",
+   "seed": false,
+   "x": 459.2,
+   "y": 594.0,
+   "r": 6.4,
+   "weight": 3,
+   "outgoing": 3,
+   "incoming": 0,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 459.2,
+   "label_y": 583.6,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "diggingthedigital.com",
+   "label": "diggingthedigital.com",
+   "seed": false,
+   "x": 587.4,
+   "y": 317.6,
+   "r": 7.2,
+   "weight": 23,
+   "outgoing": 15,
+   "incoming": 8,
+   "seeds_linked": 3,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 576.2,
+   "label_y": 321.3,
+   "label_anchor": "end"
+  },
+  {
+   "id": "doubleloop.net",
+   "label": "doubleloop.net",
+   "seed": false,
+   "x": 613.9,
+   "y": 283.2,
+   "r": 6.4,
+   "weight": 8,
+   "outgoing": 4,
+   "incoming": 4,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 613.9,
+   "label_y": 300.6,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "ethanmarcotte.com",
+   "label": "ethanmarcotte.com",
+   "seed": false,
+   "x": 819.6,
+   "y": 350.4,
+   "r": 5.4,
+   "weight": 4,
+   "outgoing": 0,
+   "incoming": 4,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "evgenykuznetsov.org",
+   "label": "evgenykuznetsov.org",
+   "seed": false,
+   "x": 242.4,
+   "y": 677.4,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 3,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "giftegwuenu.com",
+   "label": "giftegwuenu.com",
+   "seed": false,
+   "x": 658.7,
+   "y": 666.1,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 0,
+   "incoming": 3,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "hamatti.org",
+   "label": "hamatti.org",
+   "seed": false,
+   "x": 454.2,
+   "y": 521.3,
+   "r": 6.4,
+   "weight": 5,
+   "outgoing": 5,
+   "incoming": 0,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 454.2,
+   "label_y": 510.9,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "hidde.blog",
+   "label": "hidde.blog",
+   "seed": false,
+   "x": 422.8,
+   "y": 614.2,
+   "r": 6.4,
+   "weight": 6,
+   "outgoing": 4,
+   "incoming": 2,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 412.4,
+   "label_y": 617.9,
+   "label_anchor": "end"
+  },
+  {
+   "id": "indieweb.org",
+   "label": "indieweb.org",
+   "seed": false,
+   "x": 451.3,
+   "y": 407.1,
+   "r": 8.4,
+   "weight": 56,
+   "outgoing": 0,
+   "incoming": 56,
+   "seeds_linked": 5,
+   "utility": true,
+   "note": "The IndieWeb wiki: cited to explain a concept, and never mentions back",
+   "labelled": true,
+   "label_x": 451.3,
+   "label_y": 394.7,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "iwebthings.joejenett.com",
+   "label": "iwebthings.joejenett.com",
+   "seed": false,
+   "x": 496.3,
+   "y": 614.1,
+   "r": 6.4,
+   "weight": 3,
+   "outgoing": 3,
+   "incoming": 0,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 506.7,
+   "label_y": 617.8,
+   "label_anchor": "start"
+  },
+  {
+   "id": "jeffbridgforth.com",
+   "label": "jeffbridgforth.com",
+   "seed": false,
+   "x": 448.6,
+   "y": 466.9,
+   "r": 7.8,
+   "weight": 31,
+   "outgoing": 30,
+   "incoming": 1,
+   "seeds_linked": 4,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 448.6,
+   "label_y": 455.1,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "johnjohnston.info",
+   "label": "johnjohnston.info",
+   "seed": false,
+   "x": 463.9,
+   "y": 356.3,
+   "r": 7.2,
+   "weight": 5,
+   "outgoing": 5,
+   "incoming": 0,
+   "seeds_linked": 3,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "jvt.me",
+   "label": "jvt.me",
+   "seed": false,
+   "x": 516.8,
+   "y": 350.7,
+   "r": 7.8,
+   "weight": 30,
+   "outgoing": 27,
+   "incoming": 3,
+   "seeds_linked": 4,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 516.8,
+   "label_y": 338.9,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "leahdas.com",
+   "label": "leahdas.com",
+   "seed": false,
+   "x": 95.0,
+   "y": 485.1,
+   "r": 5.4,
+   "weight": 6,
+   "outgoing": 6,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "localghost.dev",
+   "label": "localghost.dev",
+   "seed": false,
+   "x": 414.1,
+   "y": 543.8,
+   "r": 6.4,
+   "weight": 8,
+   "outgoing": 4,
+   "incoming": 4,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 403.7,
+   "label_y": 547.5,
+   "label_anchor": "end"
+  },
+  {
+   "id": "lqdev.me",
+   "label": "lqdev.me",
+   "seed": false,
+   "x": 195.1,
+   "y": 670.1,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 3,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "maggieappleton.com",
+   "label": "Maggie Appleton",
+   "seed": true,
+   "x": 312.5,
+   "y": 492.9,
+   "r": 19.1,
+   "weight": 156,
+   "outgoing": 26,
+   "incoming": 130,
+   "seeds_linked": 6,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 312.5,
+   "label_y": 469.8,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "marcthiele.com",
+   "label": "marcthiele.com",
+   "seed": false,
+   "x": 410.7,
+   "y": 580.5,
+   "r": 6.4,
+   "weight": 4,
+   "outgoing": 0,
+   "incoming": 4,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 400.3,
+   "label_y": 584.2,
+   "label_anchor": "end"
+  },
+  {
+   "id": "martymcgui.re",
+   "label": "martymcgui.re",
+   "seed": false,
+   "x": 499.3,
+   "y": 497.9,
+   "r": 7.2,
+   "weight": 5,
+   "outgoing": 3,
+   "incoming": 2,
+   "seeds_linked": 3,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 499.3,
+   "label_y": 486.7,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "matthiasott.com",
+   "label": "matthiasott.com",
+   "seed": false,
+   "x": 705.6,
+   "y": 487.0,
+   "r": 6.4,
+   "weight": 7,
+   "outgoing": 1,
+   "incoming": 6,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 716.0,
+   "label_y": 490.7,
+   "label_anchor": "start"
+  },
+  {
+   "id": "matuzo.at",
+   "label": "matuzo.at",
+   "seed": false,
+   "x": 869.3,
+   "y": 625.0,
+   "r": 5.4,
+   "weight": 15,
+   "outgoing": 0,
+   "incoming": 15,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "michaelharley.net",
+   "label": "michaelharley.net",
+   "seed": false,
+   "x": 621.5,
+   "y": 700.8,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 1,
+   "incoming": 2,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "mxb.dev",
+   "label": "mxb.dev",
+   "seed": false,
+   "x": 408.1,
+   "y": 485.7,
+   "r": 7.2,
+   "weight": 6,
+   "outgoing": 2,
+   "incoming": 4,
+   "seeds_linked": 3,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 408.1,
+   "label_y": 474.5,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "nest.jakl.one",
+   "label": "nest.jakl.one",
+   "seed": false,
+   "x": 835.0,
+   "y": 593.0,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 3,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "news.indieweb.org",
+   "label": "news.indieweb.org",
+   "seed": false,
+   "x": 685.2,
+   "y": 296.6,
+   "r": 6.4,
+   "weight": 7,
+   "outgoing": 0,
+   "incoming": 7,
+   "seeds_linked": 2,
+   "utility": true,
+   "note": "IndieNews: an aggregator a post is submitted to by sending it a webmention",
+   "labelled": true,
+   "label_x": 695.6,
+   "label_y": 300.9,
+   "label_anchor": "start"
+  },
+  {
+   "id": "nicksimson.com",
+   "label": "nicksimson.com",
+   "seed": false,
+   "x": 74.7,
+   "y": 424.6,
+   "r": 5.4,
+   "weight": 4,
+   "outgoing": 4,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "notiz.blog",
+   "label": "notiz.blog",
+   "seed": false,
+   "x": 438.8,
+   "y": 53.0,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 0,
+   "incoming": 2,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "ohhelloana.blog",
+   "label": "Ana Rodrigues",
+   "seed": true,
+   "x": 640.3,
+   "y": 496.6,
+   "r": 21.3,
+   "weight": 326,
+   "outgoing": 209,
+   "incoming": 117,
+   "seeds_linked": 4,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 640.3,
+   "label_y": 471.3,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "paperpilot.dev",
+   "label": "paperpilot.dev",
+   "seed": false,
+   "x": 79.3,
+   "y": 592.1,
+   "r": 5.4,
+   "weight": 9,
+   "outgoing": 9,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "paulrobertlloyd.com",
+   "label": "paulrobertlloyd.com",
+   "seed": false,
+   "x": 908.1,
+   "y": 499.1,
+   "r": 5.4,
+   "weight": 6,
+   "outgoing": 1,
+   "incoming": 5,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "petermolnar.net",
+   "label": "petermolnar.net",
+   "seed": false,
+   "x": 787.8,
+   "y": 676.3,
+   "r": 5.4,
+   "weight": 4,
+   "outgoing": 2,
+   "incoming": 2,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "quantumgardener.info",
+   "label": "quantumgardener.info",
+   "seed": false,
+   "x": 112.0,
+   "y": 538.2,
+   "r": 5.4,
+   "weight": 4,
+   "outgoing": 4,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "qubyte.codes",
+   "label": "qubyte.codes",
+   "seed": false,
+   "x": 459.8,
+   "y": 631.0,
+   "r": 6.4,
+   "weight": 6,
+   "outgoing": 4,
+   "incoming": 2,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 459.8,
+   "label_y": 648.4,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "rachelandrew.co.uk",
+   "label": "rachelandrew.co.uk",
+   "seed": false,
+   "x": 893.0,
+   "y": 582.4,
+   "r": 5.4,
+   "weight": 4,
+   "outgoing": 0,
+   "incoming": 4,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "remysharp.com",
+   "label": "remysharp.com",
+   "seed": false,
+   "x": 716.7,
+   "y": 671.5,
+   "r": 5.4,
+   "weight": 9,
+   "outgoing": 2,
+   "incoming": 7,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "robida.net",
+   "label": "robida.net",
+   "seed": false,
+   "x": 799.7,
+   "y": 556.9,
+   "r": 5.4,
+   "weight": 5,
+   "outgoing": 5,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "roytang.net",
+   "label": "roytang.net",
+   "seed": false,
+   "x": 789.0,
+   "y": 621.8,
+   "r": 5.4,
+   "weight": 4,
+   "outgoing": 0,
+   "incoming": 4,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "ryanpatrickrandall.com",
+   "label": "ryanpatrickrandall.com",
+   "seed": false,
+   "x": 91.1,
+   "y": 382.1,
+   "r": 5.4,
+   "weight": 6,
+   "outgoing": 6,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "sekhmetdesign.thegeekcartel.com",
+   "label": "sekhmetdesign.thegeekcartel.com",
+   "seed": false,
+   "x": 49.4,
+   "y": 461.0,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 3,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "sia.codes",
+   "label": "sia.codes",
+   "seed": false,
+   "x": 857.9,
+   "y": 538.6,
+   "r": 5.4,
+   "weight": 4,
+   "outgoing": 0,
+   "incoming": 4,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "simonwillison.net",
+   "label": "simonwillison.net",
+   "seed": false,
+   "x": 222.3,
+   "y": 392.4,
+   "r": 6.4,
+   "weight": 8,
+   "outgoing": 0,
+   "incoming": 8,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 222.3,
+   "label_y": 382.0,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "storymin.es",
+   "label": "storymin.es",
+   "seed": false,
+   "x": 355.8,
+   "y": 101.5,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 0,
+   "incoming": 3,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "stream.jeremycherfas.net",
+   "label": "stream.jeremycherfas.net",
+   "seed": false,
+   "x": 484.5,
+   "y": 385.1,
+   "r": 7.8,
+   "weight": 7,
+   "outgoing": 7,
+   "incoming": 0,
+   "seeds_linked": 4,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "swyx.io",
+   "label": "swyx",
+   "seed": true,
+   "x": 342.0,
+   "y": 415.8,
+   "r": 12.0,
+   "weight": 40,
+   "outgoing": 10,
+   "incoming": 30,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 342.0,
+   "label_y": 399.8,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "synesthesia.co.uk",
+   "label": "synesthesia.co.uk",
+   "seed": false,
+   "x": 400.9,
+   "y": 82.2,
+   "r": 5.4,
+   "weight": 10,
+   "outgoing": 6,
+   "incoming": 4,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "theadhocracy.co.uk",
+   "label": "theadhocracy.co.uk",
+   "seed": false,
+   "x": 709.9,
+   "y": 363.6,
+   "r": 6.4,
+   "weight": 5,
+   "outgoing": 1,
+   "incoming": 4,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 709.9,
+   "label_y": 381.0,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "thegreenland.eu",
+   "label": "thegreenland.eu",
+   "seed": false,
+   "x": 549.4,
+   "y": 70.3,
+   "r": 5.4,
+   "weight": 13,
+   "outgoing": 0,
+   "incoming": 13,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "thejaymo.net",
+   "label": "thejaymo.net",
+   "seed": false,
+   "x": 189.8,
+   "y": 437.4,
+   "r": 6.4,
+   "weight": 5,
+   "outgoing": 5,
+   "incoming": 0,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 200.2,
+   "label_y": 441.1,
+   "label_anchor": "start"
+  },
+  {
+   "id": "tomcritchlow.com",
+   "label": "tomcritchlow.com",
+   "seed": false,
+   "x": 503.0,
+   "y": 543.1,
+   "r": 6.4,
+   "weight": 8,
+   "outgoing": 0,
+   "incoming": 8,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 513.4,
+   "label_y": 546.8,
+   "label_anchor": "start"
+  },
+  {
+   "id": "tracydurnell.com",
+   "label": "tracydurnell.com",
+   "seed": false,
+   "x": 397.7,
+   "y": 349.7,
+   "r": 8.4,
+   "weight": 9,
+   "outgoing": 8,
+   "incoming": 1,
+   "seeds_linked": 5,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 397.7,
+   "label_y": 337.3,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "utilitybend.com",
+   "label": "utilitybend.com",
+   "seed": false,
+   "x": 831.4,
+   "y": 656.3,
+   "r": 5.4,
+   "weight": 4,
+   "outgoing": 0,
+   "incoming": 4,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "visitmy.website",
+   "label": "visitmy.website",
+   "seed": false,
+   "x": 459.4,
+   "y": 560.1,
+   "r": 6.4,
+   "weight": 7,
+   "outgoing": 3,
+   "incoming": 4,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 469.8,
+   "label_y": 563.8,
+   "label_anchor": "start"
+  },
+  {
+   "id": "werd.io",
+   "label": "werd.io",
+   "seed": false,
+   "x": 419.1,
+   "y": 395.5,
+   "r": 7.8,
+   "weight": 12,
+   "outgoing": 5,
+   "incoming": 7,
+   "seeds_linked": 4,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 419.1,
+   "label_y": 414.3,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "wittenbrink.net",
+   "label": "wittenbrink.net",
+   "seed": false,
+   "x": 476.2,
+   "y": 87.8,
+   "r": 5.4,
+   "weight": 5,
+   "outgoing": 2,
+   "incoming": 3,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "zylstra.org",
+   "label": "Ton Zijlstra",
+   "seed": true,
+   "x": 492.8,
+   "y": 251.1,
+   "r": 14.5,
+   "weight": 109,
+   "outgoing": 71,
+   "incoming": 38,
+   "seeds_linked": 2,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 492.8,
+   "label_y": 232.6,
+   "label_anchor": "middle"
+  }
+ ],
+ "links": [
+  {
+   "source": "11d.im",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://11d.im/notices/11d",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://11d.im/write.apreslanu.it/offload/1761310045",
+     "target": "https://maggieappleton.com/antilibrary",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "200666.xyz",
+   "target": "maggieappleton.com",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://200666.xyz/gas-town-exploring-agent-patterns-and-vibecoding-at-scale",
+     "target": "https://maggieappleton.com/gastown",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://200666.xyz/gas-towns-agent-patterns-design-bottlenecks-and-vibecoding-at-scale",
+     "target": "https://maggieappleton.com/gastown",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://200666.xyz/the-rise-and-evolution-of-command-k-bars-in-modern-ui",
+     "target": "https://maggieappleton.com/command-bar",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "aaronparecki.com",
+   "target": "ohhelloana.blog",
+   "count": 2,
+   "kinds": {
+    "bookmark": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://aaronparecki.com/2021/03/19/22",
+     "target": "https://ohhelloana.blog/one-year-of-online-only",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://aaronparecki.com/2024/03/14/4",
+     "target": "https://ohhelloana.blog/just-get-a-website",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "adactio.com",
+   "target": "cydstumpel.nl",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://adactio.com/journal/22805",
+     "target": "https://cydstumpel.nl/my-picks-for-interop-2027",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "adactio.com",
+   "target": "maggieappleton.com",
+   "count": 8,
+   "kinds": {
+    "bookmark": 8
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://adactio.com/links/19761",
+     "target": "https://maggieappleton.com/ai-empty-pointer",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://adactio.com/links/20146",
+     "target": "https://maggieappleton.com/forest-talk",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://adactio.com/links/20236",
+     "target": "https://maggieappleton.com/lm-sketchbook",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://adactio.com/links/20436",
+     "target": "https://maggieappleton.com/squish-structure",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://adactio.com/links/20754",
+     "target": "https://maggieappleton.com/historical-trails",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://adactio.com/links/20927",
+     "target": "https://maggieappleton.com/gathering-structures",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://adactio.com/links/21052",
+     "target": "https://maggieappleton.com/openings",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://adactio.com/links/21188",
+     "target": "https://maggieappleton.com/home-cooked-software",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "adactio.com",
+   "target": "ohhelloana.blog",
+   "count": 6,
+   "kinds": {
+    "bookmark": 4,
+    "mention": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://adactio.com/journal/16320",
+     "target": "https://ohhelloana.blog",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://adactio.com/journal/22805",
+     "target": "https://ohhelloana.blog/my-interop-2027",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://adactio.com/links/15354",
+     "target": "https://ohhelloana.blog/six-talks-later",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://adactio.com/links/16508",
+     "target": "https://ohhelloana.blog/indiewebcamp-london",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://adactio.com/links/20992",
+     "target": "https://ohhelloana.blog/iwc-brighton-2024",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://adactio.com/links/22714",
+     "target": "https://ohhelloana.blog/mkdn",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "alexhyett.com",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://alexhyett.com/blogroll",
+     "target": "https://maggieappleton.com",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://alexhyett.com/newsletter/but-at-what-cost",
+     "target": "https://maggieappleton.com/forest-talk",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "alexsirac.com",
+   "target": "ohhelloana.blog",
+   "count": 4,
+   "kinds": {
+    "like": 2,
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://alexsirac.com/101-blog-posts-ideas-for-your-personal-website",
+     "target": "https://ohhelloana.blog",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://alexsirac.com/101-blog-posts-ideas-for-your-personal-website",
+     "target": "https://ohhelloana.blog/just-get-a-website",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://alexsirac.com/i-cant-do-it-all",
+     "target": "https://ohhelloana.blog/i-want-it-all",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://alexsirac.com/i-too-have-deleted-my-spotify-account",
+     "target": "https://ohhelloana.blog/goodbye-spotify",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "alongtheray.com",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://alongtheray.com/blogging/short-thoughts-on-digital-gardens",
+     "target": "https://maggieappleton.com/garden",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://alongtheray.com/welcome-to-my-new-digs",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "artlung.com",
+   "target": "adactio.com",
+   "count": 3,
+   "kinds": {
+    "like": 2,
+    "reply": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://artlung.com/blog/2024/05/08/declarative-vs-imperative-programming",
+     "target": "https://adactio.com/articles/21110",
+     "kind": "reply",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com/likes/0dbf2ea93c382a341effc0c04e69da50",
+     "target": "https://adactio.com/articles/21876",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com/likes/b7864f0661d9fb5788afea666f82223f",
+     "target": "https://adactio.com/journal/22781",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "artlung.com",
+   "target": "boffosocko.com",
+   "count": 9,
+   "kinds": {
+    "like": 6,
+    "mention": 3
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://artlung.com/blog/2024/03/12/on-topics-various-and-sundry-misc-morning",
+     "target": "https://boffosocko.com/2024/03/11/acquisition-1957-remington-quiet-riter-with-miracle-tab-manual-typewriter",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com/blog/2024/12/11/sdiwc2024",
+     "target": "https://boffosocko.com/2024/12/08/typewriters-as-proof-of-life",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com/likes/0bc7d1e4b135b0cafc19a72dcf3dfa03",
+     "target": "https://boffosocko.com/2025/10/29/greetings-from-altadena",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com/likes/16d95bf5b32272568e159bea1968fe60",
+     "target": "https://boffosocko.com/2025/03/25/youre-invited-to-a-southern-california-type-in",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com/likes/2c165d33ba530232f71db2d4f57075d9",
+     "target": "https://boffosocko.com/2025/07/08/wilson-jones-co-hummer-3-hole-punch",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com/likes/45cece813b4ad1b21d866b841d1b8f2e",
+     "target": "https://boffosocko.com/2025/05/24/the-rules-for-typewriter-club",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com/likes/46985222005236561e19148a038f15bc",
+     "target": "https://boffosocko.com/2026/02/01/grand-opening-of-typewriter-muse",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com/likes/926c6d4135ee2ceb645dc23033f7e97e",
+     "target": "https://boffosocko.com/2025/04/30/card-indexes-in-wedding-crashers",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com/likes/caccb4bc644848d55ab3344004f9d717",
+     "target": "https://boffosocko.com/2026/01/08/on-purchasing-typewriters-condition-is-king-context-is-queen",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "artlung.com",
+   "target": "maggieappleton.com",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://artlung.com/blog/2024/02/28/digital-gardens",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com/blog/2024/10/31/owning-my-own-bookmarks-over-20-years",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com/gardening-ic",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "artlung.com",
+   "target": "ohhelloana.blog",
+   "count": 9,
+   "kinds": {
+    "like": 8,
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://artlung.com",
+     "target": "https://ohhelloana.blog/css-talk-final-act",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com",
+     "target": "https://ohhelloana.blog/indieweb-book-club-oct-25",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com",
+     "target": "https://ohhelloana.blog/my-indieweb-journey",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com",
+     "target": "https://ohhelloana.blog/post-css-talk",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com",
+     "target": "https://ohhelloana.blog/why",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com/blog/2024/06/14/friday-links-2",
+     "target": "https://ohhelloana.blog/i-want-it-all",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com/likes/38c3d3aac85b720d00d1f56b58e793c7",
+     "target": "https://ohhelloana.blog/mkdn",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com/likes/5e7d6d70a7ab87c700b26583d1b6577b",
+     "target": "https://ohhelloana.blog/woman-in-tech",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com/likes/f92ce22dfd36ceddbb9649a3bd869a80",
+     "target": "https://ohhelloana.blog/in-defense-of-unpolished-websites",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "artlung.com",
+   "target": "zylstra.org",
+   "count": 2,
+   "kinds": {
+    "like": 1,
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://artlung.com/blog/2026/04/07/hello-human-json",
+     "target": "https://zylstra.org/blog/2026/04/human-json",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com/likes/881c629432d99b9a41ca8d418ae4162f",
+     "target": "https://zylstra.org/blog/2025/11/23-years-of-blogging-the-sense-of-wonder-edition",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "awfulwoman.com",
+   "target": "adactio.com",
+   "count": 2,
+   "kinds": {
+    "bookmark": 1,
+    "like": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://awfulwoman.com/bookmarks/2021/01/23/nfq2d4f6",
+     "target": "https://adactio.com/articles/17733",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://awfulwoman.com/likes/2026/10/18/kdqc23e5",
+     "target": "https://adactio.com/journal/22802",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "awfulwoman.com",
+   "target": "ohhelloana.blog",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://awfulwoman.com/bookmarks/2021/02/09/bf5kkj9x",
+     "target": "https://ohhelloana.blog/unsolicited-rejection",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "beesbuzz.biz",
+   "target": "boffosocko.com",
+   "count": 1,
+   "kinds": {
+    "reply": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://beesbuzz.biz/blog/chatter/14920-Re-So-What-s-all-this-Indieweb-and-Webmentions-stuff",
+     "target": "https://boffosocko.com/2026/09/25/okay-typosphere-who-else-is-using-their-typewriter-to-converse-with-others-via-web-and-webmention",
+     "kind": "reply",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "beesbuzz.biz",
+   "target": "ohhelloana.blog",
+   "count": 2,
+   "kinds": {
+    "bookmark": 1,
+    "like": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://beesbuzz.biz/blog/chatter/8714-My-tech-savvy-privilege",
+     "target": "https://ohhelloana.blog/my-tech-savvy-privilege",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://beesbuzz.biz/blog/chatter/9202-August-bookmarks",
+     "target": "https://ohhelloana.blog/august-2020-bookmarks",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "beko.famkos.net",
+   "target": "adactio.com",
+   "count": 1,
+   "kinds": {
+    "bookmark": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://beko.famkos.net/2021/01/05/243400",
+     "target": "https://adactio.com/articles/17733",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "beko.famkos.net",
+   "target": "ohhelloana.blog",
+   "count": 4,
+   "kinds": {
+    "like": 2,
+    "mention": 1,
+    "reply": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://beko.famkos.net/2020/07/15/136499",
+     "target": "https://ohhelloana.blog/overthinking-my-nostalgia",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://beko.famkos.net/2020/08/27/159511",
+     "target": "https://ohhelloana.blog/my-tech-savvy-privilege",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://beko.famkos.net/2021/02/09/271267",
+     "target": "https://ohhelloana.blog/about",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://beko.famkos.net/2024/03/14/15629107",
+     "target": "https://ohhelloana.blog/just-get-a-website",
+     "kind": "reply",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "beko.famkos.net",
+   "target": "zylstra.org",
+   "count": 1,
+   "kinds": {
+    "reply": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://beko.famkos.net/author/beko",
+     "target": "https://zylstra.org/blog/2020/01/i-dont-track-you-here-but-others-might",
+     "kind": "reply",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "blog.chaoticgood.computer",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://blog.chaoticgood.computer/content/notes/dashes",
+     "target": "https://maggieappleton.com/planning-agents",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://blog.chaoticgood.computer/mentions/content/notes/dashes/40579207c6f6",
+     "target": "https://maggieappleton.com/planning-agents",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "blog.glasp.co",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://blog.glasp.co/p/bc3907c3-9f5e-4008-a82d-fc28474bc38a",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.glasp.co/p/e0ab9928-eb6b-4134-b7b9-59052fb34eae",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "blog.glasp.co",
+   "target": "swyx.io",
+   "count": 6,
+   "kinds": {
+    "mention": 6
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://blog.glasp.co/p/254c0af7-cce8-4665-8a97-52425b53cdc8",
+     "target": "https://swyx.io/learn-in-public",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.glasp.co/p/2e401052-16dc-477d-b36a-7eb4ee72f525",
+     "target": "https://swyx.io",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.glasp.co/p/3f074f69-711f-4c0c-a3fe-893b5100d240",
+     "target": "https://swyx.io/create-luck",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.glasp.co/p/7238d524-390b-4a52-a4c4-633b867a1507",
+     "target": "https://swyx.io/learn-in-public",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.glasp.co/p/9428b957-cdef-4f02-a6bc-5df52f9652cf",
+     "target": "https://swyx.io/learn-in-public",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.glasp.co/p/cd03932f-a4b0-487b-bda4-b03ce82aa197",
+     "target": "https://swyx.io/learn-in-public",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "blog.muni.town",
+   "target": "maggieappleton.com",
+   "count": 8,
+   "kinds": {
+    "mention": 8
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://blog.muni.town/chatty-community-gardens",
+     "target": "https://maggieappleton.com",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.muni.town/chatty-community-gardens",
+     "target": "https://maggieappleton.com/cozy-web",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.muni.town/chatty-community-gardens",
+     "target": "https://maggieappleton.com/evergreens",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.muni.town/chatty-community-gardens",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.muni.town/chatty-community-gardens",
+     "target": "https://maggieappleton.com/nontechnical-gardening",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.muni.town/chatty-community-gardens",
+     "target": "https://maggieappleton.com/tools-for-thought",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.muni.town/content-imperative",
+     "target": "https://maggieappleton.com/nontechnical-gardening",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.muni.town/weird-v0-4",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "blog.voss.co",
+   "target": "ohhelloana.blog",
+   "count": 2,
+   "kinds": {
+    "like": 1,
+    "reply": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://blog.voss.co/2018/-10",
+     "target": "https://ohhelloana.blog/blogging-and-me",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.voss.co/2019/great-post-and-yes-i-remember-moods",
+     "target": "https://ohhelloana.blog/mood-doing-thinking-listening",
+     "kind": "reply",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "blog.voss.co",
+   "target": "zylstra.org",
+   "count": 2,
+   "kinds": {
+    "like": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://blog.voss.co/profile/voss",
+     "target": "https://zylstra.org/blog/2019/11/choosing-rocket-chat-over-slack",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.voss.co/profile/voss",
+     "target": "https://zylstra.org/blog/2020/01/i-dont-track-you-here-but-others-might",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "boffosocko.com",
+   "target": "adactio.com",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://boffosocko.com/2025/07/02/huffduffer-tags-gone",
+     "target": "https://adactio.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "boffosocko.com",
+   "target": "artlung.com",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://boffosocko.com/2026/03/04/typewriter-guy-sesame-street-reaction-figures",
+     "target": "https://artlung.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "boffosocko.com",
+   "target": "indieweb.org",
+   "count": 11,
+   "kinds": {
+    "mention": 11
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://boffosocko.com/2021/07/03/differentiating-online-variations-of-the-commonplace-book-digital-gardens-wikis-zettlekasten-waste-books-florilegia-and-second-brains",
+     "target": "https://indieweb.org",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://boffosocko.com/2021/07/03/differentiating-online-variations-of-the-commonplace-book-digital-gardens-wikis-zettlekasten-waste-books-florilegia-and-second-brains",
+     "target": "https://indieweb.org/2011/Smallest_Federated_Wiki",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://boffosocko.com/2021/07/03/differentiating-online-variations-of-the-commonplace-book-digital-gardens-wikis-zettlekasten-waste-books-florilegia-and-second-brains",
+     "target": "https://indieweb.org/2021/Pop-ups/Sessions",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://boffosocko.com/2021/07/03/differentiating-online-variations-of-the-commonplace-book-digital-gardens-wikis-zettlekasten-waste-books-florilegia-and-second-brains",
+     "target": "https://indieweb.org/Webmention",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://boffosocko.com/2021/07/03/differentiating-online-variations-of-the-commonplace-book-digital-gardens-wikis-zettlekasten-waste-books-florilegia-and-second-brains",
+     "target": "https://indieweb.org/commonplace_book",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://boffosocko.com/2024/12/08/typewriters-as-proof-of-life",
+     "target": "https://indieweb.org/2024/SD",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://boffosocko.com/2025/09/13/55833074",
+     "target": "https://indieweb.org/typecast",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://boffosocko.com/2025/11/18/rsvp-to-indiewebcamp-san-diego-2025",
+     "target": "https://indieweb.org/2025/SD",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://boffosocko.com/2026/05/07/faq-how-do-you-use-your-typewriters",
+     "target": "https://indieweb.org/typecast",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://boffosocko.com/2026/09/25/okay-typosphere-who-else-is-using-their-typewriter-to-converse-with-others-via-web-and-webmention",
+     "target": "https://indieweb.org/Webmention",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://boffosocko.com/2026/09/25/okay-typosphere-who-else-is-using-their-typewriter-to-converse-with-others-via-web-and-webmention",
+     "target": "https://indieweb.org/typecast",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "boffosocko.com",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 1,
+    "reply": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://boffosocko.com/2021/07/06/55793175",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "reply",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://boffosocko.com/2022/12/02/55812255",
+     "target": "https://maggieappleton.com",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "boffosocko.com",
+   "target": "zylstra.org",
+   "count": 2,
+   "kinds": {
+    "reply": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://boffosocko.com/author/chrisaldrich",
+     "target": "https://zylstra.org/blog/2022/06/spring-83",
+     "kind": "reply",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://boffosocko.com/mentions?replytocom=415931",
+     "target": "https://zylstra.org/blog/2023/07/index-cards-as-improv-prompts",
+     "kind": "reply",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "cagrimmett.com",
+   "target": "maggieappleton.com",
+   "count": 5,
+   "kinds": {
+    "like": 1,
+    "mention": 4
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://cagrimmett.com/6524-2",
+     "target": "https://maggieappleton.com",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://cagrimmett.com/6524-2",
+     "target": "https://maggieappleton.com/garden",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://cagrimmett.com/blogroll",
+     "target": "https://maggieappleton.com",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://cagrimmett.com/blogroll",
+     "target": "https://maggieappleton.com/garden",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://cagrimmett.com/likes/3a71834380",
+     "target": "https://maggieappleton.com/now-2026-01",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "cagrimmett.com",
+   "target": "ohhelloana.blog",
+   "count": 1,
+   "kinds": {
+    "like": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://cagrimmett.com/likes/7acccaea6f",
+     "target": "https://ohhelloana.blog/my-indieweb-journey",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "cagrimmett.com",
+   "target": "zylstra.org",
+   "count": 2,
+   "kinds": {
+    "like": 1,
+    "reply": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://cagrimmett.com/likes/c54e28e1ff",
+     "target": "https://zylstra.org/blog/2022/10/indieweb-plugin-for-wordpress-blocks",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://cagrimmett.com/week-of/2022/10/02/week-of-september-26",
+     "target": "https://zylstra.org/blog/2022/09/wordpressindieweb-as-the-os-of-the-open-social-web",
+     "kind": "reply",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "calumryan.com",
+   "target": "ohhelloana.blog",
+   "count": 1,
+   "kinds": {
+    "bookmark": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://calumryan.com/note/3239",
+     "target": "https://ohhelloana.blog/ffconf-2019",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "carol.gg",
+   "target": "ohhelloana.blog",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://carol.gg/blog/site-rebuild-microformats",
+     "target": "https://ohhelloana.blog",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "chrisburnell.com",
+   "target": "ohhelloana.blog",
+   "count": 5,
+   "kinds": {
+    "like": 4,
+    "reply": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://chrisburnell.com/like/1559229555",
+     "target": "https://ohhelloana.blog/rsvp-using-webmentions",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://chrisburnell.com/like/1574267374",
+     "target": "https://ohhelloana.blog/ffconf-2019",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://chrisburnell.com/like/1598475122",
+     "target": "https://ohhelloana.blog/my-tech-savvy-privilege",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://chrisburnell.com/like/1620816781",
+     "target": "https://ohhelloana.blog/on-onion-cutting",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://chrisburnell.com/note/ohhelloana-guestbook",
+     "target": "https://ohhelloana.blog/guestbook",
+     "kind": "reply",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "citationneeded.news",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://citationneeded.news/curate-with-rss",
+     "target": "https://maggieappleton.com/garden",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://citationneeded.news/we-can-have-a-different-web",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "clarale.com",
+   "target": "ohhelloana.blog",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://clarale.com/posts/indieweb-browsing",
+     "target": "https://ohhelloana.blog",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "cote.io",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://cote.io/2023/01/10/no-you-dont-want-to.html",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://cote.io/2026/02/07/ai-reality-bites-wall-street.html",
+     "target": "https://maggieappleton.com/gastown",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "cote.io",
+   "target": "swyx.io",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://cote.io/2021/10/15/the-legacytrap-kills-flexibility-cots.html",
+     "target": "https://swyx.io/cloudflare-go",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "danielcorin.com",
+   "target": "maggieappleton.com",
+   "count": 4,
+   "kinds": {
+    "bookmark": 4
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://danielcorin.com/links/2025/05/language-model-sketchbook-or-why-i-hate-chatbots",
+     "target": "https://maggieappleton.com/lm-sketchbook",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://danielcorin.com/links/2026/01/gas-towns-agent-patterns-design-bottlenecks-and-vibecoding-at-scale",
+     "target": "https://maggieappleton.com/gastown",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://danielcorin.com/links/2026/01/january-2026-maggie-appleton",
+     "target": "https://maggieappleton.com/now-2026-01",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://danielcorin.com/links/2026/05/one-developer-two-dozen-agents-zero-alignment",
+     "target": "https://maggieappleton.com/zero-alignment",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "danielcorin.com",
+   "target": "swyx.io",
+   "count": 2,
+   "kinds": {
+    "bookmark": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://danielcorin.com/links/2024/10/eating-the-cloud-from-outside-in",
+     "target": "https://swyx.io/cloudflare-go",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://danielcorin.com/links/2025/02/learn-in-public",
+     "target": "https://swyx.io/learn-in-public",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "danielsantos.org",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://danielsantos.org/nota/jardim-digital",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://danielsantos.org/notes/jardim-digital",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "danielsantos.org",
+   "target": "swyx.io",
+   "count": 5,
+   "kinds": {
+    "mention": 5
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://danielsantos.org/nota/jardim-digital",
+     "target": "https://swyx.io/digital-garden-tos",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://danielsantos.org/nota/jardim-digital",
+     "target": "https://swyx.io/learn-in-public",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://danielsantos.org/nota/termos-de-uso-do-jardim-digital",
+     "target": "https://swyx.io/digital-garden-tos",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://danielsantos.org/notes/jardim-digital",
+     "target": "https://swyx.io/digital-garden-tos",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://danielsantos.org/notes/jardim-digital",
+     "target": "https://swyx.io/learn-in-public",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "darekkay.com",
+   "target": "ohhelloana.blog",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://darekkay.com/blog/personal-one-pager",
+     "target": "https://ohhelloana.blog",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "david.garden",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://david.garden",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://david.garden/newsletter/archive/celebrate-your-progress-for-it-is-yours",
+     "target": "https://maggieappleton.com/home-cooked-software",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "david.garden",
+   "target": "ohhelloana.blog",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://david.garden/newsletter/archive/a-short-update-on-stickers-and-plugins",
+     "target": "https://ohhelloana.blog/just-get-a-website",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "diggingthedigital.com",
+   "target": "boffosocko.com",
+   "count": 2,
+   "kinds": {
+    "mention": 1,
+    "reply": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://diggingthedigital.com/author/frank-meeuwsen",
+     "target": "https://boffosocko.com/2021/07/03/differentiating-online-variations-of-the-commonplace-book-digital-gardens-wikis-zettlekasten-waste-books-florilegia-and-second-brains",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://diggingthedigital.com/reply-to-chris-on-differentiating-online-variations-of-the-commonplace-book",
+     "target": "https://boffosocko.com/2021/07/03/differentiating-online-variations-of-the-commonplace-book-digital-gardens-wikis-zettlekasten-waste-books-florilegia-and-second-brains",
+     "kind": "reply",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "diggingthedigital.com",
+   "target": "ohhelloana.blog",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://diggingthedigital.com/blogroll",
+     "target": "https://ohhelloana.blog",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "diggingthedigital.com",
+   "target": "zylstra.org",
+   "count": 12,
+   "kinds": {
+    "bookmark": 1,
+    "like": 4,
+    "mention": 6,
+    "reply": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://diggingthedigital.com/author/frank-meeuwsen",
+     "target": "https://zylstra.org/blog/2019/06/an-obligation-to-explain-the-indieweb",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://diggingthedigital.com/author/frank-meeuwsen",
+     "target": "https://zylstra.org/blog/2020/07/planting-the-garden-of-forking-paths",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://diggingthedigital.com/author/frank-meeuwsen",
+     "target": "https://zylstra.org/blog/2021/10/3e-nederlandstalige-obsidian-meet-up",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://diggingthedigital.com/author/frank-meeuwsen",
+     "target": "https://zylstra.org/blog/2021/11/terugblik-derde-nl-talige-obsidian-meet-up",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://diggingthedigital.com/author/frank-meeuwsen",
+     "target": "https://zylstra.org/blog/2022/01/writing-a-personal-micropub-client",
+     "kind": "reply",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://diggingthedigital.com/author/frank-meeuwsen",
+     "target": "https://zylstra.org/blog/2022/02/posting-directly-from-my-feed-reader-to-my-blog",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://diggingthedigital.com/author/frank-meeuwsen",
+     "target": "https://zylstra.org/blog/2022/03/reading-to-notes-process-sketch",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://diggingthedigital.com/author/frank-meeuwsen",
+     "target": "https://zylstra.org/blog/2022/05/gesprekken-met-bloggers-van-toen-smullen-van-lekker-meta",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://diggingthedigital.com/author/frank-meeuwsen",
+     "target": "https://zylstra.org/blog/2022/08/electric-drummer-outliner-handles-opml-includes",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://diggingthedigital.com/author/frank-meeuwsen",
+     "target": "https://zylstra.org/blog/2023/05/sharing-to-hypothes-is-from-feed-reader",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://diggingthedigital.com/de-zoektocht-naar-een-systeem",
+     "target": "https://zylstra.org/blog/2020/10/100-days-in-obsidian-pt-1",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://diggingthedigital.com/s02e39-een-terugblik-op-de-eerste-obsidian-meetup",
+     "target": "https://zylstra.org/blog/2021/04/nabeschouwing-de-eerste-nederlandstalige-obsidian-meet-up",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "doubleloop.net",
+   "target": "ohhelloana.blog",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://doubleloop.net/2019/12/31/6484",
+     "target": "https://ohhelloana.blog/goodbye-2019",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "doubleloop.net",
+   "target": "zylstra.org",
+   "count": 3,
+   "kinds": {
+    "like": 1,
+    "mention": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://doubleloop.net/2020/11/01/7248",
+     "target": "https://zylstra.org/blog/2020/10/100-days-in-obsidian-pt-1",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://doubleloop.net/2020/11/08/7258",
+     "target": "https://zylstra.org/blog/2020/10/100-days-in-obsidian-pt-1",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://doubleloop.net/author/neil",
+     "target": "https://zylstra.org/blog/2019/06/the-blog-and-wiki-combo",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "evgenykuznetsov.org",
+   "target": "maggieappleton.com",
+   "count": 3,
+   "kinds": {
+    "like": 1,
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://evgenykuznetsov.org/en/posts/2022/hovercards",
+     "target": "https://maggieappleton.com/xanadu-patterns",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://evgenykuznetsov.org/en/reactions/2021/like-149072925",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://evgenykuznetsov.org/posts/2022/hovercards",
+     "target": "https://maggieappleton.com/xanadu-patterns",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "hamatti.org",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://hamatti.org/posts/home-cooked-situated-software",
+     "target": "https://maggieappleton.com/home-cooked-software",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://hamatti.org/weeklies/2024-24",
+     "target": "https://maggieappleton.com/home-cooked-software",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "hamatti.org",
+   "target": "ohhelloana.blog",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://hamatti.org/posts/chance-of-serendipity",
+     "target": "https://ohhelloana.blog/forty-mins-to-change-your-life",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://hamatti.org/posts/on-content-creation-and-personal-web",
+     "target": "https://ohhelloana.blog/just-get-a-website",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://hamatti.org/posts/view-source-explorers-welcome",
+     "target": "https://ohhelloana.blog/in-defense-of-unpolished-websites",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "hidde.blog",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://hidde.blog/artificial-nor-intelligent/Neither%20artificial,%20nor%20intelligent",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://hidde.blog/how-i-turned-my-goodreads-data-into-a-self-hosted-website-with-eleventy/How%20I%20turned%20my%20Goodreads%20data%20into%20a%20self-hosted%20website%20with%20Eleventy",
+     "target": "https://maggieappleton.com/library",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "hidde.blog",
+   "target": "ohhelloana.blog",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://hidde.blog/150/150",
+     "target": "https://ohhelloana.blog",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://hidde.blog/my-typical-day/My%20typical%20day",
+     "target": "https://ohhelloana.blog",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "iwebthings.joejenett.com",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://iwebthings.joejenett.com/a-few-in-the-meantime-05-01-24",
+     "target": "https://maggieappleton.com/ambient-copresence",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://iwebthings.joejenett.com/linkylove-a-few-personal-faves-11-03-23",
+     "target": "https://maggieappleton.com/garden",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "iwebthings.joejenett.com",
+   "target": "ohhelloana.blog",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://iwebthings.joejenett.com/mixed-bag-04-28-26",
+     "target": "https://ohhelloana.blog/in-defense-of-unpolished-websites",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "jeffbridgforth.com",
+   "target": "adactio.com",
+   "count": 2,
+   "kinds": {
+    "reply": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-november-25-2023",
+     "target": "https://adactio.com/articles/20638",
+     "kind": "reply",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-october-7-2026",
+     "target": "https://adactio.com/journal/22781",
+     "kind": "reply",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "jeffbridgforth.com",
+   "target": "maggieappleton.com",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-april-2-2024",
+     "target": "https://maggieappleton.com/design-engineers",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "jeffbridgforth.com",
+   "target": "ohhelloana.blog",
+   "count": 26,
+   "kinds": {
+    "mention": 26
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://jeffbridgforth.com/my-interop-feature-ranking-2027",
+     "target": "https://ohhelloana.blog/my-interop-2027",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-april-9-2026",
+     "target": "https://ohhelloana.blog/new-forest",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-august-16-2026",
+     "target": "https://ohhelloana.blog/mkdn",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-august-25-2025",
+     "target": "https://ohhelloana.blog/eight-years-of-jessie",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-august-25-2025",
+     "target": "https://ohhelloana.blog/my-pick-of-the-year-css",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-august-4-2025",
+     "target": "https://ohhelloana.blog/post-css-talk",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-december-24-2023",
+     "target": "https://ohhelloana.blog/opposite-of-shame",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-february-15-2021",
+     "target": "https://ohhelloana.blog/unsolicited-rejection",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-february-15-2026",
+     "target": "https://ohhelloana.blog/bookmarks-final-final",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-january-12-2026",
+     "target": "https://ohhelloana.blog/2025-no-sleep",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-july-19-2026",
+     "target": "https://ohhelloana.blog/codebar-podcast",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-june-2-2025",
+     "target": "https://ohhelloana.blog/css-refactor-talk",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-june-29-2026",
+     "target": "https://ohhelloana.blog/css-day-mc",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-march-2-2025",
+     "target": "https://ohhelloana.blog/blog-questions-challenge",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-march-25-2026",
+     "target": "https://ohhelloana.blog/overthinking-ai",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-may-12-2025",
+     "target": "https://ohhelloana.blog/forty-mins-to-change-your-life",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-may-14-2024",
+     "target": "https://ohhelloana.blog/i-want-it-all",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-may-17-2026",
+     "target": "https://ohhelloana.blog/woman-in-tech",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-november-10-2025",
+     "target": "https://ohhelloana.blog/indieweb-book-club-oct-25",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-november-17-2025",
+     "target": "https://ohhelloana.blog/css-talk-final-act",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-november-28-2023",
+     "target": "https://ohhelloana.blog/ffconf-2023",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-october-12-2026",
+     "target": "https://ohhelloana.blog/my-interop-2027",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-october-12-2026",
+     "target": "https://ohhelloana.blog/september-bookmarks",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-october-19-2026",
+     "target": "https://ohhelloana.blog/goodbye-jessie",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-september-21-2025",
+     "target": "https://ohhelloana.blog/why",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-september-22-2026",
+     "target": "https://ohhelloana.blog/tell-the-speakers",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "jeffbridgforth.com",
+   "target": "swyx.io",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-june-20-2022",
+     "target": "https://swyx.io/three-strikes",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "johnjohnston.info",
+   "target": "maggieappleton.com",
+   "count": 3,
+   "kinds": {
+    "bookmark": 1,
+    "like": 1,
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://johnjohnston.info/blog/14631-2",
+     "target": "https://maggieappleton.com/nontechnical-gardening",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://johnjohnston.info/blog/folk-interfaces",
+     "target": "https://maggieappleton.com/folk-interfaces",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://johnjohnston.info/blog/programming-portals",
+     "target": "https://maggieappleton.com/programming-portals",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "johnjohnston.info",
+   "target": "ohhelloana.blog",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://johnjohnston.info/blog/life-in-links-43",
+     "target": "https://ohhelloana.blog/blogging-and-me",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "johnjohnston.info",
+   "target": "zylstra.org",
+   "count": 1,
+   "kinds": {
+    "like": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://johnjohnston.info/blog/author/john",
+     "target": "https://zylstra.org/blog/2022/09/wordpressindieweb-as-the-os-of-the-open-social-web",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "jvt.me",
+   "target": "adactio.com",
+   "count": 1,
+   "kinds": {
+    "bookmark": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://jvt.me/mf2/2021/11/7nlou",
+     "target": "https://adactio.com/articles/18580",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "jvt.me",
+   "target": "ohhelloana.blog",
+   "count": 21,
+   "kinds": {
+    "bookmark": 4,
+    "like": 14,
+    "mention": 2,
+    "repost": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://jvt.me/kind/likes",
+     "target": "https://ohhelloana.blog/starring-jessie",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2019/12/vhxjh",
+     "target": "https://ohhelloana.blog/starring-jessie",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2019/12/vne0l",
+     "target": "https://ohhelloana.blog/starring-jessie",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2020/03/fafps",
+     "target": "https://ohhelloana.blog",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2020/03/ubyt5",
+     "target": "https://ohhelloana.blog/indiewebcamp-london",
+     "kind": "repost",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2020/09/hrg01",
+     "target": "https://ohhelloana.blog/my-tech-savvy-privilege",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2021/02/a9cia",
+     "target": "https://ohhelloana.blog/my-typical-day",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2021/03/yuuzz",
+     "target": "https://ohhelloana.blog/one-year-of-online-only",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2021/04/ehfgw",
+     "target": "https://ohhelloana.blog/a-note",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2021/11/a6c6a",
+     "target": "https://ohhelloana.blog/on-onion-cutting",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2023/05/ui2ae",
+     "target": "https://ohhelloana.blog/one-year-later",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2023/06/l9zps",
+     "target": "https://ohhelloana.blog/overthinking-online-participation",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2023/10/smcgs",
+     "target": "https://ohhelloana.blog/overthinking-social-media",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2024/02/bzr5o",
+     "target": "https://ohhelloana.blog/attending-indiewebcamp-brighton",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2024/03/g5dwr",
+     "target": "https://ohhelloana.blog/iwc-brighton-2024",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2024/05/vnfto",
+     "target": "https://ohhelloana.blog/i-want-it-all",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2024/07/5ujbr",
+     "target": "https://ohhelloana.blog/love-letter-to-events",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2025/08/kd228",
+     "target": "https://ohhelloana.blog/my-indieweb-journey",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2025/08/m4hay",
+     "target": "https://ohhelloana.blog/my-indieweb-journey",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2025/08/mhot6",
+     "target": "https://ohhelloana.blog/eight-years-of-jessie",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2026/01/jllad",
+     "target": "https://ohhelloana.blog/2025-no-sleep",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "jvt.me",
+   "target": "swyx.io",
+   "count": 5,
+   "kinds": {
+    "like": 3,
+    "mention": 1,
+    "reply": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://jvt.me/blogroll",
+     "target": "https://swyx.io",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2021/04/2rsx2",
+     "target": "https://swyx.io/three-strikes",
+     "kind": "reply",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2022/05/s6y1z",
+     "target": "https://swyx.io/running-docker-without-docker-desktop",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2022/06/pgvkb",
+     "target": "https://swyx.io/sharding-yourself",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://jvt.me/mf2/2022/06/y3ovs",
+     "target": "https://swyx.io/the-importance-of-writing-weekly-updates",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "leahdas.com",
+   "target": "maggieappleton.com",
+   "count": 6,
+   "kinds": {
+    "mention": 6
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://leahdas.com/note/rethinking-personal-websites",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://leahdas.com/note/rethinking-personal-websites",
+     "target": "https://maggieappleton.com/nontechnical-gardening",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://leahdas.com/posts/personal-websites",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://leahdas.com/posts/personal-websites",
+     "target": "https://maggieappleton.com/nontechnical-gardening",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://leahdas.com/posts/rethinking-personal-websites",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://leahdas.com/posts/rethinking-personal-websites",
+     "target": "https://maggieappleton.com/nontechnical-gardening",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "localghost.dev",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://localghost.dev/blog/stop-generating-start-thinking",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://localghost.dev/blog/this-page-is-under-construction",
+     "target": "https://maggieappleton.com/forest-talk",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "localghost.dev",
+   "target": "ohhelloana.blog",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://localghost.dev/blog/good-links-2024-01-28",
+     "target": "https://ohhelloana.blog/another-round-of-bookmarks",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://localghost.dev/blog/this-page-is-under-construction",
+     "target": "https://ohhelloana.blog",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "lqdev.me",
+   "target": "maggieappleton.com",
+   "count": 3,
+   "kinds": {
+    "bookmark": 1,
+    "like": 1,
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://lqdev.me/feed/appleton-garden-history",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://lqdev.me/feed/gas-towns-agent-patterns-design-bottlenecks-and-vi-2026-01-23",
+     "target": "https://maggieappleton.com/gastown",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://lqdev.me/feed/home-cooked-software-barefoot-developers-appleton",
+     "target": "https://maggieappleton.com/home-cooked-software",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "maggieappleton.com",
+   "target": "boffosocko.com",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://maggieappleton.com/metatour",
+     "target": "https://boffosocko.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "maggieappleton.com",
+   "target": "indieweb.org",
+   "count": 9,
+   "kinds": {
+    "mention": 9
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://maggieappleton.com/bidirectionals",
+     "target": "https://indieweb.org",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/bidirectionals",
+     "target": "https://indieweb.org/Webmention",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/garden-history",
+     "target": "https://indieweb.org",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/garden-history",
+     "target": "https://indieweb.org/2020/Pop-ups/GardenAndStream",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/interoperable-libraries",
+     "target": "https://indieweb.org",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/interoperable-libraries",
+     "target": "https://indieweb.org/2022/Pop-ups/Personal_Libraries",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/metatour",
+     "target": "https://indieweb.org",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/now-2022-11",
+     "target": "https://indieweb.org",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/now-2022-11",
+     "target": "https://indieweb.org/POSSE",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "maggieappleton.com",
+   "target": "marcthiele.com",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://maggieappleton.com/squish-structure",
+     "target": "https://marcthiele.com/photos/smashingconf-freiburg-2023",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "maggieappleton.com",
+   "target": "simonwillison.net",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://maggieappleton.com/2025-08-vibe-legacy-code",
+     "target": "https://simonwillison.net/2025/Mar/19/vibe-coding",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/smidgeons",
+     "target": "https://simonwillison.net/2025/Mar/19/vibe-coding",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/squish-structure",
+     "target": "https://simonwillison.net/2023/Aug/27/wordcamp-llms",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "maggieappleton.com",
+   "target": "swyx.io",
+   "count": 5,
+   "kinds": {
+    "mention": 5
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://maggieappleton.com/cscl",
+     "target": "https://swyx.io/writing/learn-in-public",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/garden-history",
+     "target": "https://swyx.io/digital-garden-tos",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/garden-history",
+     "target": "https://swyx.io/learn-in-public",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/garden-history",
+     "target": "https://swyx.io/writing/digital-garden-tos",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/gathering-structures",
+     "target": "https://swyx.io/learn-in-public",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "maggieappleton.com",
+   "target": "tomcritchlow.com",
+   "count": 5,
+   "kinds": {
+    "mention": 5
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://maggieappleton.com/garden-history",
+     "target": "https://tomcritchlow.com/2018/10/10/of-gardens-and-wikis",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/garden-history",
+     "target": "https://tomcritchlow.com/wiki",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/interoperable-libraries",
+     "target": "https://tomcritchlow.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/interoperable-libraries",
+     "target": "https://tomcritchlow.com/2020/04/15/library-json",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/metatour",
+     "target": "https://tomcritchlow.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "maggieappleton.com",
+   "target": "zylstra.org",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://maggieappleton.com/interoperable-libraries",
+     "target": "https://zylstra.org",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/interoperable-libraries",
+     "target": "https://zylstra.org/blog/booklist-opml-data-structure",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "martymcgui.re",
+   "target": "adactio.com",
+   "count": 1,
+   "kinds": {
+    "bookmark": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://martymcgui.re/2021/01/04/adactio-articlesdesign-principles-for-the-web",
+     "target": "https://adactio.com/articles/17733",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "martymcgui.re",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "like": 1,
+    "repost": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://martymcgui.re/2023/01/07/082208",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://martymcgui.re/2023/05/02/201637",
+     "target": "https://maggieappleton.com/forest-talk",
+     "kind": "repost",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "matthiasott.com",
+   "target": "adactio.com",
+   "count": 1,
+   "kinds": {
+    "reply": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://matthiasott.com/notes/transient-frameworks",
+     "target": "https://adactio.com/articles/19210",
+     "kind": "reply",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "michaelharley.net",
+   "target": "ohhelloana.blog",
+   "count": 1,
+   "kinds": {
+    "like": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://michaelharley.net/likes/2026/10/07/bookmarks-that-were-lingering-in-tabs",
+     "target": "https://ohhelloana.blog/september-bookmarks",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "mxb.dev",
+   "target": "maggieappleton.com",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://mxb.dev/blog/seven-reasons-why-i-dont-write",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "mxb.dev",
+   "target": "ohhelloana.blog",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://mxb.dev/notes/2021-07-08-oh-hello-ana-blog",
+     "target": "https://ohhelloana.blog",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "nest.jakl.one",
+   "target": "ohhelloana.blog",
+   "count": 3,
+   "kinds": {
+    "like": 3
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://nest.jakl.one/likes/2020-07-07-ka1d7",
+     "target": "https://ohhelloana.blog/overthinking-likes",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://nest.jakl.one/likes/2020-08-26-xeiwa",
+     "target": "https://ohhelloana.blog/my-tech-savvy-privilege",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://nest.jakl.one/likes/2021-07-10-oh-hello-ana-so",
+     "target": "https://ohhelloana.blog/so-i-am-now-a-naturalised-citizen",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "nicksimson.com",
+   "target": "maggieappleton.com",
+   "count": 4,
+   "kinds": {
+    "mention": 4
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://nicksimson.com/following",
+     "target": "https://maggieappleton.com",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://nicksimson.com/posts/commonplace-books-gardens-and-streams",
+     "target": "https://maggieappleton.com",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://nicksimson.com/posts/engine-building-garden",
+     "target": "https://maggieappleton.com",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://nicksimson.com/posts/engine-building-garden",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "aaronparecki.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/blogroll",
+     "target": "https://aaronparecki.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/mood-doing-thinking-listening",
+     "target": "https://aaronparecki.com/2019/02/25/9/emoji",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "aboutmonica.com",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/bookmarks-from-september-and-october",
+     "target": "https://aboutmonica.com/blog/how-to-make-your-vs-code-sparkle",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/catching-up-on-my-bookmarks",
+     "target": "https://aboutmonica.com/blog/adding-instagram-timeline-to-next-js-site",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/may-june-other-bookmarks",
+     "target": "https://aboutmonica.com/blog/2020-06-24-exploring-art-direction-in-gatsby",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "adactio.com",
+   "count": 21,
+   "kinds": {
+    "mention": 19,
+    "reply": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/back-to-doing-talks",
+     "target": "https://adactio.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/blogroll",
+     "target": "https://adactio.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://adactio.com/articles/20638",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-2019",
+     "target": "https://adactio.com/journal/15740",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-2023",
+     "target": "https://adactio.com/articles/20638",
+     "kind": "reply",
+     "seen_as": "both"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-from-september-and-october",
+     "target": "https://adactio.com/journal/17573",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-that-were-collecting-dust",
+     "target": "https://adactio.com/articles/18580",
+     "kind": "reply",
+     "seen_as": "both"
+    },
+    {
+     "source": "https://ohhelloana.blog/catching-up-on-my-bookmarks",
+     "target": "https://adactio.com/journal/17794",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/css-day-mc",
+     "target": "https://adactio.com/notes/22604",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/indiewebcamp-london",
+     "target": "https://adactio.com/journal/16320",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/iwc-brighton-2024",
+     "target": "https://adactio.com/journal/20968",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/iwc-brighton-2024",
+     "target": "https://adactio.com/notes/20962",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/mkdn",
+     "target": "https://adactio.com/links/13151",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/more-bookmarks-from-2021",
+     "target": "https://adactio.com/journal/18046",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/more-bookmarks-from-2021",
+     "target": "https://adactio.com/journal/18117",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/my-indieweb-journey",
+     "target": "https://adactio.com/links/13151",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/my-interop-2027",
+     "target": "https://adactio.com/journal/22805",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/overthinking-my-blog",
+     "target": "https://adactio.com/journal/6801",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/post-css-talk",
+     "target": "https://adactio.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/six-talks-later",
+     "target": "https://adactio.com/journal/14363",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/six-talks-later",
+     "target": "https://adactio.com/notes/9725",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "amberwilson.co.uk",
+   "count": 7,
+   "kinds": {
+    "mention": 7
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/blogroll",
+     "target": "https://amberwilson.co.uk",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-2019",
+     "target": "https://amberwilson.co.uk/blog/what-makes-a-mid-level-developer",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-of-2018",
+     "target": "https://amberwilson.co.uk/blog/apartfromcode",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/catching-up-on-my-bookmarks",
+     "target": "https://amberwilson.co.uk/blog/are-your-anchor-links-accessible",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/june-bookmarks",
+     "target": "https://amberwilson.co.uk/learn",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/march-bookmarks-2020",
+     "target": "https://amberwilson.co.uk/blog/accessible-html-elements",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/may-june-other-bookmarks",
+     "target": "https://amberwilson.co.uk/blog/where-did-the-focus-go",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "awfulwoman.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://awfulwoman.com/posts/2016/progressive-enhancement",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/late-2024-bookmarks",
+     "target": "https://awfulwoman.com/posts/2016/progressive-enhancement",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "beesbuzz.biz",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/august-2020-bookmarks",
+     "target": "https://beesbuzz.biz/blog/3876-Incremental-progress",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/catching-up-on-my-bookmarks",
+     "target": "https://beesbuzz.biz/blog/2316-Distributed-toxicity-and-the-IndieWeb",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "blog.voss.co",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/blogroll",
+     "target": "https://blog.voss.co",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "boffosocko.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/blogroll",
+     "target": "https://boffosocko.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/june-bookmarks",
+     "target": "https://boffosocko.com/2019/06/02/lurking-twitter-the-commons-and-private-posts",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "calumryan.com",
+   "count": 8,
+   "kinds": {
+    "mention": 8
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/blog-questions-challenge",
+     "target": "https://calumryan.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/blogroll",
+     "target": "https://calumryan.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/indiewebcamp-london",
+     "target": "https://calumryan.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/my-indieweb-journey",
+     "target": "https://calumryan.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/my-typical-day",
+     "target": "https://calumryan.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/one-year-later",
+     "target": "https://calumryan.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/one-year-of-online-only",
+     "target": "https://calumryan.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/rsvp-using-webmentions",
+     "target": "https://calumryan.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "carol.gg",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/my-typical-day",
+     "target": "https://carol.gg",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "carolgilabert.me",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/blogroll",
+     "target": "https://carolgilabert.me",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/may-bookmarks",
+     "target": "https://carolgilabert.me/blog/frontend-ne-2019",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/may-bookmarks",
+     "target": "https://carolgilabert.me/blog/impostor-syndrome",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "chrisburnell.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/blogroll",
+     "target": "https://chrisburnell.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/catching-up-on-my-bookmarks",
+     "target": "https://chrisburnell.com/article/time-to-cache-up",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "citationneeded.news",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://citationneeded.news/we-can-have-a-different-web",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/late-2024-bookmarks",
+     "target": "https://citationneeded.news/we-can-have-a-different-web",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "clarale.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://clarale.com/blogroll",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-final-final",
+     "target": "https://clarale.com/blogroll",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "css-irl.info",
+   "count": 14,
+   "kinds": {
+    "mention": 14
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/another-round-of-bookmarks",
+     "target": "https://css-irl.info/aspect-ratio-is-great",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/august-2020-bookmarks",
+     "target": "https://css-irl.info/drop-shadow-the-underrated-css-filter",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/blogroll",
+     "target": "https://css-irl.info",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-2019",
+     "target": "https://css-irl.info/how-to-accessibly-split-text",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-from-september-and-october",
+     "target": "https://css-irl.info/why-i-dont-have-time-for-your-coding-challenge",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-that-were-collecting-dust",
+     "target": "https://css-irl.info/inspecting-sizes",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/catching-up-on-my-bookmarks",
+     "target": "https://css-irl.info/finding-an-elements-nearest-relative-positioned-ancestor",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/january-bookmarks-2020",
+     "target": "https://css-irl.info/optimising-svgs-for-the-web",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/july-2020-bookmarks",
+     "target": "https://css-irl.info/from-gatsby-to-eleventy",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/july-bookmarks",
+     "target": "https://css-irl.info/heatwave-animated-sun-illustration",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/march-bookmarks",
+     "target": "https://css-irl.info/becoming-a-tech-speaker",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/may-bookmarks",
+     "target": "https://css-irl.info/debugging-css-grid-part-2-what-the-fraction",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/more-bookmarks-from-2021",
+     "target": "https://css-irl.info/creating-generative-svg-characters",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/the-interviewers",
+     "target": "https://css-irl.info/why-i-dont-have-time-for-your-coding-challenge",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "cydstumpel.nl",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://cydstumpel.nl/being-lazy-with-view-transition-old-and-new",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-final-final",
+     "target": "https://cydstumpel.nl/being-lazy-with-view-transition-old-and-new",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/my-interop-2027",
+     "target": "https://cydstumpel.nl/my-picks-for-interop-2027",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "darekkay.com",
+   "count": 4,
+   "kinds": {
+    "mention": 4
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://darekkay.com/blog/bookmarklets",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://darekkay.com/blog/rss-styling",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-2023",
+     "target": "https://darekkay.com/blog/rss-styling",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/late-2024-bookmarks",
+     "target": "https://darekkay.com/blog/bookmarklets",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "doubleloop.net",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/blogroll",
+     "target": "https://doubleloop.net",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/rsvp-using-webmentions",
+     "target": "https://doubleloop.net",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/rsvp-using-webmentions",
+     "target": "https://doubleloop.net/2019/05/10/5392",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "ethanmarcotte.com",
+   "count": 4,
+   "kinds": {
+    "mention": 4
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/april-bookmarks-2019",
+     "target": "https://ethanmarcotte.com/wrote/trainers",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://ethanmarcotte.com/wrote/books-no-longer-apart",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/late-2024-bookmarks",
+     "target": "https://ethanmarcotte.com/wrote/books-no-longer-apart",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/march-bookmarks",
+     "target": "https://ethanmarcotte.com/wrote/the-web-we-broke",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "giftegwuenu.com",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/blogging-and-me",
+     "target": "https://giftegwuenu.com/the-benefits-of-owning-a-personal-blog",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/march-bookmarks-2020",
+     "target": "https://giftegwuenu.com/improve-video-accessibility-with-captions",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/may-bookmarks",
+     "target": "https://giftegwuenu.com/a-practical-guide-to-optimizing-performance-on-the-web",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "hidde.blog",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/another-round-of-bookmarks",
+     "target": "https://hidde.blog/sharing-links",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/back-to-doing-talks",
+     "target": "https://hidde.blog",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "indieweb.org",
+   "count": 27,
+   "kinds": {
+    "mention": 27
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/article-at-smashing-magazine",
+     "target": "https://indieweb.org/name",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/attending-indiewebcamp-brighton",
+     "target": "https://indieweb.org/2024/Brighton",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/blogging-and-me",
+     "target": "https://indieweb.org",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/indie-web-camp-berlin-2018",
+     "target": "https://indieweb.org",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/indie-web-camp-berlin-2018",
+     "target": "https://indieweb.org/2018/Berlin",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/indiewebcamp-london",
+     "target": "https://indieweb.org/2020/London",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/iwc-brighton-2024",
+     "target": "https://indieweb.org/2024/Brighton",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/iwc-brighton-2024",
+     "target": "https://indieweb.org/2024/Brighton/Schedule",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/my-indieweb-journey",
+     "target": "https://indieweb.org",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/my-indieweb-journey",
+     "target": "https://indieweb.org/Getting_Started",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/my-indieweb-journey",
+     "target": "https://indieweb.org/User:Ohhelloana.blog",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/my-indieweb-journey",
+     "target": "https://indieweb.org/disclosure",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/my-indieweb-journey",
+     "target": "https://indieweb.org/discuss",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/my-indieweb-journey",
+     "target": "https://indieweb.org/guestbook",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/my-typical-day",
+     "target": "https://indieweb.org/life_happens",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/overthinking-likes",
+     "target": "https://indieweb.org/2020/London/analytics",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/overthinking-likes",
+     "target": "https://indieweb.org/like",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/overthinking-likes",
+     "target": "https://indieweb.org/likes",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/overthinking-likes",
+     "target": "https://indieweb.org/website-analytics",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/overthinking-my-blog",
+     "target": "https://indieweb.org/principles",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/overthinking-my-blog",
+     "target": "https://indieweb.org/selfdogfood",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/rsvp-using-webmentions",
+     "target": "https://indieweb.org/rsvp",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/thoughts-this-version-of-myself",
+     "target": "https://indieweb.org/User:Ohhelloana.blog",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/thoughts-this-version-of-myself",
+     "target": "https://indieweb.org/identity",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/thoughts-this-version-of-myself",
+     "target": "https://indieweb.org/name",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/viewsource-2018",
+     "target": "https://indieweb.org/2018/Berlin",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/viewsource-2018",
+     "target": "https://indieweb.org/this-week/2018-10-26.html",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "jeffbridgforth.com",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/my-interop-2027",
+     "target": "https://jeffbridgforth.com/my-interop-feature-ranking-2027",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "jvt.me",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/blogroll",
+     "target": "https://jvt.me",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "localghost.dev",
+   "count": 4,
+   "kinds": {
+    "mention": 4
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://localghost.dev/blog/engineering-progression-for-humans",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-2023",
+     "target": "https://localghost.dev/blog/engineering-progression-for-humans",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/ffconf-2019",
+     "target": "https://localghost.dev/2019/11/ffconf-2019-future-friends-beside-the-seaside",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/ffconf-2023",
+     "target": "https://localghost.dev",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/iwc-brighton-2024",
+     "target": "https://maggieappleton.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/more-bookmarks-from-2021",
+     "target": "https://maggieappleton.com/nontechnical-gardening",
+     "kind": "mention",
+     "seen_as": "both"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "marcthiele.com",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://marcthiele.com/notes/links-with-tips-and-advice-for-public-speaking",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/late-2024-bookmarks",
+     "target": "https://marcthiele.com/notes/links-with-tips-and-advice-for-public-speaking",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/love-letter-to-events",
+     "target": "https://marcthiele.com/notes/state-of-events-2024",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "martymcgui.re",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/blogroll",
+     "target": "https://martymcgui.re",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/my-indieweb-journey",
+     "target": "https://martymcgui.re/2024/08/29/141602",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "matthiasott.com",
+   "count": 6,
+   "kinds": {
+    "mention": 6
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/august-2020-bookmarks",
+     "target": "https://matthiasott.com/notes/debugging-html-with-advanced-css-selectors",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/blogging-and-me",
+     "target": "https://matthiasott.com/articles/into-the-personal-website-verse",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/blogroll",
+     "target": "https://matthiasott.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/may-bookmarks",
+     "target": "https://matthiasott.com/articles/into-the-personal-website-verse",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/one-year-later",
+     "target": "https://matthiasott.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/people-and-blogs",
+     "target": "https://matthiasott.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "matuzo.at",
+   "count": 15,
+   "kinds": {
+    "mention": 15
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/april-bookmarks-2019",
+     "target": "https://matuzo.at/blog/12-tips-for-more-accessible-react-apps-slides-react-finland-2019",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/august-2020-bookmarks",
+     "target": "https://matuzo.at/blog/heres-what-i-didnt-know-about-content",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/blogroll",
+     "target": "https://matuzo.at",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://matuzo.at/blog/2026/grid-lanes-accessibility",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://matuzo.at/blog/2026/html-boilerplate?u=2026",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-2",
+     "target": "https://matuzo.at/blog/2026/grid-lanes-accessibility",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-2019",
+     "target": "https://matuzo.at/blog/beyond-automatic-accessibility-testing-6-things-i-check-on-every-website-i-build",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-from-september-and-october",
+     "target": "https://matuzo.at/blog/writing-even-more-css-with-accessibility-in-mind-user-preferences",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/february-bookmarks-2020",
+     "target": "https://matuzo.at/blog/reading-recommendations-animation-on-the-web-and-vestibular-disorders",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/february-bookmarks-2020",
+     "target": "https://matuzo.at/blog/why-543kb-keep-me-up-at-night",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/january-bookmarks-2020",
+     "target": "https://matuzo.at/blog/css-pro-tip-for-mac-users-always-show-scroll-bars-in-macos",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/more-bookmarks-from-2021",
+     "target": "https://matuzo.at/blog/html-boilerplate",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/my-indieweb-journey",
+     "target": "https://matuzo.at/blog/2025/breaking-up-with-my-x",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/one-year-later",
+     "target": "https://matuzo.at/blog/2022/100-days-of-more-or-less-modern-css",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/september-bookmarks",
+     "target": "https://matuzo.at/blog/2026/html-boilerplate?u=2026",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "michaelharley.net",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://michaelharley.net/posts/2026/08/06/what-happens-to-our-blogs-when-we-die",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/september-bookmarks",
+     "target": "https://michaelharley.net/posts/2026/08/06/what-happens-to-our-blogs-when-we-die",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "mxb.dev",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/blogroll",
+     "target": "https://mxb.dev",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/june-bookmarks",
+     "target": "https://mxb.dev/blog/the-css-mindset",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "news.indieweb.org",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/indienews-20-08-26",
+     "target": "https://news.indieweb.org/en",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/mkdn",
+     "target": "https://news.indieweb.org/en",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/why",
+     "target": "https://news.indieweb.org/en",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "paulrobertlloyd.com",
+   "count": 5,
+   "kinds": {
+    "mention": 5
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/attending-indiewebcamp-brighton",
+     "target": "https://paulrobertlloyd.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/attending-indiewebcamp-brighton",
+     "target": "https://paulrobertlloyd.com/2024/032/a1/indiewebcamp_brighton",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/iwc-brighton-2024",
+     "target": "https://paulrobertlloyd.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/mkdn",
+     "target": "https://paulrobertlloyd.com/2024/201/s1/peckham_digital",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/my-indieweb-journey",
+     "target": "https://paulrobertlloyd.com/2024/201/s1/peckham_digital",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "petermolnar.net",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/article-at-smashing-magazine",
+     "target": "https://petermolnar.net/article/making-things-private/index.html",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/blogroll",
+     "target": "https://petermolnar.net",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "qubyte.codes",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/iwc-brighton-2024",
+     "target": "https://qubyte.codes",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/iwc-brighton-2024",
+     "target": "https://qubyte.codes/blog/indiewebcamp-brighton-2024",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "rachelandrew.co.uk",
+   "count": 4,
+   "kinds": {
+    "mention": 4
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://rachelandrew.co.uk/archives/2026/04/21/the-importance-of-people-who-care",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-2",
+     "target": "https://rachelandrew.co.uk/archives/2026/04/21/the-importance-of-people-who-care",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/box-shadow-border-grid-gap",
+     "target": "https://rachelandrew.co.uk",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/january-bookmarks",
+     "target": "https://rachelandrew.co.uk/archives/2019/01/30/html-css-and-our-vanishing-industry-entry-points",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "remysharp.com",
+   "count": 7,
+   "kinds": {
+    "mention": 7
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/april-bookmarks-2019",
+     "target": "https://remysharp.com/2019/04/02/twitter-without-tracking",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/blog-questions-challenge",
+     "target": "https://remysharp.com/2025/02/06/blog-questions-challenge",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/catching-up-on-my-bookmarks",
+     "target": "https://remysharp.com/2020/12/17/webbish",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/ffconf-2023",
+     "target": "https://remysharp.com/2023/11/15/my-experience-of-ffconf-2023",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/fix-noisy-book",
+     "target": "https://remysharp.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/more-bookmarks-from-2021",
+     "target": "https://remysharp.com/til/css/perfect-fullscreen-43-aspect-ratio",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/my-interop-2027",
+     "target": "https://remysharp.com/2026/10/29/my-2027-web-platform-feature-ranking",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "roytang.net",
+   "count": 4,
+   "kinds": {
+    "mention": 4
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://roytang.net/2023/10/social-media-lurkers-introverts-blogging",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://roytang.net/2025/06/web-explorer",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-2023",
+     "target": "https://roytang.net/2023/10/social-media-lurkers-introverts-blogging",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-final-final",
+     "target": "https://roytang.net/2025/06/web-explorer",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "sia.codes",
+   "count": 4,
+   "kinds": {
+    "mention": 4
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://sia.codes/posts/migrating-netlify-to-cloudflare",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-that-were-collecting-dust",
+     "target": "https://sia.codes/posts/render-blocking-resources",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/catching-up-on-my-bookmarks",
+     "target": "https://sia.codes/posts/architecting-data-in-eleventy",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/late-2024-bookmarks",
+     "target": "https://sia.codes/posts/migrating-netlify-to-cloudflare",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "swyx.io",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/january-bookmarks",
+     "target": "https://swyx.io/writing/learn-in-public",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "theadhocracy.co.uk",
+   "count": 4,
+   "kinds": {
+    "mention": 4
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/article-at-smashing-magazine",
+     "target": "https://theadhocracy.co.uk/note/autonomy-online-a-case-for-the-indieweb",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://theadhocracy.co.uk/wrote/indiewebcamp-brighton-2024",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/iwc-brighton-2024",
+     "target": "https://theadhocracy.co.uk/wrote/indiewebcamp-brighton-2024",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/late-2024-bookmarks",
+     "target": "https://theadhocracy.co.uk/wrote/indiewebcamp-brighton-2024",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "tomcritchlow.com",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/another-round-of-bookmarks",
+     "target": "https://tomcritchlow.com/2022/04/01/blogging-accelerator",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/another-round-of-bookmarks",
+     "target": "https://tomcritchlow.com/2022/05/29/underground-blogging",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/catching-up-on-my-bookmarks",
+     "target": "https://tomcritchlow.com/2018/02/23/small-b-blogging",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "utilitybend.com",
+   "count": 4,
+   "kinds": {
+    "mention": 4
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://utilitybend.com/blog/css-is-filling-the-gaps-with-rules-a-way-to-style-gaps-in-grid-and-flex",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-2",
+     "target": "https://utilitybend.com/blog/css-is-filling-the-gaps-with-rules-a-way-to-style-gaps-in-grid-and-flex",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/css-day-mc",
+     "target": "https://utilitybend.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/post-css-talk",
+     "target": "https://utilitybend.com/blog/css-day-2025-a-little-story-by-a-little-man-on-quite-a-big-stage",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "visitmy.website",
+   "count": 4,
+   "kinds": {
+    "mention": 4
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/august-2020-bookmarks",
+     "target": "https://visitmy.website/2020/07/13/this-website-is-killing-the-planet",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/catching-up-on-my-bookmarks",
+     "target": "https://visitmy.website/2020/12/05/bookmarks-3",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/catching-up-on-my-bookmarks",
+     "target": "https://visitmy.website/2020/12/12/reading-list-picks-of-2020",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/more-bookmarks-from-2021",
+     "target": "https://visitmy.website/2020/11/01/why-i-write-weeknotes",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "werd.io",
+   "count": 6,
+   "kinds": {
+    "mention": 6
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://werd.io/2024/gardens-and-power",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://werd.io/47-lessons",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks",
+     "target": "https://werd.io/why-rss-matters",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-final-final",
+     "target": "https://werd.io/47-lessons",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/bookmarks-final-final",
+     "target": "https://werd.io/why-rss-matters",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://ohhelloana.blog/late-2024-bookmarks",
+     "target": "https://werd.io/2024/gardens-and-power",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "paperpilot.dev",
+   "target": "maggieappleton.com",
+   "count": 9,
+   "kinds": {
+    "mention": 9
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://paperpilot.dev/garden/artificial-intelligence",
+     "target": "https://maggieappleton.com/home-cooked-software",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://paperpilot.dev/garden/barefoot-developers",
+     "target": "https://maggieappleton.com/home-cooked-software",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://paperpilot.dev/garden/chromatic-lattice",
+     "target": "https://maggieappleton.com/ambient-copresence",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://paperpilot.dev/garden/command-palettes",
+     "target": "https://maggieappleton.com/command-bar",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://paperpilot.dev/garden/digital-gardens",
+     "target": "https://maggieappleton.com/nontechnical-gardening",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://paperpilot.dev/garden/essays",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://paperpilot.dev/garden/generative-ai",
+     "target": "https://maggieappleton.com/ai-enlightenment",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://paperpilot.dev/garden/incremental-automaton",
+     "target": "https://maggieappleton.com/ambient-copresence",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://paperpilot.dev/garden/the-cozy-web",
+     "target": "https://maggieappleton.com/cozy-web",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "paulrobertlloyd.com",
+   "target": "ohhelloana.blog",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://paulrobertlloyd.com/2024/107/a1/indiekit",
+     "target": "https://ohhelloana.blog/iwc-brighton-2024",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "petermolnar.net",
+   "target": "ohhelloana.blog",
+   "count": 2,
+   "kinds": {
+    "reply": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://petermolnar.net/note/re-ohhelloanablogblogging-and-me",
+     "target": "https://ohhelloana.blog/blogging-and-me",
+     "kind": "reply",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://petermolnar.net/note/re-ohhelloanablognew-forest",
+     "target": "https://ohhelloana.blog/new-forest",
+     "kind": "reply",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "quantumgardener.info",
+   "target": "maggieappleton.com",
+   "count": 4,
+   "kinds": {
+    "mention": 4
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://quantumgardener.info/notes/ambient-co-presence",
+     "target": "https://maggieappleton.com/ambient-copresence",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://quantumgardener.info/notes/blogging",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://quantumgardener.info/notes/designing-the-quantum-garden",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://quantumgardener.info/notes/digital-garden",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "qubyte.codes",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "bookmark": 1,
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://qubyte.codes/blog/indiewebcamp-brighton-2024",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://qubyte.codes/links/1672735995597",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "qubyte.codes",
+   "target": "ohhelloana.blog",
+   "count": 2,
+   "kinds": {
+    "bookmark": 1,
+    "like": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://qubyte.codes/likes/1594107603722",
+     "target": "https://ohhelloana.blog/overthinking-likes",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://qubyte.codes/links/1710414416957",
+     "target": "https://ohhelloana.blog/just-get-a-website",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "remysharp.com",
+   "target": "ohhelloana.blog",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://remysharp.com/2019/06/26/scheduled-and-draft-11ty-posts",
+     "target": "https://ohhelloana.blog/blogging-and-me",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://remysharp.com/2025/02/06/blog-questions-challenge",
+     "target": "https://ohhelloana.blog/posts",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "robida.net",
+   "target": "ohhelloana.blog",
+   "count": 5,
+   "kinds": {
+    "like": 4,
+    "repost": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://robida.net/entries/2026/03/19/like-1",
+     "target": "https://ohhelloana.blog/overthinking-ai",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://robida.net/entries/2026/04/02/like-1",
+     "target": "https://ohhelloana.blog/new-forest",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://robida.net/entries/2026/05/12/its-2026-and-women-are-still-asked-to-teach-others",
+     "target": "https://ohhelloana.blog/woman-in-tech",
+     "kind": "repost",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://robida.net/entries/2026/05/12/like-1",
+     "target": "https://ohhelloana.blog/woman-in-tech",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://robida.net/entries/2026/06/30/like-3",
+     "target": "https://ohhelloana.blog/web-weaving-podcast",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "ryanpatrickrandall.com",
+   "target": "maggieappleton.com",
+   "count": 6,
+   "kinds": {
+    "mention": 6
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://ryanpatrickrandall.com/_posts/2024-09-19-book-notes-elsewhere",
+     "target": "https://maggieappleton.com/antilibrary",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://ryanpatrickrandall.com/_posts/2024-09-19-book-notes-elsewhere",
+     "target": "https://maggieappleton.com/library",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://ryanpatrickrandall.com/book-notes-elsewhere",
+     "target": "https://maggieappleton.com/antilibrary",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://ryanpatrickrandall.com/book-notes-elsewhere",
+     "target": "https://maggieappleton.com/library",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://ryanpatrickrandall.com/now/_posts/2020-06-19-now-july-2020",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://ryanpatrickrandall.com/now/now-july-2020",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "sekhmetdesign.thegeekcartel.com",
+   "target": "maggieappleton.com",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://sekhmetdesign.thegeekcartel.com/2024/07/links-id-share-in-private-10",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://sekhmetdesign.thegeekcartel.com/2024/12/links-id-share-in-private-19",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://sekhmetdesign.thegeekcartel.com/2025/03/links-id-share-in-private-26",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "stream.jeremycherfas.net",
+   "target": "boffosocko.com",
+   "count": 1,
+   "kinds": {
+    "bookmark": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://stream.jeremycherfas.net/profile/jeremy",
+     "target": "https://boffosocko.com/2021/07/03/differentiating-online-variations-of-the-commonplace-book-digital-gardens-wikis-zettlekasten-waste-books-florilegia-and-second-brains",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "stream.jeremycherfas.net",
+   "target": "maggieappleton.com",
+   "count": 3,
+   "kinds": {
+    "bookmark": 3
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://stream.jeremycherfas.net/2023/the-expanding-dark-forest-and-generative-ai",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://stream.jeremycherfas.net/2024/faking-william-morris-generative-forgery-and-the-erosion-of-art",
+     "target": "https://maggieappleton.com/generative-forgery",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://stream.jeremycherfas.net/2024/home-cooked-software-and-barefoot-developers",
+     "target": "https://maggieappleton.com/home-cooked-software",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "stream.jeremycherfas.net",
+   "target": "ohhelloana.blog",
+   "count": 1,
+   "kinds": {
+    "like": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://stream.jeremycherfas.net/2021/oh-hello-ana---unsolicited-rejection",
+     "target": "https://ohhelloana.blog/unsolicited-rejection",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "stream.jeremycherfas.net",
+   "target": "zylstra.org",
+   "count": 2,
+   "kinds": {
+    "bookmark": 1,
+    "like": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://stream.jeremycherfas.net/profile/jeremy",
+     "target": "https://zylstra.org/blog/2019/07/fake-is-easy-back-up-your-words-with-hyperlinks",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://stream.jeremycherfas.net/profile/jeremy",
+     "target": "https://zylstra.org/blog/2023/05/on-the-internet-nobody",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "swyx.io",
+   "target": "indieweb.org",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://swyx.io/shortcodes-vs-mdx-3d4e",
+     "target": "https://indieweb.org/POSSE",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://swyx.io/twitter-metacommentary",
+     "target": "https://indieweb.org",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "swyx.io",
+   "target": "maggieappleton.com",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://swyx.io/particle-wave-duality",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "swyx.io",
+   "target": "mxb.dev",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://swyx.io/clientside-webmentions",
+     "target": "https://mxb.dev/blog/using-webmentions-on-static-sites",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://swyx.io/the-surprisingly-high-table-stakes-of-modern-blogs",
+     "target": "https://mxb.dev",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "swyx.io",
+   "target": "simonwillison.net",
+   "count": 5,
+   "kinds": {
+    "mention": 5
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://swyx.io/datasette-twitter",
+     "target": "https://simonwillison.net/2018/Jan/28/analyzing-my-twitter-followers",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://swyx.io/datasette-twitter",
+     "target": "https://simonwillison.net/2019/Apr/23/datasette-glitch",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://swyx.io/datasette-twitter",
+     "target": "https://simonwillison.net/2021/Jul/22/small-data",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://swyx.io/high-taste-tester",
+     "target": "https://simonwillison.net/2025/Jun/6/six-months-in-llms",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://swyx.io/preemptive-pluralization",
+     "target": "https://simonwillison.net/2021/Jul/1/pagnis",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "synesthesia.co.uk",
+   "target": "zylstra.org",
+   "count": 6,
+   "kinds": {
+    "mention": 3,
+    "reply": 3
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://synesthesia.co.uk/author/julian-elve",
+     "target": "https://zylstra.org/blog/2022/02/building-my-own-microsub-client-for-feed-reading",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://synesthesia.co.uk/author/julian-elve",
+     "target": "https://zylstra.org/blog/2022/10/twitter-after-the-birds-capture-find-me-at-tonm-tzyl-nl",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://synesthesia.co.uk/author/julian-elve",
+     "target": "https://zylstra.org/blog/2022/11/how-to-federate-like-our-business-ecosystem",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://synesthesia.co.uk/blog",
+     "target": "https://zylstra.org/blog/2004/12/bye_bye_ecademy",
+     "kind": "reply",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://synesthesia.co.uk/blog",
+     "target": "https://zylstra.org/blog/2008/01/thoughts_on_gtd",
+     "kind": "reply",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://synesthesia.co.uk/blog/archives/2004/12/06/leaving-ecademy",
+     "target": "https://zylstra.org/blog/2004/12/bye_bye_ecademy",
+     "kind": "reply",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "theadhocracy.co.uk",
+   "target": "boffosocko.com",
+   "count": 1,
+   "kinds": {
+    "bookmark": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://theadhocracy.co.uk/note/the-variations-of-the-commonplace-book",
+     "target": "https://boffosocko.com/2021/07/03/differentiating-online-variations-of-the-commonplace-book-digital-gardens-wikis-zettlekasten-waste-books-florilegia-and-second-brains",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "thejaymo.net",
+   "target": "maggieappleton.com",
+   "count": 4,
+   "kinds": {
+    "mention": 4
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://thejaymo.net/2023/01/29/280-twice-in-one-week",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://thejaymo.net/2024/03/17/331-15-years-thejaymo-net",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://thejaymo.net/2025/01/26/374-a-touch-of-future-shock-operator-and-deepseek-r1",
+     "target": "https://maggieappleton.com/2025-01-deepseek",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://thejaymo.net/2025/09/21/408-after-reading-the-draft",
+     "target": "https://maggieappleton.com/ai-enlightenment",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "thejaymo.net",
+   "target": "swyx.io",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://thejaymo.net/2021/03/21/188-the-web-that-was",
+     "target": "https://swyx.io/clubhouse-hate",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "tracydurnell.com",
+   "target": "adactio.com",
+   "count": 1,
+   "kinds": {
+    "reply": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://tracydurnell.com/2023/11/17/perspectives-on-time-change-and-longevity",
+     "target": "https://adactio.com/articles/20638",
+     "kind": "reply",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "tracydurnell.com",
+   "target": "boffosocko.com",
+   "count": 1,
+   "kinds": {
+    "reply": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://tracydurnell.com/2021/07/03/a-system-of-notes",
+     "target": "https://boffosocko.com/2021/07/03/differentiating-online-variations-of-the-commonplace-book-digital-gardens-wikis-zettlekasten-waste-books-florilegia-and-second-brains",
+     "kind": "reply",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "tracydurnell.com",
+   "target": "maggieappleton.com",
+   "count": 4,
+   "kinds": {
+    "mention": 4
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://tracydurnell.com/2023/05/02/ai-article-roundup",
+     "target": "https://maggieappleton.com/forest-talk",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://tracydurnell.com/2024/05/18/social-norms-of-the-indieweb",
+     "target": "https://maggieappleton.com/assumed-audience",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://tracydurnell.com/2025/01/09/sanding-off-friction-from-indie-web-connection",
+     "target": "https://maggieappleton.com/cozy-web",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://tracydurnell.com/2026/10/06/wonders-of-web-weaving-podcast-annotated-transcript",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "tracydurnell.com",
+   "target": "swyx.io",
+   "count": 2,
+   "kinds": {
+    "bookmark": 1,
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://tracydurnell.com/2021/02/17/why-and-how-to-learn-in-public",
+     "target": "https://swyx.io/learn-in-public",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://tracydurnell.com/2023/08/11/learning-in-community",
+     "target": "https://swyx.io/learn-in-public",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "visitmy.website",
+   "target": "maggieappleton.com",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://visitmy.website/2022/05/24/bookmarks-9",
+     "target": "https://maggieappleton.com/evergreens",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://visitmy.website/2022/05/24/bookmarks-9",
+     "target": "https://maggieappleton.com/paleolithic-nostalgia",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://visitmy.website/2022/09/26/searching-for-answers-in-data",
+     "target": "https://maggieappleton.com/block-data",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "werd.io",
+   "target": "maggieappleton.com",
+   "count": 3,
+   "kinds": {
+    "bookmark": 2,
+    "reply": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://werd.io/2023/reading-watching-playing-using-january-2023",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "reply",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://werd.io/2023/the-expanding-dark-forest-and-generative-ai",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://werd.io/2024/ambient-co-presence",
+     "target": "https://maggieappleton.com/ambient-copresence",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "werd.io",
+   "target": "swyx.io",
+   "count": 1,
+   "kinds": {
+    "bookmark": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://werd.io/2023/my-new-startup-checklist",
+     "target": "https://swyx.io/my-new-startup-checklist",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "werd.io",
+   "target": "zylstra.org",
+   "count": 1,
+   "kinds": {
+    "bookmark": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://werd.io/profile/benwerd",
+     "target": "https://zylstra.org/blog/2022/09/wordpressindieweb-as-the-os-of-the-open-social-web",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "wittenbrink.net",
+   "target": "zylstra.org",
+   "count": 2,
+   "kinds": {
+    "mention": 1,
+    "reply": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://wittenbrink.net/author/heinz",
+     "target": "https://zylstra.org/blog/networked-agency",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://wittenbrink.net/lostandfound/danke-fuer-den-kommentar-zu-contentstrategie-und-degrowth-ton",
+     "target": "https://zylstra.org/blog/2019/10/10192",
+     "kind": "reply",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "zylstra.org",
+   "target": "aaronparecki.com",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://zylstra.org/blog/2022/06/after-3-decades-notepad-cant-still-be-the-answer-can-it",
+     "target": "https://aaronparecki.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "zylstra.org",
+   "target": "blog.frankmeeuwsen.com",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://zylstra.org/blog/2025/12/the-vibe-of-coding-personal-tools",
+     "target": "https://blog.frankmeeuwsen.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2025/12/the-vibe-of-coding-personal-tools",
+     "target": "https://blog.frankmeeuwsen.com/2025/12/03/ik-geef-een-gratis-claude.html",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2026/03/the-threefold-personal-km-zine",
+     "target": "https://blog.frankmeeuwsen.com/2026/03/20/analoge-creativiteit-op-pkm-summit.html",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "zylstra.org",
+   "target": "boffosocko.com",
+   "count": 12,
+   "kinds": {
+    "bookmark": 3,
+    "mention": 8,
+    "reply": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://zylstra.org/blog/2022/01/down-the-research-rabbithole",
+     "target": "https://boffosocko.com/blog",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2022/04/three-questions-about-annotating-in-hypothesis",
+     "target": "https://boffosocko.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2022/07/a-practice-for-note-card-systems-outputs",
+     "target": "https://boffosocko.com/2022/07/12/call-for-model-examples-of-zettelkasten-output-processes",
+     "kind": "reply",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2022/09/10-thoughts-after-100-annotations-in-hypothes-is",
+     "target": "https://boffosocko.com/2022/08/29/a-small-10000-annotations-party",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2022/10/on-the-lineage-and-history-of-zettelkasten-style-pkm",
+     "target": "https://boffosocko.com/2022/10/22/the-two-definitions-of-zettelkasten",
+     "kind": "bookmark",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2023/07/index-cards-as-improv-prompts",
+     "target": "https://boffosocko.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2024/01/23807",
+     "target": "https://boffosocko.com/2024/01/18/note-taking-and-knowledge-management-resources-for-students",
+     "kind": "bookmark",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2024/01/23807",
+     "target": "https://boffosocko.com/2024/01/24/rev-dr-martin-luther-king-jr-s-zettelkasten",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2024/03/european-pkm-summit-2024",
+     "target": "https://boffosocko.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2024/03/pkm-timeline-35-000-bce-to-present",
+     "target": "https://boffosocko.com/2024/03/22/55822161",
+     "kind": "bookmark",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2024/03/word-pkm-kampioen-voor-jezelf",
+     "target": "https://boffosocko.com/2024/03/22/55822161",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2024/04/the-innovations-in-pkm-are-sparse-and-far-between",
+     "target": "https://boffosocko.com/2024/03/22/55822161",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "zylstra.org",
+   "target": "cagrimmett.com",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://zylstra.org/blog/2023/04/hey-cool-this-is-great-rubbish",
+     "target": "https://cagrimmett.com/likes/a7c6cb096c",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "zylstra.org",
+   "target": "commonplace.doubleloop.net",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://zylstra.org/blog/2020/03/13811",
+     "target": "https://commonplace.doubleloop.net/20200328164214-calculus_of_grit",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "zylstra.org",
+   "target": "diggingthedigital.com",
+   "count": 8,
+   "kinds": {
+    "mention": 7,
+    "reply": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://zylstra.org/blog/2019/05/6688",
+     "target": "https://diggingthedigital.com/2733-2",
+     "kind": "reply",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2019/06/an-obligation-to-explain-the-indieweb",
+     "target": "https://diggingthedigital.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2020/05/14340",
+     "target": "https://diggingthedigital.com/doctorow-free-speech-en-een-beter-internet",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2021/04/nabeschouwing-de-eerste-nederlandstalige-obsidian-meet-up",
+     "target": "https://diggingthedigital.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2021/10/3e-nederlandstalige-obsidian-meet-up",
+     "target": "https://diggingthedigital.com/s02e39-een-terugblik-op-de-eerste-obsidian-meetup",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2022/05/gesprekken-met-bloggers-van-toen-smullen-van-lekker-meta",
+     "target": "https://diggingthedigital.com/18542-2",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2022/05/gesprekken-met-bloggers-van-toen-smullen-van-lekker-meta",
+     "target": "https://diggingthedigital.com/maak-je-eigen-moederschip",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/stuff-that-matters-unconference-2018-smart-home-edition/smart-participants",
+     "target": "https://diggingthedigital.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "zylstra.org",
+   "target": "doubleloop.net",
+   "count": 1,
+   "kinds": {
+    "reply": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://zylstra.org/blog/2019/06/the-blog-and-wiki-combo",
+     "target": "https://doubleloop.net/2019/06/15/introduced-to-infostrats",
+     "kind": "reply",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "zylstra.org",
+   "target": "indieweb.org",
+   "count": 7,
+   "kinds": {
+    "mention": 7
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://zylstra.org/blog/2020/02/12918",
+     "target": "https://indieweb.org/Getting_Started_on_WordPress",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2022/01/writing-a-personal-micropub-client",
+     "target": "https://indieweb.org/Micropub/Clients",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2022/01/writing-a-personal-micropub-client",
+     "target": "https://indieweb.org/obtaining-an-access-token",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2022/02/building-my-own-microsub-client-for-feed-reading",
+     "target": "https://indieweb.org/Microsub-spec",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2022/02/on-taking-notes-and-choosing-tools",
+     "target": "https://indieweb.org/POSSE",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2022/09/wordpressindieweb-as-the-os-of-the-open-social-web",
+     "target": "https://indieweb.org",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/my-personal-micropub-client",
+     "target": "https://indieweb.org/Micropub",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "zylstra.org",
+   "target": "jvt.me",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://zylstra.org/blog/2022/01/writing-a-personal-micropub-client",
+     "target": "https://jvt.me/posts/2020/06/28/personal-micropub-client",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/my-personal-micropub-client",
+     "target": "https://jvt.me/posts/2020/06/28/personal-micropub-client",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "zylstra.org",
+   "target": "maggieappleton.com",
+   "count": 4,
+   "kinds": {
+    "bookmark": 4
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://zylstra.org/blog/2022/08/22024",
+     "target": "https://maggieappleton.com/joining-ought",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://zylstra.org/blog/2023/05/23128",
+     "target": "https://maggieappleton.com",
+     "kind": "bookmark",
+     "seen_as": "both"
+    },
+    {
+     "source": "https://zylstra.org/blog/2023/05/23128",
+     "target": "https://maggieappleton.com/forest-talk",
+     "kind": "bookmark",
+     "seen_as": "both"
+    },
+    {
+     "source": "https://zylstra.org/blog/2023/05/bing-bombing-through-twitter",
+     "target": "https://maggieappleton.com/forest-talk",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "zylstra.org",
+   "target": "news.indieweb.org",
+   "count": 4,
+   "kinds": {
+    "mention": 4
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://zylstra.org/blog/2022/02/on-taking-notes-and-choosing-tools",
+     "target": "https://news.indieweb.org/en",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2022/02/posting-directly-from-my-feed-reader-to-my-blog",
+     "target": "https://news.indieweb.org/en",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2022/09/wordpressindieweb-as-the-os-of-the-open-social-web",
+     "target": "https://news.indieweb.org/en",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2022/10/indieweb-plugin-for-wordpress-blocks",
+     "target": "https://news.indieweb.org/en",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "zylstra.org",
+   "target": "notiz.blog",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://zylstra.org/blog/2023/02/wordpress-activitypub-plugin-updated-now-supports-mention",
+     "target": "https://notiz.blog",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/me-and-the-fediverse",
+     "target": "https://notiz.blog",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "zylstra.org",
+   "target": "storymin.es",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://zylstra.org/blog/2019/11/choosing-rocket-chat-over-slack",
+     "target": "https://storymin.es",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2026/06/zeg-doei-tegen-big-tech",
+     "target": "https://storymin.es/2026/06/hartelijk-doeidag",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/stuff-that-matters-unconference-2018-smart-home-edition/smart-participants",
+     "target": "https://storymin.es",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "zylstra.org",
+   "target": "synesthesia.co.uk",
+   "count": 4,
+   "kinds": {
+    "mention": 4
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://zylstra.org/blog/2003/01/trust_emotion_r",
+     "target": "https://synesthesia.co.uk/blog",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2003/01/trust_emotion_r",
+     "target": "https://synesthesia.co.uk/blog/archives/knowledge_management/000122.php",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2003/01/trust_emotion_r",
+     "target": "https://synesthesia.co.uk/cgi-bin/mt-comments.cgi?entry_id=122%22%22",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2003/03/blogs_and_knowl_2",
+     "target": "https://synesthesia.co.uk/blog/archives/knowledge_management/000157.php",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "zylstra.org",
+   "target": "thegreenland.eu",
+   "count": 13,
+   "kinds": {
+    "mention": 13
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://zylstra.org/blog/2014/01/looking-back-on-2013-the-tadaa-list",
+     "target": "https://thegreenland.eu",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2014/12/the-2014-tadaa-list",
+     "target": "https://thegreenland.eu",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2015/12/looking-back-on-2015-the-tadaa-list",
+     "target": "https://thegreenland.eu/2015/10/contextualizing-economic-impact?lang=en",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2015/12/looking-back-on-2015-the-tadaa-list",
+     "target": "https://thegreenland.eu/2015/10/de-utrecht-data-trip",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2017/11/launching-the-malaysia-open-data-user-group",
+     "target": "https://thegreenland.eu",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2019/11/choosing-rocket-chat-over-slack",
+     "target": "https://thegreenland.eu",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2023/10/experiencing-a-course-with-our-entire-team",
+     "target": "https://thegreenland.eu/team",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2025/11/een-goed-gesprek-over-digitale-soevereiniteit-in-de-gemeente",
+     "target": "https://thegreenland.eu",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2026/06/zeg-doei-tegen-big-tech",
+     "target": "https://thegreenland.eu/2026/02/hoe-digitaal-onafhankelijk-zijn-wij",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2026/09/big-data-ldn-impressions",
+     "target": "https://thegreenland.eu/team",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2026/09/treffen-wir-uns-auf-der-swiss-data-alliance-konferenz-in-lausanne",
+     "target": "https://thegreenland.eu",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2026/10/doei-dag-uitpakdag-linux-smartphone",
+     "target": "https://thegreenland.eu/2026/02/hoe-digitaal-onafhankelijk-zijn-wij",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/midsummer-unconference-bbq-making-stuff-that-matters/participants",
+     "target": "https://thegreenland.eu",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "zylstra.org",
+   "target": "tracydurnell.com",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://zylstra.org/blog/2022/06/spring-83",
+     "target": "https://tracydurnell.com/2022/06/10/following-people-outside-feed",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "zylstra.org",
+   "target": "werd.io",
+   "count": 1,
+   "kinds": {
+    "reply": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://zylstra.org/blog/2018/12/5538",
+     "target": "https://werd.io/2018/checking-in-on-my-social-media-fast",
+     "kind": "reply",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "zylstra.org",
+   "target": "wittenbrink.net",
+   "count": 3,
+   "kinds": {
+    "mention": 2,
+    "reply": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://zylstra.org/blog/2013/01/looking-back-on-2012",
+     "target": "https://wittenbrink.net/lostandfound",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2019/10/10192",
+     "target": "https://wittenbrink.net/lostandfound/englische-version-meiner-praesentation-content-strategy-for-degrowth",
+     "kind": "reply",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://zylstra.org/blog/2020/01/12290",
+     "target": "https://wittenbrink.net/lostandfound/wissenschaftliche-distanz-und-aktivismus-notizen-zu-will-steffen-und-hans-blumenberg",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  }
+ ]
+}

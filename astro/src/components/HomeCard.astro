@@ -1,0 +1,21 @@
+---
+// The home page's representative h-card (https://microformats.org/wiki/representative-h-card-parsing):
+// who the site is, for the IndieWeb's readers, and for the sites a note sends a webmention to, which
+// show its author by it. Its address is the home page's own, which makes it the page's
+// representative card; its photo is the site's icon; and its profiles are the footer's contacts
+// that are the author's own (`rel="me"`). None of it is shown: the site's title says as much.
+import { getImage } from "astro:assets"
+import icon from "../assets/icon.png"
+import { footer, site } from "../site.config.ts"
+
+const home = new URL("/", Astro.site).href
+const photo = new URL((await getImage({ src: icon })).src, Astro.site).href
+const profiles = footer.contacts.filter((contact) => contact.me)
+---
+
+<div class="home-card h-card" hidden data-pagefind-ignore>
+  <a class="u-url u-uid p-name" href={home}>{site.author.name}</a>
+  <img class="u-photo" src={photo} alt="" />
+  <data class="p-org" value={site.title}></data>
+  {profiles.map((profile) => <a class="u-url" rel="me" href={profile.url}>{profile.label}</a>)}
+</div>

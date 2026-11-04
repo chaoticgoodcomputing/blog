@@ -174,3 +174,82 @@ def test_mention_targets_are_a_page_and_its_slash_twin():
 def test_probe_candidates_leave_out_what_is_no_host_name():
     counts = {"a.example": 2, "why i went back to work https": 1, "localhost": 1, "10.0.0.1": 1, "b-c.example": 1}
     assert probe_candidates(counts, set(), []) == ["a.example", "b-c.example"]
+
+
+def test_mention_targets_at_another_name_of_the_site():
+    from Flows.Crawl.Steps.parsing import mention_targets
+    assert mention_targets("https://a.example/post", ("www.a.example",)) == [
+        "https://a.example/post",
+        "https://a.example/post/",
+        "https://www.a.example/post",
+        "https://www.a.example/post/",
+    ]
+    assert mention_targets("https://a.example/post", ("a.example",)) == ["https://a.example/post", "https://a.example/post/"]
+
+
+def test_a_webmention_io_account_named_after_a_domain():
+    from Flows.Crawl.Steps.parsing import webmention_io_account
+    assert webmention_io_account("https://webmention.io/www.swyx.io/webmention") == "www.swyx.io"
+    assert webmention_io_account("https://webmention.io/aaronpk/webmention") is None
+    assert webmention_io_account("https://adactio.com/webmention") is None
+    assert webmention_io_account(None) is None
+
+
+TON_COMMENTS = """
+<ol>
+<li class="comment h-entry h-cite p-comment"><article class="comment"><footer>
+  <address class="comment-author p-author h-card"><cite class="p-name"><a class="u-url" href="https://blog.frank.example">Frank</a></cite></address>
+  <a href="https://ton.example/post/#comment-1"><time class="dt-published" datetime="2026-11-02T07:55:55+01:00">2 Nov</time></a>
+</footer></article></li>
+<li class="mention p-mention h-cite avatar-only h-entry p-comment comment"><div class="comment-body">
+  <span class="p-author h-card"><a class="u-url" href="https://ana.example/blog/a-post/">Ana</a></span>
+</div></li>
+<li class="like p-like h-cite avatar-only h-entry"><span class="p-author h-card"><a class="u-url" href="https://mastodon.example/@b/1">B</a></span></li>
+</ol>
+"""
+
+CHRIS_COMMENT = """
+<article class="comment-body h-cite p-comment"><footer class="comment-meta">
+  <div class="comment-author vcard h-card u-author"><b class="fn"><a class="url" href="https://jo.example/">Jo</a></b></div>
+  <div class="comment-metadata"><a class="u-url" href="https://jo.example/2025/reply"><time class="dt-published" datetime="2025-06-23T12:47:18-07:00">June</time></a></div>
+</footer><div class="comment-content e-content">Nice.</div></article>
+<div class="h-cite u-bookmark-of"><a class="u-url" href="https://elsewhere.example/read">what Chris read</a></div>
+"""
+
+JEREMY_COMMENTS = """
+<details class="p-comment h-entry"><summary><h3 class="p-name">2 Likes</h3></summary>
+  <p class="meta">Liked by <cite class="h-card p-author"><a class="u-url p-name" href="https://bsky.app/profile/x/post/1#liked_by_a">A</a></cite></p>
+  <p class="meta">Liked by <cite class="h-card p-author"><a class="u-url p-name" href="https://bsky.app/profile/x/post/1#liked_by_b">B</a></cite></p>
+</details>
+<article class="p-comment h-entry"><h3><a class="p-name u-url" href="https://will.example/blog/ranking">William</a></h3></article>
+"""
+
+
+def test_mentions_shown_on_a_page_are_read_from_its_comments():
+    from Flows.Crawl.Steps.parsing import mentions_on_page
+    rows = mentions_on_page(TON_COMMENTS, "ton.example", "https://ton.example/post/")
+    # The plain comment names only its author's home page: no source post, so none.
+    assert [(r["source_url"], r["kind"]) for r in rows] == [
+        ("https://ana.example/blog/a-post/", "mention"),
+        ("https://mastodon.example/@b/1", "like"),
+    ]
+    assert rows[0]["target_url"] == "https://ton.example/post/" and rows[0]["via"] == "page"
+    assert rows[0]["source_host"] == "ana.example"
+
+
+def test_a_comments_own_url_is_its_source_and_a_citation_is_no_comment():
+    from Flows.Crawl.Steps.parsing import mentions_on_page
+    rows = mentions_on_page(CHRIS_COMMENT, "chris.example", "https://chris.example/p")
+    assert [(r["source_url"], r["kind"], r["author_url"], r["published"]) for r in rows] == [
+        ("https://jo.example/2025/reply", "reply", "https://jo.example/", "2025-06-23T12:47:18-07:00"),
+    ]
+
+
+def test_a_group_of_likes_is_a_mention_each():
+    from Flows.Crawl.Steps.parsing import mentions_on_page
+    rows = mentions_on_page(JEREMY_COMMENTS, "jeremy.example", "https://jeremy.example/journal/1")
+    assert [(r["source_url"], r["kind"]) for r in rows] == [
+        ("https://bsky.app/profile/x/post/1#liked_by_a", "like"),
+        ("https://bsky.app/profile/x/post/1#liked_by_b", "like"),
+        ("https://will.example/blog/ranking", "reply"),
+    ]

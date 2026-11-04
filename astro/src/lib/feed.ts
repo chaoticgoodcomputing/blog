@@ -99,7 +99,13 @@ export function feedOptions(
     description: `Last ${feed.limit} notes on ${siteConfig.title}`,
     site,
     items: feedItems(notes, site, content ? { content } : {}),
-    customData: `<language>${siteConfig.locale.toLowerCase()}</language>`,
+    xmlns: { atom: "http://www.w3.org/2005/Atom" },
+    // Its WebSub hub, and its own address, which a hub knows it by (https://www.w3.org/TR/websub/#discovery).
+    customData: [
+      `<language>${siteConfig.locale.toLowerCase()}</language>`,
+      `<atom:link rel="hub" href="${feed.hub}"/>`,
+      `<atom:link rel="self" href="${new URL("/index.xml", site).href}" type="application/rss+xml"/>`,
+    ].join(""),
     // A page's address has no trailing slash (docs/adr/0003), and neither has an item's link.
     trailingSlash: false,
   }

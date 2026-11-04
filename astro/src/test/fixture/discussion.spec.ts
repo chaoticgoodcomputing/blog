@@ -100,6 +100,24 @@ test("a note's page is an h-entry: its name, date, author, address and content",
   await expect(entry.locator(".entry-meta")).toBeHidden()
 })
 
+test("the home page is its author's representative h-card: their name, the site's address and their own profiles", async ({ page }) => {
+  await page.goto("/")
+  const card = page.locator(".home-card.h-card")
+  await expect(card).toHaveCount(1)
+  await expect(card.locator(".p-name")).toHaveText("Spencer Elkington")
+  // Its address is the page's own, as a representative h-card's is (https://microformats.org/wiki/representative-h-card-parsing).
+  await expect(card.locator(".u-url.u-uid")).toHaveAttribute("href", "https://blog.chaoticgood.computer/")
+  await expect(card.locator("img.u-photo")).toHaveAttribute("src", /^https:\/\/blog\.chaoticgood\.computer\//)
+  await expect(card.locator('a.u-url[rel~="me"]')).toHaveAttribute("href", "https://github.com/spelkington")
+  // None of it is shown: the site's title says as much.
+  await expect(card).toBeHidden()
+})
+
+test("a note's page has no representative h-card: its author is its h-entry's", async ({ page }) => {
+  await page.goto(posted)
+  await expect(page.locator(".home-card")).toHaveCount(0)
+})
+
 test("a private page's stub is no h-entry, and has no discussion", async ({ page }) => {
   await page.goto("/content/notes/secret")
   await expect(page.locator(".h-entry")).toHaveCount(0)

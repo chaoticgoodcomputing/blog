@@ -148,22 +148,121 @@ def _bluesky_handle(url: str | None) -> str | None:
     return handle
 
 
-def mention_targets(url: str) -> list[str]:
+# A received mention's kind, from the class a site shows it with in its comments.
+PAGE_MENTION_KINDS = {
+    "p-like": "like",
+    "p-repost": "repost",
+    "p-bookmark": "bookmark",
+    "p-mention": "mention",
+    "p-comment": "reply",
+}
+# What a group of likes or reposts says it is, where its class is only `p-comment` (adactio.com's).
+GROUP_KIND = re.compile(r"\b(like|repost|share|bookmark)", re.I)
+MICROFORMAT_ROOT = re.compile(r"^h-")
+
+
+def _is_root(element) -> bool:
+    return any(MICROFORMAT_ROOT.match(c) for c in element.get("class", []))
+
+
+def _own(element, found) -> bool:
+    """Whether `found` is `element`'s own, not inside another microformat within it, such as its author's h-card."""
+    for parent in found.parents:
+        if parent is element:
+            return True
+        if _is_root(parent):
+            return False
+    return False
+
+
+def _is_home_page(url: str) -> bool:
+    return urlsplit(url).path in ("", "/")
+
+
+def mentions_on_page(html: str, site: str, page_url: str) -> list[dict]:
+    """
+    The webmentions a page shows it received, read from its comments, as rows like `mention_rows`':
+    for a site whose endpoint is its own, which only its pages tell of. A received mention is an
+    h-cite or h-entry marked as a comment, like, mention, repost or bookmark (`p-comment`, `p-like`…);
+    what it cites, such as a post the page replies to, is none. Its source is its own `u-url`, or
+    else each of its authors' that is a page and not a home page: a like shown as an avatar links
+    its source there, and a group of likes holds several. A comment that names only its author's
+    home page has no source post, and is none.
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    rows, seen = [], set()
+    for element in soup.find_all(class_=True):
+        classes = element.get("class", [])
+        kinds = [PAGE_MENTION_KINDS[c] for c in PAGE_MENTION_KINDS if c in classes]
+        if not kinds or not ({"h-cite", "h-entry"} & set(classes)):
+            continue
+        kind = kinds[0]
+        if kind == "reply":
+            heading = element.find(["summary", "h3"])
+            group = GROUP_KIND.search(heading.get_text(" ", strip=True)) if heading and not element.find(class_="e-content") else None
+            if group:
+                kind = {"share": "repost"}.get(group.group(1).lower(), group.group(1).lower())
+        links = element.select(".u-url[href]")
+        own = [a for a in links if _own(element, a)]
+        if own:
+            sources = [own[0]]
+        else:
+            sources = [a for a in links if not _is_home_page(urljoin(page_url, a["href"]))]
+        card = element.select_one(".h-card")
+        card_url = card.select_one(".u-url[href], .url[href]") if card else None
+        name = card.select_one(".p-name, .fn") if card else None
+        when = element.select_one(".dt-published")
+        published = (when.get("datetime") or when.get("title")) if when else None
+        for anchor in sources:
+            source = urljoin(page_url, anchor["href"])
+            if source in seen:
+                continue
+            seen.add(source)
+            author_url = urljoin(page_url, card_url["href"]) if card_url and card_url is not anchor else None
+            rows.append({
+                "target_site": site,
+                "target_url": page_url,
+                "source_url": source,
+                "source_host": _bluesky_handle(source) or host_of(source),
+                "via": "page",
+                "kind": kind,
+                "author_name": (name.get_text(" ", strip=True) if name and own else None) or anchor.get_text(" ", strip=True) or None,
+                "author_url": author_url,
+                "published": published,
+            })
+    return rows
+
+
+def mention_targets(url: str, hosts: tuple[str, ...] = ()) -> list[str]:
     """
     The addresses a page's webmentions may be kept under: its own, and its twin with or without a
-    trailing slash, since webmention.io keeps each under the address its sender wrote.
+    trailing slash, since webmention.io keeps each under the address its sender wrote; and the same
+    at each of `hosts`, other names its site goes by, such as its `www.` one.
     """
     parts = urlsplit(url)
+    names = [parts.netloc] + [host for host in hosts if host and host != parts.netloc]
     path = parts.path
     if path in ("", "/") or parts.query:
-        return [url]
-    if path.endswith("/"):
-        twin = path.rstrip("/")
+        paths = [path]
+    elif path.endswith("/"):
+        paths = [path, path.rstrip("/")]
     elif "." in path.rsplit("/", 1)[-1]:
-        return [url]
+        paths = [path]
     else:
-        twin = path + "/"
-    return [url, urlunsplit(parts._replace(path=twin))]
+        paths = [path, path + "/"]
+    return [urlunsplit(parts._replace(netloc=name, path=each)) for name in names for each in paths]
+
+
+def webmention_io_account(endpoint: str | None) -> str | None:
+    """
+    The domain a webmention.io endpoint's account is named after (`www.swyx.io` of
+    `https://webmention.io/www.swyx.io/webmention`), or None for another endpoint, or an account
+    named otherwise (`aaronpk`).
+    """
+    if not endpoint or host_of(endpoint) != "webmention.io":
+        return None
+    account = urlsplit(endpoint).path.strip("/").split("/")[0].lower()
+    return account if "." in account else None
 
 
 def mention_rows(children: list[dict], target_site: str, target_url: str) -> list[dict]:

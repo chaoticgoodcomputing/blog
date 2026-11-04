@@ -3,7 +3,9 @@ import os from "node:os"
 import path from "node:path"
 import type { Vault } from "@chaoticgoodcomputing/obsidian-markdown"
 import { afterAll, beforeAll, expect, test } from "vitest"
-import { feedItems, feedCategories } from "../src/lib/feed.ts"
+import { getRssString } from "@astrojs/rss"
+import { feedItems, feedCategories, feedOptions } from "../src/lib/feed.ts"
+import { feed } from "../src/site.config.ts"
 import { indexNotes, type Note } from "../src/lib/notes.ts"
 import { openVault } from "../src/lib/vault.ts"
 
@@ -98,4 +100,11 @@ test("an item's categories are the parts its note's tags name, then those they i
   expect(feedCategories(tags, [])).toEqual(["engineering", "ai", "management", "essays", "economics", "writing"])
   expect(feedCategories(["engineering/ai"], [])).toEqual(["ai", "engineering"])
   expect(feedCategories([], [])).toEqual([])
+})
+
+test("the feed names its WebSub hub and its own address, so a reader subscribed at the hub hears of a new note at once", async () => {
+  const xml = await getRssString(feedOptions([], new URL("https://blog.example.com")))
+  expect(xml).toContain('xmlns:atom="http://www.w3.org/2005/Atom"')
+  expect(xml).toContain(`<atom:link rel="hub" href="${feed.hub}"/>`)
+  expect(xml).toContain('<atom:link rel="self" href="https://blog.example.com/index.xml" type="application/rss+xml"/>')
 })
