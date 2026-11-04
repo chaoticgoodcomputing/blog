@@ -43,6 +43,7 @@ test("PostHog is set up with no cookie and no session recording", async ({ page 
   expect(postHog(page).inits[0].config).toEqual({
     api_host: "https://app.posthog.com",
     capture_pageview: false,
+    capture_pageleave: true,
     persistence: "localStorage",
     disable_session_recording: true,
     ip: false,

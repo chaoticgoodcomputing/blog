@@ -49,6 +49,10 @@
             // Counted below, once for each page shown: PostHog's own would miss the client
             // router's navigations.
             capture_pageview: false,
+            // A page left for another site, or closed. PostHog sends it only when it counts page
+            // views itself, unless told to. A page left by a link the router follows is not one:
+            // the next page view carries how long, and how far down, the last was read.
+            capture_pageleave: true,
             // No cookie: what PostHog keeps of a visit is kept in local storage.
             persistence: "localStorage",
             disable_session_recording: true,
