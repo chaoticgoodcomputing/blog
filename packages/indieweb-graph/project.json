@@ -1,0 +1,53 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "@chaoticgoodcomputing/indieweb-graph",
+  "root": "packages/indieweb-graph",
+  "projectType": "application",
+  "tags": [
+    "indieweb-graph"
+  ],
+  "targets": {
+    "setup": {
+      "//": "The Python steps' environment, .venv, from uv.lock; and seeds.json, from seeds.sample.json, where there is none yet.",
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "uv sync --frozen",
+          "cp -n Data/_01_Raw/seeds.sample.json Data/_01_Raw/seeds.json || true"
+        ],
+        "parallel": false,
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test": {
+      "//": "The C# steps' inline tests (Flowthru.FUnit), then the Python parsing's.",
+      "dependsOn": [
+        "setup"
+      ],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "dotnet test && uv run pytest -q",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "crawl": {
+      "//": "Fetches the seeds in Data/_01_Raw/seeds.json: their pages, links and webmentions, into Data/_01_Raw. Through the HTTP cache in Data/_00_Cache, so a re-run within CacheHours fetches nothing again.",
+      "dependsOn": [
+        "setup"
+      ],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "dotnet run -- --flow Crawl",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "analyze": {
+      "//": "Makes the graph of the last crawl, Data/_02_Primary/edges.csv, and its sites' summary, Data/_03_Reporting/sites.csv.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "dotnet run -- --flow Analysis",
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

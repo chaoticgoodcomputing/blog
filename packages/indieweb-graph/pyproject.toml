@@ -1,0 +1,20 @@
+[project]
+name = "indieweb-graph"
+version = "0.1.0"
+description = "The crawl steps of the IndieWeb graph: pages, their links, and the webmentions they received"
+requires-python = ">=3.12"
+dependencies = [
+  "pandas>=2.2",
+  "pyarrow>=18.0",
+  "requests>=2.32",
+  "requests-cache>=1.2",
+  "beautifulsoup4>=4.12",
+  "pip>=24",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.3"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests/python"]
+pythonpath = ["."]

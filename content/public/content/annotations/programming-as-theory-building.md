@@ -11,7 +11,7 @@ tags:
 description: Do humans have a role in software development anymore? Absolutely — but we need to rethink what it means to program. An modern review of Peter Naur's 1985 essay "Programming as Theory Building"
 annotation-target: https://pablo.rauzy.name/dev/naur1985programming.pdf
 ---
-If you ever need an endorsement of trying to chase citations all the way back to their sources, look no further! I recently read a post by [Steve Krouse,](https://bsky.app/profile/stevekrouse.com) [*Vibe code is legacy code*](https://blog.val.town/vibe-code), where it mentions the refrain:
+If you ever need an endorsement of trying to chase citations all the way back to their sources, look no further! I recently read a post by [Steve Krouse,](https://stevekrouse.com/) [*Vibe code is legacy code*](https://stevekrouse.com/syndicated/vibe-code), where it mentions the refrain:
 
 > [!QUOTE]
 > Programming is fundamentally theory building,

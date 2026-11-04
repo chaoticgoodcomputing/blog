@@ -1,0 +1,17 @@
+bin/
+obj/
+TestResults/
+.venv/
+__pycache__/
+.pytest_cache/
+_generated/
+.flowthru/
+Metadata/
+# What a crawl fetched and what the flows made of it: run `crawl` and `analyze` to rebuild them.
+# The catalog's code, the hand-kept blocklist and the sample seeds are the only data committed:
+# seeds.json is each crawler's own.
+Data/**
+!Data/**/
+!Data/**/*.cs
+!Data/_01_Raw/blocklist.csv
+!Data/_01_Raw/seeds.sample.json

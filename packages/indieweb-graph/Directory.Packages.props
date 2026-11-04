@@ -1,0 +1,34 @@
+<Project>
+
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <FlowthruVersion>0.30.0</FlowthruVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageVersion Include="Flowthru" Version="$(FlowthruVersion)" />
+    <PackageVersion Include="Flowthru.Cli" Version="$(FlowthruVersion)" />
+    <PackageVersion Include="Flowthru.FUnit" Version="$(FlowthruVersion)" />
+    <PackageVersion Include="Flowthru.Extensions.Python" Version="$(FlowthruVersion)" />
+    <PackageVersion Include="Flowthru.Extensions.Parquet" Version="$(FlowthruVersion)" />
+    <PackageVersion Include="Flowthru.Extensions.Csv" Version="$(FlowthruVersion)" />
+    <PackageVersion Include="Flowthru.Extensions.Metadata.Mermaid" Version="$(FlowthruVersion)" />
+
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.4" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.4" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="10.0.4" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.4" />
+    <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.4" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="10.0.4" />
+
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageVersion Include="NUnit" Version="4.2.2" />
+    <PackageVersion Include="NUnit.Analyzers" Version="4.4.0" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="4.6.0" />
+  </ItemGroup>
+
+</Project>

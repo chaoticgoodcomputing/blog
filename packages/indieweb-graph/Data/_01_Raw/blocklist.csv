@@ -1,0 +1,33 @@
+host,note
+twitter.com,social network
+x.com,social network
+t.co,Twitter's link shortener
+bsky.app,"social network; a post's author with a domain handle is credited to the domain"
+threads.net,social network
+facebook.com,social network
+instagram.com,social network
+linkedin.com,social network
+reddit.com,forum
+news.ycombinator.com,forum
+tiktok.com,video
+youtube.com,video
+youtu.be,YouTube's link shortener
+vimeo.com,video
+github.com,code host
+gitlab.com,code host
+wikipedia.org,encyclopedia
+wikimedia.org,encyclopedia
+archive.org,archive
+doi.org,paper resolver
+arxiv.org,papers
+amazon.com,shop
+amzn.to,Amazon's link shortener
+goodreads.com,book reviews
+apple.com,company
+spotify.com,music
+google.com,company
+medium.com,"blog platform; members' blogs are paths, not hosts of their own"
+notion.so,documents
+figma.com,design tool
+brid.gy,Bridgy: sends webmentions for others
+webmention.io,a webmention endpoint for others
