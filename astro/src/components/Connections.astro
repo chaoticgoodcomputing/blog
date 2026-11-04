@@ -1,0 +1,130 @@
+---
+// A note's connections, under its body, in one carousel (Carousel.astro), a panel at a time, in the
+// order and under the headings `connections.panels` gives (site.config.ts):
+//
+//   - outlinks: the pages it links to;
+//   - backlinks: the pages that link to it, an embed counting as a link (src/lib/backlinks.ts);
+//   - its discussion, a panel for each source of it that is on (src/lib/discussion.ts): the other
+//     sites that mention it, Bluesky's replies and Hacker News's comments, each with a `+` beside
+//     its heading that takes the reader to where they answer there.
+//
+// The links and the other sites are listed as the post listings list posts (PostList.astro), the
+// other sites with no tags; Bluesky's and Hacker News's as comments (MentionList.astro). Each list
+// is shown a page at a time (PagedList.astro), as its panel's config says.
+//
+// A links panel with nothing in it is left out; a discussion panel with nothing in it says there is
+// no discussion yet, with a link to where the reader could be the first to answer. A note with no
+// panel has no carousel. A private page has no discussion: what it publishes is a stub.
+// The site's Bluesky post of the note is its copy there, which its h-entry names (`u-syndication`).
+import { backlinksOf, outlinksOf, type Backlink } from "../lib/backlinks.ts"
+import type { DiscussionPanel } from "../lib/discussion.ts"
+import { newTab } from "../lib/external-links.ts"
+import type { Mention } from "../lib/mentions.ts"
+import { getDiscussionPanels } from "../lib/note-discussion.ts"
+import type { NoteFacts } from "../lib/notes.ts"
+import { connections } from "../site.config.ts"
+import type { ConnectionPanel } from "../site.config.types.ts"
+import Carousel, { type Slide } from "./Carousel.astro"
+import MentionList from "./MentionList.astro"
+import PostList from "./PostList.astro"
+
+interface Props {
+  /** The note the page shows, with the address it has. A page that shows none has none. */
+  note: (NoteFacts & { url?: string | undefined }) | undefined
+  /** Whether the page shows the note's discussion: a note's and an annotation's do, a tag's doesn't. */
+  discussion: boolean
+}
+
+const { note, discussion } = Astro.props
+const site = Astro.site!.href
+const links = { outlinks: note ? outlinksOf(note) : [], backlinks: note ? backlinksOf(note) : [] }
+const discussionPanels: DiscussionPanel[] =
+  discussion && note?.url !== undefined && !note.isPrivate ? await getDiscussionPanels(note.url, note.title, site) : []
+
+// Another site's page, as a post: its title, or its site's name with none; who wrote it and where,
+// `<author> at <site>`, or the site alone with no author; and what it says of the note.
+const asPage = (mention: Mention) => {
+  const host = new URL(mention.url).host.replace(/^www\./, "")
+  return {
+    url: mention.url,
+    title: mention.title ?? host,
+    byline: mention.author.name ? `${mention.author.name} at ${host}` : host,
+    date: mention.published,
+    description: mention.excerpt.join(" "),
+  }
+}
+
+// Each panel the config names that this note has, in its order: a list of links, or a discussion.
+type Panel = { config: ConnectionPanel; pages?: Backlink[] | undefined; discussion?: DiscussionPanel | undefined }
+const panels: Panel[] = connections.panels.flatMap((config): Panel[] => {
+  if (config.panel === "outlinks" || config.panel === "backlinks") {
+    const pages = links[config.panel]
+    return pages.length > 0 ? [{ config, pages }] : []
+  }
+  const found = discussionPanels.find((panel) => panel.source === config.panel)
+  return found ? [{ config, discussion: found }] : []
+})
+
+const slides: Slide[] = panels.map(({ config, discussion }) =>
+  discussion
+    ? {
+        key: config.panel,
+        title: config.title,
+        class: "discussion",
+        attributes: { "data-source": config.panel },
+        action: {
+          href: discussion.action.href,
+          label: discussion.action.label,
+          icon: "mdi:plus",
+          class: discussion.action.syndication ? "u-syndication" : undefined,
+        },
+      }
+    : { key: config.panel, title: config.title, class: config.panel },
+)
+---
+
+{
+  slides.length > 0 && (
+    <Carousel class="connections" slideClass="connection" noun="panel" id="connections" slides={slides}>
+      {panels.map(({ config, pages, discussion }) => (
+        <Fragment slot={config.panel}>
+          {pages && <PostList pages={pages} show={config.show} more={config.more} />}
+          {discussion?.detail && (
+            <p class="detail">
+              <a href={discussion.action.href} {...newTab(discussion.action.href, site)}>
+                {discussion.detail}
+              </a>
+            </p>
+          )}
+          {discussion &&
+            (discussion.mentions.length === 0 ? (
+              <p class="empty">
+                No discussion yet.{" "}
+                <a href={discussion.action.href} {...newTab(discussion.action.href, site)}>
+                  Be the first to reply
+                </a>
+                .
+              </p>
+            ) : discussion.source === "webmentions" ? (
+              <PostList pages={discussion.mentions.map(asPage)} show={config.show} more={config.more} />
+            ) : (
+              <MentionList mentions={discussion.mentions} show={config.show} more={config.more} />
+            ))}
+        </Fragment>
+      ))}
+    </Carousel>
+  )
+}
+
+<style>
+  .detail,
+  .empty {
+    margin: 0;
+    color: var(--darkgray);
+    text-align: center;
+  }
+
+  .detail a {
+    color: inherit;
+  }
+</style>

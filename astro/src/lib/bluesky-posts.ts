@@ -1,7 +1,7 @@
 // Each note's Bluesky post: the site's Bluesky account's first post that links to the note, which
 // the deploy made when the note reached the feed (.github/workflows/scripts/post-to-bluesky.mjs).
 // The `blueskyPosts` collection reads them from Bluesky's public API as the site builds
-// (src/content.config.ts), and a note's discussion links to its own (RelatedContent.astro).
+// (src/content.config.ts), and a note's discussion links to its own (Connections.astro).
 //
 // A note is posted after the deploy that publishes it, so that deploy's page has no post to link
 // to. The Bluesky job then deploys again when it has posted (.github/workflows/deploy.yaml), and

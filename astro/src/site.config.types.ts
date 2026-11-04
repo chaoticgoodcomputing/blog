@@ -102,40 +102,56 @@ export interface FooterConfig {
  */
 export type PostOrder = "recent" | "central"
 
-/** One post listing of the carousel: the order its posts are in, and its heading. */
-export interface PostListingOrder {
+/**
+ * How a list is shown a page at a time (PagedList.astro): how many items are in view at first, and
+ * how many more each press of its button shows.
+ */
+export interface Paging {
+  show: number
+  more: number
+}
+
+/**
+ * Every list of pages, posts, links or mentions, shown a page at a time: a post listing and what is
+ * related to a note alike, where nothing else says.
+ */
+export type ListsConfig = Paging
+
+/** One post listing: the order its posts are in, its heading, and how it is paged. */
+export interface PostListingOrder extends Partial<Paging> {
   order: PostOrder
   title: string
 }
 
-/** A listing of the home page's: an order, and how many posts it shows, with no more to ask for. */
-export interface HomeListing extends PostListingOrder {
-  limit: number
+/** The kinds of page a post listing is on. */
+export type ListingPageKind = "home" | "tag" | "404"
+
+/** How the listings are set out on one kind of page. */
+export interface ListingPageConfig {
+  /** One listing under the other, or a carousel the reader moves through one at a time. */
+  layout: "stacked" | "carousel"
+  /** How each listing is paged on this kind of page, in place of its own paging. */
+  paging?: Partial<Record<PostOrder, Partial<Paging>>>
 }
 
 /**
- * The post listings, after the body of the home page, a tag page and the 404 page: on a tag page
- * and the 404 page, a carousel the reader moves through; on the home page, a few of each, one
- * listing under the other. A private page is in none (src/lib/post-listing.ts).
+ * The post listings, after the body of the home page, a tag page and the 404 page: the same
+ * listings on each, set out as that kind of page says. Each is shown a page at a time, its paging
+ * the page's, else the listing's, else `lists` (src/lib/post-listing.ts). A private page is in none.
  */
 export interface PostListingConfig {
   /**
-   * The carousel's listings, in order. One with no posts is left out, unless every one has none:
-   * then the first is shown, saying `emptyText`.
+   * The listings, in order. One with no posts is left out, unless every one has none: then the first
+   * is shown, saying `emptyText`.
    */
   listings: PostListingOrder[]
-  /**
-   * The home page's listings, one under the other in place of a carousel, each its first `limit`
-   * posts. One with no posts is left out, as in the carousel.
-   */
-  home: HomeListing[]
+  /** How each kind of page with listings sets them out. */
+  pages: Record<ListingPageKind, ListingPageConfig>
   /**
    * What one mention of a post is worth beside one backlink from another post, in how central the
    * post is: `3`, and a mention counts as three backlinks.
    */
   mentionWeight: number
-  /** How many posts a listing shows until the reader asks for the rest. */
-  collapsedItemCount: number
   /** Whether each post's tag badges say how many posts are under the tag. */
   showTagCounts: boolean
   /** What a listing with no posts says. */
@@ -376,6 +392,24 @@ export interface DiscussionConfig {
    * Bridgy sends as webmentions; `hackerNews`, the note's Hacker News thread and its top comments.
    */
   sources: Record<DiscussionSourceId, boolean>
+}
+
+/** A panel of a note's connections: its outgoing links, its incoming links, or a discussion source's. */
+export type ConnectionPanelId = "outlinks" | "backlinks" | DiscussionSourceId
+
+/** One panel of a note's connections: which it is, its heading, and how its list is paged. */
+export interface ConnectionPanel extends Partial<Paging> {
+  panel: ConnectionPanelId
+  title: string
+}
+
+/**
+ * A note's connections, under its body (Connections.astro): one carousel of panels, in the order
+ * given here. A panel left out isn't shown; a discussion source must also be on in `discussion` to
+ * have one. Each panel's list is paged as it says, else as `lists`.
+ */
+export interface ConnectionsConfig {
+  panels: ConnectionPanel[]
 }
 
 /** A note's Hacker News thread, read as the site builds (src/lib/hacker-news.ts). */

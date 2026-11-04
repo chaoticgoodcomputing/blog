@@ -5,7 +5,8 @@
 
 import type { Vault } from "@chaoticgoodcomputing/obsidian-markdown"
 import { getNotes, isHomeNote, newestFirst, tagsOf, type Note } from "./notes.ts"
-import { postListing } from "../site.config.ts"
+import { lists, postListing } from "../site.config.ts"
+import type { ListingPageConfig, ListingPageKind, ListsConfig, Paging, PostListingConfig, PostOrder } from "../site.config.types.ts"
 import { isUnderTag } from "./tags.ts"
 import { getVault } from "./vault.ts"
 
@@ -72,4 +73,29 @@ export function centralPosts(tag?: string, options: CentralityOptions = {}): Not
   return listedPosts(tag, notes)
     .filter((note) => score(note) > 0)
     .sort((a, b) => score(b) - score(a) || newestFirst(a, b))
+}
+
+/** One listing as a kind of page sets it out: its order, its heading, and its paging. */
+export interface ResolvedListing extends Paging {
+  order: PostOrder
+  title: string
+}
+
+/**
+ * How a kind of page sets out the post listings: its layout, and each listing with its paging, the
+ * page's for it, else the listing's own, else every list's (`lists`), a setting at a time.
+ */
+export function listingsOn(
+  kind: ListingPageKind,
+  config: PostListingConfig = postListing,
+  defaults: ListsConfig = lists,
+): { layout: ListingPageConfig["layout"]; listings: ResolvedListing[] } {
+  const page = config.pages[kind]
+  return {
+    layout: page.layout,
+    listings: config.listings.map(({ order, title, show, more }) => {
+      const own = page.paging?.[order]
+      return { order, title, show: own?.show ?? show ?? defaults.show, more: own?.more ?? more ?? defaults.more }
+    }),
+  }
 }

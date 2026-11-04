@@ -417,7 +417,7 @@ test.describe("by touch", () => {
   })
 })
 
-test("a mirror that fails to load leaves the cards as on a note's page, with a link to the document itself", async ({ page }) => {
+test("a mirror that fails to load leaves the cards as on a note's page, and says so after the link to the document itself", async ({ page }) => {
   await page.route(`**${MIRROR}`, (route) => route.fulfill({ status: 404, body: "Not found" }))
   await page.setViewportSize(DESKTOP)
   await page.goto(PAGE)
@@ -425,12 +425,30 @@ test("a mirror that fails to load leaves the cards as on a note's page, with a l
   const viewer = viewerOf(page)
   await expect(viewer).toHaveAttribute("data-state", "failed")
   await expect(viewer).toHaveAttribute("data-layout", "static")
-  const notice = viewer.locator(".status").filter({ visible: true })
-  await expect(notice).toHaveText("We couldn't show the PDF here, but you can read along at https://example.com/papers/On Meetings.pdf.")
-  await expect(notice.getByRole("link")).toHaveAttribute("href", "https://example.com/papers/On%20Meetings.pdf")
+  // No notice over the post: a quiet word after where the document comes from.
+  await expect(viewer.locator(".status").filter({ visible: true })).toHaveCount(0)
+  const source = page.locator(".annotated-document")
+  await expect(source).toHaveText("Source document: example.com (PDF not available)")
+  await expect(source.getByRole("link")).toHaveAttribute("href", "https://example.com/papers/On%20Meetings.pdf")
   // The cards, one column, in the shell's own column, as on any note's page.
   await expect(page.locator("section.annotations")).toBeVisible()
   expect((await page.locator("article.prose").boundingBox())!.width).toBeLessThanOrEqual(640)
+})
+
+test("where the mirror fails to load, the link over the preface goes to the annotations", async ({ page }) => {
+  await page.route("**/*.pdf", (route) => route.fulfill({ status: 404, body: "Not found" }))
+  await page.setViewportSize(DESKTOP)
+  await page.goto(GARDEN)
+
+  const viewer = viewerOf(page)
+  await expect(viewer).toHaveAttribute("data-state", "failed")
+  const link = viewer.getByRole("link", { name: "Go to the annotations" })
+  await link.click()
+  await expect(page.locator("section.annotations")).toBeFocused()
+  // As far down as the page goes toward them: this page is too short for its source to reach the top.
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(0)
+  await expect(page.locator(".annotated-document")).toBeInViewport()
+  expect(new URL(page.url()).hash).toBe("")
 })
 
 test("a document with no mirror shows the cards and where the document comes from, and no viewer", async ({ page }) => {

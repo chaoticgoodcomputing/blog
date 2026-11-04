@@ -334,7 +334,7 @@ link there. A like or a repost is no mention.
 _Avoid_: reply, comment, web backlink
 
 **Discussion**:
-A public note's panels of **Related content** after its links: one for each **Discussion source**,
+A public note's panels of its **Connections** after its links: one for each **Discussion source**,
 each with its mentions and a `+` to where a reader answers there, its Bluesky post or its Hacker
 News thread. A reply on Bluesky reaches it as a mention, by Bridgy.
 _Avoid_: comments, comments section
@@ -383,14 +383,23 @@ note's paragraphs that link there, as one h-entry, at `/mentions/<the note's slu
 page>`. A reader who comes to one is sent on to the note, at the first of them.
 _Avoid_: reply page, source page
 
-**Related content**:
-Under a note, one carousel, a panel at a time: its backlinks, its outlinks, each with its date and
-description, then its discussion. A panel with nothing in it is left out.
-_Avoid_: links panel (it was two columns once), backlinks panel
+**Connections**:
+Under a note, one carousel, a panel at a time: its outlinks and its backlinks, each with its date
+and description, then its discussion. Site configuration names the panels, in order, and their
+headings. A links panel with nothing in it is left out. Each panel's list is a **Paged list**.
+_Avoid_: related content (its old name), links panel (it was two columns once), backlinks panel
 
 **Post listing**:
-Posts, newest first: all of them on the home page and the 404 page, a tag's on its tag page.
+Posts in one of two orders, newest first or most central first: all of them on the home page and
+the 404 page, a tag's on its tag page. Every page has the same listings, set out one under the
+other on the home page and in a carousel elsewhere. Each is a **Paged list**.
 _Avoid_: recent posts (its heading), feed (that is the RSS)
+
+**Paged list**:
+A list shown a few items at a time: its first `show`, then "Show more", which shows `more` more,
+until every one is in view. With no script, every item is shown. Site configuration sets both for
+every list, and a post listing or a connections panel may set its own.
+_Avoid_: pagination (there are no pages to go to), collapsed list
 
 **Graph index**:
 The file the site publishes of its notes, its tags and the links between them, which every graph

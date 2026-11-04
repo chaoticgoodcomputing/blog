@@ -13,12 +13,14 @@
 import type {
   AnalyticsConfig,
   BlueskyConfig,
+  ConnectionsConfig,
   DiscussionConfig,
   FeedConfig,
   FooterConfig,
   GraphConfig,
   HackerNewsConfig,
   LayoutConfig,
+  ListsConfig,
   PostListingConfig,
   SeoConfig,
   SiteConfig,
@@ -120,19 +122,20 @@ export const footer: FooterConfig = {
   notice: "This site contains writing by humans, for humans.",
 }
 
+export const lists: ListsConfig = { show: 5, more: 5 }
+
 export const postListing: PostListingConfig = {
-  // On a tag page and the 404 page, a carousel: the most central posts first, then the newest.
   listings: [
-    { order: "recent", title: "Recent Posts"},
-    { order: "central", title: "Core Posts"},
+    { order: "recent", title: "Recent Posts" },
+    { order: "central", title: "Core Posts" },
   ],
-  // On the home page, one under the other: the three most central posts, then the five newest.
-  home: [
-    { order: "recent", title: "Recent Posts", limit: 3 },
-    { order: "central", title: "Core Posts", limit: 5 },
-  ],
+  pages: {
+    // One under the other: the three newest, then the five most central, more on asking.
+    home: { layout: "stacked", paging: { recent: { show: 3 } } },
+    tag: { layout: "carousel" },
+    404: { layout: "carousel" },
+  },
   mentionWeight: 3,
-  collapsedItemCount: 5,
   showTagCounts: false,
   emptyText: "No posts found.",
 }
@@ -254,6 +257,17 @@ export const bluesky: BlueskyConfig = {
 
 export const hackerNews: HackerNewsConfig = {
   comments: 5,
+}
+
+// What is under a note's body: its panels, in order, each with its heading (Connections.astro).
+export const connections: ConnectionsConfig = {
+  panels: [
+    { panel: "outlinks", title: "Outgoing Links" },
+    { panel: "backlinks", title: "Incoming Links" },
+    { panel: "webmentions", title: "Around the Web" },
+    { panel: "bluesky", title: "On Bluesky" },
+    { panel: "hackerNews", title: "On Hacker News" },
+  ],
 }
 
 // A note's discussion: each source on or off (src/lib/discussion.ts).

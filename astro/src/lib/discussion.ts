@@ -1,5 +1,5 @@
 // A note's discussion: a panel for each of its sources, among what is related to the note
-// (RelatedContent.astro), each with where a reader answers and the mentions it gives. Each source
+// (Connections.astro), each with where a reader answers and the mentions it gives. Each source
 // is on or off in the site's configuration (`discussion`), so one that becomes unmanageable is
 // turned off there alone:
 //
@@ -40,8 +40,6 @@ export interface DiscussionAction {
 /** A source's panel of a note's discussion. */
 export interface DiscussionPanel {
   source: DiscussionSourceId
-  /** Its heading: `On Bluesky`. */
-  title: string
   /** Where a reader answers. */
   action: DiscussionAction
   /** What is said under the heading: `12 comments`. */
@@ -99,7 +97,6 @@ export function discussionPanels({
   if (sources.webmentions) {
     panels.push({
       source: "webmentions",
-      title: "Around the Web",
       action: { href: WEBMENTION_GUIDE, label: "Reply from your own site", syndication: false },
       mentions: of("webmentions"),
     })
@@ -107,7 +104,6 @@ export function discussionPanels({
   if (sources.bluesky) {
     panels.push({
       source: "bluesky",
-      title: "On Bluesky",
       action: { href: post?.url ?? profileUrl(handle), label: "Discuss on Bluesky", syndication: post !== undefined },
       mentions: of("bluesky"),
     })
@@ -115,7 +111,6 @@ export function discussionPanels({
   if (sources.hackerNews) {
     panels.push({
       source: "hackerNews",
-      title: "On Hacker News",
       action: thread
         ? { href: thread.url, label: "Discuss on Hacker News", syndication: false }
         : { href: hackerNewsSubmitUrl(page), label: "Submit to Hacker News", syndication: false },

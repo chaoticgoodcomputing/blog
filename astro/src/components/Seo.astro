@@ -24,9 +24,12 @@ const head = headOf(page, { site, logo: new URL(icon.src, site).href })
 // A `</script>` in a title must not end the script element, so every `<` is written as JSON's
 // escape for it, which reads back as the same text.
 const scriptSafe = (value: unknown) => JSON.stringify(value).replaceAll("<", "\\u003c")
+// Under `astro dev`, the tab says so, to tell it from the published site's at a glance. Only the
+// tab: what the page tells search engines and link previews is as it would be built.
+const tab = import.meta.env.DEV ? `[LOCAL] ${head.title}` : head.title
 ---
 
-<title>{head.title}</title>
+<title>{tab}</title>
 <meta name="description" content={head.description} />
 <link rel="canonical" href={head.canonical} />
 {!head.indexable && <meta name="robots" content="noindex" />}

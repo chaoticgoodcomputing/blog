@@ -33,10 +33,10 @@ const mentions = [mention("bluesky"), mention("webmentions"), mention("hackerNew
 
 test("a note's panels are other sites', then Bluesky's, then Hacker News's, each with its own mentions", () => {
   const panels = discussionPanels({ sources: ALL, page: PAGE, handle: "example.com", post, thread, mentions })
-  expect(panels.map((panel) => [panel.title, panel.mentions.map((each) => each.source)])).toEqual([
-    ["Around the Web", ["webmentions"]],
-    ["On Bluesky", ["bluesky"]],
-    ["On Hacker News", ["hackerNews"]],
+  expect(panels.map((panel) => [panel.source, panel.mentions.map((each) => each.source)])).toEqual([
+    ["webmentions", ["webmentions"]],
+    ["bluesky", ["bluesky"]],
+    ["hackerNews", ["hackerNews"]],
   ])
 })
 

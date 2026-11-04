@@ -16,10 +16,10 @@ const ledger = ["Ledger Six", "Ledger Five", "Ledger Four", "Ledger Three", "Led
 const ledgerTitles = async (page: Page) =>
   (await page.locator(`${recent} .post h3`).allInnerTexts()).filter((title) => /Ledger/.test(title))
 
-// Every post of a listing in view, the ones it starts collapsed to and the rest.
+// Every post of a listing in view, pressing its button until it has no more to show.
 const expand = async (page: Page) => {
-  const more = page.locator(`${recent} details`)
-  if ((await more.count()) > 0) await more.locator("summary").click()
+  const more = page.locator(`${recent} .more`)
+  while (await more.isVisible()) await more.click()
 }
 
 test("the 404 page lists the site's posts, newest first", async ({ page }) => {
@@ -56,27 +56,28 @@ test("each post shows its title as a link to it, its date, its description and i
 })
 
 // The listing of `ledger`'s tag page holds this file's six posts and no others: the one long
-// listing whose length is this file's to say.
-test("a long listing starts collapsed to five posts, and the reader can show the rest", async ({ page }) => {
+// listing whose length is this file's to say. Every list is paged five at a time.
+test("a long listing shows five posts, and five more at each press of its button", async ({ page }) => {
   await page.goto("/tags/ledger")
   const posts = page.locator(".post-listing .post")
   await expect(posts.filter({ visible: true })).toHaveCount(5)
 
-  const more = page.locator(".post-listing summary")
-  await expect(more).toHaveText("Show 1 more post")
+  const more = page.locator(".post-listing .more")
+  await expect(more).toHaveText("Show more")
   await more.click()
   await expect(posts.filter({ visible: true })).toHaveCount(6)
+  // With nothing more to show, the button goes, and the post it showed last has the focus.
+  await expect(more).toBeHidden()
+  await expect(page.getByRole("link", { name: "Ledger One" })).toBeFocused()
 })
 
 test.describe("with no script", () => {
   test.use({ javaScriptEnabled: false })
 
-  test("the reader can still show the rest of a long listing", async ({ page }) => {
+  test("a long listing shows every post, and no button", async ({ page }) => {
     await page.goto("/tags/ledger")
-    const posts = page.locator(".post-listing .post")
-    await expect(posts.filter({ visible: true })).toHaveCount(5)
-    await page.locator(".post-listing summary").click()
-    await expect(posts.filter({ visible: true })).toHaveCount(6)
+    await expect(page.locator(".post-listing .post").filter({ visible: true })).toHaveCount(6)
+    await expect(page.locator(".post-listing .more")).toBeHidden()
   })
 })
 
@@ -123,14 +124,15 @@ test.describe("on a touch screen, with no pointer that hovers", () => {
   })
 })
 
-// The carousel, on the 404 page: the posts other posts link to most, then every post newest first
+// The carousel, on the 404 page: every post newest first, then the posts other posts link to most
 // (test/central-posts.test.ts says how they are counted).
 const inView = (page: Page) =>
   page.locator(".post-listings .track").evaluate((track) => Math.round(track.scrollLeft / track.clientWidth))
 
-test("the 404 page's listings are a carousel: the most central posts first, then the newest", async ({ page }) => {
+test("the 404 page's listings are a carousel: the newest posts first, then the most central", async ({ page }) => {
   await page.goto(everything)
-  await expect(page.locator(".post-listing > h2")).toHaveText(["Central Posts", "Recent Posts"])
+  await expect(page.locator(".post-listing > h2")).toHaveText(["Recent Posts", "Core Posts"])
+  await page.getByRole("button", { name: "Core Posts" }).click()
   await expect(page.locator('.post-listing[data-order="central"] .post h3', { hasText: "A note with backlinks" })).toBeVisible()
 })
 
@@ -147,7 +149,7 @@ test("the arrows step through the listings, wrapping round at either end, and th
   await expect.poll(() => inView(page)).toBe(0)
   await page.getByRole("button", { name: "Previous listing" }).click()
   await expect.poll(() => inView(page)).toBe(1)
-  await page.getByRole("button", { name: "Central Posts" }).click()
+  await page.getByRole("button", { name: "Recent Posts" }).click()
   await expect.poll(() => inView(page)).toBe(0)
 })
 
@@ -176,25 +178,31 @@ test.describe("with no script, the carousel", () => {
   })
 })
 
-// The home page: no carousel, but the three most central posts, then the five newest, one listing
-// under the other (`postListing.home`).
-test("the home page shows the index note, and under it the three most central posts, then the five newest", async ({ page }) => {
+// The home page: no carousel, but the same listings one under the other, the three newest posts
+// then the five most central in view, and the rest of each on asking (`postListing.pages.home`).
+test("the home page shows the index note, and under it the three newest posts, then the five most central", async ({ page }) => {
   await page.goto("/")
   const note = page.locator("main .prose")
   await expect(note).toContainText("The home note.")
-  await expect(page.locator(".post-listing > h2")).toHaveText(["Central Posts", "Recent Posts"])
-  await expect(page.locator('.post-listing[data-order="central"] .post')).toHaveCount(3)
-  await expect(page.locator(`${recent} .post`)).toHaveCount(5)
-  await expect(page.locator('.post-listing[data-order="central"] .post h3').first()).toHaveText("A note with backlinks")
-  // Both in view, one under the other, after the note, with no carousel and nothing more to show.
-  const [central, newest] = [
-    (await page.locator('.post-listing[data-order="central"]').boundingBox())!,
-    (await page.locator(recent).boundingBox())!,
-  ]
-  expect(newest.y).toBeGreaterThanOrEqual(central.y + central.height)
+  await expect(page.locator(".post-listing > h2")).toHaveText(["Recent Posts", "Core Posts"])
+  const central = '.post-listing[data-order="central"]'
+  await expect(page.locator(`${recent} .post`).filter({ visible: true })).toHaveCount(3)
+  await expect(page.locator(`${central} .post`).filter({ visible: true })).toHaveCount(5)
+  await expect(page.locator(`${central} .post h3`).first()).toHaveText("A note with backlinks")
+  // Both in view, one under the other, after the note, with no carousel.
+  const [newest, core] = [(await page.locator(recent).boundingBox())!, (await page.locator(central).boundingBox())!]
+  expect(core.y).toBeGreaterThanOrEqual(newest.y + newest.height)
   expect(
     await note.evaluate((body, after) => !!(body.compareDocumentPosition(after!) & Node.DOCUMENT_POSITION_FOLLOWING), await page.locator(".post-listings").elementHandle()),
   ).toBe(true)
   await expect(page.locator(".post-listings .controls")).toHaveCount(0)
-  await expect(page.locator(".post-listings details")).toHaveCount(0)
+})
+
+test("the home page's listings show more of their posts on asking, as a tag page's do", async ({ page }) => {
+  await page.goto("/")
+  const posts = page.locator(`${recent} .post`)
+  await page.locator(`${recent} .more`).click()
+  await expect(posts.filter({ visible: true })).toHaveCount(8)
+  await expand(page)
+  expect(await ledgerTitles(page)).toEqual(ledger)
 })

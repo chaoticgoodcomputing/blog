@@ -13,7 +13,7 @@ test("a tag's page shows its description note, then the posts under the tag", as
   await expect(page.locator('head meta[name="description"]')).toHaveAttribute("content", "What the ledger keeps.")
 
   const listing = page.locator("main .after-body .post-listing")
-  await listing.locator("summary").click()
+  await listing.locator(".more").click()
   await expect(listing.locator(".post h3")).toHaveText([
     "Ledger Six",
     "Ledger Five",

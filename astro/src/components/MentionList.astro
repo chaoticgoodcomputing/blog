@@ -1,42 +1,49 @@
 ---
-// A source's mentions of a note as comments, in its discussion panel (RelatedContent.astro):
+// A source's mentions of a note as comments, in its discussion panel (Connections.astro):
 // Bluesky's replies and Hacker News's comments, each by who wrote it and when, the date the link to
-// it, over what it says, as text. The panel's heading says where they are.
+// it, over what it says, as text. The panel's heading says where they are. They are shown a page at
+// a time (PagedList.astro).
 import { newTab } from "../lib/external-links.ts"
 import type { Mention } from "../lib/mentions.ts"
 import FormattedDate from "./FormattedDate.astro"
+import PagedList from "./PagedList.astro"
 
 interface Props {
   mentions: Mention[]
+  /** How many it shows at first, and how many more at each asking (PagedList.astro). */
+  show?: number | undefined
+  more?: number | undefined
 }
 
-const { mentions } = Astro.props
+const { mentions, show, more } = Astro.props
 const site = Astro.site!.href
 ---
 
-<ul class="mentions">
-  {mentions.map((mention) => (
-    <li>
-      <p class="byline">
-        {mention.author.name &&
-          (mention.author.url ? (
-            <a class="author" href={mention.author.url} {...newTab(mention.author.url, site)}>
-              {mention.author.name}
-            </a>
-          ) : (
-            <span class="author">{mention.author.name}</span>
-          ))}
-        {mention.author.name && " · "}
-        <a class="when" href={mention.url} {...newTab(mention.url, site)}>
-          {mention.published ? <FormattedDate date={mention.published} /> : "Reply"}
-        </a>
-      </p>
-      {mention.excerpt.map((paragraph) => (
-        <p class="excerpt">{paragraph}</p>
-      ))}
-    </li>
-  ))}
-</ul>
+<PagedList show={show} more={more}>
+  <ul class="mentions">
+    {mentions.map((mention) => (
+      <li>
+        <p class="byline">
+          {mention.author.name &&
+            (mention.author.url ? (
+              <a class="author" href={mention.author.url} {...newTab(mention.author.url, site)}>
+                {mention.author.name}
+              </a>
+            ) : (
+              <span class="author">{mention.author.name}</span>
+            ))}
+          {mention.author.name && " · "}
+          <a class="when" href={mention.url} {...newTab(mention.url, site)}>
+            {mention.published ? <FormattedDate date={mention.published} /> : "Reply"}
+          </a>
+        </p>
+        {mention.excerpt.map((paragraph) => (
+          <p class="excerpt">{paragraph}</p>
+        ))}
+      </li>
+    ))}
+  </ul>
+</PagedList>
 
 <style>
   .mentions {

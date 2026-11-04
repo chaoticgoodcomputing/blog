@@ -1,17 +1,16 @@
 ---
 // A list of pages as the post listings set them (PostListing.astro), and as what is related to a
-// note sets its links and the other sites that mention it (RelatedContent.astro): each by its
+// note sets its links and the other sites that mention it (Connections.astro): each by its
 // title, a heading, with who wrote it and where under that for another site's, its date and its
-// description, and its tags as tag badges. A
-// private page is marked with a lock. A page on another site opens in a new tab.
+// description, and its tags as tag badges. A private page is marked with a lock. A page on another
+// site opens in a new tab.
 //
-// The first few are shown, and the rest in a `<details>` the reader opens: the browser's own
-// disclosure, which needs no script (docs/adr/1301).
+// The first few are shown, and the rest a few at a time as the reader asks (PagedList.astro).
 import { Icon } from "astro-icon/components"
 import { newTab } from "../lib/external-links.ts"
-import { postListing } from "../site.config.ts"
 import FileTypeChip from "./FileTypeChip.astro"
 import FormattedDate from "./FormattedDate.astro"
+import PagedList from "./PagedList.astro"
 import TagBadge from "./TagBadge.astro"
 
 /** A page as a list shows it. */
@@ -30,26 +29,23 @@ export interface ListedPage {
 
 interface Props {
   pages: ListedPage[]
-  /** What the rest are called, in the button that shows them: `post`, `posts`. */
-  noun: [one: string, many: string]
   /** How many posts are under each tag, which its badge says, where it says. */
   counts?: Map<string, number> | undefined
+  /** How many it shows at first, and how many more at each asking (PagedList.astro). */
+  show?: number | undefined
+  more?: number | undefined
 }
 
-const { pages, noun, counts } = Astro.props
+const { pages, counts, show, more } = Astro.props
 const site = Astro.site!.href
-const lists = [
-  { pages: pages.slice(0, postListing.collapsedItemCount), collapsed: false },
-  { pages: pages.slice(postListing.collapsedItemCount), collapsed: true },
-].filter((list) => list.pages.length > 0)
 // A private page's mark: the icon `mdi:lock`, drawn inline by astro-icon when the site builds, as a
 // tag bubble's icon is (docs/adr/1101), in the link's colour.
 const lock = "mdi:lock"
 ---
 
 {
-  lists.map(({ pages, collapsed }) => {
-    const list = (
+  pages.length > 0 && (
+    <PagedList show={show} more={more}>
       <ul class="posts">
         {pages.map((page) => (
           <li class="post">
@@ -82,16 +78,8 @@ const lock = "mdi:lock"
           </li>
         ))}
       </ul>
-    )
-    return collapsed ? (
-      <details>
-        <summary>{`Show ${pages.length} more ${pages.length === 1 ? noun[0] : noun[1]}`}</summary>
-        {list}
-      </details>
-    ) : (
-      list
-    )
-  })
+    </PagedList>
+  )
 }
 
 <style>
@@ -105,10 +93,6 @@ const lock = "mdi:lock"
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-  }
-
-  details .posts {
-    margin-top: 1.5rem;
   }
 
   h3 {
@@ -145,11 +129,5 @@ const lock = "mdi:lock"
 
   .tags li {
     max-width: 100%;
-  }
-
-  summary {
-    cursor: pointer;
-    color: var(--secondary);
-    font-weight: 600;
   }
 </style>

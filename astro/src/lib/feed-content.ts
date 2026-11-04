@@ -1,7 +1,7 @@
 // A feed item's content: its note's page as the build wrote it, its body alone, as HTML a feed
 // reader can show anywhere. It is what a reader of the feed reads in place of the page, and what a
 // site that copies the feed (DEV's import of it) publishes, so it ends with a link to the page,
-// where the note can be answered (RelatedContent.astro). A cross-post is the same body as Markdown, for
+// where the note can be answered (Connections.astro). A cross-post is the same body as Markdown, for
 // a site the note is posted to by hand or by its API (scripts/crosspost.ts).
 //
 // It is made from the page, not the note's source, as its Markdown copy is (./markdown-copies.ts),

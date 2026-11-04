@@ -99,7 +99,7 @@ test("a block that is not mermaid shows its source, and the rest of the page is 
   // Mermaid draws an error of its own at the end of the page unless it is told not to. The graph
   // column's icons are not diagrams, nor are the menu's, the share icons, the related content's and the
   // source link's.
-  await expect(page.locator("svg:not(aside svg, .menu-bar svg, share-links svg, .related-content svg, .source-link svg)")).toHaveCount(2)
+  await expect(page.locator("svg:not(aside svg, .menu-bar svg, share-links svg, .connections svg, .source-link svg)")).toHaveCount(2)
   expect(errors).toEqual([])
 })
 

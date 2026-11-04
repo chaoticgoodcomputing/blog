@@ -8,18 +8,18 @@ const posted = "/content/notes/alpha"
 const unposted = "/site-shell/body"
 const threaded = "/backlinks/linked"
 
-const panel = (page: Page, source: string) => page.locator(`.related.discussion[data-source="${source}"]`)
+const panel = (page: Page, source: string) => page.locator(`.connection.discussion[data-source="${source}"]`)
 
 test("what is related to a note is one carousel: its outgoing, then incoming links, then a discussion panel for each source", async ({ page }) => {
   await page.goto(threaded)
-  await expect(page.locator(".related-content .related > h2")).toHaveText([
+  await expect(page.locator(".connections .connection > h2")).toHaveText([
     "Outgoing Links",
     "Incoming Links",
     "Around the Web",
     "On Bluesky",
     "On Hacker News",
   ])
-  await expect(page.locator(".related-content .controls")).toHaveCount(1)
+  await expect(page.locator(".connections .controls")).toHaveCount(1)
 })
 
 test("a posted note's Bluesky panel answers at its Bluesky post, which its h-entry names as its copy", async ({ page }) => {
@@ -103,5 +103,5 @@ test("a note's page is an h-entry: its name, date, author, address and content",
 test("a private page's stub is no h-entry, and has no discussion", async ({ page }) => {
   await page.goto("/content/notes/secret")
   await expect(page.locator(".h-entry")).toHaveCount(0)
-  await expect(page.locator(".related.discussion")).toHaveCount(0)
+  await expect(page.locator(".connection.discussion")).toHaveCount(0)
 })

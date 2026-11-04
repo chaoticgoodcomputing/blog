@@ -1,0 +1,87 @@
+---
+// A list shown a page at a time: its first `show` items, then "Show more", which shows `more` more,
+// until every one is in view. The list is the slot, a `<ul>` or `<ol>`; every item is in the page,
+// so with no script the reader sees them all, and with script the rest wait behind the button.
+import { Icon } from "astro-icon/components"
+import { lists } from "../site.config.ts"
+
+interface Props {
+  /** How many items are in view at first. `lists.show` by default. */
+  show?: number | undefined
+  /** How many more each press of the button shows. `lists.more` by default. */
+  more?: number | undefined
+}
+
+const { show = lists.show, more = lists.more } = Astro.props
+---
+
+<paged-list data-show={show} data-more={more}>
+  <slot />
+  <button type="button" class="more" hidden>
+    Show more
+    <Icon name="mdi:chevron-down" is:inline width="1.2em" height="1.2em" aria-hidden="true" />
+  </button>
+</paged-list>
+
+<script>
+  /**
+   * Hides every item past the first `show`, and has the button show `more` more at a time. With
+   * every item in view, the button goes, and the first item it showed last takes the focus it had.
+   */
+  class PagedList extends HTMLElement {
+    connectedCallback() {
+      const button = this.querySelector<HTMLButtonElement>(":scope > .more")!
+      const items = [...this.querySelectorAll<HTMLElement>(":scope > :is(ul, ol) > li")]
+      const { show, more } = this.dataset
+      const step = Math.max(1, Number(more))
+      let shown = Math.min(items.length, Number(show))
+      items.forEach((item, at) => (item.hidden = at >= shown))
+
+      const update = () => (button.hidden = shown >= items.length)
+      button.addEventListener("click", () => {
+        const first = items[shown]
+        const to = Math.min(items.length, shown + step)
+        for (; shown < to; shown++) items[shown]!.hidden = false
+        update()
+        if (button.hidden) first?.querySelector<HTMLElement>("a, button")?.focus()
+      })
+      update()
+    }
+  }
+
+  customElements.define("paged-list", PagedList)
+</script>
+
+<style>
+  paged-list {
+    display: block;
+  }
+
+  paged-list :global(:is(ul, ol) > li[hidden]) {
+    display: none;
+  }
+
+  /* A quiet line under the list, as a link is drawn, not a button. */
+  .more {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    margin: 1rem auto 0;
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--secondary);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .more[hidden] {
+    display: none;
+  }
+
+  .more:hover,
+  .more:focus-visible {
+    text-decoration: underline;
+  }
+</style>

@@ -29,19 +29,19 @@ test("a backlink shows its page's date and description under its title, an undat
 
 test("before a note's incoming links, its outgoing links: the pages it links to", async ({ page }) => {
   await page.goto(linked)
-  const out = page.locator(".related-content .outlinks")
+  const out = page.locator(".connections .outlinks")
   await expect(out.getByRole("heading", { level: 2 })).toHaveText("Outgoing Links")
   await expect(out.getByRole("link")).toHaveCount(1)
   await expect(out.getByRole("link", { name: "Embeds it", exact: true })).toHaveAttribute("href", "/backlinks/by-embed")
   // The outgoing links first, in view; the incoming links the next panel of the carousel, beside it.
-  const [outgoing, incoming] = [(await out.boundingBox())!, (await page.locator(".related-content .backlinks").boundingBox())!]
+  const [outgoing, incoming] = [(await out.boundingBox())!, (await page.locator(".connections .backlinks").boundingBox())!]
   expect(outgoing.x + outgoing.width).toBeLessThanOrEqual(incoming.x + 1)
 })
 
 test("a note nothing links to has its outgoing links, with no incoming links panel", async ({ page }) => {
   await page.goto("/backlinks/by-link")
-  await expect(page.locator(".related-content .backlinks")).toHaveCount(0)
-  await expect(page.locator(".related-content .outlinks").getByRole("link", { name: "A note with backlinks", exact: true })).toBeVisible()
+  await expect(page.locator(".connections .backlinks")).toHaveCount(0)
+  await expect(page.locator(".connections .outlinks").getByRole("link", { name: "A note with backlinks", exact: true })).toBeVisible()
 })
 
 test("a backlink is set as the headings are", async ({ page }) => {

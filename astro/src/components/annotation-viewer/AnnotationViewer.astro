@@ -30,8 +30,9 @@
 // keys act while the reader is typing, or a dialog is open.
 //
 // PDF.js is loaded by the element's script as the page loads (./document.ts), so a page of another
-// kind has none of it. A mirror the browser can't open or draw leaves a notice with a link to the
-// annotated document itself, and the page laid out as any note's (`data-state="failed"`).
+// kind has none of it. A mirror the browser can't open or draw leaves the page laid out as any
+// note's (`data-state="failed"`), with "(PDF not available)" after the link to the annotated
+// document itself, and the link over the preface going to the annotations instead.
 //
 // What the script sets on the body's annotations, and how they are laid out in the margin and the
 // drawer, is styled in src/styles/prose/annotation-viewer.css: scoped styles never reach a slot.
@@ -57,7 +58,6 @@ const name = documentFileName(target) ?? target
 // found by its quote alone.
 const sliced = annotationPages(note.frontmatter) !== undefined
 const passages = annotatedPassages(note).map(({ start, ...passage }) => (sliced ? passage : { ...passage, start }))
-const href = encodeURI(decodeURI(target))
 // The document's id, which the link over the preface goes to.
 const DOCUMENT = "annotated-document"
 ---
@@ -74,14 +74,11 @@ const DOCUMENT = "annotated-document"
 >
   <a class="to-document" href={`#${DOCUMENT}`}>
     <Icon name="mdi:arrow-down" is:inline width="16" height="16" fill="currentColor" aria-hidden="true" />
-    Go to the annotated document
+    <span class="label">Go to the annotated document</span>
   </a>
   <div class="layout">
     <div class="document" id={DOCUMENT} tabindex="-1" role="region" aria-label={`The annotated document, ${name}`} data-pagefind-ignore>
       <p class="status" data-loading>Loading the document…</p>
-      <p class="status" data-failed hidden>
-        We couldn't show the PDF here, but you can read along at <a href={href}>{decodeURI(target)}</a>.
-      </p>
       <div class="pages"></div>
     </div>
     <slot />
@@ -214,7 +211,14 @@ const DOCUMENT = "annotated-document"
       const failed = () => {
         this.dataset.state = "failed"
         this.querySelector<HTMLElement>("[data-loading]")!.hidden = true
-        this.querySelector<HTMLElement>("[data-failed]")!.hidden = false
+        this.querySelector(".to-document .label")!.textContent = "Go to the annotations"
+        const source = this.querySelector(".prose > .annotated-document")
+        if (source && !source.querySelector(".unavailable")) {
+          const note = document.createElement("span")
+          note.className = "unavailable"
+          note.textContent = " (PDF not available)"
+          source.append(note)
+        }
       }
       try {
         const { show } = await import("./document.ts")
@@ -413,9 +417,10 @@ const DOCUMENT = "annotated-document"
     }
 
     // Goes past the preface to the document, with its source just over it, and gives it the focus,
-    // so the keys and the next Tab start there.
+    // so the keys and the next Tab start there. With no document to show, the annotations under the
+    // source take the focus.
     #toDocument() {
-      const region = this.querySelector<HTMLElement>(".document")!
+      const region = this.dataset.state === "failed" && this.#section ? this.#section : this.querySelector<HTMLElement>(".document")!
       const source = this.querySelector<HTMLElement>(".prose > .annotated-document") ?? region
       const smoothly = !matchMedia("(prefers-reduced-motion: reduce)").matches
       this.#reveal(source.getBoundingClientRect().top + BELOW_BAR - 16, smoothly)
@@ -696,12 +701,13 @@ const DOCUMENT = "annotated-document"
   }
 
   /* The link past the preface to the document: a line of the note's column, over the preface, once
-     the document is beside the cards. None where there is no preface to go past. */
+     the document is beside the cards, or to the annotations where it can't be shown. None where
+     there is no preface to go past. */
   .to-document {
     display: none;
   }
 
-  .annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]):has(.annotation-preface) .to-document {
+  .annotation-viewer:is([data-layout="margin"], [data-layout="drawer"], [data-state="failed"]):has(.annotation-preface) .to-document {
     display: flex;
     align-items: center;
     gap: 0.25rem;
@@ -721,7 +727,7 @@ const DOCUMENT = "annotated-document"
     outline: none;
   }
 
-  /* The document: out of sight until it opens, or a notice says it can't. It pans sideways in its
+  /* The document: out of sight until it opens. It pans sideways in its
      column when it is zoomed wider than it, and never scrolls down by itself: the page is the one
      scroll. */
   .document {
@@ -733,7 +739,7 @@ const DOCUMENT = "annotated-document"
     touch-action: pan-x pan-y;
   }
 
-  .annotation-viewer:is([data-layout="margin"], [data-layout="drawer"], [data-state="failed"]) .document {
+  .annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .document {
     display: block;
   }
 
@@ -743,10 +749,6 @@ const DOCUMENT = "annotated-document"
     color: var(--darkgray);
   }
 
-  .status a {
-    overflow-wrap: anywhere;
-  }
-
   .pages {
     display: flex;
     flex-direction: column;
@@ -754,10 +756,6 @@ const DOCUMENT = "annotated-document"
     gap: 1rem;
     width: var(--document-width, 100%);
     margin: 0 auto;
-  }
-
-  .annotation-viewer[data-state="failed"] .pages {
-    display: none;
   }
 
   /* What PDF.js draws is made by the element's script, which scoped styles never reach. A page is

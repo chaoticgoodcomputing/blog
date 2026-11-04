@@ -4,7 +4,7 @@
 // scheme switch to the right of it, the local graph over the reader's trail, and the footer.
 // Beside it are the trail's spines, the notes the reader came through, then the note itself: its
 // header (title, tags, date, and the ways to share it) over the page's content, and what follows the body under it:
-// what is related to the note, its links and its discussion, in one carousel.
+// its connections, its links and its discussion in one carousel.
 //
 // The window is the one scroll: the graph column and the spines stay in view beside the note. On a
 // phone or a tablet the graph column is a menu instead, opened from a bar over the note, which
@@ -28,7 +28,7 @@ import ShareLinks from "../components/ShareLinks.astro"
 import DateAndReadingTime from "../components/DateAndReadingTime.astro"
 import TagList from "../components/TagList.astro"
 import PostListing from "../components/PostListing.astro"
-import RelatedContent from "../components/RelatedContent.astro"
+import Connections from "../components/Connections.astro"
 import EntryMeta from "../components/EntryMeta.astro"
 import SourceLink from "../components/SourceLink.astro"
 
@@ -107,8 +107,8 @@ const fold = {
 
         <div class="after-body">
           {/* On a tag page, the posts under `page.tag`. */}
-          {on("home", "tag", "404") && <PostListing tag={page.tag} home={on("home")} />}
-          {on("note", "tag", "annotation") && <RelatedContent note={page.note} discussion={on("note", "annotation")} />}
+          {(page.kind === "home" || page.kind === "tag" || page.kind === "404") && <PostListing kind={page.kind} tag={page.tag} />}
+          {on("note", "tag", "annotation") && <Connections note={page.note} discussion={on("note", "annotation")} />}
           {on("note") && site.sourceLink && <SourceLink note={page.note} />}
         </div>
       </main>
