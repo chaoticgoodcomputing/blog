@@ -334,6 +334,19 @@ export interface LayoutConfig {
    * narrower, the text is as wide as the window, less its gutters. Pages read it as `--noteWidth`.
    */
   noteWidth: string
+  /**
+   * How large a note's text is: any CSS length. Headings are sized from it, each level the same
+   * multiple of it wherever it is (global.css). Pages read it as `--noteFontSize`.
+   */
+  noteFontSize: string
+  /**
+   * How wide a sidenote is, a footnote beside the paragraph that cites it (src/lib/sidenotes.ts): any
+   * CSS length. Where the margin to the right of the text is too narrow for it, the sidenote is
+   * under its paragraph.
+   */
+  sidenoteWidth: string
+  /** The room between the text and its sidenotes in the margin: any CSS length. */
+  sidenoteGap: string
 }
 
 export interface TrailConfig {

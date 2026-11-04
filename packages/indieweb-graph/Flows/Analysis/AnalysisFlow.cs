@@ -5,7 +5,10 @@ using IndiewebGraph.Flows.Analysis.Steps;
 
 namespace IndiewebGraph.Flows.Analysis;
 
-/// <summary>Makes a graph of sites of what the crawl found, and summarizes each site's place in it.</summary>
+/// <summary>
+/// Makes graphs of what the crawl found: of sites, summarizing each one's place in it; and the mention
+/// graph, of webmention-compatible blogs, their posts, and which post mentions which.
+/// </summary>
 public static class AnalysisFlow
 {
   public static BuiltFlow Create(Catalog catalog) =>
@@ -14,8 +17,25 @@ public static class AnalysisFlow
       pipeline.AddStep<IEnumerable<LinkSchema>, IEnumerable<MentionSchema>, IEnumerable<BlockedHostSchema>, IEnumerable<EdgeSchema>>(
         label: "BuildEdges",
         transform: BuildEdgesStep.Create(),
-        inputs: (catalog.Links, catalog.Mentions, catalog.Blocklist),
+        inputs: (catalog.Links, catalog.Mentions, catalog.ProbedBlocklist),
         outputs: catalog.Edges
+      );
+
+      pipeline.AddStep<
+        IEnumerable<SeedSchema>,
+        IEnumerable<PageSchema>,
+        IEnumerable<LinkSchema>,
+        IEnumerable<MentionSchema>,
+        IEnumerable<HostSchema>,
+        IEnumerable<BlogSchema>,
+        IEnumerable<PostSchema>,
+        IEnumerable<BlogHasPostSchema>,
+        IEnumerable<PostHasMentionSchema>
+      >(
+        label: "BuildMentionGraph",
+        transform: BuildMentionGraphStep.Create(),
+        inputs: (catalog.Seeds, catalog.Pages, catalog.Links, catalog.Mentions, catalog.ProbedHosts),
+        outputs: (catalog.Blogs, catalog.Posts, catalog.BlogHasPost, catalog.PostHasMention)
       );
 
       pipeline.AddStep<IEnumerable<EdgeSchema>, IEnumerable<SiteSummarySchema>>(

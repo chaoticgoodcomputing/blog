@@ -90,4 +90,8 @@ It's a Prisoners Dilemma, then: spread, or lose.
 Likewise, when hit with large quantities of pull requests and massive descriptions, a maintainer can:
 
 1. Use LLMs to review faster; or
-2. 
+
+
+
+
+[^1]: Yeah, there is a little missing "update your branch" in the diagram, so it's not an all-or-nothing, but trying to represent a secret third loop-y lane violates the DAG mindset that I love so much.

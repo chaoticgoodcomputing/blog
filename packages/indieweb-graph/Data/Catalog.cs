@@ -24,12 +24,50 @@ public class Catalog(string basePath, IConfiguration configuration) : CatalogAbs
       .AtSection("Flowthru:Flows:Crawl:CrawlOptions")
       .Build());
 
-  /// <summary>Hosts known not to accept webmentions, kept by hand: no edge of the graph.</summary>
+  /// <summary>
+  /// Hosts known not to accept webmentions, as the run starts: those kept by hand, and those earlier
+  /// runs' ProbeHosts added.
+  /// </summary>
   public IItem<IEnumerable<BlockedHostSchema>> Blocklist =>
     CreateItem(() => Item.Of<IEnumerable<BlockedHostSchema>>("Blocklist")
       .Csv()
-      .AtPath($"{basePath}/_01_Raw/blocklist.csv")
+      .AtPath(BlocklistPath)
       .Build());
+
+  /// <summary>
+  /// The blocklist with this run's probes added, written over the file <see cref="Blocklist"/> read:
+  /// two items of one file, so that a run's probes are the next run's blocklist with no hand between.
+  /// No cycle in the DAG, since the file is read before it is written.
+  /// </summary>
+  public IItem<IEnumerable<BlockedHostSchema>> ProbedBlocklist =>
+    CreateItem(() => Item.Of<IEnumerable<BlockedHostSchema>>("ProbedBlocklist")
+      .Csv()
+      .AtPath(BlocklistPath)
+      .Build());
+
+  private string BlocklistPath => $"{basePath}/_01_Raw/blocklist.csv";
+
+  /// <summary>
+  /// The hosts earlier runs probed, and what each one's home page showed: a webmention endpoint, an
+  /// h-card. Not committed, as what a crawl fetched isn't; the setup target starts it empty.
+  /// </summary>
+  public IItem<IEnumerable<HostSchema>> Hosts =>
+    CreateItem(() => Item.Of<IEnumerable<HostSchema>>("Hosts")
+      .Csv()
+      .AtPath(HostsPath)
+      .Build());
+
+  /// <summary>
+  /// The hosts with this run's probes added, written over the file <see cref="Hosts"/> read, as
+  /// <see cref="ProbedBlocklist"/> is over the blocklist's.
+  /// </summary>
+  public IItem<IEnumerable<HostSchema>> ProbedHosts =>
+    CreateItem(() => Item.Of<IEnumerable<HostSchema>>("ProbedHosts")
+      .Csv()
+      .AtPath(HostsPath)
+      .Build());
+
+  private string HostsPath => $"{basePath}/_01_Raw/hosts.csv";
 
   public IItem<IEnumerable<PageSchema>> Pages =>
     CreateItem(() => Item.Of<IEnumerable<PageSchema>>("Pages")
@@ -53,6 +91,31 @@ public class Catalog(string basePath, IConfiguration configuration) : CatalogAbs
     CreateItem(() => Item.Of<IEnumerable<EdgeSchema>>("Edges")
       .Csv()
       .AtPath($"{basePath}/_02_Primary/edges.csv")
+      .Build());
+
+  /// <summary>The mention graph's nodes and edges: webmention-compatible blogs, their posts, and which post mentions which.</summary>
+  public IItem<IEnumerable<BlogSchema>> Blogs =>
+    CreateItem(() => Item.Of<IEnumerable<BlogSchema>>("Blogs")
+      .Csv()
+      .AtPath($"{basePath}/_02_Primary/blogs.csv")
+      .Build());
+
+  public IItem<IEnumerable<PostSchema>> Posts =>
+    CreateItem(() => Item.Of<IEnumerable<PostSchema>>("Posts")
+      .Csv()
+      .AtPath($"{basePath}/_02_Primary/posts.csv")
+      .Build());
+
+  public IItem<IEnumerable<BlogHasPostSchema>> BlogHasPost =>
+    CreateItem(() => Item.Of<IEnumerable<BlogHasPostSchema>>("BlogHasPost")
+      .Csv()
+      .AtPath($"{basePath}/_02_Primary/blog_has_post.csv")
+      .Build());
+
+  public IItem<IEnumerable<PostHasMentionSchema>> PostHasMention =>
+    CreateItem(() => Item.Of<IEnumerable<PostHasMentionSchema>>("PostHasMention")
+      .Csv()
+      .AtPath($"{basePath}/_02_Primary/post_has_mention.csv")
       .Build());
 
   public IItem<IEnumerable<SiteSummarySchema>> SiteSummaries =>

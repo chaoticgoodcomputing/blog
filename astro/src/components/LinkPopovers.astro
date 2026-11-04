@@ -77,12 +77,13 @@
    * extension (docs/adr/0003), and a file's does. So a note named with a dot in its last part,
    * `v1.2`, would have no preview, and no note of the vault is. Outside the note, a link to the
    * page the reader is on has none: the reader is there. In the note, a link to a place on it has
-   * one, as a footnote's does, to read it without leaving the place, but a heading's link to itself
-   * has none: it is on the heading it would show.
+   * one, to read it without leaving the place, but a heading's link to itself has none: it is on the
+   * heading it would show. Nor does a footnote's reference: its sidenote is beside or under it
+   * (src/lib/sidenotes.ts).
    */
   function previewed(link: HTMLAnchorElement): URL | undefined {
     if (!link.closest(PREVIEWED) || link.closest(".link-popover")) return undefined
-    if (link.classList.contains("heading-anchor")) return undefined
+    if (link.classList.contains("heading-anchor") || link.hasAttribute("data-footnote-ref")) return undefined
     if (link.classList.contains("is-unresolved") || link.hasAttribute("data-astro-reload")) return undefined
     const url = new URL(link.href)
     if (url.origin !== location.origin || /\.[^./]+$/.test(url.pathname)) return undefined
@@ -213,6 +214,8 @@
     background-color: var(--light);
     color: var(--darkgray);
     box-shadow: 0 1rem 3rem var(--shadow);
-    font-size: 0.9rem;
+    /* A preview is the note in small: the whole reading scale (global.css) at this size. */
+    --noteFontSize: 0.9rem;
+    font-size: var(--text-body);
   }
 </style>

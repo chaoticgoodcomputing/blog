@@ -69,6 +69,11 @@ const counts = postListing.showTagCounts ? postCounts() : undefined
 }
 
 <style>
+  /* A post listing reads as a note's text does, though it is after the body (global.css). */
+  :global(.post-listings) {
+    font-size: var(--text-body);
+  }
+
   /* One listing under the other, as far apart as the sections after a page's body are. */
   .stacked {
     display: flex;

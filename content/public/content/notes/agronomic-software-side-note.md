@@ -34,3 +34,5 @@ That burrito analog isn't necessarily the case, though. I've only worked at a co
 They come with a tradeoff -- at the burrito job, there's clean metrics that show how much work you've done, and whether you've earned your lot that month. At the dumpster fire job, after awhile, you can either stretch yourself too thin trying to put out too many fires *or* let the fires burn; either way, that little bit of freedom comes at a cost to either your job security or satisfaction.
 
 Either way, as a junior engineer, you're in a position where you'd like security, satisfaction, and sanity, and all three seem out of reach. 
+
+[^1]: The implosion of Arc Browser has really put a dent in my bookmark-and-recall game.

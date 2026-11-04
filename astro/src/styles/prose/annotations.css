@@ -11,7 +11,7 @@
 
 .prose .annotated-document {
   color: var(--darkgray);
-  font-size: 0.9rem;
+  font-size: var(--text-small);
 }
 
 .prose .annotated-document a {
@@ -29,9 +29,11 @@
   color: var(--darkgray);
 }
 
-/* A card. */
+/* A card, in the reading scale's small step (global.css): beside the document, its caption step
+   (annotation-viewer.css). */
 .prose .annotation {
   margin: 0 0 1rem;
+  font-size: var(--text-small);
   padding: 1rem;
   border: 1px solid var(--lightgray);
   border-radius: 0.5rem;
@@ -104,7 +106,7 @@
   display: block;
   margin-top: 0.75rem;
   color: var(--gray);
-  font-size: 0.85rem;
+  font-size: var(--text-fine);
 }
 
 @media (prefers-reduced-motion: reduce) {

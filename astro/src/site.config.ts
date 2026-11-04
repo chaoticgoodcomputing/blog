@@ -162,8 +162,13 @@ export const seo: SeoConfig = {
 }
 
 export const layout: LayoutConfig = {
-  // About 70 characters to a line of the body font.
-  noteWidth: "40rem",
+  // About 65 characters to a line of the body font, as the New York Times sets its own: 20px text in
+  // a 600px column.
+  noteWidth: "37.5rem",
+  noteFontSize: "1.25rem",
+  // About 35 characters to a line of a sidenote's smaller sans.
+  sidenoteWidth: "10rem",
+  sidenoteGap: "2rem",
 }
 
 export const trail: TrailConfig = {

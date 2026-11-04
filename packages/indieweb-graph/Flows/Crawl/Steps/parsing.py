@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import re
 import xml.etree.ElementTree as ET
-from urllib.parse import urldefrag, urljoin, urlsplit
+from urllib.parse import urldefrag, urljoin, urlsplit, urlunsplit
 
 from bs4 import BeautifulSoup
 
@@ -148,6 +148,24 @@ def _bluesky_handle(url: str | None) -> str | None:
     return handle
 
 
+def mention_targets(url: str) -> list[str]:
+    """
+    The addresses a page's webmentions may be kept under: its own, and its twin with or without a
+    trailing slash, since webmention.io keeps each under the address its sender wrote.
+    """
+    parts = urlsplit(url)
+    path = parts.path
+    if path in ("", "/") or parts.query:
+        return [url]
+    if path.endswith("/"):
+        twin = path.rstrip("/")
+    elif "." in path.rsplit("/", 1)[-1]:
+        return [url]
+    else:
+        twin = path + "/"
+    return [url, urlunsplit(parts._replace(path=twin))]
+
+
 def mention_rows(children: list[dict], target_site: str, target_url: str) -> list[dict]:
     """A page's webmentions, from webmention.io's JF2 `children`, as rows."""
     rows = []
@@ -219,3 +237,59 @@ def webmention_endpoint(html: str, link_header: str, base: str) -> str | None:
     soup = BeautifulSoup(html, "html.parser")
     element = soup.find(["link", "a"], rel="webmention", href=True)
     return urljoin(base, element["href"]) if element is not None else None
+
+
+def is_blocked(host: str, blocked: list[tuple[str, bool]]) -> bool:
+    """
+    Whether a host is on the blocklist, itself, or as a subdomain of a host on it whose subdomains
+    are blocked too: each entry a host and whether its subdomains are.
+    """
+    return any(host == entry or (subdomains and host.endswith("." + entry)) for entry, subdomains in blocked)
+
+
+def has_indieweb_signs(html: str, link_header: str, base: str) -> bool:
+    """
+    Whether a home page shows it is someone's IndieWeb site: it announces a webmention endpoint, or
+    it has an h-card (https://microformats.org/wiki/h-card), whose author it says it is.
+    """
+    return webmention_endpoint(html, link_header, base) is not None or has_h_card(html)
+
+
+def has_h_card(html: str) -> bool:
+    """Whether a page has an h-card (https://microformats.org/wiki/h-card)."""
+    return BeautifulSoup(html, "html.parser").select_one(".h-card") is not None
+
+
+def probe_candidates(counts: dict[str, int], seeds: set[str], blocked: list[tuple[str, bool]]) -> list[str]:
+    """
+    The hosts to probe, the most linked and mentioned first: every one the crawl saw but a seed's,
+    and those already blocked.
+    """
+    hosts = [host for host in counts if host and host not in seeds and not is_blocked(host, blocked)]
+    return sorted(hosts, key=lambda host: (-counts[host], host))
+
+
+# What a home page links to that is no page: a feed, a stylesheet, an image or a download.
+NOT_A_PAGE = re.compile(r"\.(xml|rss|atom|json|css|js|png|jpe?g|gif|svg|webp|ico|pdf|zip)$", re.I)
+
+
+def home_pages(html: str, home: str) -> list[str]:
+    """
+    A seed's home page and the top-level pages of its own it links to (`/guestbook/`, `/about`): the
+    pages a sitemap or a feed may leave out, though they receive webmentions too. Once each, in order.
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    site = host_of(home)
+    base = urlsplit(home).path.rstrip("/")
+    pages = [home]
+    for anchor in soup.find_all("a", href=True):
+        target, _ = urldefrag(urljoin(home, anchor["href"].strip()))
+        parts = urlsplit(target)
+        if parts.scheme not in ("http", "https") or host_of(target) != site or parts.query:
+            continue
+        path = parts.path.rstrip("/")
+        # One level under the seed's own path: `/blog/about` for a seed at `/blog/`.
+        if not path.startswith(base + "/") or "/" in path[len(base) + 1:] or NOT_A_PAGE.search(path):
+            continue
+        pages.append(target)
+    return list(dict.fromkeys(pages))

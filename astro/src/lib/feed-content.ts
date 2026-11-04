@@ -17,6 +17,7 @@
 import { parse, type HTMLElement } from "node-html-parser"
 import { site as siteConfig } from "../site.config.ts"
 import { NOT_TEXT, toMarkdown } from "./markdown-copies.ts"
+import { restoreFootnotes } from "./sidenotes.ts"
 import type { Note } from "./notes.ts"
 
 /** What only works on the page: a widget, a Mermaid diagram, an annotated document's annotations. */
@@ -56,6 +57,7 @@ export function plainBody(note: ContentNote, html: string, site: URL, drawingPng
 
   const notice = `<blockquote><p>This interactive content can only be viewed on the <a href="${escape(page.href)}">live site</a>.</p></blockquote>`
   for (const selector of INTERACTIVE) for (const element of body.querySelectorAll(selector)) element.replaceWith(notice)
+  restoreFootnotes(body)
   for (const selector of [...NOT_TEXT, ...ONE_SCHEME]) for (const element of body.querySelectorAll(selector)) element.remove()
 
   // A callout is a quote: its title, in bold, where it is more than the name of its kind, then its

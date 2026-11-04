@@ -8,12 +8,13 @@
   ],
   "targets": {
     "setup": {
-      "//": "The Python steps' environment, .venv, from uv.lock; and seeds.json, from seeds.sample.json, where there is none yet.",
+      "//": "The Python steps' environment, .venv, from uv.lock; seeds.json, from seeds.sample.json, where there is none yet; and an empty hosts.csv, for probing to add to.",
       "executor": "nx:run-commands",
       "options": {
         "commands": [
           "uv sync --frozen",
-          "cp -n Data/_01_Raw/seeds.sample.json Data/_01_Raw/seeds.json || true"
+          "cp -n Data/_01_Raw/seeds.sample.json Data/_01_Raw/seeds.json || true",
+          "[ -f Data/_01_Raw/hosts.csv ] || printf 'host,endpoint,h_card,probed\\n' > Data/_01_Raw/hosts.csv"
         ],
         "parallel": false,
         "cwd": "{projectRoot}"
@@ -42,10 +43,21 @@
       }
     },
     "analyze": {
-      "//": "Makes the graph of the last crawl, Data/_02_Primary/edges.csv, and its sites' summary, Data/_03_Reporting/sites.csv.",
+      "//": "Makes the graph of the last crawl, Data/_02_Primary/edges.csv, its sites' summary, Data/_03_Reporting/sites.csv, and the mention graph's four tables, Data/_02_Primary/{blogs,posts,blog_has_post,post_has_mention}.csv.",
       "executor": "nx:run-commands",
       "options": {
         "command": "dotnet run -- --flow Analysis",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "sync-readme": {
+      "//": "Splices the flows' DAG, from a dry run's Metadata/dag-merged.md, and the project's file tree into README.md, between their flowthru markers (scripts/sync-readme.mjs).",
+      "dependsOn": [
+        "setup"
+      ],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node scripts/sync-readme.mjs",
         "cwd": "{projectRoot}"
       }
     }

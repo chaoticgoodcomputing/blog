@@ -2,7 +2,7 @@ using Flowthru.Data.Schema;
 
 namespace IndiewebGraph.Data.Schemas;
 
-/// <summary>A page of a crawled site, as its sitemap or feed lists it.</summary>
+/// <summary>A page of a crawled site, as its sitemap, its feed or its home page lists it.</summary>
 [FlowthruSchema]
 public partial record PageSchema
 {
@@ -13,7 +13,10 @@ public partial record PageSchema
   [SerializedLabel("url")]
   public required string Url { get; init; }
 
-  /// <summary>Where it was listed: <c>sitemap</c> or <c>feed</c>.</summary>
+  /// <summary>
+  /// Where it was listed: <c>sitemap</c>, <c>feed</c>, or <c>home</c> for the home page and the
+  /// top-level pages it links to.
+  /// </summary>
   [SerializedLabel("listed_in")]
   public required string ListedIn { get; init; }
 

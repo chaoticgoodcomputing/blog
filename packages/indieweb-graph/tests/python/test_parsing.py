@@ -116,3 +116,56 @@ def test_a_pages_webmention_endpoint_is_its_link_headers_or_else_its_html():
     html = '<link rel="stylesheet" href="webmention.css"><link rel="webmention" href="/wp-json/webmention/1.0/endpoint">'
     assert webmention_endpoint(html, "", "https://a.example/post") == "https://a.example/wp-json/webmention/1.0/endpoint"
     assert webmention_endpoint("<p>none</p>", "", "https://a.example/") is None
+
+
+from Flows.Crawl.Steps.parsing import has_indieweb_signs, is_blocked, probe_candidates
+
+
+def test_a_host_is_blocked_as_itself_or_a_subdomain_of_one_whose_subdomains_are():
+    blocked = [("wikipedia.org", True), ("micro.blog", False)]
+    assert is_blocked("en.wikipedia.org", blocked)
+    assert is_blocked("wikipedia.org", blocked)
+    assert not is_blocked("notwikipedia.org", blocked)
+    # A probed host's subdomains may be its members' own sites.
+    assert is_blocked("micro.blog", blocked)
+    assert not is_blocked("someone.micro.blog", blocked)
+
+
+def test_an_indieweb_site_announces_an_endpoint_or_has_an_h_card():
+    assert has_indieweb_signs('<link rel="webmention" href="/wm">', "", "https://a.example/")
+    assert has_indieweb_signs('<div class="h-card p-author">A</div>', "", "https://a.example/")
+    assert has_indieweb_signs("", '<https://webmention.io/a/webmention>; rel="webmention"', "https://a.example/")
+    assert not has_indieweb_signs('<div class="card">News</div>', "", "https://news.example/")
+
+
+def test_the_hosts_to_probe_are_the_most_seen_first_never_a_seed_or_one_blocked():
+    counts = {"b.example": 3, "seed.example": 9, "en.wikipedia.org": 5, "c.example": 7, "": 1}
+    assert probe_candidates(counts, {"seed.example"}, [("wikipedia.org", True)]) == ["c.example", "b.example"]
+
+
+from Flows.Crawl.Steps.parsing import home_pages
+
+
+def test_a_home_page_lists_itself_and_its_own_top_level_pages():
+    html = """
+      <a href="/guestbook/">Guestbook</a> <a href="/about">About</a> <a href="/about#me">Me</a>
+      <a href="/2024/01/post">A post</a> <a href="/feed.xml">Feed</a> <a href="/?page=2">Older</a>
+      <a href="https://other.example/">Elsewhere</a> <a href="https://www.a.example/now">Now</a>
+    """
+    assert home_pages(html, "https://a.example/") == [
+        "https://a.example/", "https://a.example/guestbook/", "https://a.example/about", "https://www.a.example/now",
+    ]
+
+
+def test_a_seed_under_a_path_lists_the_pages_under_it():
+    html = '<a href="/blog/about/">About</a> <a href="/shop">Shop</a>'
+    assert home_pages(html, "https://a.example/blog/") == ["https://a.example/blog/", "https://a.example/blog/about/"]
+
+
+def test_mention_targets_are_a_page_and_its_slash_twin():
+    from Flows.Crawl.Steps.parsing import mention_targets
+    assert mention_targets("https://a.example/guestbook") == ["https://a.example/guestbook", "https://a.example/guestbook/"]
+    assert mention_targets("https://a.example/post/") == ["https://a.example/post/", "https://a.example/post"]
+    assert mention_targets("https://a.example/") == ["https://a.example/"]
+    assert mention_targets("https://a.example/feed.xml") == ["https://a.example/feed.xml"]
+    assert mention_targets("https://a.example/p?id=1") == ["https://a.example/p?id=1"]

@@ -1,4 +1,6 @@
-/* The card's scale: its spacing, corners, pictures and type, which the compact card turns down. */
+/* The card's scale: its spacing, corners, pictures and type, which the compact card turns down. Its
+   type is the reading scale's (src/styles/global.css): a post in the caption step, what is said
+   about it in the fine one. */
 .root {
   --post-space: 1rem;
   --post-gap: 0.75rem;
@@ -6,8 +8,8 @@
   --post-avatar-size: 48px;
   --post-quote-avatar-size: 32px;
   --post-thumb-size: 100px;
-  --post-font-size: 0.9375rem;
-  --post-small-font-size: 0.8125rem;
+  --post-font-size: var(--text-caption);
+  --post-small-font-size: var(--text-fine);
   display: block;
   position: relative;
   box-sizing: border-box;
@@ -26,8 +28,9 @@
   --post-avatar-size: 40px;
   --post-quote-avatar-size: 24px;
   --post-thumb-size: 80px;
-  --post-font-size: 0.875rem;
-  --post-small-font-size: 0.75rem;
+  /* A step under each of the full card's, from the same note text size. */
+  --post-font-size: calc(0.7 * var(--noteFontSize));
+  --post-small-font-size: calc(0.6 * var(--noteFontSize));
 }
 
 .root:hover {
@@ -185,7 +188,7 @@
   padding: 0.75rem;
   border-radius: 6px;
   background: var(--light);
-  font-size: 0.8125rem;
+  font-size: var(--post-small-font-size);
 }
 
 .cardCompact:hover {
@@ -235,19 +238,19 @@
 
 .quoteName {
   color: var(--dark);
-  font-size: 0.875rem;
+  font-size: var(--post-font-size);
   font-weight: 600;
 }
 
 .quoteHandle {
   color: var(--gray);
-  font-size: 0.8125rem;
+  font-size: var(--post-small-font-size);
 }
 
 .quoteText {
   margin: 0;
   color: var(--darkgray);
-  font-size: 0.875rem;
+  font-size: var(--post-font-size);
   line-height: 1.5;
   white-space: pre-wrap;
   overflow-wrap: break-word;

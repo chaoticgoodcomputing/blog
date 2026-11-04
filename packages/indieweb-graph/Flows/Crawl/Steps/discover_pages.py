@@ -1,4 +1,4 @@
-"""Lists each seed's pages: its sitemaps' posts and pages, the latest first, and its feeds' items."""
+"""Lists each seed's pages: its sitemaps' posts and pages, the latest first, its feeds' items, and its home page's."""
 from __future__ import annotations
 
 import logging
@@ -11,6 +11,7 @@ from Flows.Crawl.Steps.fetching import Fetcher
 from Flows.Crawl.Steps.parsing import (
     content_sitemaps,
     feeds_in_html,
+    home_pages,
     host_of,
     newest_first,
     parse_feed,
@@ -48,6 +49,11 @@ def _from_sitemaps(fetcher: Fetcher, seed: str) -> list[tuple[str, str | None]]:
     return pages
 
 
+def _from_home(fetcher: Fetcher, seed: str) -> list[tuple[str, str | None]]:
+    response = fetcher.get(seed)
+    return [(url, None) for url in home_pages(response.text, seed)] if response is not None else []
+
+
 def _from_feeds(fetcher: Fetcher, seed: str) -> list[tuple[str, str | None]]:
     response = fetcher.get(seed)
     if response is None:
@@ -72,16 +78,21 @@ def discover_pages(seeds: pd.DataFrame, options: dict) -> pd.DataFrame:
     rows = []
     for seed in seeds["url"]:
         site = host_of(seed)
-        # Its sitemaps' pages, the latest first, then its feeds' (its latest posts, which a sitemap
-        # of only a few pages may not have): up to the limit, once each.
+        # Its sitemaps' pages, the latest first; then its feeds' (its latest posts, which a sitemap
+        # of only a few pages may not have); then its home page and the top-level pages it links to
+        # (a guestbook, an about page), which neither may have: up to the limit, once each.
         listed = [(url, lastmod, "sitemap") for url, lastmod in newest_first(_from_sitemaps(fetcher, seed))]
         listed += [(url, None, "feed") for url, _ in _from_feeds(fetcher, seed)]
-        seen, counts = set(), {"sitemap": 0, "feed": 0}
+        listed += [(url, None, "home") for url, _ in _from_home(fetcher, seed)]
+        seen, counts = set(), {"sitemap": 0, "feed": 0, "home": 0}
         for url, lastmod, listed_in in listed:
             if host_of(url) != site or url in seen or len(seen) >= limit:
                 continue
             seen.add(url)
             counts[listed_in] += 1
             rows.append({"site": site, "url": url, "listed_in": listed_in, "lastmod": lastmod})
-        logger.info("%s: %d pages from its sitemaps, %d more from its feeds", site, counts["sitemap"], counts["feed"])
+        logger.info(
+            "%s: %d pages from its sitemaps, %d more from its feeds, %d more from its home page",
+            site, counts["sitemap"], counts["feed"], counts["home"],
+        )
     return pd.DataFrame(rows, columns=COLUMNS)

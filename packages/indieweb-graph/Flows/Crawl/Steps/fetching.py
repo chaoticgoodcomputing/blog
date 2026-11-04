@@ -34,8 +34,12 @@ class Fetcher:
         self._last: dict[str, float] = {}
         self._robots: dict[str, RobotFileParser] = {}
 
+    def cached(self, url: str) -> bool:
+        """Whether the HTTP cache can answer for a URL, with no request to its host."""
+        return self.session.cache.contains(url=url)
+
     def _wait_for(self, url: str) -> None:
-        if self.session.cache.contains(url=url):
+        if self.cached(url):
             return
         host = urlsplit(url).netloc
         wait = self._last.get(host, 0) + self.delay - time.monotonic()

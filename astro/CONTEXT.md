@@ -232,6 +232,29 @@ Which page the site shell is around: a note, the home page, a tag page, an annot
 404 page. A feature is shown on some kinds and not others.
 _Avoid_: page type (Quartz's), layout
 
+**Note text size**:
+How large a note's text is, the site configuration's `layout.noteFontSize`, which pages read as
+`--noteFontSize`. The one size the reading scale is worked out from.
+_Avoid_: base font size, root size (the root's is 16px, and the interface's)
+
+**Reading scale**:
+The sizes of what a reader reads, each a step of the note text size: headings, body, small and
+caption (`--text-*`, `src/styles/global.css`). A note's text, a post listing, what follows the body,
+a sidenote and a link's preview are each set in a step, and move together when the note text size
+does. A place that sets the note text size of its own has the whole scale at that size.
+_Avoid_: type scale, font tokens
+
+**Interface text**:
+What a reader works rather than reads, the graph column, the search box, a button, a tag badge, a
+chip: sized in `rem`, apart from the reading scale, and the same whatever the note text size.
+_Avoid_: chrome, UI text
+
+**Sidenote**:
+A footnote shown beside the block that cites it: in the margin to the right of the text where the
+margin is wide enough, under the block where it isn't (`src/lib/sidenotes.ts`). The footnotes under
+the body stay in the page, undrawn, for the feed and the Markdown copies.
+_Avoid_: margin note, footnote (the Markdown it is made from)
+
 **Named place**:
 A region of a layout that features are put into: the head, the graph column's header and footer,
 the header over the content, after the body, the end of the body.

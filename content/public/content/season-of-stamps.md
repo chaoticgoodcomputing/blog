@@ -76,3 +76,7 @@ I have a lot of things in my life that, quite literally, are not *finished*.
 Stamps, to me, will be the season where I pay that extra attention to the last mile. That means giving a bit more attention to the packaging, not just the structure. It means polishing what I have before picking up something new.
 
 It means: *sign, seal, deliver.*
+
+[^1]: You can trust that I will be *eating* up the availability of interstate rail on the East Coast. Gone are the days of living a two-hour drive from the nearest state line.
+[^2]: One of the things that have absolutely floored me is the availability of coding and industry meetups in this city. You're telling me that this city is just... full of people? and some of them want to talk about DAGs? *Premium.*
+[^3]: I have already dropped the ball on responding to people, which is something that mortifies me to my core. I am *deeply* committed to not feeling like that again.

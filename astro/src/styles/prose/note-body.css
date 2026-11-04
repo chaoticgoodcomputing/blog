@@ -3,6 +3,7 @@
    feature renders into a note of its own, an embed or a diagram, is that feature's stylesheet. */
 
 .prose {
+  font-size: var(--text-body);
   /* A word longer than the column breaks rather than widen the page. */
   overflow-wrap: anywhere;
 }
@@ -254,7 +255,7 @@
 }
 
 .prose .callout[data-callout-kind="paraphrase"] > .callout-content {
-  font-size: 1.1rem;
+  font-size: 1.1em;
 }
 
 .prose .callout[data-callout-kind="paraphrase"] > .callout-content > :last-child {
@@ -304,7 +305,7 @@
   overflow-x: auto;
   border: 1px solid var(--lightgray);
   border-radius: 5px;
-  font-size: 0.85rem;
+  font-size: 0.85em;
   line-height: 1.5;
 }
 
@@ -354,7 +355,7 @@
   margin-top: 3rem;
   padding-top: 0.5rem;
   border-top: 1px solid var(--lightgray);
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
 }
 
 .prose .footnotes li > p {

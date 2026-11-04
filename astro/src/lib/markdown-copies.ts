@@ -14,6 +14,7 @@ import TurndownService from "turndown"
 import { gfm } from "@joplin/turndown-plugin-gfm"
 import { site as siteConfig, seo } from "../site.config.ts"
 import type { Note } from "./notes.ts"
+import { restoreFootnotes } from "./sidenotes.ts"
 import { isIndexableAt, tagAt } from "./page.ts"
 
 /** The address of a page's copy: its address with `.md` after it, and the home page's `/index.md`. */
@@ -133,6 +134,7 @@ export function markdownCopy(note: Note, html: string, site: URL): string {
   const root = parse(html)
   const body: HTMLElement | null = root.querySelector("main article.prose") ?? root.querySelector("main")
   if (!body) throw new Error(`${note.url} has no main element to copy`)
+  restoreFootnotes(body)
   for (const selector of NOT_TEXT) for (const element of body.querySelectorAll(selector)) element.remove()
   return `${frontOf(note, site)}\n\n---\n\n${toMarkdown(body.innerHTML, site)}\n`
 }

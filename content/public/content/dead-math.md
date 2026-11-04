@@ -1,5 +1,5 @@
 ---
-title: On Dead Math and Small Pickles
+title: Math is Dead, and Pickles are Small
 date: 2026-10-26
 updated: 2026-10-28
 tags:

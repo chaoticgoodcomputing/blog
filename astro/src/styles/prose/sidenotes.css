@@ -1,0 +1,47 @@
+/* Sidenotes (src/lib/sidenotes.ts): each footnote beside the block that cites it. Here, under the
+   block, where the note's room has no margin wide enough for it; in the margin, the rule the site
+   config's widths are written into (`sidenoteMarginStyles`, Base.astro). */
+
+/* The footnotes under the body are the feed's and the Markdown copies': on the page, each is a
+   sidenote. */
+.prose > section.footnotes {
+  display: none;
+}
+
+/* The block, then its sidenotes, which come before it in the page so the margin's can be beside its
+   top. The block keeps its margins inside the wrapper; the wrapper's own take back as much, so the
+   blocks around it are as far away as from any other block. */
+.prose .sidenoted {
+  display: flex;
+  flex-direction: column;
+  margin-block: -1em;
+}
+
+.prose .sidenoted > .sidenote {
+  order: 1;
+  margin: -0.25rem 0 1em;
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--lightgray);
+}
+
+/* Set apart from the text as a newspaper sets its margin notes and captions: a sans, smaller and
+   tighter, a step lighter than the text (and still 4.5:1 against the page in either scheme). */
+.prose .sidenote {
+  font-family: var(--sansFont);
+  font-size: var(--text-caption);
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--darkgray) 80%, var(--light));
+}
+
+.prose .sidenote > p {
+  margin: 0 0 0.4rem;
+}
+
+.prose .sidenote > :last-child {
+  margin-bottom: 0;
+}
+
+.prose .sidenote-number {
+  font-weight: 700;
+  color: var(--secondary);
+}

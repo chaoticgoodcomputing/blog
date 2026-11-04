@@ -7,7 +7,7 @@ namespace IndiewebGraph.Flows.Analysis.Steps;
 /// <summary>
 /// The graph's edges: a crawled site's links to each other site, and the webmentions each other
 /// site sent it, counted by kind. A site's links to itself, and anything to or from a host on the
-/// blocklist or a subdomain of one, are no edge.
+/// blocklist, or a subdomain of one whose subdomains it blocks, are no edge.
 /// </summary>
 [FlowthruStep]
 public static class BuildEdgesStep
@@ -16,9 +16,9 @@ public static class BuildEdgesStep
     input =>
     {
       var (links, mentions, blocklist) = input;
-      var blocked = blocklist.Select(entry => entry.Host.Trim().ToLowerInvariant()).ToList();
+      var blocked = blocklist.Select(entry => (Host: entry.Host.Trim().ToLowerInvariant(), entry.Subdomains)).ToList();
       bool IsBlocked(string host) =>
-        blocked.Any(entry => host == entry || host.EndsWith("." + entry, StringComparison.Ordinal));
+        blocked.Any(entry => host == entry.Host || (entry.Subdomains && host.EndsWith("." + entry.Host, StringComparison.Ordinal)));
 
       var seen = links
         .Select(link => (Source: link.SourceSite, Target: link.TargetHost, link.Kind, SeenAs: "link"))
@@ -62,7 +62,12 @@ public static class BuildEdgesStep
       Kind = kind,
     };
 
-    static readonly BlockedHostSchema[] Blocklist = [new() { Host = "twitter.com" }, new() { Host = "Wikipedia.org " }];
+    static readonly BlockedHostSchema[] Blocklist =
+    [
+      new() { Host = "twitter.com", Subdomains = true },
+      new() { Host = "Wikipedia.org ", Subdomains = true },
+      new() { Host = "micro.blog", Subdomains = false },
+    ];
 
     [FUnitStepTest(typeof(BuildEdgesStep))]
     public void CountsLinksAndMentionsByKindAndDirection()
@@ -84,13 +89,13 @@ public static class BuildEdgesStep
     }
 
     [FUnitStepTest(typeof(BuildEdgesStep))]
-    public void LeavesOutBlockedHostsTheirSubdomainsAndTheSiteItself()
+    public void LeavesOutBlockedHostsTheSubdomainsTheyBlockAndTheSiteItself()
     {
-      var links = new[] { Link("twitter.com"), Link("en.wikipedia.org"), Link("a.example"), Link("notwikipedia.org") };
+      var links = new[] { Link("twitter.com"), Link("en.wikipedia.org"), Link("a.example"), Link("notwikipedia.org"), Link("micro.blog"), Link("someone.micro.blog") };
 
       var targets = Invoke(Create(), (links, Array.Empty<MentionSchema>(), Blocklist)).Select(edge => edge.Target);
 
-      Assert.That(targets, Is.EqualTo(new[] { "notwikipedia.org" }));
+      Assert.That(targets, Is.EqualTo(new[] { "notwikipedia.org", "someone.micro.blog" }));
     }
   }
 #endif

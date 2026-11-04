@@ -61,6 +61,9 @@ import { externalLinks } from "./src/lib/external-links.ts"
 import { headingAnchors } from "./src/lib/heading-anchors.ts"
 import { calloutIcons } from "./src/lib/callouts.ts"
 
+import { footnoteCheck } from "./src/integrations/footnote-check.ts"
+import { sidenotes } from "./src/lib/sidenotes.ts"
+
 // The site's address, named once here because a Markdown plugin, which can't read `Astro.site`,
 // must know a link to the site from a link to another (src/lib/external-links.ts).
 const site = "https://blog.chaoticgood.computer"
@@ -170,6 +173,10 @@ export default defineConfig({
     icon(),
     tagDictionary(),
 
+    // Each note's footnotes that don't work, a reference with no definition or a definition with no
+    // reference, reported when the site builds (src/lib/footnotes.ts).
+    footnoteCheck(),
+
     // The indexable pages, each with when it last changed (src/lib/sitemap.ts).
     sitemap({
       filter: (page) => sitemapEntry(page) !== undefined,
@@ -239,6 +246,10 @@ export default defineConfig({
         // Each heading ends with a link to itself (docs/adr/3402). It gives the headings their ids
         // before Astro does, so it stays after every plugin that adds or renames a heading.
         headingAnchors(),
+
+        // Each footnote is a sidenote beside the block that cites it, a copy of the footnote as the
+        // plugins above left it (src/lib/sidenotes.ts).
+        sidenotes(),
       ],
     }),
   },

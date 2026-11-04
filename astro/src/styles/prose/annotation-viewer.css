@@ -102,13 +102,13 @@ annotation-viewer[data-layout="margin"] :is(.annotation, .unplaced) {
 
 annotation-viewer[data-layout="margin"] .annotation {
   padding: 0.75rem;
-  font-size: 0.9rem;
+  font-size: var(--text-caption);
 }
 
 annotation-viewer .unplaced {
   margin: 1.5rem 0 1rem;
   color: var(--darkgray);
-  font-size: 1rem;
+  font-size: var(--text-small);
 }
 
 /* Beside the document, every card but the selected one is shortened to two lines: one of its

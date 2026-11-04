@@ -1,4 +1,5 @@
 import type { Locator, Page } from "@playwright/test"
+import { layout } from "../../site.config.ts"
 import { expect, expectAt, test } from "../site.ts"
 
 // test/fixtures/vault/annotation-viewer: a note written with the Annotator plugin against a
@@ -553,10 +554,11 @@ test("beside the document, the preface and the epilogue read as a note does, and
   const viewer = await opened(page, DESKTOP, GARDEN)
   await expect(viewer).toHaveAttribute("data-layout", "margin")
   const main = (await page.locator("main").boundingBox())!
-  // A note's column: 40rem, in the middle of the note's room.
+  // A note's column: the site config's width, in the middle of the note's room.
+  const noteWidth = parseFloat(layout.noteWidth) * 16
   for (const part of [".annotation-preface", ".annotation-epilogue"]) {
     const box = (await page.locator(`article.prose > ${part}`).boundingBox())!
-    expect(box.width, part).toBeCloseTo(640, 0)
+    expect(box.width, part).toBeCloseTo(noteWidth, 0)
     expect(box.x + box.width / 2, part).toBeCloseTo(main.x + main.width / 2, 0)
   }
   await expect(page.locator(".annotation-epilogue h3")).toHaveText("What it found")
@@ -575,7 +577,7 @@ test("what follows an annotation page's body is as wide as a note's text, though
   await page.goto(PAGE)
   await expect(viewerOf(page)).not.toHaveAttribute("data-state", "failed")
   const [after, main] = [(await page.locator(".after-body").boundingBox())!, (await page.locator("main").boundingBox())!]
-  const noteWidth = await page.evaluate(() => parseFloat(getComputedStyle(document.documentElement).fontSize) * 40)
+  const noteWidth = await page.evaluate((rems) => parseFloat(getComputedStyle(document.documentElement).fontSize) * rems, parseFloat(layout.noteWidth))
   expect(after.width).toBeLessThanOrEqual(noteWidth + 1)
   // Centred in the note's room.
   expect(Math.abs(after.x + after.width / 2 - (main.x + main.width / 2))).toBeLessThan(2)

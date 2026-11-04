@@ -1,4 +1,5 @@
 import type { Page } from "@playwright/test"
+import { layout } from "../../site.config.ts"
 import { expect, test } from "../site.ts"
 
 // A note with every kind of Markdown in its body, a table and a line of code wider than a phone
@@ -41,10 +42,14 @@ test("the note body styles every kind of Markdown, not only Obsidian's", async (
       .first()
       .evaluate((element, property) => getComputedStyle(element).getPropertyValue(property), property)
 
-  // Each heading level a step smaller, from a 16px root: 1.4rem, 1.12rem, 1rem.
-  expect(await style("h2", "font-size")).toBe("22.4px")
-  expect(await style("h3", "font-size")).toBe("17.92px")
-  expect(await style("h4", "font-size")).toBe("16px")
+  // The reading scale (global.css): each heading level a step smaller, 1.4, 1.12 and 1 times the
+  // note text size, from a 16px root.
+  const text = parseFloat(layout.noteFontSize) * 16
+  const size = async (selector: string) => parseFloat(await style(selector, "font-size"))
+  expect(await size("p")).toBeCloseTo(text, 1)
+  expect(await size("h2")).toBeCloseTo(1.4 * text, 1)
+  expect(await size("h3")).toBeCloseTo(1.12 * text, 1)
+  expect(await size("h4")).toBeCloseTo(text, 1)
 
   expect(await style("ul", "list-style-type")).toBe("disc")
   expect(await style("ul.contains-task-list", "list-style-type")).toBe("none")
@@ -54,9 +59,10 @@ test("the note body styles every kind of Markdown, not only Obsidian's", async (
   expect(await style("p > code", "font-family")).toContain("Hack")
   expect(await style("pre", "border-top-style")).toBe("solid")
 
-  // The footnotes are set apart under the body, smaller, and their heading is for a screen reader.
-  expect(await style(".footnotes", "border-top-style")).toBe("solid")
-  expect(await style(".footnotes", "font-size")).toBe("14px")
+  // Each footnote is a sidenote, in the caption step. The footnotes under the body are the feed's
+  // and the Markdown copies', not drawn on the page, and their heading is for a screen reader.
+  expect(await size(".sidenote")).toBeCloseTo(0.75 * text, 1)
+  expect(await style(".footnotes", "display")).toBe("none")
   await expect(body.locator(".footnotes h2")).toHaveCSS("position", "absolute")
   await expect(body.locator(".footnotes h2")).toHaveCSS("width", "1px")
 })

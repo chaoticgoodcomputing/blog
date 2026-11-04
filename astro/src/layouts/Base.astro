@@ -8,6 +8,7 @@
 // feature needs to know of the page it reads from `page`.
 import type { PageProps } from "../lib/page.ts"
 import { layout, site } from "../site.config.ts"
+import { sidenoteMarginStyles } from "../lib/sidenotes.ts"
 import "../styles/global.css"
 
 // 05 math stylesheet
@@ -45,10 +46,14 @@ const page = Astro.props
 ---
 
 <!doctype html>
-<html lang={site.locale} style={`--noteWidth: ${layout.noteWidth}`}>
+<html lang={site.locale} style={`--noteWidth: ${layout.noteWidth}; --noteFontSize: ${layout.noteFontSize}`}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {/* Where the margin is wide enough for them, sidenotes in it: the site config's widths, which a
+        container query can't read from custom properties (src/lib/sidenotes.ts) */}
+    <style is:inline set:html={sidenoteMarginStyles(layout)} />
     <link rel="icon" href="/favicon.ico" />
 
     {/* 16 SEO: the title and description, the canonical address, Open Graph and JSON-LD */}

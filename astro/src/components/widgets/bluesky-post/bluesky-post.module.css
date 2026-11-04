@@ -36,24 +36,24 @@
 .message {
   margin: 0;
   color: var(--gray);
-  font-size: 0.875rem;
+  font-size: var(--text-caption);
 }
 
 .messageFailed {
   color: var(--darkgray);
-  font-size: 0.9375rem;
+  font-size: var(--text-caption);
 }
 
 .details {
   margin: 0;
   color: var(--gray);
   font-family: var(--codeFont);
-  font-size: 0.8125rem;
+  font-size: var(--text-fine);
 }
 
 .link {
   color: var(--secondary);
-  font-size: 0.8125rem;
+  font-size: var(--text-fine);
   font-weight: 500;
   text-decoration: none;
 }

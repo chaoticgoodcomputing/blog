@@ -65,8 +65,41 @@
   --headerFont: var(--bodyFont);
 }
 
-/* `--noteWidth`, how wide a note's text is, is the site config's `layout.noteWidth`, put on the root
-   by src/layouts/Base.astro. */
+/* `--noteWidth`, how wide a note's text is, and `--noteFontSize`, how large, are the site config's
+   `layout.noteWidth` and `layout.noteFontSize`, put on the root by src/layouts/Base.astro. */
+
+/* The reading scale: the sizes of what a reader reads, each a step of `--noteFontSize`. Text a
+   reader reads is set in one of these steps and in no size of its own, so a change to the note's
+   text size moves all of it together: a note's text and headings, a post listing, what follows the
+   body, a sidenote, a link's preview.
+
+     --text-h1 … --text-h4   headings (below)
+     --text-body             a note's text, and a post listing's
+     --text-small            what is set inside or after a note's text, not part of it: what is
+                             related to it, who mentions it, an embedded note, an annotation card
+     --text-caption          what is set apart beside the text: a sidenote, an annotation card
+                             beside its document, a Bluesky post
+     --text-fine             what is said about such a thing: a post's handle, its date, its footer
+
+   Each step is declared on every element, so it is worked out from the `--noteFontSize` where it
+   is read: a place that sets `--noteFontSize` of its own, as a link's preview does, has the whole
+   scale at its size. Within a step, a part a step smaller or larger, a byline, a code block, is
+   sized in `em` of it.
+
+   What a reader works rather than reads, the interface (the graph column, the search box, a
+   button, a tag badge, a chip), keeps sizes of its own in `rem`, and doesn't move with the text. */
+*,
+::before,
+::after {
+  --text-h1: calc(1.75 * var(--noteFontSize));
+  --text-h2: calc(1.4 * var(--noteFontSize));
+  --text-h3: calc(1.12 * var(--noteFontSize));
+  --text-h4: var(--noteFontSize);
+  --text-body: var(--noteFontSize);
+  --text-small: calc(0.8 * var(--noteFontSize));
+  --text-caption: calc(0.75 * var(--noteFontSize));
+  --text-fine: calc(0.65 * var(--noteFontSize));
+}
 
 /* The page: its colours, and the text everything inherits, in a light weight. A heading, bold text
    and whatever else sets its own weight is heavier. */
@@ -93,19 +126,19 @@ body {
 }
 
 h1 {
-  font-size: 1.75rem;
+  font-size: var(--text-h1);
 }
 
 h2 {
-  font-size: 1.4rem;
+  font-size: var(--text-h2);
 }
 
 h3 {
-  font-size: 1.12rem;
+  font-size: var(--text-h3);
 }
 
 :is(h4, h5, h6) {
-  font-size: 1rem;
+  font-size: var(--text-h4);
 }
 
 a {
