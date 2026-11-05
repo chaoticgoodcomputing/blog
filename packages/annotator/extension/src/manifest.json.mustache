@@ -1,0 +1,91 @@
+{
+  "name": "Hypothesis - Web & PDF Annotation",
+  "short_name": "Hypothesis",
+  "version": "{{ version }}",
+  {{#browserIsChrome}}
+  "version_name": "{{ version }} ({{ versionName }})",
+  {{/browserIsChrome}}
+  "manifest_version": 3,
+
+  {{#browserIsChrome}}
+  "minimum_chrome_version": "88",
+  {{/browserIsChrome}}
+
+  {{#key}}
+  "key": "{{{ key }}}",
+  {{/key}}
+
+  {{#browserIsFirefox}}
+  "applications": {
+    "gecko": {
+      "strict_min_version": "68.0"
+    }
+  },
+  {{/browserIsFirefox}}
+
+  "description": "Collaboratively annotate, highlight, and tag web pages and PDF documents.",
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
+
+  "homepage_url": "https://hypothes.is/",
+
+  {{! Firefox does not support the "split" mode.
+      See https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/incognito
+  }}
+  {{#browserIsChrome}}
+  "incognito": "split",
+  {{/browserIsChrome}}
+
+  "options_ui": {
+    "page": "options/index.html"
+  },
+
+  {{#browserIsChrome}}
+  "offline_enabled": false,
+  {{/browserIsChrome}}
+
+  "permissions": [
+    "scripting",
+    "storage",
+    "tabs"
+  ],
+
+  "host_permissions": ["<all_urls>"],
+
+  "optional_permissions": [
+    {{! Used to enumerate frames on certain websites. }}
+    "webNavigation"
+  ],
+
+  "background": {
+    "service_worker": "extension.bundle.js"
+  },
+
+  "action": {
+    "default_icon": {
+      "19": "images/browser-icon-inactive.png",
+      "38": "images/browser-icon-inactive@2x.png"
+    }
+  },
+
+  {{#browserIsChrome}}
+  "externally_connectable": {
+    {{#bouncerUrl}}"matches": ["{{&bouncerUrl}}*"]{{/bouncerUrl}}
+  },
+  {{/browserIsChrome}}
+
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "client/*",
+        "help/*",
+        "pdfjs/*",
+        "pdfjs/web/viewer.html"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "buildType": "staging",
+
+  "apiUrl": "https://staging.hypothes.is/api/",
+  "authDomain": "hypothes.is",
+  "bouncerUrl": "https://staging.hyp.is/",
+  "serviceUrl": "https://staging.hypothes.is/",
+
+  "oauthClientId": "92b42e3c-7793-11e7-8e17-cb2151436a1f",
+
+  "sentryPublicDSN": "https://934d4f62912b47d8bb03c28ae6670cf8@app.getsentry.com/69811",
+
+  "browserIsFirefox": true,
+  "appType": "firefox-extension"
+}

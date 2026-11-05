@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "lib": ["es2018", "dom"],
+    "module": "commonjs",
+    "noEmit": true,
+    "strict": true,
+    "target": "ES2020",
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true
+  },
+  "include": ["**/*.js", "**/*.ts", "../gulpfile.js"],
+  "exclude": ["vendor/"]
+}

@@ -1,0 +1,10 @@
+{
+  "buildType": "dev",
+
+  "apiUrl": "http://localhost:5000/api/",
+  "authDomain": "localhost",
+  "serviceUrl": "http://localhost:5000/",
+
+  "browserIsFirefox": true,
+  "appType": "firefox-extension"
+}
