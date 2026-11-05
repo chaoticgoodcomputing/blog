@@ -33,6 +33,20 @@
   color: color-mix(in srgb, var(--darkgray) 80%, var(--light));
 }
 
+/* The number in a column of its own, and the footnote's text beside it, every line of it starting
+   where the first does: a hanging indent as wide as the number. The number sits on the first
+   line's baseline. */
+.prose .sidenote {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 0.3em;
+  align-items: baseline;
+}
+
+.prose .sidenote > :not(.sidenote-number) {
+  grid-column: 2;
+}
+
 .prose .sidenote > p {
   margin: 0 0 0.4rem;
 }
@@ -41,7 +55,24 @@
   margin-bottom: 0;
 }
 
+/* The number, `4.`, is a link back to the sentence that cites the footnote, which a click on it
+   flashes (src/components/Sidenotes.astro). */
 .prose .sidenote-number {
   font-weight: 700;
   color: var(--secondary);
+  text-decoration: none;
+}
+
+.prose .sidenote-number:hover {
+  color: var(--tertiary);
+  text-decoration: underline;
+}
+
+/* The flashed sentence: marked as a highlight is, then fading. */
+::highlight(sidenote-source) {
+  background-color: var(--textHighlight);
+}
+
+::highlight(sidenote-source-fading) {
+  background-color: color-mix(in srgb, var(--textHighlight) 40%, transparent);
 }

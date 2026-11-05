@@ -1,0 +1,170 @@
+---
+// What a note's sidenotes (src/lib/sidenotes.ts) do in the browser.
+//
+// In the margin, each sidenote is moved down to the line that cites it: its first line level with
+// that line, unless the sidenote before it on its side is still in the way, when it stays under
+// that one. Without the script, each is level with the top of the block that cites it.
+//
+// A click on a sidenote's number flashes the sentence that cites it, scrolled into view if it is
+// out of it. Without the script, or without the browser's highlights, the number is a link to the
+// reference, and the click follows it.
+//
+// It is on every page, beside the other scripts for a note's HTML (Base.astro).
+---
+
+<script>
+  const BLOCKS = "p, li, dd, dt, td, th, blockquote, figcaption, h1, h2, h3, h4, h5, h6"
+  const REFERENCE = "a[data-footnote-ref]"
+
+  /** The top of the glyphs of the first character of `range`'s text, or none when it has none. */
+  function glyphTop(range: Range): number | undefined {
+    const rect = range.getClientRects()[0]
+    return rect && rect.height > 0 ? rect.top : undefined
+  }
+
+  /** The text nodes under `root`, in the order written, that `keep` keeps; the blank ones too if `blank`. */
+  function textsIn(root: Node, keep: (text: Text) => boolean = () => true, blank = false): Text[] {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT)
+    const texts: Text[] = []
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      if ((blank || (node as Text).data.trim() !== "") && keep(node as Text)) texts.push(node as Text)
+    }
+    return texts
+  }
+
+  /**
+   * The top of the line a reference is on: the glyphs of the character before it, which are the
+   * line's own and not raised as the reference's are; or the reference's when nothing is before it
+   * on its line.
+   */
+  function lineTop(reference: Element): number {
+    const sup = reference.closest("sup") ?? reference
+    const block = sup.closest(BLOCKS) ?? sup.parentElement!
+    const before = textsIn(block, (text) => !!(text.compareDocumentPosition(sup) & Node.DOCUMENT_POSITION_FOLLOWING))
+    const own = sup.getBoundingClientRect()
+    const last = before.at(-1)
+    if (last) {
+      const range = document.createRange()
+      const at = last.data.trimEnd().length
+      range.setStart(last, at - 1)
+      range.setEnd(last, at)
+      const rect = range.getClientRects()[0]
+      if (rect && rect.bottom > own.top) return rect.top
+    }
+    return own.top
+  }
+
+  /** Each sidenote in the margin moved down to its reference's line. */
+  function align(prose: HTMLElement) {
+    const notes = [...prose.querySelectorAll<HTMLElement>(":scope > .sidenoted > .sidenote")]
+    for (const note of notes) note.style.marginTop = ""
+    if (notes.length === 0 || getComputedStyle(notes[0]).float === "none") return
+    for (const note of notes) {
+      const reference = prose.querySelector(`${REFERENCE}[href="#${note.id}"]`)
+      const first = textsIn(note)[0]
+      if (!reference || !first) continue
+      // In place with no margin above it, the sidenote is as high as it can be: level with its
+      // block's top, or under the sidenote before it on its side. From there it can only go down.
+      note.style.marginTop = "0px"
+      const range = document.createRange()
+      range.setStart(first, 0)
+      range.setEnd(first, 1)
+      const top = glyphTop(range)
+      if (top === undefined) continue
+      note.style.marginTop = `${Math.max(0, lineTop(reference) - top)}px`
+    }
+  }
+
+  /** The sentence a reference is in, as its text runs in its block, the reference with it. */
+  function sentenceOf(reference: Element): Range {
+    const sup = reference.closest("sup") ?? reference
+    const block = sup.closest(BLOCKS) ?? sup.parentElement!
+    // The block's own text, without the references' numbers, which would join a sentence ending
+    // in a full stop to the next, and without what is in a block of its own inside it.
+    const texts = textsIn(block, (text) => !text.parentElement!.closest(REFERENCE) && text.parentElement!.closest(BLOCKS) === block, true)
+    const range = document.createRange()
+    if (texts.length === 0) {
+      range.selectNodeContents(block)
+      return range
+    }
+    const starts: number[] = []
+    let whole = ""
+    let at = 0
+    for (const text of texts) {
+      starts.push(whole.length)
+      if (text.compareDocumentPosition(sup) & Node.DOCUMENT_POSITION_FOLLOWING) at = whole.length + text.data.length
+      whole += text.data
+    }
+    // The sentence of the character before the reference, which the reference is set against.
+    const segment = new Intl.Segmenter(document.documentElement.lang || undefined, { granularity: "sentence" })
+      .segment(whole)
+      .containing(Math.max(0, at - 1))!
+    const start = segment.index + (segment.segment.length - segment.segment.trimStart().length)
+    const end = segment.index + segment.segment.trimEnd().length
+    /** The text node and offset of a place in `whole`, the start of a node rather than the end of the one before it. */
+    const point = (offset: number, ending: boolean): [Text, number] => {
+      let index = texts.length - 1
+      for (let i = 0; i < texts.length; i++) {
+        const stop = starts[i] + texts[i].data.length
+        if (ending ? offset <= stop : offset < stop) {
+          index = i
+          break
+        }
+      }
+      return [texts[index], Math.min(offset - starts[index], texts[index].data.length)]
+    }
+    range.setStart(...point(start, false))
+    range.setEnd(...point(end, true))
+    // The reference is in it, wherever in the sentence it is.
+    if (range.comparePoint(sup, 0) < 0) range.setStartBefore(sup)
+    if (range.comparePoint(sup, 0) > 0 || range.comparePoint(sup, sup.childNodes.length) > 0) range.setEndAfter(sup)
+    return range
+  }
+
+  // How long the sentence is marked, and then fading, before it is as it was.
+  const MARKED = 900
+  const FADING = 600
+  let flashing = 0
+
+  function flash(range: Range) {
+    clearTimeout(flashing)
+    CSS.highlights.delete("sidenote-source-fading")
+    CSS.highlights.set("sidenote-source", new Highlight(range))
+    flashing = window.setTimeout(() => {
+      CSS.highlights.delete("sidenote-source")
+      CSS.highlights.set("sidenote-source-fading", new Highlight(range))
+      flashing = window.setTimeout(() => CSS.highlights.delete("sidenote-source-fading"), FADING)
+    }, MARKED)
+  }
+
+  // Before the client router's own listener, which would follow the link.
+  document.addEventListener("click", (event) => {
+    if (!("highlights" in CSS) || !("Segmenter" in Intl)) return
+    const number = (event.target as Element).closest?.<HTMLAnchorElement>(".prose .sidenote-number")
+    if (!number?.hash || number.closest(".link-popover")) return
+    const reference = document.getElementById(decodeURIComponent(number.hash.slice(1)))
+    if (!reference) return
+    event.preventDefault()
+    const sentence = sentenceOf(reference)
+    const rect = sentence.getBoundingClientRect()
+    if (rect.top < 0 || rect.bottom > innerHeight) {
+      const smooth = !matchMedia("(prefers-reduced-motion: reduce)").matches
+      reference.scrollIntoView({ block: "center", behavior: smooth ? "smooth" : "auto" })
+    }
+    flash(sentence)
+  }, true)
+
+  // A note's text moves as its fonts and images load and as the window changes width: each time,
+  // the sidenotes are aligned again.
+  let observer: ResizeObserver | undefined
+  document.addEventListener("astro:page-load", () => {
+    observer?.disconnect()
+    const notes = [...document.querySelectorAll<HTMLElement>(".prose:has(> .sidenoted)")].filter(
+      (prose) => !prose.closest(".link-popover"),
+    )
+    if (notes.length === 0) return
+    observer = new ResizeObserver((entries) => entries.forEach((entry) => align(entry.target as HTMLElement)))
+    notes.forEach((prose) => observer!.observe(prose))
+    document.fonts.ready.then(() => notes.forEach(align))
+  })
+</script>

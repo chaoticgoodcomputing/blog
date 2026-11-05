@@ -1,5 +1,7 @@
 // A note's footnotes as sidenotes: each footnote beside the paragraph that cites it, in the margin
-// to the right of the text where the margin is wide enough, and under the paragraph where it isn't.
+// where the margin is wide enough, and under the paragraph where it isn't. In the margin, the odd
+// footnotes are to the right of the text and the even to the left (`sidenote-left`), and each is
+// moved down to the line that cites it (src/components/Sidenotes.astro).
 // The footnotes' own section, under the body, is kept in the page and not drawn
 // (src/styles/prose/sidenotes.css): the feed and the Markdown copies are made from the page, and keep
 // it in place of the sidenotes (`restoreFootnotes`).
@@ -7,7 +9,8 @@
 // Each block at the top of the note that cites a footnote, a paragraph, a list, a quote or a
 // callout, is wrapped with a copy of each footnote it is the first to cite, in the order cited, the
 // copies before the block: `<div class="sidenoted"><aside class="sidenote">…</aside><p>…</p></div>`.
-// A footnote cited twice is beside its first citation alone. Its reference links to its sidenote.
+// A footnote cited twice is beside its first citation alone. Its reference links to its sidenote,
+// and the sidenote's number, `4.`, links back to the reference, whose sentence it flashes.
 //
 // Whether the margin is wide enough is a container query on the note's room, which can't read the
 // widths from custom properties, so the site config's widths are written into it
@@ -57,14 +60,22 @@ function withoutBackReferences(node: Node): ElementContent[] {
   return [copy]
 }
 
-/** The sidenote of a footnote: its number, then its content, its first paragraph begun by the number. */
-function sidenote(id: string, number: string, item: Node): Element {
+/**
+ * The sidenote of a footnote: its number, then its content, beside the number and not under it
+ * (src/styles/prose/sidenotes.css). The number links back to the footnote's first reference,
+ * `reference`.
+ */
+function sidenote(id: string, number: string, reference: string, item: Node): Element {
   const content = (item.children ?? []).flatMap(withoutBackReferences).filter((node) => node.type !== "text" || node.value.trim() !== "")
-  const label: Element = { type: "element", tagName: "span", properties: { className: ["sidenote-number"] }, children: [{ type: "text", value: number }] }
-  const first = content[0]
-  if (first?.type === "element" && first.tagName === "p") first.children.unshift(label, { type: "text", value: " " })
-  else content.unshift(label)
-  return { type: "element", tagName: "aside", properties: { className: ["sidenote"], id: `${SIDENOTE_PREFIX}${id}` }, children: content }
+  const label: Element = {
+    type: "element",
+    tagName: "a",
+    properties: { className: ["sidenote-number"], href: `#${reference}`, ariaLabel: `Back to reference ${number}` },
+    children: [{ type: "text", value: `${number}.` }],
+  }
+  content.unshift(label)
+  const className = Number(number) % 2 === 0 ? ["sidenote", "sidenote-left"] : ["sidenote"]
+  return { type: "element", tagName: "aside", properties: { className, id: `${SIDENOTE_PREFIX}${id}` }, children: content }
 }
 
 export function sidenotes() {
@@ -94,7 +105,8 @@ export function sidenotes() {
           ctx.setProperty(reference, "href", `#${SIDENOTE_PREFIX}${id}`)
           if (placed.has(id)) continue
           placed.add(id)
-          notes.push(sidenote(id, ctx.textContent(reference), item))
+          const referenceId = reference.properties?.id
+          notes.push(sidenote(id, ctx.textContent(reference), typeof referenceId === "string" ? referenceId : "", item))
         }
         if (notes.length === 0) continue
         ctx.replaceNode(block, {
@@ -121,7 +133,8 @@ export function restoreFootnotes(body: HTMLElement): void {
 
 /**
  * The sidenotes' layout in the margin, for a note whose room is wide enough for the text, with a
- * margin either side as wide as a sidenote, the gap before it and the room's edge. Below that, the
+ * margin either side as wide as a sidenote, the gap before it and the room's edge: the odd
+ * sidenotes in the right margin, the even in the left. Below that, the
  * sidenotes are under their blocks (src/styles/prose/sidenotes.css). An annotation page whose
  * document opens has its margin for its annotations, and keeps its sidenotes under their blocks.
  */
@@ -139,6 +152,11 @@ export function sidenoteMarginStyles({ noteWidth, sidenoteWidth, sidenoteGap }: 
     padding: 0;
     border: none;
   }
-  ${note} .wide { clear: right; }
+  ${note} .sidenote-left {
+    float: left;
+    clear: left;
+    margin: 0.35em 0 1rem calc(-1 * (${sidenoteWidth} + ${sidenoteGap}));
+  }
+  ${note} .wide { clear: both; }
 }`
 }

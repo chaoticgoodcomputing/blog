@@ -41,6 +41,7 @@ import LinkPopovers from "../components/LinkPopovers.astro"
 import ExternalLinks from "../components/ExternalLinks.astro"
 
 import ImageCarousels from "../components/ImageCarousels.astro"
+import Sidenotes from "../components/Sidenotes.astro"
 
 type Props = PageProps
 
@@ -95,5 +96,8 @@ const page = Astro.props
 
     {/* A note's runs of images, each a carousel */}
     <ImageCarousels />
+
+    {/* A note's sidenotes, each beside its line, and its number flashing the sentence that cites it */}
+    <Sidenotes />
   </body>
 </html>

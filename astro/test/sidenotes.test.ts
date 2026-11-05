@@ -34,13 +34,28 @@ test("each block that cites a footnote is wrapped with its sidenotes, before it,
   expect(page.querySelectorAll("aside.sidenote").map((note) => note.id)).toEqual(["user-content-sn-a", "user-content-sn-b", "user-content-sn-c"])
 })
 
-test("a sidenote is its footnote, begun by its number, without its link back", () => {
+test("a sidenote is its number, then its footnote without its link back", () => {
   const page = render(SOURCE)
   const b = page.querySelector("#user-content-sn-b")!
-  expect(b.querySelectorAll("p").map((p) => p.text)).toEqual(["2 Note b.", "Its second paragraph."])
-  expect(b.querySelector(".sidenote-number")?.text).toBe("2")
+  expect(b.querySelectorAll(":scope > *").map((child) => child.tagName)).toEqual(["A", "P", "P"])
+  expect(b.querySelectorAll("p").map((p) => p.text)).toEqual(["Note b.", "Its second paragraph."])
+  expect(b.querySelector(".sidenote-number")?.text).toBe("2.")
   expect(b.querySelector("[data-footnote-backref]")).toBeNull()
   expect(page.querySelector("#user-content-sn-a em")?.text).toBe("a")
+})
+
+test("a sidenote's number links back to its footnote's first reference", () => {
+  const page = render(SOURCE)
+  const number = page.querySelector("#user-content-sn-a .sidenote-number")!
+  expect(number.tagName).toBe("A")
+  expect(number.getAttribute("href")).toBe("#user-content-fnref-a")
+  expect(number.getAttribute("aria-label")).toBe("Back to reference 1")
+  expect(page.querySelector("#user-content-fnref-a")?.getAttribute("data-footnote-ref")).toBeDefined()
+})
+
+test("the even sidenotes are for the left margin, the odd for the right", () => {
+  const page = render(SOURCE)
+  expect(page.querySelectorAll("aside.sidenote").map((note) => note.classList.contains("sidenote-left"))).toEqual([false, true, false])
 })
 
 test("every reference links to its sidenote, and the footnotes stay under the body", () => {
@@ -76,4 +91,5 @@ test("the margin holds the sidenotes once the room fits the text and a margin ei
   expect(css).toContain("@container note-room (width >= calc(40rem + 2 * (2rem + 14rem + 2rem)))")
   expect(css).toContain("width: 14rem;")
   expect(css).toContain("calc(-1 * (14rem + 2rem))")
+  expect(css).toMatch(/\.sidenote-left \{\s*float: left;/)
 })

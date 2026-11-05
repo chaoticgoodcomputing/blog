@@ -206,6 +206,9 @@
       for (const element of preview.querySelectorAll("[id]")) element.removeAttribute("id")
       // A heading's or an annotation's link to itself would go to a place on this page.
       for (const anchor of preview.querySelectorAll(".heading-anchor, .annotation-anchor")) anchor.remove()
+      // So would a sidenote's number, its link back to its reference: it is left a number, and a
+      // click on it opens the page, as a click on the preview's text does.
+      for (const number of preview.querySelectorAll(".sidenote-number")) number.removeAttribute("href")
 
       // The title, without the h-entry's name it is on its own page (EntryMeta.astro).
       const title = fetched.title?.cloneNode(true) as HTMLElement | undefined

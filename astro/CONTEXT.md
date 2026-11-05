@@ -250,9 +250,11 @@ chip: sized in `rem`, apart from the reading scale, and the same whatever the no
 _Avoid_: chrome, UI text
 
 **Sidenote**:
-A footnote shown beside the block that cites it: in the margin to the right of the text where the
-margin is wide enough, under the block where it isn't (`src/lib/sidenotes.ts`). The footnotes under
-the body stay in the page, undrawn, for the feed and the Markdown copies.
+A footnote shown beside the block that cites it: in the margin where the margin is wide enough, the
+odd ones to the right of the text and the even to the left, each level with the line that cites it;
+under the block where it isn't (`src/lib/sidenotes.ts`). Its number, `4.`, flashes the sentence
+that cites it when clicked. The footnotes under the body stay in the page, undrawn, for the feed and
+the Markdown copies.
 _Avoid_: margin note, footnote (the Markdown it is made from)
 
 **Image carousel**:
