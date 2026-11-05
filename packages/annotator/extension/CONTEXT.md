@@ -35,10 +35,16 @@ The fork's own settings, `settings/*-local.json`, which name a service on the us
 run for its own development.
 
 **Local service**:
-The Hypothesis service the local settings name. Nothing answers there yet: it is to be the Annotator
-plugin, serving its fake service over HTTP, so that what is made in the browser is kept in the
-vault's annotation notes.
+The Hypothesis service the local settings name: the Annotator plugin, serving the vault's
+annotation notes over HTTP while Obsidian runs (`../plugin/CONTEXT.md`), so that what is made in the
+browser is kept in them.
 _Avoid_: backend, server (where it is plain which is meant), Obsidian
+
+**Relay**:
+The sidebar's requests to the service, made by the background script for it
+(`src/sidebar-api-relay.js`, `src/background/api-relay.ts`): a frame inside a public page may not
+reach 127.0.0.1 in Firefox, by its Local Network Access.
+_Avoid_: proxy, bridge
 
 ### Browsers
 

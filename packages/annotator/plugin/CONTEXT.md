@@ -83,3 +83,24 @@ _Avoid_: frame, viewer (PDF.js's), Via (upstream's)
 The Annotator's stand-in for the Hypothesis API, which answers the sidebar from the annotation note
 in place of the Hypothesis servers.
 _Avoid_: mock API, local server
+
+### Serving the extension
+
+**Local service**:
+The fake service for the whole vault, not one note, served over HTTP on 127.0.0.1 for the
+Annotator extension (`../extension/CONTEXT.md`), while the user has it on. A request about a page
+goes to the page's note; one about an annotation, to the note that holds it.
+_Avoid_: server (where it is plain which is meant), API, backend
+
+**Page's note**:
+The annotation note whose annotation target is a page the extension names, by any of the addresses
+the client has for it: its own, its canonical link, a PDF's fingerprint. The first by path, when
+several are. A PDF opened in the browser has the note Obsidian annotates it in.
+_Avoid_: matching note, page note (Hypothesis's word for an annotation on a whole page)
+
+**Making a page's note**:
+What a page's first annotation in the browser does when it has no note: a note in the folder the
+settings name, or Obsidian's folder for new notes, named by the page's title, with the annotation
+template's properties.
+_Avoid_: importing, capturing
+

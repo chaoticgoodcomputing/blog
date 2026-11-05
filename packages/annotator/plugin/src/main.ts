@@ -12,7 +12,10 @@ import { annotatorInEditor, openAtAnnotation } from "./editor/annotator.ts"
 import { folderOf } from "./frame-page.ts"
 import type { AnnotatorSession } from "./session.ts"
 import { type AnnotatorSettings, AnnotatorSettingTab, settingsFrom } from "./settings.ts"
+import { type LocalService, serve } from "./server.ts"
 import { addressOf, bytesOf, isAnnotationNote, type Target, targetOf, textFileOf } from "./target.ts"
+import { vaultNotes } from "./vault-notes.ts"
+import { createVaultService } from "./vault-service.ts"
 
 /** The view type of upstream's annotation mode, and of this plugin's until 0.4. */
 const LEGACY_VIEW_TYPE = "pdf-annotator"
@@ -27,8 +30,12 @@ export default class AnnotatorPlugin extends Plugin {
   /** The version of the plugin's files, for the pages' addresses (src/frame-page.ts): new each time it loads. */
   readonly filesVersion = `${Date.now().toString(36)}`
 
+  /** The local service, while it serves the extension. */
+  private service?: LocalService
+
   async onload() {
     this.settings = settingsFrom(await this.loadData())
+    this.app.workspace.onLayoutReady(() => void this.restartService())
     this.addSettingTab(new AnnotatorSettingTab(this.app, this))
     this.registerEditorExtension(annotatorInEditor(this))
     this.registerView(LEGACY_VIEW_TYPE, (leaf) => new LegacyAnnotationView(leaf))
@@ -124,6 +131,38 @@ export default class AnnotatorPlugin extends Plugin {
       adapter.read(`${dir}/frames/pdfjs/build/pdf.worker.min.mjs`),
     ])
     return { worker, core, data: new Uint8Array(data), pdfWorker }
+  }
+
+  onunload() {
+    void this.service?.close()
+  }
+
+  /**
+   * Serves the Annotator extension, or stops, as the settings say: the vault's annotation notes, on
+   * 127.0.0.1 (src/server.ts).
+   */
+  async restartService() {
+    await this.service?.close()
+    this.service = undefined
+    if (!this.settings.serveExtension) return
+    const notes = vaultNotes(this.app, {
+      defaultPath: () => this.settings.customDefaultPath,
+      folder: () => this.settings.webNoteFolder,
+    })
+    try {
+      this.service = await serve({
+        port: this.settings.servicePort,
+        api: (apiUrl) => createVaultService({ notes, apiUrl, displayName: this.settings.displayName, view: this.viewOptions() }),
+        log: (message) => console.warn("Annotator service:", message),
+      })
+    } catch (error) {
+      const taken = (error as { code?: string }).code === "EADDRINUSE"
+      new Notice(
+        taken
+          ? `Annotator can't serve the browser extension: port ${this.settings.servicePort} is in use.`
+          : `Annotator can't serve the browser extension: ${error instanceof Error ? error.message : error}`,
+      )
+    }
   }
 
   async saveSettings() {

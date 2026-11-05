@@ -3,6 +3,7 @@
 
 import { type App, PluginSettingTab, Setting } from "obsidian"
 import type AnnotatorPlugin from "./main.ts"
+import { DEFAULT_PORT } from "./server.ts"
 
 export interface AnnotatorSettings {
   /** Prepended to an annotation target that names no file, to look for it again (upstream's "custom default path"). */
@@ -16,6 +17,15 @@ export interface AnnotatorSettings {
   documentFolder: string
   /** The annotator's height in each note that was given one, by the note's path. */
   annotatorHeights: Record<string, number>
+  /**
+   * Whether the plugin serves the Annotator extension (the local service, src/server.ts). Off until
+   * the user turns it on: it listens on a port of the user's machine.
+   */
+  serveExtension: boolean
+  /** The local service's port; the extension's local settings name 27183. */
+  servicePort: number
+  /** Where a page's new annotation note goes, made from the browser: empty, where Obsidian puts new notes. */
+  webNoteFolder: string
   annotationMarkdownSettings: {
     /** A block's view writes the text before its passage. */
     includePrefix: boolean
@@ -31,6 +41,9 @@ export const DEFAULT_SETTINGS: AnnotatorSettings = {
   displayName: "Me",
   documentFolder: "",
   annotatorHeights: {},
+  serveExtension: false,
+  servicePort: DEFAULT_PORT,
+  webNoteFolder: "",
   annotationMarkdownSettings: {
     includePrefix: true,
     highlightHighlightedText: true,
@@ -46,6 +59,9 @@ export function settingsFrom(saved: unknown): AnnotatorSettings {
     displayName: data.displayName ?? DEFAULT_SETTINGS.displayName,
     documentFolder: data.documentFolder ?? DEFAULT_SETTINGS.documentFolder,
     annotatorHeights: { ...data.annotatorHeights },
+    serveExtension: data.serveExtension ?? DEFAULT_SETTINGS.serveExtension,
+    servicePort: Number.isInteger(data.servicePort) ? data.servicePort! : DEFAULT_SETTINGS.servicePort,
+    webNoteFolder: data.webNoteFolder ?? DEFAULT_SETTINGS.webNoteFolder,
     annotationMarkdownSettings: {
       includePrefix: data.annotationMarkdownSettings?.includePrefix ?? DEFAULT_SETTINGS.annotationMarkdownSettings.includePrefix,
       highlightHighlightedText: data.annotationMarkdownSettings?.highlightHighlightedText ?? DEFAULT_SETTINGS.annotationMarkdownSettings.highlightHighlightedText,
@@ -86,6 +102,31 @@ export class AnnotatorSettingTab extends PluginSettingTab {
           "A folder of the vault, or an absolute path to one anywhere. Empty, the plugin's own folder, which the vault doesn't index.",
       )
       .addText((text) => text.setPlaceholder(this.plugin.defaultDocumentFolder()).setValue(settings.documentFolder).onChange((value) => ((settings.documentFolder = value.trim()), save())))
+
+    containerEl.createEl("h3", { text: "The browser extension" })
+    new Setting(containerEl)
+      .setName("Serve the Annotator extension")
+      .setDesc(
+        "Annotations made in the browser with the Annotator extension are kept here, in each page's annotation note. " +
+          "Listens on 127.0.0.1, this machine only, while Obsidian runs.",
+      )
+      .addToggle((toggle) => toggle.setValue(settings.serveExtension).onChange(async (value) => ((settings.serveExtension = value), await save(), await this.plugin.restartService())))
+    new Setting(containerEl)
+      .setName("Port")
+      .setDesc(`The extension's local build calls ${DEFAULT_PORT}.`)
+      .addText((text) =>
+        text.setPlaceholder(String(DEFAULT_PORT)).setValue(String(settings.servicePort)).onChange(async (value) => {
+          const port = Number(value || DEFAULT_PORT)
+          if (!Number.isInteger(port) || port < 1 || port > 65535) return
+          settings.servicePort = port
+          await save()
+          await this.plugin.restartService()
+        }),
+      )
+    new Setting(containerEl)
+      .setName("Folder for new notes")
+      .setDesc("Where a page's annotation note is made, on its first annotation in the browser. Empty, where Obsidian puts new notes.")
+      .addText((text) => text.setPlaceholder("Obsidian's folder for new notes").setValue(settings.webNoteFolder).onChange((value) => ((settings.webNoteFolder = value.trim()), save())))
 
     containerEl.createEl("h3", { text: "How annotations are written into the note" })
     new Setting(containerEl)

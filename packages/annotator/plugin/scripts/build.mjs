@@ -31,7 +31,8 @@ const require = createRequire(path.join(root, "package.json"))
 const packageDir = (name) => path.dirname(require.resolve(`${name}/package.json`))
 
 // The modules Obsidian provides to a plugin at run time, which are never bundled.
-const provided = ["obsidian", "electron", "@codemirror/*", "@lezer/*"]
+// Node's own modules too: the plugin is desktop only, and Obsidian's Node has them (src/server.ts).
+const provided = ["obsidian", "electron", "@codemirror/*", "@lezer/*", "node:*"]
 
 /** Copies files and folders into dist/, as [from, to] pairs, `to` relative to dist/. */
 function copy(pairs) {

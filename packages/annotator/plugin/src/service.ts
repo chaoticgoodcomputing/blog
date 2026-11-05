@@ -8,7 +8,10 @@
 
 import { type Annotation, parseNote, removeAnnotation, upsertAnnotation, type WriteOptions } from "@chaoticgoodcomputing/annotator-format"
 
-/** The address the sidebar is told the API is at. It never resolves: every request is answered here. */
+/**
+ * The address Obsidian's sidebar is told the API is at. It never resolves: every request is
+ * answered here. The local service (src/server.ts) is at an address of its own (`apiUrl`).
+ */
 export const API_URL = "https://annotator.invalid/api/"
 
 /** The authority of the vault's one user: other than the sidebar's `authDomain`, so the client is a third party's. */
@@ -40,6 +43,8 @@ export interface ServiceOptions {
   displayName?: string
   /** How a block's view is written (the plugin's settings). */
   view?: WriteOptions
+  /** Where the API is, as the client calls it: API_URL by default. Ends with `/`. */
+  apiUrl?: string
   /** The time now, as an ISO 8601 instant; a function so the tests can fix it. */
   now?: () => string
   /**
@@ -57,8 +62,8 @@ const ok = (value: unknown, status = 200): ApiResponse => ({ status, body: JSON.
 const failure = (status: number, reason: string): ApiResponse => ({ status, body: JSON.stringify({ status: "failure", reason }) })
 
 /** Every route the client may look up, by name. A name the UI asks for and the index lacks throws in the client. */
-function routes(): Record<string, unknown> {
-  const route = (method: string, path: string, desc: string) => ({ method, url: API_URL + path, desc })
+function routes(apiUrl: string): Record<string, unknown> {
+  const route = (method: string, path: string, desc: string) => ({ method, url: apiUrl + path, desc })
   return {
     annotation: {
       create: route("POST", "annotations", "Create an annotation"),
@@ -116,7 +121,7 @@ const GROUP = {
 }
 
 export function createService(options: ServiceOptions): Service {
-  const { store, displayName = "Me", view = {}, now = () => new Date().toISOString(), linkTo } = options
+  const { store, displayName = "Me", view = {}, now = () => new Date().toISOString(), linkTo, apiUrl = API_URL } = options
   let preferences: Record<string, unknown> = { show_sidebar_tutorial: false }
 
   const profile = () => ({
@@ -156,13 +161,13 @@ export function createService(options: ServiceOptions): Service {
 
   return async function service(request: ApiRequest): Promise<ApiResponse> {
     const url = new URL(request.url)
-    if (!url.href.startsWith(API_URL)) return failure(404, `Not the API: ${request.url}`)
-    const path = url.pathname.slice(new URL(API_URL).pathname.length).replace(/\/$/, "")
+    if (!url.href.startsWith(apiUrl)) return failure(404, `Not the API: ${request.url}`)
+    const path = url.pathname.slice(new URL(apiUrl).pathname.length).replace(/\/$/, "")
     const method = request.method.toUpperCase()
     const body = () => (request.body ? (JSON.parse(request.body) as Record<string, unknown>) : {})
     const [first, id, rest] = path.split("/")
 
-    if (path === "" && method === "GET") return ok({ links: routes() })
+    if (path === "" && method === "GET") return ok({ links: routes(apiUrl) })
     if (path === "links") return ok(LINKS)
     // The grant token's exchange (the client's oauth-client.ts): any token will do, for as long as it likes.
     if (path === "token") return ok({ access_token: "local", token_type: "Bearer", expires_in: 10 ** 9, refresh_token: "local" })
