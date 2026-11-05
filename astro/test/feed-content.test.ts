@@ -1,5 +1,7 @@
+import { markdownToHtml } from "satteri"
 import { expect, test } from "vitest"
 import { crosspostMarkdown, feedContent } from "../src/lib/feed-content.ts"
+import { imageCarousels } from "../src/lib/image-carousels.ts"
 import type { Note } from "../src/lib/notes.ts"
 
 const SITE = new URL("https://example.com")
@@ -118,4 +120,15 @@ test("a drawing is its PNG where it has one, and its SVG where it has none", () 
   )
   expect(content).toContain('src="https://example.com/drawings/a.light.png"')
   expect(content).toContain('src="https://example.com/drawings/b.light.svg"')
+})
+
+test("an image carousel is its images, one after another, without its buttons", async () => {
+  const { html } = await markdownToHtml("![a](/a.png)\n![b](/b.png)", { hastPlugins: [imageCarousels()] })
+  const content = feedContent(note, page(html), SITE)
+  expect(content).not.toContain("<button")
+  expect(content).not.toContain("<svg")
+  expect([...content.matchAll(/<img [^>]*src="([^"]+)"/g)].map((image) => image[1])).toEqual([
+    "https://example.com/a.png",
+    "https://example.com/b.png",
+  ])
 })

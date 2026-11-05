@@ -1,0 +1,132 @@
+/* A run of images written on adjacent lines: one image in view at a time, in a row that scrolls
+   sideways and snaps to each (src/lib/image-carousels.ts). With script, an arrow either side steps
+   through them and the dots under them go to each, as on the site's other carousels
+   (src/components/Carousel.astro). The row is as tall as its tallest image, so that stepping to a
+   shorter one never moves the page under the reader; a shorter one is centred in it. */
+
+.prose .image-carousel {
+  display: block;
+  position: relative;
+  margin: 1.5rem 0;
+}
+
+.prose .image-carousel > .track {
+  display: flex;
+  align-items: stretch;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .prose .image-carousel > .track {
+    scroll-behavior: smooth;
+  }
+}
+
+/* A swipe stops at the next image, however hard: none is scrolled past. */
+.prose .image-carousel .slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  display: grid;
+  place-items: center;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* A tall image is kept to most of the screen's height, so the whole of it is in view at once. */
+.prose .image-carousel .slide > img {
+  display: block;
+  max-height: 75vh;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Without script, the reader scrolls the row, and there are no buttons. */
+.prose .image-carousel:not(:defined) > .controls {
+  display: none;
+}
+
+/* With script, the buttons are the way across, and the scroll bar is only in the way. Room under
+   the row for the dots. */
+.prose .image-carousel:defined {
+  padding-bottom: 1.75rem;
+}
+
+.prose .image-carousel:defined > .track {
+  scrollbar-width: none;
+}
+
+.prose .image-carousel > .track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Over the row: an arrow at either side, halfway down it, and the dots centred under it. Only the
+   buttons take the pointer, so the images can still be swiped between them. */
+.prose .image-carousel > .controls {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.prose .image-carousel > .controls button {
+  pointer-events: auto;
+  display: grid;
+  place-items: center;
+  padding: 0.25rem;
+  border: none;
+  border-radius: 999px;
+  background: none;
+  color: var(--darkgray);
+  cursor: pointer;
+}
+
+/* An arrow sits over the image, so it has a disc behind it to read against whatever the image is. */
+.prose .image-carousel > .controls [data-step] {
+  position: absolute;
+  top: calc(50% - 0.875rem);
+  translate: 0 -50%;
+  margin: 0 0.5rem;
+  background: var(--light);
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--dark) 25%, transparent);
+}
+
+.prose .image-carousel [data-step="-1"] {
+  left: 0;
+}
+
+.prose .image-carousel [data-step="1"] {
+  right: 0;
+}
+
+.prose .image-carousel > .controls button:hover,
+.prose .image-carousel > .controls button:focus-visible {
+  color: var(--secondary);
+}
+
+.prose .image-carousel .dots {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 100%;
+}
+
+.prose .image-carousel .dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  padding: 0;
+  margin: 0.25rem;
+}
+
+.prose .image-carousel .controls .dot {
+  background: var(--lightgray);
+}
+
+.prose .image-carousel .controls .dot[aria-current="true"] {
+  background: var(--secondary);
+}

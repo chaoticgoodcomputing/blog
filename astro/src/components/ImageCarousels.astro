@@ -1,0 +1,13 @@
+---
+// What steps through a note's image carousels: the `<content-carousel>` element the Markdown
+// pipeline puts each run of images in (src/lib/image-carousels.ts). The element is a note's HTML,
+// not a component's, so it is styled by src/styles/prose/image-carousels.css, and this component is
+// only its script, the one the site's other carousels share (Carousel.astro).
+//
+// It is on every page, as a link's preview may show a note's carousel on any of them. The script is
+// small, and a page that has a post listing loads it anyway.
+---
+
+<script>
+  import "./content-carousel.ts"
+</script>

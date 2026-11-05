@@ -40,6 +40,8 @@ import LinkPopovers from "../components/LinkPopovers.astro"
 
 import ExternalLinks from "../components/ExternalLinks.astro"
 
+import ImageCarousels from "../components/ImageCarousels.astro"
+
 type Props = PageProps
 
 const page = Astro.props
@@ -90,5 +92,8 @@ const page = Astro.props
 
     {/* Every link to another site opens in a new tab, whatever made it */}
     <ExternalLinks />
+
+    {/* A note's runs of images, each a carousel */}
+    <ImageCarousels />
   </body>
 </html>

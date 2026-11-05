@@ -61,6 +61,8 @@ import { externalLinks } from "./src/lib/external-links.ts"
 import { headingAnchors } from "./src/lib/heading-anchors.ts"
 import { calloutIcons } from "./src/lib/callouts.ts"
 
+import { imageCarousels } from "./src/lib/image-carousels.ts"
+
 import { footnoteCheck } from "./src/integrations/footnote-check.ts"
 import { sidenotes } from "./src/lib/sidenotes.ts"
 
@@ -243,6 +245,9 @@ export default defineConfig({
 
         // A callout's title begins with its kind's icon, and a folding one's ends with a fold icon.
         calloutIcons(),
+
+        // Images on adjacent lines are a carousel, one in view at a time (src/lib/image-carousels.ts).
+        imageCarousels(),
 
         // Each heading ends with a link to itself (docs/adr/3402). It gives the headings their ids
         // before Astro does, so it stays after every plugin that adds or renames a heading.

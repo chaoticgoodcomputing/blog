@@ -255,6 +255,14 @@ margin is wide enough, under the block where it isn't (`src/lib/sidenotes.ts`). 
 the body stay in the page, undrawn, for the feed and the Markdown copies.
 _Avoid_: margin note, footnote (the Markdown it is made from)
 
+**Image carousel**:
+Two or more images a note embeds on adjacent lines, with no blank line between them, shown one at a
+time, with an arrow either side and a dot for each (`src/lib/image-carousels.ts`). Images with a
+blank line between them stay stacked, and images on one line stay side by side. Text in the same
+paragraph stays a paragraph either side of it. In the feed and a Markdown copy, its images are
+stacked.
+_Avoid_: gallery, slideshow, lightbox
+
 **Named place**:
 A region of a layout that features are put into: the head, the graph column's header and footer,
 the header over the content, after the body, the end of the body.
