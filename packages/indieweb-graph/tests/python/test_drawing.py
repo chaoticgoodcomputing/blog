@@ -1,6 +1,6 @@
 import pandas as pd
 
-from Flows.Analysis.Steps.drawing import blog_links, build_graph, direction, graph_links, render_svg
+from Flows.Analysis.Steps.drawing import blog_links, build_graph, direction, graph_links, legend_entries, link_width, render_svg
 
 BLOGS = pd.DataFrame([
     {"host": "a.example", "endpoint": "e", "seed": True, "name": "Ada"},
@@ -49,8 +49,11 @@ def test_the_layout_is_the_same_each_run():
 def test_the_svg_draws_every_node_and_link_and_escapes_names():
     blogs = BLOGS.assign(name=["Ada & co", None, None])
     svg = render_svg(build_graph(blogs, MENTIONS))
-    # The nodes, and the legend's two circles, seed and unexplored; the links, and the legend's three.
-    assert svg.count("<circle") == 3 + 2 and svg.count('class="link ') == 3 + 3
+    graph = build_graph(blogs, MENTIONS)
+    shapes, directions = legend_entries(graph)
+    # The nodes, and the legend's circles; the links, and the legend's one of each direction drawn.
+    circles = sum(shape != "utility" for shape, _ in shapes)
+    assert svg.count("<circle") == 3 + circles and svg.count('class="link ') == 3 + len(directions)
     assert "Ada &amp; co" in svg and "Ada & co" not in svg
 
 
@@ -62,7 +65,8 @@ def test_a_utility_is_marked_named_and_drawn_as_a_star():
     assert not nodes["a.example"]["utility"] and nodes["a.example"]["note"] is None
     svg = render_svg(graph)
     assert svg.count('<polygon class="node utility"') == 2  # the node, and the legend's
-    assert svg.count("<circle") == 2 + 2
+    # Both blogs left are seeds, so the legend has no unexplored circle.
+    assert svg.count("<circle") == 2 + 1
 
 
 def test_each_link_carries_its_post_mentions():
@@ -84,3 +88,55 @@ def test_both_ways_of_a_pair_that_mention_each_other_are_mutual_and_stay_two_lin
     assert links[("c.example", "a.example")]["count"] == 1
     assert links[("c.example", "b.example")]["direction"] == "in"
     assert links[("a.example", "b.example")]["direction"] == "out"
+
+
+def test_a_view_keeps_what_its_own_seeds_saw_and_none_of_the_others():
+    from Flows.Analysis.Steps.drawing import restrict
+    blogs, mentions = restrict(BLOGS, MENTIONS, {"a.example"})
+    # a.example's links out, and what a.example received; not c.example's webmention to b.example,
+    # which only b.example, a seed of another view, saw.
+    assert sorted(zip(mentions["source"], mentions["target"])) == [
+        ("https://a.example/1", "https://b.example/3"),
+        ("https://a.example/1", "https://c.example/x"),
+        ("https://a.example/2", "https://c.example/y"),
+    ]
+    # A seed of another view is unexplored in this one.
+    assert dict(zip(blogs["host"], blogs["seed"])) == {"a.example": True, "b.example": False, "c.example": False}
+
+
+def test_views_are_each_a_json_and_an_svg_named_for_the_view():
+    from Flows.Analysis.Steps.drawing import view_files
+    views = pd.DataFrame([{"view": "just-a", "seed": "a.example"}])
+    files = view_files(BLOGS, MENTIONS, None, views)
+    assert sorted(files) == ["mention-graph.json", "mention-graph.just-a.json", "mention-graph.just-a.svg", "mention-graph.svg"]
+    import json
+    just_a = json.loads(files["mention-graph.just-a.json"])
+    assert [n["id"] for n in just_a["nodes"] if n["seed"]] == ["a.example"]
+    assert len(json.loads(files["mention-graph.json"])["links"]) == 3
+
+
+def test_a_small_graph_is_drawn_small_with_every_blog_named_and_inside_the_drawing():
+    from Flows.Analysis.Steps.drawing import LINK_LENGTH, restrict
+    graph = build_graph(*restrict(BLOGS, MENTIONS, {"a.example"}))
+    nodes = {n["id"]: n for n in graph["nodes"]}
+    a, c = nodes["a.example"], nodes["c.example"]
+    import math
+    assert math.dist((a["x"], a["y"]), (c["x"], c["y"])) <= LINK_LENGTH * 1.5
+    assert graph["height"] < 760
+    assert all(n["labelled"] for n in graph["nodes"])
+    assert all(0 <= n["label_x"] <= graph["width"] and 0 <= n["label_y"] <= graph["height"] for n in graph["nodes"])
+
+
+def test_the_legend_shows_only_the_marks_the_graph_draws():
+    graph = {
+        "nodes": [{"id": "a", "seed": True}, {"id": "b", "seed": False}],
+        "links": [{"source": "a", "target": "b", "direction": "out"}],
+    }
+    shapes, directions = legend_entries(graph)
+    assert [s for s, _ in shapes] == ["seed", "node"]
+    assert [d for d, _ in directions] == ["out"]
+
+
+def test_a_links_width_grows_slowly_and_stops():
+    assert link_width(1) < link_width(2) < link_width(8) < link_width(25)
+    assert link_width(250) == link_width(10_000) == 3.2

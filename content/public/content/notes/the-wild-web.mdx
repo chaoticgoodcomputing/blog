@@ -1,0 +1,152 @@
+---
+title: The Wild Web
+date: 2026-11-04
+tags:
+  - projects/site
+  - engineering/data
+  - horticulture/seasons/stamps
+  - projects/flowthru
+  - writing/essays
+description: "Come with me and explore an invisible social network: IndieWeb, where the cowboy can-do attitude of Web 1.0 is alive and a-thrivin'."
+---
+import { IndiewebGraph } from '../../widgets/indieweb-graph/widget'
+
+Alright, let's get this out of the way:
+
+> [!QUESTION]
+>
+> You were born in 1998. You've always had the internet. What would *you* know about the old-school web?
+
+Have I only ever known an era of version control?
+
+[[public/content/annotations/programming-as-theory-building#^zvdtt8sxul|*Maybe.*]]
+
+Did I start my career just a couple years after robots absolutely swept the field, arguably before I got a stable footing in the industry?
+
+[[public/content/notes/hostage-negotiations|I suppose so.]]
+
+Have I spent the last two years getting slapped around by technical stacks older than I am?
+
+[[public/content/notes/software-gardening.mdx|A bit more, perhaps, than I'd care to admit.]]
+
+Three knocks against me, there, but I've got a trick up my sleeve. A badge of honor. A stamp of approval to talk about old-school web. An undeniable bona fide:
+
+[A slice of my personal Geocities page](https://web.archive.org/web/20090722011616/http://www.geocities.com:80/zipzapkidsplay/hiddenpage.html?), plucked, by luck, as part of the Internet Archive's [2009 GeoCities Special Collection](https://archive.org/web/geocities.php).
+
+![[public/assets/Pasted image 20261104235923.png]]
+
+Unfortunately, it seems the images have been lost to time, and the actual index page of `geocities.com/zipzapkidsplay`, our family's shared GeoCities account,[^1] didn't seem to make it into the Special Collection.[^2]
+
+The proof may be partial, but it's proof nonetheless: I, for a brief and glorious moment, got to exist in the world of Web 1.0.
+
+## The Eras of the Web
+
+If you've never heard the term Web 1.0 before, it's important that you know where we're coming from.
+
+There was a period of time when websites were *static*: when you were on a website, there was not a whole lot that you, *the user*, could do to change the contents of the page for other people.
+
+The quintessential archive example of this concept is the [website for the 1996 *Space Jam* movie](https://www.spacejam.com/1996/). You, the user, aren't a factor in the website: there's no login, nowhere to *like and subscribe*. You can click through to see Space Jam news, get coloring book printouts, and when you leave, there's no trace you were ever there.[^3]
+
+*That* is Web 1.0.
+
+Web 2.0 is the era that came after that. Funnily enough, my old Geocities site is a natural bridge, with its hyperlink to my [Roblox account](https://web.archive.org/web/20090712000801/http://www.roblox.com/User.aspx?ID=119813)[^4]. In a strange way, [[public/tags/projects/games/roblox|Roblox]] was like Baby's First Web 2.0 experience. In its original [[public/content/articles/robloxaville#2. Monetization|pre-monetized form]], the site was a textbook example of *user-generated content*. Even though I was making games, Roblox wasn't *my* site. I didn't own it. Instead, my *content* was being uploaded and served out of their servers.
+
+That was the start of an era where websites were no longer just static information. They were places where you could comment and subscribe. You could place an order, or poke your friends -- you know, back before Facebook's business model was metaverse avatars and advertising eating disorders to teenagers.
+
+Web 2.0 is[^5] the commercialization and consolidation of the internet into a core set of applications and platforms that everybody builds on top of.
+
+## Social Networks, not Social Media
+
+Like many older members of Gen Z, I spent my fair share of the 2010s with social media accounts. Facebook, for keeping up with older family members. Twitter[^6], for shitposting with friends. I'll even admit to using Snapchat, back when we were all too dumb and naive to think that any of that content *actually* self-destructed.
+
+Of course, between swinging elections, being bought out by billionaires, and generally developing into a thin facade for shilling either bad products or even worse ideas, I largely deleted all of my social media at the turn of the decade.
+
+The only two I have left are LinkedIn -- which feels more like a professional courtesy, kept [strictly at arms length](https://bsky.app/profile/speen.us/post/3mz7l5i7f322l) -- and Bluesky.
+
+Bluesky was an interesting case. I can't say that I even used Twitter all that much anymore before it was purchased, but I did stay up-to-date on Bluesky's launch and initial growth because I was interested in the promise of [ATProto](https://atproto.com/), which creates a social network environment a bit more like old-school email.[^7]
+
+I've certainly outgrown the 2010s dream of becoming Twitter Famous™, but I have thought more about the concept of social networks since picking up my [[public/content/season-of-stamps|Season of Stamps]]. Part of Stamps is to be more social, building new relationships after moving across the country. Admittedly, the last ~3 months since moving have been pretty lonely[^8], and social media is, if nothing else, *social*.
+
+It's in that state of mind that I noticed something interesting, recently. I read through [an interesting presentation about Boundary Objects](https://maggieappleton.com/planning-agents) and caught a section at the very end of the post:
+
+> **Mentions around the web**
+
+It *looks* like a comment section, but it isn't a comment: it's another blog that *mentions* her blog post, presumably with a link. I pulled on that thread a bit, and that's when I found something *wild*: [IndieWeb](https://indieweb.org), [WebMentions](https://webmention.net/), and a social network that's practically invisible unless you know what to look for.
+
+## IndieWeb, as described by an IndieNewb
+
+So, as I understand it, this is how WebMentions work:
+
+1. I publish a blog post with a hyperlink[^9]
+2. I send a request via some service like [`webmention.io`](https://webmention.io/) to the site I linked to
+3. The owner of the site receives a notification that `blog.chaoticgood.computer` mentioned them
+4. They can choose to include that mention on *their* site, in whatever form factor they'd like.
+
+This is a sneaky little process, isn't it? There's not really a *platform* to speak of: there's not a single feed anywhere to see any of this. It's just a casual "Hey, I mentioned you!", and a choice to acknowledge the mention.
+
+The tricky part: it's *elegant*, but *invisible*. I'm the type of person who gets into this kind of thing, and [[public/content/notes/digital-gardening-with-quartz|I've been reading Maggie Appleton's blog for awhile now]] without ever noticing that there was some under-the-hood magic going on.
+
+In my mind, something that's hard to see is also hard to understand, and something that's hard to understand is hard to jump into.
+
+So, let's try to see it.
+
+## The webs of the Web
+
+Since learning about this, I've gone ahead and updated this site to support WebMentions:
+
+1. Outgoing mentions are handled by a [GitHub Action](https://github.com/chaoticgoodcomputing/blog/actions/runs/41875712182/job/126735885721) that triggers after I push out new content
+2. Incoming mentions are handled through [`webmentions.io`](https://webmention.io/)[^10]
+
+So: do I have any friends, yet?
+
+Let's crawl through my mentions to check![^11]
+
+<IndiewebGraph view="chaotic-good" caption="The crawl is for all, no matter how small" />
+
+*Dammit!* No friends, yet. However, it is cool to see that I've accidentally stumbled on this in the past. My mention to Bogard's work was [[public/content/notes/over-under-engineering|March of 2024]], so I've been orbiting around WebMentions for longer than I expected!
+
+So, I *know* these three have WebMentions enabled, since my outgoing mentions were acknowledged by them. Despite being apparently easy to stumble into, I'm still not quite sure, at this point, how discoverability works for IndieWeb.
+
+One sure-fire way to know who is using WebMentions? Going through these three and finding out who they've got WebMentions with!
+
+<IndiewebGraph view="chaotic-good-and-maggie" caption="Crawling out to blogs I've mentioned before" />
+
+The web! It's *alive!*
+
+While my scrapes of Jimmy or Birgitta's sites didn't yield much[^12], Maggie's blog is a real hotspot of WebMention activity.
+
+Now that we're scraping outside of our own domain, I've added a bit of extra sauce. First, we can now see incoming and outgoing mentions for those sites: not just who is mentioning them, but who *they* are mentioning.
+
+Second: I've also stolen a bit of a Twitter-ism -- the idea of the *mutual*. On follow-based platforms, mutuals are somebody who you follow, and who follows you back. Here, I've highlighted mutuals specifically, with the hope to find not just chatter, but actual back-and-forth conversations happening on the IndieWeb within my immediate vicinity.
+
+Finally, I've highlighted an important finding: [IndieWeb itself](https://news.indieweb.org/). You're going to see this one come up a lot more as the graphs progress. IndieWeb allows folks to *mention* IndieWeb in order to consolidate posts *about* IndieWeb. It's a real turducken of self-reference. Compliments to the chefs: it's a beautiful thing to see.
+
+Now, at this point, I'm both on a roll and quickly noticing that other sites suspect my home internet of being a bot farm, so I only have the moral budget for one last scrape. I looked through many of Maggie's mutuals and mentions, and went through some of my personal highlights:
+
+1. [Chris Aldrich](https://boffosocko.com/), a.k.a. boffosocko, who seems to be a big figure in the IndieWeb/microblogging/digital gardening scene. They write about a real broad range of topics, and all of my exploring on their site has been real fun
+2. [Swyx](https://swyx.io), who has a real wacky blend of [ambient co-presence](https://maggieappleton.com/ambient-copresence) strategies that I'm absolutely eating up. I'm also a massive fan of the post they made during [their tenure as Head of Developer Experience at Temporal](https://swyx.io/why-temporal). At my [[public/tags/projects/dayjob|dayjob]], we developed and open-sourced a library called [Trax](https://traxsharp.net/) with a very similar philosophy, so it's cool to see some of the origins of the philosophy forming, there
+3. [Ton Zĳlstra](https://www.zylstra.org/blog/), who is another central node in IndieWeb and has a great post, "[Good Enough Jumps the Model Gap](https://www.zylstra.org/blog/2026/11/good-enough-jumps-the-model-gap-and-avoids-ai-lock-in/ "Permalink to Good Enough Jumps the Model Gap and Avoids AI Lock-in")", that I feel meshes super well with [[public/content/notes/software-gardening.mdx|the model selection portions of Software Gardening]]
+4. [Jeremy Keith](https://adactio.com/), whose music is fantastic and has inspired me to try my hand at putting some of my own music on this site[^13]
+
+There is one other who is worthy of the most honorable mention. To understand why, here's my final map:
+
+<IndiewebGraph caption="The full crawl, including sites that I found interesting when exploring the previous graph" />
+
+The award for the Monarch of the Mutuals goes to [Ana Rodrigues](https://ohhelloana.blog/)! They can go ahead and pile this up next to the sweep for Best Doodles,[^14] as well as Friendliest Feature: earned, properly, by their [Guestbook](https://ohhelloana.blog/guestbook/) feature.
+
+This whole adventure has been fun on many fronts, but most of all because I have a whole lot of new places to read things. I like to write about what I read, and becoming part of a strange, wild, invisible social network is just very *neat* to me! In the spirit of [[public/content/season-of-stamps#Stamp, like an envelope|"stamp, like an envelope"]], knowing that something as innocuous as linking to another page means sending out a message into this weird web has me excited to write even more.
+
+[^1]: Another feather in my family's established [[public/content/articles/robloxaville#Being a dork is a lifetime commitment|nerd cap]].
+[^2]: There are a number of efforts to properly index Geocities archives. `oocities.org` states that they have [200GB of archives just waiting to be indexed](https://www.oocities.org/zipzapkidsplay), which would be a *very* fun project to work on. Fingers crossed that [Hobby Builder](https://bsky.app/profile/hobbybuilder.bsky.social/post/3mzk6dftqjw2k) can point me in the right direction.
+[^3]: The sole exception to this is the link to the [Warner Brothers Store](https://wbshop.com/collections/looney-tunes). It's *pretty* funny that the only maintenance of this site is the plug. It's like if the janitor of a museum only swept the gift shop.
+[^4]: I'm shocked to see such a progressive bio, considering I was 10 years old -- and Mormon -- at the time of that snapshot. What can I say? I've always been an ally.
+[^5]: or "was", depending on if you believe NFT photos of apes truly brought on Web 3.0
+[^6]: X? Over my dead body.
+[^7]: I won't get into the particulars of ATProto here, but seriously: give it a read.
+[^8]: I'll concede that this is certainly *correlated* to the uptick of writing I've done here.
+[^9]: Easy!. A friend told me recently that I use more hyperlinks in casual conversation than anybody he has ever met, and I've chosen to take this as the compliment it was *not* intended to be.
+[^10]: Check out the new "Around the Web" section at the bottom of my notes!
+[^11]: You can find the scraper code I'm using at the [monorepo for this website](https://github.com/chaoticgoodcomputing/blog/blob/main/packages/indieweb-graph/). This also serves as a shameless plug for [[public/tags/projects/flowthru|Flowthru]] (☞ﾟヮﾟ)☞
+[^12]: I'm not sure if this is actual reality, or a problem with my scraper. If it ends up being obviously my fault, I'll update the graph and post accordingly.
+[^13]: Jeremy -- if you're reading this, *please* put [*Deep Black Water*](https://saltercane.com/) on YouTube Music!
+[^14]: conceding that Ana's are in a different league compared to [[public/content/annotations/llm-starter|some of my own doodle crimes]]

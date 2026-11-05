@@ -122,6 +122,15 @@ test("editing an annotation rewrites its block; the epilogue stays last", async 
   expect(note.endsWith(EPILOGUE)).toBe(true)
 })
 
+test("an annotation's Share button copies the link to it, to paste into another note", async ({ page, context }) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"])
+  const { sidebar } = await open(page, { note: seededNote() })
+  await sidebar.getByTestId("annotation-action-bar").getByRole("button", { name: "Share" }).click()
+  await expect(sidebar.getByRole("textbox", { name: "Use this URL to share this annotation" })).toHaveValue("[[annotations/fixture#^seed1]]")
+  await sidebar.getByRole("button", { name: "Copy share link to clipboard" }).click()
+  await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toBe("[[annotations/fixture#^seed1]]")
+})
+
 test("deleting an annotation removes its block, and nothing else", async ({ page }) => {
   const { sidebar } = await open(page, { note: seededNote() })
   await sidebar.getByRole("button", { name: "Delete" }).click()

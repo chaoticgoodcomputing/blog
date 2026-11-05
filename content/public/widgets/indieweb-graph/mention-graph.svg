@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 760" role="img" aria-labelledby="title desc">
 <title id="title">Who mentions whom among webmention-compatible blogs</title>
-<desc id="desc">A network of 88 blogs and 185 links between them, as seen from 7 seed blogs: the mentions each seed made, and the webmentions it received.</desc>
+<desc id="desc">A network of 94 blogs and 191 links between them, as seen from 9 seed blogs: the mentions each seed made, and the webmentions it received.</desc>
 <style>svg { --surface: #faf8f8; --ink: #2b2b2b; --muted: #4e4e4e; --rule: #b8b8b8; --node: #b8b8b8;
   --seed: #2b2b2b; --utility: #2b2b2b; --out: #2a78d6; --in: #eb6834; --mutual: #2b2b2b; }
 @media (prefers-color-scheme: dark) {
@@ -20,330 +20,322 @@ text.seed { fill: var(--ink); font-size: 13px; font-weight: 600; }
 text.utility { fill: var(--ink); font-size: 13px; font-style: italic; }
 .legend text { font-size: 12px; }</style>
 <defs>
-<marker id="arrow-out" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path class="arrow out" d="M0,0 L10,5 L0,10 z"/></marker>
-<marker id="arrow-in" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path class="arrow in" d="M0,0 L10,5 L0,10 z"/></marker>
-<marker id="arrow-mutual" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path class="arrow mutual" d="M0,0 L10,5 L0,10 z"/></marker>
+<marker id="arrow-out" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="arrow out" d="M0,0 L10,5 L0,10 z"/></marker>
+<marker id="arrow-in" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="arrow in" d="M0,0 L10,5 L0,10 z"/></marker>
+<marker id="arrow-mutual" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="arrow mutual" d="M0,0 L10,5 L0,10 z"/></marker>
 </defs>
 <rect class="surface" width="960" height="760"/>
 <g>
-<path class="link out" d="M547.8,445.9 Q629.4,462.0 701.3,441.7" stroke-width="1.1" marker-end="url(#arrow-out)"/>
-<path class="link mutual" d="M653.1,552.7 Q653.4,523.1 650.6,517.5" stroke-width="1.1" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M684.3,392.2 Q611.1,370.9 549.0,382.7" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M606.6,354.3 Q566.2,393.0 552.2,433.3" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M606.6,354.3 Q562.1,289.0 507.3,259.0" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link out" d="M536.2,385.1 Q534.7,416.9 542.3,433.8" stroke-width="1.1" marker-end="url(#arrow-out)"/>
-<path class="link mutual" d="M536.2,385.1 Q512.6,393.9 502.6,404.8" stroke-width="1.1" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M443.2,374.1 Q527.0,459.0 618.2,489.3" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M840.6,494.7 Q740.2,471.6 662.9,490.9" stroke-width="1.1" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M912.0,540.7 Q781.4,486.0 663.5,494.9" stroke-width="1.1" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M844.7,449.3 Q736.8,448.4 661.1,486.2" stroke-width="1.1" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M235.3,344.4 Q280.1,392.9 328.9,410.9" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M906.3,459.9 Q768.9,446.3 662.0,488.1" stroke-width="1.1" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M459.2,594.0 Q561.4,567.0 622.9,512.1" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M587.4,317.6 Q592.4,413.4 628.7,476.4" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M613.9,283.2 Q601.5,393.1 632.1,474.8" stroke-width="1.1" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M496.3,614.1 Q582.4,572.6 626.2,515.1" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M448.6,466.9 Q377.4,463.6 331.7,484.2" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M448.6,466.9 Q401.4,428.6 355.7,418.7" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M463.9,356.3 Q535.3,447.6 619.2,486.8" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M463.9,356.3 Q491.0,307.2 492.3,267.6" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M516.8,350.7 Q520.9,402.0 540.8,434.6" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M312.5,492.9 Q437.3,465.8 526.1,393.3" stroke-width="1.1" marker-end="url(#arrow-mutual)"/>
-<path class="link out" d="M312.5,492.9 Q351.1,548.5 403.3,576.5" stroke-width="1.1" marker-end="url(#arrow-out)"/>
-<path class="link in" d="M499.3,497.9 Q529.8,477.7 541.2,457.5" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M705.6,487.0 Q631.6,447.5 561.1,446.2" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M621.5,700.8 Q655.4,601.0 643.6,519.7" stroke-width="1.1" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M408.1,485.7 Q359.4,477.8 332.6,486.4" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M408.1,485.7 Q522.9,519.0 617.4,501.0" stroke-width="1.1" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M640.3,496.6 Q666.0,406.1 649.5,321.9" stroke-width="1.1" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M640.3,496.6 Q770.9,551.3 904.6,541.3" stroke-width="1.1" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M640.3,496.6 Q548.0,458.7 458.4,466.1" stroke-width="1.1" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M640.3,496.6 Q596.1,408.8 524.7,356.5" stroke-width="1.1" marker-end="url(#arrow-mutual)"/>
-<path class="link out" d="M640.3,496.6 Q500.8,420.4 356.0,416.2" stroke-width="1.1" marker-end="url(#arrow-out)"/>
-<path class="link mutual" d="M908.1,499.1 Q774.5,465.7 663.0,491.4" stroke-width="1.1" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M484.5,385.1 Q510.4,391.3 523.6,388.1" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M484.5,385.1 Q549.0,459.5 618.7,487.8" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M342.0,415.8 Q318.0,450.8 315.2,472.0" stroke-width="1.1" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M709.9,363.6 Q620.5,353.5 548.4,380.5" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M189.8,437.4 Q268.5,444.9 329.0,420.9" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M397.7,349.7 Q461.2,415.8 535.2,441.5" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M397.7,349.7 Q462.7,384.0 523.2,384.9" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M419.1,395.5 Q378.1,396.4 354.3,409.2" stroke-width="1.1" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M419.1,395.5 Q473.3,332.1 488.9,267.1" stroke-width="1.1" marker-end="url(#arrow-mutual)"/>
-<path class="link out" d="M492.8,251.1 Q571.3,282.5 647.0,275.6" stroke-width="1.1" marker-end="url(#arrow-out)"/>
-<path class="link mutual" d="M492.8,251.1 Q453.2,306.6 444.6,365.0" stroke-width="1.1" marker-end="url(#arrow-mutual)"/>
-<path class="link out" d="M492.8,251.1 Q566.1,179.1 596.4,88.7" stroke-width="1.1" marker-end="url(#arrow-out)"/>
-<path class="link mutual" d="M492.8,251.1 Q549.5,281.7 605.5,283.0" stroke-width="1.1" marker-end="url(#arrow-mutual)"/>
-<path class="link out" d="M492.8,251.1 Q433.4,289.0 403.0,340.7" stroke-width="1.1" marker-end="url(#arrow-out)"/>
-<path class="link mutual" d="M492.8,251.1 Q438.6,314.5 421.4,386.0" stroke-width="1.1" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M58.4,553.1 Q192.7,553.5 293.7,502.4" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M655.4,274.8 Q621.2,383.9 636.4,473.6" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M145.6,657.0 Q248.7,595.0 301.3,510.8" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M110.2,626.1 Q227.3,583.8 298.1,508.3" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M495.6,412.5 Q513.6,331.5 496.9,267.1" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M653.1,552.7 Q613.3,486.7 559.1,452.9" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M684.3,392.2 Q649.8,439.1 644.1,473.6" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link out" d="M186.3,620.5 Q264.7,571.8 301.6,511.0" stroke-width="1.31" marker-end="url(#arrow-out)"/>
-<path class="link in" d="M176.1,399.9 Q233.1,462.8 292.8,485.4" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M647.9,313.7 Q622.2,404.2 635.8,473.7" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M647.9,313.7 Q577.9,263.8 509.1,253.5" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M536.2,385.1 Q411.4,412.2 328.8,479.6" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M536.2,385.1 Q530.6,312.9 501.4,265.2" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M443.2,374.1 Q482.8,318.6 490.4,267.4" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M507.8,579.9 Q420.6,513.0 333.2,496.8" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M235.3,344.4 Q256.1,427.9 298.7,477.0" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M201.2,477.1 Q279.0,463.3 330.8,424.2" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M193.1,359.1 Q236.7,440.3 295.2,480.9" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M459.2,594.0 Q398.0,525.8 332.2,500.5" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M587.4,317.6 Q553.7,345.2 541.4,373.2" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M454.2,521.3 Q386.8,490.1 333.6,492.1" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M422.8,614.2 Q382.2,540.3 329.9,504.8" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M422.8,614.2 Q545.7,581.5 623.0,512.2" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M496.3,614.1 Q418.9,531.4 332.3,500.1" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M448.6,466.9 Q500.7,468.3 535.8,451.6" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M414.1,543.8 Q369.4,506.2 333.0,497.7" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M414.1,543.8 Q532.9,547.3 619.2,506.6" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M312.5,492.9 Q431.7,393.6 486.3,266.3" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M499.3,497.9 Q406.5,473.0 333.1,488.5" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M640.3,496.6 Q674.5,387.5 656.8,283.1" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M640.3,496.6 Q640.0,526.2 649.4,545.2" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M640.3,496.6 Q674.8,449.7 682.9,400.5" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link out" d="M640.3,496.6 Q601.6,428.4 547.0,392.3" stroke-width="1.31" marker-end="url(#arrow-out)"/>
-<path class="link mutual" d="M640.3,496.6 Q669.1,613.0 742.7,698.0" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link out" d="M640.3,496.6 Q564.1,522.4 513.7,573.9" stroke-width="1.31" marker-end="url(#arrow-out)"/>
-<path class="link mutual" d="M640.3,496.6 Q748.2,497.5 838.1,452.6" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M640.3,496.6 Q517.4,529.3 429.1,608.6" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link out" d="M640.3,496.6 Q476.8,455.4 333.1,488.2" stroke-width="1.31" marker-end="url(#arrow-out)"/>
-<path class="link out" d="M640.3,496.6 Q569.6,480.3 508.2,495.7" stroke-width="1.31" marker-end="url(#arrow-out)"/>
-<path class="link mutual" d="M640.3,496.6 Q606.4,596.4 620.4,693.5" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M640.3,496.6 Q525.5,463.3 417.1,484.0" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M640.3,496.6 Q692.5,604.2 781.9,671.8" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M640.3,496.6 Q533.9,542.1 465.2,624.5" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M787.8,676.3 Q735.6,568.8 658.9,510.7" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M459.8,631.0 Q402.7,544.3 330.8,503.3" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M459.8,631.0 Q566.2,585.5 625.4,514.5" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M716.7,671.5 Q699.5,574.9 654.4,515.2" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M484.5,385.1 Q504.7,319.1 495.7,267.4" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link out" d="M342.0,415.8 Q397.7,424.6 441.4,410.3" stroke-width="1.31" marker-end="url(#arrow-out)"/>
-<path class="link out" d="M342.0,415.8 Q366.7,458.7 400.4,480.7" stroke-width="1.31" marker-end="url(#arrow-out)"/>
-<path class="link in" d="M397.7,349.7 Q361.9,376.1 348.3,403.3" stroke-width="1.31" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M476.2,87.8 Q464.9,171.4 487.3,235.5" stroke-width="1.31" marker-end="url(#arrow-mutual)"/>
-<path class="link out" d="M492.8,251.1 Q492.8,303.8 512.3,342.0" stroke-width="1.31" marker-end="url(#arrow-out)"/>
-<path class="link out" d="M492.8,251.1 Q489.6,145.6 442.4,59.5" stroke-width="1.31" marker-end="url(#arrow-out)"/>
-<path class="link in" d="M141.6,582.8 Q237.8,558.4 296.6,506.8" stroke-width="1.47" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M495.6,412.5 Q517.7,435.5 535.2,441.5" stroke-width="1.47" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M495.6,412.5 Q394.4,430.7 329.3,480.1" stroke-width="1.47" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M613.9,283.2 Q557.2,252.6 509.3,251.5" stroke-width="1.47" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M242.4,677.4 Q299.6,593.6 309.8,513.8" stroke-width="1.47" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M454.2,521.3 Q550.2,531.3 618.6,505.0" stroke-width="1.47" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M463.9,356.3 Q371.8,406.4 324.4,475.5" stroke-width="1.47" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M195.1,670.1 Q275.1,595.6 305.3,512.7" stroke-width="1.47" marker-end="url(#arrow-in)"/>
-<path class="link out" d="M312.5,492.9 Q279.5,431.8 229.2,397.2" stroke-width="1.47" marker-end="url(#arrow-out)"/>
-<path class="link in" d="M835.0,593.0 Q749.2,521.4 663.0,501.8" stroke-width="1.47" marker-end="url(#arrow-in)"/>
-<path class="link out" d="M640.3,496.6 Q775.6,488.1 885.9,422.9" stroke-width="1.47" marker-end="url(#arrow-out)"/>
-<path class="link out" d="M640.3,496.6 Q671.7,573.9 729.2,623.7" stroke-width="1.47" marker-end="url(#arrow-out)"/>
-<path class="link out" d="M640.3,496.6 Q681.7,476.3 704.4,446.1" stroke-width="1.47" marker-end="url(#arrow-out)"/>
-<path class="link mutual" d="M640.3,496.6 Q652.7,386.7 616.8,291.1" stroke-width="1.47" marker-end="url(#arrow-mutual)"/>
-<path class="link out" d="M640.3,496.6 Q629.2,583.6 656.2,659.1" stroke-width="1.47" marker-end="url(#arrow-out)"/>
-<path class="link out" d="M640.3,496.6 Q515.4,511.0 417.7,575.9" stroke-width="1.47" marker-end="url(#arrow-out)"/>
-<path class="link out" d="M640.3,496.6 Q686.8,402.0 685.3,305.0" stroke-width="1.47" marker-end="url(#arrow-out)"/>
-<path class="link out" d="M640.3,496.6 Q566.1,503.4 510.1,538.6" stroke-width="1.47" marker-end="url(#arrow-out)"/>
-<path class="link in" d="M49.4,461.0 Q177.1,508.5 291.5,495.3" stroke-width="1.47" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M484.5,385.1 Q385.6,418.4 327.3,477.8" stroke-width="1.47" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M459.4,560.1 Q394.0,508.9 333.2,497.0" stroke-width="1.47" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M419.1,395.5 Q354.1,431.4 324.3,475.4" stroke-width="1.47" marker-end="url(#arrow-in)"/>
-<path class="link out" d="M492.8,251.1 Q523.3,151.0 506.3,55.3" stroke-width="1.47" marker-end="url(#arrow-out)"/>
-<path class="link out" d="M492.8,251.1 Q442.3,159.9 361.9,105.6" stroke-width="1.47" marker-end="url(#arrow-out)"/>
-<path class="link mutual" d="M492.8,251.1 Q504.1,167.5 478.6,94.8" stroke-width="1.47" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M866.9,378.2 Q739.4,410.2 657.9,481.3" stroke-width="1.6" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M606.6,354.3 Q606.4,429.5 629.8,475.8" stroke-width="1.6" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M201.2,477.1 Q255.0,498.4 291.5,494.9" stroke-width="1.6" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M74.7,424.6 Q185.4,487.3 291.4,492.0" stroke-width="1.6" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M640.3,496.6 Q777.7,510.2 899.4,462.6" stroke-width="1.6" marker-end="url(#arrow-mutual)"/>
-<path class="link out" d="M640.3,496.6 Q747.5,445.0 815.1,356.3" stroke-width="1.6" marker-end="url(#arrow-out)"/>
-<path class="link mutual" d="M640.3,496.6 Q521.5,493.1 421.7,540.2" stroke-width="1.6" marker-end="url(#arrow-mutual)"/>
-<path class="link out" d="M640.3,496.6 Q756.4,569.8 885.6,581.7" stroke-width="1.6" marker-end="url(#arrow-out)"/>
-<path class="link out" d="M640.3,496.6 Q699.6,577.0 782.4,618.5" stroke-width="1.6" marker-end="url(#arrow-out)"/>
-<path class="link out" d="M640.3,496.6 Q744.1,543.7 850.5,538.9" stroke-width="1.6" marker-end="url(#arrow-out)"/>
-<path class="link out" d="M640.3,496.6 Q691.1,438.5 707.8,371.7" stroke-width="1.6" marker-end="url(#arrow-out)"/>
-<path class="link out" d="M640.3,496.6 Q716.7,599.4 824.8,653.0" stroke-width="1.6" marker-end="url(#arrow-out)"/>
-<path class="link out" d="M640.3,496.6 Q542.2,506.6 466.5,555.5" stroke-width="1.6" marker-end="url(#arrow-out)"/>
-<path class="link in" d="M112.0,538.2 Q217.7,539.6 293.6,502.2" stroke-width="1.6" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M189.8,437.4 Q244.5,479.9 291.8,488.9" stroke-width="1.6" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M397.7,349.7 Q337.9,411.1 318.8,472.7" stroke-width="1.6" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M492.8,251.1 Q373.6,350.4 320.8,473.5" stroke-width="1.6" marker-end="url(#arrow-mutual)"/>
-<path class="link out" d="M492.8,251.1 Q583.5,296.9 676.8,296.6" stroke-width="1.6" marker-end="url(#arrow-out)"/>
-<path class="link mutual" d="M492.8,251.1 Q467.1,155.6 405.9,87.7" stroke-width="1.6" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M443.2,374.1 Q363.6,417.8 324.4,475.5" stroke-width="1.72" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M747.5,703.6 Q718.7,587.2 655.5,514.2" stroke-width="1.72" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M193.1,359.1 Q260.7,405.3 328.1,414.0" stroke-width="1.72" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M516.8,350.7 Q421.6,362.3 353.6,408.0" stroke-width="1.72" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M312.5,492.9 Q336.5,457.9 340.2,429.7" stroke-width="1.72" marker-end="url(#arrow-mutual)"/>
-<path class="link out" d="M312.5,492.9 Q401.7,540.9 494.6,542.9" stroke-width="1.72" marker-end="url(#arrow-out)"/>
-<path class="link mutual" d="M640.3,496.6 Q773.9,530.0 900.9,500.8" stroke-width="1.72" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M799.7,556.9 Q727.2,507.6 663.4,499.5" stroke-width="1.72" marker-end="url(#arrow-in)"/>
-<path class="link out" d="M342.0,415.8 Q285.0,389.7 230.7,392.0" stroke-width="1.72" marker-end="url(#arrow-out)"/>
-<path class="link mutual" d="M547.8,445.9 Q588.0,482.4 617.8,490.5" stroke-width="1.82" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M176.1,399.9 Q257.1,427.8 328.1,417.8" stroke-width="1.82" marker-end="url(#arrow-in)"/>
-<path class="link in" d="M95.0,485.1 Q202.8,515.1 291.8,497.1" stroke-width="1.82" marker-end="url(#arrow-in)"/>
-<path class="link out" d="M640.3,496.6 Q674.1,499.6 697.8,490.1" stroke-width="1.82" marker-end="url(#arrow-out)"/>
-<path class="link out" d="M640.3,496.6 Q541.8,419.5 428.7,397.4" stroke-width="1.82" marker-end="url(#arrow-out)"/>
-<path class="link in" d="M91.1,382.1 Q188.5,464.1 291.9,488.1" stroke-width="1.82" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M400.9,82.2 Q426.6,177.7 481.7,238.8" stroke-width="1.82" marker-end="url(#arrow-mutual)"/>
-<path class="link out" d="M640.3,496.6 Q743.5,472.0 818.8,408.1" stroke-width="1.92" marker-end="url(#arrow-out)"/>
-<path class="link mutual" d="M640.3,496.6 Q657.5,593.2 712.2,665.6" stroke-width="1.92" marker-end="url(#arrow-mutual)"/>
-<path class="link out" d="M492.8,251.1 Q453.3,324.1 451.6,396.7" stroke-width="1.92" marker-end="url(#arrow-out)"/>
-<path class="link out" d="M547.8,445.9 Q424.5,441.2 331.7,484.1" stroke-width="2.01" marker-end="url(#arrow-out)"/>
-<path class="link in" d="M48.0,510.1 Q182.3,533.2 292.3,499.1" stroke-width="2.01" marker-end="url(#arrow-in)"/>
-<path class="link mutual" d="M640.3,496.6 Q740.7,519.7 833.4,496.5" stroke-width="2.01" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M492.8,251.1 Q532.1,295.7 578.8,314.2" stroke-width="2.01" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M495.6,412.5 Q519.2,403.7 527.4,394.7" stroke-width="2.1" marker-end="url(#arrow-mutual)"/>
-<path class="link in" d="M495.6,412.5 Q557.9,471.9 618.0,489.9" stroke-width="2.1" marker-end="url(#arrow-in)"/>
-<path class="link out" d="M312.5,492.9 Q392.2,466.7 444.0,414.5" stroke-width="2.1" marker-end="url(#arrow-out)"/>
-<path class="link in" d="M79.3,592.1 Q207.8,570.5 295.5,505.5" stroke-width="2.1" marker-end="url(#arrow-in)"/>
-<path class="link out" d="M536.2,385.1 Q491.1,385.9 460.5,402.2" stroke-width="2.26" marker-end="url(#arrow-out)"/>
-<path class="link mutual" d="M587.4,317.6 Q548.1,273.0 508.1,257.2" stroke-width="2.33" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M492.8,251.1 Q498.4,323.3 529.4,374.0" stroke-width="2.33" marker-end="url(#arrow-mutual)"/>
-<path class="link out" d="M492.8,251.1 Q542.8,167.5 548.9,77.7" stroke-width="2.4" marker-end="url(#arrow-out)"/>
-<path class="link out" d="M640.3,496.6 Q635.2,609.3 678.7,705.3" stroke-width="2.47" marker-end="url(#arrow-out)"/>
-<path class="link out" d="M640.3,496.6 Q739.4,588.3 862.2,623.0" stroke-width="2.54" marker-end="url(#arrow-out)"/>
-<path class="link mutual" d="M516.8,350.7 Q561.0,438.5 621.5,482.8" stroke-width="2.89" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M640.3,496.6 Q600.1,460.1 560.6,449.4" stroke-width="2.89" marker-end="url(#arrow-mutual)"/>
-<path class="link mutual" d="M448.6,466.9 Q540.9,504.8 617.1,498.5" stroke-width="3.15" marker-end="url(#arrow-mutual)"/>
-<path class="link out" d="M640.3,496.6 Q556.5,429.2 461.5,409.2" stroke-width="3.2" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M514.4,241.7 Q538.4,201.6 540.9,163.4" stroke-width="0.8" marker-end="url(#arrow-out)"/>
+<path class="link mutual" d="M573.8,166.7 Q565.6,181.1 565.9,174.4" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M472.6,158.6 Q444.5,205.2 441.7,245.8" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M463.0,205.7 Q484.4,229.9 502.0,236.8" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M463.0,205.7 Q420.3,218.6 400.0,238.0" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link out" d="M440.7,259.5 Q479.7,259.4 502.6,247.8" stroke-width="0.8" marker-end="url(#arrow-out)"/>
+<path class="link mutual" d="M440.7,259.5 Q458.3,264.8 466.3,263.4" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M476.6,282.4 Q530.9,250.6 552.3,217.3" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M668.7,165.8 Q613.0,169.3 585.0,185.8" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M528.7,83.7 Q533.1,145.0 552.9,177.8" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M704.6,148.2 Q628.8,156.2 584.4,185.0" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M560.6,451.6 Q576.3,412.9 574.0,385.8" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M677.4,196.4 Q621.0,183.6 587.5,192.0" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M633.1,308.3 Q612.3,244.8 581.4,214.1" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M434.1,209.0 Q500.9,219.0 542.8,205.1" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M421.2,181.8 Q491.1,207.0 541.8,200.6" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M618.8,326.8 Q607.3,255.8 578.6,216.5" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M547.4,301.9 Q525.4,339.2 524.0,361.4" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M547.4,301.9 Q551.7,339.6 564.6,359.1" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M457.7,296.7 Q523.2,260.1 551.9,217.1" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M457.7,296.7 Q428.6,264.7 403.5,255.2" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M502.5,269.6 Q511.8,257.1 512.2,254.8" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M522.7,382.5 Q496.5,311.2 450.7,268.8" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link out" d="M522.7,382.5 Q560.5,344.5 574.3,301.5" stroke-width="0.8" marker-end="url(#arrow-out)"/>
+<path class="link in" d="M538.9,275.4 Q530.7,255.6 524.5,250.3" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M515.9,147.2 Q503.8,194.3 511.5,228.7" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M695.0,226.1 Q633.4,196.3 588.2,197.2" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M590.3,334.9 Q550.8,350.6 536.6,366.7" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M590.3,334.9 Q594.1,263.3 574.4,219.0" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M564.9,197.7 Q508.6,157.6 448.5,148.7" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M564.9,197.7 Q560.5,136.4 532.5,90.0" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M564.9,197.7 Q543.6,247.7 546.7,292.1" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M564.9,197.7 Q525.1,226.2 507.0,260.9" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link out" d="M564.9,197.7 Q548.0,285.4 568.7,357.3" stroke-width="0.8" marker-end="url(#arrow-out)"/>
+<path class="link mutual" d="M508.3,60.7 Q520.2,136.0 551.2,178.8" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M458.0,277.8 Q451.5,266.6 452.2,267.0" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M458.0,277.8 Q521.1,250.6 550.0,215.6" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M572.7,371.3 Q546.4,370.9 541.6,373.2" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M484.6,181.4 Q453.3,215.2 444.4,246.3" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M614.4,445.9 Q602.5,403.6 582.6,382.0" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M463.4,328.2 Q499.3,291.1 510.5,254.4" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M463.4,328.2 Q460.3,291.1 447.9,271.1" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M501.9,306.7 Q529.5,347.5 559.9,364.2" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M501.9,306.7 Q451.9,264.4 404.2,253.2" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link out" d="M388.1,249.4 Q424.6,218.3 439.9,181.9" stroke-width="0.8" marker-end="url(#arrow-out)"/>
+<path class="link mutual" d="M388.1,249.4 Q428.4,276.5 467.5,281.3" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link out" d="M388.1,249.4 Q337.6,215.8 284.8,209.7" stroke-width="0.8" marker-end="url(#arrow-out)"/>
+<path class="link mutual" d="M388.1,249.4 Q412.8,219.6 419.4,190.0" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link out" d="M388.1,249.4 Q416.3,297.8 454.7,322.6" stroke-width="0.8" marker-end="url(#arrow-out)"/>
+<path class="link mutual" d="M388.1,249.4 Q438.1,291.7 492.4,304.5" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M430.9,491.6 Q489.9,448.1 513.3,401.4" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M443.1,174.1 Q501.2,200.5 541.6,198.7" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M516.3,498.1 Q533.4,441.1 526.5,403.3" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M456.7,509.7 Q505.0,454.0 517.6,403.0" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M476.5,261.6 Q433.8,244.9 404.5,247.8" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M573.8,166.7 Q535.1,197.1 520.0,229.6" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M472.6,158.6 Q514.1,189.2 541.9,193.9" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link out" d="M515.4,595.4 Q509.2,655.6 528.3,705.1" stroke-width="1.3" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M515.4,595.4 Q489.9,650.2 491.7,703.2" stroke-width="1.3" marker-end="url(#arrow-out)"/>
+<path class="link in" d="M591.8,432.4 Q563.2,399.2 542.2,390.5" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M440.2,147.5 Q496.5,187.6 541.9,194.3" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M440.2,147.5 Q401.9,192.2 392.0,233.4" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M440.7,259.5 Q466.9,330.8 507.2,368.2" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M440.7,259.5 Q415.6,248.1 404.6,248.6" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M476.6,282.4 Q436.3,255.3 404.5,251.4" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M621.0,285.6 Q560.2,322.3 533.9,364.6" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M560.6,451.6 Q549.9,412.5 536.9,398.1" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M533.6,445.0 Q562.0,412.8 569.1,385.4" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M624.4,420.9 Q578.2,389.5 543.6,385.1" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M633.1,308.3 Q569.0,332.2 537.0,367.0" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M434.1,209.0 Q431.3,235.0 435.8,246.7" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M590.3,311.9 Q548.0,339.1 533.3,364.3" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M610.3,304.1 Q557.1,332.8 534.7,365.1" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M610.3,304.1 Q600.4,245.5 578.8,216.4" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M618.8,326.8 Q564.1,343.1 538.0,368.0" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M547.4,301.9 Q538.1,267.8 523.3,251.5" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M564.6,320.9 Q536.3,346.7 530.2,362.8" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M564.6,320.9 Q579.5,259.3 570.3,220.4" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M522.7,382.5 Q471.4,299.8 402.2,257.9" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M538.9,275.4 Q517.9,327.0 520.9,361.5" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M564.9,197.7 Q506.8,171.3 451.5,173.7" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M564.9,197.7 Q573.1,183.3 573.4,175.1" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M564.9,197.7 Q523.4,167.1 480.9,160.0" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link out" d="M564.9,197.7 Q495.4,213.7 451.2,250.7" stroke-width="1.3" marker-end="url(#arrow-out)"/>
+<path class="link mutual" d="M564.9,197.7 Q577.0,139.9 563.5,90.0" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link out" d="M564.9,197.7 Q582.4,248.4 615.0,279.8" stroke-width="1.3" marker-end="url(#arrow-out)"/>
+<path class="link mutual" d="M564.9,197.7 Q640.7,189.7 698.4,152.2" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M564.9,197.7 Q574.8,256.3 605.3,297.4" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link out" d="M564.9,197.7 Q521.6,285.0 522.5,361.4" stroke-width="1.3" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M564.9,197.7 Q542.6,233.4 539.7,266.2" stroke-width="1.3" marker-end="url(#arrow-out)"/>
+<path class="link mutual" d="M564.9,197.7 Q626.5,227.5 687.6,226.3" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M564.9,197.7 Q561.1,269.3 586.6,326.5" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M564.9,197.7 Q633.9,162.2 674.9,105.3" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M564.9,197.7 Q557.3,235.8 565.6,265.1" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M679.2,99.3 Q610.2,134.8 578.5,178.8" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M567.9,273.2 Q532.2,322.4 526.0,361.7" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M567.9,273.2 Q575.5,235.1 571.2,220.1" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M661.3,76.0 Q598.5,125.3 574.7,176.6" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M458.0,277.8 Q426.5,255.2 404.4,251.9" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link out" d="M572.7,371.3 Q537.6,327.6 496.0,308.8" stroke-width="1.3" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M572.7,371.3 Q585.9,355.2 588.3,343.9" stroke-width="1.3" marker-end="url(#arrow-out)"/>
+<path class="link in" d="M463.4,328.2 Q512.9,362.9 558.2,369.3" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M264.4,245.6 Q325.8,262.3 371.9,252.8" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link out" d="M388.1,249.4 Q442.9,273.2 492.7,270.2" stroke-width="1.3" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M388.1,249.4 Q321.4,258.6 272.3,292.9" stroke-width="1.3" marker-end="url(#arrow-out)"/>
+<path class="link in" d="M456.2,472.0 Q500.2,435.2 514.4,401.9" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M476.5,261.6 Q497.8,256.2 504.4,250.5" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M476.5,261.6 Q485.1,327.6 510.8,365.1" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link out" d="M515.4,595.4 Q544.6,489.8 526.9,403.2" stroke-width="1.59" marker-end="url(#arrow-out)"/>
+<path class="link mutual" d="M421.2,181.8 Q396.5,211.6 391.7,233.3" stroke-width="1.59" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M404.6,433.1 Q469.7,422.0 505.8,395.1" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M590.3,311.9 Q591.3,251.8 575.1,218.6" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M457.7,296.7 Q479.9,347.4 506.4,369.1" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M523.8,525.8 Q540.4,454.0 527.8,403.0" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link out" d="M522.7,382.5 Q545.5,427.8 579.6,452.8" stroke-width="1.59" marker-end="url(#arrow-out)"/>
+<path class="link in" d="M536.6,51.1 Q533.2,127.8 555.3,176.5" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link out" d="M564.9,197.7 Q625.4,178.6 665.4,139.3" stroke-width="1.59" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M564.9,197.7 Q540.9,130.9 494.7,87.4" stroke-width="1.59" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M564.9,197.7 Q558.3,173.5 547.1,161.2" stroke-width="1.59" marker-end="url(#arrow-out)"/>
+<path class="link mutual" d="M564.9,197.7 Q495.0,172.5 429.5,180.7" stroke-width="1.59" marker-end="url(#arrow-mutual)"/>
+<path class="link out" d="M564.9,197.7 Q592.0,143.3 591.6,90.0" stroke-width="1.59" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M564.9,197.7 Q559.4,247.0 573.9,285.6" stroke-width="1.59" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M564.9,197.7 Q498.0,160.4 429.9,157.9" stroke-width="1.59" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M564.9,197.7 Q571.6,241.2 592.4,270.2" stroke-width="1.59" marker-end="url(#arrow-out)"/>
+<path class="link in" d="M550.4,512.8 Q552.2,444.3 531.8,401.5" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M458.0,277.8 Q477.8,337.9 507.7,367.6" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M534.4,318.4 Q520.9,349.0 521.5,361.4" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M501.9,306.7 Q503.2,347.1 512.5,364.0" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link out" d="M388.1,249.4 Q317.6,243.1 258.8,266.7" stroke-width="1.59" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M388.1,249.4 Q335.4,201.6 273.8,184.8" stroke-width="1.59" marker-end="url(#arrow-out)"/>
+<path class="link mutual" d="M388.1,249.4 Q326.7,232.7 271.6,244.1" stroke-width="1.59" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M646.2,102.1 Q594.1,140.1 575.4,176.9" stroke-width="1.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M463.0,205.7 Q514.9,213.9 542.7,204.9" stroke-width="1.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M533.6,445.0 Q535.7,412.4 531.1,401.9" stroke-width="1.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M604.0,500.3 Q577.5,431.6 538.4,396.6" stroke-width="1.8" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M564.9,197.7 Q621.3,210.6 670.2,198.2" stroke-width="1.8" marker-end="url(#arrow-mutual)"/>
+<path class="link out" d="M564.9,197.7 Q640.4,175.3 692.1,126.2" stroke-width="1.8" marker-end="url(#arrow-out)"/>
+<path class="link mutual" d="M564.9,197.7 Q550.0,259.3 562.7,312.7" stroke-width="1.8" marker-end="url(#arrow-mutual)"/>
+<path class="link out" d="M564.9,197.7 Q606.8,132.4 613.7,62.6" stroke-width="1.8" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M564.9,197.7 Q615.9,141.1 633.8,74.6" stroke-width="1.8" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M564.9,197.7 Q609.0,174.8 633.6,140.3" stroke-width="1.8" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M564.9,197.7 Q526.7,179.9 493.0,181.1" stroke-width="1.8" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M564.9,197.7 Q582.0,122.9 565.0,55.7" stroke-width="1.8" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M564.9,197.7 Q535.2,254.4 534.5,310.0" stroke-width="1.8" marker-end="url(#arrow-out)"/>
+<path class="link in" d="M487.8,520.6 Q521.8,455.7 522.4,403.6" stroke-width="1.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M614.4,445.9 Q576.2,403.2 542.4,390.1" stroke-width="1.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M463.4,328.2 Q486.5,362.5 504.2,372.3" stroke-width="1.8" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M388.1,249.4 Q439.4,332.1 504.6,371.6" stroke-width="1.8" marker-end="url(#arrow-mutual)"/>
+<path class="link out" d="M388.1,249.4 Q415.8,207.5 420.5,165.9" stroke-width="1.8" marker-end="url(#arrow-out)"/>
+<path class="link mutual" d="M388.1,249.4 Q349.8,195.1 297.6,167.6" stroke-width="1.8" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M476.6,282.4 Q487.6,338.0 509.6,365.9" stroke-width="1.96" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M561.6,82.9 Q549.5,140.7 558.8,175.2" stroke-width="1.96" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M624.4,420.9 Q604.5,389.9 585.3,378.7" stroke-width="1.96" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M502.5,269.6 Q525.4,328.9 561.8,361.6" stroke-width="1.96" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M522.7,382.5 Q549.0,382.9 559.6,377.7" stroke-width="1.96" marker-end="url(#arrow-mutual)"/>
+<path class="link out" d="M522.7,382.5 Q572.7,338.7 594.2,284.8" stroke-width="1.96" marker-end="url(#arrow-out)"/>
+<path class="link mutual" d="M564.9,197.7 Q553.0,122.4 512.6,66.7" stroke-width="1.96" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M589.3,48.0 Q559.1,119.9 563.2,174.5" stroke-width="1.96" marker-end="url(#arrow-in)"/>
+<path class="link out" d="M572.7,371.3 Q569.2,416.2 583.2,450.0" stroke-width="1.96" marker-end="url(#arrow-out)"/>
+<path class="link mutual" d="M514.4,241.7 Q544.9,225.8 551.4,216.7" stroke-width="2.09" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M591.8,432.4 Q589.6,399.6 580.2,383.8" stroke-width="2.09" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M433.9,447.4 Q486.1,425.6 509.0,398.6" stroke-width="2.09" marker-end="url(#arrow-in)"/>
+<path class="link out" d="M564.9,197.7 Q546.5,166.6 523.0,151.7" stroke-width="2.09" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M564.9,197.7 Q520.3,244.6 504.7,297.3" stroke-width="2.09" marker-end="url(#arrow-out)"/>
+<path class="link in" d="M410.3,467.2 Q476.7,438.3 509.3,398.8" stroke-width="2.09" marker-end="url(#arrow-in)"/>
+<path class="link out" d="M572.7,371.3 Q627.6,415.5 689.4,428.4" stroke-width="2.09" marker-end="url(#arrow-out)"/>
+<path class="link mutual" d="M291.1,164.1 Q329.4,218.4 373.5,241.7" stroke-width="2.09" marker-end="url(#arrow-mutual)"/>
+<path class="link out" d="M564.9,197.7 Q601.0,155.3 612.2,108.4" stroke-width="2.2" marker-end="url(#arrow-out)"/>
+<path class="link mutual" d="M564.9,197.7 Q627.7,148.4 658.2,82.7" stroke-width="2.2" marker-end="url(#arrow-mutual)"/>
+<path class="link out" d="M388.1,249.4 Q430.7,288.8 476.5,301.7" stroke-width="2.2" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M514.4,241.7 Q501.7,313.1 516.6,362.3" stroke-width="2.3" marker-end="url(#arrow-out)"/>
+<path class="link in" d="M483.5,488.5 Q515.8,440.2 520.2,403.5" stroke-width="2.3" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M564.9,197.7 Q620.6,194.2 662.3,169.6" stroke-width="2.3" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M388.1,249.4 Q415.9,234.7 428.8,216.5" stroke-width="2.3" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M476.5,261.6 Q458.9,256.3 454.2,257.1" stroke-width="2.38" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M476.5,261.6 Q528.4,240.3 549.7,215.4" stroke-width="2.38" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M322.8,262.0 Q382.1,274.9 427.4,263.0" stroke-width="2.38" marker-end="url(#arrow-in)"/>
+<path class="link out" d="M522.7,382.5 Q514.0,339.2 493.0,312.7" stroke-width="2.38" marker-end="url(#arrow-out)"/>
+<path class="link in" d="M576.8,514.2 Q565.6,441.9 535.1,399.6" stroke-width="2.38" marker-end="url(#arrow-in)"/>
+<path class="link out" d="M440.7,259.5 Q458.2,287.5 477.6,299.1" stroke-width="2.53" marker-end="url(#arrow-out)"/>
+<path class="link mutual" d="M434.1,209.0 Q406.3,223.7 397.6,235.9" stroke-width="2.59" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M388.1,249.4 Q413.2,260.8 427.0,260.1" stroke-width="2.59" marker-end="url(#arrow-mutual)"/>
+<path class="link out" d="M388.1,249.4 Q322.1,218.5 256.7,220.7" stroke-width="2.65" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M564.9,197.7 Q637.4,216.9 703.5,202.7" stroke-width="2.7" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M564.9,197.7 Q639.1,202.8 700.8,176.5" stroke-width="2.75" marker-end="url(#arrow-out)"/>
+<path class="link mutual" d="M502.5,269.6 Q542.3,241.1 554.2,218.4" stroke-width="3.0" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M564.9,197.7 Q534.4,213.6 522.1,230.9" stroke-width="3.0" marker-end="url(#arrow-mutual)"/>
+<path class="link mutual" d="M547.4,301.9 Q568.7,251.9 566.5,220.9" stroke-width="3.15" marker-end="url(#arrow-mutual)"/>
+<path class="link out" d="M564.9,197.7 Q512.9,241.7 490.5,294.9" stroke-width="3.18" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M572.7,371.3 Q614.7,429.7 672.1,459.2" stroke-width="3.2" marker-end="url(#arrow-out)"/>
+<path class="link in" d="M326.0,307.4 Q389.1,297.2 429.6,267.6" stroke-width="3.2" marker-end="url(#arrow-in)"/>
 </g><g>
-<circle class="node" cx="58.4" cy="553.1" r="5.4"><title>11d.im</title></circle>
-<circle class="node" cx="141.6" cy="582.8" r="5.4"><title>200666.xyz</title></circle>
-<circle class="node" cx="655.4" cy="274.8" r="6.4"><title>aaronparecki.com</title></circle>
-<circle class="node" cx="892.3" cy="419.1" r="5.4"><title>aboutmonica.com</title></circle>
-<circle class="node" cx="145.6" cy="657.0" r="5.4"><title>alexhyett.com</title></circle>
-<circle class="node" cx="866.9" cy="378.2" r="5.4"><title>alexsirac.com</title></circle>
-<circle class="node" cx="110.2" cy="626.1" r="5.4"><title>alongtheray.com</title></circle>
-<circle class="node" cx="824.4" cy="403.3" r="5.4"><title>amberwilson.co.uk</title></circle>
-<circle class="node" cx="495.6" cy="412.5" r="8.4"><title>artlung.com</title></circle>
-<circle class="node" cx="653.1" cy="552.7" r="6.4"><title>awfulwoman.com</title></circle>
-<circle class="node" cx="684.3" cy="392.2" r="6.4"><title>beesbuzz.biz</title></circle>
-<circle class="node" cx="606.6" cy="354.3" r="7.2"><title>beko.famkos.net</title></circle>
-<circle class="node" cx="505.0" cy="48.0" r="5.4"><title>blog.frankmeeuwsen.com</title></circle>
-<circle class="node" cx="176.1" cy="399.9" r="6.4"><title>blog.glasp.co</title></circle>
-<circle class="node" cx="48.0" cy="510.1" r="5.4"><title>blog.muni.town</title></circle>
-<circle class="node" cx="647.9" cy="313.7" r="6.4"><title>blog.voss.co</title></circle>
-<circle class="node" cx="443.2" cy="374.1" r="7.2"><title>cagrimmett.com</title></circle>
-<circle class="node" cx="840.6" cy="494.7" r="5.4"><title>calumryan.com</title></circle>
-<circle class="node" cx="912.0" cy="540.7" r="5.4"><title>carol.gg</title></circle>
-<circle class="node" cx="734.8" cy="628.5" r="5.4"><title>carolgilabert.me</title></circle>
-<circle class="node" cx="747.5" cy="703.6" r="5.4"><title>chrisburnell.com</title></circle>
-<circle class="node" cx="507.8" cy="579.9" r="6.4"><title>citationneeded.news</title></circle>
-<circle class="node" cx="844.7" cy="449.3" r="5.4"><title>clarale.com</title></circle>
-<circle class="node" cx="598.7" cy="81.7" r="5.4"><title>commonplace.doubleloop.net</title></circle>
-<circle class="node" cx="235.3" cy="344.4" r="6.4"><title>cote.io</title></circle>
-<circle class="node" cx="681.8" cy="712.0" r="5.4"><title>css-irl.info</title></circle>
-<circle class="node" cx="709.4" cy="439.4" r="6.4"><title>cydstumpel.nl</title></circle>
-<circle class="node" cx="201.2" cy="477.1" r="6.4"><title>danielcorin.com</title></circle>
-<circle class="node" cx="193.1" cy="359.1" r="6.4"><title>danielsantos.org</title></circle>
-<circle class="node" cx="906.3" cy="459.9" r="5.4"><title>darekkay.com</title></circle>
-<circle class="node" cx="459.2" cy="594.0" r="6.4"><title>david.garden</title></circle>
-<circle class="node" cx="587.4" cy="317.6" r="7.2"><title>diggingthedigital.com</title></circle>
-<circle class="node" cx="613.9" cy="283.2" r="6.4"><title>doubleloop.net</title></circle>
-<circle class="node" cx="819.6" cy="350.4" r="5.4"><title>ethanmarcotte.com</title></circle>
-<circle class="node" cx="242.4" cy="677.4" r="5.4"><title>evgenykuznetsov.org</title></circle>
-<circle class="node" cx="658.7" cy="666.1" r="5.4"><title>giftegwuenu.com</title></circle>
-<circle class="node" cx="454.2" cy="521.3" r="6.4"><title>hamatti.org</title></circle>
-<circle class="node" cx="422.8" cy="614.2" r="6.4"><title>hidde.blog</title></circle>
-<circle class="node" cx="496.3" cy="614.1" r="6.4"><title>iwebthings.joejenett.com</title></circle>
-<circle class="node" cx="448.6" cy="466.9" r="7.8"><title>jeffbridgforth.com</title></circle>
-<circle class="node" cx="463.9" cy="356.3" r="7.2"><title>johnjohnston.info</title></circle>
-<circle class="node" cx="516.8" cy="350.7" r="7.8"><title>jvt.me</title></circle>
-<circle class="node" cx="95.0" cy="485.1" r="5.4"><title>leahdas.com</title></circle>
-<circle class="node" cx="414.1" cy="543.8" r="6.4"><title>localghost.dev</title></circle>
-<circle class="node" cx="195.1" cy="670.1" r="5.4"><title>lqdev.me</title></circle>
-<circle class="node" cx="410.7" cy="580.5" r="6.4"><title>marcthiele.com</title></circle>
-<circle class="node" cx="499.3" cy="497.9" r="7.2"><title>martymcgui.re</title></circle>
-<circle class="node" cx="705.6" cy="487.0" r="6.4"><title>matthiasott.com</title></circle>
-<circle class="node" cx="869.3" cy="625.0" r="5.4"><title>matuzo.at</title></circle>
-<circle class="node" cx="621.5" cy="700.8" r="5.4"><title>michaelharley.net</title></circle>
-<circle class="node" cx="408.1" cy="485.7" r="7.2"><title>mxb.dev</title></circle>
-<circle class="node" cx="835.0" cy="593.0" r="5.4"><title>nest.jakl.one</title></circle>
-<circle class="node" cx="74.7" cy="424.6" r="5.4"><title>nicksimson.com</title></circle>
-<circle class="node" cx="438.8" cy="53.0" r="5.4"><title>notiz.blog</title></circle>
-<circle class="node" cx="79.3" cy="592.1" r="5.4"><title>paperpilot.dev</title></circle>
-<circle class="node" cx="908.1" cy="499.1" r="5.4"><title>paulrobertlloyd.com</title></circle>
-<circle class="node" cx="787.8" cy="676.3" r="5.4"><title>petermolnar.net</title></circle>
-<circle class="node" cx="112.0" cy="538.2" r="5.4"><title>quantumgardener.info</title></circle>
-<circle class="node" cx="459.8" cy="631.0" r="6.4"><title>qubyte.codes</title></circle>
-<circle class="node" cx="893.0" cy="582.4" r="5.4"><title>rachelandrew.co.uk</title></circle>
-<circle class="node" cx="716.7" cy="671.5" r="5.4"><title>remysharp.com</title></circle>
-<circle class="node" cx="799.7" cy="556.9" r="5.4"><title>robida.net</title></circle>
-<circle class="node" cx="789.0" cy="621.8" r="5.4"><title>roytang.net</title></circle>
-<circle class="node" cx="91.1" cy="382.1" r="5.4"><title>ryanpatrickrandall.com</title></circle>
-<circle class="node" cx="49.4" cy="461.0" r="5.4"><title>sekhmetdesign.thegeekcartel.com</title></circle>
-<circle class="node" cx="857.9" cy="538.6" r="5.4"><title>sia.codes</title></circle>
-<circle class="node" cx="222.3" cy="392.4" r="6.4"><title>simonwillison.net</title></circle>
-<circle class="node" cx="355.8" cy="101.5" r="5.4"><title>storymin.es</title></circle>
-<circle class="node" cx="484.5" cy="385.1" r="7.8"><title>stream.jeremycherfas.net</title></circle>
-<circle class="node" cx="400.9" cy="82.2" r="5.4"><title>synesthesia.co.uk</title></circle>
-<circle class="node" cx="709.9" cy="363.6" r="6.4"><title>theadhocracy.co.uk</title></circle>
-<circle class="node" cx="549.4" cy="70.3" r="5.4"><title>thegreenland.eu</title></circle>
-<circle class="node" cx="189.8" cy="437.4" r="6.4"><title>thejaymo.net</title></circle>
-<circle class="node" cx="503.0" cy="543.1" r="6.4"><title>tomcritchlow.com</title></circle>
-<circle class="node" cx="397.7" cy="349.7" r="8.4"><title>tracydurnell.com</title></circle>
-<circle class="node" cx="831.4" cy="656.3" r="5.4"><title>utilitybend.com</title></circle>
-<circle class="node" cx="459.4" cy="560.1" r="6.4"><title>visitmy.website</title></circle>
-<circle class="node" cx="419.1" cy="395.5" r="7.8"><title>werd.io</title></circle>
-<circle class="node" cx="476.2" cy="87.8" r="5.4"><title>wittenbrink.net</title></circle>
-<polygon class="node utility" points="451.3,395.8 454.3,403.0 462.1,403.6 456.1,408.7 458.0,416.3 451.3,412.1 444.6,416.3 446.5,408.7 440.5,403.6 448.3,403.0"><title>indieweb.org</title></polygon>
-<polygon class="node utility" points="685.2,288.0 687.5,293.5 693.4,293.9 688.9,297.8 690.3,303.6 685.2,300.4 680.1,303.6 681.5,297.8 677.0,293.9 682.9,293.5"><title>news.indieweb.org</title></polygon>
-<circle class="node seed" cx="547.8" cy="445.9" r="11.3"><title>Jeremy Keith</title></circle>
-<circle class="node seed" cx="186.3" cy="620.5" r="5.4"><title>Chaotic Good Computing</title></circle>
-<circle class="node seed" cx="536.2" cy="385.1" r="11.0"><title>Chris Aldrich</title></circle>
-<circle class="node seed" cx="312.5" cy="492.9" r="19.1"><title>Maggie Appleton</title></circle>
-<circle class="node seed" cx="640.3" cy="496.6" r="21.3"><title>Ana Rodrigues</title></circle>
-<circle class="node seed" cx="342.0" cy="415.8" r="12.0"><title>swyx</title></circle>
-<circle class="node seed" cx="492.8" cy="251.1" r="14.5"><title>Ton Zijlstra</title></circle>
+<circle class="node" cx="430.9" cy="491.6" r="5.4"><title>11d.im</title></circle>
+<circle class="node" cx="456.2" cy="472.0" r="5.4"><title>200666.xyz</title></circle>
+<circle class="node" cx="443.1" cy="174.1" r="6.4"><title>aaronparecki.com</title></circle>
+<circle class="node" cx="670.7" cy="134.1" r="5.4"><title>aboutmonica.com</title></circle>
+<circle class="node" cx="516.3" cy="498.1" r="5.4"><title>alexhyett.com</title></circle>
+<circle class="node" cx="646.2" cy="102.1" r="5.4"><title>alexsirac.com</title></circle>
+<circle class="node" cx="456.7" cy="509.7" r="5.4"><title>alongtheray.com</title></circle>
+<circle class="node" cx="613.9" cy="101.2" r="5.4"><title>amberwilson.co.uk</title></circle>
+<circle class="node" cx="476.5" cy="261.6" r="8.4"><title>artlung.com</title></circle>
+<circle class="node" cx="573.8" cy="166.7" r="6.4"><title>awfulwoman.com</title></circle>
+<circle class="node" cx="472.6" cy="158.6" r="6.4"><title>beesbuzz.biz</title></circle>
+<circle class="node" cx="463.0" cy="205.7" r="7.2"><title>beko.famkos.net</title></circle>
+<circle class="node" cx="251.9" cy="269.5" r="5.4"><title>blog.frankmeeuwsen.com</title></circle>
+<circle class="node" cx="591.8" cy="432.4" r="6.4"><title>blog.glasp.co</title></circle>
+<circle class="node" cx="483.5" cy="488.5" r="5.4"><title>blog.muni.town</title></circle>
+<circle class="node" cx="440.2" cy="147.5" r="6.4"><title>blog.voss.co</title></circle>
+<circle class="node" cx="476.6" cy="282.4" r="7.2"><title>cagrimmett.com</title></circle>
+<circle class="node" cx="668.7" cy="165.8" r="5.4"><title>calumryan.com</title></circle>
+<circle class="node" cx="528.7" cy="83.7" r="5.4"><title>carol.gg</title></circle>
+<circle class="node" cx="489.3" cy="82.3" r="5.4"><title>carolgilabert.me</title></circle>
+<circle class="node" cx="561.6" cy="82.9" r="5.4"><title>chrisburnell.com</title></circle>
+<circle class="node" cx="621.0" cy="285.6" r="6.4"><title>citationneeded.news</title></circle>
+<circle class="node" cx="704.6" cy="148.2" r="5.4"><title>clarale.com</title></circle>
+<circle class="node" cx="277.4" cy="208.8" r="5.4"><title>commonplace.doubleloop.net</title></circle>
+<circle class="node" cx="560.6" cy="451.6" r="6.4"><title>cote.io</title></circle>
+<circle class="node" cx="710.7" cy="201.1" r="5.4"><title>css-irl.info</title></circle>
+<circle class="node" cx="541.5" cy="155.0" r="6.4"><title>cydstumpel.nl</title></circle>
+<circle class="node" cx="533.6" cy="445.0" r="6.4"><title>danielcorin.com</title></circle>
+<circle class="node" cx="624.4" cy="420.9" r="6.4"><title>danielsantos.org</title></circle>
+<circle class="node" cx="677.4" cy="196.4" r="5.4"><title>darekkay.com</title></circle>
+<circle class="node" cx="633.1" cy="308.3" r="6.4"><title>david.garden</title></circle>
+<circle class="node" cx="434.1" cy="209.0" r="7.2"><title>diggingthedigital.com</title></circle>
+<circle class="node" cx="421.2" cy="181.8" r="6.4"><title>doubleloop.net</title></circle>
+<circle class="node" cx="697.5" cy="121.1" r="5.4"><title>ethanmarcotte.com</title></circle>
+<circle class="node" cx="404.6" cy="433.1" r="5.4"><title>evgenykuznetsov.org</title></circle>
+<circle class="node" cx="322.8" cy="262.0" r="5.4"><title>fundor333.com</title></circle>
+<circle class="node" cx="591.5" cy="82.6" r="5.4"><title>giftegwuenu.com</title></circle>
+<circle class="node" cx="590.3" cy="311.9" r="6.4"><title>hamatti.org</title></circle>
+<circle class="node" cx="610.3" cy="304.1" r="6.4"><title>hidde.blog</title></circle>
+<circle class="node" cx="618.8" cy="326.8" r="6.4"><title>iwebthings.joejenett.com</title></circle>
+<circle class="node" cx="547.4" cy="301.9" r="7.8"><title>jeffbridgforth.com</title></circle>
+<circle class="node" cx="457.7" cy="296.7" r="7.2"><title>johnjohnston.info</title></circle>
+<circle class="node" cx="502.5" cy="269.6" r="7.8"><title>jvt.me</title></circle>
+<circle class="node" cx="433.9" cy="447.4" r="5.4"><title>leahdas.com</title></circle>
+<circle class="node" cx="564.6" cy="320.9" r="6.4"><title>localghost.dev</title></circle>
+<circle class="node" cx="523.8" cy="525.8" r="5.4"><title>lqdev.me</title></circle>
+<circle class="node" cx="576.9" cy="293.5" r="6.4"><title>marcthiele.com</title></circle>
+<circle class="node" cx="538.9" cy="275.4" r="7.2"><title>martymcgui.re</title></circle>
+<circle class="node" cx="515.9" cy="147.2" r="6.4"><title>matthiasott.com</title></circle>
+<circle class="node" cx="707.6" cy="173.6" r="5.4"><title>matuzo.at</title></circle>
+<circle class="node" cx="695.0" cy="226.1" r="5.4"><title>michaelharley.net</title></circle>
+<circle class="node" cx="696.6" cy="429.9" r="5.4"><title>mixtape.swyx.io</title></circle>
+<circle class="node" cx="590.3" cy="334.9" r="7.2"><title>mxb.dev</title></circle>
+<circle class="node" cx="536.6" cy="51.1" r="5.4"><title>nest.jakl.one</title></circle>
+<circle class="node" cx="604.0" cy="500.3" r="5.4"><title>nicksimson.com</title></circle>
+<circle class="node" cx="266.2" cy="297.1" r="5.4"><title>notiz.blog</title></circle>
+<circle class="node" cx="326.0" cy="307.4" r="5.4"><title>ownyourswarm.p3k.io</title></circle>
+<circle class="node" cx="576.8" cy="514.2" r="5.4"><title>paperpilot.dev</title></circle>
+<circle class="node" cx="508.3" cy="60.7" r="5.4"><title>paulrobertlloyd.com</title></circle>
+<circle class="node" cx="679.2" cy="99.3" r="5.4"><title>petermolnar.net</title></circle>
+<circle class="node" cx="487.8" cy="520.6" r="5.4"><title>quantumgardener.info</title></circle>
+<circle class="node" cx="567.9" cy="273.2" r="6.4"><title>qubyte.codes</title></circle>
+<circle class="node" cx="614.4" cy="55.2" r="5.4"><title>rachelandrew.co.uk</title></circle>
+<circle class="node" cx="661.3" cy="76.0" r="5.4"><title>remysharp.com</title></circle>
+<circle class="node" cx="589.3" cy="48.0" r="5.4"><title>robida.net</title></circle>
+<circle class="node" cx="635.7" cy="67.5" r="5.4"><title>roytang.net</title></circle>
+<circle class="node" cx="410.3" cy="467.2" r="5.4"><title>ryanpatrickrandall.com</title></circle>
+<circle class="node" cx="550.4" cy="512.8" r="5.4"><title>sekhmetdesign.thegeekcartel.com</title></circle>
+<circle class="node" cx="637.9" cy="134.3" r="5.4"><title>sia.codes</title></circle>
+<circle class="node" cx="586.4" cy="457.8" r="6.4"><title>simonwillison.net</title></circle>
+<circle class="node" cx="266.7" cy="182.9" r="5.4"><title>storymin.es</title></circle>
+<circle class="node" cx="458.0" cy="277.8" r="7.8"><title>stream.jeremycherfas.net</title></circle>
+<circle class="node" cx="678.7" cy="462.6" r="5.4"><title>swyx.transistor.fm</title></circle>
+<circle class="node" cx="291.1" cy="164.1" r="5.4"><title>synesthesia.co.uk</title></circle>
+<circle class="node" cx="484.6" cy="181.4" r="6.4"><title>theadhocracy.co.uk</title></circle>
+<circle class="node" cx="249.3" cy="220.9" r="5.4"><title>thegreenland.eu</title></circle>
+<circle class="node" cx="614.4" cy="445.9" r="6.4"><title>thejaymo.net</title></circle>
+<circle class="node" cx="597.3" cy="277.0" r="6.4"><title>tomcritchlow.com</title></circle>
+<circle class="node" cx="463.4" cy="328.2" r="8.4"><title>tracydurnell.com</title></circle>
+<circle class="node" cx="563.2" cy="48.5" r="5.4"><title>utilitybend.com</title></circle>
+<circle class="node" cx="534.4" cy="318.4" r="6.4"><title>visitmy.website</title></circle>
+<circle class="node" cx="501.9" cy="306.7" r="7.8"><title>werd.io</title></circle>
+<circle class="node" cx="264.4" cy="245.6" r="5.4"><title>wittenbrink.net</title></circle>
+<polygon class="node utility" points="486.5,293.2 489.5,300.4 497.3,301.0 491.3,306.1 493.2,313.7 486.5,309.5 479.8,313.7 481.7,306.1 475.7,301.0 483.5,300.4"><title>indieweb.org</title></polygon>
+<polygon class="node utility" points="421.5,149.0 423.8,154.5 429.7,154.9 425.2,158.8 426.6,164.6 421.5,161.4 416.4,164.6 417.8,158.8 413.3,154.9 419.2,154.5"><title>news.indieweb.org</title></polygon>
+<circle class="node seed" cx="514.4" cy="241.7" r="11.3"><title>Jeremy Keith</title></circle>
+<circle class="node seed" cx="531.0" cy="712.0" r="5.4"><title>Birgitta Boeckeler</title></circle>
+<circle class="node seed" cx="515.4" cy="595.4" r="7.2"><title>Chaotic Good Computing</title></circle>
+<circle class="node seed" cx="440.7" cy="259.5" r="11.7"><title>Chris Aldrich</title></circle>
+<circle class="node seed" cx="492.0" cy="710.6" r="5.4"><title>Jimmy Bogard</title></circle>
+<circle class="node seed" cx="522.7" cy="382.5" r="19.1"><title>Maggie Appleton</title></circle>
+<circle class="node seed" cx="564.9" cy="197.7" r="21.3"><title>Ana Rodrigues</title></circle>
+<circle class="node seed" cx="572.7" cy="371.3" r="12.6"><title>swyx</title></circle>
+<circle class="node seed" cx="388.1" cy="249.4" r="14.5"><title>Ton Zijlstra</title></circle>
 </g><g>
-<text class="" x="655.4" y="264.4" text-anchor="middle">aaronparecki.com</text>
-<text class="seed" x="563.1" y="450.2" text-anchor="start">Jeremy Keith</text>
-<text class="" x="495.6" y="431.9" text-anchor="middle">artlung.com</text>
-<text class="" x="653.1" y="570.1" text-anchor="middle">awfulwoman.com</text>
-<text class="" x="684.3" y="409.6" text-anchor="middle">beesbuzz.biz</text>
-<text class="" x="606.6" y="343.1" text-anchor="middle">beko.famkos.net</text>
-<text class="seed" x="186.3" y="611.1" text-anchor="middle">Chaotic Good Computing</text>
-<text class="" x="176.1" y="417.3" text-anchor="middle">blog.glasp.co</text>
-<text class="" x="658.3" y="317.4" text-anchor="start">blog.voss.co</text>
-<text class="seed" x="551.2" y="389.4" text-anchor="start">Chris Aldrich</text>
-<text class="" x="432.0" y="377.8" text-anchor="end">cagrimmett.com</text>
-<text class="" x="518.2" y="583.6" text-anchor="start">citationneeded.news</text>
-<text class="" x="235.3" y="334.0" text-anchor="middle">cote.io</text>
-<text class="" x="709.4" y="429.0" text-anchor="middle">cydstumpel.nl</text>
-<text class="" x="201.2" y="466.7" text-anchor="middle">danielcorin.com</text>
-<text class="" x="203.5" y="362.8" text-anchor="start">danielsantos.org</text>
-<text class="" x="459.2" y="583.6" text-anchor="middle">david.garden</text>
-<text class="" x="576.2" y="321.3" text-anchor="end">diggingthedigital.com</text>
-<text class="" x="613.9" y="300.6" text-anchor="middle">doubleloop.net</text>
-<text class="" x="454.2" y="510.9" text-anchor="middle">hamatti.org</text>
-<text class="" x="412.4" y="617.9" text-anchor="end">hidde.blog</text>
-<text class="utility" x="451.3" y="394.7" text-anchor="middle">indieweb.org</text>
-<text class="" x="506.7" y="617.8" text-anchor="start">iwebthings.joejenett.com</text>
-<text class="" x="448.6" y="455.1" text-anchor="middle">jeffbridgforth.com</text>
-<text class="" x="516.8" y="338.9" text-anchor="middle">jvt.me</text>
-<text class="" x="403.7" y="547.5" text-anchor="end">localghost.dev</text>
-<text class="seed" x="312.5" y="469.8" text-anchor="middle">Maggie Appleton</text>
-<text class="" x="400.3" y="584.2" text-anchor="end">marcthiele.com</text>
-<text class="" x="499.3" y="486.7" text-anchor="middle">martymcgui.re</text>
-<text class="" x="716.0" y="490.7" text-anchor="start">matthiasott.com</text>
-<text class="" x="408.1" y="474.5" text-anchor="middle">mxb.dev</text>
-<text class="utility" x="695.6" y="300.9" text-anchor="start">news.indieweb.org</text>
-<text class="seed" x="640.3" y="471.3" text-anchor="middle">Ana Rodrigues</text>
-<text class="" x="459.8" y="648.4" text-anchor="middle">qubyte.codes</text>
-<text class="" x="222.3" y="382.0" text-anchor="middle">simonwillison.net</text>
-<text class="seed" x="342.0" y="399.8" text-anchor="middle">swyx</text>
-<text class="" x="709.9" y="381.0" text-anchor="middle">theadhocracy.co.uk</text>
-<text class="" x="200.2" y="441.1" text-anchor="start">thejaymo.net</text>
-<text class="" x="513.4" y="546.8" text-anchor="start">tomcritchlow.com</text>
-<text class="" x="397.7" y="337.3" text-anchor="middle">tracydurnell.com</text>
-<text class="" x="469.8" y="563.8" text-anchor="start">visitmy.website</text>
-<text class="" x="419.1" y="414.3" text-anchor="middle">werd.io</text>
-<text class="seed" x="492.8" y="232.6" text-anchor="middle">Ton Zijlstra</text>
+<text class="seed" x="529.7" y="246.0" text-anchor="start">Jeremy Keith</text>
+<text class="seed" x="531.0" y="702.6" text-anchor="middle">Birgitta Boeckeler</text>
+<text class="seed" x="515.4" y="584.2" text-anchor="middle">Chaotic Good Computing</text>
+<text class="" x="581.4" y="436.1" text-anchor="end">blog.glasp.co</text>
+<text class="seed" x="440.7" y="243.8" text-anchor="middle">Chris Aldrich</text>
+<text class="" x="631.4" y="289.3" text-anchor="start">citationneeded.news</text>
+<text class="" x="643.5" y="312.0" text-anchor="start">david.garden</text>
+<text class="" x="434.1" y="227.2" text-anchor="middle">diggingthedigital.com</text>
+<text class="" x="410.8" y="185.5" text-anchor="end">doubleloop.net</text>
+<text class="utility" x="486.5" y="292.1" text-anchor="middle">indieweb.org</text>
+<text class="" x="629.2" y="330.5" text-anchor="start">iwebthings.joejenett.com</text>
+<text class="seed" x="492.0" y="701.2" text-anchor="middle">Jimmy Bogard</text>
+<text class="seed" x="522.7" y="414.6" text-anchor="middle">Maggie Appleton</text>
+<text class="" x="590.3" y="353.1" text-anchor="middle">mxb.dev</text>
+<text class="utility" x="421.5" y="147.2" text-anchor="middle">news.indieweb.org</text>
+<text class="seed" x="564.9" y="172.4" text-anchor="middle">Ana Rodrigues</text>
+<text class="" x="567.9" y="262.8" text-anchor="middle">qubyte.codes</text>
+<text class="" x="586.4" y="475.2" text-anchor="middle">simonwillison.net</text>
+<text class="seed" x="572.7" y="396.9" text-anchor="middle">swyx</text>
+<text class="" x="624.8" y="449.6" text-anchor="start">thejaymo.net</text>
+<text class="" x="463.4" y="347.6" text-anchor="middle">tracydurnell.com</text>
+<text class="" x="501.9" y="325.5" text-anchor="middle">werd.io</text>
+<text class="seed" x="369.6" y="253.7" text-anchor="end">Ton Zijlstra</text>
 </g>
 <g class="legend">
 <circle class="node seed" cx="17" cy="20" r="5"/>

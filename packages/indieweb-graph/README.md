@@ -37,8 +37,10 @@ each site's summary in `Data/_03_Reporting/sites.csv`. The mention graph, of web
 blogs only, is four tables in `Data/_02_Primary`: `blogs.csv` and `posts.csv`, its nodes, and
 `blog_has_post.csv` and `post_has_mention.csv`, its edges, the latter from the mentioning post to
 the mentioned. ExportGraph lays it out, blog to blog, and writes it to
-`Data/_03_Reporting/mention-graph.json` and `mention-graph.svg`, which are committed; `copy-to-blog`
-copies both beside the blog's `IndiewebGraph` widget (`content/public/widgets/indieweb-graph`):
+`Data/_03_Reporting/mention-graph.json` and `mention-graph.svg`, which are committed, and each view of
+[`graph-views.csv`](./Data/_01_Raw/graph-views.csv), the graph of only some seeds, beside them as
+`mention-graph.<view>.json` and `.svg`; `copy-to-blog` copies them all beside the blog's
+`IndiewebGraph` widget (`content/public/widgets/indieweb-graph`), which draws a view by its `view`:
 
 ```bash
 pnpm nx run @chaoticgoodcomputing/indieweb-graph:copy-to-blog
@@ -82,6 +84,7 @@ flowchart TB
     %% External Data Inputs
     Blocklist[("Blocklist")]
     CrawlOptions{{"CrawlOptions"}}
+    GraphViews[("GraphViews")]
     Hosts[("Hosts")]
     Seeds[("Seeds")]
     Utilities[("Utilities")]
@@ -97,8 +100,7 @@ flowchart TB
         SummarizeSites["SummarizeSites"]
         SiteSummaries[("SiteSummaries")]
         ExportGraph["ExportGraph<br>──<br>IPythonExecutor"]
-        MentionGraphJson[("MentionGraphJson")]
-        MentionGraphSvg[("MentionGraphSvg")]
+        MentionGraphs[("MentionGraphs")]
     end
 
     subgraph Crawl["Crawl"]
@@ -158,8 +160,8 @@ flowchart TB
     Blogs --> ExportGraph
     PostHasMention --> ExportGraph
     Utilities --> ExportGraph
-    ExportGraph --> MentionGraphJson
-    ExportGraph --> MentionGraphSvg
+    GraphViews --> ExportGraph
+    ExportGraph --> MentionGraphs
 
 ```
 <!-- flowthru:mermaid:end -->
@@ -184,9 +186,14 @@ indieweb-graph/
 │   ├── Catalog.cs
 │   ├── _01_Raw/
 │   │   ├── blocklist.csv
+│   │   ├── graph-views.csv
 │   │   ├── seeds.sample.json
 │   │   └── utilities.csv
 │   ├── _03_Reporting/
+│   │   ├── mention-graph.chaotic-good-and-maggie.json
+│   │   ├── mention-graph.chaotic-good-and-maggie.svg
+│   │   ├── mention-graph.chaotic-good.json
+│   │   ├── mention-graph.chaotic-good.svg
 │   │   ├── mention-graph.json
 │   │   └── mention-graph.svg
 │   └── Schemas/
@@ -195,6 +202,7 @@ indieweb-graph/
 │       ├── BlogSchema.cs
 │       ├── CrawlOptions.cs
 │       ├── EdgeSchema.cs
+│       ├── GraphViewSchema.cs
 │       ├── HostSchema.cs
 │       ├── LinkSchema.cs
 │       ├── MentionSchema.cs

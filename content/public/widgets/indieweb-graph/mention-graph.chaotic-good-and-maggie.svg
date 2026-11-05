@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 592" role="img" aria-labelledby="title desc">
+<title id="title">Who mentions whom among webmention-compatible blogs</title>
+<desc id="desc">A network of 48 blogs and 49 links between them, as seen from 4 seed blogs: the mentions each seed made, and the webmentions it received.</desc>
+<style>svg { --surface: #faf8f8; --ink: #2b2b2b; --muted: #4e4e4e; --rule: #b8b8b8; --node: #b8b8b8;
+  --seed: #2b2b2b; --utility: #2b2b2b; --out: #2a78d6; --in: #eb6834; --mutual: #2b2b2b; }
+@media (prefers-color-scheme: dark) {
+  svg { --surface: #161618; --ink: #ebebec; --muted: #d4d4d4; --rule: #646464; --node: #646464;
+    --seed: #ebebec; --utility: #ebebec; --out: #3987e5; --in: #d95926; --mutual: #ebebec; }
+}
+.surface { fill: var(--surface); }
+.link { fill: none; stroke-linecap: round; opacity: 0.7; }
+.link.out { stroke: var(--out); } .link.in { stroke: var(--in); } .link.mutual { stroke: var(--mutual); }
+.arrow.out { fill: var(--out); } .arrow.in { fill: var(--in); } .arrow.mutual { fill: var(--mutual); }
+.node { fill: var(--node); stroke: var(--surface); stroke-width: 1.5; }
+.node.seed { fill: var(--seed); }
+.node.utility { fill: var(--utility); }
+text { font-family: system-ui, sans-serif; fill: var(--muted); font-size: 11px;
+  paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+text.seed { fill: var(--ink); font-size: 13px; font-weight: 600; }
+text.utility { fill: var(--ink); font-size: 13px; font-style: italic; }
+.legend text { font-size: 12px; }</style>
+<defs>
+<marker id="arrow-out" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="arrow out" d="M0,0 L10,5 L0,10 z"/></marker>
+<marker id="arrow-in" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="arrow in" d="M0,0 L10,5 L0,10 z"/></marker>
+<marker id="arrow-mutual" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="arrow mutual" d="M0,0 L10,5 L0,10 z"/></marker>
+</defs>
+<rect class="surface" width="960" height="592"/>
+<g>
+<path class="link in" d="M623.6,427.4 Q639.9,362.2 629.6,317.2" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M624.9,296.6 Q607.9,423.4 647.8,537.1" stroke-width="0.8" marker-end="url(#arrow-mutual)"/>
+<path class="link out" d="M624.9,296.6 Q654.5,365.1 706.2,408.1" stroke-width="0.8" marker-end="url(#arrow-out)"/>
+<path class="link in" d="M407.7,194.6 Q504.1,271.7 604.2,292.3" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M808.4,462.1 Q736.5,357.3 643.4,306.7" stroke-width="0.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M416.9,406.3 Q534.1,376.4 609.0,310.5" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M618.8,47.9 Q592.0,173.0 619.5,276.2" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M475.1,309.5 Q551.5,321.0 604.9,303.3" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link out" d="M279.7,352.0 Q183.9,323.0 92.7,339.3" stroke-width="1.3" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M279.7,352.0 Q180.6,366.3 104.8,419.7" stroke-width="1.3" marker-end="url(#arrow-out)"/>
+<path class="link in" d="M452.1,235.3 Q531.1,286.7 603.9,294.4" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M650.3,544.1 Q667.3,417.3 631.9,316.5" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M840.1,178.1 Q718.3,211.5 640.5,282.4" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M681.0,480.1 Q675.0,381.6 635.6,314.8" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M408.4,335.9 Q521.4,342.2 605.6,305.1" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M713.5,219.4 Q659.9,247.4 637.1,279.4" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M763.8,163.3 Q678.4,213.3 636.3,278.8" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M632.9,104.2 Q605.8,199.4 620.8,275.9" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M698.7,131.3 Q642.0,205.1 628.8,275.9" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M742.8,327.0 Q687.5,297.7 646.0,297.0" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M624.9,296.6 Q584.5,252.2 535.2,233.6" stroke-width="1.3" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M846.1,410.7 Q749.2,327.1 645.4,301.6" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M496.0,163.2 Q544.4,245.4 607.1,285.3" stroke-width="1.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M543.8,383.5 Q594.8,349.8 614.5,315.0" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M757.6,482.0 Q713.5,373.4 640.8,310.4" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link out" d="M279.7,352.0 Q458.9,365.7 605.4,304.7" stroke-width="1.59" marker-end="url(#arrow-out)"/>
+<path class="link in" d="M561.8,535.4 Q622.0,423.6 624.4,317.7" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M458.8,459.8 Q561.4,398.1 613.7,314.5" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M554.3,61.7 Q561.4,187.6 614.3,278.4" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link out" d="M624.9,296.6 Q583.6,178.1 498.3,96.4" stroke-width="1.59" marker-end="url(#arrow-out)"/>
+<path class="link in" d="M441.2,137.5 Q514.0,239.1 606.2,286.9" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M396.7,269.7 Q507.6,310.5 603.9,299.1" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M720.7,527.6 Q700.5,400.6 637.3,313.7" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M500.5,505.4 Q587.8,415.9 618.6,316.7" stroke-width="1.59" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M794.4,231.0 Q701.8,243.5 642.3,284.6" stroke-width="1.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M688.3,59.1 Q628.1,170.2 625.4,275.5" stroke-width="1.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M747.9,84.3 Q660.9,175.7 630.9,276.4" stroke-width="1.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M849.2,354.3 Q744.0,298.5 646.0,296.9" stroke-width="1.8" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M782.5,395.8 Q715.6,327.3 644.9,303.4" stroke-width="1.8" marker-end="url(#arrow-in)"/>
+<path class="link mutual" d="M528.3,231.0 Q568.7,275.4 605.2,289.1" stroke-width="1.8" marker-end="url(#arrow-mutual)"/>
+<path class="link in" d="M473.8,388.8 Q560.4,360.8 610.0,311.5" stroke-width="1.96" marker-end="url(#arrow-in)"/>
+<path class="link out" d="M624.9,296.6 Q563.7,368.4 543.5,453.0" stroke-width="1.96" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M624.9,296.6 Q591.8,397.5 606.9,495.1" stroke-width="1.96" marker-end="url(#arrow-out)"/>
+<path class="link in" d="M615.7,175.5 Q605.8,237.2 618.4,276.5" stroke-width="2.09" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M808.9,298.7 Q717.2,275.6 645.5,291.9" stroke-width="2.09" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M874.6,300.3 Q750.2,268.5 645.5,292.0" stroke-width="2.3" marker-end="url(#arrow-in)"/>
+<path class="link in" d="M803.7,121.4 Q693.3,187.5 636.1,278.7" stroke-width="2.3" marker-end="url(#arrow-in)"/>
+<path class="link out" d="M624.9,296.6 Q611.2,202.2 560.4,130.4" stroke-width="2.38" marker-end="url(#arrow-out)"/>
+<path class="link in" d="M862.9,237.7 Q736.8,238.6 643.6,286.9" stroke-width="2.38" marker-end="url(#arrow-in)"/>
+</g><g>
+<circle class="node" cx="416.9" cy="406.3" r="5.4"><title>11d.im</title></circle>
+<circle class="node" cx="543.8" cy="383.5" r="5.4"><title>200666.xyz</title></circle>
+<circle class="node" cx="874.6" cy="300.3" r="5.4"><title>adactio.com</title></circle>
+<circle class="node" cx="618.8" cy="47.9" r="5.4"><title>alexhyett.com</title></circle>
+<circle class="node" cx="475.1" cy="309.5" r="5.4"><title>alongtheray.com</title></circle>
+<circle class="node" cx="757.6" cy="482.0" r="5.4"><title>artlung.com</title></circle>
+<circle class="node" cx="452.1" cy="235.3" r="5.4"><title>blog.glasp.co</title></circle>
+<circle class="node" cx="803.7" cy="121.4" r="5.4"><title>blog.muni.town</title></circle>
+<circle class="node" cx="650.3" cy="544.1" r="5.4"><title>boffosocko.com</title></circle>
+<circle class="node" cx="473.8" cy="388.8" r="5.4"><title>cagrimmett.com</title></circle>
+<circle class="node" cx="840.1" cy="178.1" r="5.4"><title>citationneeded.news</title></circle>
+<circle class="node" cx="681.0" cy="480.1" r="5.4"><title>cote.io</title></circle>
+<circle class="node" cx="794.4" cy="231.0" r="5.4"><title>danielcorin.com</title></circle>
+<circle class="node" cx="408.4" cy="335.9" r="5.4"><title>danielsantos.org</title></circle>
+<circle class="node" cx="713.5" cy="219.4" r="5.4"><title>david.garden</title></circle>
+<circle class="node" cx="561.8" cy="535.4" r="5.4"><title>evgenykuznetsov.org</title></circle>
+<circle class="node" cx="763.8" cy="163.3" r="5.4"><title>hamatti.org</title></circle>
+<circle class="node" cx="632.9" cy="104.2" r="5.4"><title>hidde.blog</title></circle>
+<circle class="node" cx="698.7" cy="131.3" r="5.4"><title>iwebthings.joejenett.com</title></circle>
+<circle class="node" cx="623.6" cy="427.4" r="5.4"><title>jeffbridgforth.com</title></circle>
+<circle class="node" cx="458.8" cy="459.8" r="5.4"><title>johnjohnston.info</title></circle>
+<circle class="node" cx="615.7" cy="175.5" r="5.4"><title>leahdas.com</title></circle>
+<circle class="node" cx="742.8" cy="327.0" r="5.4"><title>localghost.dev</title></circle>
+<circle class="node" cx="554.3" cy="61.7" r="5.4"><title>lqdev.me</title></circle>
+<circle class="node" cx="711.9" cy="412.8" r="5.4"><title>marcthiele.com</title></circle>
+<circle class="node" cx="846.1" cy="410.7" r="5.4"><title>martymcgui.re</title></circle>
+<circle class="node" cx="407.7" cy="194.6" r="5.4"><title>mxb.dev</title></circle>
+<circle class="node" cx="688.3" cy="59.1" r="5.4"><title>nicksimson.com</title></circle>
+<circle class="node" cx="808.4" cy="462.1" r="5.4"><title>ohhelloana.blog</title></circle>
+<circle class="node" cx="862.9" cy="237.7" r="5.4"><title>paperpilot.dev</title></circle>
+<circle class="node" cx="747.9" cy="84.3" r="5.4"><title>quantumgardener.info</title></circle>
+<circle class="node" cx="496.0" cy="163.2" r="5.4"><title>qubyte.codes</title></circle>
+<circle class="node" cx="808.9" cy="298.7" r="5.4"><title>ryanpatrickrandall.com</title></circle>
+<circle class="node" cx="441.2" cy="137.5" r="5.4"><title>sekhmetdesign.thegeekcartel.com</title></circle>
+<circle class="node" cx="493.0" cy="91.3" r="5.4"><title>simonwillison.net</title></circle>
+<circle class="node" cx="396.7" cy="269.7" r="5.4"><title>stream.jeremycherfas.net</title></circle>
+<circle class="node" cx="541.8" cy="460.2" r="5.4"><title>swyx.io</title></circle>
+<circle class="node" cx="849.2" cy="354.3" r="5.4"><title>thejaymo.net</title></circle>
+<circle class="node" cx="608.0" cy="502.4" r="5.4"><title>tomcritchlow.com</title></circle>
+<circle class="node" cx="782.5" cy="395.8" r="5.4"><title>tracydurnell.com</title></circle>
+<circle class="node" cx="720.7" cy="527.6" r="5.4"><title>visitmy.website</title></circle>
+<circle class="node" cx="500.5" cy="505.4" r="5.4"><title>werd.io</title></circle>
+<circle class="node" cx="528.3" cy="231.0" r="5.4"><title>zylstra.org</title></circle>
+<polygon class="node utility" points="556.1,117.1 558.0,121.8 563.0,122.1 559.2,125.4 560.4,130.3 556.1,127.6 551.8,130.3 553.0,125.4 549.2,122.1 554.2,121.8"><title>indieweb.org</title></polygon>
+<circle class="node seed" cx="85.4" cy="340.6" r="5.4"><title>Birgitta Boeckeler</title></circle>
+<circle class="node seed" cx="279.7" cy="352.0" r="7.2"><title>Chaotic Good Computing</title></circle>
+<circle class="node seed" cx="98.8" cy="424.0" r="5.4"><title>Jimmy Bogard</title></circle>
+<circle class="node seed" cx="624.9" cy="296.6" r="19.1"><title>Maggie Appleton</title></circle>
+</g><g>
+<text class="seed" x="85.4" y="331.2" text-anchor="middle">Birgitta Boeckeler</text>
+<text class="seed" x="279.7" y="340.8" text-anchor="middle">Chaotic Good Computing</text>
+<text class="utility" x="556.1" y="115.0" text-anchor="middle">indieweb.org</text>
+<text class="seed" x="98.8" y="414.6" text-anchor="middle">Jimmy Bogard</text>
+<text class="seed" x="624.9" y="273.5" text-anchor="middle">Maggie Appleton</text>
+</g>
+<g class="legend">
+<circle class="node seed" cx="17" cy="20" r="5"/>
+<text x="28" y="24">seed</text>
+<circle class="node" cx="79" cy="20" r="5"/>
+<text x="90" y="24">unexplored</text>
+<polygon class="node utility" points="183.0,13.2 184.8,17.6 189.4,17.9 185.9,20.9 187.0,25.5 183.0,23.0 179.0,25.5 180.1,20.9 176.6,17.9 181.2,17.6"/>
+<text x="194" y="24">utility</text>
+<path class="link out" d="M12,42 L40,42" stroke-width="2" marker-end="url(#arrow-out)"/><text x="48" y="46">outgoing mention</text>
+<path class="link in" d="M178,42 L206,42" stroke-width="2" marker-end="url(#arrow-in)"/><text x="214" y="46">incoming mention</text>
+<path class="link mutual" d="M344,42 L372,42" stroke-width="2" marker-end="url(#arrow-mutual)"/><text x="380" y="46">mutual mention</text>
+</g></svg>

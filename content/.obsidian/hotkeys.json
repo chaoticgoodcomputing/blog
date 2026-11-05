@@ -11,14 +11,7 @@
     }
   ],
   "editor:toggle-checklist-status": [],
-  "editor:toggle-bold": [
-    {
-      "modifiers": [
-        "Mod"
-      ],
-      "key": "B"
-    }
-  ],
+  "editor:toggle-bold": [],
   "templater-obsidian:jump-to-next-cursor-location": [],
   "global-search:open": [],
   "editor:open-search": [],
@@ -251,6 +244,14 @@
         "Shift"
       ],
       "key": "I"
+    }
+  ],
+  "obsidian-footnotes:insert-autonumbered-footnote": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "B"
     }
   ]
 }

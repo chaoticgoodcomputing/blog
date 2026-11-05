@@ -25,6 +25,35 @@ test("hovering a link to a note shows the note's content beside the link", async
   expect(shown.y + shown.height).toBeLessThanOrEqual(page.viewportSize()!.height)
 })
 
+test("a preview is headed by the note's title, smaller than on the note's page", async ({ page }) => {
+  await page.goto("/link-popovers/destination")
+  const onPage = page.locator("main > header").getByRole("heading", { level: 1, name: "The previewed note" })
+  const full = await onPage.evaluate((title) => parseFloat(getComputedStyle(title).fontSize))
+  await page.goto(start)
+
+  await link(page, "The previewed note").hover()
+
+  const title = popover(page).getByRole("heading", { level: 1, name: "The previewed note" })
+  await expect(title).toBeVisible()
+  // Over the note's text.
+  const text = (await popover(page).getByText("The top of the previewed note.").boundingBox())!
+  expect((await title.boundingBox())!.y).toBeLessThan(text.y)
+  const small = await title.evaluate((title) => parseFloat(getComputedStyle(title).fontSize))
+  expect(small).toBeLessThan(full)
+})
+
+test("a preview's title stays in view while its note scrolls under it", async ({ page }) => {
+  await page.goto(start)
+
+  await link(page, "The far heading of the previewed note").hover()
+
+  await expect(popover(page).getByRole("heading", { name: "Far heading" })).toBeInViewport()
+  await expect(popover(page).getByRole("heading", { level: 1, name: "The previewed note" })).toBeInViewport()
+  const shown = (await popover(page).boundingBox())!
+  const title = (await popover(page).getByRole("heading", { level: 1 }).boundingBox())!
+  expect(title.y).toBeGreaterThanOrEqual(shown.y)
+})
+
 test("a preview's text is set in from its top edge, as from its sides", async ({ page }) => {
   await page.goto(start)
 
@@ -152,6 +181,51 @@ test("the preview stays open while the pointer is on it, and closes when it leav
 
   await away(page)
   await expect(popover(page)).toBeHidden()
+})
+
+test("a click anywhere on a preview opens its note", async ({ page }) => {
+  await page.goto(start)
+  await link(page, "The previewed note").hover()
+
+  await popover(page).getByText("The top of the previewed note.").click()
+
+  await expect(page).toHaveURL(/\/link-popovers\/destination(\?|#|$)/)
+  await expect(page.locator("main > header h1")).toHaveText("The previewed note")
+  await expect(popover(page)).toBeHidden()
+})
+
+test("a click on a preview of a heading opens its note at the heading", async ({ page }) => {
+  await page.goto(start)
+  await link(page, "The far heading of the previewed note").hover()
+
+  await popover(page).getByRole("heading", { level: 1 }).click()
+
+  await expect(page).toHaveURL(/\/link-popovers\/destination.*#far-heading$/i)
+})
+
+test("a click on a link in a preview follows that link, not the preview's", async ({ page }) => {
+  await page.goto(start)
+  await link(page, "Another page with links").hover()
+
+  await popover(page).getByRole("link", { name: "the previewed note" }).click()
+
+  await expect(page.locator("main > header h1")).toHaveText("The previewed note")
+})
+
+test("selecting text in a preview opens nothing", async ({ page }) => {
+  await page.goto(start)
+  await link(page, "The previewed note").hover()
+
+  // Dragged across with the mouse, which ends in a click on the text.
+  const text = (await popover(page).getByText("The top of the previewed note.").boundingBox())!
+  await page.mouse.move(text.x + 2, text.y + text.height / 2)
+  await page.mouse.down()
+  await page.mouse.move(text.x + text.width - 2, text.y + text.height / 2, { steps: 5 })
+  await page.mouse.up()
+  await page.waitForTimeout(500)
+
+  await expect(page).toHaveURL(/\/link-popovers\/start/)
+  await expect(popover(page)).toBeVisible()
 })
 
 test("Escape closes the preview", async ({ page }) => {

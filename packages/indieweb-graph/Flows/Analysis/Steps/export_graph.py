@@ -1,18 +1,16 @@
 """
-Writes the mention graph for the blog: as JSON, for its widget to draw, and as an SVG of the same
-picture, for where no script runs (a feed reader, a social card). drawing.py draws it.
+Writes the mention graphs for the blog: the whole one, and each view's, of only some seeds, each as
+JSON, for its widget to draw, and as an SVG of the same picture, for where no script runs (a feed
+reader, a social card). drawing.py draws them.
 """
 from __future__ import annotations
-
-import json
 
 import pandas as pd
 from flowthru import step
 
-from Flows.Analysis.Steps.drawing import build_graph, render_svg
+from Flows.Analysis.Steps.drawing import view_files
 
 
-@step(inputs=["BlogSchema", "PostHasMentionSchema", "UtilitySchema"], outputs=["str", "str"])
-def export_graph(blogs: pd.DataFrame, mentions: pd.DataFrame, utilities: pd.DataFrame) -> tuple[str, str]:
-    graph = build_graph(blogs, mentions, utilities)
-    return json.dumps(graph, indent=1, ensure_ascii=False) + "\n", render_svg(graph)
+@step(inputs=["BlogSchema", "PostHasMentionSchema", "UtilitySchema", "GraphViewSchema"], outputs=["MentionGraphs"])
+def export_graph(blogs: pd.DataFrame, mentions: pd.DataFrame, utilities: pd.DataFrame, views: pd.DataFrame) -> dict[str, str]:
+    return view_files(blogs, mentions, utilities, views)

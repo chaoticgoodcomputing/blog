@@ -26,7 +26,7 @@ Considering [[public/content/articles/hello-blog|the editorial standards I start
 
 As somebody that has benefitted immensely from the free body of knowledge that exists on the internet, this doesn't make me happy. A graveyard of posts I've arbitrarily deemed "unfinished" isn't particularly helpful to anybody, including myself. Just because a set of knowledge isn't refined enough to be perfectly, 100% clear to a broad audience doesn't mean it wouldn't be helpful to *somebody*, including myself in the future.
 
-I was fortunate enough to stumble on [Maggie Appleton's Ethos on Digital Gardening](https://arc.net/l/quote/abfpadro), which notably resonated with me more than many things I'd read in the recent past. In particular, this diagram she designed clicked something in my brain that'd remained un-clicked for quite awhile:
+I was fortunate enough to stumble on [Maggie Appleton's Ethos on Digital Gardening](https://maggieappleton.com/garden-history), which notably resonated with me more than many things I'd read in the recent past. In particular, this diagram she designed clicked something in my brain that'd remained un-clicked for quite awhile:
 
 ![Maggie Appleton's diagram of digital media on a spectrum of polish, ranging from chaos to cultivated, with digital gardening between "private notes" and "classic blog posts](https://res.cloudinary.com/dg3gyk0gu/image/upload/c_scale,f_auto,q_auto:good,w_1100/v1593765637/maggieappleton.com/notes/garden-history/digital-garden.png)
 

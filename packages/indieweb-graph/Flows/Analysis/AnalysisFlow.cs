@@ -44,8 +44,8 @@ public static class AnalysisFlow
         label: "ExportGraph",
         module: "Flows.Analysis.Steps.export_graph",
         function: "export_graph",
-        input: (catalog.Blogs, catalog.PostHasMention, catalog.Utilities),
-        output: (catalog.MentionGraphJson, catalog.MentionGraphSvg),
+        input: (catalog.Blogs, catalog.PostHasMention, catalog.Utilities, catalog.GraphViews),
+        output: catalog.MentionGraphs,
         executor: executor
       );
 

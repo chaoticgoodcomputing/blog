@@ -138,7 +138,8 @@ const annotation = options.annotation
       authority: AUTHORITY,
       grantToken: "local",
       groups: [GROUP_ID],
-      enableShareLinks: false,
+      // Each annotation's Share button copies the link to it (src/service.ts).
+      enableShareLinks: true,
       enableShareImportExportPanel: false,
       enableAccountMenu: false,
       enableHelpPanel: false,

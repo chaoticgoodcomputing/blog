@@ -125,6 +125,19 @@ describe("annotating", () => {
     assert.equal(row.group, GROUP_ID)
   })
 
+  test("an annotation's share link is the link to it, when the vault gives one", async () => {
+    const store = memoryStore(NOTE)
+    const linked = createService({ store, linkTo: (id) => `[[Papers/A paper#^${id}]]` })
+    const call = async (path: string, body?: unknown) =>
+      JSON.parse((await linked({ method: body ? "POST" : "GET", url: API_URL + path, body: body === undefined ? undefined : JSON.stringify(body) })).body)
+    const created = await call("annotations", posted("First"))
+    assert.deepEqual(created.links, { html: `[[Papers/A paper#^${created.id}]]` })
+    assert.deepEqual((await call("search")).rows[0].links, { html: `[[Papers/A paper#^${created.id}]]` })
+    // None without one: the sidebar shows no Share button.
+    const { json } = await setup().call("POST", "annotations", posted("First"))
+    assert.deepEqual(json.links, {})
+  })
+
   test("an annotation upstream wrote is shown as the user's, so it can be edited", async () => {
     const { store, call } = setup()
     await call("POST", "annotations", posted("Old"))

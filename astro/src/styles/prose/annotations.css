@@ -32,6 +32,8 @@
 /* A card, in the reading scale's small step (global.css): beside the document, its caption step
    (annotation-viewer.css). */
 .prose .annotation {
+  /* What the card's link to itself is placed in. The margin's cards are placed themselves. */
+  position: relative;
   margin: 0 0 1rem;
   font-size: var(--text-small);
   padding: 1rem;
@@ -107,6 +109,31 @@
   margin-top: 0.75rem;
   color: var(--gray);
   font-size: var(--text-fine);
+}
+
+/* The card's link to itself (src/lib/annotations.ts), in its top right corner, shown while the
+   pointer is on the card, as a heading's is (heading-anchors.css). */
+.prose a.annotation-anchor {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  color: var(--gray);
+  font-size: 1rem;
+  line-height: 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.prose .annotation:hover > a.annotation-anchor {
+  opacity: 1;
+}
+
+.prose a.annotation-anchor:hover {
+  color: var(--tertiary);
+}
+
+.prose a.annotation-anchor svg {
+  display: block;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,5 +1,6 @@
 using Flowthru.Data.Catalog;
 using Flowthru.Data.Catalog.Configuration;
+using Flowthru.Data.Storage;
 using IndiewebGraph.Data.Schemas;
 using Microsoft.Extensions.Configuration;
 
@@ -46,6 +47,13 @@ public class Catalog(string basePath, IConfiguration configuration) : CatalogAbs
       .Build());
 
   private string BlocklistPath => $"{basePath}/_01_Raw/blocklist.csv";
+
+  /// <summary>The views of the mention graph the blog draws besides the whole one, kept by hand and committed.</summary>
+  public IItem<IEnumerable<GraphViewSchema>> GraphViews =>
+    CreateItem(() => Item.Of<IEnumerable<GraphViewSchema>>("GraphViews")
+      .Csv()
+      .AtPath($"{basePath}/_01_Raw/graph-views.csv")
+      .Build());
 
   /// <summary>The IndieWeb's canonical utilities, such as its wiki, kept by hand and committed, as the blocklist is.</summary>
   public IItem<IEnumerable<UtilitySchema>> Utilities =>
@@ -126,20 +134,15 @@ public class Catalog(string basePath, IConfiguration configuration) : CatalogAbs
       .Build());
 
   /// <summary>
-  /// The mention graph, blog to blog and laid out, as the blog's widget reads it. Committed, to be
-  /// copied beside the widget.
+  /// The mention graph, blog to blog and laid out, as the blog's widget reads it and as an SVG of
+  /// the same picture: <c>mention-graph.json</c> and <c>.svg</c>, and each view's beside them.
+  /// Committed, to be copied beside the widget.
   /// </summary>
-  public IItem<string> MentionGraphJson =>
-    CreateItem(() => Item.Of<string>("MentionGraphJson")
-      .Text()
-      .AtPath($"{basePath}/_03_Reporting/mention-graph.json")
-      .Build());
-
-  /// <summary>The same picture as an SVG, for where no script runs. Committed, as the JSON is.</summary>
-  public IItem<string> MentionGraphSvg =>
-    CreateItem(() => Item.Of<string>("MentionGraphSvg")
-      .Text()
-      .AtPath($"{basePath}/_03_Reporting/mention-graph.svg")
+  public IItem<DirectoryOf<string>> MentionGraphs =>
+    CreateItem(() => Item.Of<DirectoryOf<string>>("MentionGraphs")
+      .Directory(file => file.Text())
+      .AtPath($"{basePath}/_03_Reporting")
+      .WithFilePattern("mention-graph*")
       .Build());
 
   public IItem<IEnumerable<SiteSummarySchema>> SiteSummaries =>

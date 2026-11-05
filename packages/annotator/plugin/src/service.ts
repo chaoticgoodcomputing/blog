@@ -42,6 +42,11 @@ export interface ServiceOptions {
   view?: WriteOptions
   /** The time now, as an ISO 8601 instant; a function so the tests can fix it. */
   now?: () => string
+  /**
+   * A link to an annotation of the note, by its id, as the user's vault writes one: `[[note#^id]]`.
+   * The sidebar's Share button copies it. Without one, an annotation has no Share button.
+   */
+  linkTo?: (id: string) => string
 }
 
 export type Service = (request: ApiRequest) => Promise<ApiResponse>
@@ -111,7 +116,7 @@ const GROUP = {
 }
 
 export function createService(options: ServiceOptions): Service {
-  const { store, displayName = "Me", view = {}, now = () => new Date().toISOString() } = options
+  const { store, displayName = "Me", view = {}, now = () => new Date().toISOString(), linkTo } = options
   let preferences: Record<string, unknown> = { show_sidebar_tutorial: false }
 
   const profile = () => ({
@@ -129,7 +134,9 @@ export function createService(options: ServiceOptions): Service {
     user_info: { display_name: displayName },
     group: GROUP_ID,
     permissions: { read: [`group:${GROUP_ID}`], update: [USERID], delete: [USERID], admin: [USERID] },
-    links: {},
+    // What the client's Share button shows and copies (its AnnotationShareControl): the link to the
+    // annotation, to paste into another note.
+    links: linkTo ? { html: linkTo(annotation.id) } : {},
     hidden: false,
     flagged: false,
   })

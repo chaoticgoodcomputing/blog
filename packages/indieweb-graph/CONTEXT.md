@@ -92,6 +92,13 @@ data draws the same picture: as JSON for the blog's widget, and as an SVG of the
 where no script runs. A link's direction is a seed's point of view: out of a seed, into one, or
 between two. It names the seeds and every blog more than one seed is linked to, where a label fits.
 
+**View**:
+The mention graph as if only some seeds had been crawled: the links in their posts and the
+webmentions they received, and no other seed's, each other seed unexplored. Named, with its seeds,
+in `Data/_01_Raw/graph-views.csv`, committed, a row a seed; exported beside the whole graph as
+`mention-graph.<view>.json` and `.svg`, laid out on its own, and drawn by the widget's `view`.
+_Avoid_: subgraph, filter
+
 ## Data
 
 `Data/_00_Cache` holds the crawl's HTTP cache, `_01_Raw` the seeds, the blocklist and what it fetched,

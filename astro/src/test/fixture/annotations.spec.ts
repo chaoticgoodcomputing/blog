@@ -97,6 +97,18 @@ test("each annotation is addressed by its block id, and a link from another note
   await expect(landed).toBeInViewport()
 })
 
+test("each card has a link to itself, shown while the pointer is on the card", async ({ page }) => {
+  await page.goto(PAGE)
+  const card = page.locator(".annotation").nth(1)
+  const anchor = card.locator("a.annotation-anchor")
+  await expect(anchor).toHaveAttribute("href", "#^qywghl0r7w")
+  await expect(anchor).toHaveCSS("opacity", "0")
+  await card.hover()
+  await expect(anchor).toHaveCSS("opacity", "1")
+  await anchor.click()
+  await expectAt(page, /#\^qywghl0r7w$/)
+})
+
 test("the page says where the annotated document comes from, a link to it at its address", async ({ page }) => {
   await page.goto(PAGE)
   await expect(page.locator(".annotated-document")).toHaveText("Source document: example.com")

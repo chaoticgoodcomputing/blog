@@ -62,10 +62,10 @@
       }
     },
     "copy-to-blog": {
-      "//": "Copies the exported mention graph, Data/_03_Reporting/mention-graph.{json,svg}, beside the blog's IndiewebGraph widget, content/public/widgets/indieweb-graph, which draws the JSON; the SVG is the same picture for where no script runs.",
+      "//": "Copies the exported mention graphs, Data/_03_Reporting/mention-graph*.{json,svg} (the whole one, and each view's of graph-views.csv), beside the blog's IndiewebGraph widget, content/public/widgets/indieweb-graph, which draws the JSON; each SVG is the same picture for where no script runs.",
       "executor": "nx:run-commands",
       "options": {
-        "command": "cp Data/_03_Reporting/mention-graph.json Data/_03_Reporting/mention-graph.svg ../../content/public/widgets/indieweb-graph/",
+        "command": "cp Data/_03_Reporting/mention-graph*.json Data/_03_Reporting/mention-graph*.svg ../../content/public/widgets/indieweb-graph/",
         "cwd": "{projectRoot}"
       }
     }

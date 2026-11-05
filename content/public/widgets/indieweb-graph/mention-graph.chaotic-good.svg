@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 458" role="img" aria-labelledby="title desc">
+<title id="title">Who mentions whom among webmention-compatible blogs</title>
+<desc id="desc">A network of 4 blogs and 3 links between them, as seen from 1 seed blogs: the mentions each seed made, and the webmentions it received.</desc>
+<style>svg { --surface: #faf8f8; --ink: #2b2b2b; --muted: #4e4e4e; --rule: #b8b8b8; --node: #b8b8b8;
+  --seed: #2b2b2b; --utility: #2b2b2b; --out: #2a78d6; --in: #eb6834; --mutual: #2b2b2b; }
+@media (prefers-color-scheme: dark) {
+  svg { --surface: #161618; --ink: #ebebec; --muted: #d4d4d4; --rule: #646464; --node: #646464;
+    --seed: #ebebec; --utility: #ebebec; --out: #3987e5; --in: #d95926; --mutual: #ebebec; }
+}
+.surface { fill: var(--surface); }
+.link { fill: none; stroke-linecap: round; opacity: 0.7; }
+.link.out { stroke: var(--out); } .link.in { stroke: var(--in); } .link.mutual { stroke: var(--mutual); }
+.arrow.out { fill: var(--out); } .arrow.in { fill: var(--in); } .arrow.mutual { fill: var(--mutual); }
+.node { fill: var(--node); stroke: var(--surface); stroke-width: 1.5; }
+.node.seed { fill: var(--seed); }
+.node.utility { fill: var(--utility); }
+text { font-family: system-ui, sans-serif; fill: var(--muted); font-size: 11px;
+  paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
+text.seed { fill: var(--ink); font-size: 13px; font-weight: 600; }
+text.utility { fill: var(--ink); font-size: 13px; font-style: italic; }
+.legend text { font-size: 12px; }</style>
+<defs>
+<marker id="arrow-out" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="arrow out" d="M0,0 L10,5 L0,10 z"/></marker>
+<marker id="arrow-in" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="arrow in" d="M0,0 L10,5 L0,10 z"/></marker>
+<marker id="arrow-mutual" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="arrow mutual" d="M0,0 L10,5 L0,10 z"/></marker>
+</defs>
+<rect class="surface" width="960" height="458"/>
+<g>
+<path class="link out" d="M457.4,263.2 Q357.8,317.0 297.7,404.0" stroke-width="0.8" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M457.4,263.2 Q553.7,322.5 659.1,331.0" stroke-width="1.3" marker-end="url(#arrow-out)"/>
+<path class="link out" d="M457.4,263.2 Q460.6,150.1 415.3,54.6" stroke-width="1.3" marker-end="url(#arrow-out)"/>
+</g><g>
+<circle class="node" cx="293.5" cy="410.1" r="5.4"><title>birgitta.info</title></circle>
+<circle class="node" cx="666.5" cy="331.6" r="5.4"><title>jimmybogard.com</title></circle>
+<circle class="node" cx="412.1" cy="47.9" r="5.4"><title>maggieappleton.com</title></circle>
+<circle class="node seed" cx="457.4" cy="263.2" r="7.2"><title>Chaotic Good Computing</title></circle>
+</g><g>
+<text class="" x="293.5" y="400.7" text-anchor="middle">birgitta.info</text>
+<text class="seed" x="457.4" y="252.0" text-anchor="middle">Chaotic Good Computing</text>
+<text class="" x="666.5" y="322.2" text-anchor="middle">jimmybogard.com</text>
+<text class="" x="412.1" y="38.5" text-anchor="middle">maggieappleton.com</text>
+</g>
+<g class="legend">
+<circle class="node seed" cx="17" cy="20" r="5"/>
+<text x="28" y="24">seed</text>
+<circle class="node" cx="79" cy="20" r="5"/>
+<text x="90" y="24">unexplored</text>
+<path class="link out" d="M12,42 L40,42" stroke-width="2" marker-end="url(#arrow-out)"/><text x="48" y="46">outgoing mention</text>
+</g></svg>

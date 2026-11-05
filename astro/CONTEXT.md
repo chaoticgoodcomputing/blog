@@ -325,6 +325,11 @@ One annotation as the page shows it: its passage, quoted, the comment on it, its
 date, in a box. Without the document, the cards are the page, in one column.
 _Avoid_: comment, annotation (that is the thing the card shows)
 
+**Annotation anchor**:
+The link icon in a card's top right corner, to the card's own place on the page, `#^id`, shown while
+the pointer is on the card, as a heading anchor is on its heading.
+_Avoid_: permalink, card link
+
 **Highlight**:
 The annotation viewer's mark over each line of an annotation's passage, where it finds it in the
 document: a link to the annotation.
@@ -510,7 +515,8 @@ its note's former address.
 _Avoid_: old URL, legacy address, Quartz URL
 
 **Link popover**:
-The preview of a note shown while the pointer is over a link to it.
+The preview of a note shown while the pointer is over a link to it, headed by the note's title. A
+click anywhere on it opens the note.
 _Avoid_: tooltip, hover card
 
 **Heading anchor**:

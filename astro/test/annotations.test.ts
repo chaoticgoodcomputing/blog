@@ -11,7 +11,7 @@ import {
 } from "@chaoticgoodcomputing/obsidian-markdown"
 import { markdownToHtml } from "satteri"
 import { afterAll, beforeAll, expect, test } from "vitest"
-import { annotatedDocument, annotatedFileType, annotationDate, isAnnotationPage } from "../src/lib/annotations.ts"
+import { annotatedDocument, annotatedFileType, annotationAnchors, annotationDate, isAnnotationPage } from "../src/lib/annotations.ts"
 import { indexNotes } from "../src/lib/notes.ts"
 import { openVault } from "../src/lib/vault.ts"
 
@@ -66,6 +66,7 @@ async function render(file: string): Promise<string> {
       annotatedDocument(),
       obsidianResolve({ vault, urlFor: indexNotes(vault, []).urlOf }),
     ],
+    hastPlugins: [annotationAnchors()],
     fileURL: pathToFileURL(path.join(root, file)),
   })
   return html.replace(/>\n+</g, "><").trim()
@@ -103,6 +104,11 @@ test("a document in the vault is linked where the site publishes it, named by it
 
 test("the annotations are headed as such", async () => {
   expect(await render("on-the-web.md")).toContain('<section class="annotations" data-annotation-target="https://media.example.com/apps/Valve_Handbook%20LowRes.pdf"><h2 class="annotations-heading">Annotations</h2><article class="annotation"')
+})
+
+test("each annotation's card ends with a link to itself, for the pointer alone", async () => {
+  const card = /<article class="annotation" id="\^abc123">.*?<\/article>/s.exec(await render("on-the-web.md"))?.[0]
+  expect(card).toMatch(/<a class="annotation-anchor" href="#\^abc123" aria-hidden="true" tabindex="-1"><svg[^>]*>.*<\/svg><\/a><\/article>$/s)
 })
 
 test("an annotation's date is written as the site writes dates", () => {

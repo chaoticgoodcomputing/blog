@@ -16,6 +16,11 @@ import networkx as nx
 import pandas as pd
 
 WIDTH, HEIGHT, MARGIN = 960, 760, 48
+# The longest a link's typical length is drawn, and the shortest the drawing is: so a view of a few
+# blogs is drawn small, not stretched across the whole drawing.
+LINK_LENGTH, MIN_HEIGHT = 220, 240
+# A graph this small has every blog named.
+NAME_EVERY = 12
 # How long a laid-out graph is the same graph: the layout is seeded, so a run with the same data
 # draws the same picture.
 LAYOUT_SEED = 7
@@ -97,21 +102,31 @@ def graph_links(links: pd.DataFrame, seeds: set[str]) -> list[dict]:
     ]
 
 
-def layout(nodes: list[str], links: pd.DataFrame) -> dict[str, tuple[float, float]]:
-    """Each node's place, inside the drawing's margins: a force layout, seeded, so it is the same each run."""
+def layout(nodes: list[str], links: pd.DataFrame) -> tuple[dict[str, tuple[float, float]], int]:
+    """
+    Each node's place, and the drawing's height: a force layout, seeded, so it is the same each run,
+    scaled alike both ways to fit the drawing's width and most height, but never so far that a link's
+    typical length passes LINK_LENGTH, so a small graph stays small rather than stretched across the
+    drawing. The drawing is as tall as what it holds, and its nodes are centred in it.
+    """
     graph = nx.Graph()
     graph.add_nodes_from(nodes)
     graph.add_edges_from(zip(links["source"], links["target"]))
     places = nx.spring_layout(graph, k=0.5, iterations=500, seed=LAYOUT_SEED)
     xs, ys = [p[0] for p in places.values()], [p[1] for p in places.values()]
-    span_x, span_y = (max(xs) - min(xs)) or 1, (max(ys) - min(ys)) or 1
-    return {
-        node: (
-            round(MARGIN + (x - min(xs)) / span_x * (WIDTH - 2 * MARGIN), 1),
-            round(MARGIN + (y - min(ys)) / span_y * (HEIGHT - 2 * MARGIN), 1),
-        )
-        for node, (x, y) in places.items()
-    }
+    span_x, span_y = (max(xs) - min(xs)) or 1e-9, (max(ys) - min(ys)) or 1e-9
+    lengths = sorted(math.dist(places[a], places[b]) for a, b in graph.edges)
+    typical = lengths[len(lengths) // 2] if lengths else 1
+    scale = min((WIDTH - 2 * MARGIN) / span_x, (HEIGHT - 2 * MARGIN) / span_y, LINK_LENGTH / typical)
+    height = max(MIN_HEIGHT, round(span_y * scale + 2 * MARGIN))
+    left, top = (WIDTH - span_x * scale) / 2, (height - span_y * scale) / 2
+    return (
+        {
+            node: (round(left + (x - min(xs)) * scale, 1), round(top + (y - min(ys)) * scale, 1))
+            for node, (x, y) in places.items()
+        },
+        height,
+    )
 
 
 def radius(neighbours: int) -> float:
@@ -129,7 +144,7 @@ def _overlaps(a, b) -> bool:
     return a[0] < b[2] and b[0] < a[2] and a[1] < b[3] and b[1] < a[3]
 
 
-def place_labels(nodes: list[dict]) -> None:
+def place_labels(nodes: list[dict], width: float = WIDTH, height: float = HEIGHT) -> None:
     """
     Gives each labelled node a label place, `label_x`, `label_y` and `label_anchor`: above it, or
     else below, right or left, whichever first overlaps no label already placed and no node. The
@@ -154,14 +169,18 @@ def place_labels(nodes: list[dict]) -> None:
         for lx, ly, anchor in options:
             box = _text_box(lx, ly, text, size, anchor)
             others = [c for c, n in zip(circles, nodes) if n is not node]
-            if not any(_overlaps(box, other) for other in placed + others):
+            inside = box[0] >= 0 and box[1] >= 0 and box[2] <= width and box[3] <= height
+            if inside and not any(_overlaps(box, other) for other in placed + others):
                 break
         else:
             if not (node["seed"] or node.get("utility")):
                 node["labelled"] = False
                 continue
-            lx, ly, anchor = options[0]
-            box = _text_box(lx, ly, text, size, anchor)
+            # The first place inside the drawing, though it overlaps.
+            boxes = [(option, _text_box(*option[:2], text, size, option[2])) for option in options]
+            (lx, ly, anchor), box = next(
+                ((o, b) for o, b in boxes if b[0] >= 0 and b[1] >= 0 and b[2] <= width and b[3] <= height), boxes[0]
+            )
         placed.append(box)
         node.update(label_x=round(lx, 1), label_y=round(ly, 1), label_anchor=anchor)
 
@@ -184,7 +203,7 @@ def build_graph(blogs: pd.DataFrame, mentions: pd.DataFrame, utilities: pd.DataF
         if row["seed"]
     }
     hosts = sorted(set(links["source"]) | set(links["target"]))
-    places = layout(hosts, links)
+    places, height = layout(hosts, links)
     outgoing = links.groupby("source")["count"].sum()
     incoming = links.groupby("target")["count"].sum()
     seed_hosts = set(seeds)
@@ -211,13 +230,13 @@ def build_graph(blogs: pd.DataFrame, mentions: pd.DataFrame, utilities: pd.DataF
             "note": notes.get(host),
             # Named on the map: the seeds, the utilities, and every other blog more than one seed is
             # linked to.
-            "labelled": host in seed_hosts or host in notes or seed_neighbours >= 2,
+            "labelled": host in seed_hosts or host in notes or seed_neighbours >= 2 or len(hosts) <= NAME_EVERY,
         })
-    place_labels(nodes)
+    place_labels(nodes, WIDTH, height)
     return {
         "generated": date.today().isoformat(),
         "width": WIDTH,
-        "height": HEIGHT,
+        "height": height,
         "nodes": nodes,
         "links": graph_links(links, seed_hosts),
     }
@@ -251,6 +270,33 @@ def star_points(x: float, y: float, r: float, points: int = 5) -> str:
     return " ".join(corners)
 
 
+SHAPES = (("seed", "seed"), ("node", "unexplored"), ("utility", "utility"))
+DIRECTIONS = (("out", "outgoing mention"), ("in", "incoming mention"), ("mutual", "mutual mention"))
+
+
+def shape_of(node: dict) -> str:
+    """How a node is drawn: a utility's star, a seed's dark circle, or any other blog's gray one."""
+    return "utility" if node.get("utility") else "seed" if node["seed"] else "node"
+
+
+def legend_entries(graph: dict) -> tuple[list[tuple[str, str]], list[tuple[str, str]]]:
+    """The legend's two rows, of only the marks the graph draws: a small view may have no utility, say."""
+    shapes = {shape_of(node) for node in graph["nodes"]}
+    directions = {link["direction"] for link in graph["links"]}
+    return [s for s in SHAPES if s[0] in shapes], [d for d in DIRECTIONS if d[0] in directions]
+
+
+# A link's width by its mention count: by its logarithm, and no wider than a few dozen mentions draw
+# it, so a pair with hundreds, as a bot's, doesn't swamp the rest. Its arrow is one size whatever
+# its width.
+MAX_LINK_WIDTH = 3.2
+ARROW = 6
+
+
+def link_width(count: int) -> float:
+    return round(min(0.8 + 0.5 * math.log2(max(count, 1)), MAX_LINK_WIDTH), 2)
+
+
 def render_svg(graph: dict) -> str:
     """The graph as a standalone SVG, in the site's colours, light or dark by the reader's setting."""
     nodes = {n["id"]: n for n in graph["nodes"]}
@@ -264,7 +310,7 @@ def render_svg(graph: dict) -> str:
         f"<style>{STYLE}</style>",
         "<defs>",
         *(
-            f'<marker id="arrow-{d}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" '
+            f'<marker id="arrow-{d}" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="{ARROW}" markerHeight="{ARROW}" '
             f'orient="auto-start-reverse"><path class="arrow {d}" d="M0,0 L10,5 L0,10 z"/></marker>'
             for d in ("out", "in", "mutual")
         ),
@@ -273,7 +319,7 @@ def render_svg(graph: dict) -> str:
         "<g>",
     ]
     for link in sorted(graph["links"], key=lambda l: l["count"]):
-        width = round(0.6 + 0.5 * math.sqrt(link["count"]), 2)
+        width = link_width(link["count"])
         d = link["direction"]
         out.append(
             f'<path class="link {d}" d="{_curve(nodes[link["source"]], nodes[link["target"]])}" '
@@ -298,8 +344,9 @@ def render_svg(graph: dict) -> str:
     out.append("</g>")
     # Two rows: the nodes, then the links.
     out.append('<g class="legend">')
+    shapes, directions = legend_entries(graph)
     x = 12
-    for shape, label in (("seed", "seed"), ("node", "unexplored"), ("utility", "utility")):
+    for shape, label in shapes:
         if shape == "utility":
             out.append(f'<polygon class="node utility" points="{star_points(x + 5, 20, 5)}"/>')
         else:
@@ -307,7 +354,7 @@ def render_svg(graph: dict) -> str:
         out.append(f'<text x="{x + 16}" y="24">{label}</text>')
         x += 16 + 7 * len(label) + 18
     x = 12
-    for d, label in (("out", "outgoing mention"), ("in", "incoming mention"), ("mutual", "mutual mention")):
+    for d, label in directions:
         out.append(
             f'<path class="link {d}" d="M{x},42 L{x + 28},42" stroke-width="2" marker-end="url(#arrow-{d})"/>'
             f'<text x="{x + 36}" y="46">{label}</text>'
@@ -315,3 +362,36 @@ def render_svg(graph: dict) -> str:
         x += 36 + 7 * len(label) + 18
     out.append("</g></svg>")
     return "\n".join(out) + "\n"
+
+
+def restrict(blogs: pd.DataFrame, mentions: pd.DataFrame, seeds: set[str]) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    The graph as if only `seeds` had been crawled: the links in their posts (outgoing), and the
+    webmentions they received (incoming), and no other seed's. A seed outside `seeds` is unexplored
+    here, as any other blog.
+    """
+    source = mentions["source"].map(host_of)
+    target = mentions["target"].map(host_of)
+    seen = mentions["seen_as"]
+    kept = (source.isin(seeds) & (seen != "incoming")) | (target.isin(seeds) & (seen != "outgoing"))
+    return blogs.assign(seed=blogs["host"].isin(seeds)), mentions[kept].reset_index(drop=True)
+
+
+def view_files(
+    blogs: pd.DataFrame, mentions: pd.DataFrame, utilities: pd.DataFrame | None, views: pd.DataFrame
+) -> dict[str, str]:
+    """
+    Every graph the blog draws, as files by name: the whole one, `mention-graph.json` and `.svg`,
+    and each view's, `mention-graph.<view>.json` and `.svg`, of only that view's seeds (`restrict`),
+    laid out on its own.
+    """
+    import json
+
+    def files(name: str, graph: dict) -> dict[str, str]:
+        return {f"{name}.json": json.dumps(graph, indent=1, ensure_ascii=False) + "\n", f"{name}.svg": render_svg(graph)}
+
+    out = files("mention-graph", build_graph(blogs, mentions, utilities))
+    for view, rows in views.groupby("view", sort=True):
+        seeds = {str(seed).strip().lower() for seed in rows["seed"]}
+        out |= files(f"mention-graph.{view}", build_graph(*restrict(blogs, mentions, seeds), utilities))
+    return out

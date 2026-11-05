@@ -69,12 +69,14 @@ const service = createService({
     },
   },
   displayName: "Tester",
+  linkTo: (id) => `[[annotations/fixture#^${id}]]`,
 })
 
 async function frameViewer() {
   // As the plugin frames it (src/view.ts): a `blob:` document whose `<base>` is the folder of pages,
   // opened with the annotation and the page range the harness's own address names.
   const frame = document.createElement("iframe")
+  frame.allow = "clipboard-write"
   const html = await (await fetch("/frames/viewer.html")).text()
   frame.src = blobPage(framePage(html, `${location.protocol}//127.0.0.1:${location.port}/frames/`, { annotation: params.get("annotation") ?? undefined, pages: params.get("pages") ?? undefined }))
   frame.addEventListener("load", () => {

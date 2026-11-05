@@ -137,6 +137,13 @@
   fill: var(--indieweb-graph-seed);
 }
 
+/* This site's own blog: its icon, in a seed's ink, with no ring, which the icon's own box would draw. */
+.indieweb-graph__node--home {
+  fill: var(--indieweb-graph-seed);
+  stroke: none;
+  overflow: visible;
+}
+
 .indieweb-graph__node--utility {
   fill: var(--indieweb-graph-utility);
 }
@@ -319,4 +326,59 @@
 
 .indieweb-graph__close:hover {
   background: var(--highlight);
+}
+
+/* Zoom: buttons in the plot's corner, and the hint a plain scroll over it shows. */
+.indieweb-graph__zoom {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.indieweb-graph__zoom button {
+  min-width: 1.75rem;
+  height: 1.75rem;
+  padding: 0 0.4rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 4px;
+  background: var(--indieweb-graph-paper);
+  color: var(--indieweb-graph-muted);
+  font: inherit;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.indieweb-graph__zoom button:hover:not(:disabled) {
+  color: var(--indieweb-graph-ink);
+  background: var(--highlight);
+}
+
+.indieweb-graph__zoom button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.indieweb-graph__hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  background: var(--indieweb-graph-ink);
+  color: var(--indieweb-graph-paper);
+  font-size: 0.85rem;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+/* Zoomed in, it can be dragged about. */
+.indieweb-graph__plot svg {
+  cursor: grab;
+}
+
+.indieweb-graph__plot svg:active {
+  cursor: grabbing;
 }

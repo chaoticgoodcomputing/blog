@@ -51,7 +51,7 @@ import { mentionExcerpts } from "./src/integrations/mention-excerpts.ts"
 import { feedContentIntegration } from "./src/integrations/feed-content.ts"
 
 import { obsidianAnnotator } from "@chaoticgoodcomputing/obsidian-markdown"
-import { annotatedDocument, annotationDate } from "./src/lib/annotations.ts"
+import { annotatedDocument, annotationAnchors, annotationDate } from "./src/lib/annotations.ts"
 
 import { mirrors } from "./src/integrations/mirrors.ts"
 
@@ -69,6 +69,7 @@ import { sidenotes } from "./src/lib/sidenotes.ts"
 const site = "https://blog.chaoticgood.computer"
 
 const widgets = fileURLToPath(new URL("./src/components/widgets/", import.meta.url))
+const icons = fileURLToPath(new URL("./src/icons/", import.meta.url))
 
 // The end-to-end suite builds a site of its own beside the real build, and names a cache for it
 // (playwright.config.ts, docs/adr/0007).
@@ -247,6 +248,9 @@ export default defineConfig({
         // before Astro does, so it stays after every plugin that adds or renames a heading.
         headingAnchors(),
 
+        // Each annotation's card ends with a link to itself, as a heading does (src/lib/annotations.ts).
+        annotationAnchors(),
+
         // Each footnote is a sidenote beside the block that cites it, a copy of the footnote as the
         // plugins above left it (src/lib/sidenotes.ts).
         sidenotes(),
@@ -259,10 +263,13 @@ export default defineConfig({
         // The widgets the vault's MDX notes import by package name are this site's own components:
         // `@chaoticgoodcomputing/widgets/pdf-viewer` is src/components/widgets/pdf-viewer.
         { find: /^@chaoticgoodcomputing\/widgets\/(.+)$/, replacement: `${widgets}$1` },
+        // And the site's own icons, by file: `@chaoticgoodcomputing/icons/d20.svg?raw` is
+        // src/icons/d20.svg, as text, for a widget that draws one into its own SVG.
+        { find: /^@chaoticgoodcomputing\/icons\/(.+)$/, replacement: `${icons}$1` },
       ],
-      // A widget kept in the vault sits outside this project, where no Preact is installed: it
+      // A widget kept in the vault sits outside this project, where none of these is installed: it
       // takes this site's.
-      dedupe: ["preact"],
+      dedupe: ["preact", "d3-selection", "d3-zoom"],
     },
     server: {
       // The vault sits outside this project, and its images are served from where they are.

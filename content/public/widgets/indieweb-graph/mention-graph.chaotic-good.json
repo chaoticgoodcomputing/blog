@@ -1,0 +1,144 @@
+{
+ "generated": "2026-11-05",
+ "width": 960,
+ "height": 458,
+ "nodes": [
+  {
+   "id": "birgitta.info",
+   "label": "birgitta.info",
+   "seed": false,
+   "x": 293.5,
+   "y": 410.1,
+   "r": 5.4,
+   "weight": 1,
+   "outgoing": 0,
+   "incoming": 1,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 293.5,
+   "label_y": 400.7,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "blog.chaoticgood.computer",
+   "label": "Chaotic Good Computing",
+   "seed": true,
+   "x": 457.4,
+   "y": 263.2,
+   "r": 7.2,
+   "weight": 5,
+   "outgoing": 5,
+   "incoming": 0,
+   "seeds_linked": 0,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 457.4,
+   "label_y": 252.0,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "jimmybogard.com",
+   "label": "jimmybogard.com",
+   "seed": false,
+   "x": 666.5,
+   "y": 331.6,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 0,
+   "incoming": 2,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 666.5,
+   "label_y": 322.2,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "maggieappleton.com",
+   "label": "maggieappleton.com",
+   "seed": false,
+   "x": 412.1,
+   "y": 47.9,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 0,
+   "incoming": 2,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 412.1,
+   "label_y": 38.5,
+   "label_anchor": "middle"
+  }
+ ],
+ "links": [
+  {
+   "source": "blog.chaoticgood.computer",
+   "target": "birgitta.info",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://blog.chaoticgood.computer/content/notes/software-gardening",
+     "target": "https://birgitta.info",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "blog.chaoticgood.computer",
+   "target": "jimmybogard.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://blog.chaoticgood.computer/content/notes/software-gardening",
+     "target": "https://jimmybogard.com/vertical-slice-architecture",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://blog.chaoticgood.computer/content/notes/strong-and-weak-opinions",
+     "target": "https://jimmybogard.com/vertical-slice-architecture",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "blog.chaoticgood.computer",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://blog.chaoticgood.computer/content/notes/dashes",
+     "target": "https://maggieappleton.com/planning-agents",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://blog.chaoticgood.computer/content/notes/digital-gardening-with-quartz",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  }
+ ]
+}

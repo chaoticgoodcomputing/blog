@@ -1,13 +1,15 @@
 ---
 // Link popovers: while the pointer rests on a link to another page of the site, in a note or in
 // what lists pages around it, a preview of that page's note beside the link, without leaving the
-// page. The preview is the page as the site serves it, fetched, and its rendered body (`.prose`)
-// taken out of it.
+// page. The preview is the page as the site serves it, fetched, and its title and rendered body
+// (`.prose`) taken out of it. The title heads the preview, set apart over the body, and stays there
+// while the body scrolls under it.
 //
 // It is at the end of the body of every page, and is one element, `<link-popovers>`, which listens
 // for the pointer over the whole page while it is there (README.md, "In the browser"). The preview
 // is a popover in the top layer, over the sidebars. It opens without moving focus, and never holds
-// it: it closes when the pointer leaves both it and its link, or on Escape.
+// it: it closes when the pointer leaves both it and its link, or on Escape. A click on it opens the
+// page, as a click on its link would; a click on a link in it follows that link instead.
 //
 // What the body holds is shown as the page's HTML has it. Its scripts never run, and an element
 // that draws itself, a mermaid diagram, draws itself only where this page has its code: on a page
@@ -15,12 +17,16 @@
 ---
 
 <link-popovers class="link-popovers">
-  <div class="link-popover" popover="manual"></div>
+  <div class="link-popover" popover="manual">
+    <div class="link-popover-title"></div>
+    <div class="link-popover-body"></div>
+  </div>
 </link-popovers>
 
 <script>
-  /** What a preview shows of a page: its rendered body, and the stylesheets the page links. */
+  /** What a preview shows of a page: its title, if it has one, its rendered body, and the stylesheets the page links. */
   interface Preview {
+    title: HTMLElement | null
     body: HTMLElement
     stylesheets: HTMLLinkElement[]
   }
@@ -44,7 +50,8 @@
           const page = new DOMParser().parseFromString(await response.text(), "text/html")
           const body = page.querySelector<HTMLElement>(".prose")
           if (!body || (!body.textContent?.trim() && !body.querySelector(MEDIA))) return undefined
-          return { body, stylesheets: [...page.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]')] }
+          const title = page.querySelector<HTMLElement>("main > header .article-title")
+          return { title, body, stylesheets: [...page.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]')] }
         })
         .catch(() => undefined)
       previews.set(address, preview)
@@ -83,7 +90,7 @@
    */
   function previewed(link: HTMLAnchorElement): URL | undefined {
     if (!link.closest(PREVIEWED) || link.closest(".link-popover")) return undefined
-    if (link.classList.contains("heading-anchor") || link.hasAttribute("data-footnote-ref")) return undefined
+    if (link.matches(".heading-anchor, .annotation-anchor") || link.hasAttribute("data-footnote-ref")) return undefined
     if (link.classList.contains("is-unresolved") || link.hasAttribute("data-astro-reload")) return undefined
     const url = new URL(link.href)
     if (url.origin !== location.origin || /\.[^./]+$/.test(url.pathname)) return undefined
@@ -108,6 +115,8 @@
 
   class LinkPopovers extends HTMLElement {
     #popover!: HTMLElement
+    #title!: HTMLElement
+    #body!: HTMLElement
     /** The link a preview is wanted for, so that one fetched too late for its link is not shown. */
     #wanted: HTMLAnchorElement | undefined
     #opening: ReturnType<typeof setTimeout> | undefined
@@ -138,12 +147,35 @@
       this.#closing = setTimeout(() => this.#close(), CLOSING)
     }
 
+    // A click on the preview is a click on its link, so that the page is reached as the link reaches
+    // it: by the client router, along the trail (TrailSpines.astro). One with a modifier key, or the
+    // middle button, opens it in a new tab. What has a click of its own keeps it: a link in the
+    // preview, a form's control, a summary. A click that ends a drag across the text, to select it,
+    // opens nothing.
+    #click = (event: MouseEvent) => {
+      const link = this.#wanted
+      if (!link || (event.button !== 0 && event.button !== 1)) return
+      if ((event.target as Element).closest("a[href], button, input, select, textarea, label, summary")) return
+      if (!(getSelection()?.isCollapsed ?? true)) return
+      event.preventDefault()
+      this.#close()
+      if (event.button === 1 || event.ctrlKey || event.metaKey || event.shiftKey) {
+        window.open(link.href, "_blank", "noopener")
+      } else {
+        link.click()
+      }
+    }
+
     #key = (event: KeyboardEvent) => {
       if (event.key === "Escape") this.#close()
     }
 
     connectedCallback() {
       this.#popover = this.querySelector(".link-popover")!
+      this.#title = this.querySelector(".link-popover-title")!
+      this.#body = this.querySelector(".link-popover-body")!
+      this.#popover.addEventListener("click", this.#click)
+      this.#popover.addEventListener("auxclick", this.#click)
       document.addEventListener("pointerover", this.#over)
       document.addEventListener("pointerout", this.#out)
       document.addEventListener("keydown", this.#key)
@@ -172,14 +204,18 @@
       // The page already has the ids it needs: one in a preview would be a second, where a link to
       // a heading on this page might land.
       for (const element of preview.querySelectorAll("[id]")) element.removeAttribute("id")
-      // A heading's link to itself would go to a place on this page.
-      for (const anchor of preview.querySelectorAll(".heading-anchor")) anchor.remove()
+      // A heading's or an annotation's link to itself would go to a place on this page.
+      for (const anchor of preview.querySelectorAll(".heading-anchor, .annotation-anchor")) anchor.remove()
 
-      this.#popover.replaceChildren(...missing(fetched.stylesheets).map((link) => link.cloneNode()), preview)
+      // The title, without the h-entry's name it is on its own page (EntryMeta.astro).
+      const title = fetched.title?.cloneNode(true) as HTMLElement | undefined
+      title?.classList.remove("p-name")
+      this.#title.replaceChildren(...(title ? [title] : []))
+      this.#body.replaceChildren(...missing(fetched.stylesheets).map((link) => link.cloneNode()), preview)
       this.#popover.showPopover()
       this.#place(link)
-      // The heading or block the link names is at the top of the preview, a little below its edge.
-      this.#popover.scrollTop = named
+      // The heading or block the link names is at the top of the body, a little below the title.
+      this.#body.scrollTop = named
         ? named.getBoundingClientRect().top - preview.getBoundingClientRect().top - 12
         : 0
     }
@@ -206,16 +242,48 @@
     box-sizing: border-box;
     width: min(30rem, 100vw - 1rem);
     max-height: 20rem;
-    padding: 1rem;
-    overflow: auto;
-    overscroll-behavior: contain;
+    padding: 0;
+    overflow: hidden;
     border: 1px solid var(--lightgray);
     border-radius: 5px;
     background-color: var(--light);
     color: var(--darkgray);
     box-shadow: 0 1rem 3rem var(--shadow);
+    /* The whole of it is a link to its page. */
+    cursor: pointer;
     /* A preview is the note in small: the whole reading scale (global.css) at this size. */
     --noteFontSize: 0.9rem;
     font-size: var(--text-body);
+  }
+
+  /* The title over the body, and the body, the one that scrolls, under it. Only while open: a
+     popover's own `display: none` is what hides it otherwise. */
+  .link-popover:popover-open {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* The title, set apart from the body by a rule. Its size is an h1's, at the preview's scale
+     (global.css), so smaller than on its page. */
+  .link-popover-title {
+    flex: none;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--lightgray);
+  }
+
+  .link-popover-title:empty {
+    display: none;
+  }
+
+  .link-popover-title > :global(h1) {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .link-popover-body {
+    min-height: 0;
+    padding: 1rem;
+    overflow: auto;
+    overscroll-behavior: contain;
   }
 </style>

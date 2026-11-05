@@ -6,11 +6,12 @@
 // (docs/cutover/annotations-audit.md).
 
 import { ANNOTATIONS, annotationTarget, parseAnnotations, type Vault } from "@chaoticgoodcomputing/obsidian-markdown"
-import { defineMdastPlugin } from "satteri"
+import { defineHastPlugin, defineMdastPlugin } from "satteri"
 import type { AnnotatedPassage } from "./highlights.ts"
 import type { Note } from "./notes.ts"
 import { getVault } from "./vault.ts"
 import { formatDate } from "./dates.ts"
+import { noteIcon } from "./icons.ts"
 import { site } from "../site.config.ts"
 
 /** Whether a note's page is an annotation page: the note has an annotation target. */
@@ -101,6 +102,32 @@ export function annotatedDocument() {
         node,
         ...column("annotation-epilogue", children.slice(at + 1)),
       ] as never)
+    },
+  })
+}
+
+/**
+ * Ends each annotation's card with a link to itself, `#^id`, for a reader to copy the address of
+ * one annotation, as a heading's link to itself is for a section (src/lib/heading-anchors.ts): the
+ * same icon, for the pointer alone, shown while the pointer is on the card
+ * (src/styles/prose/annotations.css). Following it selects the annotation where the viewer draws
+ * the document, as a link to it from anywhere does.
+ */
+export function annotationAnchors() {
+  return defineHastPlugin({
+    name: "annotation-anchors",
+    element: {
+      filter: ["article"],
+      visit(node, ctx) {
+        const { id, className } = node.properties ?? {}
+        if (typeof id !== "string" || !Array.isArray(className) || !className.includes("annotation")) return
+        ctx.appendChild(node, {
+          type: "element",
+          tagName: "a",
+          properties: { className: ["annotation-anchor"], href: `#${id}`, ariaHidden: "true", tabIndex: -1 },
+          children: [noteIcon("link-variant")],
+        })
+      },
     },
   })
 }

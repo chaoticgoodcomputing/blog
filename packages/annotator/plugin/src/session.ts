@@ -33,7 +33,13 @@ export class AnnotatorSession {
     store: NoteStore,
   ) {
     this.element = createDiv({ cls: "annotator-session" })
-    this.service = createService({ store, displayName: plugin.settings.displayName, view: plugin.viewOptions() })
+    this.service = createService({
+      store,
+      displayName: plugin.settings.displayName,
+      view: plugin.viewOptions(),
+      // As the user's settings write a link, the note named as it is now, from no note in particular.
+      linkTo: (id) => plugin.app.fileManager.generateMarkdownLink(this.note, "", `#^${id}`),
+    })
     plugin.sessions.add(this)
   }
 
@@ -109,7 +115,7 @@ export class AnnotatorSession {
     const html = await this.plugin.readFrame("viewer.html")
     if (generation !== this.generation) return
     this.pageUrl = blobPage(framePage(html, this.plugin.framesFolder(), options))
-    const frame = this.element.createEl("iframe", { cls: "annotator-frame", attr: { src: this.pageUrl } })
+    const frame = this.element.createEl("iframe", { cls: "annotator-frame", attr: { src: this.pageUrl, allow: "clipboard-write" } })
     frame.addEventListener("load", () => {
       const channel = new MessageChannel()
       channel.port1.onmessage = ({ data }: MessageEvent<Request>) => this.answer(channel.port1, data, target)
