@@ -1,0 +1,67 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "obsidian-mdx",
+  "//": "The Obsidian plugin that opens .mdx files as Markdown notes, a fork of mkozhukharenko/mdx-as-md-obsidian (NOTICE.md), built with esbuild into dist/.",
+  "root": "packages/obsidian-mdx",
+  "sourceRoot": "packages/obsidian-mdx/src",
+  "projectType": "application",
+  "tags": [
+    "obsidian-plugin"
+  ],
+  "targets": {
+    "build": {
+      "//": "dist/: main.js and manifest.json, as Obsidian loads a plugin (scripts/build.mjs).",
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": [
+        "production",
+        "^production"
+      ],
+      "outputs": [
+        "{projectRoot}/dist"
+      ],
+      "options": {
+        "command": "pnpm run build",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "dev": {
+      "//": "Rebuilds dist/ on every change, unminified, with inline source maps.",
+      "executor": "nx:run-commands",
+      "continuous": true,
+      "options": {
+        "command": "pnpm run dev",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm run typecheck",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test": {
+      "//": "The build, loaded as Obsidian loads a plugin, on Node's test runner (test/).",
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        "build"
+      ],
+      "options": {
+        "command": "pnpm run test",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "install": {
+      "//": "Run by hand, never by a build: copies dist/ into content/.obsidian/plugins/obsidian-mdx, which git ignores. `--vault=<path>` installs into another vault (scripts/install-in-vault.mjs).",
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        "build"
+      ],
+      "options": {
+        "command": "pnpm run install-in-vault",
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+	"id": "obsidian-mdx",
+	"name": "MDX",
+	"version": "0.2.0",
+	"minAppVersion": "1.1.0",
+	"description": "Edit .mdx files as Markdown notes, their imports and components shown as code blocks. A fork of mkozhukharenko's mdx as md.",
+	"author": "Chaotic Good Computing, from mdx as md by Nikolay Kozhukharenko and deathau",
+	"authorUrl": "https://github.com/chaoticgoodcomputing/blog",
+	"isDesktopOnly": false
+}

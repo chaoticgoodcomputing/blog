@@ -1,0 +1,8 @@
+{
+  "//": "The tests: Node's types, beside the plugin's.",
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["../src", "*.ts"]
+}

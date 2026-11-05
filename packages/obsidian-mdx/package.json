@@ -1,0 +1,24 @@
+{
+  "name": "@chaoticgoodcomputing/obsidian-mdx",
+  "version": "0.2.0",
+  "private": true,
+  "description": "A fork of mdx as md (mkozhukharenko/mdx-as-md-obsidian): edit .mdx files in Obsidian as Markdown notes, their imports and components shown as code blocks.",
+  "license": "MIT",
+  "type": "module",
+  "//scripts": "Nx runs these (project.json). build.mjs bundles src/ with esbuild into dist/; install-in-vault.mjs copies dist/ into a vault's plugin folder.",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/build.mjs --watch",
+    "typecheck": "tsc -p . && tsc -p test",
+    "install-in-vault": "node scripts/install-in-vault.mjs",
+    "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning --test --test-reporter=spec \"test/*.test.ts\" \"test/*.test.mjs\""
+  },
+  "devDependencies": {
+    "@codemirror/state": "6.7.6",
+    "@codemirror/view": "6.43.13",
+    "@types/node": "^22.15.0",
+    "esbuild": "0.28.2",
+    "obsidian": "1.14.4",
+    "typescript": "^5.9.3"
+  }
+}

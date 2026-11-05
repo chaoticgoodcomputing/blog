@@ -1,0 +1,17 @@
+/* An MDX note's imports and components, as code blocks (src/editor.ts, src/reading.ts). */
+
+/* In Live Preview, away from the cursor: no gap of its own above or below the code block. */
+.markdown-source-view.mod-cm6 .cm-embed-block.mdx-code-block > pre {
+  margin: 0;
+}
+
+/* With the cursor in it: Obsidian's code-block line styles, and no Markdown styling of its text. */
+.markdown-source-view.mod-cm6 .cm-line.mdx-source-line * {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+  color: inherit;
+  text-decoration: none;
+  background: none;
+}
