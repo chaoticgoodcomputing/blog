@@ -1,3 +1,4 @@
+import { listenForRelayRequests } from './api-relay';
 import { chromeAPI } from './chrome-api';
 import { Extension } from './extension';
 import type { ExternalMessage } from './messages';
@@ -16,6 +17,9 @@ export const uninstallURL =
  * This is exported for use in tests.
  */
 export async function init() {
+  // The sidebar's requests to the service, before anything else can wake the background script.
+  listenForRelayRequests();
+
   const extension = new Extension();
   const initialized = extension.init();
 

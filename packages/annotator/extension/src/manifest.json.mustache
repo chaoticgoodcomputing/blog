@@ -1,6 +1,6 @@
 {
-  "name": "Hypothesis - Web & PDF Annotation",
-  "short_name": "Hypothesis",
+  "name": "Annotator - Web & PDF Annotation",
+  "short_name": "Annotator",
   "version": "{{ version }}",
   {{#browserIsChrome}}
   "version_name": "{{ version }} ({{ versionName }})",
@@ -16,21 +16,25 @@
   {{/key}}
 
   {{#browserIsFirefox}}
-  "applications": {
+  {{! Firefox's Manifest V3 needs an ID of the add-on's own, and Firefox 140 (ESR), the first with data_collection_permissions, or later. }}
+  "browser_specific_settings": {
     "gecko": {
-      "strict_min_version": "68.0"
+      "id": "annotator-extension@chaoticgood.computer",
+      "strict_min_version": "140.0",
+      {{! It sends annotations only to the service its settings name, on the user's machine for the *-local ones. }}
+      "data_collection_permissions": { "required": ["none"] }
     }
   },
   {{/browserIsFirefox}}
 
-  "description": "Collaboratively annotate, highlight, and tag web pages and PDF documents.",
+  "description": "Annotate, highlight, and tag web pages and PDF documents, against a Hypothesis service of your choosing.",
   "icons": {
     "16": "images/icon16.png",
     "48": "images/icon48.png",
     "128": "images/icon128.png"
   },
 
-  "homepage_url": "https://hypothes.is/",
+  "homepage_url": "https://github.com/hypothesis/browser-extension",
 
   {{! Firefox does not support the "split" mode.
       See https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/incognito
@@ -60,8 +64,14 @@
     "webNavigation"
   ],
 
+  {{! Firefox runs a background script as an event page, not as a service worker. }}
   "background": {
+    {{#browserIsChrome}}
     "service_worker": "extension.bundle.js"
+    {{/browserIsChrome}}
+    {{#browserIsFirefox}}
+    "scripts": ["extension.bundle.js"]
+    {{/browserIsFirefox}}
   },
 
   "action": {

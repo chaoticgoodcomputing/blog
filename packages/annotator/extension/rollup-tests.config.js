@@ -33,7 +33,8 @@ export default {
     }),
     babel({
       babelHelpers: 'bundled',
-      exclude: 'node_modules/**',
+      // Dependencies are in the workspace's store (../../../node_modules/.pnpm), not ./node_modules.
+      exclude: '**/node_modules/**',
       extensions: ['.js', '.ts'],
       plugins: [
         [

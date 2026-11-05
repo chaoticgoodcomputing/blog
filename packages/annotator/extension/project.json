@@ -1,0 +1,95 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "name": "annotator-extension",
+  "//": "The Annotator extension, a hard fork of hypothesis/browser-extension (NOTICE.md): Hypothesis's own client in the browser, against a Hypothesis service of the settings' choosing, built by upstream's Makefile into build/. Its targets share build/, so none runs beside another (`parallelism: false`).",
+  "root": "packages/annotator/extension",
+  "sourceRoot": "packages/annotator/extension/src",
+  "projectType": "application",
+  "tags": [
+    "annotator"
+  ],
+  "targets": {
+    "build": {
+      "//": "build/: the unpacked extension, for Firefox and Zen by default, against the service on 127.0.0.1 (settings/firefox-local.json). `-c chrome` builds for Chromium. From an empty build/: make compares times to the second on macOS, so a build for one browser just after one for another would keep the other's files.",
+      "executor": "nx:run-commands",
+      "cache": true,
+      "inputs": [
+        "production",
+        "^production"
+      ],
+      "outputs": [
+        "{projectRoot}/build"
+      ],
+      "defaultConfiguration": "firefox",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "configurations": {
+        "firefox": {
+          "command": "make clean && make build SETTINGS_FILE=settings/firefox-local.json"
+        },
+        "chrome": {
+          "command": "make clean && make build SETTINGS_FILE=settings/chrome-local.json"
+        }
+      },
+      "parallelism": false
+    },
+    "dev": {
+      "//": "Rebuilds build/ on every change to src/ or the client (upstream's gulp watch), for Firefox and Zen.",
+      "executor": "nx:run-commands",
+      "continuous": true,
+      "options": {
+        "command": "make dev SETTINGS_FILE=settings/firefox-local.json",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "run": {
+      "//": "Run by hand: opens Zen with build/ installed as a temporary add-on, in a fresh profile web-ext throws away on exit, never the user's own. `--firefox=firefox` opens Firefox instead.",
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        "build"
+      ],
+      "options": {
+        "command": "pnpm exec web-ext run --source-dir build --firefox=/Applications/Zen.app/Contents/MacOS/zen",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "package": {
+      "//": "dist/annotator-extension.xpi: the extension, built again from an empty build/ (the tests write theirs there), zipped, unsigned. Release Firefox and Zen install an add-on for good only once Mozilla has signed it.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "make clean && make dist/annotator-extension.xpi SETTINGS_FILE=settings/firefox-local.json",
+        "cwd": "{projectRoot}"
+      },
+      "parallelism": false
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm run typecheck",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test": {
+      "//": "Upstream's unit tests (tests/), in Chromium, with vitest's browser mode.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm exec gulp test",
+        "cwd": "{projectRoot}"
+      },
+      "parallelism": false
+    },
+    "lint": {
+      "//": "Mozilla's linter on the built extension, as addons.mozilla.org would run it: errors fail, upstream's client and PDF.js warn.",
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        "build"
+      ],
+      "options": {
+        "command": "pnpm exec web-ext lint --source-dir build",
+        "cwd": "{projectRoot}"
+      },
+      "parallelism": false
+    }
+  }
+}

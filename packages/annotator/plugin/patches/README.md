@@ -12,6 +12,13 @@ client (`frames/hypothesis/LICENSE`) and which is at
 <https://github.com/hypothesis/client/blob/main/LICENSE>. This patch, which holds a few lines of the
 client's built code as its context, modifies it, as that license permits.
 
+**The patch's own license.** Unlike the rest of this directory (`../NOTICE.md`), the patches here
+are under the **BSD 2-Clause license**, the client's own, © 2026 Spencer Elkington: what they add is
+written for this repository, against the client as npm publishes it, and holds nothing of Obsidian
+Annotator's. The workspace applies them to the client wherever it is installed, so they ship in the
+Annotator extension's BSD build (`../../extension`) as well as in the plugin's. A patch that took
+code from Obsidian Annotator would be under the AGPL, and could not be one of them.
+
 **What it does.** The sidebar renders an annotation's comment with the client's own Markdown
 renderer, which has no setting to replace it. The patch makes it defer to
 `window.__annotatorRenderMarkdown` when the sidebar page defines one (`frames/sidebar.ts`), which

@@ -19,6 +19,7 @@ function eventListenerStub() {
 
 describe('background/index', () => {
   let fakeChromeAPI;
+  let fakeListenForRelayRequests;
 
   beforeEach(() => {
     fakeChromeAPI = {
@@ -38,7 +39,9 @@ describe('background/index', () => {
       },
     };
 
+    fakeListenForRelayRequests = sinon.stub();
     $imports.$mock({
+      './api-relay': { listenForRelayRequests: fakeListenForRelayRequests },
       './chrome-api': { chromeAPI: fakeChromeAPI },
       './extension': { Extension: FakeExtension },
     });
@@ -47,6 +50,10 @@ describe('background/index', () => {
 
   afterEach(() => {
     $imports.$restore();
+  });
+
+  it("listens for the sidebar's relayed requests", () => {
+    assert.calledOnce(fakeListenForRelayRequests);
   });
 
   /**

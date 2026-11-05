@@ -19,24 +19,25 @@ process.stdout.on('error', err => {
 });
 
 /**
- * getVersion fetches the current version from git, applying the following
- * rules:
+ * getVersion gives the extension's version, applying the following rules:
  *
  * - If buildType is 'production' and the git state is not clean, throw an error
- * - Set the version number to X.Y.Z.W, where X.Y.Z is the last tagged release
- *   and W is the number of commits since that release.
+ * - Set the version number to package.json's version.
  * - If the buildType is 'production', set the version name to "Official Build",
  *   otherwise set it to a string of the form "gXXXXXXX[.dirty]" to reflect the
  *   exact commit and state of the repository.
  */
 function getVersion(buildType) {
-  const gitInfo = gitDescribeSync();
+  // The fork's version is its package.json's: in this repository, `git describe` finds the
+  // repository's own tags, not the extension's.
+  const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json')));
+  const gitInfo = gitDescribeSync({ match: 'no-such-tag-*' });
 
   if (buildType === 'production' && gitInfo.dirty) {
     throw new Error('cannot create production build with dirty git state!');
   }
 
-  const version = `${gitInfo.semver}.${gitInfo.distance}`;
+  const version = pkg.version;
   let versionName = 'Official Build';
 
   if (buildType !== 'production') {

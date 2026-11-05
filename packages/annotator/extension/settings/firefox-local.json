@@ -1,0 +1,12 @@
+{
+  "buildType": "local",
+
+  "apiUrl": "http://127.0.0.1:27183/api/",
+  "authDomain": "annotator.local",
+  "serviceUrl": "http://127.0.0.1:27183/",
+
+  "oauthClientId": "annotator-extension",
+
+  "browserIsFirefox": true,
+  "appType": "firefox-extension"
+}

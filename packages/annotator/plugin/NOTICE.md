@@ -19,6 +19,10 @@ Obsidian Annotator is licensed under the **GNU Affero General Public License, ve
 here. Anyone who receives this program, or interacts with a modified version of it over a network,
 is entitled to its source under that license.
 
+The patches to the Hypothesis client (`patches/`), which the workspace applies wherever the client
+is installed, are the exception: they are under the client's BSD 2-Clause license
+([patches/README.md](./patches/README.md)), and hold nothing of Obsidian Annotator's.
+
 That license covers this directory only. The rest of this repository is not part of the program and
 is not licensed by it.
 

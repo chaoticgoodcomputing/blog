@@ -1,4 +1,5 @@
-SETTINGS_FILE := settings/chrome-dev.json
+# The settings to build with (settings/). The fork's own are the *-local ones.
+SETTINGS_FILE := settings/firefox-local.json
 
 ROLLUP := node_modules/.bin/rollup
 ESLINT := node_modules/.bin/eslint
@@ -26,7 +27,7 @@ build: node_modules/.uptodate extension
 
 .PHONY: dev
 dev: node_modules/.uptodate
-	yarn gulp watch
+	pnpm exec gulp watch
 
 .PHONY: clean
 clean:
@@ -51,9 +52,13 @@ extension: build/extension.bundle.js
 extension: build/manifest.json
 extension: build/client/build
 extension: build/client/app.html
+extension: build/client/sidebar-api-relay.js
 extension: build/client/notebook.html
 extension: build/client/profile.html
 extension: build/unload-client.js
+extension: build/LICENSE
+extension: build/NOTICE.md
+extension: build/licenses
 extension: build/pdfjs-init.js
 extension: $(addprefix build/,$(EXTENSION_SRC))
 
@@ -64,6 +69,8 @@ build/manifest.json: src/manifest.json.mustache build/settings.json
 build/client/build: node_modules/hypothesis/build/manifest.json
 	@mkdir -p $@
 	cp -R node_modules/hypothesis/build/* $@
+	@# The client's license, which its BSD 2-Clause terms ask a build to carry (NOTICE.md).
+	cp node_modules/hypothesis/LICENSE $(dir $@)LICENSE
 	@# Replace boot template with extension-specific URLs.
 	node tools/render-boot-template.js $@/boot-template.js $@/boot.js
 	rm $@/boot-template.js
@@ -72,10 +79,21 @@ build/client/build: node_modules/hypothesis/build/manifest.json
 	rm $@/manifest.json
 build/client/app.html: src/sidebar-app.html.mustache build/client build/settings.json
 	tools/template-context-app.js build/settings.json | $(MUSTACHE) - $< >$@
+build/client/sidebar-api-relay.js: src/sidebar-api-relay.js build/client/build
+	cp $< $@
 build/client/notebook.html: build/client/app.html
 	cp $< $@
 build/client/profile.html: build/client/app.html
 	cp $< $@
+# The extension's own license, which its BSD 2-Clause terms ask a build to carry, and where it came from.
+build/LICENSE: LICENSE
+	cp $< $@
+build/NOTICE.md: NOTICE.md
+	cp $< $@
+# The notices of the packages the bundles hold (licenses/): fails if a bundle holds one without.
+.PHONY: build/licenses
+build/licenses: build/extension.bundle.js build/client/build
+	node tools/third-party.js check
 build/unload-client.js: src/unload-client.js
 	cp $< $@
 build/pdfjs-%.js: src/pdfjs-%.js
@@ -92,7 +110,7 @@ dist/%.zip dist/%.xpi: extension
 .PHONY: lint
 lint: node_modules/.uptodate build/settings.json
 	$(ESLINT) .
-	yarn typecheck
+	pnpm run typecheck
 
 .PHONY: checkformatting
 checkformatting: node_modules/.uptodate
@@ -104,12 +122,12 @@ format: node_modules/.uptodate
 
 .PHONY: test
 test: node_modules/.uptodate
-	yarn test
+	pnpm exec gulp test
 
 .PHONY: sure
 sure: checkformatting lint test
 
-node_modules/.uptodate: package.json yarn.lock
-	yarn install
-	yarn playwright install chromium
+# Dependencies come from the workspace's `pnpm install`, at the repository's root.
+node_modules/.uptodate: package.json
+	@test -d node_modules || (echo "Run pnpm install at the repository's root first." && exit 1)
 	@touch $@

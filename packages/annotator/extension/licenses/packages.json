@@ -1,0 +1,330 @@
+{
+  "client": "1.1769.0",
+  "packages": [
+    {
+      "name": "@hypothesis/annotation-ui",
+      "version": "1.1.0",
+      "license": "BSD-2-Clause",
+      "bundles": [
+        "sidebar.bundle.js"
+      ],
+      "notice": [
+        "@hypothesis+annotation-ui@1.1.0/LICENSE"
+      ]
+    },
+    {
+      "name": "@hypothesis/frontend-shared",
+      "version": "10.3.2",
+      "license": "BSD-2-Clause",
+      "bundles": [
+        "annotator.bundle.js",
+        "sidebar.bundle.js",
+        "ui-playground.bundle.js"
+      ],
+      "notice": [
+        "@hypothesis+frontend-shared@10.3.2/LICENSE"
+      ]
+    },
+    {
+      "name": "@sentry-internal/browser-utils",
+      "version": "10.51.0",
+      "license": "MIT",
+      "author": "Sentry",
+      "bundles": [
+        "sidebar.bundle.js"
+      ],
+      "notice": [
+        "@sentry-internal+browser-utils@10.51.0/LICENSE"
+      ]
+    },
+    {
+      "name": "@sentry/browser",
+      "version": "10.51.0",
+      "license": "MIT",
+      "author": "Sentry",
+      "bundles": [
+        "sidebar.bundle.js"
+      ],
+      "notice": [
+        "@sentry+browser@10.51.0/LICENSE"
+      ]
+    },
+    {
+      "name": "@sentry/core",
+      "version": "10.51.0",
+      "license": "MIT",
+      "author": "Sentry",
+      "bundles": [
+        "sidebar.bundle.js"
+      ],
+      "notice": [
+        "@sentry+core@10.51.0/LICENSE"
+      ]
+    },
+    {
+      "name": "approx-string-match",
+      "version": "2.0.0",
+      "license": "MIT",
+      "author": "Robert Knight",
+      "bundles": [
+        "annotator.bundle.js"
+      ],
+      "notice": [
+        "approx-string-match@2.0.0/LICENSE"
+      ]
+    },
+    {
+      "name": "classnames",
+      "version": "2.5.1",
+      "license": "MIT",
+      "author": "Jed Watson",
+      "bundles": [
+        "annotator.bundle.js",
+        "sidebar.bundle.js",
+        "ui-playground.bundle.js"
+      ],
+      "notice": [
+        "classnames@2.5.1/LICENSE"
+      ]
+    },
+    {
+      "name": "dompurify",
+      "version": "3.3.0",
+      "license": "(MPL-2.0 OR Apache-2.0)",
+      "author": "Dr.-Ing. Mario Heiderich, Cure53",
+      "bundles": [
+        "sidebar.bundle.js"
+      ],
+      "notice": [
+        "dompurify@3.3.0/LICENSE"
+      ]
+    },
+    {
+      "name": "escape-html",
+      "version": "1.0.3",
+      "license": "MIT",
+      "bundles": [
+        "sidebar.bundle.js"
+      ],
+      "notice": [
+        "escape-html@1.0.3/LICENSE"
+      ]
+    },
+    {
+      "name": "escape-string-regexp",
+      "version": "4.0.0",
+      "license": "MIT",
+      "author": "Sindre Sorhus",
+      "bundles": [
+        "sidebar.bundle.js"
+      ],
+      "notice": [
+        "escape-string-regexp@4.0.0/license"
+      ]
+    },
+    {
+      "name": "highlight.js",
+      "version": "11.8.0",
+      "license": "BSD-3-Clause",
+      "author": "Josh Goebel",
+      "bundles": [
+        "ui-playground.bundle.js"
+      ],
+      "notice": [
+        "highlight.js@11.8.0/LICENSE"
+      ]
+    },
+    {
+      "name": "is-equal-shallow",
+      "version": "0.1.3",
+      "license": "MIT",
+      "author": "Jon Schlinkert",
+      "bundles": [
+        "extension.bundle.js"
+      ],
+      "notice": [
+        "is-equal-shallow@0.1.3/LICENSE"
+      ]
+    },
+    {
+      "name": "is-primitive",
+      "version": "2.0.0",
+      "license": "MIT",
+      "author": "Jon Schlinkert",
+      "bundles": [
+        "extension.bundle.js"
+      ],
+      "notice": [
+        "is-primitive@2.0.0/LICENSE"
+      ]
+    },
+    {
+      "name": "katex",
+      "version": "0.16.27",
+      "license": "MIT",
+      "bundles": [
+        "sidebar.bundle.js"
+      ],
+      "notice": [
+        "katex@0.16.27/LICENSE"
+      ]
+    },
+    {
+      "name": "lodash.debounce",
+      "version": "4.0.8",
+      "license": "MIT",
+      "author": "John-David Dalton",
+      "bundles": [
+        "annotator.bundle.js",
+        "sidebar.bundle.js"
+      ],
+      "notice": [
+        "lodash.debounce@4.0.8/LICENSE"
+      ]
+    },
+    {
+      "name": "preact",
+      "version": "10.28.0",
+      "license": "MIT",
+      "bundles": [
+        "annotator.bundle.js",
+        "sidebar.bundle.js",
+        "ui-playground.bundle.js"
+      ],
+      "notice": [
+        "preact@10.28.0/LICENSE"
+      ]
+    },
+    {
+      "name": "preact-render-to-string",
+      "version": "6.6.3",
+      "license": "MIT",
+      "author": "The Preact Authors",
+      "bundles": [
+        "sidebar.bundle.js"
+      ],
+      "notice": [
+        "preact-render-to-string@6.6.3/LICENSE"
+      ]
+    },
+    {
+      "name": "redux",
+      "version": "5.0.1",
+      "license": "MIT",
+      "bundles": [
+        "sidebar.bundle.js"
+      ],
+      "notice": [
+        "redux@5.0.1/LICENSE.md"
+      ]
+    },
+    {
+      "name": "redux-thunk",
+      "version": "3.1.0",
+      "license": "MIT",
+      "author": "Dan Abramov",
+      "bundles": [
+        "sidebar.bundle.js"
+      ],
+      "notice": [
+        "redux-thunk@3.1.0/LICENSE.md"
+      ]
+    },
+    {
+      "name": "regexparam",
+      "version": "3.0.0",
+      "license": "MIT",
+      "author": "Luke Edwards",
+      "bundles": [
+        "ui-playground.bundle.js"
+      ],
+      "notice": [
+        "regexparam@3.0.0/license"
+      ]
+    },
+    {
+      "name": "reselect",
+      "version": "5.1.1",
+      "license": "MIT",
+      "bundles": [
+        "sidebar.bundle.js"
+      ],
+      "notice": [
+        "reselect@5.1.1/LICENSE"
+      ]
+    },
+    {
+      "name": "retry",
+      "version": "0.12.0",
+      "license": "MIT",
+      "author": "Tim Koschützki",
+      "bundles": [
+        "sidebar.bundle.js"
+      ],
+      "notice": [
+        "retry@0.12.0/License"
+      ]
+    },
+    {
+      "name": "retry",
+      "version": "0.13.1",
+      "license": "MIT",
+      "author": "Tim Koschützki",
+      "bundles": [
+        "sidebar.bundle.js"
+      ],
+      "notice": [
+        "retry@0.13.1/License"
+      ]
+    },
+    {
+      "name": "scroll-into-view",
+      "version": "1.16.2",
+      "license": "MIT",
+      "author": "",
+      "bundles": [
+        "annotator.bundle.js",
+        "sidebar.bundle.js"
+      ],
+      "notice": [
+        "scroll-into-view@1.16.2/LICENSE.txt"
+      ]
+    },
+    {
+      "name": "shallowequal",
+      "version": "1.1.0",
+      "license": "MIT",
+      "author": "Alberto Leal",
+      "bundles": [
+        "sidebar.bundle.js"
+      ],
+      "notice": [
+        "shallowequal@1.1.0/LICENSE"
+      ]
+    },
+    {
+      "name": "showdown",
+      "version": "2.1.0",
+      "license": "MIT",
+      "author": "Estevão Santos",
+      "bundles": [
+        "sidebar.bundle.js"
+      ],
+      "notice": [
+        "showdown@2.1.0/LICENSE"
+      ]
+    },
+    {
+      "name": "wouter-preact",
+      "version": "3.0.0",
+      "license": "Unlicense",
+      "author": "Alexey Taktarov",
+      "bundles": [
+        "ui-playground.bundle.js"
+      ],
+      "notice": [
+        "wouter-preact@3.0.0/NOTICE"
+      ]
+    }
+  ]
+}

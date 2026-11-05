@@ -1,13 +1,19 @@
 {
-  "name": "hypothesis-browser-extension",
-  "version": "1.1769.0",
+  "name": "@chaoticgoodcomputing/annotator-extension",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Annotate with anyone, anywhere.",
+  "description": "A hard fork of Hypothesis's browser extension (hypothesis/browser-extension): annotate the web with Hypothesis's own client, against a Hypothesis service of the user's choosing.",
   "license": "BSD-2-Clause",
-  "homepage": "https://hypothes.is",
-  "bugs": "https://github.com/hypothesis/browser-extension/issues",
   "repository": "hypothesis/browser-extension",
+  "//scripts": "Nx runs these (project.json). build and dev run upstream's Makefile, with SETTINGS_FILE naming the settings to build with (settings/).",
+  "scripts": {
+    "build": "make build",
+    "dev": "make dev",
+    "lint": "eslint --cache .",
+    "test": "gulp test",
+    "typecheck": "tsc --build src/tsconfig.json"
+  },
   "devDependencies": {
     "@babel/core": "^7.28.5",
     "@babel/preset-env": "^7.28.5",
@@ -29,13 +35,13 @@
     "babel-plugin-istanbul": "^7.0.1",
     "babel-plugin-mockable-imports": "^2.0.1",
     "chai": "^6.2.2",
-    "chrome-webstore-upload-cli": "^3.5.0",
     "eslint": "^9.39.1",
     "eslint-config-hypothesis": "^3.3.1",
     "git-describe": "^4.1.1",
+    "glob": "7.2.3",
     "globals": "^16.5.0",
     "gulp": "^5.0.1",
-    "hypothesis": "^1.1769.0",
+    "hypothesis": "1.1769.0",
     "is-equal-shallow": "^0.1.3",
     "mustache": "^4.2.0",
     "playwright": "^1.57.0",
@@ -47,11 +53,5 @@
     "vitest": "^4.1.7",
     "web-ext": "^9.2.0"
   },
-  "browserslist": "chrome 85, firefox 75",
-  "scripts": {
-    "lint": "eslint --cache .",
-    "test": "gulp test",
-    "typecheck": "tsc --build src/tsconfig.json"
-  },
-  "packageManager": "yarn@3.6.1"
+  "browserslist": "chrome 85, firefox 75"
 }
