@@ -1,6 +1,6 @@
 // A page's share card: the image its `og:image` names, drawn when the site builds. It shows the
-// site's icon and address, and the page's title, description, date, reading time and tags, in the
-// site's dark palette (docs/adr/1701).
+// site's title and address, and the page as a post listing shows it: its title, date, description
+// and tags, in the site's dark palette (docs/adr/1701).
 
 import { createHash, randomUUID } from "node:crypto"
 import fs from "node:fs"
@@ -13,7 +13,7 @@ import { formatDate } from "./dates.ts"
 import { SITE_ICONS } from "./icons.ts"
 import { getNotes, type Note, type NoteFacts } from "./notes.ts"
 import { isIndexable, type PageProps } from "./page.ts"
-import { readingMinutes } from "./reading-time.ts"
+import { site as siteConfig } from "../site.config.ts"
 import { bubbleParts } from "./tag-bubble.ts"
 import { tagColor, tagIcon } from "./tag-dictionary.ts"
 import { tagPages, tagPageTitle } from "./tag-pages.ts"
@@ -60,8 +60,6 @@ export interface ShareCard {
   description?: string
   /** The note's date, as the site prints one. */
   date?: string
-  /** `3 min read`. */
-  readingTime?: string
   /** Tag slugs, in the order written. */
   tags: string[]
 }
@@ -76,13 +74,10 @@ export type CardSubject = { note: NoteFacts } | { tag: string | undefined }
 export function shareCardOf(subject: CardSubject): ShareCard {
   if ("tag" in subject) return { ...tagPageTitle(subject.tag), tags: subject.tag === undefined ? [] : [subject.tag] }
   const { note } = subject
-  const minutes = readingMinutes(note)
   return {
     title: note.title,
     ...(note.summary !== undefined && { description: note.summary }),
-    ...(note.date && { date: formatDate(note.date) }),
-    // A note with no text has its date alone, as its page shows it.
-    ...(minutes > 0 && { readingTime: `${minutes} min read` }),
+    ...(note.date && { date: formatDate(note.date, siteConfig.locale) }),
     tags: note.tags,
   }
 }
@@ -95,12 +90,16 @@ export const SHARE_CARD_SIZE = { width: 1200, height: 630 }
 
 // The room around the card's content.
 const PADDING = 64
-// A tag bubble's size, and so a tag's height on the card.
-const TAG_HEIGHT = 44
-// The space between two tags on the foot.
-const TAG_GAP = 28
-// The size of the foot's text.
-const FOOT_FONT_SIZE = 28
+// A tag bubble's size, the room around it on its badge, and so a tag badge's height on the card;
+// the size of a tag's name; and the space between two badges. A post listing's, scaled up
+// (src/components/PostList.astro).
+const TAG_BUBBLE = 44
+const TAG_PADDING = 6
+const TAG_HEIGHT = TAG_BUBBLE + 2 * TAG_PADDING
+const TAG_FONT_SIZE = 24
+const TAG_GAP = 12
+// How wide the row of tags is: the card's, inside its padding.
+const TAG_ROOM = SHARE_CARD_SIZE.width - 2 * PADDING
 
 // The card is drawn in the site's own palette, as the dark scheme has it: each token of global.css
 // is read for its dark value, so the palette is written in one place. Astro runs from astro/, as
@@ -133,18 +132,30 @@ function inDark(value: string): string {
 
 const color = (token: string) => inDark(`var(--${token})`)
 
-// Inter, the site's text font. Satori reads neither WOFF2 nor a variable font, which is what the
-// Fonts API serves the site, so the card is set from Fontsource's static WOFF files of the same
-// font (docs/adr/1702). Latin Extended is there for what Latin lacks.
+// The site's fonts (astro.config.ts): Fraunces for text and headings, in the text's light 300, the
+// headings' 600 and the site title's 700, and Hack for tags. Satori reads neither WOFF2 nor a
+// variable font, which is what the Fonts API serves the site, so Fraunces is set from Fontsource's
+// static WOFF files of it (docs/adr/1702), Latin Extended there for what Latin lacks, and Hack from
+// the WOFF files of the `hack-font` package the site serves its WOFF2 files from.
 const require = createRequire(import.meta.url)
-const FONTS: SatoriOptions["fonts"] = (["latin", "latin-ext"] as const).flatMap((subset) =>
-  ([400, 700] as const).map((weight) => ({
-    name: "Inter",
-    weight,
-    style: "normal" as const,
-    data: fs.readFileSync(require.resolve(`@fontsource/inter/files/inter-${subset}-${weight}-normal.woff`)),
-  })),
-)
+const FONT = "Fraunces"
+const TAG_FONT = "Hack"
+const FONTS: SatoriOptions["fonts"] = [
+  ...(["latin", "latin-ext"] as const).flatMap((subset) =>
+    ([300, 600, 700] as const).map((weight) => ({
+      name: FONT,
+      weight,
+      style: "normal" as const,
+      data: fs.readFileSync(require.resolve(`@fontsource/fraunces/files/fraunces-${subset}-${weight}-normal.woff`)),
+    })),
+  ),
+  {
+    name: TAG_FONT,
+    weight: 400,
+    style: "normal",
+    data: fs.readFileSync(require.resolve("hack-font/build/web/fonts/hack-regular.woff")),
+  },
+]
 
 // An icon id's SVG, painted in one colour, as a data address an `<img>` can show. Material Design
 // Icons are read from their installed set; the site's own from its files in src/icons
@@ -189,35 +200,71 @@ const image = (src: string, size: number, style: Record<string, unknown> = {}): 
   props: { src, width: size, height: size, style },
 })
 
-// A tag bubble as the site draws one (src/lib/tag-bubble.ts), then `#` and its tag name.
-// A tag the foot has too little room for even alone is cut, its name with an ellipsis.
+// A tag badge as the site draws one open (src/components/TagBadge.astro): its tag bubble
+// (src/lib/tag-bubble.ts) on a pill of `--lightgray`, then `#` and its tag name in the code font. A
+// tag too long for the row even alone has its name cut, with an ellipsis.
 function tagBadge(tag: string): Element {
-  const bubble = bubbleParts(TAG_HEIGHT)
+  const bubble = bubbleParts(TAG_BUBBLE)
   const icon = tagIcon(tag)
   const src = icon === undefined ? undefined : iconSvg(icon, color("dark"))
   return box(
-    { alignItems: "center", gap: 12, height: TAG_HEIGHT, flexShrink: 1, minWidth: TAG_HEIGHT },
+    {
+      alignItems: "center",
+      flexShrink: 0,
+      maxWidth: TAG_ROOM,
+      height: TAG_HEIGHT,
+      padding: TAG_PADDING,
+      // The open badge's corners: round before the bubble, nearly square after the name.
+      borderRadius: `${TAG_HEIGHT / 2}px ${TAG_HEIGHT / 5}px ${TAG_HEIGHT / 5}px ${TAG_HEIGHT / 2}px`,
+      backgroundColor: color("lightgray"),
+      fontFamily: TAG_FONT,
+      fontSize: TAG_FONT_SIZE,
+      color: color("darkgray"),
+    },
     box(
       {
         alignItems: "center",
         justifyContent: "center",
         flexShrink: 0,
-        width: TAG_HEIGHT,
-        height: TAG_HEIGHT,
-        borderRadius: TAG_HEIGHT / 2,
+        width: TAG_BUBBLE,
+        height: TAG_BUBBLE,
+        borderRadius: TAG_BUBBLE / 2,
         border: `${bubble.rim}px solid ${inDark(tagColor(tag) ?? "var(--gray)")}`,
         backgroundColor: color("light"),
       },
       src && image(src, bubble.icon),
     ),
-    // A tag name longer than any other is cut, rather than run off the card.
-    clamped(1, { maxWidth: 400, minWidth: 0, flexShrink: 1, overflow: "hidden", whiteSpace: "nowrap" }, `#${tagName(tag)}`),
+    clamped(1, { minWidth: 0, flexShrink: 1, overflow: "hidden", whiteSpace: "nowrap", padding: "0 6px 0 12px" }, `#${tagName(tag)}`),
   )
 }
 
-// A date or a reading time, after its icon.
-const fact = (icon: string, text: string) =>
-  box({ alignItems: "center", gap: 10 }, image(iconSvg(icon, color("darkgray"))!, 30), text)
+// How wide Satori draws a tag badge: laid out alone, with no width given, which Satori then takes
+// from what it holds. Each tag's is measured once.
+const widths = new Map<string, Promise<number>>()
+function widthOf(tag: string): Promise<number> {
+  let width = widths.get(tag)
+  if (!width) {
+    width = satori(tagBadge(tag) as never, { height: TAG_HEIGHT, fonts: FONTS } as never).then((svg) =>
+      Math.min(TAG_ROOM, Number(/^<svg width="([\d.]+)"/.exec(svg)![1])),
+    )
+    widths.set(tag, width)
+  }
+  return width
+}
+
+// The tags' badges: the first tags, in the order written, as many as the row holds whole. The first
+// is drawn whatever its width, cut to the row if it must be.
+async function tagRow(tags: string[]): Promise<Element[]> {
+  const sizes = await Promise.all(tags.map(widthOf))
+  let used = 0
+  let shown = 0
+  for (const size of sizes) {
+    used += size + (shown > 0 ? TAG_GAP : 0)
+    if (shown > 0 && used > TAG_ROOM) break
+    shown++
+  }
+  return tags.slice(0, shown).map(tagBadge)
+}
 
 // Text cut to a number of lines, ending in an ellipsis when it is cut.
 const clamped = (lines: number, style: Record<string, unknown>, text: string): Element => ({
@@ -225,46 +272,13 @@ const clamped = (lines: number, style: Record<string, unknown>, text: string): E
   props: { style: { display: "block", lineClamp: lines, textOverflow: "ellipsis", ...style }, children: text },
 })
 
-// How wide Satori draws an element of the foot: laid out alone, at the foot's height and in its
-// text, with no width given, which Satori then takes from what it holds. Each is measured once.
-const widths = new Map<string, Promise<number>>()
-function widthOf(element: Element): Promise<number> {
-  const key = JSON.stringify(element)
-  let width = widths.get(key)
-  if (!width) {
-    const alone = box({ fontFamily: "Inter", fontSize: FOOT_FONT_SIZE }, element)
-    width = satori(alone as never, { height: TAG_HEIGHT, fonts: FONTS } as never).then((svg) =>
-      Number(/^<svg width="([\d.]+)"/.exec(svg)![1]),
-    )
-    widths.set(key, width)
-  }
-  return width
-}
-
-// The foot's tags: as many whole ones as fit in `room`, in the order written, then how many more
-// there are. At least one is drawn, cut to fit if it must be.
-async function footTags(tags: string[], room: number): Promise<Element[]> {
-  const more = (count: number) => box({ flexShrink: 0, color: color("gray") }, `+${count}`)
-  const badges = tags.map(tagBadge)
-  let shown = badges.length
-  for (; shown > 1; shown--) {
-    const parts = [...badges.slice(0, shown), ...(shown < badges.length ? [more(badges.length - shown)] : [])]
-    const width = (await Promise.all(parts.map(widthOf))).reduce((sum, each) => sum + each, 0)
-    if (width + TAG_GAP * (parts.length - 1) <= room) break
-  }
-  return [...badges.slice(0, shown), ...(shown < badges.length ? [more(badges.length - shown)] : [])]
-}
-
-// The card: the site at the top, the page's title and description, and its date, reading time and
-// tags along the foot. The title and description take what room the foot leaves, and are cut to
-// it, so a long title never moves the foot.
+// The card: the site's title at the top, as the sidebar has it, and under it the page as a post
+// listing shows it, centred in the room left: its title, centred; its date, a dash and its
+// description; and as many of its tags' badges as fit on a row, centred. The title and the line
+// under it are cut to fit, so the tags are always drawn.
 async function layout(card: ShareCard, site: URL): Promise<Element> {
-  const facts = box(
-    { alignItems: "center", gap: 36, flexShrink: 0, marginRight: 36 },
-    card.date !== undefined && fact("mdi:calendar-blank-outline", card.date),
-    card.readingTime !== undefined && fact("mdi:clock-outline", card.readingTime),
-  )
-  const room = SHARE_CARD_SIZE.width - 2 * PADDING - (await widthOf(facts))
+  // "Mar 14, 2026 — What it is about", as PostList.astro writes it.
+  const meta = [card.date, card.description].filter((part) => part !== undefined).join(" — ")
   return box(
     {
       flexDirection: "column",
@@ -273,33 +287,34 @@ async function layout(card: ShareCard, site: URL): Promise<Element> {
       padding: PADDING,
       backgroundColor: color("light"),
       color: color("darkgray"),
-      fontFamily: "Inter",
+      fontFamily: FONT,
+      fontWeight: 300,
     },
+    // The site's title as the sidebar draws it (SiteTitle.astro), and its address across from it.
     box(
-      { alignItems: "center", flexShrink: 0, gap: 20, fontSize: 30, color: color("gray") },
-      image(siteIcon, 64, { borderRadius: 32 }),
-      site.host,
-    ),
-    box(
-      { flexDirection: "column", flexGrow: 1, flexShrink: 1, overflow: "hidden", margin: "40px 0 24px", gap: 20 },
-      clamped(2, { fontSize: 64, fontWeight: 700, lineHeight: 1.2, color: color("dark") }, card.title),
-      card.description !== undefined && clamped(2, { fontSize: 32, lineHeight: 1.4 }, card.description),
-    ),
-    box(
-      {
-        alignItems: "center",
-        justifyContent: "space-between",
-        flexShrink: 0,
-        height: 92,
-        paddingTop: 24,
-        borderTop: `2px solid ${color("lightgray")}`,
-        fontSize: FOOT_FONT_SIZE,
-      },
-      facts,
+      { alignItems: "center", justifyContent: "space-between", flexShrink: 0, gap: 24 },
       box(
-        { alignItems: "center", justifyContent: "flex-end", gap: TAG_GAP, flexShrink: 1, minWidth: 0, height: TAG_HEIGHT },
-        ...(await footTags(card.tags, room)),
+        { alignItems: "center", gap: 18, color: color("dark") },
+        image(siteIcon, 72, { borderRadius: 5 }),
+        box(
+          { flexDirection: "column", gap: 2 },
+          box({ fontSize: 36, fontWeight: 700, lineHeight: 1.2 }, siteConfig.title),
+          box({ fontSize: 20, opacity: 0.7 }, `by ${siteConfig.author.name}`),
+        ),
       ),
+      box({ fontSize: 24, color: color("gray") }, site.host),
+    ),
+    box(
+      { flexDirection: "column", justifyContent: "center", flexGrow: 1, minHeight: 0, gap: 20, paddingTop: 24 },
+      // The listing's title is a link, and drawn as one. Satori centres a clamped text's lines only
+      // when it wraps, so a title of one line is centred by the row it is in.
+      box(
+        { justifyContent: "center", flexShrink: 0 },
+        clamped(2, { fontSize: 56, fontWeight: 600, lineHeight: 1.25, textAlign: "center", color: color("secondary") }, card.title),
+      ),
+      meta !== "" && clamped(3, { fontSize: 30, lineHeight: 1.45, flexShrink: 0 }, meta),
+      card.tags.length > 0 &&
+        box({ justifyContent: "center", gap: TAG_GAP, flexShrink: 0, marginTop: 4 }, ...(await tagRow(card.tags))),
     ),
   )
 }

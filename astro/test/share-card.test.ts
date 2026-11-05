@@ -10,7 +10,6 @@ import {
   shareCardOf,
   shareCardPages,
   shareCardUrl,
-  type ShareCard,
 } from "../src/lib/share-card.ts"
 import { tagColor } from "../src/lib/tag-dictionary.ts"
 
@@ -51,12 +50,11 @@ test("a note with no description has a card with its first paragraph in its plac
       "Everything I Learned Building a Static Site Generator Twice Over, Including the Parts I Would Rather Forget About Entirely",
     description: "No description, and a title too long for one line.",
     date: "Feb 15, 2026",
-    readingTime: "1 min read",
     tags: [],
   })
 })
 
-test("a note with no text has its date alone, as its page does", () => {
+test("a note with neither a description nor text has its date alone", () => {
   expect(shareCardOf({ note: note("share-card/blank") })).toEqual({
     title: "Blank",
     date: "Feb 16, 2026",
@@ -152,28 +150,20 @@ test("a card's tags are drawn in their dark colours", async () => {
   expect(await count(untagged, dark("horticulture"))).toBe(0)
 })
 
-test("a long title is cut to fit, and leaves the card's foot where every card has it", async () => {
-  const foot: Omit<ShareCard, "title"> = { date: "Feb 15, 2026", readingTime: "1 min read", tags: ["engineering"] }
+test("a long title and description are cut to fit, and leave room for the card's tags", async () => {
   const long = shareCardOf({ note: note("share-card/long-title") }).title
-  const bottom = { top: 480, height: 150 }
-  const short = await pixels(await drawShareCard({ title: "Short", ...foot }, SITE), bottom)
-  const cut = await pixels(await drawShareCard({ title: long, ...foot }, SITE), bottom)
-  const described = await pixels(
-    await drawShareCard({ title: long, description: "A description that runs on. ".repeat(30), ...foot }, SITE),
-    bottom,
+  const png = await drawShareCard(
+    { title: long, date: "Feb 15, 2026", description: "A description that runs on. ".repeat(30), tags: ["horticulture"] },
+    SITE,
   )
-  expect(differs(cut.data, short.data)).toBe(false)
-  expect(differs(described.data, short.data)).toBe(false)
+  expect(await count(png, dark("horticulture"))).toBeGreaterThan(100)
 })
 
-test("a long title is cut to two lines, and draws nothing in the room a third would take", async () => {
-  // The title's two lines are at 168 to 322, under the site's row; the foot starts at 474. With no
-  // description, everything between is the background.
+test("a title is cut to two lines: a longer one draws the same card", async () => {
   const long = shareCardOf({ note: note("share-card/long-title") }).title
-  const { data } = await pixels(await drawShareCard({ title: long, tags: [] }, SITE), { top: 330, height: 120 })
-  const colours = new Set<string>()
-  for (let at = 0; at < data.length; at += 3) colours.add(hex(data, at))
-  expect([...colours]).toEqual(["#161618"])
+  const cut = await pixels(await drawShareCard({ title: long, tags: [] }, SITE))
+  const longer = await pixels(await drawShareCard({ title: `${long} ${long}`, tags: [] }, SITE))
+  expect(differs(longer.data, cut.data)).toBe(false)
 })
 
 test("a card draws every tag it has room for", async () => {
@@ -182,18 +172,20 @@ test("a card draws every tag it has room for", async () => {
   for (const tag of ["writing", "projects", "horticulture"]) expect(await count(png, dark(tag)), tag).toBeGreaterThan(100)
 })
 
-test("a card with more tags than it has room for draws those that fit, and says how many more there are", async () => {
-  // A Pattern Language annotation's tags: the first is long, and leaves no room for the others.
-  const foot = { date: "Feb 15, 2026", readingTime: "12 min read" }
-  const first = "writing/annotations/a-pattern-language"
-  const all = await drawShareCard({ title: "Tagged", ...foot, tags: [first, "projects/games/the-neighborhood", "horticulture"] }, SITE)
-  expect(await count(all, dark(first))).toBeGreaterThan(100)
-  expect(await count(all, dark("projects/games/the-neighborhood"))).toBe(0)
-  expect(await count(all, dark("horticulture"))).toBe(0)
-  // `+2` is drawn where a card with the one tag has nothing.
-  const one = await drawShareCard({ title: "Tagged", ...foot, tags: [first] }, SITE)
-  const end = { top: 500, height: 80 }
-  expect(differs((await pixels(all, end)).data, (await pixels(one, end)).data)).toBe(true)
+test("a card with more tags than a row holds draws the first that fit, and no more", async () => {
+  // Tags with no entry in the dictionary are drawn grey: two long ones fill the row after the first.
+  const long = (at: number) => `a-tag-with-a-rather-long-name-${at}`
+  const png = await drawShareCard({ title: "Tagged", tags: ["horticulture", long(0), long(1), "writing"] }, SITE)
+  expect(await count(png, dark("horticulture"))).toBeGreaterThan(100)
+  expect(await count(png, dark("writing"))).toBe(0)
+  // With room for it, the same tag is drawn.
+  const roomy = await drawShareCard({ title: "Tagged", tags: ["horticulture", "writing"] }, SITE)
+  expect(await count(roomy, dark("writing"))).toBeGreaterThan(100)
+})
+
+test("a tag too long for the row alone is drawn, cut to fit", async () => {
+  const png = await drawShareCard({ title: "Tagged", tags: [`horticulture/${"overgrown-".repeat(20)}`] }, SITE)
+  expect(await count(png, dark("horticulture"))).toBeGreaterThan(100)
 })
 
 test("a card is drawn once, and the next build takes it from the cache until what it shows changes", async () => {
@@ -207,7 +199,7 @@ test("a card is drawn once, and the next build takes it from the cache until wha
     const next = shareCardDrawer(cache)
     expect((await next.draw(roses, SITE)).equals(drawn)).toBe(true)
     expect(next.drawn).toBe(0)
-    await next.draw({ ...roses, readingTime: "3 min read" }, SITE)
+    await next.draw({ ...roses, date: "Mar 01, 2026" }, SITE)
     await next.draw(roses, new URL("https://example.com"))
     expect(next.drawn).toBe(2)
   } finally {
