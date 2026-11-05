@@ -58,6 +58,7 @@ import { mirrors } from "./src/integrations/mirrors.ts"
 import { resume } from "./src/integrations/resume.ts"
 
 import { externalLinks } from "./src/lib/external-links.ts"
+import { indieNews } from "./src/lib/indienews.ts"
 import { headingAnchors } from "./src/lib/heading-anchors.ts"
 import { calloutIcons } from "./src/lib/callouts.ts"
 
@@ -242,6 +243,10 @@ export default defineConfig({
 
         // A link to another site opens in a new tab (docs/adr/3401).
         externalLinks(site),
+
+        // A link to an IndieNews language page is the note's copy there, which submits the note
+        // (src/lib/indienews.ts).
+        indieNews(),
 
         // A callout's title begins with its kind's icon, and a folding one's ends with a fold icon.
         calloutIcons(),

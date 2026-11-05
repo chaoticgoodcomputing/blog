@@ -432,6 +432,13 @@ page>`. A reader who comes to one is sent on to the note, at the first of them. 
 what is marked `data-no-webmention`, such as a widget's links to the sites it charts, has none.
 _Avoid_: reply page, source page
 
+**IndieNews submission**:
+A note's link to one of IndieNews's language pages (`https://news.indieweb.org/en`), written as an
+ordinary Markdown link. The build marks it as the note's copy there (`u-syndication`), as IndieNews
+asks, and its mention excerpt's webmention submits the note. A link to IndieNews's home page
+submits nothing.
+_Avoid_: IndieNews post, syndication link
+
 **Connections**:
 Under a note, one carousel, a panel at a time: its outlinks and its backlinks, each with its date
 and description, then its discussion. Site configuration names the panels, in order, and their
