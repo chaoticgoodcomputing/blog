@@ -1,5 +1,5 @@
 ---
-title: LLMs; or, How to Run Your Own Hostage Negotiation
+title: How to Run Your Own Hostage Negotiation
 description: |
   LLMs: Are we doomed to die, or born to garden?
   I'd like to make the case that AI is less like Terminator, and more like tomatoes.
@@ -7,7 +7,7 @@ date: 2026-01-10
 updated: 2026-01-22
 tags:
   - engineering/ai
-  - writing/essays
+  - writing/notes
 ---
 I remember watching CGPGrey's [Humans Need Not Apply](https://www.youtube.com/watch?v=7Pq-S557XQU) back in 2017, when I was a freshman in college. At the time, I knew I was going into *something* related to programming (my major bounced around a few times in the first couple years of my undergraduate). Around the same time, I participated in the 2016 University of Utah hackathon, [HackTheU](https://www.hacktheu.org/), in which two forms of machine learning were all the rage:
 
