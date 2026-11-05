@@ -25,7 +25,7 @@ export function indieNews() {
         const href = node.properties?.href
         if (typeof href !== "string" || !isIndieNews(href)) return
         const classes = node.properties?.className
-        const own = Array.isArray(classes) ? classes.map(String) : typeof classes === "string" ? classes.split(/\s+/) : []
+        const own = Array.isArray(classes) ? classes.map(String) : []
         if (!own.includes("u-syndication")) ctx.setProperty(node, "className", [...own, "u-syndication"])
       },
     },
