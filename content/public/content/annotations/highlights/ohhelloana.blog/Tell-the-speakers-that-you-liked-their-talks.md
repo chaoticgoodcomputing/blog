@@ -1,15 +1,20 @@
 ---
-title:
+title: Tell the speakers that you liked their talks
 date: 2026-11-06
 updated: 2026-11-06
 tags:
+  - horticulture/seasons/stamps
   - writing/annotations
-description:
-annotation-pages:
-annotation-target: "https://ohhelloana.blog/tell-the-speakers/"
+  - writing/fragments
+description: Some quick thoughts on Ana Rodrigues's post "Tell the speakers that you liked their talks", and a general initial test for web-based annotations.
+annotation-pages: 
+annotation-target: https://ohhelloana.blog/tell-the-speakers/
 annotation-target-type: web
 ---
 
+This is largely a test of something that I picked up while reading blogs from my [[public/content/notes/the-wild-web.mdx|Wild Web]] analysis. Something that is vaguely in the spirit of WebMentions/IndieWeb is posting annotations about other folks web pages, as a form of direct reply.
+
+I've created a hacky workaround of the [Hypothes.is browser extension](https://github.com/hypothesis/browser-extension) in Firefox that treats Obsidian as the hypothes.is server. I'll be giving that a trial run in the coming weeks, to see if I can reliably do web annotations in the same way that I've been doing [[public/content/annotations/valve-handbook|PDF annotations]].
 
 >%%
 >```annotation-json
