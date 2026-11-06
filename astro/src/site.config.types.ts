@@ -39,8 +39,8 @@ export interface SiteConfig {
     explorer: PrivateTreatment
   }
   /**
-   * Fragments: pages published in full and listed on their tags' pages, but not on the home page or
-   * in the feed, such as the highlights made of other sites' pages. A page under one of these tags,
+   * Fragments: pages published in full, listed on their tags' pages and in the feed, but not on the
+   * home page, such as the highlights made of other sites' pages. A page under one of these tags,
    * or under a tag under one, is a fragment.
    */
   fragments: {

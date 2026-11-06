@@ -6,7 +6,7 @@ import type { RSSFeedItem, RSSOptions } from "@astrojs/rss"
 import type { Vault } from "@chaoticgoodcomputing/obsidian-markdown"
 import { feed, site as siteConfig } from "../site.config.ts"
 import { formerAddress } from "./former-addresses.ts"
-import { isFragment, newestFirst, type Note } from "./notes.ts"
+import { newestFirst, type Note } from "./notes.ts"
 import { readingMinutes } from "./reading-time.ts"
 import { getVault } from "./vault.ts"
 
@@ -45,10 +45,10 @@ export function feedCategories(tags: string[], excluded: string[] = feed.exclude
   return [...above.keys()].sort((a, b) => above.get(a)! - above.get(b)!)
 }
 
-/** The notes the feed holds, newest first: each article whose page is neither private nor a fragment, up to `limit`. */
+/** The notes the feed holds, newest first: each article whose page is not private, a fragment's among them, up to `limit`. */
 export const feedNotes = (notes: Note[], limit = feed.limit): Note[] =>
   notes
-    .filter((note) => note.isArticle && !note.isPrivate && !isFragment(note.tags))
+    .filter((note) => note.isArticle && !note.isPrivate)
     .sort(newestFirst)
     .slice(0, limit)
 
