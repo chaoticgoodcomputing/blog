@@ -2,15 +2,21 @@
 // found by Obsidian's index of their properties, read and written through the vault.
 
 import { type App, moment, normalizePath, TFile } from "obsidian"
+import { newNote, notePath, type Page, pageVariables } from "./new-notes.ts"
 import type { NoteStore } from "./service.ts"
 import { targetOf } from "./target.ts"
-import { type AnnotationNote, newNote, noteName, type Page, type VaultNotes } from "./vault-service.ts"
+import type { AnnotationNote, VaultNotes } from "./vault-service.ts"
 
 export interface VaultNotesOptions {
   /** Looked in for a target that names no file (the plugin's default path setting). */
   defaultPath: () => string
-  /** Where a page's new note goes: a folder of the vault, or, empty, where Obsidian puts new notes. */
-  folder: () => string
+  /**
+   * Where a page's new note goes: a path pattern (src/new-notes.ts) from the vault's root, or, empty,
+   * its title, where Obsidian puts new notes.
+   */
+  path: () => string
+  /** The note a page's new note is made from, a web page's or a PDF's: a note of the vault, or, empty, none. */
+  template: (page: Page) => string
 }
 
 export function vaultNotes(app: App, options: VaultNotesOptions): VaultNotes {
@@ -22,6 +28,39 @@ export function vaultNotes(app: App, options: VaultNotesOptions): VaultNotes {
     const file = app.vault.getAbstractFileByPath(path)
     if (!(file instanceof TFile)) throw new Error(`No note ${path}`)
     return file
+  }
+
+  /** The template's text, or none when the settings name none; one they name that isn't there is told of, and skipped. */
+  async function templateText(page: Page): Promise<string | undefined> {
+    const name = options.template(page).trim()
+    if (!name) return undefined
+    const file = app.metadataCache.getFirstLinkpathDest(name.replace(/\.md$/i, ""), "")
+    if (file) return app.vault.read(file)
+    console.warn(`Annotator: no template ${name} for a new note; made it without one.`)
+    return undefined
+  }
+
+  /** Makes each folder of a path that isn't there yet, from the vault's root down. */
+  async function createFolders(parts: string[]) {
+    for (let i = 1; i <= parts.length; i++) {
+      const folder = parts.slice(0, i).join("/")
+      if (!app.vault.getAbstractFileByPath(folder)) await app.vault.createFolder(folder)
+    }
+  }
+
+  /**
+   * Runs Templater's commands (`<% %>`) in a new note, when Templater is on, as its "Replace
+   * templates in the active file" command does. Its own setting may run them as the note is made
+   * too: a second run finds none left.
+   */
+  async function runTemplater(file: TFile) {
+    const templater = (app as any).plugins?.plugins?.["templater-obsidian"]?.templater
+    if (typeof templater?.overwrite_file_commands !== "function") return
+    try {
+      await templater.overwrite_file_commands(file)
+    } catch (error) {
+      console.error("Annotator: Templater, on a new note", error)
+    }
   }
 
   return {
@@ -46,13 +85,17 @@ export function vaultNotes(app: App, options: VaultNotesOptions): VaultNotes {
     },
 
     async create(page: Page): Promise<string> {
-      const folder = normalizePath(options.folder().trim() || app.fileManager.getNewFileParent("").path)
-      if (!app.vault.getAbstractFileByPath(folder)) await app.vault.createFolder(folder)
-      const name = noteName(page)
-      let path = normalizePath(`${folder}/${name}.md`)
-      for (let n = 2; app.vault.getAbstractFileByPath(path); n++) path = normalizePath(`${folder}/${name} ${n}.md`)
-      await app.vault.create(path, newNote(page, moment().format("YYYY-MM-DD")))
+      const today = moment().format("YYYY-MM-DD")
+      const pattern = options.path().trim()
+      const relative = notePath(pattern, pageVariables(page, today))
+      const base = normalizePath(`${pattern ? "" : app.fileManager.getNewFileParent("").path}/${relative}`)
+      await createFolders(base.split("/").slice(0, -1))
+      let path = `${base}.md`
+      for (let n = 2; app.vault.getAbstractFileByPath(path); n++) path = `${base} ${n}.md`
+      const template = await templateText(page)
+      const file = await app.vault.create(path, newNote(page, today, template))
       made.set(path, page.uri)
+      if (template?.includes("<%")) await runTemplater(file)
       return path
     },
 

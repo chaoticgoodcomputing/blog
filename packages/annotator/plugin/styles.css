@@ -84,3 +84,26 @@
   padding: var(--size-4-4);
   color: var(--text-muted);
 }
+
+/* A web page's annotation note: the bar under its properties that opens the page in the browser. */
+.annotator-web-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  margin: var(--size-4-2) 0 var(--size-4-4);
+  padding: var(--size-4-2) var(--size-4-3);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background: var(--background-secondary);
+  font-size: var(--font-ui-small);
+}
+
+.annotator-web-bar-icon {
+  display: flex;
+  color: var(--text-muted);
+}
+
+.annotator-web-bar-host {
+  flex: 1;
+  color: var(--text-muted);
+}

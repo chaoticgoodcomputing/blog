@@ -5,7 +5,7 @@ import assert from "node:assert/strict"
 import { test } from "node:test"
 import { upsertAnnotation } from "@chaoticgoodcomputing/annotator-format"
 import { EditorState } from "@codemirror/state"
-import { annotatorWrite, changeBetween, isAnnotationNoteText, protectBlocks, regionField, regionOf } from "../src/editor/region.ts"
+import { annotatorWrite, changeBetween, isAnnotationNoteText, protectBlocks, regionField, regionOf, webPageOf } from "../src/editor/region.ts"
 
 const FRONTMATTER = "---\ntitle: A paper\nannotation-target: https://example.org/paper.pdf\n---\n"
 const annotation = (id: string, text: string) => ({ id, text, target: [{ source: "https://example.org/paper.pdf", selector: [{ type: "TextQuoteSelector", exact: `passage ${id}` }] }] })
@@ -81,4 +81,11 @@ test("the plugin's own writes reach the blocks", () => {
   const written = state.update({ changes: change, filter: false, annotations: annotatorWrite.of(true) }).state
   assert.equal(written.doc.toString(), after)
   assert.equal(changeBetween(after, after), null)
+})
+
+test("a web page's note has no region: its annotations are its text", () => {
+  const web = note().replace("annotation-target: https://example.org/paper.pdf\n", "annotation-target: \"https://example.org/page\"\nannotation-target-type: web\n")
+  assert.equal(regionOf(web), null)
+  assert.deepEqual(webPageOf(web), { url: "https://example.org/page", end: web.indexOf("---\n", 4) + 4 })
+  assert.equal(webPageOf(note()), null)
 })

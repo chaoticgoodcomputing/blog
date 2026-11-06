@@ -9,12 +9,13 @@ import { type Events, ItemView, MarkdownView, Notice, Plugin, TFile, type ViewSt
 import { documentStore } from "./documents.ts"
 import { type OcrFiles, recognizePdf } from "./ocr.ts"
 import { annotatorInEditor, openAtAnnotation } from "./editor/annotator.ts"
+import { webNoteInEditor } from "./editor/web-note.ts"
 import { folderOf } from "./frame-page.ts"
 import type { AnnotatorSession } from "./session.ts"
 import { type AnnotatorSettings, AnnotatorSettingTab, settingsFrom } from "./settings.ts"
 import logo from "./cgc-logo.svg"
 import { type LocalService, serve } from "./server.ts"
-import { addressOf, bytesOf, isAnnotationNote, type Target, targetOf, textFileOf } from "./target.ts"
+import { addressOf, bytesOf, isAnnotationNote, isWebNote, type Target, targetOf, textFileOf } from "./target.ts"
 import { vaultNotes } from "./vault-notes.ts"
 import { createVaultService } from "./vault-service.ts"
 
@@ -38,7 +39,7 @@ export default class AnnotatorPlugin extends Plugin {
     this.settings = settingsFrom(await this.loadData())
     this.app.workspace.onLayoutReady(() => void this.restartService())
     this.addSettingTab(new AnnotatorSettingTab(this.app, this))
-    this.registerEditorExtension(annotatorInEditor(this))
+    this.registerEditorExtension([annotatorInEditor(this), webNoteInEditor])
     this.registerView(LEGACY_VIEW_TYPE, (leaf) => new LegacyAnnotationView(leaf))
     this.openLinksToAnnotationsAtThem()
 
@@ -62,7 +63,7 @@ export default class AnnotatorPlugin extends Plugin {
       name: "Recognize the text of this note's scanned PDF",
       checkCallback: (checking) => {
         const file = this.app.workspace.getActiveViewOfType(MarkdownView)?.file ?? null
-        const target = isAnnotationNote(this.app, file) ? targetOf(this.app, file, this.settings.customDefaultPath) : undefined
+        const target = isAnnotationNote(this.app, file) && !isWebNote(this.app, file) ? targetOf(this.app, file, this.settings.customDefaultPath) : undefined
         if (!target) return false
         if (!checking) {
           const notice = new Notice("Recognizing this PDF's text…", 0)
@@ -77,7 +78,7 @@ export default class AnnotatorPlugin extends Plugin {
       name: "Supply this note's PDF from a file",
       checkCallback: (checking) => {
         const file = this.app.workspace.getActiveViewOfType(MarkdownView)?.file ?? null
-        const target = isAnnotationNote(this.app, file) ? targetOf(this.app, file, this.settings.customDefaultPath) : undefined
+        const target = isAnnotationNote(this.app, file) && !isWebNote(this.app, file) ? targetOf(this.app, file, this.settings.customDefaultPath) : undefined
         if (target?.kind !== "url") return false
         if (!checking) void this.supplyDocument(target.url)
         return true
@@ -148,7 +149,8 @@ export default class AnnotatorPlugin extends Plugin {
     if (!this.settings.serveExtension) return
     const notes = vaultNotes(this.app, {
       defaultPath: () => this.settings.customDefaultPath,
-      folder: () => this.settings.webNoteFolder,
+      path: () => this.settings.webNotePath,
+      template: (page) => (page.pdf ? this.settings.pdfTemplate : this.settings.webPageTemplate),
     })
     try {
       this.service = await serve({

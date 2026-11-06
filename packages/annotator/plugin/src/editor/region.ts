@@ -19,12 +19,29 @@ export interface Region {
 const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/
 const TARGET = /^annotation-target:[ \t]*(?:\S|\r?\n[ \t]+-[ \t]*\S)/m
 
+// A web page's target type: `annotation-target-type: web`, quoted or not.
+const WEB = /^annotation-target-type:[ \t]*(["']?)web\1[ \t]*$/im
+
 /** Whether a note's text is an annotation note's: its frontmatter names an annotation target. */
 export const isAnnotationNoteText = (text: string) => TARGET.test(FRONTMATTER.exec(text)?.[1] ?? "")
 
-/** A note's annotator region, or none for a note that is no annotation note. */
+/**
+ * Whether a note's text is a web page's annotation note's: one made in the browser, whose page
+ * Obsidian doesn't show, so its annotations are the note's text, as any note's.
+ */
+export const isWebNoteText = (text: string) => isAnnotationNoteText(text) && WEB.test(FRONTMATTER.exec(text)![1]!)
+
+/** A web page's note's page, and where its frontmatter ends; none for any other note. */
+export function webPageOf(text: string): { url: string; end: number } | null {
+  if (!isWebNoteText(text)) return null
+  const frontmatter = FRONTMATTER.exec(text)!
+  const url = /^annotation-target:[ \t]*(?:\r?\n[ \t]+-[ \t]*)?(["']?)([^"'\r\n]+?)\1[ \t]*$/m.exec(frontmatter[1]!)?.[2]
+  return url ? { url, end: frontmatter[0].length } : null
+}
+
+/** A note's annotator region, or none for a note that is no annotation note, or a web page's. */
 export function regionOf(text: string): Region | null {
-  if (!isAnnotationNoteText(text)) return null
+  if (!isAnnotationNoteText(text) || isWebNoteText(text)) return null
   const { blocks } = parseNote(text)
   const first = blocks[0]
   const last = blocks.at(-1)

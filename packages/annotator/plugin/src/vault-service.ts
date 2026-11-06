@@ -5,18 +5,15 @@
 // runs in the plugin and in the tests.
 
 import { parseNote, type WriteOptions } from "@chaoticgoodcomputing/annotator-format"
+import type { Page } from "./new-notes.ts"
 import { type ApiRequest, type ApiResponse, createService, type NoteStore, type Service } from "./service.ts"
+
+export type { Page } from "./new-notes.ts"
 
 /** An annotation note, by its path in the vault, and its annotation target's address. */
 export interface AnnotationNote {
   path: string
   target: string
-}
-
-/** A page the client names, as an annotation made on it names it. */
-export interface Page {
-  uri: string
-  title?: string
 }
 
 /** The vault's annotation notes, as the local service reads and makes them. */
@@ -131,7 +128,9 @@ export function createVaultService(options: VaultServiceOptions): Service {
       const links: string[] = (posted.document?.link ?? []).map((link: { href?: string }) => link.href)
       const sources: string[] = (posted.target ?? []).map((target: { source?: string }) => target.source)
       const existing = noteFor([uri, ...links, ...sources])
-      const notePath = existing?.path ?? (await notes.create({ uri, title: posted.document?.title }))
+      // The client names a PDF by its fingerprint, as `urn:x-pdf:`, beside its address.
+      const pdf = [uri, ...links].some((address) => /^urn:x-pdf:|\.pdf(?:[?#]|$)/i.test(address ?? ""))
+      const notePath = existing?.path ?? (await notes.create({ uri, title: posted.document?.title, pdf }))
       return serviceOf(notePath)(request)
     }
 
@@ -143,44 +142,4 @@ export function createVaultService(options: VaultServiceOptions): Service {
 
     return general(request)
   }
-}
-
-/** The longest a new note's name is, before `.md`. */
-const MAX_NAME = 100
-
-/** A page's note's name: its title, else its address, without what a file name can't hold. */
-export function noteName(page: Page): string {
-  const fromAddress = () => {
-    try {
-      const url = new URL(page.uri)
-      return `${url.host}${url.pathname}`.replace(/\/$/, "")
-    } catch {
-      return page.uri
-    }
-  }
-  const name = (page.title?.trim() || fromAddress())
-    .replace(/[\\/:*?"<>|#^[\]]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .slice(0, MAX_NAME)
-    .trim()
-  return name || "Annotations"
-}
-
-/**
- * A page's new annotation note: its properties as the vault's annotation template has them
- * (content/templates/annotation.template.md), and nothing else; the annotations follow.
- */
-export function newNote(page: Page, today: string): string {
-  const quoted = (text: string) => JSON.stringify(text)
-  return [
-    "---",
-    `title: ${quoted(page.title?.trim() || noteName(page))}`,
-    `date: ${today}`,
-    "tags:",
-    "  - writing/annotations",
-    `annotation-target: ${quoted(page.uri)}`,
-    "---",
-    "",
-  ].join("\n")
 }

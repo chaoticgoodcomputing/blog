@@ -99,8 +99,22 @@ several are. A PDF opened in the browser has the note Obsidian annotates it in.
 _Avoid_: matching note, page note (Hypothesis's word for an annotation on a whole page)
 
 **Making a page's note**:
-What a page's first annotation in the browser does when it has no note: a note in the folder the
-settings name, or Obsidian's folder for new notes, named by the page's title, with the annotation
-template's properties.
+What a page's first annotation in the browser does when it has no note: a note at the path the
+settings' pattern makes of the page, from the settings' template for a web page or for a PDF, or
+with the annotation template's properties, its annotation target the page. A web page's note has `annotation-target-type: web`; a
+PDF's has none, and is a PDF's note as any other.
 _Avoid_: importing, capturing
 
+**Note path pattern**:
+Where a page's new note goes, as the settings write it: a path from the vault's root, with the
+page's `{title}`, `{sanitized-title}` (its title with dashes for spaces and for what a
+file name can't hold), `{domain}` (its host, without `www.`), `{slug}` (its whole path, in hyphenated
+lowercase), `{url}` and `{date}`, each with underscores for what a file name can't hold. The
+pattern's own slashes are folders; a variable's never are.
+_Avoid_: folder, file name template
+
+**Web page's note**:
+An annotation note whose target type is a web page: annotated in the browser, never in Obsidian,
+which doesn't show the page. Its editor has no annotator region; its annotations are its text, as
+any note's, under a bar that opens the page in the browser.
+_Avoid_: web note, bookmark, clipping

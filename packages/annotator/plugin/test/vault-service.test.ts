@@ -4,7 +4,8 @@
 import assert from "node:assert/strict"
 import { describe, test } from "node:test"
 import { parseNote } from "@chaoticgoodcomputing/annotator-format"
-import { createVaultService, newNote, normalizeAddress, noteName, type Page, type VaultNotes } from "../src/vault-service.ts"
+import { newNote, notePath, pageVariables } from "../src/new-notes.ts"
+import { createVaultService, normalizeAddress, type Page, type VaultNotes } from "../src/vault-service.ts"
 
 const API = "http://127.0.0.1:27183/api/"
 const PAGE = "https://en.wikipedia.org/wiki/Pickle"
@@ -27,7 +28,7 @@ function memoryVault(files: Record<string, string>) {
     }),
     create: async (page) => {
       created.push(page)
-      const path = `new/${noteName(page)}.md`
+      const path = `${notePath("new/{title}", pageVariables(page, "2026-11-05"))}.md`
       files[path] = newNote(page, "2026-11-05")
       return path
     },
@@ -111,13 +112,26 @@ describe("a page's first annotation", () => {
     const { call, files, created } = setup({})
     await call("POST", "annotations", posted(PAGE, "First"))
     await call("POST", "annotations", posted(PAGE, "Second"))
-    assert.deepEqual(created, [{ uri: PAGE, title: "Pickle - Wikipedia" }])
+    assert.deepEqual(created, [{ uri: PAGE, title: "Pickle - Wikipedia", pdf: false }])
     const made = files["new/Pickle - Wikipedia.md"]!
     assert.match(made, /^annotation-target: "https:\/\/en.wikipedia.org\/wiki\/Pickle"$/m)
     assert.deepEqual(
       parseNote(made).annotations.map((annotation) => annotation.text),
       ["First", "Second"],
     )
+  })
+
+  test("of a PDF in the browser makes a PDF's note, which Obsidian can show", async () => {
+    const { call, files, created } = setup({})
+    await call("POST", "annotations", posted(PDF, "First", { document: { title: "Paper", link: [{ href: PDF }, { href: "urn:x-pdf:abc123" }] } }))
+    assert.equal(created[0]!.pdf, true)
+    assert.doesNotMatch(files["new/Paper.md"]!, /annotation-target-type/)
+  })
+
+  test("of a web page makes a web page's note", async () => {
+    const { call, files } = setup({})
+    await call("POST", "annotations", posted(PAGE, "First"))
+    assert.match(files["new/Pickle - Wikipedia.md"]!, /^annotation-target-type: web$/m)
   })
 
   test("goes to an existing note that names the page by another address", async () => {
@@ -173,20 +187,5 @@ describe("the sidebar's logo", () => {
   test("is the client's own without one", async () => {
     const { call } = setup({})
     assert.equal((await call("GET", "groups")).json[0].organization, null)
-  })
-})
-
-describe("a new note", () => {
-  test("is named by the page's title, without what a file name can't hold", () => {
-    assert.equal(noteName({ uri: PAGE, title: 'Pickles: a "history" / part 1' }), "Pickles a history part 1")
-  })
-  test("is named by the page's address when it has no title", () => {
-    assert.equal(noteName({ uri: "https://example.com/a/b/" }), "example.com a b")
-  })
-  test("has the annotation template's properties", () => {
-    assert.equal(
-      newNote({ uri: PAGE, title: "Pickle: a food" }, "2026-11-05"),
-      `---\ntitle: "Pickle: a food"\ndate: 2026-11-05\ntags:\n  - writing/annotations\nannotation-target: "${PAGE}"\n---\n`,
-    )
   })
 })

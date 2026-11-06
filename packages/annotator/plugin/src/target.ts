@@ -4,6 +4,7 @@ import { type DocumentStore, documentFor, savedName } from "@chaoticgoodcomputin
 import { textFileName } from "@chaoticgoodcomputing/pdf-ocr"
 import { type App, TFile } from "obsidian"
 import { obsidianFetch } from "./documents.ts"
+import { TYPE_PROPERTY, WEB_TYPE } from "./new-notes.ts"
 
 export const TARGET_PROPERTY = "annotation-target"
 
@@ -29,6 +30,9 @@ export function propertyOf(app: App, file: TFile, name: string): unknown {
 /** Whether a note is an annotation note: it has an annotation target. */
 export const isAnnotationNote = (app: App, file: TFile | null): file is TFile =>
   file instanceof TFile && Boolean(propertyOf(app, file, TARGET_PROPERTY))
+
+/** Whether an annotation note is a web page's: made in the browser, whose page Obsidian doesn't show. */
+export const isWebNote = (app: App, file: TFile) => String(propertyOf(app, file, TYPE_PROPERTY) ?? "").trim().toLowerCase() === WEB_TYPE
 
 const isUrl = (text: string) => /^[a-z][a-z0-9+.-]*:\/\//i.test(text)
 

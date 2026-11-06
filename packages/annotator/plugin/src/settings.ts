@@ -3,6 +3,7 @@
 
 import { type App, PluginSettingTab, Setting } from "obsidian"
 import type AnnotatorPlugin from "./main.ts"
+import { DEFAULT_PATTERN } from "./new-notes.ts"
 import { DEFAULT_PORT } from "./server.ts"
 
 export interface AnnotatorSettings {
@@ -24,8 +25,18 @@ export interface AnnotatorSettings {
   serveExtension: boolean
   /** The local service's port; the extension's local settings name 27183. */
   servicePort: number
-  /** Where a page's new annotation note goes, made from the browser: empty, where Obsidian puts new notes. */
-  webNoteFolder: string
+  /**
+   * Where a page's new annotation note goes, made from the browser: a path pattern from the vault's
+   * root, with the page's `{title}`, `{sanitized-title}`, `{domain}`, `{slug}`, `{url}` and `{date}` (src/new-notes.ts).
+   * Empty, its title, where Obsidian puts new notes.
+   */
+  webNotePath: string
+  /**
+   * The notes a page's new annotation note is made from, with `{{variables}}` and Templater's
+   * commands: a web page's, and a PDF's opened in the browser. Empty, none.
+   */
+  webPageTemplate: string
+  pdfTemplate: string
   annotationMarkdownSettings: {
     /** A block's view writes the text before its passage. */
     includePrefix: boolean
@@ -43,7 +54,9 @@ export const DEFAULT_SETTINGS: AnnotatorSettings = {
   annotatorHeights: {},
   serveExtension: false,
   servicePort: DEFAULT_PORT,
-  webNoteFolder: "",
+  webNotePath: "",
+  webPageTemplate: "",
+  pdfTemplate: "",
   annotationMarkdownSettings: {
     includePrefix: true,
     highlightHighlightedText: true,
@@ -53,7 +66,9 @@ export const DEFAULT_SETTINGS: AnnotatorSettings = {
 
 /** Settings as saved, with what they lack filled in from the defaults. */
 export function settingsFrom(saved: unknown): AnnotatorSettings {
-  const data = (saved ?? {}) as Partial<AnnotatorSettings>
+  const data = (saved ?? {}) as Partial<AnnotatorSettings> & { webNoteFolder?: string; webNoteTemplate?: string }
+  // The folder for new notes the settings named before the path pattern: a note's title, in it.
+  const folder = data.webNoteFolder?.trim().replace(/\/+$/, "")
   return {
     customDefaultPath: data.customDefaultPath ?? DEFAULT_SETTINGS.customDefaultPath,
     displayName: data.displayName ?? DEFAULT_SETTINGS.displayName,
@@ -61,7 +76,10 @@ export function settingsFrom(saved: unknown): AnnotatorSettings {
     annotatorHeights: { ...data.annotatorHeights },
     serveExtension: data.serveExtension ?? DEFAULT_SETTINGS.serveExtension,
     servicePort: Number.isInteger(data.servicePort) ? data.servicePort! : DEFAULT_SETTINGS.servicePort,
-    webNoteFolder: data.webNoteFolder ?? DEFAULT_SETTINGS.webNoteFolder,
+    webNotePath: data.webNotePath ?? (folder ? `${folder}/${DEFAULT_PATTERN}` : DEFAULT_SETTINGS.webNotePath),
+    // The one template the settings named before there were two: both's.
+    webPageTemplate: data.webPageTemplate ?? data.webNoteTemplate ?? DEFAULT_SETTINGS.webPageTemplate,
+    pdfTemplate: data.pdfTemplate ?? data.webNoteTemplate ?? DEFAULT_SETTINGS.pdfTemplate,
     annotationMarkdownSettings: {
       includePrefix: data.annotationMarkdownSettings?.includePrefix ?? DEFAULT_SETTINGS.annotationMarkdownSettings.includePrefix,
       highlightHighlightedText: data.annotationMarkdownSettings?.highlightHighlightedText ?? DEFAULT_SETTINGS.annotationMarkdownSettings.highlightHighlightedText,
@@ -124,9 +142,28 @@ export class AnnotatorSettingTab extends PluginSettingTab {
         }),
       )
     new Setting(containerEl)
-      .setName("Folder for new notes")
-      .setDesc("Where a page's annotation note is made, on its first annotation in the browser. Empty, where Obsidian puts new notes.")
-      .addText((text) => text.setPlaceholder("Obsidian's folder for new notes").setValue(settings.webNoteFolder).onChange((value) => ((settings.webNoteFolder = value.trim()), save())))
+      .setName("Path for new notes")
+      .setDesc(
+        "Where a page's annotation note is made, on its first annotation in the browser, from the vault's root. " +
+          "{title}, {sanitized-title} (Pickle-Wikipedia), {domain} (en.wikipedia.org), {slug} (the page's path: wiki-pickle), {url} and {date} are the page's, " +
+          "with underscores for what a file name can't hold. Empty, the page's title, where Obsidian puts new notes.",
+      )
+      .addText((text) =>
+        text.setPlaceholder("Annotations/{domain}/{title}").setValue(settings.webNotePath).onChange((value) => ((settings.webNotePath = value.trim()), save())),
+      )
+    const variables = "{{title}}, {{sanitized-title}}, {{url}}, {{domain}}, {{slug}} and {{date}} are the page's; Templater's commands run too, when Templater is on. "
+    new Setting(containerEl)
+      .setName("Template for web pages")
+      .setDesc(`The note a web page's new annotation note is made from. ${variables}Its annotation target is always the page. Empty, a title, date and tags.`)
+      .addText((text) =>
+        text.setPlaceholder("Templates/Web annotation").setValue(settings.webPageTemplate).onChange((value) => ((settings.webPageTemplate = value.trim()), save())),
+      )
+    new Setting(containerEl)
+      .setName("Template for PDFs")
+      .setDesc(`The note a PDF's new annotation note is made from, when it is first annotated in the browser. ${variables}Empty, a title, date and tags.`)
+      .addText((text) =>
+        text.setPlaceholder("Templates/PDF annotation").setValue(settings.pdfTemplate).onChange((value) => ((settings.pdfTemplate = value.trim()), save())),
+      )
 
     containerEl.createEl("h3", { text: "How annotations are written into the note" })
     new Setting(containerEl)
