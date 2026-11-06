@@ -140,6 +140,12 @@ export interface ListingPageConfig {
   layout: "stacked" | "carousel"
   /** How each listing is paged on this kind of page, in place of its own paging. */
   paging?: Partial<Record<PostOrder, Partial<Paging>>>
+  /**
+   * What each listing is on this kind of page, in place of what it is everywhere: its heading, and a
+   * tag its posts are narrowed to, those carrying it or a tag under it (on a tag page, as well as
+   * the page's own).
+   */
+  listings?: Partial<Record<PostOrder, { title?: string; tag?: string }>>
 }
 
 /**

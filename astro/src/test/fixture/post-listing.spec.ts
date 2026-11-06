@@ -179,16 +179,16 @@ test.describe("with no script, the carousel", () => {
 })
 
 // The home page: no carousel, but the same listings one under the other, the three newest posts
-// then the five most central in view, and the rest of each on asking (`postListing.pages.home`).
-test("the home page shows the index note, and under it the three newest posts, then the five most central", async ({ page }) => {
+// then the most central essays (`writing/essays`), its core essays, five in view, and the rest of
+// each on asking (`postListing.pages.home`). The fixture's central essays are two.
+test("the home page shows the index note, and under it the three newest posts, then the core essays", async ({ page }) => {
   await page.goto("/")
   const note = page.locator("main .prose")
   await expect(note).toContainText("The home note.")
-  await expect(page.locator(".post-listing > h2")).toHaveText(["Recent Posts", "Core Posts"])
+  await expect(page.locator(".post-listing > h2")).toHaveText(["Recent Posts", "Core Essays"])
   const central = '.post-listing[data-order="central"]'
   await expect(page.locator(`${recent} .post`).filter({ visible: true })).toHaveCount(3)
-  await expect(page.locator(`${central} .post`).filter({ visible: true })).toHaveCount(5)
-  await expect(page.locator(`${central} .post h3`).first()).toHaveText("A note with backlinks")
+  await expect(page.locator(`${central} .post h3`)).toHaveText(["Beta", "Alpha"])
   // Both in view, one under the other, after the note, with no carousel.
   const [newest, core] = [(await page.locator(recent).boundingBox())!, (await page.locator(central).boundingBox())!]
   expect(core.y).toBeGreaterThanOrEqual(newest.y + newest.height)

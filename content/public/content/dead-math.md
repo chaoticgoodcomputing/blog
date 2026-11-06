@@ -210,11 +210,11 @@ From the Airbus paper:
 > 
 > -- Delmas & Souyris, [*Astrée: from Research to Industry*](https://www.astree.ens.fr/papers/astree_airbus_sas2007.pdf) (2007)
 
-## Small Pickles & Autopilot
+## Is math actually dead?
 
-I am still a part of the world that has shifted most in the past 18 months, and finding my footing during this shift is still a daily effort. I sympathize with mathematicians, being in a space that is *very* sensitive to the seemingly endless wave of news that, even three years ago, would've been considered once-a-decade events.
+My call would be a definitive and emphatic "no." I'm obviously not a mathematician, so I can't speak to that feeling from within the occupation. I will, however, take a stab of this as an economist.
 
-Past the immediate anxiety for my own well-being, though, I am excited to see what new capabilities can be done if we, as human beings, broaden our horizons and find new ways to solve problems with new tools and a willingness to keep learning.
+If we think about a post-Stokes world, I'd say that this is proof that the supply of "math", in the abstract, has gone up thanks to AI agents. I don't believe that this cheapens math: on the contrary, it may, in a [Jevon's Paradox](https://en.wikipedia.org/wiki/Jevons_paradox) situation, become more in demand. As focus shifts onto the specification of programs, with mathematical definitions of those specifications being in demand for the world's most important and load-bearing programs, I can hardly see a future where "mathematician" becomes among the most important occupations a person could hold.
 
 [^1]: For the life of me, I do not understand why software developers name things like this, or where they get it from. I will never forgive the Kubernetes team, either for the name itself, or for k8s as the abbreviation.
 [^2]: These examples are taken directly from the Cucumber docs, which are among some of the most helpful docs I have ever read.

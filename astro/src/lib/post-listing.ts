@@ -82,11 +82,14 @@ export function centralPosts(tag?: string, options: CentralityOptions = {}): Not
 export interface ResolvedListing extends Paging {
   order: PostOrder
   title: string
+  /** The tag its posts are narrowed to on this kind of page, when it says one. */
+  tag?: string
 }
 
 /**
  * How a kind of page sets out the post listings: its layout, and each listing with its paging, the
- * page's for it, else the listing's own, else every list's (`lists`), a setting at a time.
+ * page's for it, else the listing's own, else every list's (`lists`), a setting at a time; and its
+ * heading and the tag it is narrowed to, where the page says.
  */
 export function listingsOn(
   kind: ListingPageKind,
@@ -98,7 +101,14 @@ export function listingsOn(
     layout: page.layout,
     listings: config.listings.map(({ order, title, show, more }) => {
       const own = page.paging?.[order]
-      return { order, title, show: own?.show ?? show ?? defaults.show, more: own?.more ?? more ?? defaults.more }
+      const here = page.listings?.[order]
+      return {
+        order,
+        title: here?.title ?? title,
+        ...(here?.tag !== undefined && { tag: here.tag }),
+        show: own?.show ?? show ?? defaults.show,
+        more: own?.more ?? more ?? defaults.more,
+      }
     }),
   }
 }

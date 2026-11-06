@@ -37,3 +37,19 @@ test("a listing's paging is the page's, else the listing's, else every list's, a
   expect(paging("tag")).toEqual([[5, 3], [4, 3]])
   expect(paging("404")).toEqual([[5, 3], [4, 10]])
 })
+
+test("a kind of page may retitle a listing and narrow it to a tag; the others keep it as it is", () => {
+  const narrowed: PostListingConfig = {
+    ...config,
+    pages: { ...config.pages, home: { ...config.pages.home, listings: { central: { title: "Core Essays", tag: "writing/essays" } } } },
+  }
+  const home = listingsOn("home", narrowed, defaults).listings
+  expect(home.map(({ title, tag }) => [title, tag])).toEqual([
+    ["Recent", undefined],
+    ["Core Essays", "writing/essays"],
+  ])
+  expect(listingsOn("tag", narrowed, defaults).listings.map(({ title, tag }) => [title, tag])).toEqual([
+    ["Recent", undefined],
+    ["Central", undefined],
+  ])
+})

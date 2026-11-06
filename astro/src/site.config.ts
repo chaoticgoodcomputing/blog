@@ -134,8 +134,12 @@ export const postListing: PostListingConfig = {
     { order: "central", title: "Core Posts" },
   ],
   pages: {
-    // One under the other: the three newest, then the five most central, more on asking.
-    home: { layout: "stacked", paging: { recent: { show: 3 } } },
+    // One under the other: the three newest, then the five most central essays, more on asking.
+    home: {
+      layout: "stacked",
+      paging: { recent: { show: 3 } },
+      listings: { central: { title: "Core Essays", tag: "writing/essays" } },
+    },
     tag: { layout: "carousel" },
     404: { layout: "carousel" },
   },

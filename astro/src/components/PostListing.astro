@@ -1,13 +1,16 @@
 ---
 // The post listings: the site's posts in each of the orders site configuration names, newest first
 // or most central first. Each post with its title, its date, its description and its tags as tag
-// badges. On a tag page, the posts under its tag; on the home page and the 404 page, every post.
+// badges. On a tag page, the posts under its tag; on the home page and the 404 page, every post. A
+// kind of page may retitle a listing and narrow it to a tag (`postListing.pages`): the home page's
+// most central posts are its core essays.
 // The same listings on each kind of page, set out as `postListing.pages` says: one under the other,
 // or one at a time in a carousel the reader moves through (Carousel.astro: with no script, the
 // reader swipes or scrolls it; with script, buttons step through it) (src/lib/post-listing.ts).
 // Each listing's posts are set by PostList.astro, a page at a time.
 import Carousel from "./Carousel.astro"
 import { centralPosts, listedPosts, listingsOn, postCounts } from "../lib/post-listing.ts"
+import { isUnderTag } from "../lib/tags.ts"
 import type { Note } from "../lib/notes.ts"
 import type { ListingPageKind, PostOrder } from "../site.config.types.ts"
 import { mentionCounts } from "../lib/mentions.ts"
@@ -30,9 +33,11 @@ const postsIn: Record<PostOrder, () => Note[]> = {
   central: () => centralPosts(tag, { mentions }),
 }
 const { layout, listings: all } = listingsOn(kind)
+// A listing the page narrows to a tag: its posts carrying it, or a tag under it.
+const narrowed = (notes: Note[], to: string | undefined) => (to === undefined ? notes : notes.filter((note) => note.tags.some((own) => isUnderTag(own, to))))
 const withPages = all.map((listing) => ({
   ...listing,
-  pages: postsIn[listing.order]().map((note) => ({ ...note, description: note.summary, fileType: annotatedFileType(note) })),
+  pages: narrowed(postsIn[listing.order](), listing.tag).map((note) => ({ ...note, description: note.summary, fileType: annotatedFileType(note) })),
 }))
 const withPosts = withPages.filter((listing) => listing.pages.length > 0)
 const listings = withPosts.length > 0 ? withPosts : withPages.slice(0, 1)
