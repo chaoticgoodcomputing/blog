@@ -125,6 +125,13 @@ export class TabState {
   }
 
   /**
+   * Whether the extension has state for a tab: none for a tab just opened, until its first page.
+   */
+  hasTab(tabId: number): boolean {
+    return this._currentState.has(tabId);
+  }
+
+  /**
    * Return the current Hypothesis-related state for a tab.
    */
   getState(tabId: number): State {

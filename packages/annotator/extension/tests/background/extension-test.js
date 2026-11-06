@@ -47,6 +47,7 @@ describe('Extension', () => {
         sync: {
           get: sandbox.stub().resolves({ badge: true }),
         },
+        onChanged: new FakeListener(),
       },
       tabs: {
         onCreated: new FakeListener(),
@@ -80,6 +81,7 @@ describe('Extension', () => {
       isTabInactive: sandbox.stub().returns(false),
       isTabErrored: sandbox.stub().returns(false),
       getState: sandbox.stub().returns({}),
+      hasTab: sandbox.stub().returns(true),
       setState: sandbox.spy(),
       clearTab: sandbox.spy(),
       load: sandbox.spy(),
@@ -444,6 +446,40 @@ describe('Extension', () => {
         assert.equal(tabState[tab.id].ready, false);
         assert.equal(tabState[tab.id].annotationCount, 0);
         assert.equal(tabState[tab.id].extensionSidebarInstalled, false);
+      });
+
+      describe('in a new tab', () => {
+        function loadNewTab(url) {
+          const tab = { ...createTab({ state: 'inactive' }), url };
+          fakeTabState.hasTab = () => false;
+          fakeChromeAPI.tabs.onUpdated.listener(tab.id, { status: 'loading' }, tab);
+          return tabState[tab.id];
+        }
+
+        it('turns on at its first web page, as Annotator is always on by default', () => {
+          assert.equal(loadNewTab('https://example.com/').state, 'active');
+        });
+
+        it('stays off at a page that is no web page', () => {
+          assert.equal(loadNewTab('about:newtab').state, 'inactive');
+        });
+
+        it('stays off when the user turned "always on" off', async () => {
+          fakeChromeAPI.storage.sync.get.resolves({ alwaysOn: false });
+          await ext.init();
+          assert.equal(loadNewTab('https://example.com/').state, 'inactive');
+        });
+
+        it('follows the option as it changes', () => {
+          fakeChromeAPI.storage.onChanged.listener({ alwaysOn: { newValue: false } }, 'sync');
+          assert.equal(loadNewTab('https://example.com/').state, 'inactive');
+        });
+      });
+
+      it('keeps a tab the user turned off off, from page to page, though Annotator is always on', () => {
+        const tab = createTab({ state: 'inactive', ready: true });
+        fakeChromeAPI.tabs.onUpdated.listener(tab.id, { status: 'loading' }, { ...tab, url: 'https://example.com/next' });
+        assert.equal(tabState[tab.id].state, 'inactive');
       });
 
       it('resets the tab state to active if errored', () => {

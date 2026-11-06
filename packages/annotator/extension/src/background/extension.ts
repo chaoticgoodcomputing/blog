@@ -216,9 +216,20 @@ export class Extension {
     }
 
     /**
-     * Returns the active state for a tab which has just been navigated to.
+     * Whether Annotator turns itself on in a new tab, at its first web page: the "always on"
+     * option, on unless the user turned it off. Read at `init`, and kept as the option changes.
      */
-    function activeStateForNavigatedTab(tabId: number) {
+    let alwaysOn = true;
+
+    /**
+     * Returns the active state for a tab which has just been navigated to: what it was, so a tab
+     * keeps the user's choice from page to page; on, for a new tab's first web page, when Annotator
+     * is always on.
+     */
+    function activeStateForNavigatedTab(tabId: number, url?: string) {
+      if (alwaysOn && url && /^https?:/.test(url) && !state.hasTab(tabId)) {
+        return 'active';
+      }
       let activeState = state.getState(tabId).state;
       if (activeState === 'errored') {
         // user had tried to activate H on the previous page but it failed,
@@ -230,7 +241,7 @@ export class Extension {
 
     function resetTabState(tabId: number, url: string) {
       state.setState(tabId, {
-        state: activeStateForNavigatedTab(tabId),
+        state: activeStateForNavigatedTab(tabId, url),
         ready: false,
         annotationCount: 0,
         extensionSidebarInstalled: false,
@@ -412,6 +423,15 @@ export class Extension {
      */
     this.init = async () => {
       chromeAPI.browserAction.onClicked.addListener(onBrowserActionClicked);
+
+      // The "always on" option (the options page), on unless set off.
+      const options = await chromeAPI.storage.sync.get({ alwaysOn: true });
+      alwaysOn = options.alwaysOn !== false;
+      chromeAPI.storage.onChanged?.addListener((changes, area) => {
+        if (area === 'sync' && changes.alwaysOn) {
+          alwaysOn = changes.alwaysOn.newValue !== false;
+        }
+      });
 
       // Set up listeners for tab events.
       chromeAPI.tabs.onCreated.addListener(onTabCreated);

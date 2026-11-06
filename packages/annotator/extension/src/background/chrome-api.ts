@@ -84,6 +84,7 @@ export function getChromeAPI(chrome = globalThis.chrome) {
       sync: {
         get: chrome.storage.sync.get.bind(chrome.storage.sync),
       },
+      onChanged: chrome.storage.onChanged,
     },
 
     // APIs that require optional permissions.
