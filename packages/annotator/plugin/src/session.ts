@@ -6,6 +6,7 @@
 import { DocumentUnavailable } from "@chaoticgoodcomputing/annotator-documents"
 import { isTextFileOf, sha256 } from "@chaoticgoodcomputing/pdf-ocr"
 import type { TFile } from "obsidian"
+import logo from "./cgc-logo.svg"
 import { blobPage, framePage, type PageOptions } from "./frame-page.ts"
 import type AnnotatorPlugin from "./main.ts"
 import { obsidianStyles, renderMarkdown } from "./obsidian-rendering.ts"
@@ -37,6 +38,7 @@ export class AnnotatorSession {
       store,
       displayName: plugin.settings.displayName,
       view: plugin.viewOptions(),
+      logo,
       // As the user's settings write a link, the note named as it is now, from no note in particular.
       linkTo: (id) => plugin.app.fileManager.generateMarkdownLink(this.note, "", `#^${id}`),
     })

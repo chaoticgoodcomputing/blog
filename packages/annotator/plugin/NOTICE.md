@@ -23,6 +23,9 @@ The patches to the Hypothesis client (`patches/`), which the workspace applies w
 is installed, are the exception: they are under the client's BSD 2-Clause license
 ([patches/README.md](./patches/README.md)), and hold nothing of Obsidian Annotator's.
 
+Chaotic Good Computing's logo (`src/cgc-logo.svg`), which the sidebar shows by its group's name, is
+a mark, not part of the program, and not licensed by it.
+
 That license covers this directory only. The rest of this repository is not part of the program and
 is not licensed by it.
 

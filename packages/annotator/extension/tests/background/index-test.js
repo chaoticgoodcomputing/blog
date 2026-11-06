@@ -1,4 +1,4 @@
-import { init, uninstallURL, $imports } from '../../src/background';
+import { init, $imports } from '../../src/background';
 
 let extension;
 
@@ -81,8 +81,8 @@ describe('background/index', () => {
     });
   });
 
-  it('shows survey to users after extension is uninstalled', () => {
-    assert.calledWith(fakeChromeAPI.runtime.setUninstallURL, uninstallURL);
+  it('opens nothing on uninstalling', () => {
+    assert.notCalled(fakeChromeAPI.runtime.setUninstallURL);
   });
 
   describe('bouncer (hyp.is) message handling', () => {

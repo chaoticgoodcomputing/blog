@@ -35,6 +35,12 @@ clean:
 	rm -rf build/*
 	rm -rf dist/*
 
+# Empties build/ alone, keeping dist/: a signed .xpi there can't be made again
+# at the same version.
+.PHONY: clean-build
+clean-build:
+	rm -rf build/*
+
 ################################################################################
 
 # The `build/settings.json` target is always rebuilt in case the value of
@@ -106,6 +112,33 @@ build/%: src/%
 
 dist/%.zip dist/%.xpi: extension
 	cd build && find . -not -path '*/\.*' -type f | zip -q -@ $(abspath $@)
+
+################################################################################
+# Signing, by Mozilla, for the fork's own installs: unlisted, never on
+# addons.mozilla.org's listings. The API key and secret come from the
+# environment, as web-ext reads them: WEB_EXT_API_KEY and WEB_EXT_API_SECRET
+# (addons.mozilla.org's "Manage API Keys" page). The `sign` Nx target fills them
+# from 1Password with `op run` (project.json).
+
+# What a reviewer rebuilds the extension from (SOURCE.md), from the repository's
+# last commit: the extension, the client's patch, and the workspace's files.
+REPO_ROOT := $(shell git rev-parse --show-toplevel)
+SOURCE_PATHS := packages/annotator/extension packages/annotator/plugin/patches \
+	package.json pnpm-lock.yaml pnpm-workspace.yaml .nvmrc
+
+.PHONY: source
+source:
+	@mkdir -p dist
+	@cd $(REPO_ROOT) && test -z "$$(git status --porcelain -- $(SOURCE_PATHS))" || \
+		(echo "Commit the extension's changes first: its source archive is the last commit's." && exit 1)
+	cd $(REPO_ROOT) && git archive --format=zip -o $(abspath dist/annotator-extension-source.zip) HEAD -- $(SOURCE_PATHS)
+
+.PHONY: sign
+sign: extension source
+	@test -n "$$WEB_EXT_API_KEY" -a -n "$$WEB_EXT_API_SECRET" || \
+		(echo "Set WEB_EXT_API_KEY and WEB_EXT_API_SECRET, addons.mozilla.org's API key and secret." && exit 1)
+	node_modules/.bin/web-ext sign --source-dir build --artifacts-dir dist \
+		--channel unlisted --upload-source-code dist/annotator-extension-source.zip
 
 .PHONY: lint
 lint: node_modules/.uptodate build/settings.json

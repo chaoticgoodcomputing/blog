@@ -208,7 +208,7 @@ export class Extension {
           state.errorTab(
             tabId,
             new Error(
-              'Hypothesis could not get the permissions needed to load in this tab',
+              'Annotator could not get the permissions needed to load in this tab',
             ),
           );
         }

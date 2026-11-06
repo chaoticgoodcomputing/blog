@@ -307,7 +307,7 @@ export class SidebarInjector {
         // URL and open that in the Hypothesis viewer instead.
         const protocol = tab.url.split(':')[0];
         throw new RestrictedProtocolError(
-          `Cannot load Hypothesis into ${protocol} pages`,
+          `Cannot load Annotator into ${protocol} pages`,
         );
       }
 

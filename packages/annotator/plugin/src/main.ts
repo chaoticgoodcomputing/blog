@@ -12,6 +12,7 @@ import { annotatorInEditor, openAtAnnotation } from "./editor/annotator.ts"
 import { folderOf } from "./frame-page.ts"
 import type { AnnotatorSession } from "./session.ts"
 import { type AnnotatorSettings, AnnotatorSettingTab, settingsFrom } from "./settings.ts"
+import logo from "./cgc-logo.svg"
 import { type LocalService, serve } from "./server.ts"
 import { addressOf, bytesOf, isAnnotationNote, type Target, targetOf, textFileOf } from "./target.ts"
 import { vaultNotes } from "./vault-notes.ts"
@@ -152,7 +153,7 @@ export default class AnnotatorPlugin extends Plugin {
     try {
       this.service = await serve({
         port: this.settings.servicePort,
-        api: (apiUrl) => createVaultService({ notes, apiUrl, displayName: this.settings.displayName, view: this.viewOptions() }),
+        api: (apiUrl) => createVaultService({ notes, apiUrl, displayName: this.settings.displayName, view: this.viewOptions(), logo }),
         log: (message) => console.warn("Annotator service:", message),
       })
     } catch (error) {

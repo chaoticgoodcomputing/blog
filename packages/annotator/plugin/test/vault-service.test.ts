@@ -163,6 +163,19 @@ describe("what names no note", () => {
   })
 })
 
+describe("the sidebar's logo", () => {
+  test("is the group's organization's, when there is one", async () => {
+    const vault = memoryVault({})
+    const service = createVaultService({ notes: vault.notes, apiUrl: API, logo: "data:image/svg+xml,logo" })
+    const groups = JSON.parse((await service({ method: "GET", url: `${API}groups?expand=organization` })).body)
+    assert.equal(groups[0].organization.logo, "data:image/svg+xml,logo")
+  })
+  test("is the client's own without one", async () => {
+    const { call } = setup({})
+    assert.equal((await call("GET", "groups")).json[0].organization, null)
+  })
+})
+
 describe("a new note", () => {
   test("is named by the page's title, without what a file name can't hold", () => {
     assert.equal(noteName({ uri: PAGE, title: 'Pickles: a "history" / part 1' }), "Pickles a history part 1")

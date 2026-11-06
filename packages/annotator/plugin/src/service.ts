@@ -45,6 +45,11 @@ export interface ServiceOptions {
   view?: WriteOptions
   /** Where the API is, as the client calls it: API_URL by default. Ends with `/`. */
   apiUrl?: string
+  /**
+   * The logo the sidebar shows by the group's name, as an image's address: its organization's.
+   * Without one, the client shows Hypothesis's.
+   */
+  logo?: string
   /** The time now, as an ISO 8601 instant; a function so the tests can fix it. */
   now?: () => string
   /**
@@ -109,19 +114,21 @@ const LINKS = {
   user: `${NOWHERE}users/:user`,
 }
 
-const GROUP = {
+/** The one group, in an organization of the vault's own when there is a logo to show for it. */
+const groupWith = (logo?: string) => ({
   id: GROUP_ID,
   groupid: `group:${GROUP_ID}@${AUTHORITY}`,
   name: "This note",
   type: "private",
-  organization: null,
+  organization: logo ? { id: "vault", name: "Chaotic Good Computing", logo } : null,
   scopes: null,
   links: {},
   pre_moderated: false,
-}
+})
 
 export function createService(options: ServiceOptions): Service {
-  const { store, displayName = "Me", view = {}, now = () => new Date().toISOString(), linkTo, apiUrl = API_URL } = options
+  const { store, displayName = "Me", view = {}, now = () => new Date().toISOString(), linkTo, apiUrl = API_URL, logo } = options
+  const GROUP = groupWith(logo)
   let preferences: Record<string, unknown> = { show_sidebar_tutorial: false }
 
   const profile = () => ({

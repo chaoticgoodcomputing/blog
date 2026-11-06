@@ -102,6 +102,9 @@ const builds = [
     platform: "browser",
     target: "es2022",
     external: provided,
+    // The logo the sidebar shows by its group's name (src/service.ts), inline: the sidebar in the
+    // browser may not load an image from the local service.
+    loader: { ".svg": "dataurl" },
     plugins: [{ name: "copy-assets", setup: (build) => build.onEnd(copyAssets) }],
   },
   // The pages' scripts, loaded as classic scripts in Obsidian's Chromium.

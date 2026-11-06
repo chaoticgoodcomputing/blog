@@ -631,7 +631,7 @@ describe('Extension', () => {
           1,
           sinon.match({
             message:
-              'Hypothesis could not get the permissions needed to load in this tab',
+              'Annotator could not get the permissions needed to load in this tab',
           }),
         );
       });

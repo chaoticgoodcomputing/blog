@@ -26,10 +26,10 @@
       },
       "configurations": {
         "firefox": {
-          "command": "make clean && make build SETTINGS_FILE=settings/firefox-local.json"
+          "command": "make clean-build && make build SETTINGS_FILE=settings/firefox-local.json"
         },
         "chrome": {
-          "command": "make clean && make build SETTINGS_FILE=settings/chrome-local.json"
+          "command": "make clean-build && make build SETTINGS_FILE=settings/chrome-local.json"
         }
       },
       "parallelism": false
@@ -55,11 +55,25 @@
       }
     },
     "package": {
-      "//": "dist/annotator-extension.xpi: the extension, built again from an empty build/ (the tests write theirs there), zipped, unsigned. Release Firefox and Zen install an add-on for good only once Mozilla has signed it.",
+      "//": "dist/annotator-extension.xpi: the extension, built again from an empty build/ (the tests write theirs there), zipped, unsigned. Release Firefox and Zen install an add-on for good only once Mozilla has signed it (`sign`).",
       "executor": "nx:run-commands",
       "options": {
-        "command": "make clean && make dist/annotator-extension.xpi SETTINGS_FILE=settings/firefox-local.json",
+        "command": "make clean-build && make dist/annotator-extension.xpi SETTINGS_FILE=settings/firefox-local.json",
         "cwd": "{projectRoot}"
+      },
+      "parallelism": false
+    },
+    "sign": {
+      "//": "Run by hand, with the network and 1Password unlocked: dist/<name>-<version>.xpi, the extension signed by Mozilla, unlisted, which release Firefox and Zen install for good. addons.mozilla.org's API key and secret are 1Password references (env), which `op run` resolves for make alone, in the account OP_ACCOUNT names. Needs a version Mozilla hasn't signed before (package.json), and the extension's changes committed: the source archive it uploads alongside (SOURCE.md) is the last commit's.",
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "make clean-build && op run -- make sign SETTINGS_FILE=settings/firefox-local.json",
+        "cwd": "{projectRoot}",
+        "env": {
+          "OP_ACCOUNT": "my.1password.com",
+          "WEB_EXT_API_KEY": "op://Private/Mozilla Personal Signing/username",
+          "WEB_EXT_API_SECRET": "op://Private/Mozilla Personal Signing/credential"
+        }
       },
       "parallelism": false
     },

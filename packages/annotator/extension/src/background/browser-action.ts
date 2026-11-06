@@ -52,15 +52,15 @@ export class BrowserAction {
     switch (state.state) {
       case 'active':
         activeIcon = icons.active;
-        title = 'Hypothesis is active';
+        title = 'Annotator is active';
         break;
       case 'inactive':
         activeIcon = icons.inactive;
-        title = 'Hypothesis is inactive';
+        title = 'Annotator is inactive';
         break;
       case 'errored':
         activeIcon = icons.inactive;
-        title = 'Hypothesis failed to load';
+        title = 'Annotator failed to load';
         badgeText = '!';
         break;
     }

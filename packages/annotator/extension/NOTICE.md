@@ -26,10 +26,13 @@ is not licensed by it.
 
 ## Names and logos
 
-The license grants no right to Hypothesis's name or logos. The extension's own name is changed
-(`src/manifest.json.mustache`), but upstream's icons (`src/images/`) and the help and settings
-pages' wording (`src/help/`, `src/options/`) are still Hypothesis's. They are fine in a build kept on
-this machine, and must be replaced before a build is given to anyone else.
+The license grants no right to Hypothesis's name or logos, and the fork shows neither: its name is
+Annotator, its icons (`src/images/`, drawn by `tools/icons.js`) and its help page's
+(`src/help/cgc-logo.svg`) are Chaotic Good Computing's logo, and its pages' wording is its own. The
+sidebar is Hypothesis's client, unchanged, and still says "Hypothesis" in places.
+
+Chaotic Good Computing's logo is a mark, not part of the program: the BSD 2-Clause license does not
+cover it.
 
 ## Third-party components
 

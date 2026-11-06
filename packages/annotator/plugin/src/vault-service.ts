@@ -38,6 +38,8 @@ export interface VaultServiceOptions {
   displayName?: string
   view?: WriteOptions
   now?: () => string
+  /** The logo the sidebar shows (src/service.ts). */
+  logo?: string
 }
 
 /**
@@ -59,7 +61,7 @@ export function normalizeAddress(address: string): string {
 const json = (value: unknown, status = 200): ApiResponse => ({ status, body: JSON.stringify(value) })
 
 export function createVaultService(options: VaultServiceOptions): Service {
-  const { notes, apiUrl, displayName, view, now } = options
+  const { notes, apiUrl, displayName, view, now, logo } = options
 
   // Each note's service, by its path; and one for what names no note (the index, the profile, the
   // groups), whose note is never written.
@@ -68,7 +70,7 @@ export function createVaultService(options: VaultServiceOptions): Service {
     let service = services.get(path)
     if (!service) {
       const linkTo = notes.linkTo
-      service = createService({ store: notes.store(path), apiUrl, displayName, view, now, linkTo: linkTo && ((id) => linkTo(path, id)) })
+      service = createService({ store: notes.store(path), apiUrl, displayName, view, now, logo, linkTo: linkTo && ((id) => linkTo(path, id)) })
       services.set(path, service)
     }
     return service
@@ -78,6 +80,7 @@ export function createVaultService(options: VaultServiceOptions): Service {
     store: { read: async () => empty, update: async (change) => void (empty = change(empty)) },
     apiUrl,
     displayName,
+    logo,
   })
 
   /** The note annotating any of `addresses`: the first by path, when there are several. */
