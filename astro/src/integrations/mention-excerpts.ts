@@ -19,9 +19,11 @@ import {
   excerptDigest,
   excerptPage,
   linkingBlocks,
+  mentionTarget,
   noteAtBlock,
   type ManifestEntry,
 } from "../lib/mention-excerpts.ts"
+import { webAnnotationTarget } from "../lib/annotations.ts"
 import { getNotes } from "../lib/notes.ts"
 import { isIndexable } from "../lib/page.ts"
 import { site as siteConfig } from "../site.config.ts"
@@ -48,12 +50,16 @@ export function mentionExcerpts(): AstroIntegration {
           if (!note || !isIndexable({ kind: "note", note })) continue
           const file = path.join(out, url === "/" ? "index.html" : `${url}.html`)
           const noteAddress = new URL(url, site).href
+          // A web page's annotation page answers the page it annotates.
+          const annotated = webAnnotationTarget(note)
+          const answers = annotated === undefined ? undefined : mentionTarget(annotated)
 
           for (const [target, blocks] of linkingBlocks(await fs.readFile(file, "utf8"), site)) {
             const address = excerptAddress(url, target)
             const source = new URL(address, site).href
             const excerpt = blocks.map((block) => excerptBlock(block, noteAddress))
             const facts = { title: note.title, url, date: note.date }
+            const inReplyTo = target === answers ? target : undefined
             const html = excerptPage({
               address: source,
               noteAddress,
@@ -62,11 +68,12 @@ export function mentionExcerpts(): AstroIntegration {
               continueTo: noteAtBlock(noteAddress, blocks[0]!.text),
               author,
               locale: siteConfig.locale,
+              inReplyTo,
             })
             const written = path.join(out, `${address}.html`)
             await fs.mkdir(path.dirname(written), { recursive: true })
             await fs.writeFile(written, html)
-            manifest.push({ source, target, note: noteAddress, digest: excerptDigest(facts, excerpt) })
+            manifest.push({ source, target, note: noteAddress, digest: excerptDigest(facts, excerpt, inReplyTo) })
           }
         }
 

@@ -3,6 +3,7 @@ import { expect, test } from "vitest"
 import {
   excerptAddress,
   excerptBlock,
+  excerptDigest,
   excerptPage,
   linkingBlocks,
   mentionTarget,
@@ -107,4 +108,40 @@ test("an excerpt's page is one h-entry of the blocks, its own address its url, s
   expect(root.querySelector("link[rel=canonical]")!.getAttribute("href")).toBe(NOTE)
   expect(root.querySelector("meta[name=robots]")!.getAttribute("content")).toBe("noindex")
   expect(root.querySelector("script")!.text).toContain(`location.replace("${NOTE}#:~:text=One")`)
+  // A mention answers nothing.
+  expect(root.querySelector(".u-in-reply-to")).toBeNull()
+})
+
+test("a link in an annotation's card takes the whole card, without its link to itself", () => {
+  const html = page(`
+    <p class="annotated-document">From <a href="https://ana.example/talks/">Talks</a> on ana.example</p>
+    <section class="annotations"><article class="annotation" id="^a1">
+      <a class="annotation-passage" href="https://ana.example/talks/#:~:text=Most"><div class="callout" data-callout="quote"><div class="callout-title">Quote</div><div class="callout-content"><p>Most times.</p></div></div></a>
+      <div class="annotation-comment"><p>My comment.</p></div>
+      <a class="annotation-anchor" href="#^a1">#</a>
+    </article></section>`)
+  const blocks = linkingBlocks(html, SITE).get("https://ana.example/talks/")!
+  expect(blocks.map((block) => block.tagName)).toEqual(["P", "ARTICLE"])
+  const card = excerptBlock(blocks[1]!, NOTE)
+  expect(card).toContain("My comment.")
+  expect(card).not.toContain("annotation-anchor")
+})
+
+test("an excerpt that answers a page is a reply to it, and its hash says so; a mention's hash is as before", () => {
+  const facts = { title: "Talks", url: "/content/notes/a", date: new Date("2026-03-14T00:00:00Z") }
+  const reply = parse(
+    excerptPage({
+      address: `${SITE}/mentions/content/notes/a/abc`,
+      noteAddress: NOTE,
+      note: facts,
+      blocks: ["<p>One</p>"],
+      continueTo: NOTE,
+      author: { name: "Someone", url: `${SITE}/about` },
+      locale: "en-US",
+      inReplyTo: "https://ana.example/talks/",
+    }),
+  )
+  expect(reply.querySelector(".h-entry .u-in-reply-to")!.getAttribute("href")).toBe("https://ana.example/talks/")
+  expect(excerptDigest(facts, ["<p>One</p>"], "https://ana.example/talks/")).not.toBe(excerptDigest(facts, ["<p>One</p>"]))
+  expect(excerptDigest(facts, ["<p>One</p>"], undefined)).toBe(excerptDigest(facts, ["<p>One</p>"]))
 })

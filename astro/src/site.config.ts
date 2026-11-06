@@ -49,6 +49,10 @@ export const site: SiteConfig = {
     backlinks: "omit",
     explorer: "omit",
   },
+  // Highlights of other sites' pages (the Annotator extension's): theirs, quoted, more than ours.
+  fragments: {
+    tags: ["writing/fragments"],
+  },
 }
 
 // One colour for two top-level tags.

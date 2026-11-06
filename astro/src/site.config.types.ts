@@ -38,6 +38,14 @@ export interface SiteConfig {
     backlinks: PrivateTreatment
     explorer: PrivateTreatment
   }
+  /**
+   * Fragments: pages published in full and listed on their tags' pages, but not on the home page or
+   * in the feed, such as the highlights made of other sites' pages. A page under one of these tags,
+   * or under a tag under one, is a fragment.
+   */
+  fragments: {
+    tags: string[]
+  }
 }
 
 /** What the tag dictionary holds for one tag. A tag without either takes its nearest ancestor's. */

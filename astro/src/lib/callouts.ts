@@ -55,6 +55,15 @@ const ALIASES: Record<string, Kind> = {
 /** The kind a type is drawn as: its own, the one Obsidian reads it as, or a note's. */
 const kindOf = (type: string): Kind => (Object.hasOwn(KINDS, type) ? (type as Kind) : (ALIASES[type] ?? "note"))
 
+/**
+ * A callout's kind and its title's icon, for a callout another plugin makes in the same pass, which
+ * `calloutIcons` doesn't visit: a web page's passage's (src/lib/annotations.ts).
+ */
+export function calloutLook(type: string): { kind: string; icon: ReturnType<typeof noteIcon> } {
+  const kind = kindOf(type)
+  return { kind, icon: noteIcon(KINDS[kind], { className: "callout-icon", ariaHidden: "true" }) }
+}
+
 export function calloutIcons() {
   return defineHastPlugin({
     name: "callout-icons",

@@ -51,7 +51,7 @@ import { mentionExcerpts } from "./src/integrations/mention-excerpts.ts"
 import { feedContentIntegration } from "./src/integrations/feed-content.ts"
 
 import { obsidianAnnotator } from "@chaoticgoodcomputing/obsidian-markdown"
-import { annotatedDocument, annotationAnchors, annotationDate } from "./src/lib/annotations.ts"
+import { annotatedDocument, annotationAnchors, annotationDate, passageLinks } from "./src/lib/annotations.ts"
 
 import { mirrors } from "./src/integrations/mirrors.ts"
 
@@ -247,6 +247,10 @@ export default defineConfig({
         // A link to an IndieNews language page is the note's copy there, which submits the note
         // (src/lib/indienews.ts).
         indieNews(),
+
+        // A web page's passage, in its card, is a quote callout linking to it in the page
+        // (src/lib/annotations.ts).
+        passageLinks(),
 
         // A callout's title begins with its kind's icon, and a folding one's ends with a fold icon.
         calloutIcons(),

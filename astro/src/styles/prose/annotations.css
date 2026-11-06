@@ -67,6 +67,25 @@
   margin: 0;
 }
 
+/* A web page's passage (src/lib/annotations.ts): a quote callout, the whole box a link to the
+   passage in the page, drawn as the callout it holds, not as a link. */
+.prose a.annotation-passage {
+  display: block;
+  color: inherit;
+  font-weight: inherit;
+  text-decoration: none;
+}
+
+.prose a.annotation-passage > .callout {
+  margin: 0;
+  transition: border-color 0.15s;
+}
+
+.prose a.annotation-passage:hover > .callout,
+.prose a.annotation-passage:focus-visible > .callout {
+  border-color: var(--callout-color);
+}
+
 .prose .annotation-comment {
   margin-top: 0.75rem;
   color: var(--dark);

@@ -11,7 +11,7 @@ import {
 } from "@chaoticgoodcomputing/obsidian-markdown"
 import { markdownToHtml } from "satteri"
 import { afterAll, beforeAll, expect, test } from "vitest"
-import { annotatedDocument, annotatedFileType, annotationAnchors, annotationDate, isAnnotationPage } from "../src/lib/annotations.ts"
+import { annotatedDocument, annotatedFileType, annotationAnchors, annotationDate, isAnnotationPage, passageLinks } from "../src/lib/annotations.ts"
 import { indexNotes } from "../src/lib/notes.ts"
 import { openVault } from "../src/lib/vault.ts"
 
@@ -33,7 +33,14 @@ const BLOCK =
 const note = (target: string) =>
   `---\nannotation-target: ${target}\n---\nThe preface.\n\n${BLOCK.replace("TARGET", target)}\n\nThe epilogue.\n`
 
+// A web page's note, as the Annotator extension has the plugin write it: its type, and the page's
+// title in its records.
+const webNote = (title?: string) =>
+  `---\nannotation-target: "https://example.org/pickle"\nannotation-target-type: web\n---\n${BLOCK.replace("TARGET", "https://example.org/pickle").replace('"tags":[]', title ? `"tags":[],"document":{"title":"${title}"}` : '"tags":[]')}`
+
 const FILES: Record<string, string> = {
+  "pickle.md": webNote("Pickle - Wikipedia"),
+  "untitled-page.md": webNote(),
   "on-the-web.md": note("https://media.example.com/apps/Valve_Handbook%20LowRes.pdf"),
   "on-a-host.md": note("https://example.com/"),
   "in-the-vault.md": note("papers/On Stability.pdf"),
@@ -66,7 +73,7 @@ async function render(file: string): Promise<string> {
       annotatedDocument(),
       obsidianResolve({ vault, urlFor: indexNotes(vault, []).urlOf }),
     ],
-    hastPlugins: [annotationAnchors()],
+    hastPlugins: [passageLinks(), annotationAnchors()],
     fileURL: pathToFileURL(path.join(root, file)),
   })
   return html.replace(/>\n+</g, "><").trim()
@@ -122,6 +129,27 @@ test("an annotation page is marked by the kind of file it annotates, from the ex
   expect(annotatedFileType(page("https://example.com/papers/"))).toBeUndefined()
   expect(annotatedFileType(page(""))).toBeUndefined()
   expect(annotatedFileType({ frontmatter: {}, isPrivate: false })).toBeUndefined()
+  // A web page annotated in the browser, whatever its address ends in.
+  const web = { "annotation-target": "https://example.org/notes.html", "annotation-target-type": "web" }
+  expect(annotatedFileType({ frontmatter: web, isPrivate: false })).toBe("web")
+  expect(annotatedFileType({ frontmatter: web, isPrivate: true })).toBeUndefined()
   // A private page says nothing of what it is.
   expect(annotatedFileType(page("https://example.com/papers/On%20Meetings.pdf", true))).toBeUndefined()
+})
+
+test("a web page is cited by its title and host, or by its host alone", async () => {
+  expect(documentLink(await render("pickle.md"))).toBe(
+    '<p class="annotated-document">From <a href="https://example.org/pickle">Pickle - Wikipedia</a> on example.org</p>',
+  )
+  expect(documentLink(await render("untitled-page.md"))).toBe('<p class="annotated-document">From <a href="https://example.org/pickle">example.org</a></p>')
+})
+
+test("a web page's passage is a quote callout linking to it in the page, and a PDF's a plain quote", async () => {
+  const passage = /<a class="annotation-passage".*?<\/a>/s.exec(await render("pickle.md"))?.[0] ?? ""
+  expect(passage).toMatch(/^<a class="annotation-passage" href="https:\/\/example\.org\/pickle#:~:text=A%20passage" target="_blank" rel="noopener" title="Read it in context">/)
+  expect(passage).toMatch(/<div class="callout" data-callout="quote" data-callout-kind="quote"><div class="callout-title"><svg/)
+  expect(passage).toMatch(/Quote<\/div><div class="callout-content"><p>A passage<\/p><\/div><\/div><\/a>$/)
+  const pdf = await render("on-the-web.md")
+  expect(pdf).toContain('<blockquote class="annotation-highlight"><p>A passage</p></blockquote>')
+  expect(pdf).not.toContain("annotation-passage")
 })

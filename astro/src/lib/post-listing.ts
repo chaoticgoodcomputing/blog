@@ -1,10 +1,10 @@
 // What a post listing lists: the site's posts, or on a tag page those under its tag, in one of two
 // orders: newest first, or most central first. A private page is in no listing, whatever
 // `site.private` says of other features: a listing that marked one would still be a list of the
-// site's private pages.
+// site's private pages. A fragment (`site.fragments`) is in the tag pages' listings, not the home page's.
 
 import type { Vault } from "@chaoticgoodcomputing/obsidian-markdown"
-import { getNotes, isHomeNote, newestFirst, tagsOf, type Note } from "./notes.ts"
+import { getNotes, isFragment, isHomeNote, newestFirst, tagsOf, type Note } from "./notes.ts"
 import { lists, postListing } from "../site.config.ts"
 import type { ListingPageConfig, ListingPageKind, ListsConfig, Paging, PostListingConfig, PostOrder } from "../site.config.types.ts"
 import { isUnderTag } from "./tags.ts"
@@ -12,22 +12,25 @@ import { getVault } from "./vault.ts"
 
 /**
  * The posts a listing shows, newest first: every post, or with `tag` those carrying it or a tag
- * under it. The index note is the home page, and not one of its own posts.
+ * under it. The index note is the home page, and not one of its own posts. A fragment is listed on
+ * its tags' pages, and not on the home page.
  */
 export function listedPosts(tag?: string, notes: Note[] = getNotes()): Note[] {
   return notes
     .filter((note) => !note.isPrivate && !isHomeNote(note))
+    .filter((note) => tag !== undefined || !isFragment(note.tags))
     .filter((note) => tag === undefined || note.tags.some((own) => isUnderTag(own, tag)))
     .sort(newestFirst)
 }
 
 /**
  * How many posts are under each tag, which is how many its tag page lists: what a tag badge's count
- * says. A tag no post is under has none.
+ * says. A tag no post is under has none. A fragment counts under its tags, as their pages list it.
  */
 export function postCounts(notes: Note[] = getNotes()): Map<string, number> {
   const counts = new Map<string, number>()
-  for (const [tag, use] of tagsOf(listedPosts(undefined, notes))) counts.set(tag, use.under.length)
+  const tagged = notes.filter((note) => !note.isPrivate && !isHomeNote(note))
+  for (const [tag, use] of tagsOf(tagged)) counts.set(tag, use.under.length)
   return counts
 }
 

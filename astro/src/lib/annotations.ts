@@ -5,12 +5,13 @@
 // laid out (src/styles/prose/annotations.css), as the Quartz annotator laid it out
 // (docs/cutover/annotations-audit.md).
 
-import { ANNOTATIONS, annotationTarget, parseAnnotations, type Vault } from "@chaoticgoodcomputing/obsidian-markdown"
+import { ANNOTATIONS, annotationTarget, annotationTargetType, parseAnnotations, type Vault } from "@chaoticgoodcomputing/obsidian-markdown"
 import { defineHastPlugin, defineMdastPlugin } from "satteri"
 import type { AnnotatedPassage } from "./highlights.ts"
 import type { Note } from "./notes.ts"
 import { getVault } from "./vault.ts"
 import { formatDate } from "./dates.ts"
+import { calloutLook } from "./callouts.ts"
 import { noteIcon } from "./icons.ts"
 import { site } from "../site.config.ts"
 
@@ -18,13 +19,25 @@ import { site } from "../site.config.ts"
 export const isAnnotationPage = (note: Pick<Note, "frontmatter">): boolean => annotationTarget(note.frontmatter) !== undefined
 
 /**
+ * The web page a note's annotations were made on, in the browser (`annotation-target-type: web`):
+ * what its page cites by title, links passage by passage, and answers by webmention. Undefined for
+ * any other note, a PDF's among them.
+ */
+export function webAnnotationTarget(note: Pick<Note, "frontmatter">): string | undefined {
+  const target = annotationTarget(note.frontmatter)
+  return target !== undefined && annotationTargetType(note.frontmatter) === "web" && URL.canParse(target) ? target : undefined
+}
+
+/**
  * The kind of file a page's annotated document is, by its file name's extension, as a search
- * engine marks a result that is one: `pdf`. None for a note that isn't an annotation page, a private
- * page, which says nothing of what it is, or a document whose address names no extension.
+ * engine marks a result that is one: `pdf`; or `web`, for a web page annotated in the browser
+ * (`annotation-target-type: web`). None for a note that isn't an annotation page, a private page,
+ * which says nothing of what it is, or a document whose address names no extension.
  */
 export function annotatedFileType(note: Pick<Note, "frontmatter" | "isPrivate">): string | undefined {
   const target = annotationTarget(note.frontmatter)
   if (note.isPrivate || !target) return undefined
+  if (webAnnotationTarget(note) !== undefined) return "web"
   return /\.([a-z0-9]+)$/i.exec(documentFileName(target) ?? "")?.[1]?.toLowerCase()
 }
 
@@ -63,7 +76,8 @@ const named = (target: string): string => (URL.canParse(target) ? new URL(target
 /**
  * Lays out an annotation page's body: its preface and its epilogue each in a column of their own,
  * read as a note is (annotation-viewer.css centres them beside a wide document), then where the
- * annotated document comes from, a link to it at its target address, just before the annotations,
+ * annotated document comes from, a link to it at its target address, just before the annotations:
+ * a web page's cited by its title, "From <title> on <host>", where its annotations kept one,
  * so it stands over the document once the viewer draws it; and heads the annotations. The link is
  * a Markdown link, so the resolver after it gives a document kept in the vault the address the
  * site publishes it at.
@@ -75,6 +89,8 @@ export function annotatedDocument() {
       if (node.type !== ANNOTATIONS) return
       const properties = (node.data as { hProperties?: Record<string, unknown> } | undefined)?.hProperties
       const target = properties?.["data-annotation-target"]
+      const web = properties?.["data-annotation-target-type"] === "web" && typeof target === "string" && URL.canParse(target)
+      const title = properties?.["data-annotation-title"]
       const parent = ctx.parent(node)
       if (typeof target !== "string" || !parent) return
       ctx.prependChild(node, {
@@ -83,13 +99,16 @@ export function annotatedDocument() {
         data: { hProperties: { className: ["annotations-heading"] } },
         children: [{ type: "text", value: "Annotations" }],
       })
+      const link = (value: string) => ({ type: "link", url: encodeURI(decodeURI(target)), children: [{ type: "text", value }] })
+      const cited = typeof title === "string" && title !== ""
       const source = {
         type: "paragraph",
         data: { hProperties: { className: ["annotated-document"] } },
-        children: [
-          { type: "text", value: "Source document: " },
-          { type: "link", url: encodeURI(decodeURI(target)), children: [{ type: "text", value: named(target) }] },
-        ],
+        children: !web
+          ? [{ type: "text", value: "Source document: " }, link(named(target))]
+          : cited
+            ? [{ type: "text", value: "From " }, link(title), { type: "text", value: ` on ${named(target)}` }]
+            : [{ type: "text", value: "From " }, link(named(target))],
       }
       const children = [...parent.children]
       const at = ctx.indexOf(node)
@@ -102,6 +121,41 @@ export function annotatedDocument() {
         node,
         ...column("annotation-epilogue", children.slice(at + 1)),
       ] as never)
+    },
+  })
+}
+
+/**
+ * Shows a web page's passage, in its card, as a quote callout, `[!QUOTE]`, the whole box a link to
+ * the passage in the page itself: the address its quote cites, whose text fragment a browser that
+ * has them scrolls to and marks, with a quote callout's icon (src/lib/callouts.ts). A PDF's passage
+ * cites none and stays a quote: the viewer shows it in its document.
+ */
+export function passageLinks() {
+  return defineHastPlugin({
+    name: "passage-links",
+    element: {
+      filter: ["blockquote"],
+      visit(node, ctx) {
+        const { className, cite } = node.properties ?? {}
+        if (!Array.isArray(className) || !className.includes("annotation-highlight") || typeof cite !== "string") return
+        const { kind, icon } = calloutLook("quote")
+        const callout = {
+          type: "element",
+          tagName: "div",
+          properties: { className: ["callout"], dataCallout: "quote", dataCalloutKind: kind },
+          children: [
+            { type: "element", tagName: "div", properties: { className: ["callout-title"] }, children: [icon, { type: "text", value: "Quote" }] },
+            { type: "element", tagName: "div", properties: { className: ["callout-content"] }, children: node.children },
+          ],
+        }
+        ctx.replaceNode(node, {
+          type: "element",
+          tagName: "a",
+          properties: { className: ["annotation-passage"], href: cite, target: "_blank", rel: ["noopener"], title: "Read it in context" },
+          children: [callout],
+        } as never)
+      },
     },
   })
 }

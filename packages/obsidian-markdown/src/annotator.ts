@@ -38,6 +38,35 @@ export function annotationTarget(frontmatter: Record<string, unknown> | null | u
   return typeof target === "string" && target.trim() !== "" ? target.trim() : undefined
 }
 
+/**
+ * What kind of document a note's annotation target is, as its `annotation-target-type` property
+ * names it, lowercased: `web` for a web page annotated in the browser. Undefined when the note names
+ * none, as a PDF's note mostly doesn't.
+ */
+export function annotationTargetType(frontmatter: Record<string, unknown> | null | undefined): string | undefined {
+  const type = frontmatter?.["annotation-target-type"]
+  return typeof type === "string" && type.trim() !== "" ? type.trim().toLowerCase() : undefined
+}
+
+/**
+ * The address of a passage in a web page: the page's, with a text fragment for the passage, which
+ * a browser that has them scrolls to and marks
+ * (https://wicg.github.io/scroll-to-text-fragment/). A long passage is named by its first and last
+ * words; the words either side of it tell one quote of it from another.
+ */
+export function passageAddress(target: string, annotation: Pick<Annotation, "exact" | "prefix" | "suffix">): string {
+  const words = (text: string | undefined) => (text ?? "").trim().split(/\s+/).filter(Boolean)
+  // A text fragment's own delimiters, `-`, `,` and `&`, are written percent-encoded.
+  const encode = (list: string[]) => encodeURIComponent(list.join(" ")).replace(/-/g, "%2D")
+  const exact = words(annotation.exact)
+  if (exact.length === 0) return target
+  const quote = exact.length > 10 ? `${encode(exact.slice(0, 5))},${encode(exact.slice(-5))}` : encode(exact)
+  const prefix = words(annotation.prefix).slice(-3)
+  const suffix = words(annotation.suffix).slice(0, 3)
+  const text = [prefix.length ? `${encode(prefix)}-` : "", quote, suffix.length ? `-${encode(suffix)}` : ""].filter(Boolean).join(",")
+  return `${target.replace(/#.*$/, "")}#:~:text=${text}`
+}
+
 /** Pages of a document, numbered from 1 as a PDF reader numbers them: runs `[first, last]`, both included. */
 export type PageRange = [number, number][]
 
@@ -87,6 +116,8 @@ export interface Annotation {
   tags: string[]
   /** When it was written, as the record has it: an ISO 8601 instant. */
   created?: string
+  /** The annotated document's title, as the client read it from the document when it was written. */
+  documentTitle?: string
   /** Where its block is in the note's source: `[start, end)` offsets, the `^id` line included. */
   position: { start: number; end: number }
 }
@@ -149,6 +180,8 @@ export function parseAnnotations(source: string): ParsedAnnotations {
     if (typeof place?.start === "number") annotation.start = place.start
     if (text !== undefined && text.trim() !== "") annotation.text = text
     if (string(record?.created) !== undefined) annotation.created = string(record?.created)
+    const title = string(record?.document?.title)?.trim()
+    if (title) annotation.documentTitle = title
     const references: unknown[] = Array.isArray(record?.references) ? record.references : []
     const answered = string(references.at(-1))
     if (answered !== undefined) answers.set(id, answered)
@@ -223,13 +256,18 @@ function element(type: string, hName: string, className: string, children: Node[
  * was written, where the host writes dates. It carries its block id, as a block of the note does, so
  * a link to `#^id` lands on it and an embed of `^id` shows it.
  */
-function annotationNode(annotation: Annotation, vault: Vault, formatDate?: (date: Date) => string): Node {
+function annotationNode(annotation: Annotation, vault: Vault, formatDate?: (date: Date) => string, web?: string): Node {
   const children: Node[] = []
   if (annotation.exact) {
     children.push(
-      element("annotationHighlight", "blockquote", "annotation-highlight", [
-        { type: "paragraph", children: [text(annotation.exact)] },
-      ]),
+      element(
+        "annotationHighlight",
+        "blockquote",
+        "annotation-highlight",
+        [{ type: "paragraph", children: [text(annotation.exact)] }],
+        // A web page's passage is quoted from an address of its own, as a quotation's `cite` names one.
+        web === undefined ? {} : { cite: passageAddress(web, annotation) },
+      ),
     )
   }
   if (annotation.text) {
@@ -260,7 +298,10 @@ function annotationNode(annotation: Annotation, vault: Vault, formatDate?: (date
  * Shows the annotations of a note with an annotation target in place of Annotator's blocks. The note
  * becomes what was written before its first block, its preface; then a `<section
  * class="annotations">` holding the annotations in the order of the document, which names the
- * annotated document in `data-annotation-target`; then everything after, its epilogue. Of a block
+ * annotated document in `data-annotation-target`, its kind in `data-annotation-target-type` when the
+ * note names one, and its title in `data-annotation-title` when an annotation's record has it; then
+ * everything after, its epilogue. A web page's passages each `cite` their own address in it
+ * (`passageAddress`). Of a block
  * only its record is read, and nothing of it is left: a block whose JSON does not parse is left out,
  * with a warning.
  *
@@ -296,8 +337,16 @@ export function obsidianAnnotator(options: AnnotatorOptions) {
         ;(start !== undefined && start > first ? epilogue : preface).push(node)
       }
 
-      const shown = annotations.map((annotation) => annotationNode(annotation, vault, options.formatDate))
-      const section = element(ANNOTATIONS, "section", "annotations", shown, { "data-annotation-target": target })
+      const frontmatter = file && vault.metadataCache.getFileCache(file)?.frontmatter
+      const type = annotationTargetType(frontmatter)
+      const web = type === "web" && URL.canParse(target) ? target : undefined
+      const shown = annotations.map((annotation) => annotationNode(annotation, vault, options.formatDate, web))
+      const title = annotations.find((annotation) => annotation.documentTitle)?.documentTitle
+      const section = element(ANNOTATIONS, "section", "annotations", shown, {
+        "data-annotation-target": target,
+        ...(type === undefined ? {} : { "data-annotation-target-type": type }),
+        ...(title === undefined ? {} : { "data-annotation-title": title }),
+      })
       ctx.setProperty(root as never, "children", [...preface, section, ...epilogue] as never)
     },
   })

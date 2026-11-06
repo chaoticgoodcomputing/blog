@@ -14,7 +14,9 @@ import {
   obsidianFeatures,
   obsidianResolve,
   obsidianSyntax,
+  annotationTargetType,
   parseAnnotations,
+  passageAddress,
 } from "../src/index.ts"
 
 // One annotation as Obsidian's Annotator writes it: its record as JSON in a hidden code block, then
@@ -94,7 +96,18 @@ const TAGGED =
 
 // A vault with annotation notes in it. Each test renders a note as a site would: the syntax, the
 // annotations, then the resolver, a note at `/` and its path without the extension.
+// A web page's annotation, as the browser extension has the plugin write it: the page's title in
+// its record's `document`.
+const PICKLE =
+  ">%%\n" +
+  ">```annotation-json\n" +
+  '>{"text":"Brined.","target":[{"source":"https://example.org/pickle","selector":[{"type":"TextQuoteSelector","exact":"A pickle is a cucumber","prefix":"Introduction. ","suffix":" kept in brine."}]}],"document":{"title":"Pickle - Wikipedia"},"uri":"https://example.org/pickle","created":"2026-11-06T10:00:00.000Z","updated":"2026-11-06T10:00:00.000Z"}\n' +
+  ">```\n" +
+  ">%%\n" +
+  "^pickle1\n"
+
 const FILES: Record<string, string> = {
+  "pickle.md": `---\nannotation-target: "https://example.org/pickle"\nannotation-target-type: web\n---\n${PICKLE}`,
   "handbook.md": `---\nannotation-target: https://example.com/handbook.pdf\n---\nWhy I read it.\n\n\n${VALVE}\n\n${TAGGED}\n\nWhat I took from it.\n`,
   "flatland.md": "Flatland.\n",
   "quoted.md": "See [[handbook#^qywghl0r7w|the adventure]].\n\n![[handbook#^ze04t12qu3i]]\n",
@@ -210,4 +223,31 @@ test("a block whose JSON does not parse is left out, and the rest are shown", as
   const html = await render("broken.md")
   assert.deepEqual(ids(html), ["^ze04t12qu3i"])
   assert.ok(!html.includes("fearless"), html)
+})
+
+test("a note's annotation target type is its annotation-target-type property, lowercased", () => {
+  assert.equal(annotationTargetType({ "annotation-target-type": " Web " }), "web")
+  assert.equal(annotationTargetType({ "annotation-target": "https://example.com/handbook.pdf" }), undefined)
+})
+
+test("a passage's address is its page's, with a text fragment for it and the words either side", () => {
+  assert.equal(
+    passageAddress("https://example.org/pickle#history", { exact: "A pickle is a cucumber", prefix: "So, the long Introduction. ", suffix: " kept in brine, mostly." }),
+    "https://example.org/pickle#:~:text=the%20long%20Introduction.-,A%20pickle%20is%20a%20cucumber,-kept%20in%20brine%2C",
+  )
+  assert.equal(
+    passageAddress("https://example.org/a", { exact: "one two three four five six seven eight nine ten eleven twelve" }),
+    "https://example.org/a#:~:text=one%20two%20three%20four%20five,eight%20nine%20ten%20eleven%20twelve",
+  )
+  assert.equal(passageAddress("https://example.org/a", { exact: "well-known" }), "https://example.org/a#:~:text=well%2Dknown")
+})
+
+test("a web page's section names its kind and title, and each passage cites its own address", async () => {
+  const html = await render("pickle.md")
+  assert.match(html, /<section class="annotations" data-annotation-target="https:\/\/example\.org\/pickle" data-annotation-target-type="web" data-annotation-title="Pickle - Wikipedia">/)
+  assert.match(html, /<blockquote class="annotation-highlight" cite="https:\/\/example\.org\/pickle#:~:text=Introduction\.-,A%20pickle%20is%20a%20cucumber,-kept%20in%20brine\.">/)
+})
+
+test("a PDF's passages cite no address", async () => {
+  assert.doesNotMatch(await render("handbook.md"), /cite=/)
 })

@@ -2,8 +2,8 @@ import { expect, test } from "vitest"
 import { listedPosts, postCounts } from "../src/lib/post-listing.ts"
 
 // test/fixtures/vault/post-listing: six posts under `ledger`, one a day each month of 2024 from
-// January to June, two of them under `ledger/accounts`, and `Locked Ledger`, the newest, a private
-// page. Other features' notes are in the listing too, so what is asked here is asked of these.
+// January to June, two of them under `ledger/accounts`, `Locked Ledger`, the newest, a private
+// page, and `Ledger Margin`, newer still, a fragment (under `writing/fragments` alone), on tag pages only. Other features' notes are in the listing too, so what is asked here is asked of these.
 const ledger = (titles: string[]) => titles.filter((title) => /Ledger/.test(title))
 const titles = (tag?: string) => ledger(listedPosts(tag).map((note) => note.title))
 
@@ -41,4 +41,16 @@ test("a tag's count is how many posts its tag page lists", () => {
 
 test("the home page is not one of its own posts", () => {
   expect(listedPosts().map((note) => note.url)).not.toContain("/")
+})
+
+test("a fragment is listed on its tags' pages, and not the home page", () => {
+  expect(titles()).not.toContain("Ledger Margin")
+  expect(titles("writing")).toContain("Ledger Margin")
+  expect(titles("writing/fragments")).toEqual(["Ledger Margin"])
+})
+
+test("a fragment counts under its tags, as their pages list it", () => {
+  const counts = postCounts()
+  expect(counts.get("writing/fragments")).toBe(1)
+  for (const tag of ["writing", "writing/fragments"]) expect(listedPosts(tag).length).toBe(counts.get(tag))
 })

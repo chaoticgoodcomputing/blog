@@ -119,6 +119,9 @@ function tagPageAt(linkpath: string, published: Note[]): string | undefined {
 /** Whether tags make a page private: one of them is a private tag, or under one. */
 export const isPrivate = (tags: Iterable<string>): boolean => underAny(tags, site.private.tags)
 
+/** Whether tags make a page a fragment, listed on its tags' pages but not the home page: one is a fragment tag, or under one. */
+export const isFragment = (tags: Iterable<string>): boolean => underAny(tags, site.fragments.tags)
+
 export interface NoteIndex {
   /** The published notes, in the vault's order, which is by path. */
   notes: Note[]

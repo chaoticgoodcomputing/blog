@@ -73,7 +73,9 @@ export function linkingBlocks(html: string, site: string): Map<string, HTMLEleme
     if (!isExternal(href, site)) continue
     if (link.closest(`[${NO_WEBMENTION}]`)) continue
     const target = mentionTarget(href)
-    const near = link.closest(BLOCKS)
+    // A link in an annotation's card (a web page's passage's, src/lib/annotations.ts) takes the whole
+    // card: the passage, and what was written on it.
+    const near = link.closest("article.annotation") ?? link.closest(BLOCKS)
     // A link outside any block, such as one on its own in a callout's title, is its own block.
     const block = near && isInside(near, body) ? near : link
     const blocks = found.get(target) ?? []
@@ -95,7 +97,7 @@ const isInside = (node: HTMLElement, root: HTMLElement): boolean => {
  */
 export function excerptBlock(block: HTMLElement, noteAddress: string): string {
   const copy = parse(block.outerHTML)
-  for (const drawn of copy.querySelectorAll(".new-tab")) drawn.remove()
+  for (const drawn of copy.querySelectorAll(".new-tab, .annotation-anchor")) drawn.remove()
   for (const element of copy.querySelectorAll("[href], [src]")) {
     for (const name of ["href", "src"]) {
       const value = element.getAttribute(name)
@@ -143,6 +145,11 @@ export interface ExcerptPage {
   continueTo: string
   author: { name: string; url: string }
   locale: string
+  /**
+   * The page the excerpt answers, when it is a reply to it: a web page's annotation page's, to the
+   * page it annotates. A receiver shows a reply as a response on its page, not a mere mention.
+   */
+  inReplyTo?: string | undefined
 }
 
 /**
@@ -151,7 +158,7 @@ export interface ExcerptPage {
  * indexed, its canonical page is the note, and a reader is sent on to the note at once.
  */
 export function excerptPage(page: ExcerptPage): string {
-  const { address, noteAddress, note, blocks, continueTo, author, locale } = page
+  const { address, noteAddress, note, blocks, continueTo, author, locale, inReplyTo } = page
   const published = note.date
     ? `<time class="dt-published" datetime="${note.date.toISOString()}">${escape(note.date.toISOString().slice(0, 10))}</time>`
     : ""
@@ -175,7 +182,7 @@ export function excerptPage(page: ExcerptPage): string {
       <p>
         <a class="p-author h-card" href="${escape(author.url)}">${escape(author.name)}</a>
         ${published}
-        <a class="u-url" href="${escape(address)}" hidden></a>
+        <a class="u-url" href="${escape(address)}" hidden></a>${inReplyTo ? `\n        <a class="u-in-reply-to" href="${escape(inReplyTo)}" hidden></a>` : ""}
       </p>
       <div class="e-content">
 ${blocks.map((block) => `        ${block}`).join("\n")}
@@ -187,9 +194,9 @@ ${blocks.map((block) => `        ${block}`).join("\n")}
 `
 }
 
-/** A hash of what a mention excerpt says. */
-export const excerptDigest = (note: ExcerptNote, blocks: string[]): string =>
+/** A hash of what a mention excerpt says. A reply's hash has what it answers too; a mention's is as it always was. */
+export const excerptDigest = (note: ExcerptNote, blocks: string[], inReplyTo?: string): string =>
   createHash("sha256")
-    .update(JSON.stringify([note.title, note.date?.toISOString() ?? null, blocks]))
+    .update(JSON.stringify([note.title, note.date?.toISOString() ?? null, blocks, ...(inReplyTo ? [inReplyTo] : [])]))
     .digest("hex")
     .slice(0, 16)
