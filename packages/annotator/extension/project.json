@@ -58,7 +58,7 @@
       "//": "dist/annotator-extension.xpi: the extension, built again from an empty build/ (the tests write theirs there), zipped, unsigned. Release Firefox and Zen install an add-on for good only once Mozilla has signed it (`sign`).",
       "executor": "nx:run-commands",
       "options": {
-        "command": "make clean-build && make dist/annotator-extension.xpi SETTINGS_FILE=settings/firefox-local.json",
+        "command": "make clean-build && make dist/annotator-extension.xpi SETTINGS_FILE=settings/firefox-local.json && echo \"\\nInstall $(pwd)/dist/annotator-extension.xpi from about:addons (gear menu, Install Add-on From File).\"",
         "cwd": "{projectRoot}"
       },
       "parallelism": false
