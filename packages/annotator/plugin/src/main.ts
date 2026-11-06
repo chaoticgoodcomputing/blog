@@ -10,6 +10,7 @@ import { documentStore } from "./documents.ts"
 import { type OcrFiles, recognizePdf } from "./ocr.ts"
 import { annotatorInEditor, openAtAnnotation } from "./editor/annotator.ts"
 import { webNoteInEditor } from "./editor/web-note.ts"
+import { webCardsInReadingView } from "./reading-view.ts"
 import { folderOf } from "./frame-page.ts"
 import type { AnnotatorSession } from "./session.ts"
 import { type AnnotatorSettings, AnnotatorSettingTab, settingsFrom } from "./settings.ts"
@@ -40,6 +41,7 @@ export default class AnnotatorPlugin extends Plugin {
     this.app.workspace.onLayoutReady(() => void this.restartService())
     this.addSettingTab(new AnnotatorSettingTab(this.app, this))
     this.registerEditorExtension([annotatorInEditor(this), webNoteInEditor])
+    this.registerMarkdownPostProcessor(webCardsInReadingView(this.app))
     this.registerView(LEGACY_VIEW_TYPE, (leaf) => new LegacyAnnotationView(leaf))
     this.openLinksToAnnotationsAtThem()
 

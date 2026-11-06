@@ -107,3 +107,121 @@
   flex: 1;
   color: var(--text-muted);
 }
+
+/* A web page's note: its annotations as cards, in the blocks' place, between preface and epilogue. */
+.annotator-web-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4-3);
+  margin: var(--size-4-3) 0;
+}
+
+.annotator-web-card {
+  position: relative;
+  padding: var(--size-4-3) var(--size-4-4);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background: var(--background-primary-alt);
+}
+
+.annotator-web-quote .callout {
+  margin: 0;
+}
+
+.annotator-web-quote[data-passage] {
+  cursor: pointer;
+}
+
+.annotator-web-quote[data-passage]:hover .callout {
+  border-color: rgb(var(--callout-color));
+}
+
+.annotator-web-comment {
+  margin-top: var(--size-4-2);
+}
+
+.annotator-web-comment > :first-child {
+  margin-top: 0;
+}
+
+.annotator-web-comment > :last-child {
+  margin-bottom: 0;
+}
+
+.annotator-web-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-4-1);
+  margin-top: var(--size-4-2);
+}
+
+.annotator-web-tag {
+  padding: 0 var(--size-4-2);
+  border-radius: var(--radius-s);
+  background: var(--background-modifier-hover);
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+}
+
+.annotator-web-empty {
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+}
+
+/* A card's comment while it is edited (src/editor/comment-editor.ts): the text box in its place. */
+.annotator-web-card.is-editing .annotator-web-comment {
+  display: none;
+}
+
+/* A card is clicked to edit its comment: the pointer says so over all of it but its passage. */
+.annotator-web-card:not(.is-editing) {
+  cursor: text;
+}
+
+.annotator-web-card:not(.is-editing):hover {
+  border-color: var(--background-modifier-border-hover);
+}
+
+.annotator-web-comment-empty {
+  color: var(--text-faint);
+  font-style: italic;
+}
+
+.annotator-web-comment-editor {
+  margin-top: var(--size-4-2);
+}
+
+.annotator-web-comment-editor textarea {
+  width: 100%;
+  min-height: 5em;
+  resize: vertical;
+  font-family: var(--font-text);
+  font-size: var(--font-text-size);
+  line-height: var(--line-height-normal);
+}
+
+.annotator-web-comment-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--size-4-2);
+  margin-top: var(--size-4-2);
+}
+
+.annotator-suggest-path {
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+}
+
+/* Reading view: a web page's note's block's sections after its first, which its card stands for. */
+.annotator-web-hidden {
+  display: none;
+}
+
+/* Reading view: a card stands alone, a section of its own. */
+.markdown-preview-view .annotator-web-cards {
+  margin: var(--size-4-2) 0;
+}
+
+.annotator-web-card .annotator-web-comment p {
+  margin-block: var(--size-4-2);
+}

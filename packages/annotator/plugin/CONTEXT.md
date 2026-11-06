@@ -115,6 +115,8 @@ _Avoid_: folder, file name template
 
 **Web page's note**:
 An annotation note whose target type is a web page: annotated in the browser, never in Obsidian,
-which doesn't show the page. Its editor has no annotator region; its annotations are its text, as
-any note's, under a bar that opens the page in the browser.
+which doesn't show the page. Its editor has an annotator region, between its preface and its
+epilogue, as a PDF's note has, its blocks kept from edits; the region shows its annotations as
+cards, not the annotator. A click on a card edits its comment alone, in a text box, wikilinks
+suggested; saving writes its block again through the format, never by hand. A bar under its properties opens the page in the browser.
 _Avoid_: web note, bookmark, clipping

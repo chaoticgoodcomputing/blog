@@ -5,7 +5,7 @@
 // (annotator-format's layout), which the editor shows the annotator in place of. A note with no
 // blocks yet has an empty region at its end, where its first will go.
 
-import { parseNote } from "@chaoticgoodcomputing/annotator-format"
+import { type Block, parseNote } from "@chaoticgoodcomputing/annotator-format"
 import { Annotation, EditorState, StateField, type Transaction } from "@codemirror/state"
 
 export interface Region {
@@ -27,7 +27,8 @@ export const isAnnotationNoteText = (text: string) => TARGET.test(FRONTMATTER.ex
 
 /**
  * Whether a note's text is a web page's annotation note's: one made in the browser, whose page
- * Obsidian doesn't show, so its annotations are the note's text, as any note's.
+ * Obsidian doesn't show, so its region shows its annotations as cards (src/editor/annotator.ts), in
+ * place of the annotator.
  */
 export const isWebNoteText = (text: string) => isAnnotationNoteText(text) && WEB.test(FRONTMATTER.exec(text)![1]!)
 
@@ -39,9 +40,12 @@ export function webPageOf(text: string): { url: string; end: number } | null {
   return url ? { url, end: frontmatter[0].length } : null
 }
 
-/** A note's annotator region, or none for a note that is no annotation note, or a web page's. */
+/**
+ * A note's annotator region, or none for a note that is no annotation note. A web page's note has
+ * one as a PDF's does: its preface above, its epilogue below, its blocks between, kept from the editor.
+ */
 export function regionOf(text: string): Region | null {
-  if (!isAnnotationNoteText(text) || isWebNoteText(text)) return null
+  if (!isAnnotationNoteText(text)) return null
   const { blocks } = parseNote(text)
   const first = blocks[0]
   const last = blocks.at(-1)
@@ -61,7 +65,8 @@ export const regionField = StateField.define<Region | null>({
 /**
  * No edit may touch the blocks, or the line breaks just before and after them, which would join a
  * line to a block's: changes there are dropped. Typing on the line above the blocks, or the line
- * below, is an edit beside them. The plugin's own writes pass (`annotatorWrite`).
+ * below, is an edit beside them. The plugin's own writes pass (`annotatorWrite`): a card's comment,
+ * edited, is one (src/editor/annotator.ts).
  */
 export const protectBlocks = EditorState.changeFilter.of((transaction) => {
   const region = transaction.startState.field(regionField, false)
@@ -85,3 +90,20 @@ export function changeBetween(before: string, after: string): { from: number; to
 
 /** Whether a transaction is the plugin's own write. */
 export const isAnnotatorWrite = (transaction: Transaction) => transaction.annotation(annotatorWrite) === true
+
+/**
+ * The block of a note's text that holds line `line`, numbered from 0, as reading view numbers a
+ * section's lines, with the line it starts on; none when no block does.
+ */
+export function blockAtLine(text: string, line: number): { block: Block; firstLine: number } | undefined {
+  const lineOf = (offset: number) => {
+    let count = 0
+    for (let at = text.indexOf("\n"); at >= 0 && at < offset; at = text.indexOf("\n", at + 1)) count++
+    return count
+  }
+  for (const block of parseNote(text).blocks) {
+    const firstLine = lineOf(block.span.start)
+    if (firstLine <= line && line <= lineOf(Math.max(block.span.start, block.span.end - 1))) return { block, firstLine }
+  }
+  return undefined
+}

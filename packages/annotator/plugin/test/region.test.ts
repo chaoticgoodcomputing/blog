@@ -5,7 +5,7 @@ import assert from "node:assert/strict"
 import { test } from "node:test"
 import { upsertAnnotation } from "@chaoticgoodcomputing/annotator-format"
 import { EditorState } from "@codemirror/state"
-import { annotatorWrite, changeBetween, isAnnotationNoteText, protectBlocks, regionField, regionOf, webPageOf } from "../src/editor/region.ts"
+import { annotatorWrite, blockAtLine, changeBetween, isAnnotationNoteText, protectBlocks, regionField, regionOf, webPageOf } from "../src/editor/region.ts"
 
 const FRONTMATTER = "---\ntitle: A paper\nannotation-target: https://example.org/paper.pdf\n---\n"
 const annotation = (id: string, text: string) => ({ id, text, target: [{ source: "https://example.org/paper.pdf", selector: [{ type: "TextQuoteSelector", exact: `passage ${id}` }] }] })
@@ -83,9 +83,27 @@ test("the plugin's own writes reach the blocks", () => {
   assert.equal(changeBetween(after, after), null)
 })
 
-test("a web page's note has no region: its annotations are its text", () => {
+test("a web page's note has a region as a PDF's does, between its preface and its epilogue", () => {
   const web = note().replace("annotation-target: https://example.org/paper.pdf\n", "annotation-target: \"https://example.org/page\"\nannotation-target-type: web\n")
-  assert.equal(regionOf(web), null)
+  const region = regionOf(web)!
+  const [preface, blocks, epilogue] = [web.slice(0, region.from), web.slice(region.from, region.to), web.slice(region.to)]
+  assert.ok(preface.includes("The preface.") && !preface.includes("annotation-json"))
+  assert.ok(epilogue.includes("The epilogue.") && !epilogue.includes("annotation-json"))
+  assert.equal(blocks.match(/annotation-json/g)?.length, 2)
   assert.deepEqual(webPageOf(web), { url: "https://example.org/page", end: web.indexOf("---\n", 4) + 4 })
   assert.equal(webPageOf(note()), null)
+})
+
+
+test("a line of a block is known as its block's, with the line the block starts on", () => {
+  const text = note()
+  const lines = text.split("\n")
+  const first = lines.findIndex((line) => line === ">%%")
+  const id = lines.findIndex((line) => line === "^aaa")
+  assert.deepEqual([blockAtLine(text, first)?.block.id, blockAtLine(text, first)?.firstLine], ["aaa", first])
+  assert.equal(blockAtLine(text, id)?.block.id, "aaa")
+  assert.equal(blockAtLine(text, id)?.firstLine, first)
+  assert.equal(blockAtLine(text, lines.findIndex((line) => line === "^bbb"))?.block.id, "bbb")
+  assert.equal(blockAtLine(text, lines.indexOf("The preface.")), undefined)
+  assert.equal(blockAtLine(text, lines.indexOf("The epilogue.")), undefined)
 })

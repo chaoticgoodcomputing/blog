@@ -1,6 +1,7 @@
 // The annotator in Obsidian's editor: an annotation note opens as any note, with its run of
 // annotation blocks shown as the annotator, the PDF and the sidebar, between the preface above and
-// the epilogue below.
+// the epilogue below. A web page's note, annotated in the browser, has its blocks shown as cards
+// in their place instead (WebCards): the same preface and epilogue, the same blocks kept from edits.
 //
 // The editor shows a placeholder in the blocks' place (a block widget over the region,
 // src/editor/region.ts), and the annotator itself lives in a layer of the plugin's in the editor's
@@ -10,11 +11,14 @@
 
 import { type Extension, RangeSet, StateField, type Text, Transaction } from "@codemirror/state"
 import { Decoration, type DecorationSet, EditorView, type PluginValue, ViewPlugin, type ViewUpdate, WidgetType } from "@codemirror/view"
-import { editorInfoField, type TFile } from "obsidian"
+import { type Component, editorInfoField, type TFile } from "obsidian"
 import type AnnotatorPlugin from "../main.ts"
 import { AnnotatorSession } from "../session.ts"
 import { parseNote } from "@chaoticgoodcomputing/annotator-format"
-import { annotatorWrite, changeBetween, protectBlocks, type Region, regionField } from "./region.ts"
+import { withComment } from "../comment-edit.ts"
+import { type Card, cardsOf, openPassages, renderCard } from "../web-cards.ts"
+import { openCommentEditor } from "./comment-editor.ts"
+import { annotatorWrite, changeBetween, isWebNoteText, protectBlocks, type Region, regionField } from "./region.ts"
 
 /** The annotator's distance from the editor's sides. */
 const LAYER_MARGIN = 16
@@ -60,6 +64,88 @@ class Placeholder extends WidgetType {
 
 const placeholder = new Placeholder()
 
+/**
+ * A web page's note's annotations, in its blocks' place: a card for each, its passage as a quote
+ * callout (`[!QUOTE]`) that opens it in the page, in the browser, its comment as Obsidian renders
+ * Markdown, and its tags. A click on a card turns its comment into a text box of the comment alone
+ * (src/editor/comment-editor.ts), wikilinks suggested; saving writes the whole block again through
+ * the format (src/comment-edit.ts), so nothing of the block itself can be broken by an edit.
+ */
+class WebCards extends WidgetType {
+  constructor(private cards: Card[]) {
+    super()
+  }
+
+  eq(other: WidgetType) {
+    return other instanceof WebCards && JSON.stringify(other.cards) === JSON.stringify(this.cards)
+  }
+
+  toDOM(view: EditorView) {
+    const element = createDiv({ cls: "annotator-web-cards" })
+    const path = view.state.field(editorInfoField, false)?.file?.path ?? ""
+    if (!this.cards.length) {
+      element.createDiv({ cls: "annotator-web-empty", text: "No annotations yet: highlight a passage of the page in the browser." })
+      return element
+    }
+    if (!cardsHost) return element
+    const host = cardsHost
+    for (const card of this.cards) {
+      const { article, slot } = renderCard(element, card, { app: host.app, component: host.component, sourcePath: path })
+      // A click on the card, but on a link or the passage's box, edits its comment.
+      article.addEventListener("click", (event) => {
+        if ((event.target as HTMLElement).closest("a, button, textarea, [data-passage]")) return
+        if (article.hasClass("is-editing")) return
+        event.preventDefault()
+        article.addClass("is-editing")
+        const close = () => {
+          article.removeClass("is-editing")
+          slot.querySelector(".annotator-web-comment-editor")?.remove()
+        }
+        openCommentEditor(slot, {
+          app: host.app,
+          comment: card.text ?? "",
+          sourcePath: path,
+          cancel: close,
+          save: (text) => {
+            const before = view.state.doc.toString()
+            const changes = changeBetween(before, withComment(before, card.id, text, new Date().toISOString(), host.viewOptions()))
+            // The plugin's own write, past the blocks' protection; out of the undo history, which
+            // the protection would refuse to undo.
+            if (changes) view.dispatch({ changes, filter: false, annotations: [annotatorWrite.of(true), Transaction.addToHistory.of(false)] })
+            close()
+          },
+        })
+      })
+    }
+    openPassages(element)
+    // The comments' links, which the editor would follow in its own text, are followed here.
+    element.addEventListener("click", (event) => {
+      const link = (event.target as HTMLElement).closest("a")
+      if (!link || !cardsHost) return
+      event.preventDefault()
+      const href = link.getAttribute("data-href") ?? link.getAttribute("href") ?? ""
+      if (link.hasClass("internal-link")) void cardsHost.app.workspace.openLinkText(href, path, event.metaKey || event.ctrlKey)
+      else if (href) window.open(href)
+    })
+    return element
+  }
+
+  get estimatedHeight() {
+    return 120 * Math.max(1, this.cards.length)
+  }
+
+  // The cards' links have their clicks; the editor doesn't.
+  ignoreEvent() {
+    return true
+  }
+}
+
+/**
+ * What the cards render their comments with: the plugin's app, and the plugin, which owns what they
+ * render; and how the plugin writes a block's view.
+ */
+let cardsHost: { app: AnnotatorPlugin["app"]; component: Component; viewOptions: () => ReturnType<AnnotatorPlugin["viewOptions"]> } | undefined
+
 /** Hosts one editor's annotator: its session, its layer, and the placeholder it follows. */
 class AnnotatorHost implements PluginValue {
   private session?: AnnotatorSession
@@ -94,7 +180,8 @@ class AnnotatorHost implements PluginValue {
   private sync() {
     const file = this.view.state.field(editorInfoField, false)?.file ?? undefined
     const region = this.view.state.field(regionField, false)
-    if (!file || !region) return this.end()
+    // A web page's note has cards, not the annotator: Obsidian doesn't show the page.
+    if (!file || !region || isWebNoteText(this.view.state.doc.toString())) return this.end()
     if (this.session && this.file === file) return
     this.end()
     this.file = file
@@ -218,11 +305,16 @@ export function openAtAnnotation(view: EditorView, id: string): boolean {
   return host ? host.openAt(id) : false
 }
 
-/** The placeholder over the region: replacing the blocks, or, with none, at the note's end. */
+/**
+ * The placeholder over the region: replacing the blocks, or, with none, at the note's end. A web
+ * page's note has its cards there instead.
+ */
 function decorationsOf(region: Region | null, doc: Text): DecorationSet {
   if (!region) return Decoration.none
-  if (region.from === region.to) return Decoration.set([Decoration.widget({ widget: placeholder, block: true, side: 1 }).range(doc.length)])
-  return Decoration.set([Decoration.replace({ widget: placeholder, block: true }).range(region.from, region.to)])
+  const text = doc.toString()
+  const widget = isWebNoteText(text) ? new WebCards(cardsOf(text)) : placeholder
+  if (region.from === region.to) return Decoration.set([Decoration.widget({ widget, block: true, side: 1 }).range(doc.length)])
+  return Decoration.set([Decoration.replace({ widget, block: true }).range(region.from, region.to)])
 }
 
 /** The placeholder, as editor state: block widgets can come from nowhere else. */
@@ -240,6 +332,7 @@ const hostOf = (view: EditorView) => (hostPlugin ? view.plugin(hostPlugin) : nul
 /** The annotator in the editor, for every annotation note it opens. */
 export function annotatorInEditor(plugin: AnnotatorPlugin): Extension {
   hostPlugin = ViewPlugin.define((view) => new AnnotatorHost(view, plugin))
+  cardsHost = { app: plugin.app, component: plugin, viewOptions: () => plugin.viewOptions() }
   return [
     regionField,
     placeholderField,
