@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hyperparameter verification of StcE protein folds in Pedram et al., 2023</title>
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href="https://blog.chaoticgood.computer/content/annotations/bertozzi-stickies" />
+    <script>location.replace("https://blog.chaoticgood.computer/content/annotations/bertozzi-stickies#:~:text=d%2C%20Setup%20for%20flow%20cytometry%20assays%20measuring%20cell%2Dsurface")</script>
+    <style>
+      :root { color-scheme: light dark; }
+      body { max-width: 40rem; margin: 2rem auto; padding: 0 1rem; font-family: Georgia, serif; line-height: 1.5; }
+    </style>
+  </head>
+  <body>
+    <article class="h-entry">
+      <h1 class="p-name">Hyperparameter verification of StcE protein folds in Pedram et al., 2023</h1>
+      <p>
+        <a class="p-author h-card" href="https://blog.chaoticgood.computer/contact">Spencer Elkington</a>
+        <time class="dt-published" datetime="2026-02-28T00:00:00.000Z">2026-02-28</time>
+        <a class="u-url" href="https://blog.chaoticgood.computer/mentions/content/annotations/bertozzi-stickies/7cfa7ff8bef5" hidden></a>
+      </p>
+      <div class="e-content">
+        <article class="annotation" id="^z2rvt8kocg"><blockquote class="annotation-highlight"><p>d, Setup for flow cytometry assays measuring cell-surface activity and binding of StcE and StcE mutants. e, Representative flow plots showing surface MUC1 levels of HeLa cells treated with StcE mutants at the indicated concentrations. For flow plots of all other StcE mutants, see Supplementary Fig. 1d.</p></blockquote><div class="annotation-comment"><p>(This annotation has nothing to do with 4d — I’m just placing it here for its proximity to figure 4a)</p><p>After reviewing this annotation set with my partner, she did point me in the right direction (read: she actually read the upstream paper and told me exactly what I was missing. <em>Nerd.</em>)</p><p>From up upstream paper, they do highlight domains differently than the NIH structural source does — the NIH source also has a beginning sequence, called the signal sequence (SS), chopped off of it (we think):</p><div class="callout" data-callout="quote" data-callout-kind="quote"><div class="callout-title"><svg viewBox="0 0 24 24" width="1em" height="1em" class="callout-icon" aria-hidden="true"><path fill="currentColor" d="M14 17h3l2-4V7h-6v6h3M6 17h3l2-4V7H5v6h3z"></path></svg>Quote</div><div class="callout-content"><p><img alt="Pasted image 20260302215331" loading="lazy" decoding="async" width="2724" height="346" src="https://blog.chaoticgood.computer/_astro/Pasted%20image%2020260302215331.ZF2mGAlf_X6ngQ.webp"></p><p>— <a href="https://www.cell.com/action/showPdf?pii=S0969-2126(12)00095-0" target="_blank" rel="noopener">Structural Insight into the Bacterial Mucinase StcE Essential to Adhesion and Immune Evasion during Enterohemorrhagic E. coli Infection</a></p></div></div><p>She was very nice, and reconstructed the amino acid sequence based on the StcE DNA sequence. What we found is that the upstream NIH source is weird. From the beginning of that sequence:</p><div class="callout" data-callout="quote" data-callout-kind="quote"><div class="callout-title"><svg viewBox="0 0 24 24" width="1em" height="1em" class="callout-icon" aria-hidden="true"><path fill="currentColor" d="M14 17h3l2-4V7h-6v6h3M6 17h3l2-4V7H5v6h3z"></path></svg>Quote</div><div class="callout-content"><p>GSH<strong>MAS</strong>ADNNSA…</p><p>—<a href="https://www.ncbi.nlm.nih.gov/Structure/pdb/3UJZ" target="_blank" rel="noopener">3UJZ/StcE, NCBI</a></p></div></div><p>Paraphrasing her, the “important” part of the sequence starts after the <code>MAS</code> sequence. I asked her why this is the case, and she gave me a very long, well-researched answer. When I asked her to dumb it down for me, she said it’s “because of the way proteins are.” I’ll take her word for it.</p><p>For our purposes, we can trust that everything before (and including) MAS is the signal sequence, which this paper cut off prior to the fold. While I <em>didn’t</em> do that, the preceding <code>GSHMAS</code> sequence probably won’t effect the fold very much. However, it does let us know that we need to do some offset math when highlighting the domains in the same way Yu et al. does. We know that the sample we folded only cut off 29 of the 35 SS-domain amino acids, so we need to offset all of the highlights by 29.</p><p>Doing that math, then, the two subsequences we need to highlight are:</p><ul>
+<li><strong>INS Domain:</strong> [121, 216]</li>
+<li><strong>C Domain:</strong> [775, 869]</li>
+</ul><p>Using these domain sets gives us a FAR clearer picture than we had, before:</p><p><img alt="Pasted image 20260302235555" loading="lazy" decoding="async" width="1306" height="1192" src="https://blog.chaoticgood.computer/_astro/Pasted%20image%2020260302235555.C6qoeJaE_2fMMy0.webp"></p><p><img alt="Pasted image 20260302235321" loading="lazy" decoding="async" width="1124" height="1300" src="https://blog.chaoticgood.computer/_astro/Pasted%20image%2020260302235321.VPE2LVEe_Z85e80.webp"></p><p>(the extra red highlight is the <code>GSHMAS</code> erroneous part of the sequence that we were un-offsetting for — given that it’s in a tail offshoot, I’m not too concerned about it affecting the rest of the fold.)</p><p>The differences in angles between the three loose domains against the core rigid body is expected — those were the sources of uncertainty on the graph above, which is still correct. However, this is confirmation that the C and INS domains are correctly confined to the spokes of the protein. I think that the second, rotated figure also gives a strong confirmation — the shape is close enough that, if I was the type of person qualified to guesstimate, I’d be able to loosely point out where the mutated residues and Zn^2+ active sites were, in a pseudo-academic pin-the-Zn^2+-active-sites-on-the-protein-donkey kind of way.</p></div><time class="annotation-date" datetime="2026-03-03T07:18:31.971Z">Mar 03, 2026</time></article>
+      </div>
+      <p><a href="https://blog.chaoticgood.computer/content/annotations/bertozzi-stickies#:~:text=d%2C%20Setup%20for%20flow%20cytometry%20assays%20measuring%20cell%2Dsurface">Read the whole note</a></p>
+    </article>
+  </body>
+</html>

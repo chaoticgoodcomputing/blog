@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Union types (C# reference)</title>
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href="https://blog.chaoticgood.computer/content/annotations/highlights/learn.microsoft.com/Union-types-C-reference" />
+    <script>location.replace("https://blog.chaoticgood.computer/content/annotations/highlights/learn.microsoft.com/Union-types-C-reference#:~:text=From%20Union%20types%20%2D%20C%23%20reference%20on%20learn.microsoft.com")</script>
+    <style>
+      :root { color-scheme: light dark; }
+      body { max-width: 40rem; margin: 2rem auto; padding: 0 1rem; font-family: Georgia, serif; line-height: 1.5; }
+    </style>
+  </head>
+  <body>
+    <article class="h-entry">
+      <h1 class="p-name">Union types (C# reference)</h1>
+      <p>
+        <a class="p-author h-card" href="https://blog.chaoticgood.computer/contact">Spencer Elkington</a>
+        <time class="dt-published" datetime="2026-11-06T00:00:00.000Z">2026-11-06</time>
+        <a class="u-url" href="https://blog.chaoticgood.computer/mentions/content/annotations/highlights/learn.microsoft.com/Union-types-C-reference/a147e8790d47" hidden></a>
+        <a class="u-in-reply-to" href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/union" hidden></a>
+      </p>
+      <div class="e-content">
+        <p class="annotated-document">From <a href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/union" target="_blank" rel="noopener">Union types - C# reference</a> on learn.microsoft.com</p>
+        <article class="annotation" id="^knxn9xm6kka"><a class="annotation-passage" href="https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/union#:~:text=language%20version%20history.-,Declare%20a%20union%20when%20a,requiring%20inheritance%20or%20shared%20members.,-A%20union%20differs" target="_blank" rel="noopener" title="Read it in context"><div class="callout" data-callout="quote" data-callout-kind="quote"><div class="callout-title"><svg viewBox="0 0 24 24" width="1em" height="1em" class="callout-icon" aria-hidden="true"><path fill="currentColor" d="M14 17h3l2-4V7h-6v6h3M6 17h3l2-4V7H5v6h3z"></path></svg>Quote</div><div class="callout-content"><p>Declare a union when a value must be exactly one of a fixed set of types and you want the compiler to enforce that every possibility is handled. Common scenarios include:
+
+Result-or-error returns: A method returns either a success value or an error value, and the caller must handle both. A union like union Result(Success, Error) makes the set of outcomes explicit.
+Message or command dispatching: A system processes a closed set of message types. A union ensures new message types produce compile-time warnings at every switch that doesn't handle them yet.
+Replacing marker interfaces or abstract base classes: If you use an interface or abstract class solely to group types for pattern matching, a union gives you exhaustiveness checking without requiring inheritance or shared members.</p></div></div></a><div class="annotation-comment"><p>This is VERY exciting stuff. It took me a second to sit on how, exactly, this could be used: specifically in <a class="internal-link" href="https://blog.chaoticgood.computer/tags/projects/flowthru" data-href="/tags/projects/flowthru">Flowthru</a>, and for other cases where I, in my role as a stack engineer for .NET layers of the stack, want to make it harder to write wrong code.</p><p>The immediate top of mind that I’ve got is the ability to enforce strong typing in Flowthru for <code>FlowthruService</code> callers when slicing flows.</p><p>The simple explanation is: in Flowthru, a Flow can be seen as a composite function of all of its steps. Let’s say a Flow has three steps:</p><ol>
+<li>Step 1 takes in some raw data, and outputs Item A, of schema I_A</li>
+<li>Step 2 takes in Item B, of schema I_B</li>
+<li>Step 3 takes in Item A and Item B, and outputs Item C, of schema I_C</li>
+</ol><p>By combining those three functions, the Flow is then a composite function that takes in the raw data and outputs Items A, B, and C. Trying to express that to the Flow caller in a way that preserves type safety (e.g. a breaking change of the Flow can result in design-type errors within the caller code) has eluded me. My instinct, though, is that a <code>union</code> could be used to express that a Flow will output many union objects that can then be safely <code>switch</code>ed through.</p><p>It’s… barely an idea, but an idea nonetheless. I know it’s worth exploring further, at the very least.</p></div><time class="annotation-date" datetime="2026-11-06T06:34:56.905Z">Nov 06, 2026</time></article>
+      </div>
+      <p><a href="https://blog.chaoticgood.computer/content/annotations/highlights/learn.microsoft.com/Union-types-C-reference#:~:text=From%20Union%20types%20%2D%20C%23%20reference%20on%20learn.microsoft.com">Read the whole note</a></p>
+    </article>
+  </body>
+</html>
