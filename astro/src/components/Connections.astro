@@ -27,6 +27,7 @@ import type { ConnectionPanel } from "../site.config.types.ts"
 import Carousel, { type Slide } from "./Carousel.astro"
 import MentionList from "./MentionList.astro"
 import PostList from "./PostList.astro"
+import { getNoteIndex } from "../lib/notes.ts"
 
 interface Props {
   /** The note the page shows, with the address it has. A page that shows none has none. */
@@ -35,7 +36,7 @@ interface Props {
 
 const { note } = Astro.props
 const site = Astro.site!.href
-const links = { outlinks: note ? outlinksOf(note) : [], backlinks: note ? backlinksOf(note) : [] }
+const links = { outlinks: note ? outlinksOf(note, { index: getNoteIndex() }) : [], backlinks: note ? backlinksOf(note, { index: getNoteIndex() }) : [] }
 const discussionPanels: DiscussionPanel[] =
   note?.url !== undefined && !note.isPrivate ? await getDiscussionPanels(note.url, note.title, site) : []
 

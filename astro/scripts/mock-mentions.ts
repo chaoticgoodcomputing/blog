@@ -13,16 +13,17 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { aliasRedirects, publishedFiles, staticPages } from "../src/lib/aliases.ts"
 import { mockBlueskyFeed, mockHackerNews, mockMentions } from "../src/lib/mock-mentions.ts"
-import { getNotes, getUnpublished, isHomeNote, newestFirst } from "../src/lib/notes.ts"
+import { getNoteIndex, isHomeNote, newestFirst } from "../src/lib/notes.ts"
 
 // The host is read only to tell the site's pages from others': it must be the site's.
 const SITE = "https://blog.chaoticgood.computer"
 const dist = fileURLToPath(new URL("../../dist/", import.meta.url))
 
-const notes = getNotes()
+const index = getNoteIndex()
+const { notes } = index
 const posts = notes.filter((note) => !note.isPrivate && !isHomeNote(note) && note.date).sort(newestFirst)
 const published = new Set(notes.filter((note) => !note.isPrivate).map((note) => note.url))
-const { redirects } = aliasRedirects(notes, staticPages(), publishedFiles(), getUnpublished("tag description"))
+const { redirects } = aliasRedirects(notes, staticPages(), publishedFiles(), index.tagDescriptions())
 const alias = Object.entries(redirects).find(([, to]) => published.has(to))?.[0]
 const targets = { site: SITE, notes: posts.slice(0, 3).map((note) => note.url), alias }
 

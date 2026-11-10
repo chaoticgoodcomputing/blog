@@ -32,6 +32,7 @@ import { graphIndex } from "../../lib/graph-index.ts"
 import { graph } from "../../site.config.ts"
 import type { TimePeriod } from "../../site.config.types.ts"
 import TagBubble from "../TagBubble.astro"
+import { getNoteIndex } from "../../lib/notes.ts"
 
 interface Props {
   /** The page's address, which is its node's id. */
@@ -42,7 +43,7 @@ interface Props {
 
 const { url, fullPage = false } = Astro.props
 // The widest the reader can ask for: every period, with the private pages.
-const widest = globalGraph(graphIndex(), graph.global, { period: "all", includePrivate: true }, new Date())
+const widest = globalGraph(graphIndex({ index: getNoteIndex() }), graph.global, { period: "all", includePrivate: true }, new Date())
 const tags = [...new Set(widest.nodes.flatMap((node) => (node.tag === undefined ? [] : [node.tag])))]
 const periodLabel: Record<TimePeriod, string> = { month: "Month", year: "Year", all: "All" }
 // The slider's stops, from the widest period to the narrowest, as on the Quartz site.

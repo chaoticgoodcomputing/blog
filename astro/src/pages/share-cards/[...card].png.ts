@@ -4,7 +4,7 @@
 import { fileURLToPath } from "node:url"
 import type { APIRoute, GetStaticPaths } from "astro"
 import { cacheDir } from "astro:config/server"
-import { getNote } from "../../lib/notes.ts"
+import { getNote, getNotes, getNoteIndex } from "../../lib/notes.ts"
 import { shareCardDrawer, shareCardOf, shareCardPages } from "../../lib/share-card.ts"
 
 const drawer = shareCardDrawer(fileURLToPath(new URL("share-cards/", cacheDir)))
@@ -12,7 +12,7 @@ const drawer = shareCardDrawer(fileURLToPath(new URL("share-cards/", cacheDir)))
 type Props = { note: string } | { tag: string | undefined }
 
 export const getStaticPaths = (() =>
-  shareCardPages().map(({ card, subject }) => ({
+  shareCardPages(getNotes()).map(({ card, subject }) => ({
     params: { card },
     props: ("note" in subject ? { note: subject.note.id } : subject) satisfies Props,
   }))) satisfies GetStaticPaths
@@ -22,7 +22,7 @@ export const GET: APIRoute<Props> = async ({ props, site }) => {
   // the vault was last read.
   const note = "note" in props ? getNote(props.note) : undefined
   if ("note" in props && !note) return new Response(null, { status: 404 })
-  const card = shareCardOf(note ? { note } : (props as { tag: string | undefined }))
+  const card = shareCardOf(note ? { note } : (props as { tag: string | undefined }), getNoteIndex())
   const png = await drawer.draw(card, site!)
   return new Response(new Uint8Array(png), { headers: { "Content-Type": "image/png" } })
 }

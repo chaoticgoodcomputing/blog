@@ -9,7 +9,6 @@ import { ANNOTATIONS, annotationTarget, annotationTargetType, parseAnnotations, 
 import { defineHastPlugin, defineMdastPlugin } from "satteri"
 import type { AnnotatedPassage } from "./highlights.ts"
 import type { Note } from "./notes.ts"
-import { getVault } from "./vault.ts"
 import { formatDate } from "./dates.ts"
 import { calloutLook } from "./callouts.ts"
 import { noteIcon } from "./icons.ts"
@@ -60,7 +59,7 @@ export function documentFileName(target: string): string | undefined {
  * note's source as the library reads the page's annotations: each annotation's quote, with its id,
  * the text either side of it and where it starts. An annotation with no quote, a reply, has none.
  */
-export function annotatedPassages(note: Pick<Note, "file">, vault: Vault = getVault()): AnnotatedPassage[] {
+export function annotatedPassages(note: Pick<Note, "file">, vault: Vault): AnnotatedPassage[] {
   return parseAnnotations(vault.read(note.file) ?? "")
     .annotations.filter((annotation) => annotation.exact)
     .map(({ id, exact, prefix, suffix, start }) => ({ id, exact, prefix, suffix, start }))

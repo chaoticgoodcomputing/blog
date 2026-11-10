@@ -2,8 +2,8 @@ import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
 import { afterAll, beforeAll, expect, test } from "vitest"
-import { indexNotes, type Unpublished } from "../src/lib/notes.ts"
-import { sitemapEntry, type SitemapNotes } from "../src/lib/sitemap.ts"
+import { indexNotes, unpublished, type NoteIndex, type Unpublished } from "../src/lib/notes.ts"
+import { sitemapEntry } from "../src/lib/sitemap.ts"
 import { openVault } from "../src/lib/vault.ts"
 
 // A vault of this file's own, in no repository, so each note was last modified when its file was:
@@ -22,16 +22,16 @@ const FILES: Record<string, [contents: string, modified: string]> = {
   "tags/orchard.mdx": ["---\ntitle: '#orchard'\n---\n\nAbout the orchard.\n", "2026-05-20T00:00:00Z"],
   "content/sealed.md": ["---\ntags: [sealed, private]\n---\n\nThe only page with its tag.\n", "2026-04-07T00:00:00Z"],
 }
-// Tag description notes taken out of publication, as the site's own come to be.
-const RULES: Unpublished[] = [{ reason: "tag", test: (file) => file.path.startsWith("tags/") }]
+// Tag description notes taken out of publication, as the site's own are.
+const RULES: Unpublished[] = [unpublished.find((rule) => rule.reason === "tag description")!]
 const SITE = "https://example.com"
 
 let root: string
-let notes: SitemapNotes
+let index: NoteIndex
 
 // What the sitemap says of an address: when its page was last modified, or that it is not listed.
 const lastModified = (address: string) => {
-  const entry = sitemapEntry(address, notes)
+  const entry = sitemapEntry(address, index)
   return entry ? (entry.lastModified?.toISOString() ?? "no date") : "not listed"
 }
 
@@ -42,8 +42,7 @@ beforeAll(async () => {
     fs.writeFileSync(path.join(root, file), contents)
     fs.utimesSync(path.join(root, file), new Date(modified), new Date(modified))
   }
-  const index = indexNotes(await openVault(root), RULES)
-  notes = { notes: index.notes, noteOf: (file) => index.byPath.get(file) }
+  index = indexNotes(await openVault(root), RULES)
 })
 
 afterAll(() => fs.rmSync(root, { recursive: true, force: true }))

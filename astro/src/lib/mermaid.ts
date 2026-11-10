@@ -5,7 +5,6 @@
 
 import { parseLinktext, type Vault, type VaultFile } from "@chaoticgoodcomputing/obsidian-markdown"
 import { defineMdastPlugin } from "satteri"
-import { getVault } from "./vault.ts"
 
 /** The custom element a mermaid block is put in, which is also its class. */
 export const MERMAID_ELEMENT = "mermaid-diagram"
@@ -38,7 +37,7 @@ const MERMAID_FENCE = /^[ \t>]*(?:(?:[-*+]|\d+[.)])[ \t>]+)*(?:`{3,}|~{3,})[ \t]
  * does. Read from the note's source as the vault last read it, since a page's layout has the note
  * and not its rendered body.
  */
-export function hasDiagrams(file: VaultFile, vault: Vault = getVault(), seen = new Set<string>()): boolean {
+export function hasDiagrams(file: VaultFile, vault: Vault, seen = new Set<string>()): boolean {
   if (seen.has(file.path)) return false
   seen.add(file.path)
   if (MERMAID_FENCE.test(vault.read(file) ?? "")) return true

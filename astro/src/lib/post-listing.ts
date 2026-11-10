@@ -3,7 +3,7 @@
 // `site.private` says of other features: a listing that marked one would still be a list of the
 // site's private pages. A fragment (`site.fragments`) is in the tag pages' listings, not the home page's.
 
-import { getNoteIndex, getNotes, isFragment, isHomeNote, newestFirst, tagsOf, type Note, type NoteIndex } from "./notes.ts"
+import { isFragment, isHomeNote, newestFirst, tagsOf, type Note, type NoteIndex } from "./notes.ts"
 import { lists, postListing } from "../site.config.ts"
 import type { ListingPageConfig, ListingPageKind, ListsConfig, Paging, PostListingConfig, PostOrder } from "../site.config.types.ts"
 import { isUnderTag } from "./tags.ts"
@@ -13,7 +13,7 @@ import { isUnderTag } from "./tags.ts"
  * under it. The index note is the home page, and not one of its own posts. A fragment is listed on
  * its tags' pages, and not on the home page.
  */
-export function listedPosts(tag?: string, notes: Note[] = getNotes()): Note[] {
+export function listedPosts(tag: string | undefined, notes: Note[]): Note[] {
   return notes
     .filter((note) => !note.isPrivate && !isHomeNote(note))
     .filter((note) => tag !== undefined || !isFragment(note.tags))
@@ -25,7 +25,7 @@ export function listedPosts(tag?: string, notes: Note[] = getNotes()): Note[] {
  * How many posts are under each tag, which is how many its tag page lists: what a tag badge's count
  * says. A tag no post is under has none. A fragment counts under its tags, as their pages list it.
  */
-export function postCounts(notes: Note[] = getNotes()): Map<string, number> {
+export function postCounts(notes: Note[]): Map<string, number> {
   const counts = new Map<string, number>()
   const tagged = notes.filter((note) => !note.isPrivate && !isHomeNote(note))
   for (const [tag, use] of tagsOf(tagged)) counts.set(tag, use.under.length)
@@ -38,7 +38,7 @@ export function postCounts(notes: Note[] = getNotes()): Map<string, number> {
  * so neither does one only a private page can see. Keyed by the post's address; a post no other
  * post links to has none.
  */
-export function postBacklinkCounts(index: NoteIndex = getNoteIndex()): Map<string, number> {
+export function postBacklinkCounts(index: NoteIndex): Map<string, number> {
   const posts = listedPosts(undefined, index.notes)
   const isPost = new Set(posts.map((post) => post.url))
   const counts = new Map<string, number>()
@@ -51,8 +51,8 @@ export function postBacklinkCounts(index: NoteIndex = getNoteIndex()): Map<strin
 }
 
 export interface CentralityOptions {
-  /** The notes index the posts and their links are read from. The site's by default. */
-  index?: NoteIndex
+  /** The notes index the posts and their links are read from. */
+  index: NoteIndex
   /** How many mentions each note has, by its address (`mentionCounts`). None by default. */
   mentions?: Map<string, number>
   /** What one mention is worth beside one backlink from a post. The site's by default. */
@@ -65,8 +65,8 @@ export interface CentralityOptions {
  * mentions, each worth `mentionWeight` backlinks. With `tag`, the posts under it, still counting
  * backlinks from every post of the site.
  */
-export function centralPosts(tag?: string, options: CentralityOptions = {}): Note[] {
-  const { index = getNoteIndex(), mentions = new Map(), mentionWeight = postListing.mentionWeight } = options
+export function centralPosts(tag: string | undefined, options: CentralityOptions): Note[] {
+  const { index, mentions = new Map(), mentionWeight = postListing.mentionWeight } = options
   const backlinks = postBacklinkCounts(index)
   const score = (note: Note) => (backlinks.get(note.url) ?? 0) + mentionWeight * (mentions.get(note.url) ?? 0)
   return listedPosts(tag, index.notes)

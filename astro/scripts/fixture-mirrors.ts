@@ -15,6 +15,7 @@ import { textFileName } from "@chaoticgoodcomputing/pdf-ocr/text"
 import { scannedPdf } from "../../packages/pdf-ocr/test/fixture-pdf.ts"
 import { slicesToMake } from "../src/lib/mirrors.ts"
 import { slicePdf } from "../src/lib/slices.ts"
+import { getNotes } from "../src/lib/notes.ts"
 
 const into = process.argv[2]
 if (!into) throw new Error("usage: fixture-mirrors <directory>")
@@ -25,7 +26,7 @@ for (const file of fs.readdirSync(kept)) fs.copyFileSync(path.join(kept, file), 
 const garden = scannedPdf()
 fs.writeFileSync(path.join(into, "Garden.pdf"), garden)
 fs.writeFileSync(path.join(into, textFileName("Garden.pdf")), JSON.stringify(await recognizePdf(garden)))
-for (const { slice, mirror, range } of slicesToMake(into)) {
+for (const { slice, mirror, range } of slicesToMake(into, getNotes())) {
   const cut = await slicePdf(new Uint8Array(fs.readFileSync(path.join(into, mirror))), range)
   if (!cut) throw new Error(`${mirror} has none of the pages of ${slice}`)
   fs.writeFileSync(path.join(into, slice), cut.bytes)

@@ -80,6 +80,8 @@ export interface Unpublished {
 
 // Where the vault keeps its tag description notes: `tags/<tag slug>.md`.
 const TAG_DESCRIPTIONS = "tags/"
+/** The reason a tag's description note has no page of its own. */
+const TAG_DESCRIPTION = "tag description"
 
 export const unpublished: Unpublished[] = [
   // A drawing's note holds Excalidraw's scene data, which is no page. A note that embeds it shows
@@ -90,7 +92,7 @@ export const unpublished: Unpublished[] = [
   // address the note's own page would have had (src/pages/tags). A link to it goes there, when the
   // tag has a page; a link to the description of a tag no published note carries is unresolved.
   {
-    reason: "tag description",
+    reason: TAG_DESCRIPTION,
     test: (file) => file.path.startsWith(TAG_DESCRIPTIONS),
     url: (file, _cache, published) => tagPageAt(file.path, published),
   },
@@ -152,6 +154,10 @@ export interface NoteIndex {
   backlinks: (note: NoteFacts) => LinkedNote[]
   /** The tags' pages a note links to by a path no file has (`urlOfPath`), each once. */
   tagLinks: (note: NoteFacts) => string[]
+  /** A tag's description note, `tags/<tag slug>.md` (or `.mdx`): the body of its tag's page. */
+  tagDescription: (tag: string) => UnpublishedNote | undefined
+  /** Every tag's description note, in the vault's order: at its tag's page, or with none. */
+  tagDescriptions: () => UnpublishedNote[]
 }
 
 /** A note a link leads to: one with a page. */
@@ -185,6 +191,11 @@ export function indexNotes(vault: Vault, rules: Unpublished[] = unpublished): No
     linksDigest: "",
     outlinks: (note) => linked(Object.keys(vault.metadataCache.resolvedLinks[note.file.path] ?? {}), note),
     backlinks: (note) => linked([...vault.metadataCache.getBacklinksForFile(note.file).keys()], note),
+    tagDescription: (tag) =>
+      [`${TAG_DESCRIPTIONS}${tag}.md`, `${TAG_DESCRIPTIONS}${tag}.mdx`]
+        .map((file) => index.byPath.get(file))
+        .find((note): note is UnpublishedNote => note !== undefined && "reason" in note && note.reason === TAG_DESCRIPTION),
+    tagDescriptions: () => index.unpublished.get(TAG_DESCRIPTION) ?? [],
     tagLinks: (note) => [
       ...new Set(
         Object.keys(vault.metadataCache.unresolvedLinks[note.file.path] ?? {}).flatMap((linkpath) => index.urlOfPath(linkpath) ?? []),

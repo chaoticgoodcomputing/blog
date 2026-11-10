@@ -6,7 +6,7 @@
 import { site } from "../site.config.ts"
 import type { PrivateTreatment } from "../site.config.types.ts"
 import { annotatedFileType } from "./annotations.ts"
-import { getNoteIndex, newestFirst, type LinkedNote, type NoteFacts, type NoteIndex } from "./notes.ts"
+import { newestFirst, type LinkedNote, type NoteFacts, type NoteIndex } from "./notes.ts"
 
 /** One page that links to a note, or that a note links to, as the related content lists it. */
 export interface Backlink {
@@ -27,8 +27,8 @@ export interface Backlink {
 export interface BacklinkOptions {
   /** How a private page is treated. The site's `private.backlinks` by default. */
   treatment?: PrivateTreatment
-  /** The notes index. The site's by default; a test passes one of its own. */
-  index?: NoteIndex
+  /** The notes index the links are read from. */
+  index: NoteIndex
 }
 
 /**
@@ -36,16 +36,16 @@ export interface BacklinkOptions {
  * links here and has no address of its own, such as a drawing, has nothing to link back to, and is
  * not among them.
  */
-export function backlinksOf(note: NoteFacts, options: BacklinkOptions = {}): Backlink[] {
-  return listed((options.index ?? getNoteIndex()).backlinks(note), options)
+export function backlinksOf(note: NoteFacts, options: BacklinkOptions): Backlink[] {
+  return listed(options.index.backlinks(note), options)
 }
 
 /**
  * The pages a note links to or embeds, each once, in the panel's order (`listed`). Itself, and a
  * note it links to that has no address of its own, such as a drawing, are not among them.
  */
-export function outlinksOf(note: NoteFacts, options: BacklinkOptions = {}): Backlink[] {
-  return listed((options.index ?? getNoteIndex()).outlinks(note), options)
+export function outlinksOf(note: NoteFacts, options: BacklinkOptions): Backlink[] {
+  return listed(options.index.outlinks(note), options)
 }
 
 /**

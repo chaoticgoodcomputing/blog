@@ -5,6 +5,7 @@
 import { readingMinutes } from "../lib/reading-time.ts"
 import type { NoteFacts } from "../lib/notes.ts"
 import FormattedDate from "./FormattedDate.astro"
+import { getVault } from "../lib/vault.ts"
 
 interface Props {
   /** The note the page shows. A page that shows none has neither. */
@@ -12,7 +13,7 @@ interface Props {
 }
 
 const { note } = Astro.props
-const minutes = note ? readingMinutes(note) : 0
+const minutes = note ? readingMinutes(note, getVault()) : 0
 const date = note?.date
 ---
 

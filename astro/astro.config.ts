@@ -5,7 +5,7 @@ import preact from "@astrojs/preact"
 import { obsidianFeatures, obsidianResolve, obsidianSyntax } from "@chaoticgoodcomputing/obsidian-markdown"
 import { defineConfig } from "astro/config"
 import { islands } from "./src/lib/islands.ts"
-import { urlOf, urlOfPath } from "./src/lib/notes.ts"
+import { getNoteIndex, urlOf, urlOfPath } from "./src/lib/notes.ts"
 import { tagUrl } from "./src/lib/tags.ts"
 import { getVault } from "./src/lib/vault.ts"
 
@@ -176,8 +176,8 @@ export default defineConfig({
 
     // The indexable pages, each with when it last changed (src/lib/sitemap.ts).
     sitemap({
-      filter: (page) => sitemapEntry(page) !== undefined,
-      serialize: (item) => ({ ...item, lastmod: sitemapEntry(item.url)?.lastModified?.toISOString() }),
+      filter: (page) => sitemapEntry(page, getNoteIndex()) !== undefined,
+      serialize: (item) => ({ ...item, lastmod: sitemapEntry(item.url, getNoteIndex())?.lastModified?.toISOString() }),
     }),
 
     // The sitemap at /sitemap.xml too, the address search consoles have on file.

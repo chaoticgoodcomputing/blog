@@ -11,6 +11,7 @@ import { getDrawingPngs } from "../lib/drawings.ts"
 import { feedContent } from "../lib/feed-content.ts"
 import { feedNotes, feedOptions } from "../lib/feed.ts"
 import { getPublicNotes, type Note } from "../lib/notes.ts"
+import { getVault } from "../lib/vault.ts"
 
 export function feedContentIntegration(): AstroIntegration {
   let site: URL
@@ -31,7 +32,7 @@ export function feedContentIntegration(): AstroIntegration {
           const file = path.join(out, `${decodeURI(note.url)}.html`)
           content.set(note, feedContent(note, await fs.readFile(file, "utf8"), site, pngs))
         }
-        await fs.writeFile(path.join(out, "index.xml"), await getRssString(feedOptions(notes, site, (note) => content.get(note))))
+        await fs.writeFile(path.join(out, "index.xml"), await getRssString(feedOptions(notes, site, getVault(), (note) => content.get(note))))
         logger.info(`The feed, with the content of its ${content.size} items.`)
       },
     },

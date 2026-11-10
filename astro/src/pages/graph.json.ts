@@ -3,5 +3,6 @@
 // page is in it, flagged.
 import type { APIRoute } from "astro"
 import { graphIndex } from "../lib/graph-index.ts"
+import { getNoteIndex } from "../lib/notes.ts"
 
-export const GET: APIRoute = () => Response.json(graphIndex())
+export const GET: APIRoute = () => Response.json(graphIndex({ index: getNoteIndex() }))

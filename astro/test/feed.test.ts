@@ -103,7 +103,7 @@ test("an item's categories are the parts its note's tags name, then those they i
 })
 
 test("the feed names its WebSub hub and its own address, so a reader subscribed at the hub hears of a new note at once", async () => {
-  const xml = await getRssString(feedOptions([], new URL("https://blog.example.com")))
+  const xml = await getRssString(feedOptions([], new URL("https://blog.example.com"), vault))
   expect(xml).toContain('xmlns:atom="http://www.w3.org/2005/Atom"')
   expect(xml).toContain(`<atom:link rel="hub" href="${feed.hub}"/>`)
   expect(xml).toContain('<atom:link rel="self" href="https://blog.example.com/index.xml" type="application/rss+xml"/>')

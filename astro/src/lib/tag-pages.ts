@@ -2,8 +2,7 @@
 // A tag page is at `tagUrl(tag)`, and the tags index, which lists the top-level tags, at
 // `TAGS_INDEX` (src/pages/tags).
 
-import { tagList } from "../site.config.ts"
-import { getNotes, isPrivate, noteOf, tagsOf, type Note, type UnpublishedNote } from "./notes.ts"
+import { isPrivate, tagsOf, type Note, type NoteIndex } from "./notes.ts"
 import { postCounts } from "./post-listing.ts"
 import { tagAncestors, tagName } from "./tags.ts"
 
@@ -11,9 +10,9 @@ import { tagAncestors, tagName } from "./tags.ts"
  * A tag page's title and description, which its head and its share card both say: the description
  * note's, or with none `#<tag name>` and no description. The tags index, with no tag, is `Tags`.
  */
-export function tagPageTitle(tag: string | undefined): { title: string; description?: string } {
+export function tagPageTitle(tag: string | undefined, index: NoteIndex): { title: string; description?: string } {
   if (tag === undefined) return { title: "Tags" }
-  const note = descriptionOf(tag)
+  const note = index.tagDescription(tag)
   return {
     title: note?.title ?? `#${tagName(tag)}`,
     ...(note?.summary !== undefined && { description: note.summary }),
@@ -24,17 +23,8 @@ export function tagPageTitle(tag: string | undefined): { title: string; descript
  * The tags that have a tag page, sorted: every tag a published note carries, private pages
  * included, and every ancestor of one. A private page's tag badges link to its tags' pages too.
  */
-export function tagPages(notes: Note[] = getNotes()): string[] {
+export function tagPages(notes: Note[]): string[] {
   return [...tagsOf(notes).keys()]
-}
-
-/** A tag's description note, `tags/<tag slug>.md`: the body of its tag page. */
-export function descriptionOf(
-  tag: string,
-  find: (file: string) => Note | UnpublishedNote | undefined = noteOf,
-): UnpublishedNote | undefined {
-  const note = find(`tags/${tag}.md`) ?? find(`tags/${tag}.mdx`)
-  return note && "reason" in note ? note : undefined
 }
 
 /** A tag a tag page links to, with how many posts are under it. */
@@ -50,8 +40,8 @@ export interface LinkedTag {
  */
 export function tagPageTags(
   tag: string | undefined,
-  { showParents }: { showParents: boolean } = tagList,
-  notes: Note[] = getNotes(),
+  { showParents }: { showParents: boolean },
+  notes: Note[],
 ): LinkedTag[] {
   const counts = postCounts(notes)
   const above = tag !== undefined && showParents ? tagAncestors(tag) : []

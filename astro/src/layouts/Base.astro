@@ -42,6 +42,7 @@ import ExternalLinks from "../components/ExternalLinks.astro"
 
 import ImageCarousels from "../components/ImageCarousels.astro"
 import Sidenotes from "../components/Sidenotes.astro"
+import { getVault } from "../lib/vault.ts"
 
 type Props = PageProps
 
@@ -86,7 +87,7 @@ const page = Astro.props
   <body>
     <slot />
 
-    {page.note && hasDiagrams(page.note.file) && <MermaidDiagram />}
+    {page.note && hasDiagrams(page.note.file, getVault()) && <MermaidDiagram />}
 
     {/* 20 link popovers: every kind */}
     <LinkPopovers />

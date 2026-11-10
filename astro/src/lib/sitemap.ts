@@ -3,19 +3,10 @@
 // here, and whether it is listed is `isIndexableAt`'s answer, the one `isIndexable` gives a page that
 // has its props (./page.ts).
 
-import { getNotes, noteOf, type Note, type UnpublishedNote } from "./notes.ts"
+import type { NoteIndex } from "./notes.ts"
 import { isIndexableAt, tagAt } from "./page.ts"
 import { listedPosts } from "./post-listing.ts"
-import { descriptionOf } from "./tag-pages.ts"
 import { isUnderTag } from "./tags.ts"
-
-/** The notes the sitemap is drawn from. The site's own are the notes query's. */
-export interface SitemapNotes {
-  /** The published notes. */
-  notes: Note[]
-  /** The note a path of the vault is, published or not. */
-  noteOf: (file: string) => Note | UnpublishedNote | undefined
-}
 
 export interface SitemapEntry {
   /** When the page last changed. A page that no note says anything about has no such date. */
@@ -29,10 +20,8 @@ const newest = (dates: Date[]): Date | undefined =>
  * The sitemap's entry for the page at an address, or undefined for a page that is not an indexable
  * page. The address is whole, as the sitemap integration gives it.
  */
-export function sitemapEntry(
-  address: string,
-  { notes, noteOf: find }: SitemapNotes = { notes: getNotes(), noteOf },
-): SitemapEntry | undefined {
+export function sitemapEntry(address: string, index: NoteIndex): SitemapEntry | undefined {
+  const { notes } = index
   // An address writes a note's url percent-encoded.
   const url = decodeURI(new URL(address).pathname)
 
@@ -45,7 +34,7 @@ export function sitemapEntry(
   const tagPage = tagAt(url)
   if (tagPage) {
     const { tag } = tagPage
-    const description = tag === undefined ? undefined : descriptionOf(tag, find)
+    const description = tag === undefined ? undefined : index.tagDescription(tag)
     const shown = [...listedPosts(tag, notes), ...(description ? [description] : [])]
     const carrying = tag === undefined ? [] : notes.filter((note) => note.tags.some((own) => isUnderTag(own, tag)))
     return { lastModified: newest((shown.length ? shown : carrying).map((note) => note.modified)) }

@@ -7,7 +7,6 @@
 import type { Vault } from "@chaoticgoodcomputing/obsidian-markdown"
 import readingTime from "reading-time"
 import type { NoteFacts } from "./notes.ts"
-import { getVault } from "./vault.ts"
 
 /** Words read in a minute: reading-time's default, and what the site has always counted by. */
 const WORDS_PER_MINUTE = 300
@@ -17,7 +16,7 @@ const WORDS_PER_MINUTE = 300
  * left out, at two hundred a minute, with a minute begun counted whole. A note with no text takes
  * none. `vault` is the vault the note is of.
  */
-export function readingMinutes(note: NoteFacts, vault: Vault = getVault()): number {
+export function readingMinutes(note: NoteFacts, vault: Vault): number {
   const text = vault.readText(note.file) ?? ""
   return Math.ceil(readingTime(text, { wordsPerMinute: WORDS_PER_MINUTE }).minutes)
 }

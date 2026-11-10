@@ -3,7 +3,7 @@ import os from "node:os"
 import path from "node:path"
 import sharp from "sharp"
 import { expect, test } from "vitest"
-import { getNote } from "../src/lib/notes.ts"
+import { getNote, getNotes, getNoteIndex } from "../src/lib/notes.ts"
 import {
   drawShareCard,
   shareCardDrawer,
@@ -45,7 +45,7 @@ async function count(png: Buffer, color: string): Promise<number> {
 }
 
 test("a note with no description has a card with its first paragraph in its place", () => {
-  expect(shareCardOf({ note: note("share-card/long-title") })).toEqual({
+  expect(shareCardOf({ note: note("share-card/long-title") }, getNoteIndex())).toEqual({
     title:
       "Everything I Learned Building a Static Site Generator Twice Over, Including the Parts I Would Rather Forget About Entirely",
     description: "No description, and a title too long for one line.",
@@ -55,7 +55,7 @@ test("a note with no description has a card with its first paragraph in its plac
 })
 
 test("a note with neither a description nor text has its date alone", () => {
-  expect(shareCardOf({ note: note("share-card/blank") })).toEqual({
+  expect(shareCardOf({ note: note("share-card/blank") }, getNoteIndex())).toEqual({
     title: "Blank",
     date: "Feb 16, 2026",
     tags: ["horticulture"],
@@ -64,18 +64,18 @@ test("a note with neither a description nor text has its date alone", () => {
 
 test("a tag page's card says what the page's head does, with the tag's badge", () => {
   // engineering/ai has no description note: its page is titled by its tag name.
-  expect(shareCardOf({ tag: "engineering/ai" })).toEqual({ title: "#ai", tags: ["engineering/ai"] })
+  expect(shareCardOf({ tag: "engineering/ai" }, getNoteIndex())).toEqual({ title: "#ai", tags: ["engineering/ai"] })
   // ledger's description note, tags/ledger.md, titles and describes its page (ticket 12).
-  expect(shareCardOf({ tag: "ledger" })).toEqual({
+  expect(shareCardOf({ tag: "ledger" }, getNoteIndex())).toEqual({
     title: "#ledger",
     description: "What the ledger keeps.",
     tags: ["ledger"],
   })
-  expect(shareCardOf({ tag: "ledger/accounts" })).toEqual({ title: "#accounts", tags: ["ledger/accounts"] })
+  expect(shareCardOf({ tag: "ledger/accounts" }, getNoteIndex())).toEqual({ title: "#accounts", tags: ["ledger/accounts"] })
 })
 
 test("the tags index's card is its title alone", () => {
-  expect(shareCardOf({ tag: undefined })).toEqual({ title: "Tags", tags: [] })
+  expect(shareCardOf({ tag: undefined }, getNoteIndex())).toEqual({ title: "Tags", tags: [] })
 })
 
 test("a page's card is under /share-cards, at the page's own address", () => {
@@ -97,14 +97,14 @@ test("a private page has no card, nor a private tag's page", () => {
   expect(diary.isPrivate).toBe(true)
   expect(shareCardUrl({ kind: "note", url: diary.url, note: diary })).toBeUndefined()
   expect(shareCardUrl({ kind: "tag", url: "/tags/private/work", tag: "private/work" })).toBeUndefined()
-  const cards = shareCardPages().map(({ url }) => url)
+  const cards = shareCardPages(getNotes()).map(({ url }) => url)
   expect(cards).not.toContain(`/share-cards${diary.url}.png`)
   expect(cards).not.toContain("/share-cards/tags/private.png")
   expect(cards).not.toContain("/share-cards/tags/private/work.png")
 })
 
 test("a card is drawn for every indexable page: each public note's, and each tag's but a private one's", () => {
-  const cards = new Map(shareCardPages().map(({ url, subject }) => [url, subject]))
+  const cards = new Map(shareCardPages(getNotes()).map(({ url, subject }) => [url, subject]))
   expect(cards.get("/share-cards/share-card/pruning-roses.png")).toEqual({ note: note("share-card/pruning-roses") })
   expect(cards.get("/share-cards/index.png")).toEqual({ note: note("index") })
   expect(cards.get("/share-cards/tags/horticulture.png")).toEqual({ tag: "horticulture" })
@@ -113,7 +113,7 @@ test("a card is drawn for every indexable page: each public note's, and each tag
 })
 
 test("each card's route parameter is its address under /share-cards, without .png", () => {
-  const params = new Map(shareCardPages().map(({ url, card }) => [url, card]))
+  const params = new Map(shareCardPages(getNotes()).map(({ url, card }) => [url, card]))
   expect(params.get("/share-cards/index.png")).toBe("index")
   expect(params.get("/share-cards/share-card/pruning-roses.png")).toBe("share-card/pruning-roses")
   expect(params.get("/share-cards/tags/horticulture/seasons.png")).toBe("tags/horticulture/seasons")
@@ -121,7 +121,7 @@ test("each card's route parameter is its address under /share-cards, without .pn
 })
 
 test("a card is drawn for every tag page, and for no tag without one (ticket 12)", () => {
-  const cards = new Set(shareCardPages().map(({ url }) => url))
+  const cards = new Set(shareCardPages(getNotes()).map(({ url }) => url))
   // ledger/sealed is carried only by a private page, and has a tag page all the same.
   expect(cards).toContain("/share-cards/tags/ledger/sealed.png")
   // tags/unworn.md describes a tag no note carries: it has no tag page, and no card.
@@ -135,7 +135,7 @@ test("a card is drawn for every tag page, and for no tag without one (ticket 12)
 })
 
 test("a card is a 1200 by 630 PNG, on the dark palette's background", async () => {
-  const png = await drawShareCard(shareCardOf({ note: note("share-card/pruning-roses") }), SITE)
+  const png = await drawShareCard(shareCardOf({ note: note("share-card/pruning-roses") }, getNoteIndex()), SITE)
   const { width, height, format } = await sharp(png).metadata()
   expect({ width, height, format }).toEqual({ width: 1200, height: 630, format: "png" })
   const { data } = await pixels(png, { top: 0, height: 1 })
@@ -151,7 +151,7 @@ test("a card's tags are drawn in their dark colours", async () => {
 })
 
 test("a long title and description are cut to fit, and leave room for the card's tags", async () => {
-  const long = shareCardOf({ note: note("share-card/long-title") }).title
+  const long = shareCardOf({ note: note("share-card/long-title") }, getNoteIndex()).title
   const png = await drawShareCard(
     { title: long, date: "Feb 15, 2026", description: "A description that runs on. ".repeat(30), tags: ["horticulture"] },
     SITE,
@@ -160,7 +160,7 @@ test("a long title and description are cut to fit, and leave room for the card's
 })
 
 test("a title is cut to two lines: a longer one draws the same card", async () => {
-  const long = shareCardOf({ note: note("share-card/long-title") }).title
+  const long = shareCardOf({ note: note("share-card/long-title") }, getNoteIndex()).title
   const cut = await pixels(await drawShareCard({ title: long, tags: [] }, SITE))
   const longer = await pixels(await drawShareCard({ title: `${long} ${long}`, tags: [] }, SITE))
   expect(differs(longer.data, cut.data)).toBe(false)
@@ -191,7 +191,7 @@ test("a tag too long for the row alone is drawn, cut to fit", async () => {
 test("a card is drawn once, and the next build takes it from the cache until what it shows changes", async () => {
   const cache = fs.mkdtempSync(path.join(os.tmpdir(), "astro-share-cards-"))
   try {
-    const roses = shareCardOf({ note: note("share-card/pruning-roses") })
+    const roses = shareCardOf({ note: note("share-card/pruning-roses") }, getNoteIndex())
     const build = shareCardDrawer(cache)
     const drawn = await build.draw(roses, SITE)
     expect(build.drawn).toBe(1)

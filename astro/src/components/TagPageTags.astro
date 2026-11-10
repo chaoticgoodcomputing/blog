@@ -5,13 +5,14 @@
 import { tagPageTags } from "../lib/tag-pages.ts"
 import { tagList } from "../site.config.ts"
 import TagBadge from "./TagBadge.astro"
+import { getNotes } from "../lib/notes.ts"
 
 interface Props {
   /** The page's tag. The tags index has none. */
   tag?: string | undefined
 }
 
-const tags = tagPageTags(Astro.props.tag, tagList)
+const tags = tagPageTags(Astro.props.tag, tagList, getNotes())
 ---
 
 {

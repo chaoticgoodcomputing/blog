@@ -3,7 +3,7 @@
 // layout reads what it needs from it. A feature never adds a prop of its own to a layout.
 
 import type { MarkdownHeading } from "astro"
-import { getNotes, isPrivate, type Note, type UnpublishedNote } from "./notes.ts"
+import { isPrivate, type Note, type UnpublishedNote } from "./notes.ts"
 import { TAGS_INDEX } from "./tags.ts"
 
 /** The full-window global graph's page (src/pages/graph.astro): a tool for finding pages, with no content of its own. */
@@ -58,7 +58,7 @@ export function isIndexable(page: Pick<PageProps, "kind" | "note" | "tag">): boo
  * what knows a page only by its address (the sitemap, search). It is `isIndexable`'s answer for the
  * note or the tag page there; undefined where there is neither, a page the rule says nothing of.
  */
-export function isIndexableAt(url: string, notes: Note[] = getNotes()): boolean | undefined {
+export function isIndexableAt(url: string, notes: Note[]): boolean | undefined {
   if (url === GRAPH_PAGE) return isIndexable({ kind: "graph" })
   const tagPage = tagAt(url)
   if (tagPage) return isIndexable({ kind: "tag", ...tagPage })

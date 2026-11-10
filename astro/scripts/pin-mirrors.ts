@@ -27,8 +27,9 @@ import http from "node:http"
 import https from "node:https"
 import path from "node:path"
 import { recognizePdf } from "@chaoticgoodcomputing/pdf-ocr/node"
-import { isPdf, mirrorFile, mirrorName, mirrorsToRecognize, mirrorsToSave, mirrorTextFile, slicesToMake, unmirroredDocuments } from "../src/lib/mirrors.ts"
+import { isPdf, mirrorFile, mirrorName, mirrorsToRecognize, mirrorsToSave, mirrorTextFile, slicesToMake, unmirroredDocuments, MIRRORS_ROOT } from "../src/lib/mirrors.ts"
 import { slicePdf } from "../src/lib/slices.ts"
+import { getNotes } from "../src/lib/notes.ts"
 
 const TIMEOUT = 60_000
 const MAX_REDIRECTS = 10
@@ -91,7 +92,7 @@ function writeInPlace(file: string, bytes: Uint8Array | string) {
   fs.renameSync(partial, file)
 }
 
-const targets = unmirroredDocuments()
+const targets = unmirroredDocuments(MIRRORS_ROOT, getNotes())
 const { save, clashing } = mirrorsToSave(targets)
 let failed = 0
 for (const [name, sharing] of clashing) {
@@ -110,7 +111,7 @@ console.log(`${targets.length - failed} of ${targets.length} documents with no m
 
 // The slices, from the mirrors saved. A mirror that can't be cut, or that has none of a range's
 // pages, is reported and left, and the notes on those pages are shown their annotations alone.
-for (const { slice, mirror, range } of slicesToMake()) {
+for (const { slice, mirror, range } of slicesToMake(MIRRORS_ROOT, getNotes())) {
   try {
     const cut = await slicePdf(new Uint8Array(fs.readFileSync(mirrorFile(mirror))), range)
     if (!cut) {
@@ -127,7 +128,7 @@ for (const { slice, mirror, range } of slicesToMake()) {
 
 // The text of the scanned pages of the mirrors and slices the notes show. A mirror that can't be read is reported and left, as a
 // document that can't be fetched is.
-for (const name of mirrorsToRecognize()) {
+for (const name of mirrorsToRecognize(MIRRORS_ROOT, getNotes())) {
   const started = Date.now()
   try {
     const text = await recognizePdf(new Uint8Array(fs.readFileSync(mirrorFile(name))))

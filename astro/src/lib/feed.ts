@@ -8,7 +8,6 @@ import { feed, site as siteConfig } from "../site.config.ts"
 import { formerAddress } from "./former-addresses.ts"
 import { newestFirst, type Note } from "./notes.ts"
 import { readingMinutes } from "./reading-time.ts"
-import { getVault } from "./vault.ts"
 
 /**
  * What a feed reader knows a note's item by: the address the site's feed has always written for
@@ -61,9 +60,9 @@ export function feedItems(
   site: URL,
   {
     limit = feed.limit,
-    vault = getVault(),
+    vault,
     content,
-  }: { limit?: number; vault?: Vault; content?: (note: Note) => string | undefined } = {},
+  }: { limit?: number; vault: Vault; content?: (note: Note) => string | undefined },
 ): RSSFeedItem[] {
   return feedNotes(notes, limit)
     .map((note) => {
@@ -91,13 +90,14 @@ export function feedItems(
 export function feedOptions(
   notes: Note[],
   site: URL,
+  vault: Vault,
   content?: (note: Note) => string | undefined,
 ): RSSOptions {
   return {
     title: siteConfig.title,
     description: `Last ${feed.limit} notes on ${siteConfig.title}`,
     site,
-    items: feedItems(notes, site, content ? { content } : {}),
+    items: feedItems(notes, site, content ? { vault, content } : { vault }),
     xmlns: { atom: "http://www.w3.org/2005/Atom" },
     // Its WebSub hub, and its own address, which a hub knows it by (https://www.w3.org/TR/websub/#discovery).
     customData: [

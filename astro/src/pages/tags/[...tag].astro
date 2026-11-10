@@ -8,19 +8,20 @@ import Prose from "../../components/Prose.astro"
 import TagPageTags from "../../components/TagPageTags.astro"
 import Page from "../../layouts/Page.astro"
 import { entryOf } from "../../lib/entries.ts"
-import { descriptionOf, tagPages, tagPageTitle } from "../../lib/tag-pages.ts"
+import { tagPages, tagPageTitle } from "../../lib/tag-pages.ts"
 import { tagUrl } from "../../lib/tags.ts"
+import { getNoteIndex, getNotes } from "../../lib/notes.ts"
 
-export const getStaticPaths = (() => tagPages().map((tag) => ({ params: { tag }, props: { tag } }))) satisfies GetStaticPaths
+export const getStaticPaths = (() => tagPages(getNotes()).map((tag) => ({ params: { tag }, props: { tag } }))) satisfies GetStaticPaths
 
 const { tag } = Astro.props
 // Asked for here, not carried from the paths, so the dev server shows the note as the vault was
 // last read.
-const note = descriptionOf(tag)
+const note = getNoteIndex().tagDescription(tag)
 const description = note ? await render(await entryOf(note)) : undefined
 const Content = description?.Content
 // What its head and its share card say (src/lib/share-card.ts).
-const head = tagPageTitle(tag)
+const head = tagPageTitle(tag, getNoteIndex())
 ---
 
 <Page

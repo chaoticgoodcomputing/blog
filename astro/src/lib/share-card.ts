@@ -11,7 +11,7 @@ import sharp, { type PngOptions } from "sharp"
 import siteIcon from "../assets/icon.png?inline"
 import { formatDate } from "./dates.ts"
 import { SITE_ICONS } from "./icons.ts"
-import { getNotes, type Note, type NoteFacts } from "./notes.ts"
+import type { Note, NoteFacts, NoteIndex } from "./notes.ts"
 import { isIndexable, type PageProps } from "./page.ts"
 import { site as siteConfig } from "../site.config.ts"
 import { bubbleParts } from "./tag-bubble.ts"
@@ -43,7 +43,7 @@ export function shareCardUrl(page: Pick<PageProps, "kind" | "url" | "note" | "ta
  * each indexable note's page, the page of each tag that has one and is no private tag's
  * (src/lib/tag-pages.ts), and the tags index.
  */
-export function shareCardPages(notes: Note[] = getNotes()): { url: string; card: string; subject: CardSubject }[] {
+export function shareCardPages(notes: Note[]): { url: string; card: string; subject: CardSubject }[] {
   const page = (url: string, subject: CardSubject) => ({ url: cardAt(url), card: cardOf(url), subject })
   return [
     ...notes.filter((note) => isIndexable({ kind: "note", note })).map((note) => page(note.url, { note })),
@@ -71,8 +71,8 @@ export type CardSubject = { note: NoteFacts } | { tag: string | undefined }
  * What a page's card says. A tag page's says what the page's head does (`tagPageTitle`), with the
  * tag's badge; the tags index's, its title alone.
  */
-export function shareCardOf(subject: CardSubject): ShareCard {
-  if ("tag" in subject) return { ...tagPageTitle(subject.tag), tags: subject.tag === undefined ? [] : [subject.tag] }
+export function shareCardOf(subject: CardSubject, index: NoteIndex): ShareCard {
+  if ("tag" in subject) return { ...tagPageTitle(subject.tag, index), tags: subject.tag === undefined ? [] : [subject.tag] }
   const { note } = subject
   return {
     title: note.title,

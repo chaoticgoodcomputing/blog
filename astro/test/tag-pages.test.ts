@@ -1,6 +1,6 @@
 import { expect, test } from "vitest"
-import { getNote, getUnpublished, isPublished, noteOf, urlOfPath } from "../src/lib/notes.ts"
-import { descriptionOf, tagPages, tagPageTags } from "../src/lib/tag-pages.ts"
+import { getNote, getNoteIndex, getNotes, getUnpublished, isPublished, noteOf, urlOfPath } from "../src/lib/notes.ts"
+import { tagPages, tagPageTags } from "../src/lib/tag-pages.ts"
 
 // The fixture vault's tag description notes are `tags/ledger.md`, of a tag six posts carry, and
 // `tags/unworn.md`, of a tag no note carries. `tag-pages/sealed.md` is a private page, and the one
@@ -14,7 +14,7 @@ test("a tag description note has no page of its own, and a link to it goes to it
 })
 
 test("a tag has a page when a published note carries it or a tag under it, private pages included", () => {
-  const tags = tagPages()
+  const tags = tagPages(getNotes())
   expect(tags).toContain("ledger")
   expect(tags).toContain("ledger/accounts")
   // Carried only by a private page.
@@ -25,22 +25,22 @@ test("a tag has a page when a published note carries it or a tag under it, priva
 })
 
 test("a tag page shows its tag's description note, where the vault has one", () => {
-  expect(descriptionOf("ledger")).toMatchObject({ title: "#ledger", description: "What the ledger keeps." })
-  expect(descriptionOf("ledger/accounts")).toBeUndefined()
+  expect(getNoteIndex().tagDescription("ledger")).toMatchObject({ title: "#ledger", description: "What the ledger keeps." })
+  expect(getNoteIndex().tagDescription("ledger/accounts")).toBeUndefined()
 })
 
 test("a tag page links to its subtags, each with how many posts are under it", () => {
-  expect(tagPageTags("ledger", { showParents: false })).toEqual([
+  expect(tagPageTags("ledger", { showParents: false }, getNotes())).toEqual([
     { tag: "ledger/accounts", count: 2 },
     // Only a private page carries it: its page is there, and lists no posts.
     { tag: "ledger/sealed", count: 0 },
   ])
-  expect(tagPageTags("ledger/accounts", { showParents: false })).toEqual([])
+  expect(tagPageTags("ledger/accounts", { showParents: false }, getNotes())).toEqual([])
 })
 
 test("with parents shown, a tag page links first to the tags above it, from the top", () => {
-  expect(tagPageTags("ledger/accounts", { showParents: true })).toEqual([{ tag: "ledger", count: 6 }])
-  expect(tagPageTags("ledger", { showParents: true })).toEqual([
+  expect(tagPageTags("ledger/accounts", { showParents: true }, getNotes())).toEqual([{ tag: "ledger", count: 6 }])
+  expect(tagPageTags("ledger", { showParents: true }, getNotes())).toEqual([
     { tag: "ledger/accounts", count: 2 },
     { tag: "ledger/sealed", count: 0 },
   ])
@@ -48,21 +48,21 @@ test("with parents shown, a tag page links first to the tags above it, from the 
 
 test("a tag page links to no private tag's page", () => {
   // `private/drafts` and `private/work` are in use, under `private`.
-  expect(tagPageTags("private", { showParents: false })).toEqual([])
-  expect(tagPageTags(undefined, { showParents: false }).map(({ tag }) => tag)).not.toContain("private")
+  expect(tagPageTags("private", { showParents: false }, getNotes())).toEqual([])
+  expect(tagPageTags(undefined, { showParents: false }, getNotes()).map(({ tag }) => tag)).not.toContain("private")
 })
 
 test("the tags index links to the top-level tags", () => {
-  const tags = tagPageTags(undefined, { showParents: true })
+  const tags = tagPageTags(undefined, { showParents: true }, getNotes())
   expect(tags).toContainEqual({ tag: "ledger", count: 6 })
   expect(tags.map(({ tag }) => tag)).toContain("engineering")
   expect(tags.every(({ tag }) => !tag.includes("/"))).toBe(true)
 })
 
 test("a tag no published note carries has no page, though it has a description note", () => {
-  expect(tagPages()).not.toContain("unworn")
+  expect(tagPages(getNotes())).not.toContain("unworn")
   // The drawings' tag: a drawing has no page.
-  expect(tagPages()).not.toContain("excalidraw")
+  expect(tagPages(getNotes())).not.toContain("excalidraw")
 })
 
 test("a link to the description note of a tag with no page goes nowhere, and is unresolved", () => {

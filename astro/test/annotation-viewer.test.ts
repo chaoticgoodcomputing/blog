@@ -7,6 +7,7 @@ import { annotatedPassages, documentFileName } from "../src/lib/annotations.ts"
 import { getNote } from "../src/lib/notes.ts"
 import { createHash } from "node:crypto"
 import { MIRRORS_ROOT, defaultMirrorsRoot, workspaceRoot, isPdf, mirrorFile, mirrorName, mirrorOf, mirrorsToSave, mirrorText, mirrorTextFile, mirrorTextOf } from "../src/lib/mirrors.ts"
+import { getVault } from "../src/lib/vault.ts"
 
 test("a mirror is named by its document's file name, a space written as -", () => {
   expect(mirrorName("https://media.steampowered.com/apps/valve/Valve_Handbook_LowRes.pdf")).toBe("Valve_Handbook_LowRes.pdf")
@@ -158,7 +159,7 @@ test("a passage that is not in the document, or is empty, is not found", () => {
 // What the viewer is given of an annotation page: test/fixtures/vault/annotation-viewer/on-meetings.md.
 
 test("an annotation page's passages are its annotations' quotes, each with its id, the text either side and where it starts", () => {
-  expect(annotatedPassages(getNote("annotation-viewer/on-meetings")!)).toEqual([
+  expect(annotatedPassages(getNote("annotation-viewer/on-meetings")!, getVault())).toEqual([
     {
       id: "promise",
       exact: "A meeting is a promise that the people in it will leave knowing more than they came with.",

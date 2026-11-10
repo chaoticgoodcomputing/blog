@@ -6,7 +6,7 @@
 import { aliasRedirects, publishedFiles, staticPages } from "./aliases.ts"
 import { publishedAttachments } from "./attachments.ts"
 import { formerAddresses } from "./former-addresses.ts"
-import { getNotes, getUnpublished, tagsOf, type Note } from "./notes.ts"
+import { getNoteIndex, getNotes, tagsOf, type Note } from "./notes.ts"
 import { resumeAddresses } from "./resume.ts"
 import { tagUrl } from "./tags.ts"
 import { trailingSlashRedirects } from "./trailing-slashes.ts"
@@ -79,9 +79,9 @@ let siteMap: AddressMap | undefined
  */
 export function getAddressMap(): AddressMap {
   if (siteMap) return siteMap
-  const notes = getNotes()
-  const descriptions = getUnpublished("tag description")
-  const { redirects: aliases, collisions } = aliasRedirects(notes, staticPages(), publishedFiles(), descriptions)
+  const index = getNoteIndex()
+  const { notes } = index
+  const { redirects: aliases, collisions } = aliasRedirects(notes, staticPages(), publishedFiles(), index.tagDescriptions())
   for (const { file, alias, address, holder } of collisions) {
     console.warn(`[aliases] ${file}: the alias "${alias}" has no redirect, since ${address} is ${holder}.`)
   }

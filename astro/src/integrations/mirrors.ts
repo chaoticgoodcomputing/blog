@@ -9,6 +9,7 @@ import type { AstroIntegration } from "astro"
 import sirv from "sirv"
 import { attachmentAddressOf, copyIntoBuild } from "../lib/attachments.ts"
 import { MIRRORS, MIRRORS_ROOT, missingMirrors, publishedMirrors } from "../lib/mirrors.ts"
+import { getNotes } from "../lib/notes.ts"
 
 export function mirrors(): AstroIntegration {
   return {
@@ -19,7 +20,7 @@ export function mirrors(): AstroIntegration {
         server.middlewares.use((request, response, next) => {
           // Asked on every request, so a mirror saved while the server runs is served too.
           const address = attachmentAddressOf(request.url ?? "/")
-          if (address === undefined || !publishedMirrors().has(address)) return next()
+          if (address === undefined || !publishedMirrors(MIRRORS_ROOT, getNotes()).has(address)) return next()
           request.url = request.url!.slice(`/${MIRRORS}`.length)
           serve(request, response, next)
         })
@@ -28,11 +29,11 @@ export function mirrors(): AstroIntegration {
       "astro:build:done": async ({ dir, logger }) => {
         // A mirror already there is a file of the vault at the same address, which the attachments
         // integration has copied.
-        const { copied } = await copyIntoBuild(publishedMirrors(), fileURLToPath(dir))
+        const { copied } = await copyIntoBuild(publishedMirrors(MIRRORS_ROOT, getNotes()), fileURLToPath(dir))
         logger.info(`${copied} mirrors copied from the mirror directory.`)
         // A page whose document has no mirror, or no slice of its pages, is built all the same,
         // with its annotations alone.
-        const missing = missingMirrors()
+        const missing = missingMirrors(MIRRORS_ROOT, getNotes())
         if (missing.length) {
           logger.warn(
             `${missing.length} mirrors and slices the annotation pages show are not saved, and those pages have no viewer; ` +

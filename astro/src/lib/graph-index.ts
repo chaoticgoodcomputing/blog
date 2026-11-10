@@ -9,16 +9,16 @@
 // the tag.
 
 import type { GraphIndex, IndexedNote } from "./graph.ts"
-import { getNoteIndex, getNotes, getUnpublished, unpublished, type Note, type NoteFacts, type NoteIndex } from "./notes.ts"
+import type { NoteFacts, NoteIndex } from "./notes.ts"
 import { tagAt } from "./page.ts"
 
 export interface GraphIndexOptions {
-  /** The notes index. The site's by default; a test passes one of its own. */
-  index?: NoteIndex
+  /** The notes index the graph is drawn from. */
+  index: NoteIndex
 }
 
-// The site's, built once for the notes as the vault was last read.
-const built = new WeakMap<Note[], GraphIndex>()
+// Each index's, built once: the site's index is a new one each time the vault is read again.
+const built = new WeakMap<NoteIndex, GraphIndex>()
 
 // Whether an address is a tag's page; the tags index is not one.
 const isTagPage = (url: string | undefined): url is string => url !== undefined && tagAt(url)?.tag !== undefined
@@ -30,19 +30,16 @@ const isTagPage = (url: string | undefined): url is string => url !== undefined 
  * its description note or by a path no file has (`urlOfPath`). A link to itself, to any other
  * unpublished note or to an attachment is not among them.
  */
-export function graphIndex(options: GraphIndexOptions = {}): GraphIndex {
-  const { index } = options
-  const notes = index?.notes ?? getNotes()
-  const linking = index ?? getNoteIndex()
-  const cached = index ? undefined : built.get(notes)
+export function graphIndex({ index }: GraphIndexOptions): GraphIndex {
+  const cached = built.get(index)
   if (cached) return cached
+  const { notes } = index
 
-  // The unpublished notes a link to goes to a tag's page: its description notes.
-  const ruledOut = index ? [...index.unpublished.values()].flat() : unpublished.flatMap((rule) => getUnpublished(rule.reason))
-  const descriptions = ruledOut.filter((note) => isTagPage(note.url))
+  // The tags' description notes, each at its tag's page, where the tag has one.
+  const descriptions = index.tagDescriptions().filter((note) => isTagPage(note.url))
 
   const indexed = (note: NoteFacts, url: string): IndexedNote => {
-    const links = [...linking.outlinks(note).map((linked) => linked.url), ...linking.tagLinks(note)]
+    const links = [...index.outlinks(note).map((linked) => linked.url), ...index.tagLinks(note)]
     return {
       url,
       title: note.title,
@@ -56,6 +53,6 @@ export function graphIndex(options: GraphIndexOptions = {}): GraphIndex {
   const graph: GraphIndex = {
     notes: [...notes.map((note) => indexed(note, note.url)), ...descriptions.map((note) => indexed(note, note.url!))],
   }
-  if (!index) built.set(notes, graph)
+  built.set(index, graph)
   return graph
 }

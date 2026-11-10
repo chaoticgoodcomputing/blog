@@ -26,7 +26,7 @@ import { fileURLToPath } from "node:url"
 import { annotationPages, annotationTarget, type PageRange } from "@chaoticgoodcomputing/obsidian-markdown"
 import { isTextFileOf, textFileName } from "@chaoticgoodcomputing/pdf-ocr/text"
 import { documentFileName } from "./annotations.ts"
-import { getNotes, type Note } from "./notes.ts"
+import type { Note } from "./notes.ts"
 import { slugFor } from "./vault.ts"
 
 /** Where mirrors are served from on the site. public/robots.txt names it. */
@@ -170,7 +170,7 @@ export const mirrorTextFor = (note: Pick<Note, "frontmatter">, root: string = MI
  * of the published notes, that are saved in the mirror directory, and the text files of those that
  * have one to serve.
  */
-export function publishedMirrors(root: string = MIRRORS_ROOT, notes: Pick<Note, "frontmatter">[] = getNotes()): Map<string, string> {
+export function publishedMirrors(root: string, notes: Pick<Note, "frontmatter">[]): Map<string, string> {
   const published = new Map<string, string>()
   for (const note of notes) {
     const address = mirrorFor(note, root)
@@ -191,7 +191,7 @@ const shownNames = (notes: Pick<Note, "frontmatter">[]): string[] =>
  * own yet, by name: those `astro:mirrors` looks at for scanned pages to recognize. A mirror only
  * sliced is not among them: its slices are.
  */
-export function mirrorsToRecognize(root: string = MIRRORS_ROOT, notes: Pick<Note, "frontmatter">[] = getNotes()): string[] {
+export function mirrorsToRecognize(root: string, notes: Pick<Note, "frontmatter">[]): string[] {
   return shownNames(notes).filter((name) => fs.existsSync(mirrorFile(name, root)) && !mirrorText(name, root))
 }
 
@@ -199,7 +199,7 @@ export function mirrorsToRecognize(root: string = MIRRORS_ROOT, notes: Pick<Note
  * The mirrors and slices the published notes' viewers draw that are not saved, by name: each one's
  * page shows its annotations without it.
  */
-export const missingMirrors = (root: string = MIRRORS_ROOT, notes: Pick<Note, "frontmatter">[] = getNotes()): string[] =>
+export const missingMirrors = (root: string, notes: Pick<Note, "frontmatter">[]): string[] =>
   shownNames(notes).filter((name) => !fs.existsSync(mirrorFile(name, root)))
 
 /** A slice still to make: the pages `range` of the saved mirror `mirror`, saved as `slice`. */
@@ -210,7 +210,7 @@ export interface SliceToMake {
 }
 
 /** The slices the published notes' viewers draw that are not saved, and whose mirror is: each once. */
-export function slicesToMake(root: string = MIRRORS_ROOT, notes: Pick<Note, "frontmatter">[] = getNotes()): SliceToMake[] {
+export function slicesToMake(root: string, notes: Pick<Note, "frontmatter">[]): SliceToMake[] {
   const slices = new Map<string, SliceToMake>()
   for (const { frontmatter } of notes) {
     const target = annotationTarget(frontmatter)
@@ -245,7 +245,7 @@ export function mirrorsToSave(targets: string[]): { save: string[]; clashing: [s
  * no mirror saved, and shown by a note whose mirror or slice is not saved either. A document whose
  * notes all have their slices needs no mirror of its own.
  */
-export function unmirroredDocuments(root: string = MIRRORS_ROOT, notes: Pick<Note, "frontmatter">[] = getNotes()): string[] {
+export function unmirroredDocuments(root: string, notes: Pick<Note, "frontmatter">[]): string[] {
   const missing = new Set(missingMirrors(root, notes))
   const targets = notes
     .filter((note) => missing.has(shownMirrorName(note.frontmatter)!))

@@ -4,10 +4,10 @@
 // tag's (./page.ts), the sitemap's own; any other page, the 404 page or an alias redirect, is not
 // searched.
 
-import { getNotes, type Note } from "./notes.ts"
+import type { Note } from "./notes.ts"
 import { isIndexableAt } from "./page.ts"
 
 /** Whether the page at an address, from the site's root and not encoded, is in the search index. */
-export function isSearched(url: string, notes: Note[] = getNotes()): boolean {
+export function isSearched(url: string, notes: Note[]): boolean {
   return isIndexableAt(url, notes) === true
 }

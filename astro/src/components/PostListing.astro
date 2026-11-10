@@ -18,6 +18,7 @@ import { getMentions } from "../lib/note-discussion.ts"
 import { postListing, webmentions } from "../site.config.ts"
 import { annotatedFileType } from "../lib/annotations.ts"
 import PostList from "./PostList.astro"
+import { getNotes, getNoteIndex } from "../lib/notes.ts"
 
 interface Props {
   /** The kind of page it is on, which says how its listings are set out. */
@@ -29,8 +30,8 @@ interface Props {
 const { kind, tag } = Astro.props
 const mentions = mentionCounts(await getMentions(), webmentions.blockedDomains)
 const postsIn: Record<PostOrder, () => Note[]> = {
-  recent: () => listedPosts(tag),
-  central: () => centralPosts(tag, { mentions }),
+  recent: () => listedPosts(tag, getNotes()),
+  central: () => centralPosts(tag, { index: getNoteIndex(), mentions }),
 }
 const { layout, listings: all } = listingsOn(kind)
 // A listing the page narrows to a tag: its posts carrying it, or a tag under it.
@@ -41,7 +42,7 @@ const withPages = all.map((listing) => ({
 }))
 const withPosts = withPages.filter((listing) => listing.pages.length > 0)
 const listings = withPosts.length > 0 ? withPosts : withPages.slice(0, 1)
-const counts = postListing.showTagCounts ? postCounts() : undefined
+const counts = postListing.showTagCounts ? postCounts(getNotes()) : undefined
 ---
 
 {

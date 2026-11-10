@@ -22,6 +22,7 @@ import { graphIndex } from "../lib/graph-index.ts"
 import { graph } from "../site.config.ts"
 import GlobalGraph from "./global-graph/GlobalGraph.astro"
 import TagBubble from "./TagBubble.astro"
+import { getNoteIndex } from "../lib/notes.ts"
 
 interface Props {
   /** The page's address, which is its node's id: a note's, the home page's `/`, a tag page's. */
@@ -30,7 +31,7 @@ interface Props {
 
 const { url } = Astro.props
 const { removeTags, privatePages } = graph.local
-const tags = graphOf(graphIndex(), { removeTags, privatePages }).nodes.flatMap((node) =>
+const tags = graphOf(graphIndex({ index: getNoteIndex() }), { removeTags, privatePages }).nodes.flatMap((node) =>
   node.kind === "tag" && node.tag !== undefined ? [node.tag] : [],
 )
 ---

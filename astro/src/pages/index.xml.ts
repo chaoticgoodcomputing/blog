@@ -5,5 +5,6 @@ import rss from "@astrojs/rss"
 import type { APIRoute } from "astro"
 import { feedOptions } from "../lib/feed.ts"
 import { getPublicNotes } from "../lib/notes.ts"
+import { getVault } from "../lib/vault.ts"
 
-export const GET: APIRoute = ({ site: address }) => rss(feedOptions(getPublicNotes(), address!))
+export const GET: APIRoute = ({ site: address }) => rss(feedOptions(getPublicNotes(), address!, getVault()))
