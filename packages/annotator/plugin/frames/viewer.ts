@@ -11,7 +11,8 @@ import { addStylesheet } from "./stylesheets.ts"
 import * as pdfjs from "pdfjs-dist"
 import { EventBus, PDFLinkService, PDFViewer } from "pdfjs-dist/web/pdf_viewer.mjs"
 import { hasScan, type TextFile, textContentOf } from "@chaoticgoodcomputing/pdf-ocr"
-import { inPageRange, parsePageRange } from "../src/pages.ts"
+import { pageRangeIncludes } from "@chaoticgoodcomputing/web-annotations"
+import { pageRangeOfAddress } from "../src/pages.ts"
 import { blobPage, framePage, optionsOf } from "../src/frame-page.ts"
 import { CONNECT, type DocumentReply, type MarkdownReply, type Push, type Reply, type Request, type StylesReply } from "../src/protocol.ts"
 import { API_URL, AUTHORITY, GROUP_ID, type ApiRequest, type ApiResponse } from "../src/service.ts"
@@ -92,13 +93,13 @@ const pdfViewer = new PDFViewer({ container, viewer, eventBus, linkService })
 linkService.setViewer(pdfViewer)
 // The pages the note names, when it names some: the rest of the document is there, for the client
 // to find passages in, but not shown.
-const pageRange = parsePageRange(options.pages)
+const pageRange = pageRangeOfAddress(options.pages)
 
 eventBus.on("pagesinit", () => {
   pdfViewer.currentScaleValue = "page-width"
   if (!pageRange) return
   for (let index = 0; index < pdfViewer.pagesCount; index++) {
-    pdfViewer.getPageView(index)?.div.classList.toggle("annotator-outside", !inPageRange(pageRange, index + 1))
+    pdfViewer.getPageView(index)?.div.classList.toggle("annotator-outside", !pageRangeIncludes(pageRange, index + 1))
   }
   const first = Math.min(pageRange[0]![0], pdfViewer.pagesCount)
   pdfViewer.scrollPageIntoView({ pageNumber: first })

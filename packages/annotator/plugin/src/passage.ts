@@ -9,6 +9,17 @@ export interface Passage {
   suffix?: string
 }
 
+/** A record's passage: its target's quote selector, which the note doesn't write out. None for a reply. */
+export function passageOf(record: { target: unknown }): Passage | undefined {
+  const target = record.target
+  if (typeof target !== "object" || target === null) return undefined
+  const selectors = (target as { selector?: unknown }).selector
+  const quote = Array.isArray(selectors) ? selectors.find((selector) => selector?.type === "TextQuoteSelector") : undefined
+  if (!quote) return undefined
+  const text = (value: unknown) => (typeof value === "string" ? value : undefined)
+  return { exact: text(quote.exact), prefix: text(quote.prefix), suffix: text(quote.suffix) }
+}
+
 /** A long passage is named by its first and last words; the words either side of it say which it is. */
 export function passageAddress(page: string, { exact, prefix, suffix }: Passage): string {
   const words = (text: string | undefined) => (text ?? "").trim().split(/\s+/).filter(Boolean)

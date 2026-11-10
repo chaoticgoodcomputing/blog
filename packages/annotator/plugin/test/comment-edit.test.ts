@@ -1,41 +1,52 @@
-// A card's comment, edited: the comment alone, written back by the format; and wikilinks typed in it.
+// A card's comment, edited: the comment alone, as the block's Markdown, written back by
+// web-annotations; and wikilinks typed in it.
 
 import assert from "node:assert/strict"
 import { test } from "node:test"
-import { parseNote, upsertAnnotation } from "@chaoticgoodcomputing/annotator-format"
+import { readNote } from "@chaoticgoodcomputing/web-annotations"
 import { completeWikilink, wikilinkQuery, withComment } from "../src/comment-edit.ts"
+import { annotate } from "./notes.ts"
 
-const FRONTMATTER = "---\nannotation-target: \"https://example.org/page\"\nannotation-target-type: web\n---\n"
-const annotation = (id: string, text: string) => ({ id, text, tags: ["food"], target: [{ source: "https://example.org/page", selector: [{ type: "TextQuoteSelector", exact: `passage ${id}` }] }] })
+const PAGE = "https://example.org/page"
+const FRONTMATTER = `---\nannotation-target: "${PAGE}"\nannotation-target-type: web\n---\n`
+const NOW = "2026-11-11T09:00:00.000Z"
 
 function note() {
   let text = `${FRONTMATTER}\nThe preface.\n`
-  text = upsertAnnotation(text, annotation("aaa", "First.")).note
-  text = upsertAnnotation(text, annotation("bbb", "Second.")).note
+  text = annotate(text, "aaa", PAGE, "passage aaa", "First.", ["food"])
+  text = annotate(text, "bbb", PAGE, "passage bbb", "Second.")
   return `${text}\nThe epilogue.\n`
 }
 
-test("a comment edited is written into its record and its view, and nothing else changes", () => {
+test("a comment edited is the block's comment, as Markdown, and nothing else changes", () => {
   const before = note()
-  const after = withComment(before, "aaa", "First, and [[flatland]].", "2026-11-06T12:00:00.000Z")
-  const blocks = parseNote(after).blocks
-  assert.equal(blocks[0]!.annotation!.text, "First, and [[flatland]].")
-  assert.equal((blocks[0]!.record as { text?: string }).text, "First, and [[flatland]].")
-  assert.equal(blocks[0]!.annotation!.updated, "2026-11-06T12:00:00.000Z")
-  assert.deepEqual(blocks[0]!.annotation!.tags, ["food"])
-  assert.equal(blocks[1]!.annotation!.text, "Second.")
-  assert.ok(after.includes("The preface.") && after.endsWith("The epilogue.\n"))
+  const after = withComment(before, "aaa", "First, and [[flatland]].", NOW)
+  const [first, second] = readNote(after).annotations
+  assert.equal(first!.comment, "First, and [[flatland]].")
+  assert.ok(after.includes("> First, and [[flatland]].\n^aaa"))
+  assert.equal(first!.record.modified, NOW)
+  assert.ok(JSON.stringify(first!.record.body).includes('"food"'))
+  assert.deepEqual([second!.record, second!.comment], [readNote(before).annotations[1]!.record, "Second."])
+  assert.equal(after.slice(0, readNote(after).annotations[0]!.span.start), before.slice(0, readNote(before).annotations[0]!.span.start))
+  assert.ok(after.endsWith("The epilogue.\n"))
 })
 
-test("a comment over lines, or with quote marks of its own, still makes a block that reads back", () => {
-  const comment = "> Quoted.\n\nAnd %%COMMENT%% said, \"too\"."
-  const after = withComment(note(), "bbb", comment, "2026-11-06T12:00:00.000Z")
-  assert.equal(parseNote(after).blocks[1]!.annotation!.text, comment)
-  assert.equal(parseNote(after).blocks.length, 2)
+test("a comment over lines, with a callout of its own, still makes a block that reads back", () => {
+  const comment = "> [!NOTE]\n> Quoted.\n\nAnd %%COMMENT%% said, \"too\"."
+  const after = withComment(note(), "bbb", comment, NOW)
+  assert.equal(readNote(after).annotations[1]!.comment, comment)
+  assert.equal(readNote(after).annotations.length, 2)
+  assert.deepEqual(readNote(after).errors, [])
+})
+
+test("an emptied comment leaves a highlight; the same comment changes nothing", () => {
+  const emptied = withComment(note(), "aaa", "", NOW)
+  assert.equal(readNote(emptied).annotations[0]!.comment, "")
+  assert.equal(withComment(note(), "aaa", "First.", NOW), note())
 })
 
 test("a comment of an annotation the note doesn't have changes nothing", () => {
-  assert.equal(withComment(note(), "nope", "x", "2026-11-06T12:00:00.000Z"), note())
+  assert.equal(withComment(note(), "nope", "x", NOW), note())
 })
 
 test("the note name typed after [[ is the query; none outside a link", () => {

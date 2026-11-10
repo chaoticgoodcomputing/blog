@@ -4,7 +4,7 @@
 
 import assert from "node:assert/strict"
 import { describe, test } from "node:test"
-import { readNote } from "@chaoticgoodcomputing/web-annotations"
+import { AnnotationPropertyError, readNote } from "@chaoticgoodcomputing/web-annotations"
 import { newNote, notePath, pageVariables } from "../src/new-notes.ts"
 import { createVaultService, normalizeAddress, type Page, type VaultNotes } from "../src/vault-service.ts"
 
@@ -32,8 +32,8 @@ function memoryVault(files: Record<string, string>) {
   const notes: VaultNotes = {
     list: () =>
       Object.entries(files).flatMap(([path, text]) => {
-        const target = /^annotation-target: "?([^"\n]+)"?$/m.exec(text)?.[1]
-        return target ? [{ path, target }] : []
+        const properties = readNote(text).properties
+        return properties && !(properties instanceof AnnotationPropertyError) ? [{ path, target: properties.target }] : []
       }),
     withBlock: (id) => blockIndex.get(id) ?? [],
     store: (path) => ({

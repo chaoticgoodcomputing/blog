@@ -2,6 +2,8 @@
 // settings' path pattern, and what it says, from the settings' template or the plugin's own
 // properties. Nothing here reaches Obsidian, so the tests run it as it is.
 
+import { TARGET_PROPERTY, TYPE_PROPERTY, WEB_TYPE } from "./annotation-properties.ts"
+
 /** A page the client names, as an annotation made on it names it. */
 export interface Page {
   uri: string
@@ -126,21 +128,17 @@ export function fillTemplate(template: string, variables: PageVariables): string
 
 const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/
 
-/** The property naming what kind of document a note's target is, and the kind a page in the browser is. */
-export const TYPE_PROPERTY = "annotation-target-type"
-export const WEB_TYPE = "web"
-
 /**
  * A note's text with the page as its annotation target, and, for a web page, its target type: in
  * place of any the template wrote, at the end of its frontmatter, or in frontmatter of its own. In
  * the text, not after it is made, so whatever else writes to the new note (Templater) keeps them.
  */
 export function withTarget(text: string, page: Page): string {
-  const lines = [`annotation-target: ${JSON.stringify(page.uri)}`, ...(page.pdf ? [] : [`${TYPE_PROPERTY}: ${WEB_TYPE}`])]
+  const lines = [`${TARGET_PROPERTY}: ${JSON.stringify(page.uri)}`, ...(page.pdf ? [] : [`${TYPE_PROPERTY}: ${WEB_TYPE}`])]
   const frontmatter = FRONTMATTER.exec(text)
   if (!frontmatter) return `---\n${lines.join("\n")}\n---\n${text}`
   // A property, with any lines of a list or a block under it.
-  const ours = /^annotation-target(?:-type)?:.*(?:\r?\n[ \t]+.*)*$/gm
+  const ours = new RegExp(`^(?:${TARGET_PROPERTY}|${TYPE_PROPERTY}):.*(?:\\r?\\n[ \\t]+.*)*$`, "gm")
   const kept = frontmatter[1]!.replace(ours, "").replace(/\n{2,}/g, "\n").replace(/^\n|\n$/g, "")
   return `---\n${[...(kept ? [kept] : []), ...lines].join("\n")}\n---\n${text.slice(frontmatter[0].length)}`
 }

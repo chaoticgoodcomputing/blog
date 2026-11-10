@@ -35,14 +35,14 @@ A note of the vault with an annotation target, which holds the annotations made 
 _Avoid_: annotation file (the code's), annotated note
 
 **Annotation target type**:
-What kind of annotated document a note's target is (a PDF, an EPUB, a web page or a video), from its
-`annotation-target-type` property, or from the extension of its address when the note has none.
+What kind of annotated document a note's target is, from its `annotation-target-type` property: a
+web page (`web`), or, with none, a document such as a PDF. Any other value is malformed.
 _Avoid_: file type, format
 
 **Page range**:
 The pages of a PDF an annotation note shows, from its `annotation-pages` property: the document is
 opened whole, and only they are shown, so annotations on them name their passages in the whole
-document.
+document. A malformed one is told of, and the annotator doesn't open.
 _Avoid_: excerpt, slice, chapter
 
 **Recognizing a document**:
@@ -52,8 +52,9 @@ The site recognizes the same scans to the same text.
 _Avoid_: OCR, converting
 
 **Annotation record**:
-The part of an annotation that is Hypothesis's own JSON for it, in an `annotation-json` block,
-hidden in a comment. The rest of the annotation is written from it, for reading.
+The W3C Web Annotation an annotation's block holds, hidden in a comment, as web-annotations writes
+it (`../web-annotations/CONTEXT.md`). The passage's quote is in it, not written out; the comment is
+the block's Markdown.
 _Avoid_: annotation JSON, metadata
 
 **Passage**:
@@ -118,5 +119,5 @@ An annotation note whose target type is a web page: annotated in the browser, ne
 which doesn't show the page. Its editor has an annotator region, between its preface and its
 epilogue, as a PDF's note has, its blocks kept from edits; the region shows its annotations as
 cards, not the annotator. A click on a card edits its comment alone, in a text box, wikilinks
-suggested; saving writes its block again through the format, never by hand. A bar under its properties opens the page in the browser.
+suggested; saving writes its block again through web-annotations, never by hand. A bar under its properties opens the page in the browser.
 _Avoid_: web note, bookmark, clipping

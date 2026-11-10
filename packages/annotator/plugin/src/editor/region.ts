@@ -2,11 +2,12 @@
 // touch: as editor state, so it follows every change, and needs no Obsidian or DOM.
 //
 // The annotator's region is the run of the note's annotation blocks, from the first to the last
-// (annotator-format's layout), which the editor shows the annotator in place of. A note with no
+// (web-annotations' layout), which the editor shows the annotator in place of. A note with no
 // blocks yet has an empty region at its end, where its first will go.
 
-import { type Block, parseNote } from "@chaoticgoodcomputing/annotator-format"
+import { type NoteAnnotation, readNote } from "@chaoticgoodcomputing/web-annotations"
 import { Annotation, EditorState, StateField, type Transaction } from "@codemirror/state"
+import { frontmatterOfText, readProperties } from "../annotation-properties.ts"
 
 export interface Region {
   /** The start of the first block's first line; the end of the note, with no blocks. */
@@ -15,29 +16,32 @@ export interface Region {
   to: number
 }
 
-// An annotation target in the frontmatter: `annotation-target: <address>`, or a list's first item.
-const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/
-const TARGET = /^annotation-target:[ \t]*(?:\S|\r?\n[ \t]+-[ \t]*\S)/m
-
-// A web page's target type: `annotation-target-type: web`, quoted or not.
-const WEB = /^annotation-target-type:[ \t]*(["']?)web\1[ \t]*$/im
-
-/** Whether a note's text is an annotation note's: its frontmatter names an annotation target. */
-export const isAnnotationNoteText = (text: string) => TARGET.test(FRONTMATTER.exec(text)?.[1] ?? "")
+/**
+ * Whether a note's text is an annotation note's: it names an annotation target, in its frontmatter
+ * or a Dataview inline field, read as the vault's index reads it (src/annotation-properties.ts).
+ */
+export const isAnnotationNoteText = (text: string) => readProperties(frontmatterOfText(text).properties) !== undefined
 
 /**
  * Whether a note's text is a web page's annotation note's: one made in the browser, whose page
  * Obsidian doesn't show, so its region shows its annotations as cards (src/editor/annotator.ts), in
  * place of the annotator.
  */
-export const isWebNoteText = (text: string) => isAnnotationNoteText(text) && WEB.test(FRONTMATTER.exec(text)![1]!)
+export const isWebNoteText = (text: string) => readProperties(frontmatterOfText(text).properties)?.web === true
 
-/** A web page's note's page, and where its frontmatter ends; none for any other note. */
+/** A web page's note's page, and where its frontmatter ends (0 with none); none for any other note. */
 export function webPageOf(text: string): { url: string; end: number } | null {
-  if (!isWebNoteText(text)) return null
-  const frontmatter = FRONTMATTER.exec(text)!
-  const url = /^annotation-target:[ \t]*(?:\r?\n[ \t]+-[ \t]*)?(["']?)([^"'\r\n]+?)\1[ \t]*$/m.exec(frontmatter[1]!)?.[2]
-  return url ? { url, end: frontmatter[0].length } : null
+  const { properties, end } = frontmatterOfText(text)
+  const read = readProperties(properties)
+  return read?.web && read.target ? { url: read.target, end } : null
+}
+
+/** Every block of a note, read or not, in the note's order. */
+function blockSpans(text: string) {
+  const { annotations, errors } = readNote(text)
+  return [...annotations.map((annotation) => ({ span: annotation.span, annotation })), ...errors.map((error) => ({ span: error.span, annotation: undefined }))].sort(
+    (a, b) => a.span.start - b.span.start,
+  )
 }
 
 /**
@@ -46,7 +50,7 @@ export function webPageOf(text: string): { url: string; end: number } | null {
  */
 export function regionOf(text: string): Region | null {
   if (!isAnnotationNoteText(text)) return null
-  const { blocks } = parseNote(text)
+  const blocks = blockSpans(text)
   const first = blocks[0]
   const last = blocks.at(-1)
   if (!first || !last) return { from: text.length, to: text.length }
@@ -93,17 +97,18 @@ export const isAnnotatorWrite = (transaction: Transaction) => transaction.annota
 
 /**
  * The block of a note's text that holds line `line`, numbered from 0, as reading view numbers a
- * section's lines, with the line it starts on; none when no block does.
+ * section's lines, with the line it starts on, and its annotation, when it reads; none when no
+ * block holds the line.
  */
-export function blockAtLine(text: string, line: number): { block: Block; firstLine: number } | undefined {
+export function blockAtLine(text: string, line: number): { annotation?: NoteAnnotation; firstLine: number } | undefined {
   const lineOf = (offset: number) => {
     let count = 0
     for (let at = text.indexOf("\n"); at >= 0 && at < offset; at = text.indexOf("\n", at + 1)) count++
     return count
   }
-  for (const block of parseNote(text).blocks) {
-    const firstLine = lineOf(block.span.start)
-    if (firstLine <= line && line <= lineOf(Math.max(block.span.start, block.span.end - 1))) return { block, firstLine }
+  for (const { span, annotation } of blockSpans(text)) {
+    const firstLine = lineOf(span.start)
+    if (firstLine <= line && line <= lineOf(Math.max(span.start, span.end - 1))) return { annotation, firstLine }
   }
   return undefined
 }

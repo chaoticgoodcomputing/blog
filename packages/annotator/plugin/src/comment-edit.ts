@@ -1,18 +1,21 @@
-// A card's comment, edited in Obsidian: the comment alone, never the block that keeps it. The new
-// comment is written back as the fake service writes any change, through the format, which writes
-// the whole block again, record and view; and wikilinks are typed with Obsidian's names for notes.
+// A card's comment, edited in Obsidian: the comment alone, as the Markdown its block holds, never
+// the block that keeps it. The new comment is written back through web-annotations, which writes the
+// block again, record and comment; and wikilinks are typed with Obsidian's names for notes.
 
-import { parseNote, upsertAnnotation, type WriteOptions } from "@chaoticgoodcomputing/annotator-format"
+import { AnnotationWriteError, updateAnnotation } from "@chaoticgoodcomputing/web-annotations"
 
 /**
- * The note with its annotation `id`'s comment made `comment`, and its time of change `now`: its
- * block written again by the format, the rest of the note as it was. The note as it is, when it has
- * no such annotation, or one whose record doesn't parse.
+ * The note with annotation `blockId`'s comment made `comment`, and its time of change `now`: its
+ * block written again, the rest of the note as it was. The note as it is, when it has no such
+ * annotation, or one whose record doesn't read.
  */
-export function withComment(note: string, id: string, comment: string, now: string, options: WriteOptions = {}): string {
-  const annotation = parseNote(note).blocks.find((block) => block.id === id)?.annotation
-  if (!annotation) return note
-  return upsertAnnotation(note, { ...annotation, text: comment, updated: now }, options).note
+export function withComment(note: string, blockId: string, comment: string, now: string): string {
+  try {
+    return updateAnnotation(note, blockId, { comment }, { now: () => now }).text
+  } catch (error) {
+    if (error instanceof AnnotationWriteError) return note
+    throw error
+  }
 }
 
 /** The note name being typed in a wikilink that ends at the caret: what follows its `[[`, or none. */

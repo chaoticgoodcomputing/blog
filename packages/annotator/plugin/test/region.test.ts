@@ -3,18 +3,19 @@
 
 import assert from "node:assert/strict"
 import { test } from "node:test"
-import { upsertAnnotation } from "@chaoticgoodcomputing/annotator-format"
+import { updateAnnotation } from "@chaoticgoodcomputing/web-annotations"
 import { EditorState } from "@codemirror/state"
-import { annotatorWrite, blockAtLine, changeBetween, isAnnotationNoteText, protectBlocks, regionField, regionOf, webPageOf } from "../src/editor/region.ts"
+import { annotatorWrite, blockAtLine, changeBetween, isAnnotationNoteText, isWebNoteText, protectBlocks, regionField, regionOf, webPageOf } from "../src/editor/region.ts"
+import { annotate } from "./notes.ts"
 
-const FRONTMATTER = "---\ntitle: A paper\nannotation-target: https://example.org/paper.pdf\n---\n"
-const annotation = (id: string, text: string) => ({ id, text, target: [{ source: "https://example.org/paper.pdf", selector: [{ type: "TextQuoteSelector", exact: `passage ${id}` }] }] })
+const PDF = "https://example.org/paper.pdf"
+const FRONTMATTER = `---\ntitle: A paper\nannotation-target: ${PDF}\n---\n`
 
 /** A note: frontmatter, a preface, two annotations, an epilogue. */
-function note() {
-  let text = `${FRONTMATTER}\nThe preface.\n`
-  text = upsertAnnotation(text, annotation("aaa", "First.")).note
-  text = upsertAnnotation(text, annotation("bbb", "Second.")).note
+function note(frontmatter = FRONTMATTER) {
+  let text = `${frontmatter}\nThe preface.\n`
+  text = annotate(text, "aaa", PDF, "passage aaa", "First.")
+  text = annotate(text, "bbb", PDF, "passage bbb", "Second.")
   return `${text}\nThe epilogue.\n`
 }
 
@@ -29,10 +30,24 @@ test("an annotation note is known by its frontmatter's annotation target", () =>
   assert.equal(regionOf("A plain note."), null)
 })
 
+test("a note whose target is a Dataview inline field has a region too", () => {
+  const text = note(`---\ntitle: A paper\n---\nannotation-target:: ${PDF}\n`)
+  assert.equal(isAnnotationNoteText(text), true)
+  const region = regionOf(text)!
+  assert.ok(text.slice(region.from).startsWith("> [!annotation]"))
+  assert.ok(text.slice(0, region.to).endsWith("^bbb"))
+})
+
+test("a note with a malformed page range is an annotation note, with its region", () => {
+  const text = note(`---\nannotation-target: ${PDF}\nannotation-pages: 5-3\n---\n`)
+  assert.equal(isAnnotationNoteText(text), true)
+  assert.ok(regionOf(text)!.to > regionOf(text)!.from)
+})
+
 test("the region runs from the first block's first line to the last block's id line", () => {
   const text = note()
   const region = regionOf(text)!
-  assert.ok(text.slice(region.from).startsWith(">%%"))
+  assert.ok(text.slice(region.from).startsWith("> [!annotation]"))
   assert.ok(text.slice(0, region.to).endsWith("^bbb"))
   assert.equal(text.slice(region.to), "\n\nThe epilogue.\n")
   // No blocks: an empty region at the end, where the first will go.
@@ -76,7 +91,7 @@ test("editing beside the blocks is editing the preface or the epilogue", () => {
 test("the plugin's own writes reach the blocks", () => {
   const state = stateOf(note())
   const before = state.doc.toString()
-  const after = upsertAnnotation(before, annotation("aaa", "First, edited.")).note
+  const after = updateAnnotation(before, "aaa", { comment: "First, edited." }).text
   const change = changeBetween(before, after)!
   const written = state.update({ changes: change, filter: false, annotations: annotatorWrite.of(true) }).state
   assert.equal(written.doc.toString(), after)
@@ -84,26 +99,29 @@ test("the plugin's own writes reach the blocks", () => {
 })
 
 test("a web page's note has a region as a PDF's does, between its preface and its epilogue", () => {
-  const web = note().replace("annotation-target: https://example.org/paper.pdf\n", "annotation-target: \"https://example.org/page\"\nannotation-target-type: web\n")
+  const web = note().replace(`annotation-target: ${PDF}\n`, "annotation-target: \"https://example.org/page\"\nannotation-target-type: web\n")
   const region = regionOf(web)!
   const [preface, blocks, epilogue] = [web.slice(0, region.from), web.slice(region.from, region.to), web.slice(region.to)]
-  assert.ok(preface.includes("The preface.") && !preface.includes("annotation-json"))
-  assert.ok(epilogue.includes("The epilogue.") && !epilogue.includes("annotation-json"))
-  assert.equal(blocks.match(/annotation-json/g)?.length, 2)
+  assert.ok(preface.includes("The preface.") && !preface.includes("[!annotation]"))
+  assert.ok(epilogue.includes("The epilogue.") && !epilogue.includes("[!annotation]"))
+  assert.equal(blocks.match(/\[!annotation\]/g)?.length, 2)
+  assert.equal(isWebNoteText(web), true)
+  assert.equal(isWebNoteText(note()), false)
   assert.deepEqual(webPageOf(web), { url: "https://example.org/page", end: web.indexOf("---\n", 4) + 4 })
   assert.equal(webPageOf(note()), null)
+  // An inline field's web page, under no frontmatter: its bar goes at the top.
+  assert.deepEqual(webPageOf("annotation-target:: https://example.org/page\nannotation-target-type:: web\n"), { url: "https://example.org/page", end: 0 })
 })
-
 
 test("a line of a block is known as its block's, with the line the block starts on", () => {
   const text = note()
   const lines = text.split("\n")
-  const first = lines.findIndex((line) => line === ">%%")
+  const first = lines.findIndex((line) => line === "> [!annotation]")
   const id = lines.findIndex((line) => line === "^aaa")
-  assert.deepEqual([blockAtLine(text, first)?.block.id, blockAtLine(text, first)?.firstLine], ["aaa", first])
-  assert.equal(blockAtLine(text, id)?.block.id, "aaa")
+  assert.deepEqual([blockAtLine(text, first)?.annotation?.blockId, blockAtLine(text, first)?.firstLine], ["aaa", first])
+  assert.equal(blockAtLine(text, id)?.annotation?.blockId, "aaa")
   assert.equal(blockAtLine(text, id)?.firstLine, first)
-  assert.equal(blockAtLine(text, lines.findIndex((line) => line === "^bbb"))?.block.id, "bbb")
+  assert.equal(blockAtLine(text, lines.findIndex((line) => line === "^bbb"))?.annotation?.blockId, "bbb")
   assert.equal(blockAtLine(text, lines.indexOf("The preface.")), undefined)
   assert.equal(blockAtLine(text, lines.indexOf("The epilogue.")), undefined)
 })

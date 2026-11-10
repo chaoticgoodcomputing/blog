@@ -20,7 +20,8 @@
     "@chaoticgoodcomputing/web-annotations": "workspace:*",
     "hypothesis": "1.1769.0",
     "monkey-around": "^2.2.0",
-    "pdfjs-dist": "5.4.530"
+    "pdfjs-dist": "5.4.530",
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
     "@codemirror/state": "6.7.6",

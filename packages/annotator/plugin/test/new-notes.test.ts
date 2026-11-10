@@ -3,6 +3,8 @@
 
 import assert from "node:assert/strict"
 import { describe, test } from "node:test"
+import { addAnnotation, readNote } from "@chaoticgoodcomputing/web-annotations"
+import { propertiesOfText } from "../src/annotation-properties.ts"
 import { fillTemplate, newNote, notePath, pageVariables, sanitize } from "../src/new-notes.ts"
 
 const PAGE = "https://en.wikipedia.org/wiki/Pickle_(food)"
@@ -84,5 +86,16 @@ describe("a new note's text", () => {
       newNote({ uri: PAGE, title: "Pickle: a food" }, DATE),
       `---\ntitle: "Pickle: a food"\ndate: ${DATE}\ntags:\n  - writing/annotations\nannotation-target: "${PAGE}"\nannotation-target-type: web\n---\n`,
     )
+  })
+
+  test("reads back as an annotation note of the page, and takes its first annotation after its body", () => {
+    const web = newNote({ uri: PAGE, title: "Pickle" }, DATE, "---\nannotation-target: elsewhere\nannotation-target-type: web\n---\nBody\n")
+    assert.deepEqual(propertiesOfText(web), { target: PAGE, web: true, pages: undefined, error: undefined })
+    const pdf = newNote({ uri: "https://example.org/a.pdf", pdf: true }, DATE)
+    assert.deepEqual(propertiesOfText(pdf), { target: "https://example.org/a.pdf", web: false, pages: undefined, error: undefined })
+    const first = addAnnotation(web, { comment: "A comment.", target: { source: PAGE } }).text
+    const read = readNote(first)
+    assert.equal(read.annotations.length, 1)
+    assert.equal(read.preface.trim(), "Body")
   })
 })

@@ -3,10 +3,8 @@
 import { type DocumentStore, documentFor, savedName } from "@chaoticgoodcomputing/annotator-documents"
 import { textFileName } from "@chaoticgoodcomputing/pdf-ocr"
 import { type App, TFile } from "obsidian"
+import { annotationFrontmatter, dataviewValue, type NoteProperties, readProperties } from "./annotation-properties.ts"
 import { obsidianFetch } from "./documents.ts"
-import { TYPE_PROPERTY, WEB_TYPE } from "./new-notes.ts"
-
-export const TARGET_PROPERTY = "annotation-target"
 
 /** Where a note's annotated document is: on the web, or a file of the vault. */
 export type Target = { kind: "url"; url: string } | { kind: "file"; file: TFile }
@@ -18,34 +16,38 @@ export type Target = { kind: "url"; url: string } | { kind: "file"; file: TFile 
 export function propertyOf(app: App, file: TFile, name: string): unknown {
   // Dataview's API, as obsidian-dataview's getAPI() finds it with no app: the global it installs.
   const dataview = (window as any).DataviewAPI
-  const fromDataview = dataview?.page?.(file.path)?.[name]
-  if (fromDataview) {
-    if (fromDataview.path) return app.metadataCache.getFirstLinkpathDest(fromDataview.path, file.path)?.path
-    const link = /^\[.*\]\((.*)\)$/.exec(String(fromDataview))?.[1]
-    return link ?? fromDataview
-  }
+  const resolve = (path: string) => app.metadataCache.getFirstLinkpathDest(path, file.path)?.path
+  const fromDataview = dataviewValue(dataview?.page?.(file.path)?.[name], resolve)
+  if (fromDataview !== undefined && fromDataview !== null && fromDataview !== "") return fromDataview
   return app.metadataCache.getFileCache(file)?.frontmatter?.[name]
 }
 
+/**
+ * A note's annotation properties, from Obsidian's index and Dataview's, read by web-annotations as
+ * the editor reads them from the note's text (src/annotation-properties.ts). None for a note that
+ * names no annotation target.
+ */
+export const annotationPropertiesOf = (app: App, file: TFile): NoteProperties | undefined =>
+  readProperties(annotationFrontmatter((name) => propertyOf(app, file, name)))
+
 /** Whether a note is an annotation note: it has an annotation target. */
 export const isAnnotationNote = (app: App, file: TFile | null): file is TFile =>
-  file instanceof TFile && Boolean(propertyOf(app, file, TARGET_PROPERTY))
+  file instanceof TFile && annotationPropertiesOf(app, file) !== undefined
 
 /** Whether an annotation note is a web page's: made in the browser, whose page Obsidian doesn't show. */
-export const isWebNote = (app: App, file: TFile) => String(propertyOf(app, file, TYPE_PROPERTY) ?? "").trim().toLowerCase() === WEB_TYPE
+export const isWebNote = (app: App, file: TFile) => annotationPropertiesOf(app, file)?.web === true
 
 const isUrl = (text: string) => /^[a-z][a-z0-9+.-]*:\/\//i.test(text)
 
 /**
  * A note's annotation target: its property, as an address on the web, or as a link to a file of
  * the vault, from the note, then from `defaultPath` (the setting upstream called its custom default
- * path). A list's first item counts, as MetaEdit writes one.
+ * path).
  */
 export function targetOf(app: App, note: TFile, defaultPath = ""): Target | undefined {
-  let value = propertyOf(app, note, TARGET_PROPERTY)
-  if (Array.isArray(value)) value = value[0]
-  if (typeof value !== "string" || !value.trim()) return undefined
-  const target = value.trim().replace(/^\[\[(.*?)(\|.*)?\]\]$/, "$1")
+  const value = annotationPropertiesOf(app, note)?.target
+  if (!value) return undefined
+  const target = value.replace(/^\[\[(.*?)(\|.*)?\]\]$/, "$1")
   if (isUrl(target)) return { kind: "url", url: target }
   for (const path of [target, `${defaultPath}${target}`]) {
     const file = app.metadataCache.getFirstLinkpathDest(path, note.path)

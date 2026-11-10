@@ -5,15 +5,16 @@
 
 import { DocumentUnavailable } from "@chaoticgoodcomputing/annotator-documents"
 import { isTextFileOf, sha256 } from "@chaoticgoodcomputing/pdf-ocr"
-import type { TFile } from "obsidian"
+import { formatPageRange } from "@chaoticgoodcomputing/web-annotations"
+import { Notice, type TFile } from "obsidian"
+import { propertyProblem } from "./annotation-properties.ts"
 import logo from "./cgc-logo.svg"
 import { blobPage, framePage, type PageOptions } from "./frame-page.ts"
 import type AnnotatorPlugin from "./main.ts"
 import { obsidianStyles, renderMarkdown } from "./obsidian-rendering.ts"
-import { formatPageRange, PAGES_PROPERTY, parsePageRange } from "./pages.ts"
 import { CONNECT, type Push, type Reply, type Request } from "./protocol.ts"
 import { createService, type NoteStore, oneNote, type Service } from "./service.ts"
-import { addressOf, bytesOf, propertyOf, type Target, targetOf, textFileOf } from "./target.ts"
+import { addressOf, annotationPropertiesOf, bytesOf, type Target, targetOf, textFileOf } from "./target.ts"
 
 export class AnnotatorSession {
   /** What the session shows: the viewer page's frame, or why there is none, below any notice. */
@@ -51,16 +52,26 @@ export class AnnotatorSession {
     return targetOf(this.plugin.app, this.note, this.plugin.settings.customDefaultPath)
   }
 
-  /** Shows the annotator, from the start, at an annotation when one is named. */
+  /**
+   * Shows the annotator, from the start, at an annotation when one is named. Not on a note with a
+   * malformed property (its page range, say): the user is told which, and the note's text stays.
+   */
   start(annotation?: string) {
     this.stop()
     this.shown = this.shownNow()
+    const error = annotationPropertiesOf(this.plugin.app, this.note)?.error
+    if (error) {
+      const problem = propertyProblem(this.note.path, error)
+      new Notice(problem)
+      this.element.createEl("p", { cls: "annotator-message", text: problem })
+      return
+    }
     const target = this.target()
     if (!target) {
       this.element.createEl("p", { cls: "annotator-message", text: "This note's annotation target names no document Annotator can find." })
       return
     }
-    const pages = parsePageRange(propertyOf(this.plugin.app, this.note, PAGES_PROPERTY))
+    const pages = annotationPropertiesOf(this.plugin.app, this.note)?.pages
     void this.frameViewer(target, { annotation, pages: pages && formatPageRange(pages), version: this.plugin.filesVersion })
   }
 
@@ -73,11 +84,11 @@ export class AnnotatorSession {
     if (this.shownNow() !== this.shown) this.start()
   }
 
-  /** The note's target and page range, as they are now. */
+  /** The note's target and page range, as they are now, or what is malformed of them. */
   private shownNow() {
     const target = this.target()
-    const pages = parsePageRange(propertyOf(this.plugin.app, this.note, PAGES_PROPERTY))
-    return JSON.stringify([target && addressOf(target), pages && formatPageRange(pages)])
+    const properties = annotationPropertiesOf(this.plugin.app, this.note)
+    return JSON.stringify([target && addressOf(target), properties?.pages && formatPageRange(properties.pages), properties?.error?.message])
   }
 
   /**

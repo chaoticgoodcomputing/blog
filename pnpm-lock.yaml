@@ -337,6 +337,9 @@ importers:
       pdfjs-dist:
         specifier: 5.4.530
         version: 5.4.530
+      yaml:
+        specifier: ^2.9.1
+        version: 2.9.1
     devDependencies:
       '@codemirror/state':
         specifier: 6.7.6

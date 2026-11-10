@@ -1,11 +1,12 @@
 // A web page's note in reading view: each of its blocks as its card (src/web-cards.ts), as the
 // editor shows them, in place of the blockquote Obsidian would draw of the block, whose hidden
-// lines (its record, `%%COMMENT%%` and the like) leave line breaks and paragraphs where they were.
+// lines (its record, in `%%`) leave line breaks and paragraphs where they were.
 // Read, not edited: the editor edits a card's comment.
 
 import { type App, MarkdownRenderChild, type MarkdownPostProcessor } from "obsidian"
 import { blockAtLine, isWebNoteText } from "./editor/region.ts"
-import { cardsOf, openPassages, renderCard } from "./web-cards.ts"
+import { cardsOf } from "./cards.ts"
+import { openPassages, renderCard } from "./web-cards.ts"
 
 /** Reading view's sections of a web page's note's blocks, as cards. */
 export function webCardsInReadingView(app: App): MarkdownPostProcessor {
@@ -20,8 +21,8 @@ export function webCardsInReadingView(app: App): MarkdownPostProcessor {
       element.addClass("annotator-web-hidden")
       return
     }
-    const card = cardsOf(section.text, [found.block])[0]
-    if (!card) return
+    if (!found.annotation) return
+    const card = cardsOf(section.text, [found.annotation])[0]!
     const child = new MarkdownRenderChild(element)
     context.addChild(child)
     const cards = element.createDiv({ cls: "annotator-web-cards" })
