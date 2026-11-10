@@ -14,10 +14,10 @@ import {
   type HypothesisAnnotation,
   type Mint,
   readNote,
-  removeAnnotation,
   toHypothesis,
 } from "@chaoticgoodcomputing/web-annotations"
 import type { Page } from "./new-notes.ts"
+import { removeThread } from "./threads.ts"
 
 /**
  * The address Obsidian's sidebar is told the API is at. It never resolves: every request is
@@ -290,7 +290,8 @@ export function createService(options: ServiceOptions): Service {
       if (method === "PATCH" || method === "PUT") return writing(async () => ok(shown(note, await write(note, { ...existing, ...body(), id }))))
       if (method === "DELETE") {
         // Its replies stay in the note, as Hypothesis keeps a deleted annotation's replies.
-        await note.update((text) => removeAnnotation(text, id))
+        // A thread's root takes its replies with it (./threads.ts).
+        await note.update((text) => removeThread(text, id))
         return ok({ id, deleted: true })
       }
     }

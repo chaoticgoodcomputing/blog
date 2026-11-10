@@ -294,6 +294,16 @@ describe("replying", () => {
     assert.deepEqual(json.rows.map((row: any) => row.id), [reply1.id])
   })
 
+  test("deleting a thread's root deletes its replies too, and leaves other annotations", async () => {
+    const { store, call } = setup()
+    const { json: root } = await call("POST", "annotations", posted("Root", "one passage"))
+    const { json: other } = await call("POST", "annotations", posted("Other", "another passage"))
+    const { json: first } = await call("POST", "annotations", reply("Reply", [root.id]))
+    await call("POST", "annotations", reply("Reply to the reply", [root.id, first.id]))
+    await call("DELETE", `annotations/${root.id}`)
+    assert.deepEqual(readNote(store.note).annotations.map((annotation) => annotation.blockId), [other.id])
+  })
+
   test("a reply to an annotation the note doesn't hold is not found", async () => {
     const { store, call } = setup()
     assert.equal((await call("POST", "annotations", reply("Orphan", ["nope"]))).status, 404)
