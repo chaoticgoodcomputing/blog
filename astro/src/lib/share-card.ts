@@ -306,11 +306,11 @@ async function layout(card: ShareCard, site: URL): Promise<Element> {
     ),
     box(
       { flexDirection: "column", justifyContent: "center", flexGrow: 1, minHeight: 0, gap: 20, paddingTop: 24 },
-      // The listing's title is a link, and drawn as one. Satori centres a clamped text's lines only
+      // The title, in the headings' colour, not a link's. Satori centres a clamped text's lines only
       // when it wraps, so a title of one line is centred by the row it is in.
       box(
         { justifyContent: "center", flexShrink: 0 },
-        clamped(2, { fontSize: 56, fontWeight: 600, lineHeight: 1.25, textAlign: "center", color: color("secondary") }, card.title),
+        clamped(2, { fontSize: 56, fontWeight: 600, lineHeight: 1.25, textAlign: "center", color: color("dark") }, card.title),
       ),
       meta !== "" && clamped(3, { fontSize: 30, lineHeight: 1.45, flexShrink: 0 }, meta),
       card.tags.length > 0 &&
