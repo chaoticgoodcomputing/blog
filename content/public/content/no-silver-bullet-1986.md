@@ -933,3 +933,185 @@ I recently got into a discussion about [computer-aided software engineering](htt
 >%%TAGS%%
 >
 ^tic5hg7ofof
+
+
+>%%
+>```annotation-json
+>{"created":"2026-11-10T13:09:12.688Z","text":".","updated":"2026-11-10T13:09:12.688Z","document":{"title":"No Silver Bullet – Essence and Accident in Software Engineering","link":[{"href":"urn:x-pdf:4c3b2ffb168efc85024df33a5623b254"},{"href":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf"}],"documentFingerprint":"4c3b2ffb168efc85024df33a5623b254"},"uri":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","target":[{"source":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","selector":[{"type":"TextPositionSelector","start":38576,"end":39112},{"type":"TextQuoteSelector","exact":"The big change has been in the hardware/software cost ratio. The buyer of a $2- million machine in 1960 felt that he could afford $250,000 more for a customized payroll program, one that slipped easily and nondisruptively into the computer-hostile social environment. Buyers of $50,000 office machines today cannot conceivably afford customized payroll programs; so they adapt their payroll procedures to the packages available. Computers are now so commonplace, if not yet so beloved, that the adaptations are accepted as a matter of course.","prefix":"cated than those of 20 years ago. ","suffix":"There are dramatic exceptions to"},{"type":"PageSelector","index":12,"label":"13"}]}]}
+>```
+>%%
+>*%%PREFIX%%cated than those of 20 years ago.%%HIGHLIGHT%% ==The big change has been in the hardware/software cost ratio. The buyer of a $2- million machine in 1960 felt that he could afford $250,000 more for a customized payroll program, one that slipped easily and nondisruptively into the computer-hostile social environment. Buyers of $50,000 office machines today cannot conceivably afford customized payroll programs; so they adapt their payroll procedures to the packages available. Computers are now so commonplace, if not yet so beloved, that the adaptations are accepted as a matter of course.== %%POSTFIX%%There are dramatic exceptions to*
+>%%LINK%%[[#^y1gz1ngkwvm|show annotation]]
+>%%COMMENT%%
+>.
+>%%TAGS%%
+>
+^y1gz1ngkwvm
+
+
+>%%
+>```annotation-json
+>{"created":"2026-11-10T13:09:47.965Z","text":".","updated":"2026-11-10T13:09:47.965Z","document":{"title":"No Silver Bullet – Essence and Accident in Software Engineering","link":[{"href":"urn:x-pdf:4c3b2ffb168efc85024df33a5623b254"},{"href":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf"}],"documentFingerprint":"4c3b2ffb168efc85024df33a5623b254"},"uri":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","target":[{"source":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","selector":[{"type":"TextPositionSelector","start":39672,"end":39926},{"type":"TextQuoteSelector","exact":"Many users now operate their own computers day in and day out on varied applications without ever writing a program. Indeed, many of these users cannot write new programs for their machines, but they are nevertheless adept at solving new problems with them.","prefix":"routinely done with these tools. ","suffix":"I believe the single most powerf"},{"type":"PageSelector","index":12,"label":"13"}]}]}
+>```
+>%%
+>*%%PREFIX%%routinely done with these tools.%%HIGHLIGHT%% ==Many users now operate their own computers day in and day out on varied applications without ever writing a program. Indeed, many of these users cannot write new programs for their machines, but they are nevertheless adept at solving new problems with them.== %%POSTFIX%%I believe the single most powerf*
+>%%LINK%%[[#^z8uqeaqsds|show annotation]]
+>%%COMMENT%%
+>.
+>%%TAGS%%
+>
+^z8uqeaqsds
+
+
+>%%
+>```annotation-json
+>{"created":"2026-11-10T13:09:54.490Z","text":".","updated":"2026-11-10T13:09:54.490Z","document":{"title":"No Silver Bullet – Essence and Accident in Software Engineering","link":[{"href":"urn:x-pdf:4c3b2ffb168efc85024df33a5623b254"},{"href":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf"}],"documentFingerprint":"4c3b2ffb168efc85024df33a5623b254"},"uri":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","target":[{"source":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","selector":[{"type":"TextPositionSelector","start":40204,"end":40313},{"type":"TextQuoteSelector","exact":"The same strategy, with simple programming capabilities, will also work for hundreds of laboratory scientists.","prefix":"t programs, and turn them loose. ","suffix":"Requirements refinement and rapi"},{"type":"PageSelector","index":12,"label":"13"}]}]}
+>```
+>%%
+>*%%PREFIX%%t programs, and turn them loose.%%HIGHLIGHT%% ==The same strategy, with simple programming capabilities, will also work for hundreds of laboratory scientists.== %%POSTFIX%%Requirements refinement and rapi*
+>%%LINK%%[[#^zm63kpzvr2q|show annotation]]
+>%%COMMENT%%
+>.
+>%%TAGS%%
+>
+^zm63kpzvr2q
+
+
+>%%
+>```annotation-json
+>{"created":"2026-11-10T13:10:08.183Z","text":".","updated":"2026-11-10T13:10:08.183Z","document":{"title":"No Silver Bullet – Essence and Accident in Software Engineering","link":[{"href":"urn:x-pdf:4c3b2ffb168efc85024df33a5623b254"},{"href":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf"}],"documentFingerprint":"4c3b2ffb168efc85024df33a5623b254"},"uri":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","target":[{"source":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","selector":[{"type":"TextPositionSelector","start":40313,"end":40449},{"type":"TextQuoteSelector","exact":"Requirements refinement and rapid prototyping. The hardest single part of building a software system is deciding precisely what to build.","prefix":"ndreds of laboratory scientists. ","suffix":" No other part of the conceptual"},{"type":"PageSelector","index":12,"label":"13"}]}]}
+>```
+>%%
+>*%%PREFIX%%ndreds of laboratory scientists.%%HIGHLIGHT%% ==Requirements refinement and rapid prototyping. The hardest single part of building a software system is deciding precisely what to build.== %%POSTFIX%%No other part of the conceptual*
+>%%LINK%%[[#^14gm56fc3zwd|show annotation]]
+>%%COMMENT%%
+>.
+>%%TAGS%%
+>
+^14gm56fc3zwd
+
+
+>%%
+>```annotation-json
+>{"created":"2026-11-10T13:10:43.052Z","text":".","updated":"2026-11-10T13:10:43.052Z","document":{"title":"No Silver Bullet – Essence and Accident in Software Engineering","link":[{"href":"urn:x-pdf:4c3b2ffb168efc85024df33a5623b254"},{"href":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf"}],"documentFingerprint":"4c3b2ffb168efc85024df33a5623b254"},"uri":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","target":[{"source":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","selector":[{"type":"TextPositionSelector","start":40912,"end":40968},{"type":"TextQuoteSelector","exact":"For the truth is, the clients do not know what they want.","prefix":"nt of the product requirements. ","suffix":" They usually do not know what q"},{"type":"PageSelector","index":12,"label":"13"}]}]}
+>```
+>%%
+>*%%PREFIX%%nt of the product requirements.%%HIGHLIGHT%% ==For the truth is, the clients do not know what they want.== %%POSTFIX%%They usually do not know what q*
+>%%LINK%%[[#^spwoqgulnam|show annotation]]
+>%%COMMENT%%
+>.
+>%%TAGS%%
+>
+^spwoqgulnam
+
+
+>%%
+>```annotation-json
+>{"created":"2026-11-10T13:10:54.746Z","text":".","updated":"2026-11-10T13:10:54.746Z","document":{"title":"No Silver Bullet – Essence and Accident in Software Engineering","link":[{"href":"urn:x-pdf:4c3b2ffb168efc85024df33a5623b254"},{"href":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf"}],"documentFingerprint":"4c3b2ffb168efc85024df33a5623b254"},"uri":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","target":[{"source":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","selector":[{"type":"TextPositionSelector","start":41113,"end":41244},{"type":"TextQuoteSelector","exact":"Even the simple answer−”Make the new software system work like our old manual information-processing system” −is in fact too simple.","prefix":"e detail that must be specified. ","suffix":" Clients never want exactly that."},{"type":"PageSelector","index":12,"label":"13"}]}]}
+>```
+>%%
+>*%%PREFIX%%e detail that must be specified.%%HIGHLIGHT%% ==Even the simple answer−”Make the new software system work like our old manual information-processing system” −is in fact too simple.== %%POSTFIX%%Clients never want exactly that.*
+>%%LINK%%[[#^eikgl68ua48|show annotation]]
+>%%COMMENT%%
+>.
+>%%TAGS%%
+>
+^eikgl68ua48
+
+
+>%%
+>```annotation-json
+>{"created":"2026-11-10T13:11:26.033Z","text":".","updated":"2026-11-10T13:11:26.033Z","document":{"title":"No Silver Bullet – Essence and Accident in Software Engineering","link":[{"href":"urn:x-pdf:4c3b2ffb168efc85024df33a5623b254"},{"href":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf"}],"documentFingerprint":"4c3b2ffb168efc85024df33a5623b254"},"uri":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","target":[{"source":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","selector":[{"type":"TextPositionSelector","start":41561,"end":41860},{"type":"TextQuoteSelector","exact":"I would go a step further and assert that it is really impossible for clients, even those working with software engineers, to specify completely, precisely, and correctly the exact requirements of a modern software product before having built and tried some versions of the product they are specifying.","prefix":"s part of the system definition. ","suffix":""},{"type":"PageSelector","index":12,"label":"13"}]}]}
+>```
+>%%
+>*%%PREFIX%%s part of the system definition.%%HIGHLIGHT%% ==I would go a step further and assert that it is really impossible for clients, even those working with software engineers, to specify completely, precisely, and correctly the exact requirements of a modern software product before having built and tried some versions of the product they are specifying.== %%POSTFIX%%*
+>%%LINK%%[[#^k3d5e5ivcdq|show annotation]]
+>%%COMMENT%%
+>.
+>%%TAGS%%
+>
+^k3d5e5ivcdq
+
+
+>%%
+>```annotation-json
+>{"created":"2026-11-10T13:12:21.506Z","text":".","updated":"2026-11-10T13:12:21.506Z","document":{"title":"No Silver Bullet – Essence and Accident in Software Engineering","link":[{"href":"urn:x-pdf:4c3b2ffb168efc85024df33a5623b254"},{"href":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf"}],"documentFingerprint":"4c3b2ffb168efc85024df33a5623b254"},"uri":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","target":[{"source":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","selector":[{"type":"TextPositionSelector","start":42610,"end":42749},{"type":"TextQuoteSelector","exact":"The purpose of the prototype is to make real the conceptual structure specified, so that the client can test it for consistency and usability","prefix":"lid inputs, abort cleanly, etc. ","suffix":"Much of present-day software acq"},{"type":"PageSelector","index":13,"label":"14"}]}]}
+>```
+>%%
+>*%%PREFIX%%lid inputs, abort cleanly, etc.%%HIGHLIGHT%% ==The purpose of the prototype is to make real the conceptual structure specified, so that the client can test it for consistency and usability== %%POSTFIX%%Much of present-day software acq*
+>%%LINK%%[[#^l6116faqbyh|show annotation]]
+>%%COMMENT%%
+>.
+>%%TAGS%%
+>
+^l6116faqbyh
+
+
+>%%
+>```annotation-json
+>{"created":"2026-11-10T13:13:07.455Z","text":"https://agilemanifesto.org/authors.html","updated":"2026-11-10T13:13:07.455Z","document":{"title":"No Silver Bullet – Essence and Accident in Software Engineering","link":[{"href":"urn:x-pdf:4c3b2ffb168efc85024df33a5623b254"},{"href":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf"}],"documentFingerprint":"4c3b2ffb168efc85024df33a5623b254"},"uri":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","target":[{"source":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","selector":[{"type":"TextPositionSelector","start":42749,"end":43058},{"type":"TextQuoteSelector","exact":"Much of present-day software acquisition procedures rests upon the assumption that one can specify a satisfactory system in advance, get bids for its construction, have it built, and install it. I think this assumption is fundamentally wrong, and that many software acquisition problems spring from that fallacy.","prefix":" it for consistency and usability ","suffix":" Hence they cannot be fixed witho"},{"type":"PageSelector","index":13,"label":"14"}]}]}
+>```
+>%%
+>*%%PREFIX%%it for consistency and usability%%HIGHLIGHT%% ==Much of present-day software acquisition procedures rests upon the assumption that one can specify a satisfactory system in advance, get bids for its construction, have it built, and install it. I think this assumption is fundamentally wrong, and that many software acquisition problems spring from that fallacy.== %%POSTFIX%%Hence they cannot be fixed witho*
+>%%LINK%%[[#^ta0co6qjc6d|show annotation]]
+>%%COMMENT%%
+>https://agilemanifesto.org/authors.html
+>%%TAGS%%
+>
+^ta0co6qjc6d
+
+
+>%%
+>```annotation-json
+>{"created":"2026-11-10T13:13:35.689Z","text":".","updated":"2026-11-10T13:13:35.689Z","document":{"title":"No Silver Bullet – Essence and Accident in Software Engineering","link":[{"href":"urn:x-pdf:4c3b2ffb168efc85024df33a5623b254"},{"href":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf"}],"documentFingerprint":"4c3b2ffb168efc85024df33a5623b254"},"uri":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","target":[{"source":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","selector":[{"type":"TextPositionSelector","start":43203,"end":43253},{"type":"TextQuoteSelector","exact":"Incremental development−grow, not build, software.","prefix":"tion of prototypes and products. ","suffix":" I still remember the jolt I fel"},{"type":"PageSelector","index":13,"label":"14"}]}]}
+>```
+>%%
+>*%%PREFIX%%tion of prototypes and products.%%HIGHLIGHT%% ==Incremental development−grow, not build, software.== %%POSTFIX%%I still remember the jolt I fel*
+>%%LINK%%[[#^ucs8dz59q1g|show annotation]]
+>%%COMMENT%%
+>.
+>%%TAGS%%
+>
+^ucs8dz59q1g
+
+
+>%%
+>```annotation-json
+>{"created":"2026-11-10T13:13:56.542Z","text":".","updated":"2026-11-10T13:13:56.542Z","document":{"title":"No Silver Bullet – Essence and Accident in Software Engineering","link":[{"href":"urn:x-pdf:4c3b2ffb168efc85024df33a5623b254"},{"href":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf"}],"documentFingerprint":"4c3b2ffb168efc85024df33a5623b254"},"uri":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","target":[{"source":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","selector":[{"type":"TextPositionSelector","start":43687,"end":43736},{"type":"TextQuoteSelector","exact":"The building metaphor has outlived its usefulness","prefix":" of components, and scaffolding. ","suffix":". It is time to change again. If"},{"type":"PageSelector","index":13,"label":"14"}]}]}
+>```
+>%%
+>*%%PREFIX%%of components, and scaffolding.%%HIGHLIGHT%% ==The building metaphor has outlived its usefulness== %%POSTFIX%%. It is time to change again. If*
+>%%LINK%%[[#^l87arq847gq|show annotation]]
+>%%COMMENT%%
+>.
+>%%TAGS%%
+>
+^l87arq847gq
+
+
+>%%
+>```annotation-json
+>{"created":"2026-11-10T13:14:51.449Z","text":".","updated":"2026-11-10T13:14:51.449Z","document":{"title":"No Silver Bullet – Essence and Accident in Software Engineering","link":[{"href":"urn:x-pdf:4c3b2ffb168efc85024df33a5623b254"},{"href":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf"}],"documentFingerprint":"4c3b2ffb168efc85024df33a5623b254"},"uri":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","target":[{"source":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","selector":[{"type":"TextPositionSelector","start":45231,"end":45384},{"type":"TextQuoteSelector","exact":"Mills, H. D., “Top-down programming in large systems,” Debugging Techniques in Large Systems, R. Rustin, ed., Englewood Cliffs, N.J., Prentice-Hall, 1971.","prefix":"out of what is already there. 11 ","suffix":""},{"type":"PageSelector","index":13,"label":"14"}]}]}
+>```
+>%%
+>*%%PREFIX%%out of what is already there. 11%%HIGHLIGHT%% ==Mills, H. D., “Top-down programming in large systems,” Debugging Techniques in Large Systems, R. Rustin, ed., Englewood Cliffs, N.J., Prentice-Hall, 1971.== %%POSTFIX%%*
+>%%LINK%%[[#^h6tmealho1b|show annotation]]
+>%%COMMENT%%
+>.
+>%%TAGS%%
+>
+^h6tmealho1b
+
+
+>%%
+>```annotation-json
+>{"created":"2026-11-10T13:15:41.748Z","text":".","updated":"2026-11-10T13:15:41.748Z","document":{"title":"No Silver Bullet – Essence and Accident in Software Engineering","link":[{"href":"urn:x-pdf:4c3b2ffb168efc85024df33a5623b254"},{"href":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf"}],"documentFingerprint":"4c3b2ffb168efc85024df33a5623b254"},"uri":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","target":[{"source":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","selector":[{"type":"TextPositionSelector","start":43975,"end":44305},{"type":"TextQuoteSelector","exact":"Let us turn to nature and study complexity in living things, instead of just the dead works of man. Here we find constructs whose complexities thrill us with awe. The brain alone is intricate beyond mapping, powerful beyond imitation, rich in diversity, self- protecting, and self-renewing. The secret is that it is grown, not built.","prefix":"e a radically different approach. ","suffix":"So it must be with our software "},{"type":"PageSelector","index":13,"label":"14"}]}]}
+>```
+>%%
+>*%%PREFIX%%e a radically different approach.%%HIGHLIGHT%% ==Let us turn to nature and study complexity in living things, instead of just the dead works of man. Here we find constructs whose complexities thrill us with awe. The brain alone is intricate beyond mapping, powerful beyond imitation, rich in diversity, self- protecting, and self-renewing. The secret is that it is grown, not built.== %%POSTFIX%%So it must be with our software*
+>%%LINK%%[[#^z9rqoddbhek|show annotation]]
+>%%COMMENT%%
+>.
+>%%TAGS%%
+>
+^z9rqoddbhek
