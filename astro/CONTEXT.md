@@ -32,6 +32,13 @@ _Avoid_: merged vault, build vault
 A Markdown or MDX file of the vault.
 _Avoid_: page (what a published note has), document, file (a note is one kind)
 
+**Description**:
+What a note is about, said outside its text for whoever meets it before reading it: in a search
+result, a share card, a listing. Its `description` property, or when that is missing or empty, its
+first paragraph; a private page's is site configuration's private description instead, never its
+text. Every place that shows a note's description shows this one.
+_Avoid_: summary, excerpt, blurb
+
 **Attachment**:
 A file of the vault that is not a note: an image, a PDF, a drawing's exported SVG.
 _Avoid_: asset (that is a file of this project's, under `src/assets`), static file
@@ -308,8 +315,8 @@ _Avoid_: download, cached PDF
 
 **Page range**:
 The pages of its annotated document a note's annotations are on, which its `annotation-pages`
-property holds (`12-40`, `3-5, 9`), and which the Annotator plugin shows alone. A note with none
-is on every page.
+property holds (`12-40`, `3-5, 9`), and which the Annotator plugin shows alone. A set of pages:
+the order and overlap of what is written mean nothing. A note with none is on every page.
 _Avoid_: chapter (what a range often is, not what it is called)
 
 **Slice**:
