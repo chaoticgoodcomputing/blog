@@ -46,7 +46,7 @@ beforeAll(async () => {
 afterAll(() => fs.rmSync(root, { recursive: true, force: true }))
 
 test("the graph index holds every published note, with its title, date, tags and the notes it links to or embeds", () => {
-  expect(graphIndex({ vault, index: notes }).notes.filter((note) => !note.url.startsWith("/tags/"))).toEqual([
+  expect(graphIndex({ index: notes }).notes.filter((note) => !note.url.startsWith("/tags/"))).toEqual([
     { url: "/far", title: "Far", date: "2026-01-01T00:00:00.000Z", tags: [], links: ["/spoke"], private: false },
     {
       url: "/guide",
@@ -130,12 +130,12 @@ test("a graph's edges join a note to each note it links to, a note to each tag i
 })
 
 test("the graph index holds each tag description note at its tag page's address, with the notes it links to", () => {
-  const index = graphIndex({ vault, index: notes })
+  const index = graphIndex({ index: notes })
   expect(index.notes.find((note) => note.url === "/tags/writing")).toMatchObject({ title: "Writing", links: ["/spoke"] })
 })
 
 test("a link to a tag's page is an edge to the tag's node, and its description note's links are the tag's", () => {
-  const graph = graphOf(graphIndex({ vault, index: notes }), { removeTags: [], privatePages: "mark" })
+  const graph = graphOf(graphIndex({ index: notes }), { removeTags: [], privatePages: "mark" })
   expect(graph.nodes.filter((node) => node.id === "/tags/writing")).toEqual([
     { id: "/tags/writing", kind: "tag", label: "#writing", tag: "writing", private: false },
   ])

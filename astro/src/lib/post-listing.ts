@@ -3,12 +3,10 @@
 // `site.private` says of other features: a listing that marked one would still be a list of the
 // site's private pages. A fragment (`site.fragments`) is in the tag pages' listings, not the home page's.
 
-import type { Vault } from "@chaoticgoodcomputing/obsidian-markdown"
-import { getNotes, isFragment, isHomeNote, newestFirst, tagsOf, type Note } from "./notes.ts"
+import { getNoteIndex, getNotes, isFragment, isHomeNote, newestFirst, tagsOf, type Note, type NoteIndex } from "./notes.ts"
 import { lists, postListing } from "../site.config.ts"
 import type { ListingPageConfig, ListingPageKind, ListsConfig, Paging, PostListingConfig, PostOrder } from "../site.config.types.ts"
 import { isUnderTag } from "./tags.ts"
-import { getVault } from "./vault.ts"
 
 /**
  * The posts a listing shows, newest first: every post, or with `tag` those carrying it or a tag
@@ -40,23 +38,21 @@ export function postCounts(notes: Note[] = getNotes()): Map<string, number> {
  * so neither does one only a private page can see. Keyed by the post's address; a post no other
  * post links to has none.
  */
-export function postBacklinkCounts(notes: Note[] = getNotes(), vault: Vault = getVault()): Map<string, number> {
-  const posts = listedPosts(undefined, notes)
-  const byPath = new Map(posts.map((post) => [post.file.path, post]))
+export function postBacklinkCounts(index: NoteIndex = getNoteIndex()): Map<string, number> {
+  const posts = listedPosts(undefined, index.notes)
+  const isPost = new Set(posts.map((post) => post.url))
   const counts = new Map<string, number>()
   for (const source of posts) {
-    for (const target of Object.keys(vault.metadataCache.resolvedLinks[source.file.path] ?? {})) {
-      const post = byPath.get(target)
-      if (post && post !== source) counts.set(post.url, (counts.get(post.url) ?? 0) + 1)
+    for (const { url } of index.outlinks(source)) {
+      if (isPost.has(url)) counts.set(url, (counts.get(url) ?? 0) + 1)
     }
   }
   return counts
 }
 
 export interface CentralityOptions {
-  /** The notes, and the vault their links are read from. The site's by default. */
-  notes?: Note[]
-  vault?: Vault
+  /** The notes index the posts and their links are read from. The site's by default. */
+  index?: NoteIndex
   /** How many mentions each note has, by its address (`mentionCounts`). None by default. */
   mentions?: Map<string, number>
   /** What one mention is worth beside one backlink from a post. The site's by default. */
@@ -70,10 +66,10 @@ export interface CentralityOptions {
  * backlinks from every post of the site.
  */
 export function centralPosts(tag?: string, options: CentralityOptions = {}): Note[] {
-  const { notes = getNotes(), vault = getVault(), mentions = new Map(), mentionWeight = postListing.mentionWeight } = options
-  const backlinks = postBacklinkCounts(notes, vault)
+  const { index = getNoteIndex(), mentions = new Map(), mentionWeight = postListing.mentionWeight } = options
+  const backlinks = postBacklinkCounts(index)
   const score = (note: Note) => (backlinks.get(note.url) ?? 0) + mentionWeight * (mentions.get(note.url) ?? 0)
-  return listedPosts(tag, notes)
+  return listedPosts(tag, index.notes)
     .filter((note) => score(note) > 0)
     .sort((a, b) => score(b) - score(a) || newestFirst(a, b))
 }

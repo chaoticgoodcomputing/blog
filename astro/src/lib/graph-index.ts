@@ -8,15 +8,12 @@
 // graph draws the note's links as the tag's, and a link to the note or to the tag's page as one to
 // the tag.
 
-import type { Vault } from "@chaoticgoodcomputing/obsidian-markdown"
 import type { GraphIndex, IndexedNote } from "./graph.ts"
-import { getNotes, getUnpublished, noteOf, unpublished, urlOfPath, type Note, type NoteFacts, type NoteIndex } from "./notes.ts"
+import { getNoteIndex, getNotes, getUnpublished, unpublished, type Note, type NoteFacts, type NoteIndex } from "./notes.ts"
 import { tagAt } from "./page.ts"
-import { getVault } from "./vault.ts"
 
 export interface GraphIndexOptions {
-  /** The vault and its notes' index. The site's by default; a test passes a vault of its own. */
-  vault?: Vault
+  /** The notes index. The site's by default; a test passes one of its own. */
   index?: NoteIndex
 }
 
@@ -34,10 +31,9 @@ const isTagPage = (url: string | undefined): url is string => url !== undefined 
  * unpublished note or to an attachment is not among them.
  */
 export function graphIndex(options: GraphIndexOptions = {}): GraphIndex {
-  const { vault = getVault(), index } = options
+  const { index } = options
   const notes = index?.notes ?? getNotes()
-  const lookup = (file: string) => (index ? index.byPath.get(file) : noteOf(file))
-  const pageAt = index ? index.urlOfPath : urlOfPath
+  const linking = index ?? getNoteIndex()
   const cached = index ? undefined : built.get(notes)
   if (cached) return cached
 
@@ -46,20 +42,13 @@ export function graphIndex(options: GraphIndexOptions = {}): GraphIndex {
   const descriptions = ruledOut.filter((note) => isTagPage(note.url))
 
   const indexed = (note: NoteFacts, url: string): IndexedNote => {
-    const { resolvedLinks, unresolvedLinks } = vault.metadataCache
-    const links = [
-      ...Object.keys(resolvedLinks[note.file.path] ?? {}).map((file) => {
-        const linked = lookup(file)
-        return linked && (!("reason" in linked) || isTagPage(linked.url)) ? linked.url : undefined
-      }),
-      ...Object.keys(unresolvedLinks[note.file.path] ?? {}).map(pageAt),
-    ]
+    const links = [...linking.outlinks(note).map((linked) => linked.url), ...linking.tagLinks(note)]
     return {
       url,
       title: note.title,
       ...(note.date && { date: note.date.toISOString() }),
       tags: note.tags,
-      links: [...new Set(links.filter((link): link is string => link !== undefined && link !== url))],
+      links: [...new Set(links.filter((link) => link !== url))],
       private: note.isPrivate,
     }
   }

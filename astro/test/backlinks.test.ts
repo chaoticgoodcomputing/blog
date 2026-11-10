@@ -47,7 +47,7 @@ afterAll(() => fs.rmSync(root, { recursive: true, force: true }))
 const untagged = ({ tags: _, ...link }: Backlink) => link
 
 const backlinks = (note: string, treatment: "omit" | "mark") =>
-  backlinksOf(index.byId.get(note)!, { treatment, vault, index }).map(untagged)
+  backlinksOf(index.byId.get(note)!, { treatment, index }).map(untagged)
 
 test("a note's backlinks are the pages that link to or embed it, once each, newest first by date, then the undated", () => {
   // A page's summary is its description, else its first paragraph: none for one that only embeds.
@@ -73,7 +73,7 @@ test("a note nothing links to has no backlinks", () => {
 })
 
 const outlinks = (note: string, treatment: "omit" | "mark") =>
-  outlinksOf(index.byId.get(note)!, { treatment, vault, index }).map(untagged)
+  outlinksOf(index.byId.get(note)!, { treatment, index }).map(untagged)
 
 test("a note's outlinks are the pages it links to or embeds, once each, newest first by date, then the undated", () => {
   // Not itself, a drawing, which has no page, or a link to no note. Not in the order the note links
@@ -99,7 +99,7 @@ test("a note that links nowhere has no outlinks", () => {
 })
 
 test("a link carries its page's own tags, which the panel shows as tag badges", () => {
-  const tags = backlinksOf(index.byId.get("target")!, { treatment: "mark", vault, index }).map((link) => [link.title, link.tags])
+  const tags = backlinksOf(index.byId.get("target")!, { treatment: "mark", index }).map((link) => [link.title, link.tags])
   expect(tags).toContainEqual(["Old", []])
   expect(tags).toContainEqual(["Work", ["private/work"]])
 })

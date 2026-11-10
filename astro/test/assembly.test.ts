@@ -228,7 +228,7 @@ describe("a link written with a public/ or private/ prefix", () => {
     const index = indexNotes(linked)
     for (const target of ["content/notes/periodic/2024-03-15.md", "content/articles/post.md"]) {
       const note = index.byPath.get(target)!
-      const titles = backlinksOf(note, { vault: linked, index, treatment: "mark" }).map(({ title }) => title)
+      const titles = backlinksOf(note, { index, treatment: "mark" }).map(({ title }) => title)
       expect(titles, target).toEqual(["Linking"])
     }
   })

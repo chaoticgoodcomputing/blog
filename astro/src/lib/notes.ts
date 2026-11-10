@@ -142,7 +142,20 @@ export interface NoteIndex {
    * its answer for any file.
    */
   linksDigest: string
+  /**
+   * A note's outlinks: the notes it links to or embeds that have a page, each once, in the order
+   * it first links them. Not itself, and not a note with no page, such as a drawing: a link there
+   * goes nowhere. A tag's description note leads to its tag's page.
+   */
+  outlinks: (note: NoteFacts) => LinkedNote[]
+  /** A note's backlinks: the notes with a page that link to or embed it, each once. Not itself. */
+  backlinks: (note: NoteFacts) => LinkedNote[]
+  /** The tags' pages a note links to by a path no file has (`urlOfPath`), each once. */
+  tagLinks: (note: NoteFacts) => string[]
 }
+
+/** A note a link leads to: one with a page. */
+export type LinkedNote = (Note | UnpublishedNote) & { url: string }
 
 // Whether a path of the vault is under a folder of it: `content/a.md` is under `content`, and
 // `contents.md` is not.
@@ -170,7 +183,20 @@ export function indexNotes(vault: Vault, rules: Unpublished[] = unpublished): No
     },
     urlOfPath: (linkpath) => tagPageAt(linkpath, index.notes),
     linksDigest: "",
+    outlinks: (note) => linked(Object.keys(vault.metadataCache.resolvedLinks[note.file.path] ?? {}), note),
+    backlinks: (note) => linked([...vault.metadataCache.getBacklinksForFile(note.file).keys()], note),
+    tagLinks: (note) => [
+      ...new Set(
+        Object.keys(vault.metadataCache.unresolvedLinks[note.file.path] ?? {}).flatMap((linkpath) => index.urlOfPath(linkpath) ?? []),
+      ),
+    ],
   }
+  // The notes at `files` that have a page, each once, `from` left out.
+  const linked = (files: string[], from: NoteFacts): LinkedNote[] =>
+    files.flatMap((file) => {
+      const to = index.byPath.get(file)
+      return to?.url !== undefined && file !== from.file.path ? [to as LinkedNote] : []
+    })
 
   const ruled: [UnpublishedNote, Unpublished][] = []
   for (const file of vault.getMarkdownFiles()) {
@@ -240,6 +266,9 @@ const current = (): NoteIndex => {
 export const isHomeNote = (note: Pick<Note, "url">): boolean => note.url === "/"
 
 /** Every published note, by path. */
+/** The site's notes index, as the vault was last read. */
+export const getNoteIndex = (): NoteIndex => current()
+
 export const getNotes = (): Note[] => current().notes
 
 /** Every published note whose page is not a private page. */

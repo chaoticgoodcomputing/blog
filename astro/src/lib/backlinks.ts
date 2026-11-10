@@ -1,14 +1,12 @@
 // A note's backlinks, the pages that link to it, and its outlinks, the pages it links to, an
-// embed counting as a link, as the vault's metadata cache has them. Which of them a reader is shown,
+// embed counting as a link, as the notes index has them. Which of them a reader is shown,
 // and in what order, is the site's: a private page is left out or marked, as site configuration's
 // `private.backlinks` says, for both.
 
-import type { Vault } from "@chaoticgoodcomputing/obsidian-markdown"
 import { site } from "../site.config.ts"
 import type { PrivateTreatment } from "../site.config.types.ts"
 import { annotatedFileType } from "./annotations.ts"
-import { newestFirst, noteOf, type NoteFacts, type NoteIndex } from "./notes.ts"
-import { getVault } from "./vault.ts"
+import { getNoteIndex, newestFirst, type LinkedNote, type NoteFacts, type NoteIndex } from "./notes.ts"
 
 /** One page that links to a note, or that a note links to, as the related content lists it. */
 export interface Backlink {
@@ -29,8 +27,7 @@ export interface Backlink {
 export interface BacklinkOptions {
   /** How a private page is treated. The site's `private.backlinks` by default. */
   treatment?: PrivateTreatment
-  /** The vault and its notes' index. The site's by default; a test passes a vault of its own. */
-  vault?: Vault
+  /** The notes index. The site's by default; a test passes one of its own. */
   index?: NoteIndex
 }
 
@@ -40,8 +37,7 @@ export interface BacklinkOptions {
  * not among them.
  */
 export function backlinksOf(note: NoteFacts, options: BacklinkOptions = {}): Backlink[] {
-  const vault = options.vault ?? getVault()
-  return listed([...vault.metadataCache.getBacklinksForFile(note.file).keys()], options)
+  return listed((options.index ?? getNoteIndex()).backlinks(note), options)
 }
 
 /**
@@ -49,23 +45,17 @@ export function backlinksOf(note: NoteFacts, options: BacklinkOptions = {}): Bac
  * note it links to that has no address of its own, such as a drawing, are not among them.
  */
 export function outlinksOf(note: NoteFacts, options: BacklinkOptions = {}): Backlink[] {
-  const vault = options.vault ?? getVault()
-  const files = Object.keys(vault.metadataCache.resolvedLinks[note.file.path] ?? {})
-  return listed(files.filter((file) => file !== note.file.path), options)
+  return listed((options.index ?? getNoteIndex()).outlinks(note), options)
 }
 
 /**
- * The pages at `files` as the panel lists them: those with an address, a private one left out or
+ * The pages of `pages` as the panel lists them: a private one left out or
  * kept as `treatment` says; public pages first, then newest first by date, by title on the same
  * day, and undated pages, such as tag pages, after every dated one (`newestFirst`).
  */
-function listed(files: string[], { treatment = site.private.backlinks, index }: BacklinkOptions): Backlink[] {
-  const lookup = (file: string) => (index ? index.byPath.get(file) : noteOf(file))
-  return files
-    .flatMap((file) => {
-      const page = lookup(file)
-      return page?.url ? [{ page, url: page.url }] : []
-    })
+function listed(pages: LinkedNote[], { treatment = site.private.backlinks }: BacklinkOptions): Backlink[] {
+  return pages
+    .map((page) => ({ page, url: page.url }))
     .filter(({ page }) => treatment === "mark" || !page.isPrivate)
     .sort((a, b) => Number(a.page.isPrivate) - Number(b.page.isPrivate) || newestFirst(a.page, b.page))
     .map(({ page, url }) => linkTo(page, url))

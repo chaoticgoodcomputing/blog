@@ -1,9 +1,8 @@
 import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
-import type { Vault } from "@chaoticgoodcomputing/obsidian-markdown"
 import { afterAll, beforeAll, expect, test } from "vitest"
-import { indexNotes, type Note } from "../src/lib/notes.ts"
+import { indexNotes, type Note, type NoteIndex } from "../src/lib/notes.ts"
 import { centralPosts, postBacklinkCounts } from "../src/lib/post-listing.ts"
 import { openVault } from "../src/lib/vault.ts"
 
@@ -21,14 +20,12 @@ const FILES: Record<string, string> = {
 }
 
 let root: string
-let vault: Vault
-let notes: Note[]
+let index: NoteIndex
 
 beforeAll(async () => {
   root = fs.mkdtempSync(path.join(os.tmpdir(), "astro-central-"))
   for (const [file, contents] of Object.entries(FILES)) fs.writeFileSync(path.join(root, file), contents)
-  vault = await openVault(root)
-  notes = indexNotes(vault, []).notes
+  index = indexNotes(await openVault(root), [])
 })
 
 afterAll(() => fs.rmSync(root, { recursive: true, force: true }))
@@ -36,7 +33,7 @@ afterAll(() => fs.rmSync(root, { recursive: true, force: true }))
 const titles = (posts: Note[]) => posts.map((note) => note.title)
 
 test("a post's count is how many other posts link to or embed it, each once", () => {
-  const counts = postBacklinkCounts(notes, vault)
+  const counts = postBacklinkCounts(index)
   expect(counts.get("/hub")).toBe(3)
   expect(counts.get("/spoke")).toBe(2)
   // Rim's link counts; its own, Secret's and the home note's don't.
@@ -45,26 +42,26 @@ test("a post's count is how many other posts link to or embed it, each once", ()
 })
 
 test("the central posts are those other posts link to, the most linked to first", () => {
-  expect(titles(centralPosts(undefined, { notes, vault }))).toEqual(["Hub", "Spoke", "Edge"])
+  expect(titles(centralPosts(undefined, { index }))).toEqual(["Hub", "Spoke", "Edge"])
 })
 
 test("on a tag page, the central posts under the tag, by backlinks from every post", () => {
-  expect(titles(centralPosts("garden", { notes, vault }))).toEqual(["Hub", "Spoke"])
+  expect(titles(centralPosts("garden", { index }))).toEqual(["Hub", "Spoke"])
 })
 
 test("a private page is never a central post", () => {
-  expect(titles(centralPosts(undefined, { notes, vault }))).not.toContain("Secret")
+  expect(titles(centralPosts(undefined, { index }))).not.toContain("Secret")
 })
 
 test("a mention counts as `mentionWeight` backlinks", () => {
   // Lone has no backlinks from posts; two mentions at three apiece put it past Hub's three.
   const mentions = new Map([["/lone", 2]])
-  expect(titles(centralPosts(undefined, { notes, vault, mentions, mentionWeight: 3 }))).toEqual(["Lone", "Hub", "Spoke", "Edge"])
+  expect(titles(centralPosts(undefined, { index, mentions, mentionWeight: 3 }))).toEqual(["Lone", "Hub", "Spoke", "Edge"])
   // At one apiece, it ties Spoke, and the newer of the two comes first.
-  expect(titles(centralPosts(undefined, { notes, vault, mentions, mentionWeight: 1 }))).toEqual(["Hub", "Lone", "Spoke", "Edge"])
+  expect(titles(centralPosts(undefined, { index, mentions, mentionWeight: 1 }))).toEqual(["Hub", "Lone", "Spoke", "Edge"])
 })
 
 test("a private page's mentions don't make it a central post", () => {
   const mentions = new Map([["/secret", 10]])
-  expect(titles(centralPosts(undefined, { notes, vault, mentions }))).not.toContain("Secret")
+  expect(titles(centralPosts(undefined, { index, mentions }))).not.toContain("Secret")
 })
