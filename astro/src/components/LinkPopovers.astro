@@ -8,8 +8,9 @@
 // It is at the end of the body of every page, and is one element, `<link-popovers>`, which listens
 // for the pointer over the whole page while it is there (README.md, "In the browser"). The preview
 // is a popover in the top layer, over the sidebars. It opens without moving focus, and never holds
-// it: it closes when the pointer leaves both it and its link, or on Escape. A click on it opens the
-// page, as a click on its link would; a click on a link in it follows that link instead.
+// it: it closes when the pointer leaves both it and its link, or on Escape, as every hover popover
+// does (src/lib/hover-popover.ts). A click on it opens the page, as a click on its link would; a
+// click on a link in it follows that link instead.
 //
 // What the body holds is shown as the page's HTML has it. Its scripts never run, and an element
 // that draws itself, a mermaid diagram, draws itself only where this page has its code: on a page
@@ -24,6 +25,8 @@
 </link-popovers>
 
 <script>
+  import { HoverPopover } from "../lib/hover-popover.ts"
+
   /** What a preview shows of a page: its title, if it has one, its rendered body, and the stylesheets the page links. */
   interface Preview {
     title: HTMLElement | null
@@ -98,54 +101,14 @@
     return url
   }
 
-  // A pointer that can rest on a link without following it, as a mouse can. A finger can't: on a
-  // touch screen the first touch of a link follows it, and there is no preview. A screen that has
-  // both, a laptop's, hovers with its mouse, and a touch on it is still a finger's.
-  const hovering = matchMedia("(hover: hover) and (pointer: fine)")
-
-  // How long the pointer rests on a link before its preview opens, so that one passing over a
-  // paragraph of links on its way elsewhere opens none; and how long a preview stays once the
-  // pointer is off both it and its link, so that one crossing the gap between them keeps it.
-  const OPENING = 300
-  const CLOSING = 150
-
-  // How far the preview is from the link, and from the edges of the window.
-  const GAP = 4
-  const MARGIN = 8
-
   class LinkPopovers extends HTMLElement {
     #popover!: HTMLElement
     #title!: HTMLElement
     #body!: HTMLElement
-    /** The link a preview is wanted for, so that one fetched too late for its link is not shown. */
-    #wanted: HTMLAnchorElement | undefined
-    #opening: ReturnType<typeof setTimeout> | undefined
-    #closing: ReturnType<typeof setTimeout> | undefined
-
-    #over = (event: PointerEvent) => {
-      if (!hovering.matches || event.pointerType === "touch") return
-      const target = event.target as Element
-      if (this.#popover.contains(target) || this.#wanted?.contains(target)) {
-        clearTimeout(this.#closing)
-        return
-      }
-      const link = target.closest?.<HTMLAnchorElement>("a[href]")
-      const url = link && previewed(link)
-      if (!link || !url) return
-      clearTimeout(this.#closing)
-      clearTimeout(this.#opening)
-      this.#wanted = link
-      this.#opening = setTimeout(() => void this.#open(link, url), OPENING)
-    }
-
-    // The preview closes when the pointer is on neither the link nor the preview.
-    #out = (event: PointerEvent) => {
-      if (!this.#wanted) return
-      const to = event.relatedTarget as Node | null
-      if (to && (this.#wanted.contains(to) || this.#popover.contains(to))) return
-      clearTimeout(this.#closing)
-      this.#closing = setTimeout(() => this.#close(), CLOSING)
-    }
+    #hover!: HoverPopover<HTMLAnchorElement>
+    #disconnect: (() => void) | undefined
+    /** What the open preview's link names on its page, which goes to the top of the body. */
+    #named: HTMLElement | null = null
 
     // A click on the preview is a click on its link, so that the page is reached as the link reaches
     // it: by the client router, along the trail (TrailSpines.astro). One with a modifier key, or the
@@ -153,21 +116,17 @@
     // preview, a form's control, a summary. A click that ends a drag across the text, to select it,
     // opens nothing.
     #click = (event: MouseEvent) => {
-      const link = this.#wanted
+      const link = this.#hover.wanted?.key
       if (!link || (event.button !== 0 && event.button !== 1)) return
       if ((event.target as Element).closest("a[href], button, input, select, textarea, label, summary")) return
       if (!(getSelection()?.isCollapsed ?? true)) return
       event.preventDefault()
-      this.#close()
+      this.#hover.close()
       if (event.button === 1 || event.ctrlKey || event.metaKey || event.shiftKey) {
         window.open(link.href, "_blank", "noopener")
       } else {
         link.click()
       }
-    }
-
-    #key = (event: KeyboardEvent) => {
-      if (event.key === "Escape") this.#close()
     }
 
     connectedCallback() {
@@ -176,31 +135,35 @@
       this.#body = this.querySelector(".link-popover-body")!
       this.#popover.addEventListener("click", this.#click)
       this.#popover.addEventListener("auxclick", this.#click)
-      document.addEventListener("pointerover", this.#over)
-      document.addEventListener("pointerout", this.#out)
-      document.addEventListener("keydown", this.#key)
+      this.#hover = new HoverPopover({
+        popover: this.#popover,
+        find: (target) => {
+          const link = target.closest?.<HTMLAnchorElement>("a[href]")
+          return link && previewed(link) ? { anchor: link, key: link } : undefined
+        },
+        fill: (link) => this.#fill(link),
+        // The heading or block the link names is at the top of the body, a little below the title.
+        opened: () => {
+          const preview = this.#body.lastElementChild!
+          this.#body.scrollTop = this.#named
+            ? this.#named.getBoundingClientRect().top - preview.getBoundingClientRect().top - 12
+            : 0
+        },
+      })
+      this.#disconnect = this.#hover.connect()
     }
 
     disconnectedCallback() {
-      document.removeEventListener("pointerover", this.#over)
-      document.removeEventListener("pointerout", this.#out)
-      document.removeEventListener("keydown", this.#key)
-      this.#close()
+      this.#disconnect?.()
     }
 
-    #close() {
-      clearTimeout(this.#opening)
-      clearTimeout(this.#closing)
-      this.#wanted = undefined
-      if (this.#popover.matches(":popover-open")) this.#popover.hidePopover()
-    }
-
-    async #open(link: HTMLAnchorElement, url: URL) {
+    async #fill(link: HTMLAnchorElement): Promise<boolean> {
+      const url = previewed(link)!
       const fetched = await previewOf(url.pathname)
-      if (!fetched || this.#wanted !== link) return
+      if (!fetched || this.#hover.wanted?.key !== link) return false
       const preview = fetched.body.cloneNode(true) as HTMLElement
       const id = decodeURIComponent(url.hash.slice(1))
-      const named = id ? preview.querySelector<HTMLElement>(`[id="${CSS.escape(id)}"]`) : null
+      this.#named = id ? preview.querySelector<HTMLElement>(`[id="${CSS.escape(id)}"]`) : null
       // The page already has the ids it needs: one in a preview would be a second, where a link to
       // a heading on this page might land.
       for (const element of preview.querySelectorAll("[id]")) element.removeAttribute("id")
@@ -215,22 +178,7 @@
       title?.classList.remove("p-name")
       this.#title.replaceChildren(...(title ? [title] : []))
       this.#body.replaceChildren(...missing(fetched.stylesheets).map((link) => link.cloneNode()), preview)
-      this.#popover.showPopover()
-      this.#place(link)
-      // The heading or block the link names is at the top of the body, a little below the title.
-      this.#body.scrollTop = named
-        ? named.getBoundingClientRect().top - preview.getBoundingClientRect().top - 12
-        : 0
-    }
-
-    /** Puts the preview under the link, or over it where there is more room there. */
-    #place(link: HTMLAnchorElement) {
-      const around = link.getBoundingClientRect()
-      const { width, height } = this.#popover.getBoundingClientRect()
-      const below = innerHeight - around.bottom
-      const top = below >= height + GAP + MARGIN || below >= around.top ? around.bottom + GAP : around.top - GAP - height
-      const left = Math.max(MARGIN, Math.min(around.left, innerWidth - width - MARGIN))
-      Object.assign(this.#popover.style, { top: `${top}px`, left: `${left}px` })
+      return true
     }
   }
 

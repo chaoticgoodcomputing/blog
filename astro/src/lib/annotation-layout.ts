@@ -4,83 +4,33 @@
 // takes the whole of the viewer's width, on a desktop as on a phone: the cards are in the drawer,
 // and beside the document only as its highlights' popovers.
 
-/**
- * The viewer's layouts: the cards alone, as the page is built (`static`); the document with the
- * cards in its margin; the document with the cards in a drawer.
- */
-export type Layout = "static" | "margin" | "drawer"
+/** The viewer's layouts: the cards alone, as the page is built (`static`); the document with the cards in a drawer. */
+export type Layout = "static" | "drawer"
 
 /** Lengths the layout is worked out from, in CSS pixels. */
 export interface Measures {
   /** The viewer's width: the site shell's content column. */
   available: number
-  /** A card's width: the margin's, and a tablet's drawer's. */
-  margin: number
-  /** The narrowest the document may be at 100% beside the margin. */
-  minDocument: number
-  /** The root font size, which the gap and the document's cap are in. */
-  rem: number
+  /** A card's width: the drawer's, but on a phone. */
+  card: number
 }
 
-/** What fits: the layout, the document's width, and, for the drawer, whether it is a phone's. */
+/** The document's width, and whether the drawer is a phone's. */
 export interface Fit {
-  layout: "margin" | "drawer"
-  /** The document's width at this zoom: wider than the column when zoomed past it. */
+  /** The document's width at this zoom: wider than the column when zoomed past 100%. */
   documentWidth: number
   /** The drawer covers most of the screen, and is modal: one a card wide would cover more than half. */
   mobile: boolean
 }
 
-/** A card's width: the margin's, and a tablet's drawer's. The Quartz annotator's `marginWidth`. */
-export const MARGIN_WIDTH = "20rem"
-/** The narrowest the document may be at 100% beside the margin. The Quartz annotator's `minDocumentWidth`. */
-export const MIN_DOCUMENT_WIDTH = "36rem"
+/** A card's width: the drawer's, but on a phone. The Quartz annotator's `marginWidth`. */
+export const CARD_WIDTH = "20rem"
 
-/** The gap between the document and the margin, in rem. */
-export const GAP = 3
-/** The widest the document is at 100% beside the margin, in rem. */
-export const CAP = 60
-
-/**
- * What fits the viewer at `zoom`. 100% is the fitted width: what the margin leaves the document, up
- * to the cap, where the margin fits beside `minDocument`, and the column's width otherwise. At zoom
- * `z` the document is `z` times that, and once the zoomed document and the margin no longer fit
- * side by side, the cards go to the drawer, where the document takes at least the column.
- */
-export function fit(m: Measures, zoom: number): Fit {
-  const mobile = m.margin > m.available / 2
-  const gap = GAP * m.rem
-  const desktop = m.minDocument + m.margin + gap <= m.available
-  if (desktop) {
-    const width = zoom * Math.min(CAP * m.rem, m.available - m.margin - gap)
-    if (width + m.margin + gap <= m.available) return { layout: "margin", documentWidth: width, mobile }
-    // Zoomed out of the margin: the drawer's document takes the column, or more.
-    return { layout: "drawer", documentWidth: Math.max(width, m.available), mobile }
-  }
-  return { layout: "drawer", documentWidth: zoom * m.available, mobile }
-}
-
-/**
- * Where each card's top goes in the margin, in its order down the page: level with its passage
- * (`desired`), or just below the card above it, so none overlap. The selected card, if any, is
- * level with its passage, and the cards above it move up to make room, as far as the top.
- */
-export function stack(desired: number[], heights: number[], selected: number, gap: number): number[] {
-  const tops: number[] = []
-  const below = (i: number) => tops[i - 1]! + heights[i - 1]! + gap
-  const down = (from: number) => {
-    for (let i = from; i < desired.length; i++) tops[i] = i === 0 ? Math.max(0, desired[i]!) : Math.max(desired[i]!, below(i))
-  }
-  down(0)
-  if (selected < 0 || selected >= desired.length) return tops
-  tops[selected] = Math.max(0, desired[selected]!)
-  for (let i = selected - 1; i >= 0; i--) tops[i] = Math.min(tops[i]!, tops[i + 1]! - gap - heights[i]!)
-  // Pushed above the top, the cards stack from the top down, the selected one as near its passage
-  // as they let it be.
-  if (tops[0]! < 0) down(0)
-  else for (let i = selected + 1; i < desired.length; i++) tops[i] = Math.max(desired[i]!, below(i))
-  return tops
-}
+/** What fits the viewer at `zoom`. 100% is the viewer's width; at zoom `z` the document is `z` times that. */
+export const fit = (m: Measures, zoom: number): Fit => ({
+  documentWidth: zoom * m.available,
+  mobile: m.card > m.available / 2,
+})
 
 /** A `px` or `rem` length in pixels. */
 export const toPx = (length: string, rem: number): number => (length.endsWith("rem") ? parseFloat(length) * rem : parseFloat(length))

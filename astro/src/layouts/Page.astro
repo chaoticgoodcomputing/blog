@@ -206,8 +206,13 @@ const fold = {
     padding: 2.5rem max(2rem, calc((100% - var(--noteWidth)) / 2)) 6rem;
   }
 
-  /* The page's header, its title, date and tags, centred, as every heading is (global.css). */
+  /* The page's header, its title, date and tags, centred, as every heading is (global.css). As wide
+     as the note's text, --noteWidth: on an annotation page, whose note takes the whole of its room
+     (below), as on any other. */
   main > header {
+    box-sizing: border-box;
+    width: min(100%, var(--noteWidth));
+    margin-inline: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -252,9 +257,9 @@ const fold = {
     margin: 0 0 1.5rem;
   }
 
-  /* An annotation page whose document opens takes the whole of the note's room: the annotation
-     viewer lays itself out by the room it has, the document beside its cards where they fit. One
-     whose document couldn't be shown is laid out as any note. */
+  /* An annotation page whose document opens takes the whole of the note's room: the document is
+     as wide as it, with its cards in a drawer and in popovers over its highlights. One whose
+     document couldn't be shown is laid out as any note. */
   .page:has(.annotation-viewer:not([data-state="failed"])) main {
     padding-inline: 1.5rem;
   }

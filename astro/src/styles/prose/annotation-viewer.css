@@ -10,57 +10,53 @@ annotation-viewer[data-layout="static"] .layout {
   margin-inline: auto;
 }
 
-/* With the document, the body is laid out with it in one grid: the preface across the top, then
-   where the document comes from, over the document, then the document, then the cards in its margin
-   or its drawer, then the epilogue. The body's own article leaves its children to the grid. */
-annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .layout {
+/* With the document, the body is laid out with it in one column: the preface across the top, then
+   where the document comes from, over the document, then the document, the whole of the column
+   wide, then the epilogue. The cards are in the drawer. The body's own article leaves its children
+   to the grid. */
+annotation-viewer[data-layout="drawer"] .layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: start;
 }
 
-annotation-viewer[data-layout="margin"] .layout {
-  grid-template-columns: var(--document-width) var(--margin-width);
-  column-gap: 3rem;
-}
-
-annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .prose {
+annotation-viewer[data-layout="drawer"] .layout > .prose {
   display: contents;
 }
 
-annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .prose > * {
+annotation-viewer[data-layout="drawer"] .layout > .prose > * {
   grid-column: 1 / -1;
 }
 
 /* The preface and the epilogue read as a note does: a column as wide as a note's, in the middle of
-   the room, however wide the document beside the cards. */
-annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .prose > :is(.annotation-preface, .annotation-epilogue) {
+   the room, however wide the document under them. */
+annotation-viewer[data-layout="drawer"] .layout > .prose > :is(.annotation-preface, .annotation-epilogue) {
   justify-self: center;
   box-sizing: border-box;
   width: min(100%, var(--noteWidth));
 }
 
-annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .prose > .annotated-document {
+annotation-viewer[data-layout="drawer"] .layout > .prose > .annotated-document {
   order: 1;
   margin: 0 0 0.75rem;
 }
 
-annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .document {
+annotation-viewer[data-layout="drawer"] .document {
   grid-column: 1;
   order: 2;
   margin-bottom: 2rem;
 }
 
-annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .prose > .annotations {
+annotation-viewer[data-layout="drawer"] .layout > .prose > .annotations {
   order: 3;
   margin: 0;
 }
 
-annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .prose > .annotations ~ * {
+annotation-viewer[data-layout="drawer"] .layout > .prose > .annotations ~ * {
   order: 4;
 }
 
-/* A card selects its annotation once the document is beside it. */
+/* A card selects its annotation once the document is shown. */
 annotation-viewer:not([data-layout="static"]) .annotation {
   cursor: pointer;
 }
@@ -81,38 +77,14 @@ annotation-viewer .annotation-highlight[role="button"] {
   cursor: pointer;
 }
 
-/* The margin: a column of cards beside the document, each level with its passage. */
-annotation-viewer[data-layout="margin"] .annotations {
-  grid-column: 2;
-  position: relative;
-}
-
-annotation-viewer[data-layout="margin"] .annotations-heading {
-  display: none;
-}
-
-annotation-viewer[data-layout="margin"] :is(.annotation, .unplaced) {
-  position: absolute;
-  right: 0;
-  left: 0;
-  margin: 0;
-  transition: top 0.2s ease;
-}
-
-annotation-viewer[data-layout="margin"] .annotation {
-  padding: 0.75rem;
-  font-size: var(--text-caption);
-}
-
 annotation-viewer .unplaced {
   margin: 1.5rem 0 1rem;
   color: var(--darkgray);
   font-size: var(--text-small);
 }
 
-/* Beside the document, every card but the selected one is shortened to two lines: one of its
-   passage, one of its comment, faded where it is cut, so that even a document's closely annotated
-   passages keep their cards near them. Its tags and date are the whole card's. */
+/* In the drawer, every card but the selected one is shortened to two lines while one is selected:
+   one of its passage, one of its comment. Its tags and date are the whole card's. */
 annotation-viewer .annotation.short .annotation-highlight > p {
   display: -webkit-box;
   overflow: hidden;
@@ -133,12 +105,8 @@ annotation-viewer .annotation.short :is(.annotation-tags, .annotation-date) {
   display: none;
 }
 
-annotation-viewer .annotation.short .annotation-comment.clipped {
-  mask-image: linear-gradient(to bottom, black 55%, transparent);
-}
-
-/* The drawer: the document takes the column, and the cards come in from the right. On a tablet it
-   is a card's width, and nothing is dimmed; on a phone it is most of the screen, with the page
+/* The drawer: the document takes the column, and the cards come in from the right. On a desktop or
+   a tablet it is a card's width, and nothing is dimmed; on a phone it is most of the screen, with the page
    dimmed behind it. It slides, unless the reader would rather things didn't move. */
 annotation-viewer[data-layout="drawer"] .annotations {
   position: fixed;
@@ -147,7 +115,7 @@ annotation-viewer[data-layout="drawer"] .annotations {
   bottom: 0;
   z-index: 19;
   box-sizing: border-box;
-  width: var(--margin-width);
+  width: var(--card-width);
   padding: 1rem;
   overflow-y: auto;
   overscroll-behavior: contain;

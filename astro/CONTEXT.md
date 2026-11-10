@@ -333,8 +333,9 @@ in which the annotations' passages are found. Served beside the mirror while it 
 _Avoid_: OCR, transcript
 
 **Annotation viewer**:
-The island on an annotation page that draws the mirror with its highlights, and lays the page's
-cards out around it: in its margin, or in a drawer. A page whose document has no mirror has none.
+The island on an annotation page that draws the mirror with its highlights, the whole of the
+note's room wide, and shows the page's cards in a drawer and in highlight popovers. A page whose
+document has no mirror has none.
 _Avoid_: PDF viewer (that is a widget), reader
 
 **Card**:
@@ -352,14 +353,14 @@ The annotation viewer's mark over each line of an annotation's passage, where it
 document: a link to the annotation.
 _Avoid_: annotation, selection
 
-**Margin**:
-The column beside the document where the cards sit, each level with its passage, where the
-document fits beside it.
-_Avoid_: sidebar, panel
+**Highlight popover**:
+A highlight's card, and any replies to it, beside the highlight while the pointer rests on it, as a
+link's preview is beside its link. None on a touch screen.
+_Avoid_: tooltip, margin (what the cards were beside the document before)
 
 **Drawer**:
-On an annotation page, the cards where the margin doesn't fit, coming in from the right edge, from
-its tab. A phone's covers most of the screen.
+On an annotation page, every card, in order, coming in from the right edge, from its tab or a
+clicked highlight. A phone's covers most of the screen.
 _Avoid_: sidebar, sheet
 
 ### Features

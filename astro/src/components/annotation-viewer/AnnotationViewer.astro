@@ -6,18 +6,16 @@
 // The page's body is this component's slot: the preface, the source of the document, the
 // annotations and the epilogue, which the Markdown pipeline makes. As built, and for good
 // where the document can't be shown, the cards are the page, in one column (`data-layout="static"`).
-// Once the document opens, the element's script lays the page out by the room it has, and never by
-// a media query:
-// - **the margin**, where the document fits beside a column of cards: each card level with its
-//   passage, or just below the card above; every card whole until one is selected, and then all
-//   but the selected one shortened, to two lines. Where whole cards would run on more than a
-//   screen past the end of the document, they are short from the start. Cards whose passage
-//   isn't in the document go last, under "Not found in the document".
-// - **the drawer**, where it doesn't: the document takes the column, and the cards come in from the
-//   right, in order. On a tablet the drawer is a card's width and the document stays usable beside
-//   it; on a phone, where that would cover more than half the screen, it is most of the screen, and
-//   modal. It opens from its tab on the right edge, tapped or dragged, or from a tapped highlight,
-//   at its card. It always starts closed.
+// Once the document opens, it takes the whole of the viewer's width, on a desktop as on a phone, and
+// the cards are read two ways:
+// - **the popover**: where the pointer can rest on a highlight, as a mouse's can, its annotation's
+//   card opens beside it, as a link's preview does (src/lib/hover-popover.ts), with any replies to
+//   it. A click on the popover is a click on the highlight.
+// - **the drawer**: the cards come in from the right, in order, with those whose passage isn't in
+//   the document last, under "Not found in the document". On a desktop or a tablet the drawer is a
+//   card's width and the document stays usable beside it; on a phone, where that would cover more
+//   than half the screen, it is most of the screen, and modal. It opens from its tab on the right
+//   edge, tapped or dragged, or from a clicked highlight, at its card. It always starts closed.
 // The page is the one scroll: the document is never a box that scrolls by itself, and pans
 // sideways in its column only when it is zoomed wider than it. Where the page has a preface, a link
 // over it goes past it, to the document, and gives it the focus.
@@ -34,11 +32,11 @@
 // note's (`data-state="failed"`), with "(PDF not available)" after the link to the annotated
 // document itself, and the link over the preface going to the annotations instead.
 //
-// What the script sets on the body's annotations, and how they are laid out in the margin and the
-// drawer, is styled in src/styles/prose/annotation-viewer.css: scoped styles never reach a slot.
+// What the script sets on the body's annotations, and how they are laid out in the drawer, is
+// styled in src/styles/prose/annotation-viewer.css: scoped styles never reach a slot.
 import { annotationPages, annotationTarget } from "@chaoticgoodcomputing/obsidian-markdown"
 import { Icon } from "astro-icon/components"
-import { MARGIN_WIDTH, MIN_DOCUMENT_WIDTH } from "../../lib/annotation-layout.ts"
+import { CARD_WIDTH } from "../../lib/annotation-layout.ts"
 import { annotatedPassages, documentFileName } from "../../lib/annotations.ts"
 import type { Note } from "../../lib/notes.ts"
 
@@ -68,9 +66,8 @@ const DOCUMENT = "annotated-document"
   data-src={encodeURI(mirror)}
   data-text={text && encodeURI(text)}
   data-passages={JSON.stringify(passages)}
-  data-margin-width={MARGIN_WIDTH}
-  data-min-document-width={MIN_DOCUMENT_WIDTH}
-  style={`--margin-width: ${MARGIN_WIDTH}`}
+  data-card-width={CARD_WIDTH}
+  style={`--card-width: ${CARD_WIDTH}`}
 >
   <a class="to-document" href={`#${DOCUMENT}`}>
     <Icon name="mdi:arrow-down" is:inline width="16" height="16" fill="currentColor" aria-hidden="true" />
@@ -87,25 +84,19 @@ const DOCUMENT = "annotated-document"
     <span class="grip" aria-hidden="true"></span>
   </button>
   <div class="scrim" aria-hidden="true"></div>
+  {/* A highlight's annotation, while the pointer rests on the highlight. In `.prose`, as the cards
+      are, so it is styled as they are (src/styles/prose/annotations.css). */}
+  <div class="annotation-popover prose" popover="manual" data-pagefind-ignore></div>
 </annotation-viewer>
 
 <script>
-  import {
-    clampZoom,
-    fit,
-    stack,
-    steppedZoom,
-    toPx,
-    type Fit,
-    type Layout,
-  } from "../../lib/annotation-layout.ts"
+  import { clampZoom, fit, steppedZoom, toPx, type Fit, type Layout } from "../../lib/annotation-layout.ts"
   import type { AnnotatedPassage } from "../../lib/highlights.ts"
+  import { HoverPopover } from "../../lib/hover-popover.ts"
   import type { Place, Shown } from "./document.ts"
 
   /** How far a drag or a swipe must go to open or close the drawer, in pixels. */
   const SWIPE = 40
-  /** The space between two cards in the margin, in pixels. */
-  const CARD_GAP = 12
   /** How far below the top of the window, or of a phone's menu bar, a passage gone to sits, in pixels. */
   const BELOW_BAR = 32
   /** What the browser remembers for the reader, in local storage. */
@@ -133,12 +124,13 @@ const DOCUMENT = "annotated-document"
   }
 
   // Whether a key press is the reader typing, or meant for something else: a field, a shortcut, or
-  // a dialog in front of the page (search, the global graph).
+  // a dialog in front of the page (search, the global graph). A hover popover is none: it is
+  // only read, and the keys go on acting under it.
   const typing = (event: KeyboardEvent): boolean => {
     if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return true
     const target = event.target as HTMLElement | null
     if (target?.closest?.("input, textarea, select, [contenteditable]:not([contenteditable='false'])")) return true
-    return !!document.querySelector("dialog[open], :popover-open")
+    return !!document.querySelector("dialog[open], :popover-open:not(.annotation-popover, .link-popover)")
   }
 
   class AnnotationViewer extends HTMLElement {
@@ -155,6 +147,7 @@ const DOCUMENT = "annotated-document"
     #queued = 0
     #cleanups: (() => void)[] = []
     #disconnected = false
+    #popover: HoverPopover<string> | undefined
 
     #on(target: EventTarget, type: string, listener: (event: any) => void, options?: AddEventListenerOptions) {
       target.addEventListener(type, listener, options)
@@ -187,6 +180,19 @@ const DOCUMENT = "annotated-document"
         section.tabIndex = -1
       }
       this.querySelector(".tab")!.setAttribute("aria-controls", CARDS)
+
+      // A highlight's annotation, in a popover beside it, while the pointer rests on it.
+      const popover = this.querySelector<HTMLElement>(".annotation-popover")!
+      this.#popover = new HoverPopover<string>({
+        popover,
+        find: (target) => {
+          const highlight = target.closest?.<HTMLElement>(".highlight")
+          const id = highlight?.dataset.annotation
+          return highlight && id && this.contains(highlight) ? { anchor: highlight, key: id } : undefined
+        },
+        fill: (id) => this.#fillPopover(popover, id),
+      })
+      this.#cleanups.push(this.#popover.connect())
 
       this.#listen()
       // The annotation the address names, selected as the page opens: its card is gone to now, and
@@ -256,11 +262,10 @@ const DOCUMENT = "annotated-document"
           passage.tabIndex = 0
           passage.title = "Show this passage in the document"
         }
-        const resized = new ResizeObserver(() => this.#relayout())
-        resized.observe(this)
-        for (const card of this.#cards()) resized.observe(card)
-        this.#cleanups.push(() => resized.disconnect())
       }
+      const resized = new ResizeObserver(() => this.#relayout())
+      resized.observe(this)
+      this.#cleanups.push(() => resized.disconnect())
       this.#apply()
       if (this.#pending) {
         const id = this.#pending
@@ -302,112 +307,58 @@ const DOCUMENT = "annotated-document"
     #apply() {
       if (this.dataset.state !== "opened") return
       const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16
-      const next = fit(
-        {
-          available: this.clientWidth,
-          margin: toPx(this.dataset.marginWidth!, rem),
-          minDocument: toPx(this.dataset.minDocumentWidth!, rem),
-          rem,
-        },
-        this.#zoom,
-      )
-      if (next.layout !== this.#layout) {
+      const next = fit({ available: this.clientWidth, card: toPx(this.dataset.cardWidth!, rem) }, this.#zoom)
+      // The drawer turned from a tablet's into a phone's, or back, is taken at once: nothing slides
+      // into place, as the drawer would slide shut.
+      if (this.#fit && next.mobile !== this.#fit.mobile) {
         if (this.#drawerOpen) this.#setDrawer(false, false)
-        // A new layout is taken at once: nothing slides into place, as the drawer would slide shut.
         this.setAttribute("data-switching", "")
         requestAnimationFrame(() => requestAnimationFrame(() => this.removeAttribute("data-switching")))
       }
       this.#fit = next
-      this.#layout = next.layout
-      this.dataset.layout = next.layout
-      if (next.layout === "drawer") this.dataset.drawer = next.mobile ? "mobile" : "tablet"
-      else delete this.dataset.drawer
+      this.#layout = "drawer"
+      this.dataset.layout = "drawer"
+      this.dataset.drawer = next.mobile ? "mobile" : "tablet"
       this.style.setProperty("--document-width", `${next.documentWidth}px`)
-      this.querySelector(".tab")!.setAttribute("tabindex", next.layout === "drawer" ? "0" : "-1")
+      this.querySelector(".tab")!.setAttribute("tabindex", "0")
       this.#mark()
-      this.#place()
       this.#restore()
     }
 
-    // Marks the selected annotation's card and highlights, and, once the document is beside the
-    // cards, shortens every other card while one is selected, or from the start where the cards
-    // are crowded.
+    // Marks the selected annotation's card and highlights, and, once the document is shown, shortens
+    // every other card in the drawer while one is selected.
     #mark() {
       for (const highlight of this.querySelectorAll<HTMLElement>(".highlight")) {
         highlight.classList.toggle("selected", highlight.dataset.annotation === this.#selected)
       }
-      const crowded = this.#crowded()
       for (const card of this.#cards()) {
         const selected = idOf(card) === this.#selected
         card.toggleAttribute("data-selected", selected)
-        // Every card is whole until one is selected, unless the cards are crowded.
-        card.classList.toggle("short", !selected && this.#layout !== "static" && (crowded || this.#selected !== undefined))
+        card.classList.toggle("short", !selected && this.#layout !== "static" && this.#selected !== undefined)
         if (selected) card.setAttribute("aria-current", "true")
         else card.removeAttribute("aria-current")
       }
     }
 
-    // Whether the cards in the margin, every one whole, each beside its passage or below the card
-    // above, would run on more than a screen past the end of the document.
-    #crowded(): boolean {
-      if (this.#layout !== "margin" || !this.#section) return false
-      const cards = this.#cards()
-      for (const card of cards) card.classList.remove("short")
-      const sectionTop = this.#section.getBoundingClientRect().top
-      const placed = cards.filter((card) => this.#placeOf(card))
-      if (!placed.length) return false
-      const heights = placed.map((card) => card.offsetHeight)
-      const tops = stack(
-        placed.map((card) => this.#passageY(this.#placeOf(card)!)! - sectionTop),
-        heights,
-        -1,
-        CARD_GAP,
-      )
-      const end = this.#pages.getBoundingClientRect().bottom - sectionTop
-      return tops.at(-1)! + heights.at(-1)! > end + window.innerHeight
-    }
-
-    // Puts every card where it goes: in the margin, beside its passage; elsewhere, in the flow.
-    #place() {
-      const section = this.#section
-      if (!section) return
-      const cards = this.#cards()
-      const heading = section.querySelector<HTMLElement>(":scope > .unplaced")
-      if (this.#layout !== "margin") {
-        for (const card of cards) card.style.top = ""
-        if (heading) heading.style.top = ""
-        section.style.height = ""
-        return
-      }
-      // A shortened card fades where its comment is cut.
-      for (const card of cards) {
-        const comment = card.querySelector<HTMLElement>(":scope > .annotation-comment")
-        comment?.classList.toggle("clipped", comment.scrollHeight > comment.clientHeight + 1)
-      }
-      const sectionTop = section.getBoundingClientRect().top
-      const placed = cards.filter((card) => this.#placeOf(card))
-      const unplaced = cards.filter((card) => !this.#placeOf(card))
-      const tops = stack(
-        placed.map((card) => this.#passageY(this.#placeOf(card)!)! - sectionTop),
-        placed.map((card) => card.offsetHeight),
-        placed.findIndex((card) => idOf(card) === this.#selected),
-        CARD_GAP,
-      )
-      placed.forEach((card, i) => (card.style.top = `${tops[i]}px`))
-      let y = placed.length ? tops.at(-1)! + placed.at(-1)!.offsetHeight + CARD_GAP : 0
-      if (unplaced.length) {
-        // At the margin's end, after the last page.
-        y = Math.max(y + 2 * CARD_GAP, this.#pages.getBoundingClientRect().bottom - sectionTop)
-        if (heading) {
-          heading.style.top = `${y}px`
-          y += heading.offsetHeight + CARD_GAP
-        }
-        for (const card of unplaced) {
-          card.style.top = `${y}px`
-          y += card.offsetHeight + CARD_GAP
-        }
-      }
-      section.style.height = `${y}px`
+    // The popover over a highlight: its annotation's card whole, and any replies to it, each without
+    // its passage where it has a comment, since the passage is what the pointer is on. The cards' ids
+    // and links to themselves are the drawer's.
+    #fillPopover(popover: HTMLElement, id: string): boolean {
+      const cards = this.#cards().filter((card) => this.#placeOf(card) === id)
+      if (!cards.length) return false
+      const copies = cards.map((card) => {
+        const copy = card.cloneNode(true) as HTMLElement
+        copy.removeAttribute("id")
+        copy.removeAttribute("data-selected")
+        copy.removeAttribute("aria-current")
+        copy.classList.remove("short")
+        for (const element of copy.querySelectorAll("[id]")) element.removeAttribute("id")
+        copy.querySelector(":scope > .annotation-anchor")?.remove()
+        if (copy.querySelector(":scope > .annotation-comment")) copy.querySelector(":scope > .annotation-highlight")?.remove()
+        return copy
+      })
+      popover.replaceChildren(...copies)
+      return true
     }
 
     // Scrolls the page so that a point `y` down the window sits a little below its top, or a phone's
@@ -443,8 +394,6 @@ const DOCUMENT = "annotated-document"
       const url = new URL(location.href)
       url.hash = this.#selected ? `#^${this.#selected}` : ""
       if (url.href !== location.href) history.replaceState(history.state, "", url.href.replace(/#$/, ""))
-      // The margin lays the selected card out whole, level with its passage, before it is gone to.
-      this.#place()
       if (this.#selected && going) this.#go(this.#selected)
     }
 
@@ -559,15 +508,20 @@ const DOCUMENT = "annotated-document"
     // --- The reader's hands -------------------------------------------------------------------------
 
     #listen() {
-      // A highlight selects its annotation, and in the drawer opens it at its card. A card, but not a
-      // link in it, selects its annotation and takes the document to its passage, leaving the drawer
-      // open, so the card just tapped stays in front of the reader.
+      // A highlight, or its popover, selects its annotation, and opens the drawer at its card. A
+      // link in the popover is followed instead. A card, but not a link in it, selects its
+      // annotation and takes the document to its passage, leaving the drawer open, so the card just
+      // tapped stays in front of the reader.
       this.#on(this, "click", (event: MouseEvent) => {
         const target = event.target as Element
         const highlight = target.closest<HTMLElement>(".highlight")
-        if (highlight?.dataset.annotation) {
+        const popover = target.closest(".annotation-popover") ? this.#popover?.wanted?.key : undefined
+        if (target.closest(".annotation-popover a[href]")) return
+        const id = highlight?.dataset.annotation ?? popover
+        if (id) {
           event.preventDefault()
-          this.#select(highlight.dataset.annotation, false)
+          this.#popover?.close()
+          this.#select(id, false)
           if (this.#layout === "drawer" && this.#selected) {
             this.#setDrawer(true)
             this.#card(this.#selected)?.scrollIntoView({ block: "nearest" })
@@ -701,13 +655,13 @@ const DOCUMENT = "annotated-document"
   }
 
   /* The link past the preface to the document: a line of the note's column, over the preface, once
-     the document is beside the cards, or to the annotations where it can't be shown. None where
+     the document is shown, or to the annotations where it can't be. None where
      there is no preface to go past. */
   .to-document {
     display: none;
   }
 
-  .annotation-viewer:is([data-layout="margin"], [data-layout="drawer"], [data-state="failed"]):has(.annotation-preface) .to-document {
+  .annotation-viewer:is([data-layout="drawer"], [data-state="failed"]):has(.annotation-preface) .to-document {
     display: flex;
     align-items: center;
     gap: 0.25rem;
@@ -739,7 +693,7 @@ const DOCUMENT = "annotated-document"
     touch-action: pan-x pan-y;
   }
 
-  .annotation-viewer:is([data-layout="margin"], [data-layout="drawer"]) .document {
+  .annotation-viewer[data-layout="drawer"] .document {
     display: block;
   }
 
@@ -879,7 +833,7 @@ const DOCUMENT = "annotated-document"
   }
 
   .annotation-viewer[data-layout="drawer"][data-drawer-open="true"] .tab {
-    right: var(--margin-width);
+    right: var(--card-width);
   }
 
   .annotation-viewer[data-layout="drawer"][data-drawer="mobile"][data-drawer-open="true"] .tab {
@@ -908,6 +862,37 @@ const DOCUMENT = "annotated-document"
   .annotation-viewer[data-layout="drawer"][data-drawer="mobile"][data-drawer-open="true"] .scrim {
     opacity: 1;
     pointer-events: auto;
+  }
+
+  /* A highlight's annotation, beside it: its card, and any replies, ruled off from each other, in a
+     box as wide as the drawer, and over it, as a link's preview is (LinkPopovers.astro). */
+  .annotation-popover {
+    inset: auto;
+    margin: 0;
+    box-sizing: border-box;
+    width: min(var(--card-width), 100vw - 1rem);
+    max-height: 24rem;
+    padding: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    border: 1px solid var(--lightgray);
+    border-radius: 0.5rem;
+    background: var(--light);
+    color: var(--darkgray);
+    box-shadow: 0 1rem 3rem var(--shadow);
+    /* The whole of it opens its card in the drawer, as its highlight does. */
+    cursor: pointer;
+  }
+
+  .annotation-popover :global(.annotation) {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    background: none;
+  }
+
+  .annotation-popover :global(.annotation + .annotation) {
+    border-top: 1px solid var(--lightgray);
   }
 
   .annotation-viewer[data-switching] .tab {

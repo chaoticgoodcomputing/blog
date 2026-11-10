@@ -37,56 +37,75 @@ async function opened(page: Page, size: { width: number; height: number }, addre
 // How far the page has scrolled sideways, which it never should.
 const sideways = (page: Page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
 
-test("on a desktop the document is drawn from the site's own mirror, with the cards in its margin", async ({ page }) => {
+test("on a desktop the document is drawn from the site's own mirror, the whole column wide, with the cards in a drawer that starts closed", async ({ page }) => {
   const mirror = page.waitForResponse((response) => isMirror(response.url()))
   const viewer = await opened(page, DESKTOP)
   expect((await mirror).status()).toBe(200)
-  await expect(viewer).toHaveAttribute("data-layout", "margin")
+  await expect(viewer).toHaveAttribute("data-layout", "drawer")
+  await expect(viewer).toHaveAttribute("data-drawer", "tablet")
 
   const pages = viewer.locator(".document-page")
   await expect(pages).toHaveCount(2)
   await expect(pages.first().locator("canvas")).toBeVisible()
-  // Side by side: the document, then the cards, which are no wider than a card.
   const document = (await viewer.locator(".document").boundingBox())!
-  const cards = (await page.locator("section.annotations").boundingBox())!
-  expect(document.x + document.width).toBeLessThanOrEqual(cards.x)
-  expect(cards.width).toBeCloseTo(320, 0)
-  expect(document.width).toBeGreaterThan(cards.width)
+  expect(document.width).toBeCloseTo((await viewer.boundingBox())!.width, 0)
+  await expect(page.locator("section.annotations")).toBeHidden()
+  await expect(viewer.getByRole("button", { name: "Annotations", exact: true })).toBeVisible()
   // One page scroll: the document never scrolls by itself, and nothing scrolls sideways.
   expect(await viewer.locator(".document").evaluate((el) => el.scrollHeight - el.clientHeight)).toBeLessThanOrEqual(1)
   expect(await sideways(page)).toBe(0)
 })
 
-test("each card in the margin is level with its passage, or just below the card above, and none overlap", async ({ page }) => {
-  await opened(page, DESKTOP)
-  await expect(page.locator("section.annotations > .annotation")).toHaveCount(5)
-  const ids = await page.locator("section.annotations > .annotation").evaluateAll((all) => all.map((each) => each.id))
-  expect(ids).toEqual(IN_ORDER)
-  let bottom = -Infinity
-  for (const id of ["promise", "cancel", "reply", "minutes"]) {
-    const box = (await card(page, id).boundingBox())!
-    expect(box.y, id).toBeGreaterThanOrEqual(bottom)
-    if (id === "reply") {
-      // A reply follows what it answers.
-      expect(box.y).toBeCloseTo(bottom + 12, 0)
-    } else {
-      // Level with its passage, give or take its first line's height, unless the card above is in the way.
-      const passage = (await highlights(page, id).first().boundingBox())!
-      if (box.y > bottom + 13) expect(Math.abs(box.y - passage.y), id).toBeLessThan(20)
-      else expect(box.y, id).toBeGreaterThan(passage.y)
-    }
-    bottom = box.y + box.height
-  }
+test("resting the pointer on a highlight opens its annotation beside it, with its replies, and leaving it closes it", async ({ page }) => {
+  const viewer = await opened(page, DESKTOP)
+  const popover = viewer.locator(".annotation-popover")
+  const highlight = highlights(page, "cancel").first()
+  await highlight.scrollIntoViewIfNeeded()
+  await highlight.hover()
+  await expect(popover).toBeVisible()
+  // The card and the reply to it, without the passage the pointer is on, and with no ids of their own.
+  await expect(popover.locator(".annotation")).toHaveCount(2)
+  await expect(popover.locator(".annotation-comment").first()).toHaveText((await card(page, "cancel").locator(".annotation-comment").textContent())!)
+  await expect(popover.locator(".annotation-highlight, .annotation-anchor, [id]")).toHaveCount(0)
+  // Under the highlight, or over it.
+  const [around, box] = [(await highlight.boundingBox())!, (await popover.boundingBox())!]
+  expect(box.y >= around.y + around.height || box.y + box.height <= around.y).toBe(true)
+  // The pointer can cross to the popover and stay on it.
+  await popover.hover()
+  await page.waitForTimeout(300)
+  await expect(popover).toBeVisible()
+  await page.mouse.move(5, 5)
+  await expect(popover).toBeHidden()
 })
 
-test("what the document has no place for goes last, under its own heading, after the last page", async ({ page }) => {
+test("a click on a highlight's popover opens the drawer at its card", async ({ page }) => {
   const viewer = await opened(page, DESKTOP)
+  const highlight = highlights(page, "minutes").first()
+  await highlight.scrollIntoViewIfNeeded()
+  await highlight.hover()
+  const popover = viewer.locator(".annotation-popover")
+  await popover.click()
+  // Closed by the click, though the pointer, left where it was, may rest on a highlight again.
+  expect(await popover.evaluate((el) => el.matches(":popover-open"))).toBe(false)
+  await expect(page.locator("section.annotations")).toBeVisible()
+  await expect(card(page, "minutes")).toHaveAttribute("data-selected")
+  await expect(card(page, "minutes")).toBeInViewport()
+  await expectAt(page, /#\^minutes$/)
+})
+
+test("the drawer has every card, a reply after what it answers, and what the document has no place for last, under its own heading", async ({ page }) => {
+  const viewer = await opened(page, DESKTOP)
+  await viewer.getByRole("button", { name: "Annotations", exact: true }).click()
+  const ids = await page.locator("section.annotations > .annotation").evaluateAll((all) => all.map((each) => each.id))
+  expect(ids).toEqual(IN_ORDER)
   const heading = page.locator("section.annotations > .unplaced")
   await expect(heading).toHaveText("Not found in the document")
-  const lastPage = (await viewer.locator(".document-page").last().boundingBox())!
-  const under = (await heading.boundingBox())!
-  const draft = (await card(page, "draft").boundingBox())!
-  expect(under.y).toBeGreaterThanOrEqual(lastPage.y + lastPage.height - 1)
+  const [minutes, under, draft] = [
+    (await card(page, "minutes").boundingBox())!,
+    (await heading.boundingBox())!,
+    (await card(page, "draft").boundingBox())!,
+  ]
+  expect(under.y).toBeGreaterThan(minutes.y)
   expect(draft.y).toBeGreaterThan(under.y)
   await expect(highlights(page, "draft")).toHaveCount(0)
 })
@@ -154,8 +173,9 @@ test("a highlight is the scheme's text highlight, and the page is paper, white i
   await expect(highlights(page, "promise").first()).toHaveCSS("background-color", "rgba(179, 170, 2, 0.533)")
 })
 
-test("every card is whole beside the document until one is selected, which then lays the others short", async ({ page }) => {
-  await opened(page, DESKTOP)
+test("every card in the drawer is whole until one is selected, which then lays the others short", async ({ page }) => {
+  const viewer = await opened(page, DESKTOP)
+  await viewer.getByRole("button", { name: "Annotations", exact: true }).click()
   const promise = card(page, "promise")
   const comment = promise.locator(".annotation-comment")
   for (const id of ["promise", "cancel", "minutes"]) await expect(card(page, id)).not.toHaveClass(/\bshort\b/)
@@ -163,10 +183,9 @@ test("every card is whole beside the document until one is selected, which then 
 
   await card(page, "cancel").locator(".annotation-comment").click()
   await expect(card(page, "cancel")).toHaveAttribute("data-selected")
-  // Every other card is cut to two lines, one of its passage and one of its comment, which fades
-  // where it is cut; its tags and date are left for the whole card.
+  // Every other card is cut to two lines, one of its passage and one of its comment; its tags and
+  // date are left for the whole card.
   await expect(promise).toHaveClass(/\bshort\b/)
-  await expect(comment).toHaveClass(/\bclipped\b/)
   await expect.poll(async () => (await comment.boundingBox())!.height).toBeLessThan(30)
   await expect.poll(async () => (await promise.locator(".annotation-highlight").boundingBox())!.height).toBeLessThan(45)
   await expect(promise.locator(".annotation-date")).toBeHidden()
@@ -179,32 +198,9 @@ test("every card is whole beside the document until one is selected, which then 
   for (const id of ["cancel", "minutes"]) await expect(card(page, id)).toHaveClass(/\bshort\b/)
 })
 
-test("where the cards, whole, would run on more than a screen past the end of the document, every one is short from the start", async ({ page }) => {
-  const viewer = await opened(page, DESKTOP)
-  const document = viewer.locator(".document")
-  // Zoomed out, and on a short screen, the cards run on well past the document.
-  await page.setViewportSize({ width: DESKTOP.width, height: 400 })
-  for (let i = 0; i < 4; i++) await page.keyboard.press("-")
-  await expect(viewer).toHaveAttribute("data-layout", "margin")
-  for (const id of ["promise", "cancel", "minutes"]) await expect(card(page, id)).toHaveClass(/\bshort\b/)
-  // The last card the document has a place for (^draft's passage it hasn't, and goes after it).
-  const bottom = async (locator: Locator) => {
-    const box = (await locator.boundingBox())!
-    return box.y + box.height
-  }
-  await expect.poll(async () => (await bottom(card(page, "minutes"))) - (await bottom(document))).toBeLessThanOrEqual(0)
-
-  // A selected card is whole, the others still short; zoomed back in, they are whole again.
-  await card(page, "cancel").click()
-  await expect(card(page, "cancel")).not.toHaveClass(/\bshort\b/)
-  await expect(card(page, "promise")).toHaveClass(/\bshort\b/)
-  await page.keyboard.press("Escape")
-  await page.keyboard.press("0")
-  for (const id of ["promise", "cancel", "minutes"]) await expect(card(page, id)).not.toHaveClass(/\bshort\b/)
-})
-
 test("a card takes the document to its passage, marks its highlights, and puts its address in place of the page's", async ({ page }) => {
-  await opened(page, DESKTOP)
+  const viewer = await opened(page, DESKTOP)
+  await viewer.getByRole("button", { name: "Annotations", exact: true }).click()
   const before = await page.evaluate(() => history.length)
   const highlight = highlights(page, "minutes").first()
   await expect(highlight).not.toBeInViewport()
@@ -218,9 +214,10 @@ test("a card takes the document to its passage, marks its highlights, and puts i
   expect(await page.evaluate(() => history.length)).toBe(before)
 })
 
-test("a highlight selects its annotation, whose card is beside it", async ({ page }) => {
+test("a highlight selects its annotation, and opens the drawer at its card", async ({ page }) => {
   await opened(page, DESKTOP)
   await highlights(page, "cancel").first().click()
+  await expect(page.locator("section.annotations")).toBeVisible()
   await expect(card(page, "cancel")).toHaveAttribute("data-selected")
   await expect(card(page, "cancel")).toBeInViewport()
   await expectAt(page, /#\^cancel$/)
@@ -251,11 +248,11 @@ test("a page opened at an annotation's address opens with it selected, at its pa
   await opened(page, DESKTOP, `${PAGE}#^cancel`)
   await expect(card(page, "cancel")).toHaveAttribute("data-selected")
   await expect(highlights(page, "cancel")).toBeInViewport()
-  await expect(card(page, "cancel")).toBeInViewport()
 })
 
 test("hovering a card tints its highlights", async ({ page }) => {
-  await opened(page, DESKTOP)
+  const viewer = await opened(page, DESKTOP)
+  await viewer.getByRole("button", { name: "Annotations", exact: true }).click()
   await card(page, "promise").hover()
   await expect(highlights(page, "promise").first()).toHaveClass(/\bhovered\b/)
   await expect(highlights(page, "cancel")).not.toHaveClass(/\bhovered\b/)
@@ -287,7 +284,7 @@ test("a page with no preface has no link to go past it", async ({ page }) => {
   await expect(viewer.getByRole("link", { name: "Go to the annotated document" })).toBeHidden()
 })
 
-test("the zoom is the keyboard's: zoomed past the margin the cards go to the drawer, and a reload remembers it", async ({ page }) => {
+test("the zoom is the keyboard's, and a reload remembers it", async ({ page }) => {
   const viewer = await opened(page, DESKTOP)
   const width = async () => (await viewer.locator(".document-page").first().boundingBox())!.width
   const at100 = await width()
@@ -297,22 +294,18 @@ test("the zoom is the keyboard's: zoomed past the margin the cards go to the dra
   await page.keyboard.press("0")
   await expect.poll(width).toBeCloseTo(at100, 0)
 
-  await page.keyboard.press("+")
-  await page.keyboard.press("+")
-  await expect(viewer).toHaveAttribute("data-layout", "drawer")
   // Wider than the column, it pans sideways in it, and the page never does.
-  await page.keyboard.press("+")
-  await page.keyboard.press("+")
+  for (let i = 0; i < 4; i++) await page.keyboard.press("+")
   await expect.poll(() => viewer.locator(".document").evaluate((el) => el.scrollWidth > el.clientWidth)).toBe(true)
   expect(await sideways(page)).toBe(0)
   const at175 = await width()
 
   await page.reload()
-  await expect(viewer).toHaveAttribute("data-layout", "drawer")
+  await expect(viewer).toHaveAttribute("data-state", "opened")
   await expect.poll(width).toBeCloseTo(at175, 0)
   expect(await page.evaluate(() => location.href)).not.toContain("175")
   await page.keyboard.press("0")
-  await expect(viewer).toHaveAttribute("data-layout", "margin")
+  await expect.poll(width).toBeCloseTo(at100, 0)
 })
 
 test("on a phone the document takes the column, and the cards are in a drawer that starts closed", async ({ page }) => {
@@ -384,16 +377,24 @@ test("dragging the tab out opens the drawer", async ({ page }) => {
   await expect(page.locator("section.annotations")).toBeVisible()
 })
 
-test("narrowing the window past where the margin fits turns it into the drawer, and widening turns it back", async ({ page }) => {
+test("narrowing the window to a phone's turns the drawer into a phone's, and widening turns it back", async ({ page }) => {
   const viewer = await opened(page, DESKTOP)
-  await page.setViewportSize(TABLET)
-  await expect(viewer).toHaveAttribute("data-layout", "drawer")
+  await page.setViewportSize(PHONE)
+  await expect(viewer).toHaveAttribute("data-drawer", "mobile")
   await page.setViewportSize(DESKTOP)
-  await expect(viewer).toHaveAttribute("data-layout", "margin")
+  await expect(viewer).toHaveAttribute("data-drawer", "tablet")
 })
 
 test.describe("by touch", () => {
   test.use({ hasTouch: true, isMobile: true })
+
+  test("a tapped highlight opens the drawer, and no popover", async ({ page }) => {
+    const viewer = await opened(page, PHONE)
+    await highlights(page, "promise").first().tap()
+    await expect(page.locator("section.annotations")).toBeVisible()
+    await page.waitForTimeout(600)
+    await expect(viewer.locator(".annotation-popover")).toBeHidden()
+  })
 
   test("two fingers pinch the document, not the page", async ({ page }) => {
     const viewer = await opened(page, PHONE)
@@ -550,9 +551,8 @@ test("a document with text of its own has no text file to fetch", async ({ page 
   expect(requested.filter((path) => path.endsWith(".text.json"))).toEqual([])
 })
 
-test("beside the document, the preface and the epilogue read as a note does, and the document's source is just over it", async ({ page }) => {
+test("around the document, the preface and the epilogue read as a note does, and the document's source is just over it", async ({ page }) => {
   const viewer = await opened(page, DESKTOP, GARDEN)
-  await expect(viewer).toHaveAttribute("data-layout", "margin")
   const main = (await page.locator("main").boundingBox())!
   // A note's column: the site config's width, in the middle of the note's room.
   const noteWidth = parseFloat(layout.noteWidth) * 16

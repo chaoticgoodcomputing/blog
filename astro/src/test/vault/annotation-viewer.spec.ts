@@ -9,7 +9,7 @@ import { expect, test } from "../site.ts"
 
 const MIRRORS = "run `pnpm nx run astro:mirrors`"
 
-test("every passage annotated on each annotation page is highlighted in its document, and no two of its cards overlap", async ({
+test("every passage annotated on each annotation page is highlighted in its document", async ({
   page,
 }) => {
   test.setTimeout(300_000)
@@ -27,13 +27,5 @@ test("every passage annotated on each annotation page is highlighted in its docu
     expect(highlighted.sort(), address).toEqual(passages.sort())
     // Nothing the document has no place for, so no heading for it.
     await expect(page.locator("section.annotations > .unplaced"), address).toHaveCount(0)
-
-    if ((await viewer.getAttribute("data-layout")) !== "margin") continue
-    const boxes = await page.locator("section.annotations > .annotation").evaluateAll((all) =>
-      all.map((each) => each.getBoundingClientRect()).map(({ top, bottom }) => ({ top, bottom })),
-    )
-    for (const [i, box] of boxes.entries()) {
-      if (i > 0) expect(box.top, `${address}: card ${i}`).toBeGreaterThanOrEqual(boxes[i - 1]!.bottom)
-    }
   }
 })

@@ -1,46 +1,21 @@
 import { expect, test } from "vitest"
-import { clampZoom, fit, stack, steppedZoom, toPx } from "../src/lib/annotation-layout.ts"
+import { clampZoom, fit, steppedZoom, toPx } from "../src/lib/annotation-layout.ts"
 
-// A card 20rem wide, a document no narrower than 36rem beside it, at 16px to the rem: the margin
-// needs 320 + 576 + the 3rem gap between them, 944px.
-const measures = (available: number) => ({ available, margin: 320, minDocument: 576, rem: 16 })
+// A card 20rem wide, at 16px to the rem.
+const measures = (available: number) => ({ available, card: 320 })
 
-test("where the document fits beside a column of cards, they are its margin, and the document takes the rest", () => {
+test("the document takes the viewer's width, on a desktop as on a phone", () => {
   // The site shell's content column on a desktop, 1440px wide.
-  expect(fit(measures(1072), 1)).toEqual({ layout: "margin", documentWidth: 1072 - 320 - 48, mobile: false })
-  expect(fit(measures(944), 1)).toEqual({ layout: "margin", documentWidth: 576, mobile: false })
-})
-
-test("the document beside the margin is never wider than 60rem", () => {
-  expect(fit(measures(2000), 1).documentWidth).toBe(960)
-})
-
-test("where it doesn't, the cards are a drawer, and the document takes the column", () => {
+  expect(fit(measures(1072), 1)).toEqual({ documentWidth: 1072, mobile: false })
   // A tablet's column: the drawer is a card's width, and covers less than half of it.
-  expect(fit(measures(700), 1)).toEqual({ layout: "drawer", documentWidth: 700, mobile: false })
+  expect(fit(measures(700), 1)).toEqual({ documentWidth: 700, mobile: false })
   // A phone's: a card's width would cover more than half the screen, so the drawer is a phone's.
-  expect(fit(measures(358), 1)).toEqual({ layout: "drawer", documentWidth: 358, mobile: true })
+  expect(fit(measures(358), 1)).toEqual({ documentWidth: 358, mobile: true })
 })
 
-test("zoomed, the document is that many times as wide, and zoomed past the margin it turns into the drawer", () => {
-  expect(fit(measures(1072), 0.5)).toEqual({ layout: "margin", documentWidth: 352, mobile: false })
-  // 704 × 1.25 = 880, and 880 + 320 + 48 is wider than the column.
-  expect(fit(measures(1072), 1.25)).toEqual({ layout: "drawer", documentWidth: 1072, mobile: false })
-  expect(fit(measures(1072), 2)).toEqual({ layout: "drawer", documentWidth: 1408, mobile: false })
-  expect(fit(measures(700), 2).documentWidth).toBe(1400)
-})
-
-test("each card is level with its passage, or just below the card above it", () => {
-  // Three cards 100px tall, 12px apart: the second's passage is too near the first's.
-  expect(stack([50, 100, 400], [100, 100, 100], -1, 12)).toEqual([50, 162, 400])
-  // One whose passage is above the margin's top starts at it.
-  expect(stack([-20, 300], [100, 100], -1, 12)).toEqual([0, 300])
-})
-
-test("the selected card is level with its passage, and those above it move up to make room", () => {
-  expect(stack([200, 210, 400], [100, 100, 100], 1, 12)).toEqual([98, 210, 400])
-  // Pushed above the top, they stack from the top down again.
-  expect(stack([50, 100, 400], [100, 100, 100], 1, 12)).toEqual([50, 162, 400])
+test("zoomed, the document is that many times as wide", () => {
+  expect(fit(measures(1072), 0.5).documentWidth).toBe(536)
+  expect(fit(measures(1072), 2).documentWidth).toBe(2144)
 })
 
 test("a length is read in pixels from px or rem", () => {
