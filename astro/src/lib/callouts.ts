@@ -5,7 +5,7 @@
 // (the library's callouts.ts). Obsidian draws several types as one kind, `faq` as a question and a
 // type it doesn't know as a note, so this says which kind a callout is drawn as,
 // `data-callout-kind`, and the stylesheet reads that alone. The icons are Material Design Icons',
-// written as elements as a heading's anchor is (src/lib/icons.ts, docs/adr/3402), and hidden from a
+// written as elements as a heading's anchor is (src/lib/icons.ts), and hidden from a
 // screen reader: the title says what the callout is. It is the site's choice how a callout is drawn,
 // not Obsidian's, so it is the site's plugin and not the library's.
 //

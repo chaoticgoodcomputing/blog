@@ -1,8 +1,8 @@
-// The arithmetic of an annotation page's layout, apart from the page it lays out: which layout fits
-// the annotation viewer's width, how wide the document is at a zoom, and where each card goes in the
-// margin. The viewer (src/components/annotation-viewer) measures the page and applies what these
-// return. Ported from the Quartz annotator's `src/viewer/layout.ts` (docs/cutover/annotations-audit.md),
-// less the gutters either side of the page, which the site shell's column already has.
+// The arithmetic of an annotation page's layout, apart from the page it lays out: how wide the
+// document is at a zoom, and whether the drawer is a phone's. The viewer
+// (src/components/annotation-viewer) measures the page and applies what these return. The document
+// takes the whole of the viewer's width, on a desktop as on a phone: the cards are in the drawer,
+// and beside the document only as its highlights' popovers.
 
 /**
  * The viewer's layouts: the cards alone, as the page is built (`static`); the document with the

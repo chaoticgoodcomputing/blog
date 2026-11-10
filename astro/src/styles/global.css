@@ -3,7 +3,7 @@
    under `.prose`, in src/styles/prose.
 
    The tokens keep the names the vault's widgets are written against: a widget kept in the vault
-   paints with `var(--light)`, `var(--secondary)`, `var(--codeFont)` and the rest (docs/adr/0005).
+   paints with `var(--light)`, `var(--secondary)`, `var(--codeFont)` and the rest.
 
    The site is laid out for three widths, and a component that changes with the width uses the same
    two: a phone, narrower than 1000px; a tablet, from 1000px; a desktop, from 1300px. A media query

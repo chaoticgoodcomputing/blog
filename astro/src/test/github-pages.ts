@@ -2,7 +2,7 @@
 // answers from the build's files and tells case apart: `/a` is the file `a`, else `a.html`, else the
 // folder `a/`'s `index.html`, by way of `/a/`. `astro preview` serves the same build, but on a disk
 // that ignores case, as a Mac's does, it answers `/a` from `A.html` too, and a spec over HTTP can't
-// tell whether a former address has a redirect of its own (docs/adr/2901). So these read the names
+// tell whether a former address has a redirect of its own. So these read the names
 // of the build's files, as Pages does (README.md, "Tests"). The pages the build wrote are ./build.ts's.
 
 import fs from "node:fs"

@@ -2,7 +2,7 @@ import { githubPages } from "../github-pages.ts"
 import { expect, expectAt, test } from "../site.ts"
 
 // Each address the Quartz site served a page or an attachment at, where this site serves it at
-// another, forwards the reader there (src/lib/former-addresses.ts, docs/adr/2901). Whether GitHub
+// another, forwards the reader there (src/lib/former-addresses.ts). Whether GitHub
 // Pages reaches a former address's redirect is read from the build's file names (../github-pages.ts).
 
 test("each former address is where GitHub Pages finds a redirect to the page or the attachment, in one step", () => {

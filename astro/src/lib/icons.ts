@@ -1,6 +1,6 @@
 // Icon ids, `prefix:name`, and the collections they name: an installed Iconify set, `mdi` from
 // @iconify-json/mdi, or the site's own SVG files in src/icons, under the prefix `custom`. astro-icon
-// draws them, inline, when the site builds (docs/adr/1101). It knows the site's own files as its
+// draws them, inline, when the site builds. It knows the site's own files as its
 // "local" icons, named by the file alone, which is why an id is turned into its name here.
 //
 // Read where the Astro config runs, and in the unit tests: the files are found from this module's
@@ -53,7 +53,7 @@ export function iconName(id: string): string {
  * An icon of Material Design Icons, the set astro-icon draws the site's others from, as an `<svg>`
  * element a Markdown plugin writes into a note, 1em square in the colour of its text. A Markdown
  * plugin can't render astro-icon's `<Icon>`, and the icon is written as elements, not as the set's
- * SVG text, since an MDX note is compiled to JSX, which holds no raw HTML (docs/adr/3402). An icon
+ * SVG text, since an MDX note is compiled to JSX, which holds no raw HTML. An icon
  * that is anything but one path fails the build here rather than drawing part of itself.
  * `properties` are the `<svg>`'s besides its box.
  */

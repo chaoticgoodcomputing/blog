@@ -20,7 +20,7 @@ export interface PageProps {
   /**
    * The page's address from the site's root: a note's `url`, `tagUrl(tag)`, `/404`. The only
    * source of a page's address: `Astro.url.pathname` ends in `.html` in a build, since the site
-   * builds one file per page (docs/adr/0003).
+   * builds one file per page.
    */
   url: string
   /** The note the page shows: its own, or on a tag page the tag's description note. */

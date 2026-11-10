@@ -6,7 +6,7 @@ import { ownServer, portOf, refuseBesideDevServer } from "./src/test/own-server.
 // The built site, served by `astro preview`, over one of two vaults: the fixture vault (the
 // default), or with E2E_SITE=vault the real one, for what a ticket says is "checked in a browser".
 // The suite builds its own site and serves it on its own port, so suites in separate checkouts run
-// side by side (docs/adr/0007).
+// side by side.
 const root = fileURLToPath(new URL(".", import.meta.url))
 const site = process.env.E2E_SITE === "vault" ? "vault" : "fixture"
 

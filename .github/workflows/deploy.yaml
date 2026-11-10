@@ -1,5 +1,5 @@
 # Builds the site with Astro (astro/) and publishes it to the `pages` branch, which GitHub Pages
-# serves at blog.chaoticgood.computer (#81; astro/docs/adr/3001). Deliberately minimal for now: no
+# serves at blog.chaoticgood.computer (#81). Deliberately minimal for now: no
 # tests, no affected check; every push to main rebuilds and redeploys the whole site
 # (astro/docs/cutover/deploy.md). After a deploy, the IndexNow job tells Bing and the other IndexNow
 # engines which pages it changed, the WebSub job tells the feed's hub when the feed changed, the
@@ -86,8 +86,8 @@ jobs:
         run: pnpm nx run vault:guard-private
 
       # The mirrors of annotated documents are kept between deploys, so a mirror stays the copy first
-      # saved and a host that refuses CI's runners costs nothing once its document is saved
-      # (astro/docs/adr/2801). They live in dist/mirrors, outside node_modules, never in the vault.
+      # saved and a host that refuses CI's runners costs nothing once its document is saved.
+      # They live in dist/mirrors, outside node_modules, never in the vault.
       # The newest set is restored; astro:mirrors adds what is missing.
       - name: Restore the annotated documents' mirrors
         id: mirrors
@@ -111,8 +111,8 @@ jobs:
           key: annotation-mirrors-${{ hashFiles('dist/mirrors/**') }}
 
       # Share cards are named by the hash of everything they are drawn from, so the newest set is
-      # always safe to start from: a page that changed draws a new card, the rest are read
-      # (astro/docs/adr/1701). Only this directory of Astro's cache is kept: the content layer's
+      # always safe to start from: a page that changed draws a new card, the rest are read.
+      # Only this directory of Astro's cache is kept: the content layer's
       # rendered notes don't know a Markdown plugin's code changed.
       - name: Restore the share cards
         id: share-cards

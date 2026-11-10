@@ -1,8 +1,7 @@
 /* What the annotation viewer (src/components/annotation-viewer) does with an annotation page's body,
-   its slot, which only its script lays out: the cards in the document's margin or in a drawer, the
-   card it has selected (data-selected), and the cards it shortens (.short). As the Quartz annotator
-   lays them out (docs/cutover/annotations-audit.md). Scoped styles never reach a slot, so these are
-   here, under the viewer's element. */
+   its slot, which only its script lays out: the cards in a drawer, the card it has selected
+   (data-selected), and the cards it shortens (.short). Scoped styles never reach a slot, so these
+   are here, under the viewer's element. */
 
 /* As built, and where the document couldn't be shown, the cards are the page: one column, at the
    width of a note's. */

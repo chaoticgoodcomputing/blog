@@ -1,8 +1,7 @@
-// Each heading in a note ends with a link to itself, for a reader to copy the address of a section
-// (docs/adr/3402).
+// Each heading in a note ends with a link to itself, for a reader to copy the address of a section.
 //
 // The link holds Material Design Icons' `link-variant`, from the set astro-icon draws the site's
-// other icons from (docs/adr/1101), and is shown while the pointer is on its heading
+// other icons from, and is shown while the pointer is on its heading
 // (src/styles/prose/heading-anchors.css). It is for the pointer alone: a screen reader skips it and
 // the keyboard never stops on it, since the table of contents already links every heading and the
 // heading's own text says all there is.

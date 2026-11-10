@@ -1,5 +1,5 @@
-// What a Playwright configuration that builds and serves a site of its own in this checkout needs
-// (docs/adr/0007): the end-to-end suite's (playwright.config.ts). Its refusal to run beside the dev server, its port, and the
+// What a Playwright configuration that builds and serves a site of its own in this checkout needs:
+// the end-to-end suite's (playwright.config.ts). Its refusal to run beside the dev server, its port, and the
 // server that builds and serves the site.
 
 import { createHash } from "node:crypto"

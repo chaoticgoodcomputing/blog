@@ -13,8 +13,7 @@ import { getVault } from "./vault.ts"
 /**
  * What a feed reader knows a note's item by: the address the site's feed has always written for
  * the note, its former address: its page's in lower case, and for an MDX note with `.mdx` after
- * it. A reader shows an item whose identifier it has not seen as new, so this never changes
- * (docs/adr/1502).
+ * it. A reader shows an item whose identifier it has not seen as new, so this never changes.
  */
 export function feedIdentifier(note: Note, site: URL): string {
   return new URL(formerAddress(note), site).href.replace(/\/$/, "")
@@ -106,7 +105,7 @@ export function feedOptions(
       `<atom:link rel="hub" href="${feed.hub}"/>`,
       `<atom:link rel="self" href="${new URL("/index.xml", site).href}" type="application/rss+xml"/>`,
     ].join(""),
-    // A page's address has no trailing slash (docs/adr/0003), and neither has an item's link.
+    // A page's address has no trailing slash, and neither has an item's link.
     trailingSlash: false,
   }
 }

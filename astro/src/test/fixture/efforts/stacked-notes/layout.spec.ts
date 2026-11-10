@@ -1,4 +1,4 @@
-// Ephemeral (docs/adr/0006): where the stacked-notes layout puts things, pinned while that effort
+// Ephemeral: where the stacked-notes layout puts things, pinned while that effort
 // (.scratch/stacked-notes) works on it. Deleted when the effort closes, with whatever here is meant
 // to outlive it rewritten as a durable test first.
 import type { Page } from "@playwright/test"

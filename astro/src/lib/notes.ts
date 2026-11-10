@@ -3,7 +3,7 @@
 // out of publication in one place, and so is where a link to a file of the vault goes.
 //
 // It reads the vault's metadata cache and nothing of Astro's, so the Astro config and its
-// integrations can ask too, where `astro:content` is not to be had (docs/adr/0006). A page that
+// integrations can ask too, where `astro:content` is not to be had. A page that
 // renders a note's body joins the note to its collection entry (./entries.ts).
 
 import { createHash } from "node:crypto"

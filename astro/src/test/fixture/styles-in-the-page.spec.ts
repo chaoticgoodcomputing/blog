@@ -1,8 +1,7 @@
 import { expect, test } from "../site.ts"
 
 // A page's styles arrive in the page itself, so nothing holds its first paint back for a stylesheet
-// of its own (docs/adr/2902). The one stylesheet a page links is KaTeX's, on a page with math
-// (docs/adr/0501).
+// of its own. The one stylesheet a page links is KaTeX's, on a page with math.
 
 const linkedStylesheets = (page: import("@playwright/test").Page) =>
   page.locator('link[rel="stylesheet"]').evaluateAll((links) => links.map((link) => new URL((link as HTMLLinkElement).href).pathname))

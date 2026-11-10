@@ -1,5 +1,5 @@
-// The mirrors of the annotated documents, published under assets/annotated-documents
-// (docs/adr/2801). They are saved in the mirror directory, dist/mirrors, so they are no files of
+// The mirrors of the annotated documents, published under assets/annotated-documents.
+// They are saved in the mirror directory, dist/mirrors, so they are no files of
 // the vault the site reads, and the attachments integration never sees them. This one does for them
 // what that one does for the vault's files: the dev server serves each from where it is, and the
 // build copies it to its address. Which mirrors those are is src/lib/mirrors.ts's answer.

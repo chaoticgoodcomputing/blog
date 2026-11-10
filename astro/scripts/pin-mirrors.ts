@@ -1,4 +1,4 @@
-// Saves a mirror of each annotated document that has none (docs/adr/2801): `pnpm nx run
+// Saves a mirror of each annotated document that has none: `pnpm nx run
 // astro:mirrors`. A mirror is pinned: once saved it is the document the annotations were written
 // against, and it is never fetched again, so a document whose host has since changed it keeps the
 // copy the passages were found in. Deleting a mirror is how one is fetched afresh.

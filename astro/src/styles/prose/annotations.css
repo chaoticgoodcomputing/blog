@@ -100,7 +100,7 @@
   margin-bottom: 0;
 }
 
-/* Annotator's tags, as text: no tag of the site's, and no tag page holds them (ADR 2701). In the
+/* Annotator's tags, as text: no tag of the site's, and no tag page holds them. In the
    palette's dark grey, where the Quartz annotator's were in --secondary, which on --lightgray is
    3.9:1 in the dark scheme: text to read at this size wants 4.5. */
 .prose .annotation-tags {

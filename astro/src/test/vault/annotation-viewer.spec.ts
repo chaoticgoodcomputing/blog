@@ -2,9 +2,9 @@ import { builtPages } from "../build.ts"
 import { expect, test } from "../site.ts"
 
 // The vault's annotation pages, each with its document drawn from the site's mirror, and its cards
-// in the document's margin or a drawer (ADR 3701). The mirrors are kept in dist/mirrors, so a
-// checkout has them only once they are saved: `pnpm nx run astro:mirrors` before this suite
-// (docs/adr/2801). How the viewer behaves is the fixture's to show; this says that every real
+// in a drawer. The mirrors are kept in dist/mirrors, so a
+// checkout has them only once they are saved: `pnpm nx run astro:mirrors` before this suite.
+// How the viewer behaves is the fixture's to show; this says that every real
 // document's passages are found in it.
 
 const MIRRORS = "run `pnpm nx run astro:mirrors`"

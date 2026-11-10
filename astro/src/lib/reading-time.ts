@@ -2,7 +2,7 @@
 // the feed and the share card show the same number, so all of them ask here.
 //
 // It is counted from the note's text as the vault read it, not from its rendered page, so that
-// anything with a note can ask without rendering it (docs/adr/1001).
+// anything with a note can ask without rendering it.
 
 import type { Vault } from "@chaoticgoodcomputing/obsidian-markdown"
 import readingTime from "reading-time"

@@ -1,4 +1,4 @@
-// A link to an attachment is followed by the browser, not by the client router (docs/adr/0901).
+// A link to an attachment is followed by the browser, not by the client router.
 //
 // The router fetches the address a link names, to swap it in for the page, and prefetches it when
 // the pointer rests on the link. An attachment is no page: the router would fetch the whole file,

@@ -1,5 +1,5 @@
 // Mirrors: the site's own pinned copies of the annotated documents, which the annotation viewer
-// draws (docs/adr/2801). A mirror is saved in the mirror directory, the repository's dist/mirrors,
+// draws. A mirror is saved in the mirror directory, the repository's dist/mirrors,
 // since the documents are somebody else's and nothing the build runs writes into the vault: by
 // hand, or by `astro:mirrors` (scripts/pin-mirrors.ts). The directory is the same whichever vault
 // the site reads, so a vault assembled afresh keeps the mirrors already saved. The site serves each

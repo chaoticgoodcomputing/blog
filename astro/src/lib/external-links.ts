@@ -1,4 +1,4 @@
-// A link in a note to another site opens in a new tab (docs/adr/3401).
+// A link in a note to another site opens in a new tab.
 //
 // The reader stays on the note they were reading, as on the Quartz site. A link to another site is
 // one whose address is whole, on the web, and not on this site's host, by `https:` or `http:`: a

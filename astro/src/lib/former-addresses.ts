@@ -1,8 +1,8 @@
 // Former addresses: where the Quartz site served a page or a file that this site serves at another
 // address. The Quartz site wrote a note's address in lower case, and an MDX note's with `.mdx` after
 // it, an alias's in lower case (an MDX note's, with `.mdx` after it), and an attachment's path
-// slugged and in lower case; this site keeps a name's case (docs/adr/0003), gives an MDX note the
-// address a Markdown note has, and publishes an attachment at its path in the vault (docs/adr/0101). Each former address forwards the reader to
+// slugged and in lower case; this site keeps a name's case, gives an MDX note the
+// address a Markdown note has, and publishes an attachment at its path in the vault. Each former address forwards the reader to
 // the page or the file, through Astro's `redirects` (astro.config.ts), so a link to the old site
 // keeps working.
 //
@@ -36,8 +36,7 @@ const FORMER_TAGS_INDEX = `${TAGS_INDEX}/index`
  * The route Astro is given for a redirect from `former` to what is in the build's file `file`.
  * Astro writes a redirect as a page, to the file of its address with `.html` after it. Where that
  * differs from `file` only in case, a file system that ignores case would hold one file for both,
- * and the page would forward to itself, so the redirect is the index of a folder of its name
- * (docs/adr/2901).
+ * and the page would forward to itself, so the redirect is the index of a folder of its name.
  */
 function redirectRoute(former: string, file: string): string {
   return `${former}.html`.toLowerCase() === file.toLowerCase() ? `${former}/index` : former

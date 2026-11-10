@@ -128,10 +128,10 @@
 
 /* PDF.js's text layer: transparent text laid over the drawing so it can be selected and found.
    Prefixed by hand from PDF.js 5.4.530's web/text_layer_builder.css (`.textLayer` in pdfjs-dist's
-   web/pdf_viewer.css), keeping only what TextLayer's markup needs. Rule 9's vendor layer can't
-   reach a widget, so the rules live in the block like any other (the library's ADR-0001).
-   The widget's script writes --total-scale-factor on the page for PDF.js to read (the library's
-   ADR-0001 records it as an exception to rule 7), and PDF.js writes --min-font-size on this
+   web/pdf_viewer.css), keeping only what TextLayer's markup needs. A vendor layer can't reach a
+   widget, so the rules live in the block like any other.
+   The widget's script writes --total-scale-factor on the page for PDF.js to read (unprefixed, unlike
+   the site's own custom properties), and PDF.js writes --min-font-size on this
    element, and --font-height, --scale-x and --rotate on each span. The fallbacks stand in for the
    defaults text_layer_builder.css declares. */
 .textLayer {

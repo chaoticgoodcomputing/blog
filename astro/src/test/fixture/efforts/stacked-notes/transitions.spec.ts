@@ -1,4 +1,4 @@
-// Ephemeral (docs/adr/0006): the note's fold between pages, pinned while the stacked-notes effort
+// Ephemeral: the note's fold between pages, pinned while the stacked-notes effort
 // (.scratch/stacked-notes) works on it.
 import type { Page } from "@playwright/test"
 import { expect, expectAt, test } from "../../../site.ts"

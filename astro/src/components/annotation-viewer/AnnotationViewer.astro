@@ -1,10 +1,10 @@
 ---
 // The annotation viewer: an annotation page's annotated document, drawn from the site's mirror of
-// it, with each annotation's passage highlighted, and the page's annotations, its cards, laid out
-// around it as the Quartz annotator lays them out (docs/cutover/annotations-audit.md, ADR 3701).
+// it, with each annotation's passage highlighted, and the page's annotations, its cards, in a drawer
+// beside it and in popovers over its highlights.
 //
 // The page's body is this component's slot: the preface, the source of the document, the
-// annotations and the epilogue, which the Markdown pipeline makes (ADR 2701). As built, and for good
+// annotations and the epilogue, which the Markdown pipeline makes. As built, and for good
 // where the document can't be shown, the cards are the page, in one column (`data-layout="static"`).
 // Once the document opens, the element's script lays the page out by the room it has, and never by
 // a media query:
@@ -108,7 +108,7 @@ const DOCUMENT = "annotated-document"
   const CARD_GAP = 12
   /** How far below the top of the window, or of a phone's menu bar, a passage gone to sits, in pixels. */
   const BELOW_BAR = 32
-  /** What the browser remembers for the reader, in local storage (ADR 3701). */
+  /** What the browser remembers for the reader, in local storage. */
   const KEPT = { zoom: "annotation-viewer:zoom" }
   /** The id the script gives the page's section of annotations, which the tab controls. */
   const CARDS = "annotation-cards"

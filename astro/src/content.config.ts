@@ -17,7 +17,7 @@ import { VAULT_ROOT, refreshVault, slugFor } from "./lib/vault.ts"
  * note changes where another's link goes, and so does a rule that takes a kind of note out of
  * publication. A note that embeds another shows that note's content too, so an edit to the one
  * changes the other's page. So the loader keeps the notes query's links digest beside the notes,
- * which covers all of these, and when it has changed, renders every note again (docs/adr/0201).
+ * which covers all of these, and when it has changed, renders every note again.
  *
  * The digest knows the query's answers, not the code of a Markdown plugin. A change to how a plugin
  * renders is followed by `astro build --force` (README.md, "Tests").
@@ -89,7 +89,7 @@ const notes = defineCollection({
   loader: vaultNotes(),
   // No property is read from an entry. What a note knows (its title, tags, date, whether it is
   // private) is asked of the notes query, src/lib/notes.ts, which reads the vault's own cache; the
-  // collection is what renders a note's body (docs/adr/0006). A vault's notes carry whatever
+  // collection is what renders a note's body. A vault's notes carry whatever
   // properties their plugins write, so an entry's data is left as it comes.
   schema: z.looseObject({}),
 })

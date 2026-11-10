@@ -4,7 +4,7 @@ import { expect, test } from "../site.ts"
 // test/fixtures/vault/sitemap: two indexable pages, `listed` and `Also Listed`, and a private one
 // under drafts/. The feed's articles are under content/feed.
 
-// The address the live site has always given it, which search consoles have on file (docs/adr/1501).
+// The address the live site has always given it, which search consoles have on file.
 const SITEMAP = `${SITE}/sitemap.xml`
 const LASTMOD = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
 

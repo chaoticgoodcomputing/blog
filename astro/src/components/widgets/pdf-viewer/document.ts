@@ -69,8 +69,8 @@ async function drawPage(page: PDFPageProxy, into: HTMLElement, width: number) {
   el.style.width = `${viewport.width}px`
   el.style.height = `${viewport.height}px`
   // The text layer's sizes are written in terms of PDF.js's own custom properties, which its viewer
-  // CSS would declare on the page. Unprefixed, as PDF.js names them: the library's ADR-0001 records
-  // this exception to ADR-0003 rule 7.
+  // CSS would declare on the page. Unprefixed, as PDF.js names them, rather than with the `--cgc-`
+  // prefix the site's own custom properties carry.
   el.style.setProperty("--total-scale-factor", String(scale))
   el.style.setProperty("--scale-round-x", "1px")
   el.style.setProperty("--scale-round-y", "1px")

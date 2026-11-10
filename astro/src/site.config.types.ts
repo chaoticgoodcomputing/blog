@@ -54,7 +54,7 @@ export interface TagDefinition {
   color?: string
   /**
    * An icon id, `prefix:name`: `mdi:robot` from Material Design Icons, or `custom:d20` from the
-   * site's own SVG files, `src/icons/d20.svg` (docs/adr/1101).
+   * site's own SVG files, `src/icons/d20.svg`.
    */
   icon?: string
 }
@@ -173,7 +173,7 @@ export interface PostListingConfig {
 }
 
 /**
- * The feed, at `/index.xml` (docs/adr/1501): the site's newest articles that are posts. What the
+ * The feed, at `/index.xml`: the site's newest articles that are posts. What the
  * channel says it is names the limit and the site's title, "Last 40 notes on …".
  */
 export interface FeedConfig {

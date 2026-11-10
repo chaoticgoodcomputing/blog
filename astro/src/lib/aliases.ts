@@ -124,7 +124,7 @@ export function staticPages(pages: string = fileURLToPath(new URL("../pages/", i
 export function publishedFiles(
   publicFolder: string = fileURLToPath(new URL("../../public/", import.meta.url)),
 ): string[] {
-  // Listed as the dev server lists them: a missing export is the build's to report (docs/adr/0302).
+  // Listed as the dev server lists them: a missing export is the build's to report.
   const exports = getDrawingExports({ strict: false }).map((each) => each.url)
   const own = fs
     .readdirSync(publicFolder, { recursive: true, withFileTypes: true })

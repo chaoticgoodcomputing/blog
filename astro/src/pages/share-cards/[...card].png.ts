@@ -1,6 +1,6 @@
 // Every page's share card, each at its page's address under /share-cards (src/lib/share-card.ts).
 // A card is kept in Astro's cache directory, where the next build finds it, and drawn only when
-// what it shows has changed (docs/adr/1701).
+// what it shows has changed.
 import { fileURLToPath } from "node:url"
 import type { APIRoute, GetStaticPaths } from "astro"
 import { cacheDir } from "astro:config/server"

@@ -1,5 +1,5 @@
 // Every export of every drawing in the vault, each at the address an embed of its drawing names
-// (src/lib/drawings.ts), and without the canvas it was drawn on (docs/adr/0301).
+// (src/lib/drawings.ts), and without the canvas it was drawn on.
 import type { APIRoute, GetStaticPaths } from "astro"
 import { getDrawingExports, readDrawingExport } from "../../lib/drawings.ts"
 import { getVault } from "../../lib/vault.ts"
@@ -7,7 +7,7 @@ import { getVault } from "../../lib/vault.ts"
 const PREFIX = "/drawings/"
 const SUFFIX = ".svg"
 
-// A build fails while a note embeds a drawing with no export (docs/adr/0302). The dev server keeps
+// A build fails while a note embeds a drawing with no export. The dev server keeps
 // serving the exports there are: that note's page is the one with nothing to show, and the dev
 // server's log names it.
 export const getStaticPaths = (() =>

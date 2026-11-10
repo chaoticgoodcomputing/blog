@@ -75,7 +75,7 @@ const widgets = fileURLToPath(new URL("./src/components/widgets/", import.meta.u
 const icons = fileURLToPath(new URL("./src/icons/", import.meta.url))
 
 // The end-to-end suite builds a site of its own beside the real build, and names a cache for it
-// (playwright.config.ts, docs/adr/0007).
+// (playwright.config.ts).
 const e2eCache = process.env.E2E_CACHE_DIR
 
 // What works on the syntax's own nodes, a wikilink or an embed as written, goes here, before the
@@ -103,7 +103,7 @@ export default defineConfig({
   site,
   // One file per page, `content/notes/a.html`, so a note keeps the address it has today, without a
   // trailing slash. Every page's styles are written into the page, so no stylesheet holds its first
-  // paint back (docs/adr/2902).
+  // paint back.
   build: { format: "file", inlineStylesheets: "always" },
   ...(e2eCache ? { cacheDir: e2eCache } : {}),
 
@@ -111,8 +111,7 @@ export default defineConfig({
   // Fraunces, a serif, for text and headings; Lato for whatever asks for a sans; Hack for code and
   // tags. Fraunces and Lato are downloaded from Google Fonts when the site builds; Hack, which Google
   // Fonts doesn't have, is the `hack-font` package's files. Each is served by the site itself
-  // (Base.astro), and each is a property under the name the vault's widgets read it by
-  // (docs/adr/0005).
+  // (Base.astro), and each is a property under the name the vault's widgets read it by.
   fonts: [
     {
       provider: fontProviders.google(),
@@ -152,7 +151,7 @@ export default defineConfig({
   // Each alias of a note is an address that forwards the reader to the note, as a page Astro writes
   // (src/lib/aliases.ts). Read once, as the config loads: the dev server takes a new alias on a restart.
   // So does each address the Quartz site served a page or an attachment at that this site serves
-  // elsewhere (src/lib/former-addresses.ts, docs/adr/2901). And each page and alias with a trailing
+  // elsewhere (src/lib/former-addresses.ts). And each page and alias with a trailing
   // slash, which GitHub Pages answers from a folder's index: since each page is a file (`build`
   // above), it would otherwise be the 404 page (src/lib/trailing-slashes.ts).
   redirects: withTrailingSlashes({ ...getAliasRedirects(), ...getFormerAddressRedirects() }),
@@ -161,11 +160,11 @@ export default defineConfig({
     mdx(),
     preact(),
 
-    // The vault's attachments, each at its path in the vault (docs/adr/0101).
+    // The vault's attachments, each at its path in the vault.
     attachments(),
 
     // The mirrors of the annotated documents, kept in dist/mirrors, each under
-    // assets/annotated-documents (docs/adr/2801).
+    // assets/annotated-documents.
     mirrors(),
 
     // The resume, compiled by `resume:build` outside the vault, at the address the vault's copy had.
@@ -173,7 +172,7 @@ export default defineConfig({
 
     // 11 icons
     // An icon id drawn as inline SVG when the site builds: Material Design Icons, and the site's own
-    // SVG files in src/icons (docs/adr/1101). The tag dictionary is checked against the vault.
+    // SVG files in src/icons. The tag dictionary is checked against the vault.
     icon(),
     tagDictionary(),
 
@@ -187,10 +186,10 @@ export default defineConfig({
       serialize: (item) => ({ ...item, lastmod: sitemapEntry(item.url)?.lastModified?.toISOString() }),
     }),
 
-    // The sitemap at /sitemap.xml too, the address search consoles have on file (docs/adr/1501).
+    // The sitemap at /sitemap.xml too, the address search consoles have on file.
     sitemapAddress(),
 
-    // The search index: the indexable pages, each as the build wrote it (docs/adr/1901).
+    // The search index: the indexable pages, each as the build wrote it.
     search(),
 
     // A Markdown copy of each indexable note's page, at its address with `.md` after it, and
@@ -207,7 +206,7 @@ export default defineConfig({
   markdown: {
     // 08 code themes
     // Code is highlighted in GitHub's light and dark themes, each token's colour a `light-dark()`
-    // pair, so a block follows the page's colour scheme as the palette does (docs/adr/0801).
+    // pair, so a block follows the page's colour scheme as the palette does.
     shikiConfig: {
       themes: { light: "github-light", dark: "github-dark" },
       defaultColor: "light-dark()",
@@ -232,16 +231,16 @@ export default defineConfig({
       hastPlugins: [
         islands(),
         // A widget that names an attachment as Quartz addressed it gets the attachment's own
-        // address (docs/adr/0101).
+        // address.
         widgetAddresses(),
 
-        // A link to an attachment is the browser's to follow, not the client router's (docs/adr/0901).
+        // A link to an attachment is the browser's to follow, not the client router's.
         attachmentLinks(),
 
         // 05 math
         math(),
 
-        // A link to another site opens in a new tab (docs/adr/3401).
+        // A link to another site opens in a new tab.
         externalLinks(site),
 
         // A link to an IndieNews language page is the note's copy there, which submits the note
@@ -258,7 +257,7 @@ export default defineConfig({
         // Images on adjacent lines are a carousel, one in view at a time (src/lib/image-carousels.ts).
         imageCarousels(),
 
-        // Each heading ends with a link to itself (docs/adr/3402). It gives the headings their ids
+        // Each heading ends with a link to itself. It gives the headings their ids
         // before Astro does, so it stays after every plugin that adds or renames a heading.
         headingAnchors(),
 
@@ -292,7 +291,7 @@ export default defineConfig({
       watch: { ignored: ["**/.e2e/**"] },
     },
     // The end-to-end suite's server takes the port it is given or fails, so a spec never reads
-    // another checkout's site (docs/adr/0007).
+    // another checkout's site.
     preview: { strictPort: e2eCache !== undefined },
     // What the dev server bundles as it starts, though a page only imports it when asked: the QR
     // code's library (ArticleTitle.astro). Found later, on the first click, it would be bundled

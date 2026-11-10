@@ -1,6 +1,6 @@
 // A page's share card: the image its `og:image` names, drawn when the site builds. It shows the
 // site's title and address, and the page as a post listing shows it: its title, date, description
-// and tags, in the site's dark palette (docs/adr/1701).
+// and tags, in the site's dark palette.
 
 import { createHash, randomUUID } from "node:crypto"
 import fs from "node:fs"
@@ -135,7 +135,7 @@ const color = (token: string) => inDark(`var(--${token})`)
 // The site's fonts (astro.config.ts): Fraunces for text and headings, in the text's light 300, the
 // headings' 600 and the site title's 700, and Hack for tags. Satori reads neither WOFF2 nor a
 // variable font, which is what the Fonts API serves the site, so Fraunces is set from Fontsource's
-// static WOFF files of it (docs/adr/1702), Latin Extended there for what Latin lacks, and Hack from
+// static WOFF files of it, Latin Extended there for what Latin lacks, and Hack from
 // the WOFF files of the `hack-font` package the site serves its WOFF2 files from.
 const require = createRequire(import.meta.url)
 const FONT = "Fraunces"
@@ -160,7 +160,7 @@ const FONTS: SatoriOptions["fonts"] = [
 // An icon id's SVG, painted in one colour, as a data address an `<img>` can show. Material Design
 // Icons are read from their installed set; the site's own from its files in src/icons
 // (src/lib/icons.ts). Satori draws an `<img>`, not astro-icon's component, so the card reads the
-// sets astro-icon reads itself (docs/adr/1701).
+// sets astro-icon reads itself.
 const siteIcons = import.meta.glob<string>("../icons/*.svg", { query: "?raw", import: "default", eager: true })
 interface IconSet {
   icons: Record<string, { body: string; width?: number; height?: number }>

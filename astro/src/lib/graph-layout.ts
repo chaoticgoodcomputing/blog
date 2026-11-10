@@ -303,7 +303,7 @@ export function focusedView(
  * The view that fits a graph at rest in a box, `margin` in from its edges: every node, a node with
  * a label with the label under it at `sizes.label`, and a shell's ring, round the graph's middle,
  * with its margin round it, as the Quartz site fitted its view to the ring. It is never larger than
- * the graph is (docs/adr/2201): where the Quartz site would have zoomed a ring in to fill a large
+ * the graph is: where the Quartz site would have zoomed a ring in to fill a large
  * box, this leaves it at its size. A node's place is from the middle of the box.
  */
 export function fittedView(

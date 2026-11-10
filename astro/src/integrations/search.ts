@@ -1,4 +1,4 @@
-// The site's search index, built by Pagefind from the pages the build wrote (docs/adr/1901). Only
+// The site's search index, built by Pagefind from the pages the build wrote. Only
 // the pages src/lib/search.ts names are in it: no private page, no private tag page, no 404 page
 // and no alias redirect. The index is written to `/pagefind`, beside the pages, and the search box
 // (src/components/Search.astro) loads it from there when a reader searches.

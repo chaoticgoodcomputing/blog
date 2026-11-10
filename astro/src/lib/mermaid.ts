@@ -1,6 +1,6 @@
 // A `mermaid` code block is a diagram. The note's HTML holds the block as it was written, a code
 // block of its source, inside a `<mermaid-diagram>` element; the element draws the diagram in the
-// reader's browser (src/components/MermaidDiagram.astro, docs/adr/0401). Until it has, and where
+// reader's browser (src/components/MermaidDiagram.astro). Until it has, and where
 // it can't, the reader has the source.
 
 import { parseLinktext, type Vault, type VaultFile } from "@chaoticgoodcomputing/obsidian-markdown"

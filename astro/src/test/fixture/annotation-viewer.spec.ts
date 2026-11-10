@@ -6,8 +6,8 @@ import { expect, expectAt, test } from "../site.ts"
 // two-page PDF, "On Meetings", whose mirror is in the fixture's mirror directory
 // (test/fixtures/mirrors/On-Meetings.pdf): an annotation on the first page and two on the
 // second, a reply to the first of those, and one quoted from a draft the document doesn't have; and
-// a note whose document has no mirror. The viewer lays the page out as the Quartz annotator does
-// (docs/cutover/annotations-audit.md, ADR 3701).
+// a note whose document has no mirror. The document takes the whole column; the cards are in a drawer,
+// and in popovers over the highlights.
 
 const PAGE = "/annotation-viewer/on-meetings"
 const MIRROR = "/assets/annotated-documents/On-Meetings.pdf"

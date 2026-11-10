@@ -61,7 +61,7 @@
 
   /**
    * The stylesheets a page links that this one doesn't. A stylesheet only some pages need, as
-   * KaTeX's is (docs/adr/0501), is linked by the page that needs it, and not by this one.
+   * KaTeX's is, is linked by the page that needs it, and not by this one.
    */
   function missing(stylesheets: HTMLLinkElement[]): HTMLLinkElement[] {
     const linked = new Set(
@@ -78,10 +78,10 @@
    * a note, or in the backlinks, a post listing, the tag explorer or a tag badge (`PREVIEWED`). A
    * link anywhere else has none: the site's title, a table of contents, a search result, whose
    * preview would cover the results under it, or a link in a preview. An unresolved link goes
-   * nowhere, and a link to an attachment is to a file that is no page, which is left to the browser
-   * (docs/adr/0901): neither is fetched. Markdown's links to an attachment carry
+   * nowhere, and a link to an attachment is to a file that is no page, which is left to the browser:
+   * neither is fetched. Markdown's links to an attachment carry
    * `data-astro-reload`; a widget's own do not, and are known by their address: a page's has no
-   * extension (docs/adr/0003), and a file's does. So a note named with a dot in its last part,
+   * extension, and a file's does. So a note named with a dot in its last part,
    * `v1.2`, would have no preview, and no note of the vault is. Outside the note, a link to the
    * page the reader is on has none: the reader is there. In the note, a link to a place on it has
    * one, to read it without leaving the place, but a heading's link to itself has none: it is on the

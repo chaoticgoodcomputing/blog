@@ -34,8 +34,7 @@ export { expect }
 /**
  * Where a page is, as its address says without the reader's trail (src/lib/trail.ts): the path from
  * the site's root, the rest of the query, and the hash. The trail rides in the query of every page
- * a link reaches, so a durable test says where a page is with this, never with the whole address
- * (docs/adr/0006).
+ * a link reaches, so a durable test says where a page is with this, never with the whole address.
  */
 export function placeOf(address: string): string {
   const url = new URL(address)

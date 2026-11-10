@@ -3,7 +3,7 @@
 // Obsidian's Excalidraw plugin exports beside it (astro.config.ts). What a drawing is, and which
 // files are its exports, is the library's to say. This module says where the site publishes them,
 // and what it publishes: each export without the canvas it was drawn on, so that a drawing sits on
-// the page's own background in either colour scheme (docs/adr/0301).
+// the page's own background in either colour scheme.
 
 import fs from "node:fs"
 import path from "node:path"
@@ -68,7 +68,7 @@ export function unexportedDrawings(vault: Vault): UnexportedDrawing[] {
 
 export interface DrawingExportOptions {
   /**
-   * Whether a drawing some note embeds with no export fails the list (docs/adr/0302). Default:
+   * Whether a drawing some note embeds with no export fails the list. Default:
    * true. Astro renders a Markdown note that fails as an empty page and only logs the error, and a
    * page with nothing where its drawings should be is not to be published.
    */

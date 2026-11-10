@@ -88,14 +88,14 @@
       "options": { "command": "pnpm run test", "cwd": "{projectRoot}" }
     },
     "mirrors": {
-      "//": "Saves a mirror of each annotated document that has none into the mirror directory, the repository's dist/mirrors (MIRRORS_ROOT overrides it), never into the vault; the site serves each under assets/annotated-documents (docs/adr/2801). A saved mirror is pinned and never fetched again; delete it to fetch it afresh. The only target that reaches the network for the vault: run it before a build that should have every mirror, as the deploy does. A document that can't be fetched is reported, and its page is built with its annotations alone. Then recognizes the scanned pages of each mirror with no text file of its own (@chaoticgoodcomputing/pdf-ocr), and keeps their text beside it.",
+      "//": "Saves a mirror of each annotated document that has none into the mirror directory, the repository's dist/mirrors (MIRRORS_ROOT overrides it), never into the vault; the site serves each under assets/annotated-documents. A saved mirror is pinned and never fetched again; delete it to fetch it afresh. The only target that reaches the network for the vault: run it before a build that should have every mirror, as the deploy does. A document that can't be fetched is reported, and its page is built with its annotations alone. Then recognizes the scanned pages of each mirror with no text file of its own (@chaoticgoodcomputing/pdf-ocr), and keeps their text beside it.",
       "executor": "nx:run-commands",
       "options": { "command": "pnpm run mirrors", "cwd": "{projectRoot}" },
       "dependsOn": [ "vault" ],
       "cache": false
     },
     "e2e": {
-      "//": "The Playwright specs against the built site: over the fixture vault (src/test/fixture), or with the `vault` configuration over the real one (src/test/vault). The suite builds its own site into .e2e and serves it on a port of its own, which E2E_PORT overrides (docs/adr/0007). One spec: `nx run astro:e2e -- notes`. Never beside another build in the same checkout, and never beside its dev server, which the suite refuses to start next to: every build writes the same .astro directory, and the dev server reads it. Stop the dev server first, or run the suite from another worktree.",
+      "//": "The Playwright specs against the built site: over the fixture vault (src/test/fixture), or with the `vault` configuration over the real one (src/test/vault). The suite builds its own site into .e2e and serves it on a port of its own, which E2E_PORT overrides. One spec: `nx run astro:e2e -- notes`. Never beside another build in the same checkout, and never beside its dev server, which the suite refuses to start next to: every build writes the same .astro directory, and the dev server reads it. Stop the dev server first, or run the suite from another worktree.",
       "executor": "nx:run-commands",
       "options": { "command": "pnpm run e2e", "cwd": "{projectRoot}" },
       "dependsOn": [ "vault" ],

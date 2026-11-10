@@ -1,5 +1,5 @@
-// The vault's attachments, published as they are (docs/adr/0101). Astro publishes files as they are
-// from `public/`, and the vault is not in it (docs/adr/0002), so this integration does for the
+// The vault's attachments, published as they are. Astro publishes files as they are
+// from `public/`, and the vault is not in it, so this integration does for the
 // vault what Astro does for that folder: the dev server serves each attachment from where it is,
 // and the build copies it to the same address. Which attachments those are is
 // src/lib/attachments.ts's answer.
