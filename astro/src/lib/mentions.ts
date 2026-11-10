@@ -12,8 +12,7 @@ import fs from "node:fs"
 import type { Loader } from "astro/loaders"
 import { z } from "astro/zod"
 import { parse } from "node-html-parser"
-import { getAliasRedirects } from "./aliases.ts"
-import { getFormerAddressRedirects } from "./former-addresses.ts"
+import { getAddressMap, type Resolve } from "./addresses.ts"
 import { mentionSourceOf } from "./discussion.ts"
 
 /** A mention, as the collection holds it. */
@@ -24,7 +23,7 @@ export const mentionSchema = z.object({
   target: z.string(),
   /**
    * The address of the note that page is, from the site's root, through an alias or a former
-   * address (`noteAddressOf`). Worked out as the mentions are loaded, where the redirects are known.
+   * address (`noteAddressOf`). Worked out as the mentions are loaded, where the address map is known.
    */
   note: z.string(),
   /** The page that mentions it. */
@@ -102,14 +101,14 @@ export function excerptOf(content: Jf2Entry["content"], target: string, base: st
 }
 
 /**
- * A webmention as a mention of the note it names, through `redirects`, or undefined for one that
+ * A webmention as a mention of the note it names, through `resolve`, or undefined for one that
  * says nothing, is private, or names no page of the site.
  */
-export function toMention(entry: Jf2Entry, redirects: Record<string, string> = {}): Mention | undefined {
+export function toMention(entry: Jf2Entry, resolve: Resolve = (address) => address): Mention | undefined {
   const target = entry["wm-target"]
   const url = entry.url ?? entry["wm-source"]
   if (!target || !url || entry["wm-private"] || SILENT.has(entry["wm-property"] ?? "")) return undefined
-  const note = noteAddressOf(target, redirects)
+  const note = noteAddressOf(target, resolve)
   if (note === undefined) return undefined
   return {
     source: mentionSourceOf(url, entry["wm-source"]),
@@ -127,16 +126,14 @@ export function toMention(entry: Jf2Entry, redirects: Record<string, string> = {
 }
 
 /**
- * The note address a mention's target is, from the site's root: its page, followed through
- * `redirects` (an alias, a former address) to the note's own. Its host is not asked: webmention.io
- * gives the site only the webmentions of its own domain.
+ * The note address a mention's target is, from the site's root: its page, followed by `resolve`
+ * (an alias, a former address) to the note's own. Its host is not asked: webmention.io gives the
+ * site only the webmentions of its own domain.
  */
-export function noteAddressOf(target: string, redirects: Record<string, string>): string | undefined {
+export function noteAddressOf(target: string, resolve: Resolve = (address) => address): string | undefined {
   const key = pageKey(target)
   if (key === undefined) return undefined
-  let address = key.slice(key.indexOf("/"))
-  for (let hops = 0; hops < 3 && redirects[address] !== undefined; hops++) address = redirects[address]!
-  return address
+  return resolve(key.slice(key.indexOf("/")))
 }
 
 /**
@@ -185,18 +182,6 @@ export function mentionCounts(mentions: Mention[], blocked: string[]): Map<strin
   return new Map([...pages].map(([note, seen]) => [note, seen.size]))
 }
 
-/**
- * The site's redirects to notes, an alias's and a former address's, by the address they redirect
- * from, as `noteAddressOf` follows them. Read where the Astro config reads them, as it loads: they
- * look for the site's own pages on disk, which a rendered page can't.
- */
-export function getNoteRedirects(): Record<string, string> {
-  const redirects: Record<string, string> = {}
-  for (const [from, to] of Object.entries({ ...getFormerAddressRedirects(), ...getAliasRedirects() })) {
-    redirects[from.replace(/\.html$/, "")] = to
-  }
-  return redirects
-}
 
 /** How many webmentions one request to the API asks for. */
 const PAGE_SIZE = 100
@@ -254,10 +239,10 @@ export function mentionsLoader(api: string, { enabled = true }: { enabled?: bool
         return
       }
       async function keep(entries: Jf2Entry[]) {
-        const redirects = getNoteRedirects()
+        const { resolve } = getAddressMap()
         let kept = 0
         for (const entry of entries) {
-          const mention = toMention(entry, redirects)
+          const mention = toMention(entry, resolve)
           if (!mention || entry["wm-id"] === undefined) continue
           const id = String(entry["wm-id"])
           store.set({ id, data: await parseData({ id, data: mention }) })

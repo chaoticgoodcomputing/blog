@@ -6,9 +6,6 @@
 // A trailing-slash redirect is no note, so nothing that asks the notes query lists one, as an
 // alias redirect is not listed.
 
-import { getNotes, tagsOf } from "./notes.ts"
-import { tagUrl } from "./tags.ts"
-
 /**
  * Astro's `redirects` from each address's folder index, `/a/index`, to where `/a` leads: to `/a`
  * itself for each of `pages`, and for each of `redirects`'s addresses straight to where it forwards,
@@ -37,15 +34,3 @@ export function trailingSlashRedirects(
   return result
 }
 
-/**
- * The site's trailing-slash redirects, for Astro's `redirects`: its notes' pages, its tags' pages,
- * `pages`, the site's other pages, and the addresses of `redirects`, its other redirects.
- */
-export function getTrailingSlashRedirects(
-  pages: Iterable<string>,
-  redirects: Record<string, string>,
-): Record<string, string> {
-  const notes = getNotes()
-  const tagPages = [...tagsOf(notes).keys()].map(tagUrl)
-  return trailingSlashRedirects([...notes.map((note) => note.url), ...tagPages, ...pages], redirects)
-}

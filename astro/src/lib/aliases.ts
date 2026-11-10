@@ -1,7 +1,7 @@
 // Alias redirects: each alias in a note's frontmatter is an address that forwards the reader to the
 // note, so a note's old names keep working. A tag description note's aliases forward to its tag's
-// page, so a renamed tag's old page keeps working too. The redirects themselves are Astro's own, its
-// `redirects` setting (astro.config.ts), and this module says what they are.
+// page, so a renamed tag's old page keeps working too. This module says what they are; the address map
+// (./addresses.ts) holds them with the site's other forwarding addresses.
 //
 // A nested tag's name is an alias of its page too: `/tags/ai` forwards to `/tags/engineering/ai`
 // (src/lib/tag-names.ts).
@@ -15,7 +15,7 @@ import { fileURLToPath } from "node:url"
 import { parseFrontMatterAliases } from "@chaoticgoodcomputing/obsidian-markdown"
 import { publishedAttachments } from "./attachments.ts"
 import { getDrawingExports } from "./drawings.ts"
-import { getNotes, getUnpublished, tagsOf, type Note, type UnpublishedNote } from "./notes.ts"
+import { tagsOf, type Note, type UnpublishedNote } from "./notes.ts"
 import { resumeAddresses } from "./resume.ts"
 import { tagNameAddresses } from "./tag-names.ts"
 import { tagUrl } from "./tags.ts"
@@ -133,15 +133,3 @@ export function publishedFiles(
   return [...exports, ...publishedAttachments().keys(), ...resumeAddresses(), ...own]
 }
 
-/**
- * The site's alias redirects, for Astro's `redirects`. An alias left without one is reported as the
- * config loads, and its page or file keeps the address.
- */
-export function getAliasRedirects(): Record<string, string> {
-  const descriptions = getUnpublished("tag description")
-  const { redirects, collisions } = aliasRedirects(getNotes(), staticPages(), publishedFiles(), descriptions)
-  for (const { file, alias, address, holder } of collisions) {
-    console.warn(`[aliases] ${file}: the alias "${alias}" has no redirect, since ${address} is ${holder}.`)
-  }
-  return redirects
-}

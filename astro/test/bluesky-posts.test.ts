@@ -47,7 +47,7 @@ test("a post that links to a note's former address or alias is that note's", () 
   const posts = postsOfNotes([item("p", "https://blog.example.com/content/old-name", "2026-11-01T00:00:00Z")], {
     site: SITE,
     handle: HANDLE,
-    redirects: { "/content/old-name": "/content/a" },
+    resolve: (address: string) => (address === "/content/old-name" ? "/content/a" : address),
   })
   expect(posts.get("/content/a")?.url).toBe("https://bsky.app/profile/example.com/post/p")
 })

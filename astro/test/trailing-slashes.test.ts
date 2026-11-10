@@ -1,5 +1,6 @@
 import { expect, test } from "vitest"
-import { getTrailingSlashRedirects, trailingSlashRedirects } from "../src/lib/trailing-slashes.ts"
+import { getAstroRedirects } from "../src/lib/addresses.ts"
+import { trailingSlashRedirects } from "../src/lib/trailing-slashes.ts"
 
 test("each page's address with a trailing slash forwards to the page, from its folder's index", () => {
   expect(trailingSlashRedirects(["/notes/plain", "/tags/garden", "/Move-to-Boston/Timeline"])).toEqual({
@@ -31,7 +32,7 @@ test("a folder index another redirect has, by a name that differs only in case, 
 // The site's own notes are the fixture vault's (vitest.config.ts).
 
 test("the site's trailing-slash redirects cover its notes' pages, its tags' pages and its other pages", () => {
-  const redirects = getTrailingSlashRedirects(["/graph"], { "/archive/old-name": "/aliases/renamed" })
+  const redirects = getAstroRedirects()
   expect(redirects).toMatchObject({
     "/aliases/renamed/index": "/aliases/renamed",
     "/archive/old-name/index": "/aliases/renamed",

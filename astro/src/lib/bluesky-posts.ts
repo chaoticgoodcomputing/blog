@@ -11,7 +11,8 @@ import fs from "node:fs"
 import type { Loader } from "astro/loaders"
 import { z } from "astro/zod"
 import { PUBLIC_API } from "./bluesky/client.ts"
-import { getNoteRedirects, noteAddressOf } from "./mentions.ts"
+import { getAddressMap, type Resolve } from "./addresses.ts"
+import { noteAddressOf } from "./mentions.ts"
 
 /** A note's Bluesky post, as the collection holds it. */
 export const blueskyPostSchema = z.object({
@@ -53,13 +54,13 @@ export function postUrl(uri: string, handle: string): string | undefined {
  */
 export function postsOfNotes(
   feed: AuthorFeedItem[],
-  { site, handle, redirects = {} }: { site: URL; handle: string; redirects?: Record<string, string> },
+  { site, handle, resolve }: { site: URL; handle: string; resolve?: Resolve },
 ): Map<string, BlueskyPost> {
   const posts = new Map<string, BlueskyPost>()
   for (const { reason, post } of feed) {
     const link = post.record.embed?.$type === "app.bsky.embed.external" ? post.record.embed.external?.uri : undefined
     if (reason || post.record.reply || !link || !URL.canParse(link) || new URL(link).host !== site.host) continue
-    const note = noteAddressOf(link, redirects)
+    const note = noteAddressOf(link, resolve)
     const url = postUrl(post.uri, handle)
     const published = new Date(post.record.createdAt)
     if (note === undefined || url === undefined || Number.isNaN(published.getTime())) continue
@@ -126,7 +127,7 @@ export function blueskyPostsLoader({
         logger.warn(`No Bluesky posts are linked: ${(error as Error).message}`)
         return
       }
-      const posts = postsOfNotes(feed, { site: new URL(site), handle, redirects: getNoteRedirects() })
+      const posts = postsOfNotes(feed, { site: new URL(site), handle, resolve: getAddressMap().resolve })
       for (const post of posts.values()) {
         store.set({ id: post.note, data: await parseData({ id: post.note, data: post }) })
       }

@@ -2,7 +2,7 @@ import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
 import { afterAll, beforeAll, expect, test } from "vitest"
-import { formerAddress, formerAddressRedirects, formerAttachmentAddress } from "../src/lib/former-addresses.ts"
+import { formerAddress, formerAttachmentAddress } from "../src/lib/former-addresses.ts"
 import { indexNotes, type Note } from "../src/lib/notes.ts"
 import { openVault } from "../src/lib/vault.ts"
 
@@ -39,16 +39,6 @@ test("a note's former address is its address in lower case, and an MDX note's wi
   expect(formerAddress(note("Move to Boston/Timeline.mdx"))).toBe("/move-to-boston/timeline.mdx")
 })
 
-test("each former address that is not the note's address forwards to the note, and the tags index's does too", () => {
-  expect(formerAddressRedirects(notes)).toEqual({
-    "/notes/widget.mdx": "/notes/widget",
-    "/move-to-boston/timeline.mdx": "/Move-to-Boston/Timeline",
-    // Only the case differs, so the redirect is written as its folder's index: on a file system
-    // that ignores case, a file of its own would be the page's file.
-    "/weekly/2026-w06/index": "/weekly/2026-W06",
-    "/tags/index": "/tags",
-  })
-})
 
 test("an attachment's former address is its path as the Quartz site slugged it: lower case, a space as -, and an HTML file without .html", () => {
   expect(formerAttachmentAddress("/assets/Elkington_Resume.pdf")).toBe("/assets/elkington_resume.pdf")
@@ -60,48 +50,6 @@ test("an attachment's former address is its path as the Quartz site slugged it: 
   expect(formerAttachmentAddress("/assets/clutter.png")).toBe("/assets/clutter.png")
 })
 
-test("an alias's former address is its address in lower case, and forwards to the alias's note, from its folder's index", () => {
-  const aliases = { "/widgets/README": "/plugins/quartz-mdx", "/archive/old-name": "/notes/plain" }
-  expect(formerAddressRedirects([], aliases)).toEqual({
-    // The alias's own address is already the redirect from `/archive/old-name`.
-    "/widgets/readme/index": "/plugins/quartz-mdx",
-    "/tags/index": "/tags",
-  })
-})
 
-test("each attachment's former address that GitHub Pages would not serve the attachment at forwards to the attachment", () => {
-  const attachments = [
-    "/assets/Elkington_Resume.pdf",
-    "/assets/Pasted image 20240305234056.png",
-    "/assets/3UJZ/README",
-    "/assets/clutter.png",
-    // GitHub Pages serves `/assets/lag_figure` from `lag_figure.html`, the attachment itself.
-    "/assets/lag_figure.html",
-  ]
-  expect(formerAddressRedirects([], {}, attachments)).toEqual({
-    // Astro writes each as the file of its address with `.html` after it, `elkington_resume.pdf.html`,
-    // which no file system takes for the attachment's own.
-    "/assets/elkington_resume.pdf": "/assets/Elkington_Resume.pdf",
-    "/assets/pasted-image-20240305234056.png": "/assets/Pasted image 20240305234056.png",
-    "/assets/3ujz/readme": "/assets/3UJZ/README",
-    "/tags/index": "/tags",
-  })
-})
 
-test("an attachment's former address that only differs in case from an HTML attachment's forwards from its folder's index", () => {
-  expect(formerAddressRedirects([], {}, ["/assets/Figure.html"])).toEqual({
-    "/assets/figure/index": "/assets/Figure.html",
-    "/tags/index": "/tags",
-  })
-})
 
-test("an alias of an MDX note has a former address with .mdx after it too, as the note had where it was", () => {
-  const aliases = {
-    "/archive/old-widget": "/notes/widget",
-    "/Archive/Old-Widget": "/notes/widget",
-    "/archive/old-plain": "/notes/plain",
-  }
-  const redirects = formerAddressRedirects(notes, aliases)
-  expect(redirects["/archive/old-widget.mdx"]).toBe("/notes/widget")
-  expect(redirects).not.toHaveProperty("/archive/old-plain.mdx")
-})

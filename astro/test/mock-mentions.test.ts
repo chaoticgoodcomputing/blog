@@ -11,7 +11,7 @@ const now = new Date("2026-11-02T12:00:00Z")
 /** The made-up webmentions as the loader keeps them, an alias redirecting to the third note. */
 const kept = (alias?: string) =>
   mockMentions({ site: SITE, notes: ["/a", "/b", "/c"], alias }, now)
-    .map((entry) => toMention(entry, alias ? { [alias]: "/c" } : {}))
+    .map((entry) => toMention(entry, (address) => (address === alias ? "/c" : address)))
     .filter((mention): mention is Mention => mention !== undefined)
 
 test("each made-up webmention has an id of its own, and comes from an `.example` site or account", () => {

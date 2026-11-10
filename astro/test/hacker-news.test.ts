@@ -13,7 +13,7 @@ test("each note's thread is its submission with the most comments, of those of t
       { objectID: "5", url: "https://elsewhere.example/a", num_comments: 50 },
       { objectID: "6", url: null },
     ],
-    { site: SITE, redirects: { "/old-b": "/b" } },
+    { site: SITE, resolve: (address: string) => (address === "/old-b" ? "/b" : address) },
   )
   expect([...threads].map(([note, hit]) => [note, hit.objectID])).toEqual([
     ["/a", "2"],

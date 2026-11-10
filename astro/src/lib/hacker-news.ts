@@ -16,7 +16,8 @@ import fs from "node:fs"
 import type { Loader } from "astro/loaders"
 import { z } from "astro/zod"
 import { parse } from "node-html-parser"
-import { cut, EXCERPT_BLOCKS, getNoteRedirects, mentionSchema, noteAddressOf, type Mention } from "./mentions.ts"
+import { getAddressMap, type Resolve } from "./addresses.ts"
+import { cut, EXCERPT_BLOCKS, mentionSchema, noteAddressOf, type Mention } from "./mentions.ts"
 
 /** A note's Hacker News thread, as the collection holds it. */
 export const hackerNewsThreadSchema = z.object({
@@ -63,12 +64,12 @@ const itemUrl = (id: number | string) => `${HN}/item?id=${id}`
  */
 export function threadsOfNotes(
   hits: SearchHit[],
-  { site, redirects = {} }: { site: URL; redirects?: Record<string, string> },
+  { site, resolve }: { site: URL; resolve?: Resolve },
 ): Map<string, SearchHit> {
   const threads = new Map<string, SearchHit>()
   for (const hit of hits) {
     if (!hit.url || !URL.canParse(hit.url) || new URL(hit.url).host !== site.host) continue
-    const note = noteAddressOf(hit.url, redirects)
+    const note = noteAddressOf(hit.url, resolve)
     if (note === undefined) continue
     const kept = threads.get(note)
     const more = (hit.num_comments ?? 0) - (kept?.num_comments ?? 0)
@@ -118,9 +119,9 @@ export function commentMentions(
 export function hackerNewsThreads(
   hits: SearchHit[],
   items: Record<string, Item>,
-  { site, redirects = {}, comments }: { site: URL; redirects?: Record<string, string>; comments: number },
+  { site, resolve, comments }: { site: URL; resolve?: Resolve; comments: number },
 ): HackerNewsThread[] {
-  return [...threadsOfNotes(hits, { site, redirects })].map(([note, hit]) => ({
+  return [...threadsOfNotes(hits, { site, resolve })].map(([note, hit]) => ({
     note,
     url: itemUrl(hit.objectID),
     points: hit.points ?? 0,
@@ -199,7 +200,7 @@ export function hackerNewsLoader({
         return
       }
       const file = process.env.HACKER_NEWS_FILE
-      const options = { site: new URL(site), redirects: getNoteRedirects(), comments }
+      const options = { site: new URL(site), resolve: getAddressMap().resolve, comments }
       let threads: HackerNewsThread[]
       try {
         if (file) {

@@ -22,11 +22,11 @@ test("two addresses of one page have one key: a trailing slash, `.html` and a fr
 })
 
 test("a target is the note at its page, or the note an alias or former address redirects to", () => {
-  const redirects = { "/old-name": "/content/a" }
-  expect(noteAddressOf("https://blog.example.com/content/a/", redirects)).toBe("/content/a")
-  expect(noteAddressOf("https://blog.example.com/old-name", redirects)).toBe("/content/a")
-  expect(noteAddressOf("https://blog.example.com/", redirects)).toBe("/")
-  expect(noteAddressOf("nowhere", redirects)).toBeUndefined()
+  const resolve = (address: string) => (address === "/old-name" ? "/content/a" : address)
+  expect(noteAddressOf("https://blog.example.com/content/a/", resolve)).toBe("/content/a")
+  expect(noteAddressOf("https://blog.example.com/old-name", resolve)).toBe("/content/a")
+  expect(noteAddressOf("https://blog.example.com/", resolve)).toBe("/")
+  expect(noteAddressOf("nowhere", resolve)).toBeUndefined()
 })
 
 test("the excerpt is the blocks of the page's content that link to the note, as text", () => {
@@ -49,7 +49,7 @@ test("a like, a repost and a private webmention are no mention", () => {
   expect(toMention({ ...base, "wm-property": "like-of" })).toBeUndefined()
   expect(toMention({ ...base, "wm-property": "repost-of" })).toBeUndefined()
   expect(toMention({ ...base, "wm-property": "mention-of", "wm-private": true })).toBeUndefined()
-  expect(toMention({ ...base, "wm-property": "in-reply-to", name: " A reply ", author: { name: "Them" }, published: "2026-01-02T00:00:00Z" }, { "/a": "/content/a" })).toEqual({
+  expect(toMention({ ...base, "wm-property": "in-reply-to", name: " A reply ", author: { name: "Them" }, published: "2026-01-02T00:00:00Z" }, (address) => (address === "/a" ? "/content/a" : address))).toEqual({
     source: "webmentions",
     target: `${SITE}a`,
     note: "/content/a",

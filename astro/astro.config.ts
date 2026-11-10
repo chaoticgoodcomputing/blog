@@ -38,9 +38,7 @@ import { sitemapEntry } from "./src/lib/sitemap.ts"
 
 import { sitemapAddress } from "./src/integrations/sitemap-address.ts"
 
-import { getAliasRedirects, staticPages } from "./src/lib/aliases.ts"
-import { getFormerAddressRedirects } from "./src/lib/former-addresses.ts"
-import { getTrailingSlashRedirects } from "./src/lib/trailing-slashes.ts"
+import { getAstroRedirects } from "./src/lib/addresses.ts"
 
 import { search } from "./src/integrations/search.ts"
 
@@ -93,10 +91,6 @@ const beforeLinks = [
   annotatedDocument(),
 ]
 
-const withTrailingSlashes = (redirects: Record<string, string>) => ({
-  ...redirects,
-  ...getTrailingSlashRedirects(staticPages(), redirects),
-})
 
 export default defineConfig({
   // The site's address, kept here as Astro has it. A page reads it as `Astro.site`.
@@ -148,13 +142,13 @@ export default defineConfig({
     },
   ],
 
-  // Each alias of a note is an address that forwards the reader to the note, as a page Astro writes
-  // (src/lib/aliases.ts). Read once, as the config loads: the dev server takes a new alias on a restart.
-  // So does each address the Quartz site served a page or an attachment at that this site serves
-  // elsewhere (src/lib/former-addresses.ts). And each page and alias with a trailing
-  // slash, which GitHub Pages answers from a folder's index: since each page is a file (`build`
-  // above), it would otherwise be the 404 page (src/lib/trailing-slashes.ts).
-  redirects: withTrailingSlashes({ ...getAliasRedirects(), ...getFormerAddressRedirects() }),
+  // Each address of the address map forwards the reader to its page or file, as a page Astro writes
+  // (src/lib/addresses.ts): each alias of a note, and each address the Quartz site served a page or
+  // an attachment at that this site serves elsewhere. Read once, as the config loads: the dev server
+  // takes a new alias on a restart. And each page and forwarding address with a trailing slash,
+  // which GitHub Pages answers from a folder's index: since each page is a file (`build` above), it
+  // would otherwise be the 404 page (src/lib/trailing-slashes.ts).
+  redirects: getAstroRedirects(),
 
   integrations: [
     mdx(),

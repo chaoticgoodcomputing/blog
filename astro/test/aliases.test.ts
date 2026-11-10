@@ -2,7 +2,8 @@ import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
 import { afterAll, beforeAll, expect, test, vi } from "vitest"
-import { aliasAddress, aliasRedirects, getAliasRedirects, publishedFiles } from "../src/lib/aliases.ts"
+import { getAddressMap } from "../src/lib/addresses.ts"
+import { aliasAddress, aliasRedirects, publishedFiles } from "../src/lib/aliases.ts"
 import { getNote, getNotes, indexNotes, urlOf, type Note, type Unpublished } from "../src/lib/notes.ts"
 import { getVault, openVault } from "../src/lib/vault.ts"
 
@@ -111,10 +112,10 @@ test("the site's files are the addresses of its drawings' exports, its attachmen
   )
 })
 
-test("the site's alias redirects are its notes', and none takes the address of one of its pages", () => {
+test("the site's address map holds its notes' aliases, and none takes the address of one of its pages", () => {
   const warn = vi.spyOn(console, "warn").mockImplementation(() => {})
   try {
-    const redirects = getAliasRedirects()
+    const redirects = getAddressMap().forwards
     expect(redirects).toMatchObject({
       "/aliases/Old-Name": "/aliases/renamed",
       "/archive/old-name": "/aliases/renamed",
