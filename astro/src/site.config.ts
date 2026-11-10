@@ -123,7 +123,7 @@ export const footer: FooterConfig = {
     { label: "Spencer Elkington", url: "https://chaoticgood.computer/contact" },
     // { label: "Chaotic Good Computing", url: "https://github.com/chaoticgoodcomputing" },
   ],
-  notice: "This site contains writing by humans, for humans.",
+  notice: "Human writing, for human reading.",
 }
 
 export const lists: ListsConfig = { show: 5, more: 5 }
