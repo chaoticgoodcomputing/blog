@@ -1,0 +1,19 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "name": "@chaoticgoodcomputing/web-annotations",
+  "root": "packages/annotator/web-annotations",
+  "sourceRoot": "packages/annotator/web-annotations/src",
+  "projectType": "library",
+  "tags": ["annotator"],
+  "targets": {
+    "test": {
+      "//": "The spec's fixtures (SPEC §8), kept as strings in test/fixtures.ts. No build target: whoever uses it compiles the source.",
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run test", "cwd": "{projectRoot}" }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": { "command": "pnpm run typecheck", "cwd": "{projectRoot}" }
+    }
+  }
+}

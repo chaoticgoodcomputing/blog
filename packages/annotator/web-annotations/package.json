@@ -1,0 +1,29 @@
+{
+  "name": "@chaoticgoodcomputing/web-annotations",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Annotation notes as W3C Web Annotations: reading and writing their annotation blocks, their annotation properties, and the mapping to the Hypothesis client's JSON. No Obsidian, DOM or Node in it.",
+  "//license": "MIT, unlike its AGPL siblings: written clean-room from the spec, so the site can use it free of AGPL code.",
+  "license": "MIT",
+  "//exports": "Source only: no build and no dist. Whoever uses it compiles it.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p . && tsc -p test"
+  },
+  "dependencies": {
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.3"
+  }
+}
