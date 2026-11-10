@@ -4,7 +4,7 @@
 
 import { blobPage, framePage } from "../../src/frame-page.ts"
 import { CONNECT, type Reply, type Request } from "../../src/protocol.ts"
-import { createService } from "../../src/service.ts"
+import { createService, oneNote } from "../../src/service.ts"
 import { recognizePdf } from "../../src/ocr.ts"
 import type { TextFile } from "@chaoticgoodcomputing/pdf-ocr"
 
@@ -62,14 +62,16 @@ const STYLES = { css: ":host { --text-accent: rgb(1, 2, 3); }\n.internal-link { 
 ;(window as any).harness = harness
 
 const service = createService({
-  store: {
-    read: async () => harness.note,
-    update: async (change) => {
-      harness.note = change(harness.note)
+  notes: oneNote(
+    {
+      read: async () => harness.note,
+      update: async (change) => {
+        harness.note = change(harness.note)
+      },
     },
-  },
+    { title: () => "fixture", linkTo: (id) => `[[annotations/fixture#^${id}]]` },
+  ),
   displayName: "Tester",
-  linkTo: (id) => `[[annotations/fixture#^${id}]]`,
 })
 
 async function frameViewer() {

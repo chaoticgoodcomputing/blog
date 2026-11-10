@@ -3,32 +3,36 @@
 
 import { readFileSync } from "node:fs"
 import { expect, type Frame, type Page, test } from "@playwright/test"
-import { parseNote, upsertAnnotation } from "@chaoticgoodcomputing/annotator-format"
+import { addAnnotation, readNote, toHypothesis } from "@chaoticgoodcomputing/web-annotations"
 
 const TARGET = "https://example.org/fixture.pdf"
 const PREFACE = `---\nannotation-target: ${TARGET}\n---\n\nA preface.\n`
 const EPILOGUE = "\nAn epilogue.\n"
 
-/** An annotation as the plugin would have written it into a note. */
+/** An annotation as the plugin would have written it into a note, with its block id. */
 const seed = (id: string, exact: string, prefix: string, text: string) => ({
   id,
-  uri: TARGET,
-  document: { title: "fixture.pdf" },
-  target: [{ source: TARGET, selector: [{ type: "TextQuoteSelector", exact, prefix, suffix: "" }] }],
-  text,
-  tags: ["seeded"],
-  created: "2026-10-01T12:00:00.000Z",
-  updated: "2026-10-01T12:00:00.000Z",
+  content: {
+    target: { source: TARGET, selector: [{ type: "TextQuoteSelector", exact, prefix, suffix: "" }] },
+    comment: text,
+    tags: ["seeded"],
+  },
 })
+
+const withSeed = (note: string, { id, content }: ReturnType<typeof seed>) =>
+  addAnnotation(note, content, { blockId: () => id, now: () => "2026-10-01T12:00:00.000Z" }).text
 
 /** A note holding one annotation, on the second page's passage, or more, then an epilogue. */
 function seededNote(...more: ReturnType<typeof seed>[]) {
   let note = PREFACE
   for (const annotation of [seed("seed1", "Another passage worth a comment.", "The second page of the fixture.", "A comment already in the note."), ...more]) {
-    note = upsertAnnotation(note, annotation).note
+    note = withSeed(note, annotation)
   }
   return note + EPILOGUE
 }
+
+/** A note's annotations, as the client has them. */
+const annotationsOf = (note: string) => toHypothesis(readNote(note), "fixture")
 
 /** Opens the harness, and waits for the PDF's text, on the first page or the one with `text`, and the sidebar. */
 /** What the harness's Content Security Policy refused, as Obsidian's would (e2e/serve.mjs). */
@@ -91,13 +95,13 @@ test("annotating a passage writes it into the note, after the preface", async ({
   await tags.press("Enter")
   await sidebar.getByRole("button", { name: "Post to This note" }).click()
 
-  await expect.poll(async () => parseNote(await noteOf(page)).annotations.length).toBe(1)
+  await expect.poll(async () => annotationsOf(await noteOf(page)).length).toBe(1)
   const note = await noteOf(page)
-  const [annotation] = parseNote(note).annotations
+  const [annotation] = annotationsOf(note)
   expect(annotation!.text).toBe("My first comment.")
   expect(annotation!.tags).toEqual(["reading"])
   expect(annotation!.uri).toBe(TARGET)
-  const quote = annotation!.target![0]!.selector!.find((selector) => selector.type === "TextQuoteSelector") as { exact: string }
+  const quote = annotation!.target![0]!.selector!.find((selector) => selector.type === "TextQuoteSelector") as unknown as { exact: string }
   expect(quote.exact).toContain("Annotate this sentence, please.")
   expect(note.startsWith(PREFACE)).toBe(true)
   // The card is the user's own, so it can be edited.
@@ -116,9 +120,9 @@ test("editing an annotation rewrites its block; the epilogue stays last", async 
   await sidebar.getByRole("textbox", { name: "Enter comment" }).fill("An edited comment.")
   // Saving an edit is posting it again.
   await sidebar.getByRole("button", { name: "Post to This note" }).click()
-  await expect.poll(async () => parseNote(await noteOf(page)).annotations[0]?.text).toBe("An edited comment.")
+  await expect.poll(async () => annotationsOf(await noteOf(page))[0]?.text).toBe("An edited comment.")
   const note = await noteOf(page)
-  expect(parseNote(note).annotations.map((annotation) => annotation.id)).toEqual(["seed1"])
+  expect(annotationsOf(note).map((annotation) => annotation.id)).toEqual(["seed1"])
   expect(note.endsWith(EPILOGUE)).toBe(true)
 })
 
@@ -136,8 +140,9 @@ test("deleting an annotation removes its block, and nothing else", async ({ page
   await sidebar.getByRole("button", { name: "Delete" }).click()
   // The client asks first, in a dialog of its own.
   await sidebar.getByRole("dialog").getByRole("button", { name: "Delete" }).click()
-  await expect.poll(async () => parseNote(await noteOf(page)).blocks.length).toBe(0)
-  expect(await noteOf(page)).toBe(PREFACE + EPILOGUE)
+  await expect.poll(async () => annotationsOf(await noteOf(page)).length).toBe(0)
+  // The blank line before the note's only block stays, in its preface.
+  expect(await noteOf(page)).toBe(`${PREFACE}\n${EPILOGUE}`)
 })
 
 test("opening at an annotation narrows the sidebar to it", async ({ page }) => {
@@ -162,12 +167,12 @@ test("a note's page range shows only its pages, and its passages are annotated i
   await viewer.getByRole("button", { name: /^Annotate/ }).click()
   await sidebar.getByRole("textbox", { name: "Enter comment" }).fill("On page three.")
   await sidebar.getByRole("button", { name: "Post to This note" }).click()
-  await expect.poll(async () => parseNote(await noteOf(page)).annotations.length).toBe(2)
-  const annotation = parseNote(await noteOf(page)).annotations.find((annotation) => annotation.text === "On page three.")!
-  const quote = annotation.target![0]!.selector!.find((selector) => selector.type === "TextQuoteSelector") as { exact: string }
+  await expect.poll(async () => annotationsOf(await noteOf(page)).length).toBe(2)
+  const annotation = annotationsOf(await noteOf(page)).find((annotation) => annotation.text === "On page three.")!
+  const quote = annotation.target![0]!.selector!.find((selector) => selector.type === "TextQuoteSelector") as unknown as { exact: string }
   expect(quote.exact).toContain("A passage in the middle of the book.")
   // Its position is in the whole document's text, after the hidden first page's.
-  const position = annotation.target![0]!.selector!.find((selector) => selector.type === "TextPositionSelector") as { start: number }
+  const position = annotation.target![0]!.selector!.find((selector) => selector.type === "TextPositionSelector") as unknown as { start: number }
   expect(position.start).toBeGreaterThan("The first page of the fixture.Annotate this sentence, please.A line nobody annotates.".length)
 })
 
@@ -184,7 +189,7 @@ test("each page shows its number as a page range counts it, from 1, whatever the
 
 test("a comment is shown as Obsidian renders it, with Obsidian's styles, and its links open in Obsidian", async ({ page }) => {
   const comment = seed("seed1", "Another passage worth a comment.", "The second page of the fixture.", "Read this **twice**. See [[Flatland]].")
-  const note = upsertAnnotation(PREFACE, comment).note
+  const note = withSeed(PREFACE, comment)
   const { sidebar } = await open(page, { note })
   // The harness renders as Obsidian would (e2e/harness/host.ts), into the comment's own shadow root.
   const rendered = sidebar.locator("annotator-markdown")
@@ -239,9 +244,9 @@ test("a scanned PDF's text is recognized in the browser, to the text Node recogn
   await viewer.getByRole("button", { name: /^Annotate/ }).click()
   await sidebar.getByRole("textbox", { name: "Enter comment" }).fill("On a recognized word.")
   await sidebar.getByRole("button", { name: "Post to This note" }).click()
-  await expect.poll(async () => parseNote(await noteOf(page)).annotations.length).toBe(1)
-  const [annotation] = parseNote(await noteOf(page)).annotations
-  const quote = annotation!.target![0]!.selector!.find((selector) => selector.type === "TextQuoteSelector") as { exact: string; prefix: string }
+  await expect.poll(async () => annotationsOf(await noteOf(page)).length).toBe(1)
+  const [annotation] = annotationsOf(await noteOf(page))
+  const quote = annotation!.target![0]!.selector!.find((selector) => selector.type === "TextQuoteSelector") as unknown as { exact: string; prefix: string }
   expect(quote.exact).toBe("surprise.")
   expect(quote.prefix).toContain("bench by")
 })

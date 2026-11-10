@@ -77,6 +77,15 @@ export function vaultNotes(app: App, options: VaultNotesOptions): VaultNotes {
       return notes
     },
 
+    withBlock(id: string): string[] {
+      // Obsidian's index keys a note's blocks by their ids, lowercased.
+      const key = id.toLowerCase()
+      return app.vault
+        .getMarkdownFiles()
+        .filter((file) => app.metadataCache.getFileCache(file)?.blocks?.[key])
+        .map((file) => file.path)
+    },
+
     store(path: string): NoteStore {
       return {
         read: () => app.vault.read(fileAt(path)),

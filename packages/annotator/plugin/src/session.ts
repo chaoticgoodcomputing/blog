@@ -12,7 +12,7 @@ import type AnnotatorPlugin from "./main.ts"
 import { obsidianStyles, renderMarkdown } from "./obsidian-rendering.ts"
 import { formatPageRange, PAGES_PROPERTY, parsePageRange } from "./pages.ts"
 import { CONNECT, type Push, type Reply, type Request } from "./protocol.ts"
-import { createService, type NoteStore, type Service } from "./service.ts"
+import { createService, type NoteStore, oneNote, type Service } from "./service.ts"
 import { addressOf, bytesOf, propertyOf, type Target, targetOf, textFileOf } from "./target.ts"
 
 export class AnnotatorSession {
@@ -35,12 +35,13 @@ export class AnnotatorSession {
   ) {
     this.element = createDiv({ cls: "annotator-session" })
     this.service = createService({
-      store,
+      notes: oneNote(store, {
+        title: () => this.note.basename,
+        // As the user's settings write a link, the note named as it is now, from no note in particular.
+        linkTo: (id) => plugin.app.fileManager.generateMarkdownLink(this.note, "", `#^${id}`),
+      }),
       displayName: plugin.settings.displayName,
-      view: plugin.viewOptions(),
       logo,
-      // As the user's settings write a link, the note named as it is now, from no note in particular.
-      linkTo: (id) => plugin.app.fileManager.generateMarkdownLink(this.note, "", `#^${id}`),
     })
     plugin.sessions.add(this)
   }

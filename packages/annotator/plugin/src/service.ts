@@ -1,12 +1,23 @@
-// The fake service: Hypothesis's API as the sidebar calls it, answered from one annotation note in
-// place of Hypothesis's servers. Nothing here reaches a network, Obsidian or the DOM: the note comes
-// and goes through a store, so the same service runs in the plugin and in the tests.
+// The fake service: Hypothesis's API as the sidebar calls it, answered from annotation notes in
+// place of Hypothesis's servers. Nothing here reaches a network, Obsidian or the DOM: the notes come
+// and go through a port (`Notes`), one note for the sidebar in Obsidian (`oneNote`) or the whole
+// vault for the extension (src/vault-service.ts), so the same routes run in both and in the tests.
+// The client speaks Hypothesis's JSON; the notes keep W3C Web Annotations, mapped by web-annotations.
 //
 // The routes are those the client calls (its src/sidebar/services/api.ts and api-routes.ts, at the
 // version the plugin pins), with the smallest answers it accepts; research-hypothesis-embedding.md
 // in the effort's notes lists them, with the client's own code for each.
 
-import { type Annotation, parseNote, removeAnnotation, upsertAnnotation, type WriteOptions } from "@chaoticgoodcomputing/annotator-format"
+import {
+  AnnotationWriteError,
+  fromHypothesis,
+  type HypothesisAnnotation,
+  type Mint,
+  readNote,
+  removeAnnotation,
+  toHypothesis,
+} from "@chaoticgoodcomputing/web-annotations"
+import type { Page } from "./new-notes.ts"
 
 /**
  * The address Obsidian's sidebar is told the API is at. It never resolves: every request is
@@ -31,18 +42,47 @@ export interface ApiResponse {
   body: string
 }
 
-/** Where the service reads the note, and writes it. `update` applies a change to the note as it is then. */
+/** Where the service reads a note, and writes it. `update` applies a change to the note as it is then. */
 export interface NoteStore {
   read(): Promise<string>
   update(change: (note: string) => string): Promise<void>
 }
 
+/** An annotation note the service has found: where it is read and written, and what the sidebar shows of it. */
+export interface FoundNote extends NoteStore {
+  /** The note's title, as the annotations' document. */
+  title(): string
+  /**
+   * A link to an annotation of the note, by its id, as the user's vault writes one: `[[note#^id]]`.
+   * The sidebar's Share button copies it. Without one, an annotation has no Share button.
+   */
+  linkTo?(id: string): string
+}
+
+/** Where the service finds the note a request is about. */
+export interface Notes {
+  /** The note of a page, by any of the addresses the client has for it. */
+  forPage(addresses: readonly string[]): Promise<FoundNote | undefined>
+  /** The note holding an annotation, by its id (its block id). */
+  forAnnotation(id: string): Promise<FoundNote | undefined>
+  /** Makes a page's note, for its first annotation. Without it, a page with no note is refused. */
+  create?(page: Page): Promise<FoundNote>
+}
+
+/**
+ * One note, the sidebar's in Obsidian: every request is about it, whatever page it names, since a
+ * note is about one document and older annotations name it as Via did.
+ */
+export function oneNote(store: NoteStore, options: { title?: () => string; linkTo?: (id: string) => string } = {}): Notes {
+  const { title = () => "", linkTo } = options
+  const note: FoundNote = { read: () => store.read(), update: (change) => store.update(change), title, linkTo }
+  return { forPage: async () => note, forAnnotation: async () => note }
+}
+
 export interface ServiceOptions {
-  store: NoteStore
+  notes: Notes
   /** The user's name in the sidebar. */
   displayName?: string
-  /** How a block's view is written (the plugin's settings). */
-  view?: WriteOptions
   /** Where the API is, as the client calls it: API_URL by default. Ends with `/`. */
   apiUrl?: string
   /**
@@ -50,13 +90,8 @@ export interface ServiceOptions {
    * Without one, the client shows Hypothesis's.
    */
   logo?: string
-  /** The time now, as an ISO 8601 instant; a function so the tests can fix it. */
-  now?: () => string
-  /**
-   * A link to an annotation of the note, by its id, as the user's vault writes one: `[[note#^id]]`.
-   * The sidebar's Share button copies it. Without one, an annotation has no Share button.
-   */
-  linkTo?: (id: string) => string
+  /** The time and new ids of what is written; the tests fix them. */
+  mint?: Partial<Mint>
 }
 
 export type Service = (request: ApiRequest) => Promise<ApiResponse>
@@ -126,8 +161,15 @@ const groupWith = (logo?: string) => ({
   pre_moderated: false,
 })
 
+/** Every address an annotation the client posts has for its page: its own, its links, its targets'. */
+function addressesOf(posted: Record<string, any>): string[] {
+  const links: unknown[] = (posted.document?.link ?? []).map((link: { href?: unknown }) => link?.href)
+  const sources: unknown[] = (posted.target ?? []).map((target: { source?: unknown }) => target?.source)
+  return [posted.uri, ...links, ...sources].filter((address): address is string => typeof address === "string" && address !== "")
+}
+
 export function createService(options: ServiceOptions): Service {
-  const { store, displayName = "Me", view = {}, now = () => new Date().toISOString(), linkTo, apiUrl = API_URL, logo } = options
+  const { notes, displayName = "Me", mint = {}, apiUrl = API_URL, logo } = options
   const GROUP = groupWith(logo)
   let preferences: Record<string, unknown> = { show_sidebar_tutorial: false }
 
@@ -139,8 +181,8 @@ export function createService(options: ServiceOptions): Service {
     user_info: { display_name: displayName },
   })
 
-  /** An annotation as the client is given it: the vault's user's, in the one group, whoever the note says wrote it. */
-  const shown = (annotation: Annotation) => ({
+  /** An annotation as the client is given it: the vault's user's, in the one group. */
+  const shown = (note: FoundNote, annotation: HypothesisAnnotation) => ({
     ...annotation,
     user: USERID,
     user_info: { display_name: displayName },
@@ -148,22 +190,34 @@ export function createService(options: ServiceOptions): Service {
     permissions: { read: [`group:${GROUP_ID}`], update: [USERID], delete: [USERID], admin: [USERID] },
     // What the client's Share button shows and copies (its AnnotationShareControl): the link to the
     // annotation, to paste into another note.
-    links: linkTo ? { html: linkTo(annotation.id) } : {},
+    links: note.linkTo ? { html: note.linkTo(annotation.id!) } : {},
     hidden: false,
     flagged: false,
   })
 
-  const annotations = async () => parseNote(await store.read()).annotations
+  /** A note's annotations, as the client has them; what can't be read isn't shown. */
+  const annotationsOf = (note: FoundNote, text: string) => toHypothesis(readNote(text), note.title())
 
-  /** Writes an annotation into the note, and gives back what was stored. */
-  const write = async (annotation: Omit<Annotation, "id"> & { id?: string }) => {
-    let stored: Annotation | undefined
-    await store.update((note) => {
-      const written = upsertAnnotation(note, annotation, view)
-      stored = written.annotation
-      return written.note
+  const annotationIn = async (note: FoundNote, id: string) => annotationsOf(note, await note.read()).find((annotation) => annotation.id === id)
+
+  /** Writes an annotation from the client into a note, and gives back what was stored. */
+  const write = async (note: FoundNote, annotation: HypothesisAnnotation) => {
+    let written: { text: string; blockId: string } | undefined
+    await note.update((text) => {
+      written = fromHypothesis(text, annotation, mint)
+      return written.text
     })
-    return stored!
+    return annotationsOf(note, written!.text).find((stored) => stored.id === written!.blockId)!
+  }
+
+  /** A write the note can't take (its parent is gone) is a 404, as the client expects of what isn't there. */
+  const writing = async (answer: () => Promise<ApiResponse>) => {
+    try {
+      return await answer()
+    } catch (error) {
+      if (error instanceof AnnotationWriteError) return failure(404, error.message)
+      throw error
+    }
   }
 
   return async function service(request: ApiRequest): Promise<ApiResponse> {
@@ -171,7 +225,7 @@ export function createService(options: ServiceOptions): Service {
     if (!url.href.startsWith(apiUrl)) return failure(404, `Not the API: ${request.url}`)
     const path = url.pathname.slice(new URL(apiUrl).pathname.length).replace(/\/$/, "")
     const method = request.method.toUpperCase()
-    const body = () => (request.body ? (JSON.parse(request.body) as Record<string, unknown>) : {})
+    const body = () => (request.body ? (JSON.parse(request.body) as Record<string, any>) : {})
     const [first, id, rest] = path.split("/")
 
     if (path === "" && method === "GET") return ok({ links: routes(apiUrl) })
@@ -188,32 +242,60 @@ export function createService(options: ServiceOptions): Service {
     if (first === "groups" && rest === "members") return ok({ meta: { page: { total: 0 } }, data: [] })
 
     if (path === "search") {
-      // Every annotation of the note, whatever document it names: a note is about one document, and
-      // older annotations name it as Via did. `references` asks for one thread's replies.
+      // A page's annotations: the client names the page by its address, and by the others it has (a
+      // canonical link, a PDF's fingerprint). `references` asks for one thread's replies.
       const references = url.searchParams.get("references")
-      const rows = (await annotations()).filter((annotation) => !references || annotation.references?.includes(references))
-      return ok({ total: rows.length, rows: rows.map(shown) })
+      const note =
+        (await notes.forPage(url.searchParams.getAll("uri"))) ?? (references ? await notes.forAnnotation(references) : undefined)
+      if (!note) return ok({ total: 0, rows: [] })
+      const rows = annotationsOf(note, await note.read()).filter((annotation) => !references || annotation.references?.includes(references))
+      return ok({ total: rows.length, rows: rows.map((annotation) => shown(note, annotation)) })
     }
 
-    if (first === "annotations") {
-      if (!id && method === "POST") {
-        const { id: _ignored, ...posted } = body()
-        const time = now()
-        return ok(shown(await write({ ...posted, created: time, updated: time })))
-      }
-      if (id && !rest) {
-        const existing = (await annotations()).find((annotation) => annotation.id === id)
-        if (!existing) return failure(404, `No annotation ${id}`)
-        if (method === "GET") return ok(shown(existing))
-        if (method === "PATCH" || method === "PUT") return ok(shown(await write({ ...existing, ...body(), id, updated: now() })))
-        if (method === "DELETE") {
-          await store.update((note) => removeAnnotation(note, id))
-          return ok({ id, deleted: true })
+    // The extension's toolbar badge: how many annotations a page has.
+    if (path === "badge") {
+      const note = await notes.forPage(url.searchParams.getAll("uri"))
+      return ok({ total: note ? readNote(await note.read()).annotations.length : 0 })
+    }
+
+    if (first === "annotations" && !id && method === "POST") {
+      const { id: _ignored, ...posted } = body()
+      // A reply goes where its parent is; a new annotation, to its page's note, which the first makes.
+      const parent = Array.isArray(posted.references) ? posted.references.at(-1) : undefined
+      let note: FoundNote | undefined
+      if (typeof parent === "string") {
+        note = await notes.forAnnotation(parent)
+        if (!note) return failure(404, `No annotation ${parent}`)
+      } else {
+        const addresses = addressesOf(posted)
+        note = await notes.forPage(addresses)
+        if (!note) {
+          const uri = typeof posted.uri === "string" ? posted.uri : undefined
+          if (!uri || !notes.create) return failure(400, "An annotation names no page")
+          // The client names a PDF by its fingerprint, as `urn:x-pdf:`, beside its address.
+          const pdf = addresses.some((address) => /^urn:x-pdf:|\.pdf(?:[?#]|$)/i.test(address))
+          note = await notes.create({ uri, title: posted.document?.title, pdf })
         }
       }
-      // Flagging and hiding, which the sidebar is configured never to offer.
-      if (id && (rest === "flag" || rest === "hide")) return ok({})
+      const found = note
+      return writing(async () => ok(shown(found, await write(found, posted))))
     }
+
+    if (first === "annotations" && id && !rest) {
+      const note = await notes.forAnnotation(id)
+      const existing = note && (await annotationIn(note, id))
+      if (!note || !existing) return failure(404, `No annotation ${id}`)
+      if (method === "GET") return ok(shown(note, existing))
+      // What the client leaves out of an edit stays as it was.
+      if (method === "PATCH" || method === "PUT") return writing(async () => ok(shown(note, await write(note, { ...existing, ...body(), id }))))
+      if (method === "DELETE") {
+        // Its replies stay in the note, as Hypothesis keeps a deleted annotation's replies.
+        await note.update((text) => removeAnnotation(text, id))
+        return ok({ id, deleted: true })
+      }
+    }
+    // Flagging and hiding, which the sidebar is configured never to offer.
+    if (first === "annotations" && id && (rest === "flag" || rest === "hide")) return ok({})
 
     if (path === "analytics/events") return ok({})
     return failure(404, `No route ${method} ${path}`)

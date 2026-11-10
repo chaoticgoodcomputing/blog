@@ -157,7 +157,7 @@ export default class AnnotatorPlugin extends Plugin {
     try {
       this.service = await serve({
         port: this.settings.servicePort,
-        api: (apiUrl) => createVaultService({ notes, apiUrl, displayName: this.settings.displayName, view: this.viewOptions(), logo }),
+        api: (apiUrl) => createVaultService({ notes, apiUrl, displayName: this.settings.displayName, logo }),
         log: (message) => console.warn("Annotator service:", message),
       })
     } catch (error) {
