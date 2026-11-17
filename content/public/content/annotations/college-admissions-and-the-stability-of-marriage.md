@@ -22,87 +22,71 @@ This one caught my attention, though, as it was the first technical analysis I'd
 
 It was especially fun to present a summary of this paper in [[public/content/notes/stability-of-marriage#^635c68|Dr. Allison Stashko]]'s Non-Market Environments course. I was proud to cap off the end of the term talking to my fellow early-20s undergraduates about something we could all understand at the deepest of levels: Being Horny™
 
->%%
->```annotation-json
->{"text":"It's interesting that [exploding offers](https://en.wikipedia.org/wiki/National_Resident_Matching_Program#:~:text=Students%20were%20being%20issued%20%22exploding%22%20offers%20that%20required%20them%20to%20make%20a%20decision%20about%20training%20before%20hanging%20up%20the%20telephone.) aren't mentioned here - reading this for the first time in 3-4 years, I thought that it was mentioned at the top.\n\nIf it isn't mentioned at all in this paper, then it was without a doubt Alvin Roth's [Who Gets What — And Why?](https://www.amazon.com/Who-Gets-What-Why-Matchmaking/dp/0544291131) that introduced the concept to me.","target":[{"source":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","selector":[{"type":"TextPositionSelector","start":3020,"end":3146},{"type":"TextQuoteSelector","exact":" Is it ethical to accept the first without informing the second and then withdraw his acceptance if the second later admits hi","prefix":"the second will admit him later?","suffix":"m? We contend that the difficult"}]}],"created":"2024-03-14T22:30:26.683Z","updated":"2024-03-14T22:30:26.683Z","document":{"title":"College Admissions and the Stability of Marriage","link":[{"href":"urn:x-pdf:dd0c1fc592ad4dea981aaf84679261c3"},{"href":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf"}],"documentFingerprint":"dd0c1fc592ad4dea981aaf84679261c3"},"uri":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf"}
->```
->%%
->*%%PREFIX%%the second will admit him later?%%HIGHLIGHT%% ==Is it ethical to accept the first without informing the second and then withdraw his acceptance if the second later admits hi== %%POSTFIX%%m? We contend that the difficult*
->%%LINK%%[[#^9164n7rsi64|show annotation]]
->%%COMMENT%%
->It's interesting that [exploding offers](https://en.wikipedia.org/wiki/National_Resident_Matching_Program#:~:text=Students%20were%20being%20issued%20%22exploding%22%20offers%20that%20required%20them%20to%20make%20a%20decision%20about%20training%20before%20hanging%20up%20the%20telephone.) aren't mentioned here - reading this for the first time in 3-4 years, I thought that it was mentioned at the top.
+> [!annotation]
+> %%
+> ```annotation
+> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:927b3333-cd49-4713-bdc4-448119a7540d","type":"Annotation","motivation":"commenting","body":{"id":"#^9164n7rsi64","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","selector":[{"type":"TextPositionSelector","start":3020,"end":3146},{"type":"TextQuoteSelector","exact":" Is it ethical to accept the first without informing the second and then withdraw his acceptance if the second later admits hi","prefix":"the second will admit him later?","suffix":"m? We contend that the difficult"}]},"created":"2024-03-14T22:30:26.683Z","modified":"2024-03-14T22:30:26.683Z"}
+> ```
+> %%
+> It's interesting that [exploding offers](https://en.wikipedia.org/wiki/National_Resident_Matching_Program#:~:text=Students%20were%20being%20issued%20%22exploding%22%20offers%20that%20required%20them%20to%20make%20a%20decision%20about%20training%20before%20hanging%20up%20the%20telephone.) aren't mentioned here - reading this for the first time in 3-4 years, I thought that it was mentioned at the top.
 >
->If it isn't mentioned at all in this paper, then it was without a doubt Alvin Roth's [Who Gets What — And Why?](https://www.amazon.com/Who-Gets-What-Why-Matchmaking/dp/0544291131) that introduced the concept to me.
->%%TAGS%%
->
+> If it isn't mentioned at all in this paper, then it was without a doubt Alvin Roth's [Who Gets What — And Why?](https://www.amazon.com/Who-Gets-What-Why-Matchmaking/dp/0544291131) that introduced the concept to me.
 ^9164n7rsi64
 
 
->%%
->```annotation-json
->{"created":"2024-03-14T22:47:20.871Z","text":"In the actual presentation, it was deeply difficult to re-word this in a way that didn't sound like I was having another aneurysm. It reads *somewhat* well on paper, but sounds completely unhinged out loud.","updated":"2024-03-14T22:47:20.871Z","document":{"title":"College Admissions and the Stability of Marriage","link":[{"href":"urn:x-pdf:dd0c1fc592ad4dea981aaf84679261c3"},{"href":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf"}],"documentFingerprint":"dd0c1fc592ad4dea981aaf84679261c3"},"uri":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","target":[{"source":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","selector":[{"type":"TextPositionSelector","start":5574,"end":5783},{"type":"TextQuoteSelector","exact":"DEFINITION.  An assignment of applicants to colleges will be called unstable if there are two applicants a and ,B who are assigned to colleges A and B, respectively, although ,3 prefers A to B and A prefers : ","prefix":"ng definition should not occur: ","suffix":"to a. Suppose the situation desc"}]}]}
->```
->%%
->*%%PREFIX%%ng definition should not occur:%%HIGHLIGHT%% ==DEFINITION.  An assignment of applicants to colleges will be called unstable if there are two applicants a and ,B who are assigned to colleges A and B, respectively, although ,3 prefers A to B and A prefers :== %%POSTFIX%%to a. Suppose the situation desc*
->%%LINK%%[[#^nungju8fnno|show annotation]]
->%%COMMENT%%
->In the actual presentation, it was deeply difficult to re-word this in a way that didn't sound like I was having another aneurysm. It reads *somewhat* well on paper, but sounds completely unhinged out loud.
->%%TAGS%%
->
+> [!annotation]
+> %%
+> ```annotation
+> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:c9be605f-9203-4b4f-ba1d-7764123a3dc5","type":"Annotation","motivation":"commenting","body":{"id":"#^nungju8fnno","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","selector":[{"type":"TextPositionSelector","start":5574,"end":5783},{"type":"TextQuoteSelector","exact":"DEFINITION.  An assignment of applicants to colleges will be called unstable if there are two applicants a and ,B who are assigned to colleges A and B, respectively, although ,3 prefers A to B and A prefers : ","prefix":"ng definition should not occur: ","suffix":"to a. Suppose the situation desc"}]},"created":"2024-03-14T22:47:20.871Z","modified":"2024-03-14T22:47:20.871Z"}
+> ```
+> %%
+> In the actual presentation, it was deeply difficult to re-word this in a way that didn't sound like I was having another aneurysm. It reads *somewhat* well on paper, but sounds completely unhinged out loud.
 ^nungju8fnno
 
 
->%%
->```annotation-json
->{"created":"2024-03-14T22:48:44.481Z","text":"Another difficulty was trying to reframe this specific style of diagram in such a way that a room full of people who'd been staring at game theory model grids for four years didn't reflexively start eyeballing Nash equillibria","updated":"2024-03-14T22:48:44.481Z","document":{"title":"College Admissions and the Stability of Marriage","link":[{"href":"urn:x-pdf:dd0c1fc592ad4dea981aaf84679261c3"},{"href":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf"}],"documentFingerprint":"dd0c1fc592ad4dea981aaf84679261c3"},"uri":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","target":[{"source":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","selector":[{"type":"TextPositionSelector","start":8594,"end":8700},{"type":"TextQuoteSelector","exact":"Example 1. The following is the \"ranking matrix\" of three men, a, ,3, and 7, and three women, A, B, and C.","prefix":"r let us look at some examples. ","suffix":" A  B  C a  1,3  2,2  3,1 p  3,1"}]}]}
->```
->%%
->*%%PREFIX%%r let us look at some examples.%%HIGHLIGHT%% ==Example 1. The following is the "ranking matrix" of three men, a, ,3, and 7, and three women, A, B, and C.== %%POSTFIX%%A  B  C a  1,3  2,2  3,1 p  3,1*
->%%LINK%%[[#^7gx9isj070o|show annotation]]
->%%COMMENT%%
->Another difficulty was trying to reframe this specific style of diagram in such a way that a room full of people who'd been staring at game theory model grids for four years didn't reflexively start eyeballing Nash equillibria
->%%TAGS%%
->
+> [!annotation]
+> %%
+> ```annotation
+> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:518c9057-6d09-4284-a67c-6c0b68489aa8","type":"Annotation","motivation":"commenting","body":{"id":"#^7gx9isj070o","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","selector":[{"type":"TextPositionSelector","start":8594,"end":8700},{"type":"TextQuoteSelector","exact":"Example 1. The following is the \"ranking matrix\" of three men, a, ,3, and 7, and three women, A, B, and C.","prefix":"r let us look at some examples. ","suffix":" A  B  C a  1,3  2,2  3,1 p  3,1"}]},"created":"2024-03-14T22:48:44.481Z","modified":"2024-03-14T22:48:44.481Z"}
+> ```
+> %%
+> Another difficulty was trying to reframe this specific style of diagram in such a way that a room full of people who'd been staring at game theory model grids for four years didn't reflexively start eyeballing Nash equillibria
 ^7gx9isj070o
 
 
->%%
->```annotation-json
->{"created":"2024-03-14T22:51:55.217Z","text":"The idea of match optimality was the concept that launched me out of this paper and into a rabbit hole of reading more about matchmaking algorithms, and actually modeling this in Python to toy around with the concept.\n\nIf, as they assert, this will give the *assignees* their optimal outcome compared to *other* stable match configurations, that implies the existence of other stable match configurations.\n\nTake a look at the assignment grid above — it's a 2D grid representing *one* possible stable configuration. In that case, you could imagine that all possible configurations — stable or unstable — stacked on top of each other to form a 3D grid, or *lattice*, of match configurations. All of the possible 2D grids stacked like a big crystalline structure.\n\nFrom that lattice, you can slide out all of the unstable configurations (because, obviously, they suck and don't mean anything), leaving us with a **stable match lattice**.\n\nThe even more interesting thing is - now that you have that stable match lattice, what *exactly* is in it? That's where this particular part gets super zesty - \"Every applicant is **at least as well off [...] as he would be under any other stable assignment**\"\n\nGale-Shapley's stable match algorithm takes in two sets of people — in the case of this paper, men and women — which you can think of as the \"assigner\" and the \"assignee\", the former of which makes the proposals and the latter who accepts or declines them. Think of it as a formula:\n\n```\nmatches = gale_shapley(assigners, assignees)\n```\n\n**Gale-Shapley is a noncommutative operation that optimizes the outcome for the *assigners* set**.\n\nImagine you have a set of four men and four women, and you want to measure how \"good\" a matchmaking configuration is. You could imagine that the best-case scenario is that everybody ends up with their #1 choice, and the worst-case scenario is that everybody ends up with their #4 choice. We can use that as a baseline for measuring the \"goodness\" of the matchmaking.\n\nLet's say, in some given matchmaking pair, everybody gets their first choice — the best case. If you were to add up everybody's result (1st place) and average it by the number of people (8 people) you'd get a value of `1`. On the flip side, for the worst-case, you'd get a value of `4` - ultimately being able to answer the question \"*On average*, how well were people placed?\"\n\nUltimately, if you take an analysis of the average placement of the assigner group (in this case, men), you'll see that **the assigner group's average in Gale-Shapley is the highest of all possible stable configurations**.\n\nUltimately, if you were to rank-order all possible stable matching sets on the matchmaking lattice on a spectrum of \"Benefits Group A\" to \"Benefits Group B\", the outputs of `gale_shapley(A, B)` and `gale_shapley(B, A)` calculate the ends of the lattice.\n\nThis also implies a bit of a potential ethical issue. Depending on the context, there is an active decision made for \"who gets better outcomes\" by simply putting them into the algorithm first. Even within this paper, the marriage example itself generates the stable marriage output that provides men with the optimal output.\n\nUltimately, matchmaking is still something that interests me deeply, and I'm hoping that CGC (either the consulting side or development side) puts me in a position to keep working with these very interesting, *very* cool situations.","updated":"2024-03-14T22:51:55.217Z","document":{"title":"College Admissions and the Stability of Marriage","link":[{"href":"urn:x-pdf:dd0c1fc592ad4dea981aaf84679261c3"},{"href":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf"}],"documentFingerprint":"dd0c1fc592ad4dea981aaf84679261c3"},"uri":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","target":[{"source":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","selector":[{"type":"TextPositionSelector","start":15201,"end":15368},{"type":"TextQuoteSelector","exact":"THEOREM  2. Every applicant is at least as well off under the assignment given by the deferred acceptance procedure as he would be under any other stable assign- ment.","prefix":"ignment of applicants. That is, ","suffix":" Proof. Let us call a college \"p"}]}]}
->```
->%%
->*%%PREFIX%%ignment of applicants. That is,%%HIGHLIGHT%% ==THEOREM  2. Every applicant is at least as well off under the assignment given by the deferred acceptance procedure as he would be under any other stable assign- ment.== %%POSTFIX%%Proof. Let us call a college "p*
->%%LINK%%[[#^qrpzbdvom6|show annotation]]
->%%COMMENT%%
->The idea of match optimality was the concept that launched me out of this paper and into a rabbit hole of reading more about matchmaking algorithms, and actually modeling this in Python to toy around with the concept.
+> [!annotation]
+> %%
+> ```annotation
+> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:90b37d7a-f31a-406a-86d2-b329039d0315","type":"Annotation","motivation":"commenting","body":{"id":"#^qrpzbdvom6","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","selector":[{"type":"TextPositionSelector","start":15201,"end":15368},{"type":"TextQuoteSelector","exact":"THEOREM  2. Every applicant is at least as well off under the assignment given by the deferred acceptance procedure as he would be under any other stable assign- ment.","prefix":"ignment of applicants. That is, ","suffix":" Proof. Let us call a college \"p"}]},"created":"2024-03-14T22:51:55.217Z","modified":"2024-03-14T22:51:55.217Z"}
+> ```
+> %%
+> The idea of match optimality was the concept that launched me out of this paper and into a rabbit hole of reading more about matchmaking algorithms, and actually modeling this in Python to toy around with the concept.
 >
->If, as they assert, this will give the *assignees* their optimal outcome compared to *other* stable match configurations, that implies the existence of other stable match configurations.
+> If, as they assert, this will give the *assignees* their optimal outcome compared to *other* stable match configurations, that implies the existence of other stable match configurations.
 >
->Take a look at the assignment grid above — it's a 2D grid representing *one* possible stable configuration. In that case, you could imagine that all possible configurations — stable or unstable — stacked on top of each other to form a 3D grid, or *lattice*, of match configurations. All of the possible 2D grids stacked like a big crystalline structure.
+> Take a look at the assignment grid above — it's a 2D grid representing *one* possible stable configuration. In that case, you could imagine that all possible configurations — stable or unstable — stacked on top of each other to form a 3D grid, or *lattice*, of match configurations. All of the possible 2D grids stacked like a big crystalline structure.
 >
->From that lattice, you can slide out all of the unstable configurations (because, obviously, they suck and don't mean anything), leaving us with a **stable match lattice**.
+> From that lattice, you can slide out all of the unstable configurations (because, obviously, they suck and don't mean anything), leaving us with a **stable match lattice**.
 >
->The even more interesting thing is - now that you have that stable match lattice, what *exactly* is in it? That's where this particular part gets super zesty - "Every applicant is **at least as well off [...] as he would be under any other stable assignment**"
+> The even more interesting thing is - now that you have that stable match lattice, what *exactly* is in it? That's where this particular part gets super zesty - "Every applicant is **at least as well off [...] as he would be under any other stable assignment**"
 >
->Gale-Shapley's stable match algorithm takes in two sets of people — in the case of this paper, men and women — which you can think of as the "assigner" and the "assignee", the former of which makes the proposals and the latter who accepts or declines them. Think of it as a formula:
+> Gale-Shapley's stable match algorithm takes in two sets of people — in the case of this paper, men and women — which you can think of as the "assigner" and the "assignee", the former of which makes the proposals and the latter who accepts or declines them. Think of it as a formula:
 >
->```
->matches = gale_shapley(assigners, assignees)
->```
+> ```
+> matches = gale_shapley(assigners, assignees)
+> ```
 >
->**Gale-Shapley is a noncommutative operation that optimizes the outcome for the *assigners* set**.
+> **Gale-Shapley is a noncommutative operation that optimizes the outcome for the *assigners* set**.
 >
->Imagine you have a set of four men and four women, and you want to measure how "good" a matchmaking configuration is. You could imagine that the best-case scenario is that everybody ends up with their #1 choice, and the worst-case scenario is that everybody ends up with their #4 choice. We can use that as a baseline for measuring the "goodness" of the matchmaking.
+> Imagine you have a set of four men and four women, and you want to measure how "good" a matchmaking configuration is. You could imagine that the best-case scenario is that everybody ends up with their #1 choice, and the worst-case scenario is that everybody ends up with their #4 choice. We can use that as a baseline for measuring the "goodness" of the matchmaking.
 >
->Let's say, in some given matchmaking pair, everybody gets their first choice — the best case. If you were to add up everybody's result (1st place) and average it by the number of people (8 people) you'd get a value of `1`. On the flip side, for the worst-case, you'd get a value of `4` - ultimately being able to answer the question "*On average*, how well were people placed?"
+> Let's say, in some given matchmaking pair, everybody gets their first choice — the best case. If you were to add up everybody's result (1st place) and average it by the number of people (8 people) you'd get a value of `1`. On the flip side, for the worst-case, you'd get a value of `4` - ultimately being able to answer the question "*On average*, how well were people placed?"
 >
->Ultimately, if you take an analysis of the average placement of the assigner group (in this case, men), you'll see that **the assigner group's average in Gale-Shapley is the highest of all possible stable configurations**.
+> Ultimately, if you take an analysis of the average placement of the assigner group (in this case, men), you'll see that **the assigner group's average in Gale-Shapley is the highest of all possible stable configurations**.
 >
->Ultimately, if you were to rank-order all possible stable matching sets on the matchmaking lattice on a spectrum of "Benefit to Group A" to "Benefits to Group B", the outputs of `gale_shapley(A, B)` and `gale_shapley(B, A)` calculate the ends of the lattice.
+> Ultimately, if you were to rank-order all possible stable matching sets on the matchmaking lattice on a spectrum of "Benefit to Group A" to "Benefits to Group B", the outputs of `gale_shapley(A, B)` and `gale_shapley(B, A)` calculate the ends of the lattice.
 >
->This also implies a bit of a potential ethical issue. Depending on the context, there is an active decision made for "who gets better outcomes" by simply putting them into the algorithm first. Even within this paper, the marriage example itself generates the stable marriage output that provides men with the optimal output.
+> This also implies a bit of a potential ethical issue. Depending on the context, there is an active decision made for "who gets better outcomes" by simply putting them into the algorithm first. Even within this paper, the marriage example itself generates the stable marriage output that provides men with the optimal output.
 >
->Ultimately, matchmaking is still something that interests me deeply, and I'm hoping that CGC (either the consulting side or development side) puts me in a position to keep working with these very interesting, *very* cool situations.
->%%TAGS%%
->
+> Ultimately, matchmaking is still something that interests me deeply, and I'm hoping that CGC (either the consulting side or development side) puts me in a position to keep working with these very interesting, *very* cool situations.
 ^qrpzbdvom6
