@@ -9,6 +9,8 @@
 // Each block at the top of the note that cites a footnote, a paragraph, a list, a quote or a
 // callout, is wrapped with a copy of each footnote it is the first to cite, in the order cited, the
 // copies before the block: `<div class="sidenoted"><aside class="sidenote">…</aside><p>…</p></div>`.
+// An annotation page's preface and epilogue are each a column of the note's blocks
+// (src/lib/annotations.ts), and the blocks in them are wrapped where they are, in their column.
 // A footnote cited twice is beside its first citation alone. Its reference links to its sidenote,
 // and the sidenote's number, `4.`, links back to the reference, whose sentence it flashes.
 //
@@ -44,6 +46,17 @@ function referencesIn(node: Node, found: Node[] = []): Node[] {
   if (isElement(node) && node.tagName === "a" && node.properties?.dataFootnoteRef !== undefined) found.push(node)
   for (const child of node.children ?? []) referencesIn(child, found)
   return found
+}
+
+/** The columns a note's blocks may be in rather than at its top: an annotation page's preface and epilogue. */
+const COLUMNS = ["annotation-preface", "annotation-epilogue"]
+
+const isColumn = (node: Node) => {
+  if (!isElement(node) || node.tagName !== "div") return false
+  // The class is a list, or, as some plugins leave it, the attribute's text.
+  const className = node.properties?.className ?? node.properties?.class
+  const names = Array.isArray(className) ? className.map(String) : typeof className === "string" ? className.split(/\s+/) : []
+  return names.some((name) => COLUMNS.includes(name))
 }
 
 const isBackReference = (node: Node) => isElement(node) && node.properties?.dataFootnoteBackref !== undefined
@@ -93,7 +106,8 @@ export function sidenotes() {
         }
       }
       const placed = new Set<string>()
-      for (const block of top) {
+      const blocks = top.flatMap((node) => (isColumn(node) ? (node.children ?? []) : [node]))
+      for (const block of blocks) {
         if (block === section || !isElement(block)) continue
         const notes: Element[] = []
         for (const reference of referencesIn(block)) {

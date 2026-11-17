@@ -54,9 +54,13 @@
     return own.top
   }
 
+  // A block with its sidenotes, at the top of a note or in an annotation page's preface or
+  // epilogue (src/lib/sidenotes.ts).
+  const WRAPPED = [".sidenoted", ".annotation-preface > .sidenoted", ".annotation-epilogue > .sidenoted"]
+
   /** Each sidenote in the margin moved down to its reference's line. */
   function align(prose: HTMLElement) {
-    const notes = [...prose.querySelectorAll<HTMLElement>(":scope > .sidenoted > .sidenote")]
+    const notes = [...prose.querySelectorAll<HTMLElement>(WRAPPED.map((wrapped) => `:scope > ${wrapped} > .sidenote`).join(", "))]
     for (const note of notes) note.style.marginTop = ""
     if (notes.length === 0 || getComputedStyle(notes[0]).float === "none") return
     for (const note of notes) {
@@ -159,7 +163,7 @@
   let observer: ResizeObserver | undefined
   document.addEventListener("astro:page-load", () => {
     observer?.disconnect()
-    const notes = [...document.querySelectorAll<HTMLElement>(".prose:has(> .sidenoted)")].filter(
+    const notes = [...document.querySelectorAll<HTMLElement>(`.prose:has(${WRAPPED.map((wrapped) => `> ${wrapped}`).join(", ")})`)].filter(
       (prose) => !prose.closest(".link-popover"),
     )
     if (notes.length === 0) return

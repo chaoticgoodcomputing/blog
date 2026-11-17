@@ -4,6 +4,7 @@ import path from "node:path"
 import { pathToFileURL } from "node:url"
 import { obsidianFeatures, obsidianResolve, obsidianSyntax, type Vault } from "@chaoticgoodcomputing/obsidian-markdown"
 import { addAnnotation, readNote, type AnnotationContent } from "@chaoticgoodcomputing/web-annotations"
+import { parse, type HTMLElement } from "node-html-parser"
 import { markdownToHtml } from "satteri"
 import { afterAll, beforeAll, expect, test } from "vitest"
 import {
@@ -20,6 +21,7 @@ import {
   webAnnotationTarget,
 } from "../src/lib/annotations.ts"
 import { indexNotes } from "../src/lib/notes.ts"
+import { sidenotes } from "../src/lib/sidenotes.ts"
 import { openVault } from "../src/lib/vault.ts"
 
 // Annotation blocks as the Annotator writes them: by web-annotations itself, with the time, the block
@@ -88,6 +90,8 @@ const FILES: Record<string, string> = {
   "on-a-host.md": note("https://example.com/"),
   "in-the-vault.md": note("papers/On Stability.pdf"),
   "papers/On Stability.pdf": "%PDF-1.4",
+  "footnoted-preface.md": `${handbook.replace("Why I read it.", "Why I read it.[^why]").replace("\nWhat I took from it.\n", "")}\n[^why]: A reason.\n`,
+  "footnoted.md": `${handbook.replace("Why I read it.", "Why I read it.[^why]").replace("What I took from it.", "What I took from it.[^took]")}\n[^why]: A reason.\n[^took]: A lesson.\n`,
 }
 
 let root: string
@@ -107,7 +111,7 @@ afterAll(() => fs.rmSync(root, { recursive: true, force: true }))
 // The site's pipeline around annotations: the syntax, the annotations, the link to the document,
 // then the resolver, with every file at the address the site gives it (`urlOf`, from the notes
 // query over this vault).
-async function render(file: string, options: { formatDate?: (date: Date) => string } = {}): Promise<string> {
+async function render(file: string, options: { formatDate?: (date: Date) => string; sidenotes?: boolean } = {}): Promise<string> {
   const section = annotationSection({ vault, ...options })
   const { html } = await markdownToHtml(FILES[file]!.replace(/^---\n[\s\S]*?\n---\n/, ""), {
     features: obsidianFeatures,
@@ -117,7 +121,7 @@ async function render(file: string, options: { formatDate?: (date: Date) => stri
       annotatedDocument(),
       obsidianResolve({ vault, urlFor: indexNotes(vault, []).urlOf, beforeResolve: [section] }),
     ],
-    hastPlugins: [passageLinks(), annotationAnchors()],
+    hastPlugins: [passageLinks(), annotationAnchors(), ...(options.sidenotes ? [sidenotes()] : [])],
     fileURL: pathToFileURL(path.join(root, file)),
   })
   return html.replace(/>\n+</g, "><").trim()
@@ -209,6 +213,26 @@ test("a reply to an annotation the note does not have comes last, as an annotati
 })
 
 // ─── The section of annotations ─────────────────────────────────────────────────────────────────
+
+test("a preface and an epilogue that cite footnotes keep their columns, each block wrapped with its sidenotes in them", async () => {
+  const page = parse(await render("footnoted.md", { sidenotes: true }))
+  const top = page.childNodes.filter((node) => node.nodeType === 1) as HTMLElement[]
+  expect(top.map((element) => element.classList.value[0] ?? element.tagName)).toEqual([
+    "annotation-preface",
+    "annotated-document",
+    "annotations",
+    "annotation-epilogue",
+    "footnotes",
+  ])
+  expect(page.querySelectorAll(".annotation-preface > .sidenoted > aside.sidenote").map((note) => note.id)).toEqual(["user-content-sn-why"])
+  expect(page.querySelectorAll(".annotation-epilogue > .sidenoted > aside.sidenote").map((note) => note.id)).toEqual(["user-content-sn-took"])
+})
+
+test("a note's footnotes are no part of its epilogue, which a note with none but them doesn't have", async () => {
+  const page = parse(await render("footnoted-preface.md"))
+  const top = page.childNodes.filter((node) => node.nodeType === 1) as HTMLElement[]
+  expect(top.map((element) => element.classList.value[0] ?? element.tagName)).toEqual(["annotation-preface", "annotated-document", "annotations", "footnotes"])
+})
 
 test("an annotation note is its preface, its annotations in the document's order, then its epilogue", async () => {
   const html = await render("handbook.md")

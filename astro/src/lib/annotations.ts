@@ -379,13 +379,20 @@ export function annotatedDocument() {
       const children = [...parent.children]
       const at = ctx.indexOf(node)
       if (at === undefined) return
-      const column = (className: string, nodes: typeof children) =>
-        nodes.length ? [{ type: className, data: { hName: "div", hProperties: { className: [className] } }, children: nodes }] : []
+      // A footnote's or a link's definition is no block of the text: the note's footnotes are drawn
+      // under the body, or beside the blocks that cite them (src/lib/sidenotes.ts), wherever their
+      // definitions are written.
+      const isDefinition = (child: (typeof children)[number]) => child.type === "footnoteDefinition" || child.type === "definition"
+      const column = (className: string, nodes: typeof children) => {
+        const blocks = nodes.filter((child) => !isDefinition(child))
+        return blocks.length ? [{ type: className, data: { hName: "div", hProperties: { className: [className] } }, children: blocks }] : []
+      }
       ctx.setProperty(parent, "children", [
         ...column("annotation-preface", children.slice(0, at)),
         source,
         node,
         ...column("annotation-epilogue", children.slice(at + 1)),
+        ...children.filter(isDefinition),
       ] as never)
     },
   })
