@@ -373,8 +373,9 @@ const retrieved = new Date()
     }
 
     // The popover over a highlight: its annotation's card whole, and any replies to it, each without
-    // its passage where it has a comment, since the passage is what the pointer is on. The cards' ids
-    // and links to themselves are the drawer's.
+    // its passage where it has a comment, since the passage is what the pointer is on, and each with
+    // its date at its top, to be read before the comment. The cards' ids and links to themselves are
+    // the drawer's.
     #fillPopover(popover: HTMLElement, id: string): boolean {
       const cards = this.#cards().filter((card) => this.#placeOf(card) === id)
       if (!cards.length) return false
@@ -387,6 +388,8 @@ const retrieved = new Date()
         for (const element of copy.querySelectorAll("[id]")) element.removeAttribute("id")
         copy.querySelector(":scope > .annotation-anchor")?.remove()
         if (copy.querySelector(":scope > .annotation-comment")) copy.querySelector(":scope > .annotation-highlight")?.remove()
+        const date = copy.querySelector(":scope > .annotation-date")
+        if (date) copy.prepend(date)
         return copy
       })
       popover.replaceChildren(...copies)
@@ -1028,6 +1031,10 @@ const retrieved = new Date()
     border: none;
     border-radius: 0;
     background: none;
+  }
+
+  .annotation-popover :global(.annotation > .annotation-date:first-child) {
+    margin: 0 0 0.5rem;
   }
 
   .annotation-popover :global(.annotation + .annotation) {

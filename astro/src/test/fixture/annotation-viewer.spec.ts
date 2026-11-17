@@ -67,6 +67,10 @@ test("resting the pointer on a highlight opens its annotation beside it, with it
   await expect(popover.locator(".annotation")).toHaveCount(2)
   await expect(popover.locator(".annotation-comment").first()).toHaveText((await card(page, "cancel").locator(".annotation-comment").textContent())!)
   await expect(popover.locator(".annotation-highlight, .annotation-anchor, [id]")).toHaveCount(0)
+  // Each with its date at its top, as the drawer's card has it at its foot.
+  const date = popover.locator(".annotation").first().locator(":scope > :first-child")
+  await expect(date).toHaveClass("annotation-date")
+  await expect(date).toHaveText((await card(page, "cancel").locator(".annotation-date").textContent())!)
   // Under the highlight, or over it.
   const [around, box] = [(await highlight.boundingBox())!, (await popover.boundingBox())!]
   expect(box.y >= around.y + around.height || box.y + box.height <= around.y).toBe(true)
