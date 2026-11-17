@@ -11,9 +11,9 @@ annotation-viewer[data-layout="static"] .layout {
 }
 
 /* With the document, the body is laid out with it in one column: the preface across the top, then
-   where the document comes from, over the document, then the document, the whole of the column
-   wide, then the epilogue. The cards are in the drawer. The body's own article leaves its children
-   to the grid. */
+   the document under its bar, the whole of the column wide, then the epilogue. The bar says where
+   the document comes from, in place of the body's line that does. The cards are in the drawer. The
+   body's own article leaves its children to the grid. */
 annotation-viewer[data-layout="drawer"] .layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -37,11 +37,10 @@ annotation-viewer[data-layout="drawer"] .layout > .prose > :is(.annotation-prefa
 }
 
 annotation-viewer[data-layout="drawer"] .layout > .prose > .annotated-document {
-  order: 1;
-  margin: 0 0 0.75rem;
+  display: none;
 }
 
-annotation-viewer[data-layout="drawer"] .document {
+annotation-viewer[data-layout="drawer"] .frame {
   grid-column: 1;
   order: 2;
   margin-bottom: 2rem;

@@ -78,6 +78,24 @@ test("resting the pointer on a highlight opens its annotation beside it, with it
   await expect(popover).toBeHidden()
 })
 
+test("a highlight's popover opens at its top, however far the last one was scrolled", async ({ page }) => {
+  const viewer = await opened(page, DESKTOP)
+  const popover = viewer.locator(".annotation-popover")
+  // Short enough to scroll, whatever the fixture's cards hold.
+  await popover.evaluate((el) => (el.style.maxHeight = "4rem"))
+  for (const id of ["cancel", "minutes", "cancel"]) {
+    const highlight = highlights(page, id).first()
+    await highlight.scrollIntoViewIfNeeded()
+    await highlight.hover()
+    await expect(popover).toBeVisible()
+    expect(await popover.evaluate((el) => el.scrollTop)).toBe(0)
+    await popover.evaluate((el) => (el.scrollTop = el.scrollHeight))
+    expect(await popover.evaluate((el) => el.scrollTop)).toBeGreaterThan(0)
+    await page.mouse.move(5, 5)
+    await expect(popover).toBeHidden()
+  }
+})
+
 test("a click on a highlight's popover opens the drawer at its card", async ({ page }) => {
   const viewer = await opened(page, DESKTOP)
   const highlight = highlights(page, "minutes").first()
@@ -270,9 +288,9 @@ test("a link over the preface goes past it to the document, gives the document t
   await link.click()
   const region = viewer.getByRole("region", { name: /^The annotated document/ })
   await expect(region).toBeFocused()
-  // The document's source at the top of the window, and the document under it.
-  await expect.poll(async () => (await page.locator(".annotated-document").boundingBox())!.y).toBeLessThan(40)
-  await expect.poll(async () => (await page.locator(".annotated-document").boundingBox())!.y).toBeGreaterThanOrEqual(0)
+  // The document's bar at the top of the window, and the document under it.
+  await expect.poll(async () => (await viewer.locator(".bar").boundingBox())!.y).toBeLessThan(40)
+  await expect.poll(async () => (await viewer.locator(".bar").boundingBox())!.y).toBeGreaterThanOrEqual(0)
   expect(new URL(page.url()).hash).toBe("")
   // The keys start from it.
   await page.keyboard.press("j")
@@ -284,7 +302,7 @@ test("a page with no preface has no link to go past it", async ({ page }) => {
   await expect(viewer.getByRole("link", { name: "Go to the annotated document" })).toBeHidden()
 })
 
-test("the zoom is the keyboard's, and a reload remembers it", async ({ page }) => {
+test("the zoom is the keyboard's, and a reload starts again at 100%", async ({ page }) => {
   const viewer = await opened(page, DESKTOP)
   const width = async () => (await viewer.locator(".document-page").first().boundingBox())!.width
   const at100 = await width()
@@ -298,14 +316,55 @@ test("the zoom is the keyboard's, and a reload remembers it", async ({ page }) =
   for (let i = 0; i < 4; i++) await page.keyboard.press("+")
   await expect.poll(() => viewer.locator(".document").evaluate((el) => el.scrollWidth > el.clientWidth)).toBe(true)
   expect(await sideways(page)).toBe(0)
-  const at175 = await width()
 
   await page.reload()
   await expect(viewer).toHaveAttribute("data-state", "opened")
-  await expect.poll(width).toBeCloseTo(at175, 0)
-  expect(await page.evaluate(() => location.href)).not.toContain("175")
-  await page.keyboard.press("0")
   await expect.poll(width).toBeCloseTo(at100, 0)
+  await expect(viewer.getByRole("button", { name: "Reset the zoom" })).toHaveText("100%")
+})
+
+test("the document's bar names it, says where it was retrieved from, and stays over it as it scrolls", async ({ page }) => {
+  const viewer = await opened(page, DESKTOP)
+  const bar = viewer.locator(".bar")
+  await expect(bar.locator(".title")).toHaveText("On Meetings")
+  await expect(bar.locator(".retrieved")).toHaveText(/^Retrieved from example\.com on \w{3} \d{2}, \d{4}$/)
+  await expect(bar.getByRole("link", { name: "example.com" })).toHaveAttribute("href", "https://example.com/papers/On%20Meetings.pdf")
+
+  await viewer.locator(".document-page").last().scrollIntoViewIfNeeded()
+  await expect.poll(async () => (await bar.boundingBox())!.y).toBeCloseTo(0, 0)
+  await expect(bar).toBeInViewport()
+})
+
+test("the bar's buttons zoom the document around the middle of the window", async ({ page }) => {
+  const viewer = await opened(page, DESKTOP)
+  const width = async () => (await viewer.locator(".document-page").first().boundingBox())!.width
+  const at100 = await width()
+  const zoomIn = viewer.getByRole("button", { name: "Zoom in" })
+  const level = viewer.getByRole("button", { name: "Reset the zoom" })
+
+  await page.evaluate(() => scrollBy(0, 400))
+  // What is in the middle of the window, under the bar, stays there.
+  const middle = () =>
+    page.evaluate(() => {
+      const bar = document.querySelector(".bar")!.getBoundingClientRect().bottom
+      const [x, y] = [innerWidth / 2, bar + (innerHeight - bar) / 2]
+      const box = document.querySelector(".document-page")!.getBoundingClientRect()
+      return [(x - box.left) / box.width, (y - box.top) / box.height]
+    })
+  const before = await middle()
+  await zoomIn.click()
+  await expect.poll(width).toBeCloseTo(at100 * 1.1, 0)
+  await expect(level).toHaveText("110%")
+  const after = await middle()
+  expect(after[0]).toBeCloseTo(before[0]!, 2)
+  expect(after[1]).toBeCloseTo(before[1]!, 2)
+
+  await viewer.getByRole("button", { name: "Zoom out" }).click()
+  await viewer.getByRole("button", { name: "Zoom out" }).click()
+  await expect.poll(width).toBeCloseTo(at100 * 0.9, 0)
+  await level.click()
+  await expect.poll(width).toBeCloseTo(at100, 0)
+  await expect(level).toHaveText("100%")
 })
 
 test("on a phone the document takes the column, and the cards are in a drawer that starts closed", async ({ page }) => {
@@ -562,9 +621,11 @@ test("around the document, the preface and the epilogue read as a note does, and
     expect(box.x + box.width / 2, part).toBeCloseTo(main.x + main.width / 2, 0)
   }
   await expect(page.locator(".annotation-epilogue h3")).toHaveText("What it found")
-  // The source, then the document under it, at its left edge; the preface above both.
+  // The bar, then the document under it, at its left edge; the preface above both. The body's own
+  // line saying where the document comes from is the bar's.
+  await expect(page.locator(".annotated-document")).toBeHidden()
   const preface = (await page.locator(".annotation-preface").boundingBox())!
-  const source = (await page.locator(".annotated-document").boundingBox())!
+  const source = (await viewer.locator(".bar").boundingBox())!
   const document = (await viewer.locator(".document").boundingBox())!
   expect(source.y).toBeGreaterThanOrEqual(preface.y + preface.height)
   expect(document.y - (source.y + source.height)).toBeGreaterThanOrEqual(0)

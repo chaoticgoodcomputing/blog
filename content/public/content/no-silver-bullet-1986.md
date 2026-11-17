@@ -315,30 +315,25 @@ Writing with 40 years of hindsight, and with modern agents being capable of mass
 > [!annotation]
 > %%
 > ```annotation
-> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:882d3841-9285-4e1a-aba0-05b8afd9c006","type":"Annotation","motivation":"commenting","body":{"id":"#^5moqmvedmzn","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","selector":[{"type":"TextPositionSelector","start":23484,"end":23813},{"type":"TextQuoteSelector","exact":"An expert system is a program containing a generalized inference engine and a rule base, designed to take input data and assumptions and explore the logical consequences through the inferences derivable from the rule base, yielding conclusions and advice, and offering to explain its results by retracing its reasoning for the user.","prefix":"ept, and what are the prospects? ","suffix":" The inference engines typically "},{"type":"PageSelector","index":7,"label":"8"}]},"created":"2026-11-09T17:11:30.693Z","modified":"2026-11-09T17:11:30.693Z"}
+> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:882d3841-9285-4e1a-aba0-05b8afd9c006","type":"Annotation","motivation":"commenting","body":{"id":"#^5moqmvedmzn","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","selector":[{"type":"TextPositionSelector","start":23484,"end":23813},{"type":"TextQuoteSelector","exact":"An expert system is a program containing a generalized inference engine and a rule base, designed to take input data and assumptions and explore the logical consequences through the inferences derivable from the rule base, yielding conclusions and advice, and offering to explain its results by retracing its reasoning for the user.","prefix":"ept, and what are the prospects? ","suffix":" The inference engines typically "},{"type":"PageSelector","index":7,"label":"8"}]},"created":"2026-11-09T17:11:30.693Z","modified":"2026-11-17T22:58:01.062Z"}
 > ```
 > %%
-> .
+> I may end up re-reading the section(s) of Dr. Li's book regarding expert systems, because this is... vaguely reminiscent of the inference mechanism of LLMs, but not quite. Infamously, LLMs can struggle with justifying decisions only after-the-fact, not preserving prior reasoning sessions in future context for the sake of not cluttering up the context.
+>
+> I would be curious if there *is* any mechanism used by popular harnesses, by which LLMs can directly reference prior reasoning rounds as though they're data rather than conversational context. That doesn't seem like a particularly novel idea, so if it *hasn't* been done, so if it hasn't, I wonder if that's related to a general understanding that [judging LLMs based on their train-of-thought is a dangerous practice](https://cdn.openai.com/pdf/34f2ada6-870f-4c26-9790-fd8def56387f/CoT_Monitoring.pdf) (with a fantastic [explainer video](https://www.youtube.com/watch?v=Xx4Tpsk_fnM) to boot).
 ^5moqmvedmzn
 
 
-> [!annotation]
-> %%
-> ```annotation
-> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:90d8d690-d25d-43a9-ac15-40961f7171c4","type":"Annotation","motivation":"commenting","body":{"id":"#^ficfpoqwdp8","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","selector":[{"type":"TextPositionSelector","start":23897,"end":23938},{"type":"TextQuoteSelector","exact":"in addition to purely deterministic logic.","prefix":"or probabilistic data and rules ","suffix":"Such systems offer some clear ad"},{"type":"PageSelector","index":7,"label":"8"}]},"created":"2026-11-09T17:11:45.407Z","modified":"2026-11-09T17:11:45.407Z"}
-> ```
-> %%
-> .
-^ficfpoqwdp8
-
 
 > [!annotation]
 > %%
 > ```annotation
-> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:ed9f3060-9a8a-4f3a-88d3-369cff38e9fe","type":"Annotation","motivation":"commenting","body":{"id":"#^ivjyf74mo9k","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","selector":[{"type":"TextPositionSelector","start":24530,"end":24725},{"type":"TextQuoteSelector","exact":"Edward Feigenbaum says that the power of such systems does not come from ever- fancier inference mechanisms, but rather from ever-richer knowledge bases that reflect the real world more accurately.","prefix":"lexity of the application itself. ","suffix":" I believe the most important ad"},{"type":"PageSelector","index":7,"label":"8"}]},"created":"2026-11-09T17:13:09.107Z","modified":"2026-11-09T17:13:09.107Z"}
+> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:ed9f3060-9a8a-4f3a-88d3-369cff38e9fe","type":"Annotation","motivation":"commenting","body":{"id":"#^ivjyf74mo9k","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","selector":[{"type":"TextPositionSelector","start":24530,"end":24725},{"type":"TextQuoteSelector","exact":"Edward Feigenbaum says that the power of such systems does not come from ever- fancier inference mechanisms, but rather from ever-richer knowledge bases that reflect the real world more accurately.","prefix":"lexity of the application itself. ","suffix":" I believe the most important ad"},{"type":"PageSelector","index":7,"label":"8"}]},"created":"2026-11-09T17:13:09.107Z","modified":"2026-11-17T23:01:50.654Z"}
 > ```
 > %%
-> . https://stacks.stanford.edu/file/druid:qy055zd8682/qy055zd8682.pdf
+> In trying to find the correct reference for this citation, I believe I've found the correct Feigenbaum reference: [Knowledge Engineering: The Applied Side of Artificial Intelligence](https://stacks.stanford.edu/file/druid:qy055zd8682/qy055zd8682.pdf) (1980)
+>
+> This is also uncanny, considering the later recognition that certain deep learning techniques absolutely thrive with more and more data added to them.
 ^ivjyf74mo9k
 
 
