@@ -1,10 +1,13 @@
 ---
-title:
+title: Working with Designers
 date: 2026-11-10
 updated: 2026-11-17
 tags:
+  - engineering
+  - economics/management
+  - writing/fragments
   - writing/annotations
-description:
+description: Brief notes on Sean Goedecke's "Working with Designers"
 annotation-pages:
 annotation-target: "https://www.seangoedecke.com/working-with-designers/"
 annotation-target-type: web

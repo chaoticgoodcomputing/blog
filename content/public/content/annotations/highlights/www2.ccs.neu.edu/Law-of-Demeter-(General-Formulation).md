@@ -1,12 +1,12 @@
 ---
 title: Law of Demeter (LOD)
 date: 2026-11-06
-updated: 2026-11-10
+updated: 2026-11-17
 tags:
   - engineering
   - writing/annotations
   - writing/fragments
-description:
+description: Annotations on Karl Lieberherr's "Law of Demeter"
 annotation-pages:
 annotation-target: "https://www2.ccs.neu.edu/research/demeter/demeter-method/LawOfDemeter/general-formulation.html"
 annotation-target-type: web
