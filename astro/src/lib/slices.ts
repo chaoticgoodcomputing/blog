@@ -2,7 +2,7 @@
 // `astro:mirrors` (scripts/pin-mirrors.ts) from the mirror already saved, with no download of its
 // own. Only the script imports this, so pdf-lib never reaches the build.
 
-import type { PageRange } from "@chaoticgoodcomputing/obsidian-markdown"
+import type { PageRange } from "@chaoticgoodcomputing/web-annotations"
 import { PDFDocument } from "pdf-lib"
 
 export interface Slice {

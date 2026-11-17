@@ -45,6 +45,8 @@ function splitFirstLine(children: Node[]): { title: Node[]; body: Node[] } {
 export function callouts() {
   return defineMdastPlugin({
     name: "obsidian-callouts",
+    // The quote's position, which the callout keeps (`sourcePosition`).
+    options: { position: true },
     blockquote(blockquote, ctx) {
       const node = blockquote as unknown as Node
       const [first, ...rest] = node.children ?? []
@@ -67,6 +69,9 @@ export function callouts() {
         data: {
           // What an earlier plugin set on the quote, a block id among it, stays on the callout.
           ...node.data,
+          // Where the quote was in the source. Sätteri keeps no position for a node a plugin makes,
+          // so a later plugin that places nodes by their source reads it here.
+          ...(node.position ? { sourcePosition: node.position } : {}),
           callout,
           hName: fold ? "details" : "div",
           hProperties: {

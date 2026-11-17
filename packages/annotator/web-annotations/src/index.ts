@@ -15,7 +15,7 @@ export {
 } from "./properties.ts"
 export type { AnnotationProperties, PageRange, TargetType } from "./properties.ts"
 
-export { ANNOTATION_CONTEXT } from "./record.ts"
+export { ANNOTATION_CONTEXT, tagsOf } from "./record.ts"
 export type {
   AnnotationContent,
   Body,

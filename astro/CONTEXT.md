@@ -295,8 +295,8 @@ _Avoid_: source document (the Quartz name), PDF, original
 
 **Annotation**:
 One passage of an annotated document, with the comment written on it in Markdown and its tags, as
-the Annotator plugin keeps it: a block of the note whose record is JSON. It is addressed by its
-block id, `#^id`.
+the Annotator plugin keeps it: an `[!annotation]` callout in the note, holding a W3C Web Annotation
+as JSON and then the comment, which `web-annotations` reads. It is addressed by its block id, `#^id`.
 _Avoid_: highlight (that is the passage as the page marks it), card
 
 **Preface**:
@@ -316,7 +316,8 @@ _Avoid_: download, cached PDF
 **Page range**:
 The pages of its annotated document a note's annotations are on, which its `annotation-pages`
 property holds (`12-40`, `3-5, 9`), and which the Annotator plugin shows alone. A set of pages:
-the order and overlap of what is written mean nothing. A note with none is on every page.
+the order and overlap of what is written mean nothing. A note with none is on every page; one that
+can't be read fails the build.
 _Avoid_: chapter (what a range often is, not what it is called)
 
 **Slice**:

@@ -39,9 +39,9 @@ afterEach(() => fs.rmSync(root, { recursive: true, force: true }))
 test("a slice is named by its mirror's name and its pages, so notes on the same pages share one", () => {
   expect(sliceName("A-Textbook.pdf", [[12, 40]])).toBe("A-Textbook.p12-40.pdf")
   expect(sliceName("A-Textbook.pdf", [[3, 4], [6, 6]])).toBe("A-Textbook.p3-4_6.pdf")
-  expect(shownMirrorName(whole.frontmatter)).toBe("A-Textbook.pdf")
-  expect(shownMirrorName(chapter2.frontmatter)).toBe("A-Textbook.p3-4_6.pdf")
-  expect(shownMirrorName(note({ "annotation-pages": "4, 3, 6" }).frontmatter)).toBe("A-Textbook.p3-4_6.pdf")
+  expect(shownMirrorName(whole)).toBe("A-Textbook.pdf")
+  expect(shownMirrorName(chapter2)).toBe("A-Textbook.p3-4_6.pdf")
+  expect(shownMirrorName(note({ "annotation-pages": "4, 3, 6" }))).toBe("A-Textbook.p3-4_6.pdf")
 })
 
 test("a note with a page range is shown its slice, and its slice's text file, never the whole document", () => {

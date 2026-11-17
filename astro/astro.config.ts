@@ -48,8 +48,7 @@ import { mentionExcerpts } from "./src/integrations/mention-excerpts.ts"
 
 import { feedContentIntegration } from "./src/integrations/feed-content.ts"
 
-import { obsidianAnnotator } from "@chaoticgoodcomputing/obsidian-markdown"
-import { annotatedDocument, annotationAnchors, annotationDate, passageLinks } from "./src/lib/annotations.ts"
+import { annotatedDocument, annotationAnchors, annotationDate, annotationSection, passageLinks } from "./src/lib/annotations.ts"
 
 import { mirrors } from "./src/integrations/mirrors.ts"
 
@@ -84,10 +83,10 @@ const beforeLinks = [
   obsidianExcalidraw({ vault: getVault, urlFor: drawingExportUrl }),
 
   // A note with an annotation target is its preface, its annotations and its epilogue, in place of
-  // the Annotator plugin's blocks, and opens with a link to the annotated document, which the
+  // its annotation blocks, and opens with a link to the annotated document, which the
   // resolver then gives the address the site publishes it at when it is in the vault
   // (src/lib/annotations.ts).
-  obsidianAnnotator({ vault: getVault, formatDate: annotationDate }),
+  annotationSection({ vault: getVault, formatDate: annotationDate }),
   annotatedDocument(),
 ]
 

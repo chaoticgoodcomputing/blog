@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import { test } from "node:test"
-import { markdownToHtml } from "satteri"
+import { defineMdastPlugin, markdownToHtml } from "satteri"
 import { obsidianFeatures, obsidianSyntax, type SyntaxOptions } from "../src/index.ts"
 
 /** A note rendered by the syntax plugins alone: no vault, so a link keeps its target as written. */
@@ -151,6 +151,32 @@ test("a callout nests, holds the other syntax, and keeps its block id", async ()
   assert.match(html, /<div class="callout-title">Outer <a class="internal-link"/)
   assert.match(html, /<mark>Body<\/mark>/)
   assert.match(html, /<div class="callout" data-callout="tip"><div class="callout-title">Inner<\/div>/)
+})
+
+test("a callout keeps where its quote was in the source, for a later plugin to place it by", async () => {
+  const source = "Before.\n\n> [!note] Title\n> Body\n\nAfter.\n"
+  const seen: { type: string; start?: number; end?: number }[] = []
+  await markdownToHtml(source, {
+    features: obsidianFeatures,
+    mdastPlugins: [
+      ...obsidianSyntax(),
+      defineMdastPlugin({
+        name: "reads-places",
+        options: { position: true },
+        before(root) {
+          for (const node of (root as unknown as { children: { type: string; position?: any; data?: any }[] }).children) {
+            const place = node.position ?? node.data?.sourcePosition
+            seen.push({ type: node.type, start: place?.start.offset, end: place?.end.offset })
+          }
+        },
+      }),
+    ],
+  })
+  assert.deepEqual(seen, [
+    { type: "paragraph", start: 0, end: 7 },
+    { type: "callout", start: source.indexOf(">"), end: source.indexOf("\n\nAfter") },
+    { type: "paragraph", start: source.indexOf("After"), end: source.length - 1 },
+  ])
 })
 
 test("a quote that is not a callout stays a quote", async () => {

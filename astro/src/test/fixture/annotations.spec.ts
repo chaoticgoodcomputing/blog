@@ -29,10 +29,10 @@ test("an annotation page is its preface, its link to the document, its annotatio
   ])
 })
 
-test("none of the Annotator plugin's own markup shows", async ({ page }) => {
+test("none of an annotation block's own markup shows", async ({ page }) => {
   await page.goto(PAGE)
   const text = await page.locator("article.prose").innerText()
-  for (const written of ["%%", "annotation-json", "show annotation", "TextQuoteSelector", "PREFIX", "==", "^qywghl0r7w"]) {
+  for (const written of ["%%", "```", "[!annotation]", "urn:uuid", "TextQuoteSelector", "@context", "^qywghl0r7w"]) {
     expect(text, written).not.toContain(written)
   }
 })

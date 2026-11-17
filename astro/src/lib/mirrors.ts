@@ -23,10 +23,9 @@ import { createHash } from "node:crypto"
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
-import { annotationPages, annotationTarget, type PageRange } from "@chaoticgoodcomputing/obsidian-markdown"
+import type { PageRange } from "@chaoticgoodcomputing/web-annotations"
 import { isTextFileOf, textFileName } from "@chaoticgoodcomputing/pdf-ocr/text"
-import { documentFileName } from "./annotations.ts"
-import type { Note } from "./notes.ts"
+import { type AnnotatedNote, annotationPropertiesOf, documentFileName } from "./annotations.ts"
 import { slugFor } from "./vault.ts"
 
 /** Where mirrors are served from on the site. public/robots.txt names it. */
@@ -94,10 +93,10 @@ export function sliceName(name: string, range: PageRange): string {
  * note with a page range, that mirror's slice of those pages. Undefined for a note whose document
  * can have no mirror.
  */
-export function shownMirrorName(frontmatter: Note["frontmatter"]): string | undefined {
-  const target = annotationTarget(frontmatter)
-  const name = target === undefined ? undefined : mirrorName(target)
-  const range = annotationPages(frontmatter)
+export function shownMirrorName(note: AnnotatedNote): string | undefined {
+  const properties = annotationPropertiesOf(note)
+  const name = properties === undefined ? undefined : mirrorName(properties.target)
+  const range = properties?.pages
   return name && range ? sliceName(name, range) : name
 }
 
@@ -118,8 +117,8 @@ const servedAt = (name: string | undefined, root: string): string | undefined =>
  * The address of the mirror a note's annotation viewer draws, when it is an annotation page and
  * that mirror is saved: its document's, or its slice of the note's page range.
  */
-export const mirrorFor = (note: Pick<Note, "frontmatter">, root: string = MIRRORS_ROOT): string | undefined =>
-  servedAt(shownMirrorName(note.frontmatter), root)
+export const mirrorFor = (note: AnnotatedNote, root: string = MIRRORS_ROOT): string | undefined =>
+  servedAt(shownMirrorName(note), root)
 
 /** Where a mirror's text file is kept, beside it. */
 export const mirrorTextFile = (name: string, root: string = MIRRORS_ROOT): string => textFileName(mirrorFile(name, root))
@@ -162,15 +161,15 @@ function textServedAt(name: string | undefined, root: string): string | undefine
 }
 
 /** The address of the text file of the mirror a note's viewer draws, when it has one to serve: `mirrorTextOf`. */
-export const mirrorTextFor = (note: Pick<Note, "frontmatter">, root: string = MIRRORS_ROOT): string | undefined =>
-  textServedAt(shownMirrorName(note.frontmatter), root)
+export const mirrorTextFor = (note: AnnotatedNote, root: string = MIRRORS_ROOT): string | undefined =>
+  textServedAt(shownMirrorName(note), root)
 
 /**
  * The mirrors the site publishes, by address, each with its file: those of the annotated documents
  * of the published notes, that are saved in the mirror directory, and the text files of those that
  * have one to serve.
  */
-export function publishedMirrors(root: string, notes: Pick<Note, "frontmatter">[]): Map<string, string> {
+export function publishedMirrors(root: string, notes: AnnotatedNote[]): Map<string, string> {
   const published = new Map<string, string>()
   for (const note of notes) {
     const address = mirrorFor(note, root)
@@ -183,15 +182,15 @@ export function publishedMirrors(root: string, notes: Pick<Note, "frontmatter">[
 }
 
 // The names of the mirrors and slices the published notes' viewers draw, each once.
-const shownNames = (notes: Pick<Note, "frontmatter">[]): string[] =>
-  [...new Set(notes.map((note) => shownMirrorName(note.frontmatter)))].filter((name): name is string => name !== undefined)
+const shownNames = (notes: AnnotatedNote[]): string[] =>
+  [...new Set(notes.map((note) => shownMirrorName(note)))].filter((name): name is string => name !== undefined)
 
 /**
  * The saved mirrors and slices the published notes' viewers draw that have no text file of their
  * own yet, by name: those `astro:mirrors` looks at for scanned pages to recognize. A mirror only
  * sliced is not among them: its slices are.
  */
-export function mirrorsToRecognize(root: string, notes: Pick<Note, "frontmatter">[]): string[] {
+export function mirrorsToRecognize(root: string, notes: AnnotatedNote[]): string[] {
   return shownNames(notes).filter((name) => fs.existsSync(mirrorFile(name, root)) && !mirrorText(name, root))
 }
 
@@ -199,7 +198,7 @@ export function mirrorsToRecognize(root: string, notes: Pick<Note, "frontmatter"
  * The mirrors and slices the published notes' viewers draw that are not saved, by name: each one's
  * page shows its annotations without it.
  */
-export const missingMirrors = (root: string, notes: Pick<Note, "frontmatter">[]): string[] =>
+export const missingMirrors = (root: string, notes: AnnotatedNote[]): string[] =>
   shownNames(notes).filter((name) => !fs.existsSync(mirrorFile(name, root)))
 
 /** A slice still to make: the pages `range` of the saved mirror `mirror`, saved as `slice`. */
@@ -210,12 +209,12 @@ export interface SliceToMake {
 }
 
 /** The slices the published notes' viewers draw that are not saved, and whose mirror is: each once. */
-export function slicesToMake(root: string, notes: Pick<Note, "frontmatter">[]): SliceToMake[] {
+export function slicesToMake(root: string, notes: AnnotatedNote[]): SliceToMake[] {
   const slices = new Map<string, SliceToMake>()
-  for (const { frontmatter } of notes) {
-    const target = annotationTarget(frontmatter)
-    const mirror = target === undefined ? undefined : mirrorName(target)
-    const range = annotationPages(frontmatter)
+  for (const note of notes) {
+    const properties = annotationPropertiesOf(note)
+    const mirror = properties === undefined ? undefined : mirrorName(properties.target)
+    const range = properties?.pages
     if (!mirror || !range || !fs.existsSync(mirrorFile(mirror, root))) continue
     const slice = sliceName(mirror, range)
     if (!fs.existsSync(mirrorFile(slice, root))) slices.set(slice, { slice, mirror, range })
@@ -245,10 +244,10 @@ export function mirrorsToSave(targets: string[]): { save: string[]; clashing: [s
  * no mirror saved, and shown by a note whose mirror or slice is not saved either. A document whose
  * notes all have their slices needs no mirror of its own.
  */
-export function unmirroredDocuments(root: string, notes: Pick<Note, "frontmatter">[]): string[] {
+export function unmirroredDocuments(root: string, notes: AnnotatedNote[]): string[] {
   const missing = new Set(missingMirrors(root, notes))
   const targets = notes
-    .filter((note) => missing.has(shownMirrorName(note.frontmatter)!))
-    .map((note) => annotationTarget(note.frontmatter)!)
+    .filter((note) => missing.has(shownMirrorName(note)!))
+    .map((note) => annotationPropertiesOf(note)!.target)
   return [...new Set(targets)].filter((target) => !mirrorOf(target, root))
 }
