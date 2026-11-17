@@ -1,47 +1,29 @@
-// What the sitemap says of a page: whether it is listed, and when it was last modified. The
-// sitemap integration knows a page only by its address (astro.config.ts), so that is what is asked
-// here, and whether it is listed is whether the page there is indexable (./site-pages.ts).
+// What the sitemap says of a page: whether it is listed, and when it was last modified. The sitemap
+// integration knows a page only by its address (astro.config.ts), so that is what is asked here, and
+// whether it is listed is whether the page there is indexable (./site-pages.ts): no tag page is.
 
 import type { NoteIndex } from "./notes.ts"
 import { tagAt } from "./page.ts"
 import { sitePageAt } from "./site-pages.ts"
-import { listedPosts } from "./post-listing.ts"
-import { isUnderTag } from "./tags.ts"
 
 export interface SitemapEntry {
   /** When the page last changed. A page that no note says anything about has no such date. */
   lastModified: Date | undefined
 }
 
-const newest = (dates: Date[]): Date | undefined =>
-  dates.length ? new Date(Math.max(...dates.map((date) => date.getTime()))) : undefined
-
 /**
  * The sitemap's entry for the page at an address, or undefined for a page that is not an indexable
  * page. The address is whole, as the sitemap integration gives it.
  */
 export function sitemapEntry(address: string, index: NoteIndex): SitemapEntry | undefined {
-  const { notes } = index
   // An address writes a note's url percent-encoded.
   const url = decodeURI(new URL(address).pathname)
 
   if (sitePageAt(index, url)?.indexable === false) return undefined
+  // An address under the tags index is a tag page's, which is never indexable, whether or not the
+  // site has a page there.
+  if (tagAt(url)) return undefined
 
-  // A tag page shows its tag's description note and lists the posts under the tag, so it changed
-  // when the newest of them did; the tags index lists every post. Both are asked as the page asks
-  // them. A tag page that shows neither is there for the private pages that carry its tag, and
-  // changed when the newest of them did.
-  const tagPage = tagAt(url)
-  if (tagPage) {
-    const { tag } = tagPage
-    const description = tag === undefined ? undefined : index.tagDescription(tag)
-    const shown = [...listedPosts(tag, notes), ...(description ? [description] : [])]
-    const carrying = tag === undefined ? [] : notes.filter((note) => note.tags.some((own) => isUnderTag(own, tag)))
-    return { lastModified: newest((shown.length ? shown : carrying).map((note) => note.modified)) }
-  }
-
-  const note = notes.find((each) => each.url === url)
-  if (note) return { lastModified: note.modified }
-
-  return { lastModified: undefined }
+  const note = index.notes.find((each) => each.url === url)
+  return { lastModified: note?.modified }
 }

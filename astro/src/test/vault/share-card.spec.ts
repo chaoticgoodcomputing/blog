@@ -2,7 +2,7 @@ import { SITE } from "../feed-and-sitemap.ts"
 import { builtPages } from "../build.ts"
 import { expect, test } from "../site.ts"
 
-test("every indexable page of the vault names a card of its own, which the build drew, and no other page does", async ({
+test("every discoverable page of the vault names a card of its own, which the build drew, and no other page does", async ({
   request,
 }) => {
   test.setTimeout(300_000)
@@ -12,8 +12,12 @@ test("every indexable page of the vault names a card of its own, which the build
   let carded = 0
   for (const { file, html } of pages) {
     const image = /<meta property="og:image" content="([^"]+)">/.exec(html)?.[1]
-    // The 404 page and a private page ask not to be indexed, and have no card.
-    if (file === "404.html" || html.includes('<meta name="robots" content="noindex">')) {
+    // The 404 page and a private page ask not to be indexed, and have no card. A tag page asks not
+    // to be indexed either, and has one unless its tag is private: the unit tests say which
+    // (test/share-card.test.ts).
+    const noindex = html.includes('<meta name="robots" content="noindex">')
+    const tagPage = file === "tags.html" || file.startsWith("tags/")
+    if (file === "404.html" || (noindex && !(tagPage && image))) {
       expect(image, file).toBeUndefined()
       continue
     }

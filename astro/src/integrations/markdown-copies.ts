@@ -1,4 +1,4 @@
-// Writes a Markdown copy of each indexable note's page beside it, and the site's llms.txt
+// Writes a Markdown copy of each discoverable note's page beside it, and the site's llms.txt
 // (src/lib/markdown-copies.ts), once the build has written the pages they are made from.
 
 import fs from "node:fs/promises"

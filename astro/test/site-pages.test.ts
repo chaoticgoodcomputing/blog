@@ -66,9 +66,16 @@ test("a page's description is its note's description property, else its first pa
   expect(descriptions["/404"]).toBeUndefined()
 })
 
-test("every page is indexable but a private page, a private tag's page, the 404 page and the graph page", () => {
-  const hidden = sitePages(index).filter((page) => !page.indexable).map((page) => page.url)
+test("every page is discoverable but a private page, a private tag's page, the 404 page and the graph page", () => {
+  const hidden = sitePages(index).filter((page) => !page.discoverable).map((page) => page.url)
   expect(hidden.sort()).toEqual(["/404", "/content/secret", "/graph", "/tags/private"])
+})
+
+test("every discoverable page is indexable but a tag page", () => {
+  const unindexed = sitePages(index).filter((page) => page.discoverable && !page.indexable)
+  expect(unindexed.length).toBeGreaterThan(0)
+  expect(unindexed.every((page) => page.kind === "tag")).toBe(true)
+  expect(sitePages(index).filter((page) => page.kind === "tag").some((page) => page.indexable)).toBe(false)
 })
 
 test("a page is found by its address, and an address no page has finds none", () => {

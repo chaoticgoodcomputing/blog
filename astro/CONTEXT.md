@@ -128,13 +128,19 @@ section: those of the first of site configuration's rules whose tag the note is 
 default type, with no section.
 _Avoid_: page type, schema
 
+**Discoverable page**:
+A page the site helps a reader find: in its own search, with a share card, and for a note's page a
+Markdown copy. Every page is one except a private page, a private tag page, the 404 page and the
+graph page.
+_Avoid_: public page, listed page
+
 **Indexable page**:
-A page the site asks search engines to index, and lists in its sitemap. Every page is one except a
-private page, a private tag page and the 404 page.
+A page the site asks search engines to index, and lists in its sitemap: a discoverable page that is
+no tag page. Every other page's head says `noindex`.
 _Avoid_: public page, listed page
 
 **Markdown copy**:
-An indexable note's page as Markdown, for agents, at its address with `.md` after it (the home
+A discoverable note's page as Markdown, for agents, at its address with `.md` after it (the home
 page's is `/index.md`): what the note is, then the page's text as built. A tag page has none.
 `/llms.txt` lists every copy. Search engines' crawlers are asked not to fetch copies (robots.txt),
 so a copy is never a search result in its page's place.
@@ -199,8 +205,8 @@ _Avoid_: pill, chip, tag link
 **Tag page**:
 The one page a tag has, at `tags/<tag slug>`: one for each tag a published note carries, a private
 page included, and each ancestor of one. Its tag description note, its subtags, and the posts under
-it. The page of a tag that only private pages carry lists no posts, and is still an indexable page
-unless the tag is private.
+it. No tag page is an indexable page; each is a discoverable page unless its tag is private. The
+page of a tag that only private pages carry lists no posts, and is still discoverable.
 _Avoid_: tag listing, folder page
 
 **Tags index**:
@@ -557,7 +563,7 @@ _Avoid_: outbound link, absolute link (a link to the site may be written whole t
 
 **Search box**:
 The button in the graph column's header, and the dialog it opens, that searches the site's full
-text: the indexable pages', and no other's. Ctrl+K or ⌘K opens it.
+text: the discoverable pages', and no other's. Ctrl+K or ⌘K opens it.
 _Avoid_: search bar, search modal
 
 **Widget**:

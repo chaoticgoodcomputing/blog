@@ -9,6 +9,16 @@
 				"--headless"
 			],
 			"env": { }
+		},
+		"gsc": {
+			"type": "stdio",
+			"command": "uvx",
+			"args": [
+				"mcp-search-console@0.4.2"
+			],
+			"env": {
+				"GSC_OAUTH_CLIENT_SECRETS_FILE": "~/Library/Application Support/mcp-gsc/client_secrets.json"
+			}
 		}
 	}
 }

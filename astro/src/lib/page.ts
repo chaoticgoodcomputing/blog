@@ -42,14 +42,22 @@ export function tagAt(url: string): Pick<PageProps, "tag"> | undefined {
 }
 
 /**
- * Whether a page is an indexable page: one the site asks search engines to index, and lists in its
- * sitemap. A private page is not, nor is the tag page of a private tag or of a tag under one, nor
- * the 404 page, nor the graph page, which are no content. The page of a tag that only private pages carry is: it shows the tag's description
- * note, and lists no posts.
+ * Whether a page is a discoverable page: one the site helps a reader find, in its own search and
+ * with a share card for a link to it. A private page is not, nor is the tag page of a private tag
+ * or of a tag under one, nor the 404 page, nor the graph page, which are no content. The page of a
+ * tag that only private pages carry is: it shows the tag's description note, and lists no posts.
  */
-export function isIndexable(page: Pick<PageProps, "kind" | "note" | "tag">): boolean {
+export function isDiscoverable(page: Pick<PageProps, "kind" | "note" | "tag">): boolean {
   if (page.kind === "404" || page.kind === "graph") return false
   if (page.note?.isPrivate) return false
   return !page.tag || !isPrivate([page.tag])
 }
 
+/**
+ * Whether a page is an indexable page: one the site asks search engines to index, and lists in its
+ * sitemap. A discoverable page is, but a tag page, the tags index among them: a listing of the
+ * posts under a tag, which search engines take for thin content and weigh against the whole site.
+ */
+export function isIndexable(page: Pick<PageProps, "kind" | "note" | "tag">): boolean {
+  return isDiscoverable(page) && page.kind !== "tag"
+}

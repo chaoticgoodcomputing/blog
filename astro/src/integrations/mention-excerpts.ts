@@ -1,4 +1,4 @@
-// The mention excerpts (src/lib/mention-excerpts.ts): for each indexable note, one page for each
+// The mention excerpts (src/lib/mention-excerpts.ts): for each discoverable note, one page for each
 // site it links to, holding only its paragraphs that link there, written beside the pages under
 // `/mentions`, and the manifest of them all, `/webmentions.json`, which the deploy sends
 // (.github/workflows/scripts/webmention.mjs) and reads back from the live site on the next deploy
@@ -49,7 +49,7 @@ export function mentionExcerpts(): AstroIntegration {
           const url = `/${pathname}`
           const page = sitePageAt(index, url)
           const note = page?.kind !== "tag" ? page?.note : undefined
-          if (!page?.indexable || !note || "reason" in note) continue
+          if (!page?.discoverable || !note || "reason" in note) continue
           const file = path.join(out, builtFileOf(url))
           const noteAddress = new URL(url, site).href
           // A web page's annotation page answers the page it annotates.

@@ -12,7 +12,7 @@ import siteIcon from "../assets/icon.png?inline"
 import { formatDate } from "./dates.ts"
 import { SITE_ICONS } from "./icons.ts"
 import type { NoteFacts, NoteIndex } from "./notes.ts"
-import { isIndexable, type PageProps } from "./page.ts"
+import { isDiscoverable, type PageProps } from "./page.ts"
 import { sitePages } from "./site-pages.ts"
 import { site as siteConfig } from "../site.config.ts"
 import { bubbleParts } from "./tag-bubble.ts"
@@ -28,25 +28,25 @@ const cardOf = (url: string) => (url === "/" ? "index" : url.slice(1))
 const cardAt = (url: string) => `${CARDS}/${cardOf(url)}.png`
 
 /**
- * The address of a page's card, from the site's root: an indexable page has one (`isIndexable`), a
- * note's page, the home page, an annotation page, a tag's page and the tags index. A private page,
- * a private tag's page and the 404 page have none: a page that asks not to be found is not drawn
- * for a link to it to show.
+ * The address of a page's card, from the site's root: a discoverable page has one
+ * (`isDiscoverable`), a note's page, the home page, an annotation page, a tag's page and the tags
+ * index. A private page, a private tag's page and the 404 page have none: a page the site keeps
+ * from being found is not drawn for a link to it to show.
  */
 export function shareCardUrl(page: Pick<PageProps, "kind" | "url" | "note" | "tag">): string | undefined {
-  if (!isIndexable(page)) return undefined
+  if (!isDiscoverable(page)) return undefined
   if (page.kind === "tag") return cardAt(page.url)
   return page.note ? cardAt(page.url) : undefined
 }
 
 /**
  * Every card the site draws, by its address and its route's `card` parameter, with what it is of:
- * each indexable note's page, the page of each tag that has one and is no private tag's
+ * each discoverable note's page, the page of each tag that has one and is no private tag's
  * (src/lib/tag-pages.ts), and the tags index.
  */
 export function shareCardPages(index: NoteIndex): { url: string; card: string; subject: CardSubject }[] {
   return sitePages(index).flatMap((page) => {
-    if (!page.indexable) return []
+    if (!page.discoverable) return []
     const subject: CardSubject | undefined =
       page.kind === "tag" ? { tag: page.tag } : page.note && !("reason" in page.note) ? { note: page.note } : undefined
     return subject ? [{ url: cardAt(page.url), card: cardOf(page.url), subject }] : []

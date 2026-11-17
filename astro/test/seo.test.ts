@@ -37,13 +37,17 @@ test("a page's canonical address is its own, whole, on the site", () => {
   )
 })
 
-test("a private page, a private tag page and the 404 page ask not to be indexed", () => {
+test("a private page, a tag page and the 404 page ask not to be indexed", () => {
   const page = (id: string) => ({ kind: "note", title: note(id).title, url: note(id).url, note: note(id) }) as const
   expect(headOf(page("content/seo/small-models"), CONTEXT).indexable).toBe(true)
   expect(headOf(page("content/seo/diary"), CONTEXT).indexable).toBe(false)
   expect(
     headOf({ kind: "tag", title: "#private/work", url: "/tags/private/work", tag: "private/work" }, CONTEXT).indexable,
   ).toBe(false)
+  expect(
+    headOf({ kind: "tag", title: "#engineering/ai", url: "/tags/engineering/ai", tag: "engineering/ai" }, CONTEXT).indexable,
+  ).toBe(false)
+  expect(headOf({ kind: "tag", title: "Tags", url: "/tags" }, CONTEXT).indexable).toBe(false)
   expect(headOf({ kind: "404", title: "Not Found", url: "/404" }, CONTEXT).indexable).toBe(false)
 })
 

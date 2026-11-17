@@ -4,7 +4,7 @@
 
 import { isAnnotationPage } from "./annotations.ts"
 import type { Note, NoteIndex, UnpublishedNote } from "./notes.ts"
-import { GRAPH_PAGE, isIndexable, type PageKind } from "./page.ts"
+import { GRAPH_PAGE, isDiscoverable, isIndexable, type PageKind } from "./page.ts"
 import { tagPages, tagPageTitle } from "./tag-pages.ts"
 import { TAGS_INDEX, tagUrl } from "./tags.ts"
 
@@ -21,7 +21,9 @@ export interface SitePage {
   note?: Note | UnpublishedNote | undefined
   /** On a tag page, the tag, as a tag slug; none on the tags index. */
   tag?: string | undefined
-  /** Whether it asks search engines to index it, and is in the sitemap and search. */
+  /** Whether the site helps a reader find it: in its search, with a share card. */
+  discoverable: boolean
+  /** Whether it asks search engines to index it, and is in the sitemap. */
   indexable: boolean
 }
 
@@ -32,7 +34,11 @@ const described = new WeakMap<NoteIndex, { pages: SitePage[]; byUrl: Map<string,
 function describe(index: NoteIndex): { pages: SitePage[]; byUrl: Map<string, SitePage> } {
   const known = described.get(index)
   if (known) return known
-  const page = (props: Omit<SitePage, "indexable">): SitePage => ({ ...props, indexable: isIndexable(props) })
+  const page = (props: Omit<SitePage, "discoverable" | "indexable">): SitePage => ({
+    ...props,
+    discoverable: isDiscoverable(props),
+    indexable: isIndexable(props),
+  })
   const pages: SitePage[] = [
     ...index.notes.map((note) =>
       page({

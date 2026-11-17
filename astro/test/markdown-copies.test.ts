@@ -106,7 +106,7 @@ test("a table is a table", () => {
   expect(copy).toMatch(/\| A +\| B +\|\n\| -+ \| -+ \|\n\| 1 +\| 2 +\|/)
 })
 
-test("the copied notes are the indexable notes' pages, and no tag's page", () => {
+test("the copied notes are the discoverable notes' pages, and no tag's page", () => {
   const copied = copiedNotes(getNoteIndex())
   expect(copied.length).toBeGreaterThan(0)
   expect(copied.some((note) => note.url.startsWith("/tags/"))).toBe(false)

@@ -6,7 +6,7 @@ import { footer, seo, site as siteConfig } from "../site.config.ts"
 import type { ArticleType, SeoConfig } from "../site.config.types.ts"
 import type { Note, UnpublishedNote } from "./notes.ts"
 import { markdownCopyUrl } from "./markdown-copies.ts"
-import { isIndexable, type PageProps } from "./page.ts"
+import { isDiscoverable, isIndexable, type PageProps } from "./page.ts"
 import { shareCardUrl } from "./share-card.ts"
 import { isUnderTag } from "./tags.ts"
 
@@ -42,7 +42,7 @@ export interface PageHead {
     /** Its tags, as tag slugs. */
     tags: string[]
   }
-  /** The whole address of its Markdown copy, on an indexable note's page (./markdown-copies.ts). */
+  /** The whole address of its Markdown copy, on a discoverable note's page (./markdown-copies.ts). */
   markdown?: string
   /** Its JSON-LD: an article's on an article's page, the website's on the home page, else none. */
   structuredData?: Record<string, unknown>
@@ -76,8 +76,8 @@ export function headOf(page: PageProps, context: HeadContext): PageHead {
   const head = { title: page.title, description, canonical }
 
   const indexable = isIndexable(page)
-  // A note's page, the home page among them, has a copy when it is indexable; a tag's page has none.
-  const copied = indexable && page.note !== undefined && page.kind !== "tag"
+  // A note's page, the home page among them, has a copy when it is discoverable; a tag's page has none.
+  const copied = isDiscoverable(page) && page.note !== undefined && page.kind !== "tag"
 
   return {
     title: `${page.title}${siteConfig.titleSuffix}`,

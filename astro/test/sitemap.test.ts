@@ -58,25 +58,15 @@ test("a private page is not listed", () => {
   expect(lastModified(`${SITE}/garden/hidden`)).toBe("not listed")
 })
 
-test("a tag page is listed, last modified when the newest of its posts was, or its description note", () => {
-  expect(lastModified(`${SITE}/tags/garden/seasons`)).toBe("2026-05-01T00:00:00.000Z")
-  expect(lastModified(`${SITE}/tags/garden`)).toBe("2026-05-05T00:00:00.000Z")
-  // A description note written in MDX is one too.
-  expect(lastModified(`${SITE}/tags/orchard`)).toBe("2026-05-20T00:00:00.000Z")
-})
-
-test("the page of a tag only private pages carry, with no description note, is last modified when the newest of them was", () => {
-  expect(lastModified(`${SITE}/tags/sealed`)).toBe("2026-04-07T00:00:00.000Z")
-})
-
-test("the tags index is last modified when the newest post it lists was, tagged or not, the home page's note not among them", () => {
-  expect(lastModified(`${SITE}/tags`)).toBe("2026-06-01T00:00:00.000Z")
+test("no tag page is listed, the tags index among them: each asks not to be indexed", () => {
+  for (const tag of ["/tags/garden/seasons", "/tags/garden", "/tags/orchard", "/tags/sealed", "/tags"]) {
+    expect(lastModified(`${SITE}${tag}`), tag).toBe("not listed")
+  }
 })
 
 test("the tag page of a private tag, or of a tag under one, is not listed", () => {
   expect(lastModified(`${SITE}/tags/private`)).toBe("not listed")
   expect(lastModified(`${SITE}/tags/private/work`)).toBe("not listed")
-  expect(lastModified(`${SITE}/tags/privateer`)).toBe("no date")
 })
 
 test("a page that is no note's and no tag's is listed, with no date", () => {

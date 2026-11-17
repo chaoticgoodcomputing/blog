@@ -1,4 +1,4 @@
-// Each indexable note's page as Markdown, at its address with `.md` after it, and `/llms.txt`, the
+// Each discoverable note's page as Markdown, at its address with `.md` after it, and `/llms.txt`, the
 // site's index of them (https://llmstxt.org). They are for agents: a page's HTML is mostly the site
 // around it, its styles and its icons, and a copy is its text alone. The search integration's
 // pages are the ones copied (src/integrations/markdown-copies.ts writes them).
@@ -23,13 +23,13 @@ export function markdownCopyUrl(url: string): string {
 }
 
 /**
- * The notes with a copy: those whose page is indexable. A tag's description note has none: its page
+ * The notes with a copy: those whose page is discoverable. A tag's description note has none: its page
  * is the tag's, a listing of the posts under it, which llms.txt lists itself.
  */
 export function copiedNotes(index: NoteIndex): Note[] {
   return index.notes.filter((note) => {
     const page = sitePageAt(index, note.url)
-    return page !== undefined && page.kind !== "tag" && page.indexable
+    return page !== undefined && page.kind !== "tag" && page.discoverable
   })
 }
 

@@ -59,11 +59,13 @@ test("an article's head says when it was published, who wrote it, its section an
   expect(tags).toEqual(["horticulture", "writing/notes"])
 })
 
-test("a private page asks not to be indexed, and a public page does not", async ({ page }) => {
-  await page.goto("/content/seo/diary")
-  expect(await head(page, 'meta[name="robots"]')).toBe("noindex")
-  await page.goto("/404")
-  expect(await head(page, 'meta[name="robots"]')).toBe("noindex")
+test("a private page, a tag page and the tags index ask not to be indexed, and a public note's page does not", async ({
+  page,
+}) => {
+  for (const address of ["/content/seo/diary", "/404", "/tags/horticulture/seasons", "/tags"]) {
+    await page.goto(address)
+    expect(await head(page, 'meta[name="robots"]'), address).toBe("noindex")
+  }
   for (const address of ["/", "/content/seo/small-models", "/seo/colophon"]) {
     await page.goto(address)
     await expect(page.locator('head meta[name="robots"]'), address).toHaveCount(0)
