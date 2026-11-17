@@ -2,12 +2,12 @@
 title: "On Harnesses: Flowthru GA Release"
 date: "2026-06-02T00:00:00.000Z"
 tags:
-  - "horticulture/seasons/systems"
   - "projects/flowthru"
   - "engineering/data"
   - "engineering/languages/csharp"
   - "engineering/languages/python"
   - "writing/notes"
+  - "horticulture/seasons/systems"
   - "private"
 ---
 
