@@ -1,6 +1,7 @@
 ---
 title: "Planning With Agents: Better can be Better"
 date: 2026-11-06
+updated: 2026-11-17
 tags:
   - engineering/ai
   - writing/annotations
@@ -96,3 +97,21 @@ Here are some of my notes around the post, as well as my experience using Chopin
 >%%TAGS%%
 >
 ^w92wlhbwoo7
+
+
+>%%
+>```annotation-json
+>{"created":"2026-11-10T21:40:23.964Z","text":"This is just... the most click-into-clarity moment for me, personally.\n\nI think the way that it frames the issue really does hail back to [[Programming as Theory Building]] and the World 1/2/3 setup. Effectively, there comes a point when something that sits conceptually in your head must be shared. That means that the idea must be transcribed into a physical medium and then consumed by another person. The way I see it, that physical medium *is* the boundary object: the boundary between an idea going out of my head, and into yours.\n\nAnybody who has been in a teaching role before knows that this is *way harder than it sounds*. It's a blend of art, and science, and design, and psychology, in a way that mixes together into a very strange alchemy. The result of that alchemy, done successfully,","updated":"2026-11-10T21:40:23.964Z","document":{"title":"Planning with Agents: Divided Worlds, Boundary Objects, and Thicker Interfaces","link":[{"href":"https://maggieappleton.com/planning-agents"},{"href":"https://maggieappleton.com/planning-agents","rel":"canonical","type":""}],"dc":{},"eprints":{},"facebook":{"title":["Planning with Agents: Divided Worlds, Boundary Objects, and Thicker Interfaces"],"type":["article"],"image":["https://maggieappleton.com/og/planning-agents.png"],"url":["https://maggieappleton.com/planning-agents"],"description":["Why we need richer, thicker interfaces and better boundary objects for collaborative planning with agents"],"locale":["en_GB"],"image:url":["https://maggieappleton.com/og/planning-agents.png"],"image:width":["1200"],"image:height":["630"],"image:alt":["Planning with Agents: Divided Worlds, Boundary Objects, and Thicker Interfaces"]},"highwire":{},"prism":{},"twitter":{"card":["summary_large_image"],"image":["https://maggieappleton.com/og/planning-agents.png"],"image:alt":["Planning with Agents: Divided Worlds, Boundary Objects, and Thicker Interfaces"],"creator":["@mappletons"]},"favicon":"https://maggieappleton.com/images/favicon/favicon-16x16.png"},"uri":"https://maggieappleton.com/planning-agents","target":[{"source":"https://maggieappleton.com/planning-agents","selector":[{"type":"RangeSelector","startContainer":"/main[1]/div[1]/article[1]/div[1]/div[2]/div[96]/p[1]","startOffset":0,"endContainer":"/main[1]/div[1]/article[1]/div[1]/div[2]/div[96]/p[2]","endOffset":61},{"type":"TextPositionSelector","start":20756,"end":21052},{"type":"TextQuoteSelector","exact":"When the museum was being founded, it succeeded in bringing together lots of different social groups with different cultures, beliefs, training, and priorities to create it: biologists, trappers, funders, and university administrators.All able to effectively collaborate through boundary objects.","prefix":"useum of Vertebrate Zoology    .","suffix":"Specimens, labels, field notes, "}]}]}
+>```
+>%%
+>*%%PREFIX%%useum of Vertebrate Zoology    .%%HIGHLIGHT%% ==When the museum was being founded, it succeeded in bringing together lots of different social groups with different cultures, beliefs, training, and priorities to create it: biologists, trappers, funders, and university administrators.All able to effectively collaborate through boundary objects.== %%POSTFIX%%Specimens, labels, field notes,*
+>%%LINK%%[[#^jrghswp0gen|show annotation]]
+>%%COMMENT%%
+>This is just... the most click-into-clarity moment for me, personally.
+>
+>I think the way that it frames the issue really does hail back to [[Programming as Theory Building]] and the World 1/2/3 setup. Effectively, there comes a point when something that sits conceptually in your head must be shared. That means that the idea must be transcribed into a physical medium and then consumed by another person. The way I see it, that physical medium *is* the boundary object: the boundary between an idea going out of my head, and into yours.
+>
+>Anybody who has been in a teaching role before knows that this is *way harder than it sounds*. It's a blend of art, and science, and design, and psychology, in a way that mixes together into a very strange alchemy. The result of that alchemy, done successfully,
+>%%TAGS%%
+>
+^jrghswp0gen

@@ -1,7 +1,7 @@
 ---
 title: Agentic Programming as Theory Building
 date: 2026-02-12
-updated: 2026-10-29
+updated: 2026-11-17
 tags:
   - economics/management
   - engineering/ai
@@ -11,7 +11,7 @@ tags:
 description: Do humans have a role in software development anymore? Absolutely — but we need to rethink what it means to program. An modern review of Peter Naur's 1985 essay "Programming as Theory Building"
 annotation-target: https://pablo.rauzy.name/dev/naur1985programming.pdf
 ---
-If you ever need an endorsement of trying to chase citations all the way back to their sources, look no further! I recently read a post by [Steve Krouse,](https://stevekrouse.com/) [*Vibe code is legacy code*](https://stevekrouse.com/syndicated/vibe-code), where it mentions the refrain:
+e/.I recently read a post by [Steve Krouse,](https://stevekrouse.com/) [*Vibe code is legacy code*](https://stevekrouse.com/syndicated/vibe-code), where it mentions the refrain:
 
 > [!QUOTE]
 > Programming is fundamentally theory building,
@@ -22,7 +22,7 @@ Steve Krouse's quote digs into this citation — a paper by [Peter Naur](https:/
 
 (I did just attach his name to the term "computer science", but it *is* worth noting that he didn't like that term. He preferred — and coined — the term "datalogy", which [still sticks as the term for the discipline](https://www.researchgate.net/publication/220657031_Datalogy_-_The_Copenhagen_Tradition_of_Computer_Science) in his native Denmark.)
 
-Lemme level with ya — this is going to get real heady, real fast. As background, Naur rejected the idea that computer science was itself a direct descendant from raw mathematics. This paper builds on that idea, and talks about the interface between actual programmatic processes/development and the human beings who create them. Many of the citations on this paper are philosophical essays and excerpts — one of them seeks to distinguish human thought from hydrogen atoms.
+Lemme level with ya — this is going to get real heady, real fast. As background, Naur rejected the idea that computer science was itself a direct descendant from raw mathematics. Many of the citations on this paper are philosophical essays and excerpts — one of them seeks to distinguish human thought from hydrogen atoms.
 
 Stick around, though! If you share my anxiety about the role of humans in a world where LLMs have pretty much beaten us out in the act of writing code, this paper may be as cathartic for you as it has been for myself.
 
