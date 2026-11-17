@@ -93,3 +93,9 @@ test("the margin holds the sidenotes once the room fits the text and a margin ei
   expect(css).toContain("calc(-1 * (14rem + 2rem))")
   expect(css).toMatch(/\.sidenote-left \{\s*float: left;/)
 })
+
+test("an annotation page's sidenotes are in the margin too, its cards being in a drawer over the page", () => {
+  const css = sidenoteMarginStyles(layout)
+  expect(css).not.toContain("annotation-viewer")
+  expect(css).toContain(".note-room .prose .sidenoted { display: contents; }")
+})

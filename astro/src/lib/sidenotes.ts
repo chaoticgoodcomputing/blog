@@ -149,15 +149,18 @@ export function restoreFootnotes(body: HTMLElement): void {
  * The sidenotes' layout in the margin, for a note whose room is wide enough for the text, with a
  * margin either side as wide as a sidenote, the gap before it and the room's edge: the odd
  * sidenotes in the right margin, the even in the left. Below that, the
- * sidenotes are under their blocks (src/styles/prose/sidenotes.css). An annotation page whose
- * document opens has its margin for its annotations, and keeps its sidenotes under their blocks.
+ * sidenotes are under their blocks (src/styles/prose/sidenotes.css). An annotation page's are in
+ * the margin of its preface and its epilogue as any note's are: its cards are in a drawer over the
+ * page, which takes none of its room.
  */
 export function sidenoteMarginStyles({ noteWidth, sidenoteWidth, sidenoteGap }: LayoutConfig): string {
   const room = `calc(${noteWidth} + 2 * (${sidenoteGap} + ${sidenoteWidth} + 2rem))`
-  const note = `.note-room:not(:has(.annotation-viewer:not([data-state="failed"]))) .prose`
+  // The sidenote rules name the wrapper, as the rules for under the block do (sidenotes.css), so
+  // that these, after them, take their place.
+  const note = `.note-room .prose`
   return `@container note-room (width >= ${room}) {
   ${note} .sidenoted { display: contents; }
-  ${note} .sidenote {
+  ${note} .sidenoted > .sidenote {
     float: right;
     clear: right;
     box-sizing: border-box;
@@ -166,7 +169,7 @@ export function sidenoteMarginStyles({ noteWidth, sidenoteWidth, sidenoteGap }: 
     padding: 0;
     border: none;
   }
-  ${note} .sidenote-left {
+  ${note} .sidenoted > .sidenote-left {
     float: left;
     clear: left;
     margin: 0.35em 0 1rem calc(-1 * (${sidenoteWidth} + ${sidenoteGap}));
