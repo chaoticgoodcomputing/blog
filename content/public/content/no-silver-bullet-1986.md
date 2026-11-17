@@ -303,10 +303,12 @@ Writing with 40 years of hindsight, and with modern agents being capable of mass
 > [!annotation]
 > %%
 > ```annotation
-> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:18e57bab-231a-4f16-a5b6-aec2fc1c0105","type":"Annotation","motivation":"commenting","body":{"id":"#^kuymwz1me2","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","selector":[{"type":"TextPositionSelector","start":22649,"end":22816},{"type":"TextQuoteSelector","exact":"The techniques used for speech recognition seem to have little in common with those used for image recognition, and both are different from those used in expert systems.","prefix":" completely with this critique. ","suffix":" I have a hard time seeing how i"},{"type":"PageSelector","index":7,"label":"8"}]},"created":"2026-11-09T17:10:21.719Z","modified":"2026-11-09T17:10:21.719Z"}
+> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:18e57bab-231a-4f16-a5b6-aec2fc1c0105","type":"Annotation","motivation":"commenting","body":{"id":"#^kuymwz1me2","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf","selector":[{"type":"TextPositionSelector","start":22649,"end":22816},{"type":"TextQuoteSelector","exact":"The techniques used for speech recognition seem to have little in common with those used for image recognition, and both are different from those used in expert systems.","prefix":" completely with this critique. ","suffix":" I have a hard time seeing how i"},{"type":"PageSelector","index":7,"label":"8"}]},"created":"2026-11-09T17:10:21.719Z","modified":"2026-11-17T22:23:03.184Z"}
 > ```
 > %%
-> .
+> Another thing that definitely [didn't age as well](https://en.wikipedia.org/wiki/Transformer_(deep_learning)).
+>
+> A really good book on how the history of this approach flipped from "expert-designed expert systems" to "throw as much data as humanly possible to train on" is [*The Worlds I See*](https://www.amazon.com/Worlds-See-Curiosity-Exploration-Discovery/dp/1250897939) by [Dr. Fei-Fei Li](https://en.wikipedia.org/wiki/Fei-Fei_Li), who famously put together the [ImageNet](https://en.wikipedia.org/wiki/ImageNet) dataset. It was the performance of [AlexNet](https://en.wikipedia.org/wiki/AlexNet) on the ImageNet competition that kinda kicked off this whole deep-learning, neural-networking, [transformers-are-all-you-need](https://arxiv.org/pdf/1706.03762) era of computing.
 ^kuymwz1me2
 
 

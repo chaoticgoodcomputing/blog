@@ -7,8 +7,7 @@
 // that already has a `target` keeps it. The tab is opened with `noopener`, so the page there can't
 // reach back into this one, and a screen reader is told that the link opens one: the link's name
 // ends with "(opens in a new tab)", from an element that holds no text, so a heading's slug, a link's
-// text and the search index are the note's own. What the element draws is the same news for the eye:
-// Material Design Icons' `open-in-new`, as the Quartz site drew an icon after such a link.
+// text and the search index are the note's own. The element draws nothing: the link looks like any other.
 //
 // Only a link written in Markdown is seen here: Sätteri passes HTML written in a note through as
 // it is written, and an MDX note's JSX is the writer's too. A component's link to another site takes
@@ -16,7 +15,6 @@
 // page loads (ExternalLinks.astro). Each asks `isExternal`.
 
 import { defineHastPlugin } from "satteri"
-import { noteIcon } from "./icons.ts"
 
 /**
  * Whether `href` is a link to another site: a whole web address, by `https:` or `http:`, on a host
@@ -47,7 +45,7 @@ export function externalLinks(site: string) {
           type: "element",
           tagName: "span",
           properties: { className: ["new-tab"], role: "img", ariaLabel: "(opens in a new tab)" },
-          children: [noteIcon("open-in-new")],
+          children: [],
         })
       },
     },

@@ -92,7 +92,7 @@ const isInside = (node: HTMLElement, root: HTMLElement): boolean => {
 
 /**
  * A block as a mention excerpt holds it: without what the site draws for its own reader (the
- * new-tab icon and its label), and with every address whole, from the note's, since the receiver
+ * new-tab label), and with every address whole, from the note's, since the receiver
  * shows it on another site.
  */
 export function excerptBlock(block: HTMLElement, noteAddress: string): string {

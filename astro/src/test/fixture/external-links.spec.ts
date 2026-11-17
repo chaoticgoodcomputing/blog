@@ -22,17 +22,13 @@ test("a link to another site opens in a new tab, safely, and says so to a screen
   await expectAt(page, new RegExp(`${links}$`))
 })
 
-test("a link to another site ends with an icon, in the link's colour, and is not underlined", async ({ page }) => {
+test("a link to another site draws no icon, and looks like a link that stays on the site", async ({ page }) => {
   await page.goto(links)
   const link = page.locator(".prose").getByRole("link", { name: "Astro’s documentation (opens in a new tab)", exact: true })
-  const icon = link.locator(".new-tab svg")
-  await expect(icon).toBeVisible()
-  const colour = await link.evaluate((element) => getComputedStyle(element).color)
-  await expect(icon).toHaveCSS("color", colour)
-  await expect(link).toHaveCSS("text-decoration-line", "none")
-  // A link that stays on the site keeps its own look, and no icon.
+  await expect(link.locator("svg")).toHaveCount(0)
   const stays = page.locator(".prose").getByRole("link", { name: "a place on this page", exact: true })
-  await expect(stays.locator("svg")).toHaveCount(0)
+  const decoration = await stays.evaluate((element) => getComputedStyle(element).textDecorationLine)
+  await expect(link).toHaveCSS("text-decoration-line", decoration)
 })
 
 test("an address written bare opens in a new tab too", async ({ page }) => {

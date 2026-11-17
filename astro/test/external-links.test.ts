@@ -8,9 +8,9 @@ function render(source: string): string {
   return html.trim()
 }
 
-test("a link to another site opens in a new tab, which it tells a screen reader and shows with an icon", () => {
-  expect(render("[Astro](https://astro.build/docs)")).toMatch(
-    /^<p><a href="https:\/\/astro.build\/docs" target="_blank" rel="noopener">Astro<span class="new-tab" role="img" aria-label="\(opens in a new tab\)"><svg viewBox="0 0 24 24" width="1em" height="1em"><path fill="currentColor" d="M14 3v2h3.59l-9.83 9.83[^"]*"><\/path><\/svg><\/span><\/a><\/p>$/,
+test("a link to another site opens in a new tab, which it tells a screen reader but draws nothing for", () => {
+  expect(render("[Astro](https://astro.build/docs)")).toBe(
+    '<p><a href="https://astro.build/docs" target="_blank" rel="noopener">Astro<span class="new-tab" role="img" aria-label="(opens in a new tab)"></span></a></p>',
   )
 })
 
