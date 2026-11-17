@@ -24,7 +24,7 @@ const inReplyTo = webAnnotationTarget(note)
 <div class="entry-meta" hidden data-pagefind-ignore>
   <a class="u-url u-uid" href={address}></a>
   <a class="p-author h-card" href={new URL(site.author.url, Astro.site).href}>{site.author.name}</a>
-  {note.summary && <data class="p-summary" value={note.summary}></data>}
+  {note.description && <data class="p-summary" value={note.description}></data>}
   <time class="dt-updated" datetime={note.modified.toISOString()}></time>
   {inReplyTo && <a class="u-in-reply-to" href={inReplyTo}></a>}
   {note.tags.map((tag) => <data class="p-category" value={tag}></data>)}

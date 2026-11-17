@@ -4,7 +4,7 @@
 import { fileURLToPath } from "node:url"
 import type { APIRoute, GetStaticPaths } from "astro"
 import { cacheDir } from "astro:config/server"
-import { getNote, getNotes, getNoteIndex } from "../../lib/notes.ts"
+import { getNote, getNoteIndex } from "../../lib/notes.ts"
 import { shareCardDrawer, shareCardOf, shareCardPages } from "../../lib/share-card.ts"
 
 const drawer = shareCardDrawer(fileURLToPath(new URL("share-cards/", cacheDir)))
@@ -12,7 +12,7 @@ const drawer = shareCardDrawer(fileURLToPath(new URL("share-cards/", cacheDir)))
 type Props = { note: string } | { tag: string | undefined }
 
 export const getStaticPaths = (() =>
-  shareCardPages(getNotes()).map(({ card, subject }) => ({
+  shareCardPages(getNoteIndex()).map(({ card, subject }) => ({
     params: { card },
     props: ("note" in subject ? { note: subject.note.id } : subject) satisfies Props,
   }))) satisfies GetStaticPaths

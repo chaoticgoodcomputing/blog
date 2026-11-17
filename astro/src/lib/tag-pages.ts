@@ -15,7 +15,7 @@ export function tagPageTitle(tag: string | undefined, index: NoteIndex): { title
   const note = index.tagDescription(tag)
   return {
     title: note?.title ?? `#${tagName(tag)}`,
-    ...(note?.summary !== undefined && { description: note.summary }),
+    ...(note?.description !== undefined && { description: note.description }),
   }
 }
 

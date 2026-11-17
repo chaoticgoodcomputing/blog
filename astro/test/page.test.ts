@@ -1,6 +1,10 @@
 import { expect, test } from "vitest"
-import { getNote, getNotes } from "../src/lib/notes.ts"
-import { isIndexable, isIndexableAt, tagAt } from "../src/lib/page.ts"
+import { getNote, getNoteIndex } from "../src/lib/notes.ts"
+import { isIndexable, tagAt } from "../src/lib/page.ts"
+import { sitePageAt } from "../src/lib/site-pages.ts"
+
+// Whether the site's page at an address is indexable; undefined where the site has no page.
+const indexableAt = (url: string) => sitePageAt(getNoteIndex(), url)?.indexable
 
 test("a note's page is indexable unless it is a private page", () => {
   expect(isIndexable({ kind: "note", note: getNote("content/notes/alpha")! })).toBe(true)
@@ -19,7 +23,7 @@ test("a tag page is indexable unless its tag is a private tag or under one", () 
 test("a tag page whose tag only private pages carry is indexable: it shows its description, and lists no posts", () => {
   // test/fixtures/vault/tag-pages/sealed.md, a private page, is the one note under `ledger/sealed`.
   expect(isIndexable({ kind: "tag", tag: "ledger/sealed" })).toBe(true)
-  expect(isIndexableAt("/tags/ledger/sealed", getNotes())).toBe(true)
+  expect(indexableAt("/tags/ledger/sealed")).toBe(true)
 })
 
 test("the 404 page is not indexable", () => {
@@ -28,18 +32,18 @@ test("the 404 page is not indexable", () => {
 
 test("the graph page is not indexable, at its address or by its kind: it is a tool, with no content of its own", () => {
   expect(isIndexable({ kind: "graph" })).toBe(false)
-  expect(isIndexableAt("/graph", getNotes())).toBe(false)
+  expect(indexableAt("/graph")).toBe(false)
 })
 
 test("whether the page at an address is indexable is asked of the note or tag the address names", () => {
-  expect(isIndexableAt("/content/notes/alpha", getNotes())).toBe(true)
-  expect(isIndexableAt("/content/notes/secret", getNotes())).toBe(false)
-  expect(isIndexableAt("/tags", getNotes())).toBe(true)
-  expect(isIndexableAt("/tags/engineering/ai", getNotes())).toBe(true)
-  expect(isIndexableAt("/tags/private", getNotes())).toBe(false)
-  expect(isIndexableAt("/tags/private/work", getNotes())).toBe(false)
+  expect(indexableAt("/content/notes/alpha")).toBe(true)
+  expect(indexableAt("/content/notes/secret")).toBe(false)
+  expect(indexableAt("/tags")).toBe(true)
+  expect(indexableAt("/tags/engineering/ai")).toBe(true)
+  expect(indexableAt("/tags/private")).toBe(false)
+  expect(indexableAt("/tags/private/work")).toBe(false)
   // No note's page and no tag's: the address names nothing the rule speaks of.
-  expect(isIndexableAt("/no-such-page", getNotes())).toBeUndefined()
+  expect(indexableAt("/no-such-page")).toBeUndefined()
 })
 
 test("the tag page at an address names its tag, as a tag page's props do: none for the tags index", () => {

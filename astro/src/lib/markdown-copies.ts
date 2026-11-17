@@ -13,9 +13,9 @@ import TurndownService from "turndown"
 // @ts-expect-error: the plugin ships no types.
 import { gfm } from "@joplin/turndown-plugin-gfm"
 import { site as siteConfig, seo } from "../site.config.ts"
-import type { Note } from "./notes.ts"
+import type { Note, NoteIndex } from "./notes.ts"
 import { restoreFootnotes } from "./sidenotes.ts"
-import { isIndexableAt, tagAt } from "./page.ts"
+import { sitePageAt } from "./site-pages.ts"
 
 /** The address of a page's copy: its address with `.md` after it, and the home page's `/index.md`. */
 export function markdownCopyUrl(url: string): string {
@@ -26,8 +26,11 @@ export function markdownCopyUrl(url: string): string {
  * The notes with a copy: those whose page is indexable. A tag's description note has none: its page
  * is the tag's, a listing of the posts under it, which llms.txt lists itself.
  */
-export function copiedNotes(notes: Note[]): Note[] {
-  return notes.filter((note) => tagAt(note.url) === undefined && isIndexableAt(note.url, notes) === true)
+export function copiedNotes(index: NoteIndex): Note[] {
+  return index.notes.filter((note) => {
+    const page = sitePageAt(index, note.url)
+    return page !== undefined && page.kind !== "tag" && page.indexable
+  })
 }
 
 // What is no part of a page's text: the furniture under its title (its tags, date, reading time and
@@ -117,7 +120,7 @@ function converter(site: URL): TurndownService {
 /** What a copy says of its note above its text: what it is, where its page is, and when it was written. */
 export function frontOf(note: Note, site: URL): string {
   const lines = [`# ${note.title}`, ""]
-  if (note.description) lines.push(`> ${note.description.trim().replace(/\s*\n\s*/g, " ")}`, "")
+  if (note.writtenDescription) lines.push(`> ${note.writtenDescription.trim().replace(/\s*\n\s*/g, " ")}`, "")
   lines.push(`- Page: ${new URL(note.url, site).href}`)
   lines.push(`- Author: ${siteConfig.author.name}`)
   if (note.date) lines.push(`- Published: ${note.date.toISOString().slice(0, 10)}`)
@@ -163,11 +166,11 @@ const SECTIONS: Section[] = [
 ]
 
 /**
- * The site's llms.txt: its name, what it is, and a list of every copied note, each linked to its
- * copy with what the site describes it by, grouped by where it is and newest first.
+ * The site's llms.txt: its name, what it is, and a list of `copied`, the copied notes
+ * (`copiedNotes`), each linked to its copy with its description, grouped by where it is and newest
+ * first.
  */
-export function llmsTxt(notes: Note[], site: URL, copy: (notes: Note[]) => Note[] = copiedNotes): string {
-  const copied = copy(notes)
+export function llmsTxt(copied: Note[], site: URL): string {
   const remaining = new Set(copied)
   const lines = [
     `# ${siteConfig.title}`,
@@ -184,7 +187,7 @@ export function llmsTxt(notes: Note[], site: URL, copy: (notes: Note[]) => Note[
     lines.push("", `## ${section.title}`, "")
     for (const note of inSection) {
       remaining.delete(note)
-      const summary = note.summary?.trim().replace(/\s*\n\s*/g, " ")
+      const summary = note.description?.trim().replace(/\s*\n\s*/g, " ")
       lines.push(`- [${note.title.replace(/[[\]]/g, "")}](${new URL(markdownCopyUrl(note.url), site).href})${summary ? `: ${summary}` : ""}`)
     }
   }

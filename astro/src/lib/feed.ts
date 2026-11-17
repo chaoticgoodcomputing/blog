@@ -74,7 +74,7 @@ export function feedItems(
         pubDate: note.date,
         // An item with no description of its own is described by how long it takes to read, as
         // the site's feed has always described one, so that a reader has a line under its title.
-        description: note.summary ?? `(${readingMinutes(note, vault)} min read)`,
+        description: note.description ?? `(${readingMinutes(note, vault)} min read)`,
         categories: feedCategories(note.tags),
         ...(html !== undefined && { content: html }),
         // @astrojs/rss writes an item's link as its identifier, which is right wherever the two

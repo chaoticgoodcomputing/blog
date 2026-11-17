@@ -63,8 +63,8 @@ test("marked, a private page, under a private tag or a tag under one, is listed 
     { title: "Old", url: "/old", date: new Date("2025-01-01"), description: "See target.", isPrivate: false },
     { title: "New", url: "/new", date: new Date("2024-06-01"), description: "The newer one.", isPrivate: false },
     { title: "Embeds", url: "/embeds", isPrivate: false },
-    { title: "Secret", url: "/secret", date: new Date("2026-09-01"), isPrivate: true },
-    { title: "Work", url: "/work", isPrivate: true },
+    { title: "Secret", url: "/secret", date: new Date("2026-09-01"), description: "This is a private note.", isPrivate: true },
+    { title: "Work", url: "/work", description: "This is a private note.", isPrivate: true },
   ])
 })
 
@@ -90,7 +90,7 @@ test("marked, a private page a note links to is listed after every public one", 
     { title: "Old", url: "/old", date: new Date("2025-01-01"), description: "See target.", isPrivate: false },
     { title: "New", url: "/new", date: new Date("2024-06-01"), description: "The newer one.", isPrivate: false },
     { title: "Embeds", url: "/embeds", isPrivate: false },
-    { title: "Secret", url: "/secret", date: new Date("2026-09-01"), isPrivate: true },
+    { title: "Secret", url: "/secret", date: new Date("2026-09-01"), description: "This is a private note.", isPrivate: true },
   ])
 })
 

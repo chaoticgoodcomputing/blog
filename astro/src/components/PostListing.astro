@@ -38,7 +38,7 @@ const { layout, listings: all } = listingsOn(kind)
 const narrowed = (notes: Note[], to: string | undefined) => (to === undefined ? notes : notes.filter((note) => note.tags.some((own) => isUnderTag(own, to))))
 const withPages = all.map((listing) => ({
   ...listing,
-  pages: narrowed(postsIn[listing.order](), listing.tag).map((note) => ({ ...note, description: note.summary, fileType: annotatedFileType(note) })),
+  pages: narrowed(postsIn[listing.order](), listing.tag).map((note) => ({ ...note, description: note.description, fileType: annotatedFileType(note) })),
 }))
 const withPosts = withPages.filter((listing) => listing.pages.length > 0)
 const listings = withPosts.length > 0 ? withPosts : withPages.slice(0, 1)

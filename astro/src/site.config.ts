@@ -46,6 +46,7 @@ export const site: SiteConfig = {
   articleFolders: ["content"],
   private: {
     tags: ["private"],
+    description: "This is a private note.",
     backlinks: "omit",
     explorer: "omit",
   },

@@ -69,7 +69,7 @@ test("an item with no description of its own is described by its first paragraph
 
 test("an item with no description and no paragraph is described by how long it takes to read, as the site's feed has always described one", () => {
   const plain = notes.find((note) => note.title === "Plain")!
-  const [item] = feedItems([{ ...plain, summary: undefined }], SITE, { vault })
+  const [item] = feedItems([{ ...plain, description: undefined }], SITE, { vault })
   expect(item!.description).toBe("(1 min read)")
 })
 

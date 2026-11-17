@@ -65,7 +65,7 @@ const linkTo = (note: NoteFacts, url: string): Backlink => ({
   title: note.title,
   url,
   date: note.date,
-  description: note.summary,
+  description: note.description,
   isPrivate: note.isPrivate,
   fileType: annotatedFileType(note),
   tags: note.tags,

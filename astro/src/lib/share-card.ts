@@ -11,13 +11,14 @@ import sharp, { type PngOptions } from "sharp"
 import siteIcon from "../assets/icon.png?inline"
 import { formatDate } from "./dates.ts"
 import { SITE_ICONS } from "./icons.ts"
-import type { Note, NoteFacts, NoteIndex } from "./notes.ts"
+import type { NoteFacts, NoteIndex } from "./notes.ts"
 import { isIndexable, type PageProps } from "./page.ts"
+import { sitePages } from "./site-pages.ts"
 import { site as siteConfig } from "../site.config.ts"
 import { bubbleParts } from "./tag-bubble.ts"
 import { tagColor, tagIcon } from "./tag-dictionary.ts"
-import { tagPages, tagPageTitle } from "./tag-pages.ts"
-import { TAGS_INDEX, tagName, tagUrl } from "./tags.ts"
+import { tagPageTitle } from "./tag-pages.ts"
+import { tagName } from "./tags.ts"
 
 // Where the cards are, each at its page's address: `/a/b` has `/share-cards/a/b.png`, and the home
 // page `/share-cards/index.png`. The endpoint's route, src/pages/share-cards/[...card].png.ts, is
@@ -43,15 +44,13 @@ export function shareCardUrl(page: Pick<PageProps, "kind" | "url" | "note" | "ta
  * each indexable note's page, the page of each tag that has one and is no private tag's
  * (src/lib/tag-pages.ts), and the tags index.
  */
-export function shareCardPages(notes: Note[]): { url: string; card: string; subject: CardSubject }[] {
-  const page = (url: string, subject: CardSubject) => ({ url: cardAt(url), card: cardOf(url), subject })
-  return [
-    ...notes.filter((note) => isIndexable({ kind: "note", note })).map((note) => page(note.url, { note })),
-    ...tagPages(notes)
-      .filter((tag) => isIndexable({ kind: "tag", tag }))
-      .map((tag) => page(tagUrl(tag), { tag })),
-    page(TAGS_INDEX, { tag: undefined }),
-  ]
+export function shareCardPages(index: NoteIndex): { url: string; card: string; subject: CardSubject }[] {
+  return sitePages(index).flatMap((page) => {
+    if (!page.indexable) return []
+    const subject: CardSubject | undefined =
+      page.kind === "tag" ? { tag: page.tag } : page.note && !("reason" in page.note) ? { note: page.note } : undefined
+    return subject ? [{ url: cardAt(page.url), card: cardOf(page.url), subject }] : []
+  })
 }
 
 /** What one card says. A field it has none of is left off the card. */
@@ -76,7 +75,7 @@ export function shareCardOf(subject: CardSubject, index: NoteIndex): ShareCard {
   const { note } = subject
   return {
     title: note.title,
-    ...(note.summary !== undefined && { description: note.summary }),
+    ...(note.description !== undefined && { description: note.description }),
     ...(note.date && { date: formatDate(note.date, siteConfig.locale) }),
     tags: note.tags,
   }

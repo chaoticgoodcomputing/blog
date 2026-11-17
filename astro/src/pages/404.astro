@@ -6,9 +6,11 @@
 // "Not Found": the shell shows no article title on this kind of page, so the page shows its own.
 import ArticleTitle from "../components/ArticleTitle.astro"
 import Page from "../layouts/Page.astro"
+import { getNoteIndex } from "../lib/notes.ts"
+import { sitePageAt } from "../lib/site-pages.ts"
 ---
 
-<Page kind="404" title="Not Found" url="/404">
+<Page {...sitePageAt(getNoteIndex(), "/404")!}>
   <div class="not-found">
     <ArticleTitle title="404" />
     <p>There is no page at this address.</p>

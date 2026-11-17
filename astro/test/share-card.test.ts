@@ -3,7 +3,7 @@ import os from "node:os"
 import path from "node:path"
 import sharp from "sharp"
 import { expect, test } from "vitest"
-import { getNote, getNotes, getNoteIndex } from "../src/lib/notes.ts"
+import { getNote, getNoteIndex } from "../src/lib/notes.ts"
 import {
   drawShareCard,
   shareCardDrawer,
@@ -97,14 +97,14 @@ test("a private page has no card, nor a private tag's page", () => {
   expect(diary.isPrivate).toBe(true)
   expect(shareCardUrl({ kind: "note", url: diary.url, note: diary })).toBeUndefined()
   expect(shareCardUrl({ kind: "tag", url: "/tags/private/work", tag: "private/work" })).toBeUndefined()
-  const cards = shareCardPages(getNotes()).map(({ url }) => url)
+  const cards = shareCardPages(getNoteIndex()).map(({ url }) => url)
   expect(cards).not.toContain(`/share-cards${diary.url}.png`)
   expect(cards).not.toContain("/share-cards/tags/private.png")
   expect(cards).not.toContain("/share-cards/tags/private/work.png")
 })
 
 test("a card is drawn for every indexable page: each public note's, and each tag's but a private one's", () => {
-  const cards = new Map(shareCardPages(getNotes()).map(({ url, subject }) => [url, subject]))
+  const cards = new Map(shareCardPages(getNoteIndex()).map(({ url, subject }) => [url, subject]))
   expect(cards.get("/share-cards/share-card/pruning-roses.png")).toEqual({ note: note("share-card/pruning-roses") })
   expect(cards.get("/share-cards/index.png")).toEqual({ note: note("index") })
   expect(cards.get("/share-cards/tags/horticulture.png")).toEqual({ tag: "horticulture" })
@@ -113,7 +113,7 @@ test("a card is drawn for every indexable page: each public note's, and each tag
 })
 
 test("each card's route parameter is its address under /share-cards, without .png", () => {
-  const params = new Map(shareCardPages(getNotes()).map(({ url, card }) => [url, card]))
+  const params = new Map(shareCardPages(getNoteIndex()).map(({ url, card }) => [url, card]))
   expect(params.get("/share-cards/index.png")).toBe("index")
   expect(params.get("/share-cards/share-card/pruning-roses.png")).toBe("share-card/pruning-roses")
   expect(params.get("/share-cards/tags/horticulture/seasons.png")).toBe("tags/horticulture/seasons")
@@ -121,7 +121,7 @@ test("each card's route parameter is its address under /share-cards, without .pn
 })
 
 test("a card is drawn for every tag page, and for no tag without one (ticket 12)", () => {
-  const cards = new Set(shareCardPages(getNotes()).map(({ url }) => url))
+  const cards = new Set(shareCardPages(getNoteIndex()).map(({ url }) => url))
   // ledger/sealed is carried only by a private page, and has a tag page all the same.
   expect(cards).toContain("/share-cards/tags/ledger/sealed.png")
   // tags/unworn.md describes a tag no note carries: it has no tag page, and no card.

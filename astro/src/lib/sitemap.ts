@@ -1,10 +1,10 @@
 // What the sitemap says of a page: whether it is listed, and when it was last modified. The
 // sitemap integration knows a page only by its address (astro.config.ts), so that is what is asked
-// here, and whether it is listed is `isIndexableAt`'s answer, the one `isIndexable` gives a page that
-// has its props (./page.ts).
+// here, and whether it is listed is whether the page there is indexable (./site-pages.ts).
 
 import type { NoteIndex } from "./notes.ts"
-import { isIndexableAt, tagAt } from "./page.ts"
+import { tagAt } from "./page.ts"
+import { sitePageAt } from "./site-pages.ts"
 import { listedPosts } from "./post-listing.ts"
 import { isUnderTag } from "./tags.ts"
 
@@ -25,7 +25,7 @@ export function sitemapEntry(address: string, index: NoteIndex): SitemapEntry | 
   // An address writes a note's url percent-encoded.
   const url = decodeURI(new URL(address).pathname)
 
-  if (isIndexableAt(url, notes) === false) return undefined
+  if (sitePageAt(index, url)?.indexable === false) return undefined
 
   // A tag page shows its tag's description note and lists the posts under the tag, so it changed
   // when the newest of them did; the tags index lists every post. Both are asked as the page asks

@@ -27,14 +27,17 @@ export interface NoteFacts {
   frontmatter: Record<string, unknown>
   /** Frontmatter's title, else the file's name without its extension. */
   title: string
-  /** Frontmatter's description, as written: none where it writes none. */
-  description: string | undefined
   /**
-   * What the site describes the note by, wherever it does: its description, else its excerpt, its
-   * first paragraph cut short (./excerpt.ts). A private page has no excerpt: what the site
-   * publishes of it is a stub every private page shares. None for a note with neither.
+   * Frontmatter's `description`, as written: none where it writes none. Only what quotes the
+   * author's own words reads it; everything else shows `description`.
    */
-  summary: string | undefined
+  writtenDescription: string | undefined
+  /**
+   * The note's description, wherever the site shows one: its `description` property, else its
+   * excerpt, its first paragraph cut short (./excerpt.ts). A private page's is site
+   * configuration's private description, whatever the note writes. None for a note with neither.
+   */
+  description: string | undefined
   /** Its own tags, as tag slugs, in the order written. */
   tags: string[]
   /** Its own tags and every ancestor of each, sorted. */
@@ -220,8 +223,8 @@ export function indexNotes(vault: Vault, rules: Unpublished[] = unpublished): No
       cache,
       frontmatter,
       title: text(frontmatter.title) ?? file.basename,
-      description: text(frontmatter.description),
-      summary: undefined,
+      writtenDescription: text(frontmatter.description),
+      description: undefined,
       tags,
       tagsWithAncestors: withAncestors(tags),
       ...resolveDates({
@@ -234,7 +237,9 @@ export function indexNotes(vault: Vault, rules: Unpublished[] = unpublished): No
       isPrivate: isPrivate(tags),
       isArticle: site.articleFolders.some((folder) => isUnder(file.path, folder)),
     }
-    facts.summary = facts.description ?? (facts.isPrivate ? undefined : excerptOf(vault.readTextBlocks(file) ?? [], vault.read(file) ?? ""))
+    facts.description = facts.isPrivate
+      ? site.private.description
+      : (facts.writtenDescription ?? excerptOf(vault.readTextBlocks(file) ?? [], vault.read(file) ?? ""))
 
     const rule = rules.find((each) => each.test(file, cache))
     if (rule) {

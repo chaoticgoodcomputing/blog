@@ -53,15 +53,3 @@ export function isIndexable(page: Pick<PageProps, "kind" | "note" | "tag">): boo
   return !page.tag || !isPrivate([page.tag])
 }
 
-/**
- * Whether the page at an address, from the site's root and not encoded, is an indexable page, for
- * what knows a page only by its address (the sitemap, search). It is `isIndexable`'s answer for the
- * note or the tag page there; undefined where there is neither, a page the rule says nothing of.
- */
-export function isIndexableAt(url: string, notes: Note[]): boolean | undefined {
-  if (url === GRAPH_PAGE) return isIndexable({ kind: "graph" })
-  const tagPage = tagAt(url)
-  if (tagPage) return isIndexable({ kind: "tag", ...tagPage })
-  const note = notes.find((each) => each.url === url)
-  return note === undefined ? undefined : isIndexable({ kind: "note", note })
-}

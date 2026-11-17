@@ -35,6 +35,8 @@ export interface SiteConfig {
   private: {
     /** The private tags. A page under one of them, or under a tag under one, is a private page. */
     tags: string[]
+    /** What a private page is described as, wherever a description is shown, instead of its own. */
+    description: string
     backlinks: PrivateTreatment
     explorer: PrivateTreatment
   }

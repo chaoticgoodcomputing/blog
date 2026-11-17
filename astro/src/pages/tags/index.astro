@@ -3,11 +3,11 @@
 // The site shell lists every post after it, as on any tag page.
 import TagPageTags from "../../components/TagPageTags.astro"
 import Page from "../../layouts/Page.astro"
-import { tagPageTitle } from "../../lib/tag-pages.ts"
+import { sitePageAt } from "../../lib/site-pages.ts"
 import { TAGS_INDEX } from "../../lib/tags.ts"
 import { getNoteIndex } from "../../lib/notes.ts"
 ---
 
-<Page kind="tag" title={tagPageTitle(undefined, getNoteIndex()).title} url={TAGS_INDEX}>
+<Page {...sitePageAt(getNoteIndex(), TAGS_INDEX)!}>
   <TagPageTags />
 </Page>

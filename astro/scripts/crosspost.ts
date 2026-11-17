@@ -11,6 +11,7 @@ import fs from "node:fs"
 import { fileURLToPath } from "node:url"
 import { getDrawingPngs } from "../src/lib/drawings.ts"
 import { crosspostMarkdown } from "../src/lib/feed-content.ts"
+import { builtFileOf } from "../src/lib/built-files.ts"
 import { getNotes } from "../src/lib/notes.ts"
 
 const SITE = new URL("https://blog.chaoticgood.computer")
@@ -31,6 +32,6 @@ for (const given of addresses) {
     console.error(`No public note is at ${address}.`)
     process.exit(1)
   }
-  const html = fs.readFileSync(`${dist}${decodeURI(note.url).slice(1)}.html`, "utf8")
+  const html = fs.readFileSync(`${dist}${builtFileOf(note.url)}`, "utf8")
   console.log(`# ${note.title}\n\n${crosspostMarkdown(note, html, SITE, pngs)}`)
 }

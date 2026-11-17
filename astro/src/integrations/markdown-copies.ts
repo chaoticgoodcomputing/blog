@@ -6,7 +6,8 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 import type { AstroIntegration } from "astro"
 import { copiedNotes, llmsTxt, markdownCopy, markdownCopyUrl } from "../lib/markdown-copies.ts"
-import { getNotes } from "../lib/notes.ts"
+import { builtFileOf } from "../lib/built-files.ts"
+import { getNoteIndex } from "../lib/notes.ts"
 
 export function markdownCopies(): AstroIntegration {
   let site: URL
@@ -20,15 +21,15 @@ export function markdownCopies(): AstroIntegration {
 
       "astro:build:done": async ({ dir, logger }) => {
         const out = fileURLToPath(dir)
-        const notes = getNotes()
-        const copied = copiedNotes(notes)
+        const index = getNoteIndex()
+        const copied = copiedNotes(index)
         for (const note of copied) {
-          const html = await fs.readFile(path.join(out, note.url === "/" ? "index.html" : `${decodeURI(note.url)}.html`), "utf8")
+          const html = await fs.readFile(path.join(out, builtFileOf(note.url)), "utf8")
           const file = path.join(out, decodeURI(markdownCopyUrl(note.url)))
           await fs.mkdir(path.dirname(file), { recursive: true })
           await fs.writeFile(file, markdownCopy(note, html, site))
         }
-        await fs.writeFile(path.join(out, "llms.txt"), llmsTxt(notes, site))
+        await fs.writeFile(path.join(out, "llms.txt"), llmsTxt(copied, site))
         logger.info(`${copied.length} Markdown copies, and llms.txt.`)
       },
     },

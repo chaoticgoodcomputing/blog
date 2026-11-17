@@ -11,7 +11,8 @@ import * as pagefind from "pagefind"
 import sirv from "sirv"
 import { isSearched } from "../lib/search.ts"
 import { SEARCH_INDEX } from "../lib/search-index.ts"
-import { getNotes } from "../lib/notes.ts"
+import { builtFileOf } from "../lib/built-files.ts"
+import { getNoteIndex } from "../lib/notes.ts"
 
 export function search(): AstroIntegration {
   let outDir: string
@@ -45,8 +46,8 @@ export function search(): AstroIntegration {
           // A page's pathname is its address without the leading `/`: `""` for the home page.
           for (const { pathname } of pages) {
             const url = `/${pathname}`
-            if (!isSearched(url, getNotes())) continue
-            const file = path.join(out, url === "/" ? "index.html" : `${url}.html`)
+            if (!isSearched(url, getNoteIndex())) continue
+            const file = path.join(out, builtFileOf(url))
             const added = await index.addHTMLFile({ url, content: await fs.readFile(file, "utf8") })
             if (added.errors.length) throw new Error(`${url} is not in the search index: ${added.errors.join("; ")}`)
             searched++

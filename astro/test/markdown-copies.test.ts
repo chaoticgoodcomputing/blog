@@ -1,14 +1,14 @@
 import { expect, test } from "vitest"
 import { copiedNotes, frontOf, llmsTxt, markdownCopy, markdownCopyUrl } from "../src/lib/markdown-copies.ts"
-import { getNotes, type Note } from "../src/lib/notes.ts"
+import { getNoteIndex, type Note } from "../src/lib/notes.ts"
 
 const SITE = new URL("https://example.com")
 
 const fake = (over: Partial<Note>): Note =>
   ({
     title: "Small Models",
+    writtenDescription: "A note on small language models.",
     description: "A note on small language models.",
-    summary: "A note on small language models.",
     url: "/content/notes/small-models",
     tags: ["engineering/ai"],
     date: new Date("2026-03-05T00:00:00Z"),
@@ -107,8 +107,7 @@ test("a table is a table", () => {
 })
 
 test("the copied notes are the indexable notes' pages, and no tag's page", () => {
-  const notes = getNotes()
-  const copied = copiedNotes(notes)
+  const copied = copiedNotes(getNoteIndex())
   expect(copied.length).toBeGreaterThan(0)
   expect(copied.some((note) => note.url.startsWith("/tags/"))).toBe(false)
   expect(copied.some((note) => note.isPrivate)).toBe(false)
@@ -116,12 +115,12 @@ test("the copied notes are the indexable notes' pages, and no tag's page", () =>
 
 test("llms.txt names the site, says what it is, and lists each copy by section, with its summary", () => {
   const notes = [
-    fake({ url: "/content/articles/old", title: "Old", summary: "An old one.", date: new Date("2020-01-01T00:00:00Z") }),
-    fake({ url: "/content/articles/new", title: "New", summary: "A new one.", date: new Date("2026-01-01T00:00:00Z") }),
-    fake({ url: "/content/notes/small-models", title: "Small Models", summary: undefined }),
-    fake({ url: "/contact", title: "Contact", summary: "How to reach me." }),
+    fake({ url: "/content/articles/old", title: "Old", description: "An old one.", date: new Date("2020-01-01T00:00:00Z") }),
+    fake({ url: "/content/articles/new", title: "New", description: "A new one.", date: new Date("2026-01-01T00:00:00Z") }),
+    fake({ url: "/content/notes/small-models", title: "Small Models", description: undefined }),
+    fake({ url: "/contact", title: "Contact", description: "How to reach me." }),
   ]
-  const text = llmsTxt(notes, SITE, (each) => each)
+  const text = llmsTxt(notes, SITE)
   expect(text).toMatch(/^# Chaotic Good Computing\n\n> Articles for the data and engineering consulting practice/)
   expect(text).toContain(
     [

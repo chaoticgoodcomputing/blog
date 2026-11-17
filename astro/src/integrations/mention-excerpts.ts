@@ -24,8 +24,9 @@ import {
   type ManifestEntry,
 } from "../lib/mention-excerpts.ts"
 import { webAnnotationTarget } from "../lib/annotations.ts"
-import { getNotes } from "../lib/notes.ts"
-import { isIndexable } from "../lib/page.ts"
+import { builtFileOf } from "../lib/built-files.ts"
+import { getNoteIndex } from "../lib/notes.ts"
+import { sitePageAt } from "../lib/site-pages.ts"
 import { site as siteConfig } from "../site.config.ts"
 
 export function mentionExcerpts(): AstroIntegration {
@@ -39,16 +40,17 @@ export function mentionExcerpts(): AstroIntegration {
 
       "astro:build:done": async ({ dir, pages, logger }) => {
         const out = fileURLToPath(dir)
-        const notes = new Map(getNotes().map((note) => [note.url, note]))
+        const index = getNoteIndex()
         const author = { name: siteConfig.author.name, url: new URL(siteConfig.author.url, site).href }
         const manifest: ManifestEntry[] = []
 
         // A page's pathname is its address without the leading `/`: `""` for the home page.
         for (const { pathname } of pages) {
           const url = `/${pathname}`
-          const note = notes.get(url)
-          if (!note || !isIndexable({ kind: "note", note })) continue
-          const file = path.join(out, url === "/" ? "index.html" : `${url}.html`)
+          const page = sitePageAt(index, url)
+          const note = page?.kind !== "tag" ? page?.note : undefined
+          if (!page?.indexable || !note || "reason" in note) continue
+          const file = path.join(out, builtFileOf(url))
           const noteAddress = new URL(url, site).href
           // A web page's annotation page answers the page it annotates.
           const annotated = webAnnotationTarget(note)
@@ -70,7 +72,7 @@ export function mentionExcerpts(): AstroIntegration {
               locale: siteConfig.locale,
               inReplyTo,
             })
-            const written = path.join(out, `${address}.html`)
+            const written = path.join(out, builtFileOf(address))
             await fs.mkdir(path.dirname(written), { recursive: true })
             await fs.writeFile(written, html)
             manifest.push({ source, target, note: noteAddress, digest: excerptDigest(facts, excerpt, inReplyTo) })

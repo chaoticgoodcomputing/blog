@@ -29,8 +29,8 @@ test("a published note knows its address, title, description, tags and date", ()
     id: "content/notes/alpha",
     url: "/content/notes/alpha",
     title: "Alpha",
+    writtenDescription: "The first note.",
     description: "The first note.",
-    summary: "The first note.",
     tags: ["engineering/ai", "writing/essays"],
     tagsWithAncestors: ["engineering", "engineering/ai", "writing", "writing/essays"],
     isPrivate: false,
@@ -46,8 +46,8 @@ test("the index note is the page at the site's root", () => {
 
 test("a note under a private tag is a private page: published, and not public", () => {
   expect(getNote("content/notes/secret")!.isPrivate).toBe(true)
-  // What the site publishes of it is a stub, so its first paragraph sums nothing up.
-  expect(getNote("content/notes/secret")!.summary).toBeUndefined()
+  // What the site publishes of it is a stub, so its description is the site's private description.
+  expect(getNote("content/notes/secret")!.description).toBe("This is a private note.")
   expect(getNotes().map((note) => note.id)).toContain("content/notes/secret")
   expect(getPublicNotes().map((note) => note.id)).not.toContain("content/notes/secret")
   expect(getPublicNotes().map((note) => note.id)).toContain("content/notes/alpha")
@@ -56,9 +56,9 @@ test("a note under a private tag is a private page: published, and not public", 
 test("a note with no title is named for its file, one with no description has none, and one with no date has none", () => {
   const undated = getNote("content/notes/undated")!
   expect(undated.title).toBe("undated")
-  expect(undated.description).toBeUndefined()
+  expect(undated.writtenDescription).toBeUndefined()
   // It is summed up by its first paragraph instead.
-  expect(undated.summary).toBe("No title and no date.")
+  expect(undated.description).toBe("No title and no date.")
   // When it last changed is no date of its own.
   expect(undated.date).toBeUndefined()
   expect(Number.isNaN(undated.modified.getTime())).toBe(false)

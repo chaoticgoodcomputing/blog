@@ -5,10 +5,8 @@ import { render } from "astro:content"
 import Prose from "../components/Prose.astro"
 import Page from "../layouts/Page.astro"
 import { getNoteEntries } from "../lib/entries.ts"
-import { getNote } from "../lib/notes.ts"
-import type { PageKind } from "../lib/page.ts"
-
-import { isAnnotationPage } from "../lib/annotations.ts"
+import { getNote, getNoteIndex } from "../lib/notes.ts"
+import { sitePageAt } from "../lib/site-pages.ts"
 
 import AnnotationViewer from "../components/annotation-viewer/AnnotationViewer.astro"
 import { mirrorFor, mirrorTextFor } from "../lib/mirrors.ts"
@@ -25,17 +23,17 @@ const { entry } = Astro.props
 const note = getNote(entry.id)!
 const { Content, headings } = await render(entry)
 
-// A note with an annotation target is an annotation page: its body is its preface, its annotations
-// and its epilogue (src/lib/annotations.ts).
-const kind: PageKind = isAnnotationPage(note) ? "annotation" : "note"
+// How the site describes the page (src/lib/site-pages.ts). A note with an annotation target is an
+// annotation page: its body is its preface, its annotations and its epilogue (src/lib/annotations.ts).
+const page = sitePageAt(getNoteIndex(), note.url)!
 // The body is the note's h-entry's content (EntryMeta.astro).
 // An annotation page whose document the site mirrors has the document drawn beside its body.
-const mirror = kind === "annotation" ? mirrorFor(note) : undefined
+const mirror = page.kind === "annotation" ? mirrorFor(note) : undefined
 // And a scanned one's text, which its pages don't have (src/lib/mirrors.ts).
 const mirrorText = mirror ? mirrorTextFor(note) : undefined
 ---
 
-<Page kind={kind} title={note.title} description={note.summary} url={note.url} note={note} headings={headings}>
+<Page {...page} headings={headings}>
   {
     mirror ? (
       <AnnotationViewer note={note} mirror={mirror} text={mirrorText}>
