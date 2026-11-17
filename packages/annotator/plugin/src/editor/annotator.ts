@@ -9,7 +9,7 @@
 // reloads whenever it is moved in the page, and the editor rebuilds its widgets, and drops those far
 // out of view, as it pleases. The layer stays; only its place changes.
 
-import { type Extension, RangeSet, StateField, type Text, Transaction } from "@codemirror/state"
+import { type Extension, Prec, RangeSet, StateField, type Text, Transaction } from "@codemirror/state"
 import { Decoration, type DecorationSet, EditorView, type PluginValue, ViewPlugin, type ViewUpdate, WidgetType } from "@codemirror/view"
 import { type Component, editorInfoField, type TFile } from "obsidian"
 import type AnnotatorPlugin from "../main.ts"
@@ -315,11 +315,17 @@ function decorationsOf(region: Region | null, doc: Text): DecorationSet {
   return Decoration.set([Decoration.replace({ widget, block: true }).range(region.from, region.to)])
 }
 
-/** The placeholder, as editor state: block widgets can come from nowhere else. */
+/**
+ * The placeholder, as editor state: block widgets can come from nowhere else. It takes precedence
+ * over every other decoration: the first block is a callout, which Live Preview replaces with its
+ * own widget from the same position, and of two replacements starting together the higher in
+ * precedence is drawn, the other only from where it ends. Without this, the first annotation shows
+ * as a callout above the annotator.
+ */
 const placeholderField = StateField.define<DecorationSet>({
   create: (state) => decorationsOf(state.field(regionField, false) ?? null, state.doc),
   update: (decorations, transaction) => (transaction.docChanged ? decorationsOf(transaction.state.field(regionField, false) ?? null, transaction.state.doc) : decorations),
-  provide: (field) => EditorView.decorations.from(field),
+  provide: (field) => Prec.highest(EditorView.decorations.from(field)),
 })
 
 /** The editors' hosts, live, and the plugin that makes them. */
