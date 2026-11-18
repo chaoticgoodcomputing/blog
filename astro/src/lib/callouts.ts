@@ -9,8 +9,12 @@
 // screen reader: the title says what the callout is. It is the site's choice how a callout is drawn,
 // not Obsidian's, so it is the site's plugin and not the library's.
 //
-// A paraphrase is the site's own kind, which Obsidian has not: words given as someone's, though not
-// in their words.
+// The site has kinds of its own, which Obsidian has not: a paraphrase, words given as someone's,
+// though not in their words, and a key takeaway, `[!KEY]`, what a reader should leave with.
+//
+// A kind may have a title of its own, in place of the one the library gives a callout written
+// without one, its type capitalised: `[!KEY]` is titled "Key Takeaway", not "Key". A title written
+// after the type is kept, unless it is the very title the library would have given.
 
 import { defineHastPlugin } from "satteri"
 import { noteIcon } from "./icons.ts"
@@ -31,8 +35,20 @@ const KINDS = {
   example: "format-list-bulleted",
   quote: "format-quote-close",
   paraphrase: "comment-quote-outline",
+  key: "key-outline",
 } as const
 type Kind = keyof typeof KINDS
+
+/** The kinds titled otherwise than the library titles a callout written without one. */
+const TITLES: Partial<Record<Kind, string>> = {
+  key: "Key Takeaway",
+}
+
+/** The title the library gives a callout of `type` written without one (its syntax/callouts.ts). */
+const defaultTitle = (type: string) => {
+  const words = type.replace(/-/g, " ")
+  return words.charAt(0).toUpperCase() + words.slice(1)
+}
 
 /** The types Obsidian draws as another kind (Obsidian's help, "Callouts", "Supported types"). */
 const ALIASES: Record<string, Kind> = {
@@ -78,6 +94,11 @@ export function calloutIcons() {
 
         const kind = kindOf(type)
         ctx.setProperty(node, "data-callout-kind", kind)
+        const [text, ...rest] = title.children
+        const own = TITLES[kind]
+        if (own && text?.type === "text" && !rest.length && text.value === defaultTitle(type)) {
+          ctx.replaceNode(text, { type: "text", value: own })
+        }
         ctx.prependChild(title, noteIcon(KINDS[kind], { className: "callout-icon", ariaHidden: "true" }))
         if (node.tagName === "details") {
           ctx.appendChild(title, noteIcon("chevron-down", { className: "callout-fold", ariaHidden: "true" }))

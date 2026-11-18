@@ -252,6 +252,10 @@
   --callout-color: var(--callout-example);
 }
 
+.prose .callout[data-callout-kind="key"] {
+  --callout-color: var(--callout-key);
+}
+
 .prose .callout[data-callout-kind="quote"] {
   --callout-color: var(--secondary);
 }

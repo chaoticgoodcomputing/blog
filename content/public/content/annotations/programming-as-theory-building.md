@@ -710,7 +710,8 @@ On a more philosophical level, though, the real "click" moment for the concepts 
 
 Combined, the two papers combine into an important thesis:
 
-**Theory building is an *essential, not accidental* part of the creation of software**.
+> [!KEY]
+> Theory building is an **essential**, not accidental, part of the creation of software.
 
 When I first published this, I was a bit shocked at the response from the crowds that I'll pen here as AI "hype" and AI "doom" types. They're the folks that you would see on, say, LinkedIn and Bluesky, respectively. I truly didn't go into this write-up in either camp: my goal was mainly to [[public/content/notes/digital-gardening-with-quartz|learn out loud]].
 
@@ -718,12 +719,16 @@ That thesis is probably not going to make either camp happy, either.
 
 Two claims that I'd hang on that thesis are:
 
-1. Writing code is **accidental** to the process of software creation. It's simply the medium through which you express an idea. Apologies to doomers.
-2. Human understanding, of both human problems and the shapes of great solutions, are irreducible from the process of software creation. Apologies to hypers.
+> [!KEY]
+> 1. Writing code is **accidental** to the process of software creation. It's simply the medium through which you express the solution to the problem at hand. Apologies to doomers.
+> 2. Human understanding, of both problems and the shapes of great solutions, are **intractable** from the process of software creation. Apologies to hypers.
    
-Finally -- and, in tandem with No Silver Bullet -- this forms a somewhat technical definition of what "AI slop", or "dead code", actually *means*:
+Finally -- and, in tandem with No Silver Bullet -- this forms a somewhat technical definition of what "AI slop", or "dead code", actually *means*.
 
-**AI slop is the result of an LLM cutting out, rather than supplementing, the *essential* understanding of the creation of software.**
+What is slop?
+
+> [!KEY]
+> Slop is the result of an LLM **cutting out** the essential parts of your craft.
 
 [^1]: I did just attach his name to the term "computer science", but it *is* worth noting that he didn't like that term. He preferred — and coined — the term "datalogy", which [still sticks as the term for the discipline](https://www.researchgate.net/publication/220657031_Datalogy_-_The_Copenhagen_Tradition_of_Computer_Science) in his native Denmark.
 [^2]: of *The Mythical Man Month* fame

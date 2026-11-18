@@ -26,7 +26,8 @@
 
   /* What a callout of each kind is drawn in: its title and icon, and its border and background, tints
      of it (src/styles/prose/note-body.css). Each is legible on its tint in its scheme. A to-do is
-     drawn as information, a failure and a bug as a danger, and a quote in --secondary. */
+     drawn as information, a failure and a bug as a danger, a quote in --secondary, and a key
+     takeaway in yellow, the dark one a gold that reads on the light page's tint. */
   --callout-note: light-dark(#1a5bb8, #6ea8fe);
   --callout-abstract: light-dark(#0a6596, #4fc3f7);
   --callout-info: light-dark(#006d7b, #2ec5d8);
@@ -36,6 +37,7 @@
   --callout-warning: light-dark(#a34400, #f29b45);
   --callout-danger: light-dark(#b71f1f, #f47c7c);
   --callout-example: light-dark(#7a43b5, #b896ee);
+  --callout-key: light-dark(#7a6200, #f2d33d);
 
   /* The shade under what floats over the page, a popover or a page of a document, and the scrim
      over the page behind a dialog or a drawer: one value for both schemes, as a shadow is. */

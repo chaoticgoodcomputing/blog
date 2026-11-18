@@ -32,7 +32,7 @@ test("a callout's title begins with its kind's icon, hidden from a screen reader
 })
 
 test("each kind has an icon of its own", async () => {
-  const kinds = ["note", "abstract", "info", "todo", "tip", "success", "question", "warning", "failure", "danger", "bug", "example", "quote", "paraphrase"]
+  const kinds = ["note", "abstract", "info", "todo", "tip", "success", "question", "warning", "failure", "danger", "bug", "example", "quote", "paraphrase", "key"]
   const icons = await Promise.all(kinds.map(iconOf))
   expect(icons.every((d) => d !== undefined)).toBe(true)
   expect(new Set(icons).size).toBe(kinds.length)
@@ -76,4 +76,11 @@ test("a paraphrase is a kind of its own, its paragraphs as written", async () =>
   const html = outline(await render("> [!PARAPHRASE]\n>\n> Yes, roughly.\n>\n> -- Someone, *Somewhere* (2026)"))
   expect(html).toContain('data-callout="paraphrase" data-callout-kind="paraphrase"')
   expect(html).toContain("<p>Yes, roughly.</p><p>-- Someone, <em>Somewhere</em> (2026)</p>")
+})
+
+test("a key takeaway is a kind of its own, titled \"Key Takeaway\" unless it is given a title", async () => {
+  const html = outline(await render("> [!KEY]\n> What to leave with."))
+  expect(html).toContain('data-callout="key" data-callout-kind="key"')
+  expect(html).toContain('aria-hidden="true"></svg>Key Takeaway</div>')
+  expect(outline(await render("> [!key] In short\n> Body"))).toContain('aria-hidden="true"></svg>In short</div>')
 })
