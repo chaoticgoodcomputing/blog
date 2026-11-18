@@ -1,5 +1,5 @@
 import { expect, test } from "vitest"
-import { excerptOf, isBlocked, mentionCounts, mentionsOf, noteAddressOf, pageKey, toMention, type Mention } from "../src/lib/mentions.ts"
+import { excerptOf, isBlocked, isBlockedAuthor, mentionCounts, mentionsOf, noteAddressOf, pageKey, reactionsOf, toMention, type Mention } from "../src/lib/mentions.ts"
 
 const SITE = "https://blog.example.com/"
 
@@ -44,12 +44,22 @@ test("without a block that links to the note, the excerpt is the start of the te
   expect(excerptOf(undefined, "https://blog.example.com/a", undefined)).toEqual([])
 })
 
-test("a like, a repost and a private webmention are no mention", () => {
-  const base = { "wm-id": 1, "wm-target": `${SITE}a`, url: "https://other.example/p" }
-  expect(toMention({ ...base, "wm-property": "like-of" })).toBeUndefined()
-  expect(toMention({ ...base, "wm-property": "repost-of" })).toBeUndefined()
+test("a like or a repost is a reaction, by who made it; a private webmention is nothing", () => {
+  const base = { "wm-id": 1, "wm-target": `${SITE}a`, url: "https://bsky.app/profile/site.example/post/3mz#liked_by_did:plc:you" }
+  const author = { name: "You", url: "https://bsky.app/profile/you.example", photo: "https://cdn.bsky.app/img/avatar/you" }
+  expect(toMention({ ...base, "wm-property": "like-of", author, published: null, "wm-received": "2026-11-04T04:36:40Z" })).toEqual({
+    source: "bluesky",
+    reaction: "like",
+    target: `${SITE}a`,
+    note: "/a",
+    url: base.url,
+    author,
+    published: new Date("2026-11-04T04:36:40Z"),
+    excerpt: [],
+  })
+  expect(toMention({ ...base, "wm-property": "repost-of", author })?.reaction).toBe("repost")
   expect(toMention({ ...base, "wm-property": "mention-of", "wm-private": true })).toBeUndefined()
-  expect(toMention({ ...base, "wm-property": "in-reply-to", name: " A reply ", author: { name: "Them" }, published: "2026-01-02T00:00:00Z" }, (address) => (address === "/a" ? "/content/a" : address))).toEqual({
+  expect(toMention({ ...base, url: "https://other.example/p", "wm-property": "in-reply-to", name: " A reply ", author: { name: "Them" }, published: "2026-01-02T00:00:00Z" }, (address) => (address === "/a" ? "/content/a" : address))).toEqual({
     source: "webmentions",
     target: `${SITE}a`,
     note: "/content/a",
@@ -77,7 +87,7 @@ test("a note's mentions are newest first, one for each page, none from a blocked
       mention("https://spam.example/p", "/content/a", "2026-04-01"),
       mention("https://three.example/p", "/content/b", "2026-05-01"),
     ],
-    ["spam.example"],
+    { blockedDomains: ["spam.example"] },
   )
   expect(found.map((each) => [each.url, each.published?.toISOString().slice(0, 10)])).toEqual([
     ["https://one.example/p/", "2026-03-01"],
@@ -94,7 +104,63 @@ test("a note's mention count is one for each page, none from a blocked domain, a
       mention("https://spam.example/p", "/content/a"),
       mention("https://three.example/p", "/content/b"),
     ],
-    ["spam.example"],
+    { blockedDomains: ["spam.example"] },
   )
   expect(counts).toEqual(new Map([["/content/a", 2], ["/content/b", 1]]))
+})
+
+const OWN = { blockedDomains: [], blockedAuthors: ["https://bsky.app/profile/me.example", "did:plc:me"] }
+const by = (base: Mention, author: string, url = base.url): Mention => ({ ...base, url, author: { url: author } })
+
+test("a blocked author is their address, or a Bluesky account by its handle or its DID", () => {
+  const reply = by(mention("", "/content/a"), "https://bsky.app/profile/me.example", "https://bsky.app/profile/me.example/post/3abc")
+  expect(isBlockedAuthor(reply, OWN.blockedAuthors)).toBe(true)
+  // Bridgy names an author by their DID when it has no handle for them.
+  expect(isBlockedAuthor(by(reply, "https://bsky.app/profile/did:plc:me"), OWN.blockedAuthors)).toBe(true)
+  // A post of theirs by a handle they no longer have, under their DID.
+  expect(isBlockedAuthor(by(reply, "", "https://bsky.app/profile/did:plc:me/post/3abc"), OWN.blockedAuthors)).toBe(true)
+  const other = "https://bsky.app/profile/me.example.other"
+  expect(isBlockedAuthor(by(reply, other, `${other}/post/3abc`), OWN.blockedAuthors)).toBe(false)
+  expect(isBlockedAuthor(by(reply, "https://bsky.app/profile/did:plc:meme", `${other}/post/3abc`), OWN.blockedAuthors)).toBe(false)
+})
+
+test("a note's mentions, and its count, leave out a blocked author's", () => {
+  const mentions = [
+    by(mention("https://bsky.app/profile/me.example/post/1", "/content/a", "2026-01-01"), "https://bsky.app/profile/me.example"),
+    by(mention("https://bsky.app/profile/you.example/post/2", "/content/a", "2026-02-01"), "https://bsky.app/profile/you.example"),
+  ]
+  expect(mentionsOf("/content/a", mentions, OWN).map((each) => each.url)).toEqual(["https://bsky.app/profile/you.example/post/2"])
+  expect(mentionCounts(mentions, OWN)).toEqual(new Map([["/content/a", 1]]))
+})
+
+test("a note's mentions and its count leave out its reactions", () => {
+  const reacted: Mention = { ...mention("https://bsky.app/profile/x/post/1#liked_by_y", "/content/a"), reaction: "like" }
+  const said = mention("https://one.example/p", "/content/a")
+  expect(mentionsOf("/content/a", [reacted, said], { blockedDomains: [] })).toEqual([said])
+  expect(mentionCounts([reacted, said], { blockedDomains: [] })).toEqual(new Map([["/content/a", 1]]))
+})
+
+test("a note's reactions are its likes and reposts, one of each for each person, newest first, none by a blocked author", () => {
+  const react = (reaction: "like" | "repost", who: string, note: string, published: string): Mention => ({
+    ...by(mention(`https://bsky.app/profile/site.example/post/1#${reaction}d_by_${who}`, note, published), `https://bsky.app/profile/${who}`),
+    reaction,
+  })
+  const found = reactionsOf(
+    "/content/a",
+    [
+      react("like", "ada.example", "/content/a", "2026-01-01"),
+      // One person's like of the note's two posts, which Bridgy sends twice.
+      react("like", "ada.example", "/content/a", "2026-03-01"),
+      react("like", "bo.example", "/content/a", "2026-02-01"),
+      react("repost", "ada.example", "/content/a", "2026-01-02"),
+      react("like", "me.example", "/content/a", "2026-04-01"),
+      react("like", "cy.example", "/content/b", "2026-05-01"),
+      mention("https://one.example/p", "/content/a"),
+    ],
+    OWN,
+  )
+  expect({ likes: found.likes.map((each) => each.author.url), reposts: found.reposts.map((each) => each.author.url) }).toEqual({
+    likes: ["https://bsky.app/profile/ada.example", "https://bsky.app/profile/bo.example"],
+    reposts: ["https://bsky.app/profile/ada.example"],
+  })
 })

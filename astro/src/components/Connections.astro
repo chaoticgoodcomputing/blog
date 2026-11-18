@@ -6,7 +6,8 @@
 //   - backlinks: the pages that link to it, an embed counting as a link (src/lib/backlinks.ts);
 //   - its discussion, a panel for each source of it that is on (src/lib/discussion.ts): the other
 //     sites that mention it, Bluesky's replies and Hacker News's comments, each with a `+` beside
-//     its heading that takes the reader to where they answer there.
+//     its heading that takes the reader to where they answer there, and over them who liked or
+//     reposted the note there (ReactionList.astro).
 //
 // The links and the other sites are listed as the post listings list posts (PostList.astro), the
 // other sites with no tags; Bluesky's and Hacker News's as comments (MentionList.astro). Each list
@@ -26,6 +27,7 @@ import { connections } from "../site.config.ts"
 import type { ConnectionPanel } from "../site.config.types.ts"
 import Carousel, { type Slide } from "./Carousel.astro"
 import MentionList from "./MentionList.astro"
+import ReactionList from "./ReactionList.astro"
 import PostList from "./PostList.astro"
 import { getNoteIndex } from "../lib/notes.ts"
 
@@ -95,6 +97,7 @@ const slides: Slide[] = panels.map(({ config, discussion }) =>
               </a>
             </p>
           )}
+          {discussion && <ReactionList reactions={discussion.reactions} />}
           {discussion &&
             (discussion.mentions.length === 0 ? (
               <p class="empty">

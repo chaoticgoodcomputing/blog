@@ -7,7 +7,7 @@ import { bluesky, discussion, webmentions } from "../site.config.ts"
 import type { BlueskyPost } from "./bluesky-posts.ts"
 import { discussionPanels, mentionsOn, type DiscussionPanel } from "./discussion.ts"
 import type { HackerNewsThread } from "./hacker-news.ts"
-import { mentionsOf, type Mention } from "./mentions.ts"
+import { mentionsOf, reactionsOf, type Mention } from "./mentions.ts"
 
 interface Loaded {
   /** Every mention of every source that is on. */
@@ -39,7 +39,7 @@ export const getMentions = async (): Promise<Mention[]> => (await loaded()).ment
 
 /**
  * The discussion of the note at `noteUrl`, titled `title`, a panel for each source that is on, its
- * mentions from no blocked domain. `site` is the site's address.
+ * mentions and its reactions from no blocked domain and by no blocked author. `site` is the site's address.
  */
 export async function getDiscussionPanels(noteUrl: string, title: string, site: string): Promise<DiscussionPanel[]> {
   const { mentions, posts, threads } = await loaded()
@@ -49,6 +49,7 @@ export async function getDiscussionPanels(noteUrl: string, title: string, site: 
     handle: bluesky.handle,
     post: posts.get(noteUrl),
     thread: threads.get(noteUrl),
-    mentions: mentionsOf(noteUrl, mentions, webmentions.blockedDomains),
+    mentions: mentionsOf(noteUrl, mentions, webmentions),
+    reactions: reactionsOf(noteUrl, mentions, webmentions),
   })
 }

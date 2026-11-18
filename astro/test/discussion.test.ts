@@ -65,3 +65,15 @@ test("a source that is off has no panel", () => {
   expect(panels.map((panel) => panel.source)).toEqual(["webmentions", "hackerNews"])
   expect(discussionPanels({ sources: off, page: PAGE, handle: "example.com", post, thread, mentions })).toEqual([])
 })
+
+test("each panel has its own source's reactions, likes and reposts apart", () => {
+  const like = (source: Mention["source"], who: string): Mention => ({ ...mention(source), url: `${source}#${who}`, reaction: "like", author: { url: who } })
+  const repost: Mention = { ...mention("bluesky"), url: "bluesky#bo", reaction: "repost", author: { url: "bo" } }
+  const reactions = { likes: [like("bluesky", "ada"), like("webmentions", "cy")], reposts: [repost] }
+  const [web, bluesky, hackerNews] = discussionPanels({ sources: ALL, page: PAGE, handle: "example.com", mentions, reactions })
+  expect(bluesky!.reactions).toEqual({ likes: [reactions.likes[0]], reposts: [repost] })
+  expect(web!.reactions).toEqual({ likes: [reactions.likes[1]], reposts: [] })
+  expect(hackerNews!.reactions).toEqual({ likes: [], reposts: [] })
+  // Without any, each panel has none.
+  expect(discussionPanels({ sources: ALL, page: PAGE, handle: "example.com", mentions: [] })[1]!.reactions).toEqual({ likes: [], reposts: [] })
+})

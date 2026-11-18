@@ -1,0 +1,115 @@
+---
+// A source's reactions to a note, in its discussion panel (Connections.astro): who liked it and who
+// reposted it, each a row of their pictures, a link to them, under how many there are. Bridgy sends
+// Bluesky's (src/lib/mentions.ts). Someone with no picture is shown by their name's first letter.
+// The pictures are Bluesky's own, shown from where it keeps them, and told nothing of the page.
+import { newTab } from "../lib/external-links.ts"
+import type { Mention, Reactions } from "../lib/mentions.ts"
+
+interface Props {
+  reactions: Reactions
+}
+
+const { reactions } = Astro.props
+const site = Astro.site!.href
+const rows = [
+  { kind: "likes", people: reactions.likes, one: "like", many: "likes" },
+  { kind: "reposts", people: reactions.reposts, one: "repost", many: "reposts" },
+].filter((row) => row.people.length > 0)
+const nameOf = (person: Mention) => person.author.name ?? person.author.url ?? "Someone"
+---
+
+{
+  rows.length > 0 && (
+    <div class="reactions">
+      {rows.map(({ kind, people, one, many }) => (
+        <div class:list={["reaction", kind]}>
+          <p class="count">
+            {people.length} {people.length === 1 ? one : many}
+          </p>
+          <ul class="people">
+            {people.map((person) => {
+              const href = person.author.url ?? person.url
+              return (
+                <li>
+                  <a href={href} title={nameOf(person)} aria-label={nameOf(person)} {...newTab(href, site)}>
+                    {person.author.photo ? (
+                      <img src={person.author.photo} alt="" width="28" height="28" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
+                    ) : (
+                      <span class="initial" aria-hidden="true">{nameOf(person).replace(/^https?:\/\//, "").charAt(0).toUpperCase()}</span>
+                    )}
+                  </a>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+<style>
+  .reactions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 1.5rem;
+    margin: 0 0 1rem;
+    font-size: var(--text-small);
+  }
+
+  .reaction {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .count {
+    margin: 0;
+    color: var(--darkgray);
+  }
+
+  .people {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* A row of pictures, each overlapping the one before it a little. */
+  .people li + li {
+    margin-left: -0.375rem;
+  }
+
+  .people a {
+    display: block;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--light);
+  }
+
+  .people a:hover,
+  .people a:focus-visible {
+    position: relative;
+    z-index: 1;
+  }
+
+  .people img,
+  .initial {
+    display: block;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .initial {
+    display: grid;
+    place-items: center;
+    background: var(--lightgray);
+    color: var(--darkgray);
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+</style>

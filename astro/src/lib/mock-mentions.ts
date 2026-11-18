@@ -7,8 +7,9 @@
 //
 // Between them the webmentions show each thing the Mentions section does: a title or the site in
 // its place, only the paragraph that links to the note, a reply with text alone, a long text cut
-// short, an author with no name, a like left out, a note found by an alias, and a reply from
-// Bluesky. The first note has a Bluesky post and a Hacker News thread, with a deleted comment
+// short, an author with no name, a like among the reactions and not the mentions, a note found by
+// an alias, and a reply from Bluesky, with likes and a repost of the note's post there, as Bridgy
+// sends them, one with no picture. The first note has a Bluesky post and a Hacker News thread, with a deleted comment
 // passed over; the others link to the account, and to no thread.
 
 import type { AuthorFeedItem } from "./bluesky-posts.ts"
@@ -75,6 +76,21 @@ export function mockMentions({ site, notes, alias }: MockTargets, now: Date = ne
         author: { name: "Someone who only liked it" },
         published: daysAgo(1),
       },
+      ...(["like", "like", "repost"] as const).map((reaction, i): Jf2Entry => {
+        const who = ["hal", "ivy", "hal"][i]!
+        return {
+          "wm-property": `${reaction}-of`,
+          "wm-target": target,
+          "wm-source": `https://brid.gy/${reaction}/bluesky/chaoticgood.computer/mock/${who}`,
+          url: `https://bsky.app/profile/chaoticgood.computer/post/3mockpost#${reaction}d_by_did:plc:${who}example`,
+          author: {
+            name: who === "hal" ? "Hal" : "Ivy",
+            url: `https://bsky.app/profile/${who}.example`,
+            ...(who === "hal" ? { photo: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='%2389a'/%3E%3C/svg%3E" } : {}),
+          },
+          "wm-received": daysAgo(2 + i),
+        }
+      }),
     )
   }
 

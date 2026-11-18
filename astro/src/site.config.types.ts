@@ -400,6 +400,12 @@ export interface WebmentionsConfig {
   api: string
   /** Sites whose mentions are never shown: a host, and every host under it. */
   blockedDomains: string[]
+  /**
+   * People whose mentions are never shown, the site's author's own among them: an address of theirs
+   * (their site, or a Bluesky profile, `https://bsky.app/profile/<handle>`), whose pages under it are
+   * theirs too, or a Bluesky account's DID, which outlasts its handle.
+   */
+  blockedAuthors?: string[]
 }
 
 /**

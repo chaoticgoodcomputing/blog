@@ -24,7 +24,7 @@ import type { BlueskyPost } from "./bluesky-posts.ts"
 import { profileUrl } from "./bluesky-posts.ts"
 import { hackerNewsSubmitUrl, type SharedPage } from "./share.ts"
 import type { HackerNewsThread } from "./hacker-news.ts"
-import type { Mention } from "./mentions.ts"
+import type { Mention, Reactions } from "./mentions.ts"
 
 export type { DiscussionSourceId }
 
@@ -46,6 +46,8 @@ export interface DiscussionPanel {
   detail?: string
   /** Its mentions of the note, newest first. */
   mentions: Mention[]
+  /** Its likes and reposts of the note, newest first. */
+  reactions: Reactions
 }
 
 /** Where a reader learns to send a webmention from their own site. */
@@ -83,6 +85,7 @@ export function discussionPanels({
   post,
   thread,
   mentions,
+  reactions = { likes: [], reposts: [] },
 }: {
   sources: Record<DiscussionSourceId, boolean>
   page: SharedPage
@@ -91,14 +94,21 @@ export function discussionPanels({
   post?: BlueskyPost | undefined
   thread?: HackerNewsThread | undefined
   mentions: Mention[]
+  /** The note's own reactions, as `reactionsOf` gives them. */
+  reactions?: Reactions
 }): DiscussionPanel[] {
   const of = (source: DiscussionSourceId) => mentions.filter((mention) => mention.source === source)
+  const reactionsFrom = (source: DiscussionSourceId): Reactions => ({
+    likes: reactions.likes.filter((like) => like.source === source),
+    reposts: reactions.reposts.filter((repost) => repost.source === source),
+  })
   const panels: DiscussionPanel[] = []
   if (sources.webmentions) {
     panels.push({
       source: "webmentions",
       action: { href: WEBMENTION_GUIDE, label: "Reply from your own site", syndication: false },
       mentions: of("webmentions"),
+      reactions: reactionsFrom("webmentions"),
     })
   }
   if (sources.bluesky) {
@@ -106,6 +116,7 @@ export function discussionPanels({
       source: "bluesky",
       action: { href: post?.url ?? profileUrl(handle), label: "Discuss on Bluesky", syndication: post !== undefined },
       mentions: of("bluesky"),
+      reactions: reactionsFrom("bluesky"),
     })
   }
   if (sources.hackerNews) {
@@ -116,6 +127,7 @@ export function discussionPanels({
         : { href: hackerNewsSubmitUrl(page), label: "Submit to Hacker News", syndication: false },
       ...(thread && { detail: `${thread.comments} ${thread.comments === 1 ? "comment" : "comments"}` }),
       mentions: of("hackerNews"),
+      reactions: reactionsFrom("hackerNews"),
     })
   }
   return panels

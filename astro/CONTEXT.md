@@ -386,6 +386,12 @@ too. Under a note, its mentions, each with what its page says of the note: its p
 link there. A like or a repost is no mention.
 _Avoid_: reply, comment, web backlink
 
+**Reaction**:
+A like or a repost of a note, which says nothing: a webmention like a mention's, from Bridgy for a
+like or repost of the site's Bluesky post of the note. Under a note, its source's discussion panel
+shows who made them, a picture of each, one of each kind for each person, apart from its mentions.
+_Avoid_: mention, engagement, facepile
+
 **Discussion**:
 A public note's panels of its **Connections** after its links: one for each **Discussion source**,
 each with its mentions and a `+` to where a reader answers there, its Bluesky post or its Hacker

@@ -265,6 +265,8 @@ export const webmentions: WebmentionsConfig = {
   endpoint: "https://webmention.io/blog.chaoticgood.computer/webmention",
   api: "https://webmention.io/api/mentions.jf2",
   blockedDomains: [],
+  // The author's own Bluesky account (speen.us), whose likes, reposts and replies are no discussion.
+  blockedAuthors: ["https://bsky.app/profile/speen.us", "did:plc:n4tz2nbbhlpmcu7gwrhioxjv"],
 }
 
 export const bluesky: BlueskyConfig = {

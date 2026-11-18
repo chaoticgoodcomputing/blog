@@ -28,7 +28,7 @@ interface Props {
 }
 
 const { kind, tag } = Astro.props
-const mentions = mentionCounts(await getMentions(), webmentions.blockedDomains)
+const mentions = mentionCounts(await getMentions(), webmentions)
 const postsIn: Record<PostOrder, () => Note[]> = {
   recent: () => listedPosts(tag, getNotes()),
   central: () => centralPosts(tag, { index: getNoteIndex(), mentions }),

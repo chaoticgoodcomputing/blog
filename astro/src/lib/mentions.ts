@@ -3,8 +3,9 @@
 // reads them back as the site builds (src/content.config.ts), and the Mentions section under a
 // note shows its own (Mentions.astro). A daily deploy picks up the new ones.
 //
-// Every kind of webmention with something to say is a mention here: one that only likes or
-// reposts a page says nothing, and is left out. What a mention shows of its page is that page's
+// Every kind of webmention with something to say is a mention here. One that only likes or
+// reposts a page says nothing: it is a reaction, kept with who made it, and shown apart from the
+// mentions, as who liked or reposted the note (`reactionsOf`); Bridgy sends Bluesky's. What a mention shows of its page is that page's
 // paragraphs that link to the note, as the site's own mention excerpts are (./mention-excerpts.ts),
 // as text: what another site wrote is never put on a page as HTML.
 
@@ -14,11 +15,14 @@ import { z } from "astro/zod"
 import { parse } from "node-html-parser"
 import { getAddressMap, type Resolve } from "./addresses.ts"
 import { mentionSourceOf } from "./discussion.ts"
+import type { WebmentionsConfig } from "../site.config.types.ts"
 
 /** A mention, as the collection holds it. */
 export const mentionSchema = z.object({
   /** The source of the discussion it came from (src/lib/discussion.ts). */
   source: z.enum(["webmentions", "bluesky", "hackerNews"]),
+  /** For a reaction, a like or a repost of the note, which says nothing; absent for a mention. */
+  reaction: z.enum(["like", "repost"]).optional(),
   /** The page on the site it mentions, as the sender wrote it. */
   target: z.string(),
   /**
@@ -30,7 +34,8 @@ export const mentionSchema = z.object({
   url: z.string(),
   /** That page's title, when it has one apart from its text. */
   title: z.string().optional(),
-  author: z.object({ name: z.string().optional(), url: z.string().optional() }),
+  /** Who wrote it, or made the reaction: their name, their address, and their picture. */
+  author: z.object({ name: z.string().optional(), url: z.string().optional(), photo: z.string().optional() }),
   published: z.coerce.date().optional(),
   /** What it says of the note: its paragraphs that link there, or the start of its text. */
   excerpt: z.array(z.string()),
@@ -48,12 +53,12 @@ export interface Jf2Entry {
   url?: string
   name?: string
   published?: string | null
-  author?: { name?: string; url?: string }
+  author?: { name?: string; url?: string; photo?: string }
   content?: { html?: string; text?: string }
 }
 
-/** The kinds of webmention that say nothing of a page but that they were made. */
-const SILENT = new Set(["like-of", "repost-of"])
+/** The kinds of webmention that say nothing of a page but that they were made: reactions. */
+const REACTIONS: Record<string, Mention["reaction"]> = { "like-of": "like", "repost-of": "repost" }
 
 /** The most a mention's excerpt holds: its paragraphs, each cut at this many characters. */
 export const EXCERPT_BLOCKS = 3
@@ -101,17 +106,19 @@ export function excerptOf(content: Jf2Entry["content"], target: string, base: st
 }
 
 /**
- * A webmention as a mention of the note it names, through `resolve`, or undefined for one that
- * says nothing, is private, or names no page of the site.
+ * A webmention as a mention of the note it names, through `resolve`, or as a reaction to it for a
+ * like or a repost; undefined for one that is private, or names no page of the site.
  */
 export function toMention(entry: Jf2Entry, resolve: Resolve = (address) => address): Mention | undefined {
   const target = entry["wm-target"]
   const url = entry.url ?? entry["wm-source"]
-  if (!target || !url || entry["wm-private"] || SILENT.has(entry["wm-property"] ?? "")) return undefined
+  if (!target || !url || entry["wm-private"]) return undefined
   const note = noteAddressOf(target, resolve)
   if (note === undefined) return undefined
+  const reaction = REACTIONS[entry["wm-property"] ?? ""]
   return {
     source: mentionSourceOf(url, entry["wm-source"]),
+    ...(reaction ? { reaction } : {}),
     target,
     note,
     url,
@@ -119,9 +126,10 @@ export function toMention(entry: Jf2Entry, resolve: Resolve = (address) => addre
     author: {
       ...(entry.author?.name ? { name: entry.author.name } : {}),
       ...(entry.author?.url ? { url: entry.author.url } : {}),
+      ...(entry.author?.photo ? { photo: entry.author.photo } : {}),
     },
     ...((entry.published ?? entry["wm-received"]) ? { published: new Date((entry.published ?? entry["wm-received"])!) } : {}),
-    excerpt: excerptOf(entry.content, target, url),
+    excerpt: reaction ? [] : excerptOf(entry.content, target, url),
   }
 }
 
@@ -153,13 +161,33 @@ export function isBlocked(url: string, blocked: string[]): boolean {
 }
 
 /**
- * The mentions of the note at `noteUrl`, newest first, one for each page that mentions it, and none
- * from a blocked domain.
+ * Whether a mention is by a blocked author: one whose address is in `blocked`, its author's or the
+ * page's own, or the page under it, as a Bluesky account's posts are under its profile. A Bluesky
+ * account is named by its handle's profile (`https://bsky.app/profile/<handle>`) or by its DID
+ * (`did:plc:…`), which Bridgy names it by where it has no handle, and which a new handle keeps.
  */
-export function mentionsOf(noteUrl: string, mentions: Mention[], blocked: string[]): Mention[] {
+export function isBlockedAuthor(mention: Pick<Mention, "url" | "author">, blocked: string[] = []): boolean {
+  const pages = [mention.author.url, mention.url].flatMap((address) => (address ? [pageKey(address)] : [])).filter((key) => key !== undefined)
+  return blocked.some((author) => {
+    const key = author.startsWith("did:") ? `bsky.app/profile/${author}` : pageKey(author)
+    return key !== undefined && pages.some((page) => page === key || page.startsWith(`${key}/`))
+  })
+}
+
+/** What leaves a mention out of every note's: its site's domain, or its author. */
+export type MentionBlocks = Pick<WebmentionsConfig, "blockedDomains"> & Partial<Pick<WebmentionsConfig, "blockedAuthors">>
+
+const isShown = (mention: Mention, blocks: MentionBlocks): boolean =>
+  !isBlocked(mention.url, blocks.blockedDomains) && !isBlockedAuthor(mention, blocks.blockedAuthors)
+
+/**
+ * The mentions of the note at `noteUrl`, newest first, one for each page that mentions it, and none
+ * from a blocked domain or by a blocked author.
+ */
+export function mentionsOf(noteUrl: string, mentions: Mention[], blocks: MentionBlocks): Mention[] {
   const byPage = new Map<string, Mention>()
   for (const mention of mentions) {
-    if (mention.note !== noteUrl || isBlocked(mention.url, blocked)) continue
+    if (mention.note !== noteUrl || mention.reaction || !isShown(mention, blocks)) continue
     const page = mentionKey(mention.url)
     const kept = byPage.get(page)
     if (!kept || (mention.published?.getTime() ?? 0) > (kept.published?.getTime() ?? 0)) byPage.set(page, mention)
@@ -169,12 +197,12 @@ export function mentionsOf(noteUrl: string, mentions: Mention[], blocked: string
 
 /**
  * How many mentions each note has, as `mentionsOf` counts them: one for each page, and none from a
- * blocked domain. Keyed by the note's address; a note with none has no entry.
+ * blocked domain or by a blocked author. Keyed by the note's address; a note with none has no entry.
  */
-export function mentionCounts(mentions: Mention[], blocked: string[]): Map<string, number> {
+export function mentionCounts(mentions: Mention[], blocks: MentionBlocks): Map<string, number> {
   const pages = new Map<string, Set<string>>()
   for (const mention of mentions) {
-    if (isBlocked(mention.url, blocked)) continue
+    if (mention.reaction || !isShown(mention, blocks)) continue
     const seen = pages.get(mention.note) ?? new Set<string>()
     seen.add(mentionKey(mention.url))
     pages.set(mention.note, seen)
@@ -182,6 +210,31 @@ export function mentionCounts(mentions: Mention[], blocked: string[]): Map<strin
   return new Map([...pages].map(([note, seen]) => [note, seen.size]))
 }
 
+
+/** A note's reactions: who liked it, and who reposted it. */
+export interface Reactions {
+  likes: Mention[]
+  reposts: Mention[]
+}
+
+/**
+ * The reactions to the note at `noteUrl`: its likes and its reposts, each newest first, one for each
+ * person, as Bridgy sends one for each of the site's posts of the note they liked, and none from a
+ * blocked domain or by a blocked author.
+ */
+export function reactionsOf(noteUrl: string, mentions: Mention[], blocks: MentionBlocks): Reactions {
+  const of = (reaction: Mention["reaction"]) => {
+    const byPerson = new Map<string, Mention>()
+    for (const mention of mentions) {
+      if (mention.note !== noteUrl || mention.reaction !== reaction || !isShown(mention, blocks)) continue
+      const person = mention.author.url ? mentionKey(mention.author.url) : mention.url
+      const kept = byPerson.get(person)
+      if (!kept || (mention.published?.getTime() ?? 0) > (kept.published?.getTime() ?? 0)) byPerson.set(person, mention)
+    }
+    return [...byPerson.values()].sort((a, b) => (b.published?.getTime() ?? 0) - (a.published?.getTime() ?? 0))
+  }
+  return { likes: of("like"), reposts: of("repost") }
+}
 
 /** How many webmentions one request to the API asks for. */
 const PAGE_SIZE = 100

@@ -1,5 +1,5 @@
 import { expect, test } from "vitest"
-import { mentionsOf, toMention, type Mention } from "../src/lib/mentions.ts"
+import { mentionsOf, reactionsOf, toMention, type Mention } from "../src/lib/mentions.ts"
 import { postsOfNotes } from "../src/lib/bluesky-posts.ts"
 import { mentionSourceOf } from "../src/lib/discussion.ts"
 import { hackerNewsThreads } from "../src/lib/hacker-news.ts"
@@ -21,7 +21,7 @@ test("each made-up webmention has an id of its own, and comes from an `.example`
 })
 
 test("one made-up webmention is a reply on Bluesky, as Bridgy sends one", () => {
-  const sources = kept().map((mention) => mention.source)
+  const sources = kept().filter((mention) => !mention.reaction).map((mention) => mention.source)
   expect(sources.filter((source) => source === "bluesky")).toHaveLength(1)
   expect(mentionSourceOf("https://bsky.app/profile/eve.example/post/3mockreply")).toBe("bluesky")
 })
@@ -42,7 +42,7 @@ test("the made-up Hacker News thread is of the first note, its deleted comment p
 })
 
 test("the first note's mentions are newest first, the like left out, and only the linking paragraph shown", () => {
-  const first = mentionsOf("/a", kept(), [])
+  const first = mentionsOf("/a", kept(), { blockedDomains: [] })
   expect(first.map((mention) => mention.url)).toEqual([
     "https://ada.example/2026/boundary-objects",
     "https://bsky.app/profile/eve.example/post/3mockreply",
@@ -53,18 +53,28 @@ test("the first note's mentions are newest first, the like left out, and only th
 })
 
 test("the second note's long mention is cut short, and a target with a trailing slash still finds it", () => {
-  const second = mentionsOf("/b", kept(), [])
+  const second = mentionsOf("/b", kept(), { blockedDomains: [] })
   expect(second).toHaveLength(2)
   expect(second[0]!.excerpt[0]).toMatch(/…$/)
 })
 
 test("a mention by an alias finds the note it redirects to, and without one, the third note is mentioned", () => {
-  expect(mentionsOf("/c", kept("/old"), [])[0]!.title).toBe("Linked by an old address")
-  expect(mentionsOf("/c", kept(), [])[0]!.title).toBe("Linked once")
+  expect(mentionsOf("/c", kept("/old"), { blockedDomains: [] })[0]!.title).toBe("Linked by an old address")
+  expect(mentionsOf("/c", kept(), { blockedDomains: [] })[0]!.title).toBe("Linked once")
 })
 
 test("with no notes there is no made-up discussion", () => {
   expect(mockMentions({ site: SITE, notes: [] }, now)).toEqual([])
   expect(mockBlueskyFeed({ site: SITE, notes: [] }, now).feed).toEqual([])
   expect(mockHackerNews({ site: SITE, notes: [] }, now).hits).toEqual([])
+})
+
+test("the first note's reactions are Bluesky's likes and repost, by who made them, and the other site's like", () => {
+  const { likes, reposts } = reactionsOf("/a", kept(), { blockedDomains: [] })
+  expect(likes.map((like) => [like.source, like.author.name])).toEqual([
+    ["webmentions", "Someone who only liked it"],
+    ["bluesky", "Hal"],
+    ["bluesky", "Ivy"],
+  ])
+  expect(reposts.map((repost) => [repost.source, repost.author.name])).toEqual([["bluesky", "Hal"]])
 })
