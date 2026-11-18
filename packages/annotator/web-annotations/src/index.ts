@@ -2,7 +2,7 @@
 export { readNote } from "./note.ts"
 export type { AnnotationBlockError, AnnotationNote, NoteAnnotation, Span } from "./note.ts"
 
-export { addAnnotation, AnnotationWriteError, removeAnnotation, updateAnnotation } from "./write.ts"
+export { addAnnotation, AnnotationWriteError, removeAnnotation, setRecordFields, updateAnnotation } from "./write.ts"
 export type { WriteResult } from "./write.ts"
 export type { Mint } from "./mint.ts"
 

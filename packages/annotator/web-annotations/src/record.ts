@@ -66,7 +66,8 @@ export interface Settled {
   readonly target: PassageTarget | string
 }
 
-const ORDER = ["@context", "id", "type", "motivation", "body", "target", "created", "modified"]
+/** The record's own fields, in the order they are written; any other field is a caller's. */
+export const ORDER = ["@context", "id", "type", "motivation", "body", "target", "created", "modified"]
 
 /** The record before a write: the previous one, or for a new annotation just its id and times. */
 export interface Prior {

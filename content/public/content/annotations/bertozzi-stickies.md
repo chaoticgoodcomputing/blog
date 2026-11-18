@@ -8,6 +8,7 @@ tags:
   - engineering/languages/python
   - writing/annotations
 annotation-target: https://www.nature.com/articles/s41587-023-01840-6.pdf
+annotation-public: true
 description: The rubber hits the road on ColabFold! I hope that's rubber I'm smelling — although it may be the computer. A replication attempt of a protein fold figure in K. Pedram et al (2023).
 ---
 Y'all are about to see me do my best, again.
@@ -24,7 +25,7 @@ This is due diligence, simply to make sure I'm understanding [ColabFold](https:/
 > [!annotation]
 > %%
 > ```annotation
-> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:61e1bf11-4c32-475c-b22b-8668c60cc4c5","type":"Annotation","motivation":"commenting","body":{"id":"#^e48qxcfcrom","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://www.nature.com/articles/s41587-023-01840-6.pdf","selector":[{"type":"TextPositionSelector","start":622,"end":644},{"type":"TextQuoteSelector","exact":" Carolyn R. Bertozzi  ","prefix":"Weaver    4,9, Heinz Läubli2,3 &","suffix":"1,10  Targeted protein degrada"}]},"created":"2026-02-28T19:55:01.027Z","modified":"2026-02-28T19:55:01.027Z"}
+> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:61e1bf11-4c32-475c-b22b-8668c60cc4c5","type":"Annotation","motivation":"commenting","body":{"id":"#^e48qxcfcrom","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://www.nature.com/articles/s41587-023-01840-6.pdf","selector":[{"type":"TextPositionSelector","start":622,"end":644},{"type":"TextQuoteSelector","exact":" Carolyn R. Bertozzi  ","prefix":"Weaver    4,9, Heinz Läubli2,3 &","suffix":"1,10  Targeted protein degrada"}]},"created":"2026-02-28T19:55:01.027Z","modified":"2026-11-18T03:25:40.408Z","hypothesis":{"id":"vYH8DOL_EfGwvbM8JIHI0Q","digest":"48354c2dc0697","page":{"id":"va6-IuL_EfG1rpvPxd5TGQ","digest":"804d66081d558"}}}
 > ```
 > %%
 > Some context — Dr. Bertozzi was one of the the [2022 Nobel Laureates in Chemistry](https://www.nobelprize.org/prizes/chemistry/2022/bertozzi/facts/) for her contributions to developing [click](https://en.wikipedia.org/wiki/Click_chemistry) and [bioorthogonal](https://en.wikipedia.org/wiki/Bioorthogonal_chemistry) chemistries.
@@ -39,7 +40,7 @@ This is due diligence, simply to make sure I'm understanding [ColabFold](https:/
 > [!annotation]
 > %%
 > ```annotation
-> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:b14d4247-0e3b-4823-a761-bb22c9d727d8","type":"Annotation","motivation":"commenting","body":{"id":"#^vhtmwrcrjds","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://www.nature.com/articles/s41587-023-01840-6.pdf","selector":[{"type":"TextPositionSelector","start":25391,"end":25699},{"type":"TextQuoteSelector","exact":"Fig. 2 | Structure-guided engineering of StcE yields mutants of reduced activity, binding and size. a, Structure of StcE, as predicted by ColabFold (Methods)62, with the C domain (purple) and INS domain (blue) highlighted. The Zn2+ active site is depicted in orange, while mutated residues are shown in teal.","prefix":"cell death in both populations","suffix":"b, Digestion of IRDye 800CW-lab"}]},"created":"2026-02-28T20:06:09.538Z","modified":"2026-02-28T20:06:09.538Z"}
+> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:b14d4247-0e3b-4823-a761-bb22c9d727d8","type":"Annotation","motivation":"commenting","body":{"id":"#^vhtmwrcrjds","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://www.nature.com/articles/s41587-023-01840-6.pdf","selector":[{"type":"TextPositionSelector","start":25391,"end":25699},{"type":"TextQuoteSelector","exact":"Fig. 2 | Structure-guided engineering of StcE yields mutants of reduced activity, binding and size. a, Structure of StcE, as predicted by ColabFold (Methods)62, with the C domain (purple) and INS domain (blue) highlighted. The Zn2+ active site is depicted in orange, while mutated residues are shown in teal.","prefix":"cell death in both populations","suffix":"b, Digestion of IRDye 800CW-lab"}]},"created":"2026-02-28T20:06:09.538Z","modified":"2026-02-28T20:06:09.538Z","hypothesis":{"id":"vdsiWuL_EfGxN6Paos13Hg","digest":"bbf5769ebb9ec","page":{"id":"vgm5vOL_EfGd5Ed953JyvQ","digest":"295a82223099d"}}}
 > ```
 > %%
 > This is where my interest piques, since I'd need to bug my partner for ELI5 explanations of any of the research up to this point.
@@ -81,7 +82,7 @@ This is due diligence, simply to make sure I'm understanding [ColabFold](https:/
 > [!annotation]
 > %%
 > ```annotation
-> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:ef29d736-ea57-4c60-8e6c-fff43c95ae6e","type":"Annotation","motivation":"commenting","body":{"id":"#^z2rvt8kocg","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://www.nature.com/articles/s41587-023-01840-6.pdf","selector":[{"type":"TextPositionSelector","start":25887,"end":26190},{"type":"TextQuoteSelector","exact":"d, Setup for flow cytometry assays measuring cell-surface activity and binding of StcE and StcE mutants. e, Representative flow plots showing surface MUC1 levels of HeLa cells treated with StcE mutants at the indicated concentrations. For flow plots of all other StcE mutants, see Supplementary Fig. 1d.","prefix":"(n = 4 independent digestions). ","suffix":" f, EC50 values derived from qua"}]},"created":"2026-03-03T07:18:31.971Z","modified":"2026-11-02T06:50:18.821Z"}
+> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:ef29d736-ea57-4c60-8e6c-fff43c95ae6e","type":"Annotation","motivation":"commenting","body":{"id":"#^z2rvt8kocg","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://www.nature.com/articles/s41587-023-01840-6.pdf","selector":[{"type":"TextPositionSelector","start":25887,"end":26190},{"type":"TextQuoteSelector","exact":"d, Setup for flow cytometry assays measuring cell-surface activity and binding of StcE and StcE mutants. e, Representative flow plots showing surface MUC1 levels of HeLa cells treated with StcE mutants at the indicated concentrations. For flow plots of all other StcE mutants, see Supplementary Fig. 1d.","prefix":"(n = 4 independent digestions). ","suffix":" f, EC50 values derived from qua"}]},"created":"2026-03-03T07:18:31.971Z","modified":"2026-11-02T06:50:18.821Z","hypothesis":{"id":"vjfE7OL_EfGgc0dzHQiBDg","digest":"c874218dc22de","page":{"id":"vl_MduL_EfGvN_dYJNBUUw","digest":"d9c3f9f803849"}}}
 > ```
 > %%
 > (This annotation has nothing to do with 4d — I'm just placing it here for its proximity to figure 4a)

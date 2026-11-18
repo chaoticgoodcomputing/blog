@@ -4,6 +4,7 @@ import {
   AnnotationWriteError,
   readNote,
   removeAnnotation,
+  setRecordFields,
   updateAnnotation,
   type PassageTarget,
   type WebAnnotation,
@@ -269,6 +270,32 @@ describe("removing", () => {
       expect(ids(text)).toContain(blockId)
       expect(removeAnnotation(text, blockId)).toBe(note)
     }
+  })
+})
+
+describe("setRecordFields", () => {
+  it("sets a field beside the record's own, and leaves the comment and modified alone", () => {
+    const before = readNote(NOTE).annotations.find((a) => a.blockId === "wbgdzlqm9dm")!
+    const { text, record } = setRecordFields(NOTE, "wbgdzlqm9dm", { mirror: { id: "abc" } })
+    const after = readNote(text).annotations.find((a) => a.blockId === "wbgdzlqm9dm")!
+    expect(after.record.mirror).toEqual({ id: "abc" })
+    expect(record.modified).toBe(before.record.modified)
+    expect(after.comment).toBe(before.comment)
+    expect(updateAnnotation(text, "wbgdzlqm9dm", { comment: "changed" }).record.mirror).toEqual({ id: "abc" })
+  })
+
+  it("removes a field given as undefined, giving back the note as it was", () => {
+    const set = setRecordFields(NOTE, "wbgdzlqm9dm", { mirror: "x" }).text
+    expect(setRecordFields(set, "wbgdzlqm9dm", { mirror: undefined }).text).toBe(NOTE)
+  })
+
+  it("changes nothing when the fields are as they were", () => {
+    expect(setRecordFields(NOTE, "wbgdzlqm9dm", {}).text).toBe(NOTE)
+  })
+
+  it("refuses the record's own fields, and an unknown block", () => {
+    expect(() => setRecordFields(NOTE, "wbgdzlqm9dm", { modified: "now" })).toThrow(AnnotationWriteError)
+    expect(() => setRecordFields(NOTE, "nosuchblock", { mirror: 1 })).toThrow(AnnotationWriteError)
   })
 })
 

@@ -13,13 +13,14 @@ tags:
   - projects/undergrad
   - writing/annotations
 annotation-target: https://raw.githubusercontent.com/chaoticgoodcomputing/blog/refs/heads/main/content/public/assets/utah_office_update.pdf
+annotation-public: true
 ---
 
 
 > [!annotation]
 > %%
 > ```annotation
-> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:4d7ac04c-57e2-42f8-a26e-1397ce0b9e0e","type":"Annotation","motivation":"commenting","body":{"id":"#^laee5qusdz","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://raw.githubusercontent.com/chaoticgoodcomputing/chaoticgoodcomputing.github.io/refs/heads/main/content/assets/utah_office_update.pdf","selector":[{"type":"TextPositionSelector","start":24,"end":94},{"type":"TextQuoteSelector","exact":"A Status Update From the                                  .Utah Office","prefix":"300%400%","suffix":"Conducting a retrospective on pr"}]},"created":"2026-01-09T06:33:14.024Z","modified":"2026-01-09T06:33:14.024Z"}
+> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:4d7ac04c-57e2-42f8-a26e-1397ce0b9e0e","type":"Annotation","motivation":"commenting","body":{"id":"#^laee5qusdz","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://raw.githubusercontent.com/chaoticgoodcomputing/chaoticgoodcomputing.github.io/refs/heads/main/content/assets/utah_office_update.pdf","selector":[{"type":"TextPositionSelector","start":24,"end":94},{"type":"TextQuoteSelector","exact":"A Status Update From the                                  .Utah Office","prefix":"300%400%","suffix":"Conducting a retrospective on pr"}]},"created":"2026-01-09T06:33:14.024Z","modified":"2026-01-09T06:33:14.024Z","hypothesis":{"id":"Q9jGQOMBEfGwvJPaXi-VbA","digest":"195d0e4614576a","page":{"id":"RCap8OMBEfGsYEPnqCoa9g","digest":"81dadfd43b1d0"}}}
 > ```
 > %%
 > > [!NOTE]

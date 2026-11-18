@@ -3,6 +3,7 @@ import { defaultMint, type Mint } from "./mint.ts"
 import { parseNote, type Block, type NoteAnnotation, type ParsedNote } from "./note.ts"
 import {
   composeRecord,
+  ORDER,
   sameJson,
   tagsOf,
   type AnnotationContent,
@@ -66,6 +67,29 @@ export function updateAnnotation(
   const record = { ...composed, modified: (mint.now ?? defaultMint.now)() }
   const callout = renderCallout(record, settled.comment, parsed.eol)
   return { text: text.slice(0, block.span.start) + callout + text.slice(block.idLineStart), blockId, record }
+}
+
+/**
+ * Sets fields of an annotation's record other than its own (`ORDER`): what a caller keeps beside
+ * the annotation, such as where else it is published. A field given as `undefined` is removed. The
+ * comment and `modified` stay as they were: the annotation itself hasn't changed. When nothing
+ * changes, the note comes back as it was.
+ */
+export function setRecordFields(text: string, blockId: string, fields: Readonly<Record<string, unknown>>): WriteResult {
+  const own = Object.keys(fields).filter((key) => ORDER.includes(key))
+  if (own.length > 0) throw new AnnotationWriteError(`the record's own fields can't be set this way: ${own.join(", ")}`)
+  const parsed = parseNote(text)
+  const block = blockOf(parsed, blockId)
+  const previous = block.annotation!
+  const record: Record<string, unknown> = { ...previous.record }
+  for (const [key, value] of Object.entries(fields)) {
+    if (value === undefined) delete record[key]
+    else record[key] = value
+  }
+  if (sameJson(record, previous.record)) return { text, blockId, record: previous.record }
+  const written = record as WebAnnotation
+  const callout = renderCallout(written, previous.comment, parsed.eol)
+  return { text: text.slice(0, block.span.start) + callout + text.slice(block.idLineStart), blockId, record: written }
 }
 
 /**

@@ -8,6 +8,7 @@ tags:
   - economics/markets
   - writing/annotations
 annotation-target: https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf
+annotation-public: true
 annotation-pages: 2-8
 ---
 This is a little test of something I'd like to do - keeping annotations of papers I've read on the CGC website, provided that they are open-access (which, unfortunately, is not always the case.)
@@ -25,7 +26,7 @@ It was especially fun to present a summary of this paper in [[public/content/not
 > [!annotation]
 > %%
 > ```annotation
-> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:927b3333-cd49-4713-bdc4-448119a7540d","type":"Annotation","motivation":"commenting","body":{"id":"#^9164n7rsi64","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","selector":[{"type":"TextPositionSelector","start":3020,"end":3146},{"type":"TextQuoteSelector","exact":" Is it ethical to accept the first without informing the second and then withdraw his acceptance if the second later admits hi","prefix":"the second will admit him later?","suffix":"m? We contend that the difficult"}]},"created":"2024-03-14T22:30:26.683Z","modified":"2024-03-14T22:30:26.683Z"}
+> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:927b3333-cd49-4713-bdc4-448119a7540d","type":"Annotation","motivation":"commenting","body":{"id":"#^9164n7rsi64","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","selector":[{"type":"TextPositionSelector","start":3020,"end":3146},{"type":"TextQuoteSelector","exact":" Is it ethical to accept the first without informing the second and then withdraw his acceptance if the second later admits hi","prefix":"the second will admit him later?","suffix":"m? We contend that the difficult"}]},"created":"2024-03-14T22:30:26.683Z","modified":"2024-03-14T22:30:26.683Z","hypothesis":{"id":"IvL6IuMBEfGTMZPwQw3EDQ","digest":"1d0a5ce326dc6b","page":{"id":"IxebwOMBEfGYI9fhLce2mg","digest":"75a7ff86608c2"}}}
 > ```
 > %%
 > It's interesting that [exploding offers](https://en.wikipedia.org/wiki/National_Resident_Matching_Program#:~:text=Students%20were%20being%20issued%20%22exploding%22%20offers%20that%20required%20them%20to%20make%20a%20decision%20about%20training%20before%20hanging%20up%20the%20telephone.) aren't mentioned here - reading this for the first time in 3-4 years, I thought that it was mentioned at the top.
@@ -37,7 +38,7 @@ It was especially fun to present a summary of this paper in [[public/content/not
 > [!annotation]
 > %%
 > ```annotation
-> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:c9be605f-9203-4b4f-ba1d-7764123a3dc5","type":"Annotation","motivation":"commenting","body":{"id":"#^nungju8fnno","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","selector":[{"type":"TextPositionSelector","start":5574,"end":5783},{"type":"TextQuoteSelector","exact":"DEFINITION.  An assignment of applicants to colleges will be called unstable if there are two applicants a and ,B who are assigned to colleges A and B, respectively, although ,3 prefers A to B and A prefers : ","prefix":"ng definition should not occur: ","suffix":"to a. Suppose the situation desc"}]},"created":"2024-03-14T22:47:20.871Z","modified":"2024-03-14T22:47:20.871Z"}
+> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:c9be605f-9203-4b4f-ba1d-7764123a3dc5","type":"Annotation","motivation":"commenting","body":{"id":"#^nungju8fnno","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","selector":[{"type":"TextPositionSelector","start":5574,"end":5783},{"type":"TextQuoteSelector","exact":"DEFINITION.  An assignment of applicants to colleges will be called unstable if there are two applicants a and ,B who are assigned to colleges A and B, respectively, although ,3 prefers A to B and A prefers : ","prefix":"ng definition should not occur: ","suffix":"to a. Suppose the situation desc"}]},"created":"2024-03-14T22:47:20.871Z","modified":"2024-03-14T22:47:20.871Z","hypothesis":{"id":"Iz2CmuMBEfGfyYN106dtsA","digest":"199918b7395d18","page":{"id":"I2sVXOMBEfGTMk-eEZriwA","digest":"fdf846d9738f1"}}}
 > ```
 > %%
 > In the actual presentation, it was deeply difficult to re-word this in a way that didn't sound like I was having another aneurysm. It reads *somewhat* well on paper, but sounds completely unhinged out loud.
@@ -47,7 +48,7 @@ It was especially fun to present a summary of this paper in [[public/content/not
 > [!annotation]
 > %%
 > ```annotation
-> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:518c9057-6d09-4284-a67c-6c0b68489aa8","type":"Annotation","motivation":"commenting","body":{"id":"#^7gx9isj070o","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","selector":[{"type":"TextPositionSelector","start":8594,"end":8700},{"type":"TextQuoteSelector","exact":"Example 1. The following is the \"ranking matrix\" of three men, a, ,3, and 7, and three women, A, B, and C.","prefix":"r let us look at some examples. ","suffix":" A  B  C a  1,3  2,2  3,1 p  3,1"}]},"created":"2024-03-14T22:48:44.481Z","modified":"2024-03-14T22:48:44.481Z"}
+> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:518c9057-6d09-4284-a67c-6c0b68489aa8","type":"Annotation","motivation":"commenting","body":{"id":"#^7gx9isj070o","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","selector":[{"type":"TextPositionSelector","start":8594,"end":8700},{"type":"TextQuoteSelector","exact":"Example 1. The following is the \"ranking matrix\" of three men, a, ,3, and 7, and three women, A, B, and C.","prefix":"r let us look at some examples. ","suffix":" A  B  C a  1,3  2,2  3,1 p  3,1"}]},"created":"2024-03-14T22:48:44.481Z","modified":"2024-03-14T22:48:44.481Z","hypothesis":{"id":"I44jMOMBEfGYC9szEYlszQ","digest":"135d6eb92de49c","page":{"id":"I7UToOMBEfGXEU8ZczxCCg","digest":"f23d9fd934801"}}}
 > ```
 > %%
 > Another difficulty was trying to reframe this specific style of diagram in such a way that a room full of people who'd been staring at game theory model grids for four years didn't reflexively start eyeballing Nash equillibria
@@ -57,7 +58,7 @@ It was especially fun to present a summary of this paper in [[public/content/not
 > [!annotation]
 > %%
 > ```annotation
-> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:90b37d7a-f31a-406a-86d2-b329039d0315","type":"Annotation","motivation":"commenting","body":{"id":"#^qrpzbdvom6","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","selector":[{"type":"TextPositionSelector","start":15201,"end":15368},{"type":"TextQuoteSelector","exact":"THEOREM  2. Every applicant is at least as well off under the assignment given by the deferred acceptance procedure as he would be under any other stable assign- ment.","prefix":"ignment of applicants. That is, ","suffix":" Proof. Let us call a college \"p"}]},"created":"2024-03-14T22:51:55.217Z","modified":"2024-03-14T22:51:55.217Z"}
+> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:90b37d7a-f31a-406a-86d2-b329039d0315","type":"Annotation","motivation":"commenting","body":{"id":"#^qrpzbdvom6","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf","selector":[{"type":"TextPositionSelector","start":15201,"end":15368},{"type":"TextQuoteSelector","exact":"THEOREM  2. Every applicant is at least as well off under the assignment given by the deferred acceptance procedure as he would be under any other stable assign- ment.","prefix":"ignment of applicants. That is, ","suffix":" Proof. Let us call a college \"p"}]},"created":"2024-03-14T22:51:55.217Z","modified":"2024-03-14T22:51:55.217Z","hypothesis":{"id":"I-aiduMBEfGl8pvP_VFmLg","digest":"106dc7747b36eb","page":{"id":"JBCtZOMBEfGzzU_LUR_kLQ","digest":"18287bbd17db69"}}}
 > ```
 > %%
 > The idea of match optimality was the concept that launched me out of this paper and into a rabbit hole of reading more about matchmaking algorithms, and actually modeling this in Python to toy around with the concept.

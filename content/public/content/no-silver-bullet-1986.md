@@ -8,8 +8,9 @@ tags:
   - economics/management
   - writing/annotations
 annotation-target: https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf
-description:
+description: A set of annotations on the seminal computation and project management paper, No Silver Bullet, by Frederick Brooks (1986)
 annotation-pages:
+annotation-public: true
 ---
 I recently got into a discussion about [computer-aided software engineering](https://en.wikipedia.org/wiki/Computer-aided_software_engineering) with some folks, recently, for... [[public/tags/engineering/ai|reasons that should be obvious]].
 

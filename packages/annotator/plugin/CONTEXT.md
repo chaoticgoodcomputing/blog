@@ -121,3 +121,35 @@ epilogue, as a PDF's note has, its blocks kept from edits; the region shows its 
 cards, not the annotator. A click on a card edits its comment alone, in a text box, wikilinks
 suggested; saving writes its block again through web-annotations, never by hand. A bar under its properties opens the page in the browser.
 _Avoid_: web note, bookmark, clipping
+
+### Publishing to Hypothesis
+
+**Public note**:
+An annotation note whose `annotation-public` property is `true`: its annotations are published to
+Hypothesis, in the settings' group, as well as kept in it. The note stays what is true; Hypothesis
+is told of each change a moment after it is made, however it is made, and nothing comes back but
+each copy's id. Highlights are not published; a reply is, beside its parent's copy.
+_Avoid_: shared note, synced note
+
+**Source copy**:
+An annotation as published on its annotated document, at the document's own address: a web page's,
+or a PDF's on the web. A PDF's ends with a link to the annotation's card on the note's page, and
+names the PDF by its address alone, never its fingerprint, which the site's own copy shares. A PDF
+whose text the plugin recognized has none: Hypothesis wouldn't find its passages.
+_Avoid_: mirror (the code's word for publishing), remote annotation
+
+**Page copy**:
+A PDF's note's annotation as published on the note's page on the site, on the passage its card
+quotes. A web page's note has none. Never on the site's own copy of the PDF.
+_Avoid_: site copy, mirror copy
+
+**Ledger**:
+Every copy made from a note, by the note's path, in the plugin's data: how a copy whose block is
+gone is found, to be removed. Lost, copies are left on Hypothesis, never removed by mistake.
+_Avoid_: cache, index
+
+**Public comment**:
+A comment as published: its wikilinks made links to the notes' pages on the site, by the site's
+rule for a note's address, copied from it; a note outside the site's folders, or a link to nothing,
+is its text.
+_Avoid_: rendered comment, export

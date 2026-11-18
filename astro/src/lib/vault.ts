@@ -20,7 +20,8 @@ export const NOTE_EXTENSIONS = ["md", "mdx"]
 /**
  * A note's slug, from its path in the vault: Quartz's rule, so a note keeps the address it has
  * today. The extension goes, a space becomes `-`, `&` becomes `-and-`, `%` becomes `-percent`, and
- * `?` and `#` go.
+ * `?` and `#` go. The Annotator copies this rule, to publish wikilinks to Hypothesis as links to
+ * notes' pages (packages/annotator/plugin/src/public-markdown.ts): a change here is a change there.
  */
 export function slugFor(notePath: string): string {
   return notePath

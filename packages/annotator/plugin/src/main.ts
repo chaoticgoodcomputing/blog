@@ -16,6 +16,8 @@ import type { AnnotatorSession } from "./session.ts"
 import { type AnnotatorSettings, AnnotatorSettingTab, settingsFrom } from "./settings.ts"
 import logo from "./cgc-logo.svg"
 import { type LocalService, serve } from "./server.ts"
+import { isPublic, type MirrorResult } from "./hypothesis-mirror.ts"
+import { syncWithHypothesis } from "./hypothesis-sync.ts"
 import { addressOf, bytesOf, isAnnotationNote, isWebNote, type Target, targetOf, textFileOf } from "./target.ts"
 import { vaultNotes } from "./vault-notes.ts"
 import { createVaultService } from "./vault-service.ts"
@@ -75,6 +77,22 @@ export default class AnnotatorPlugin extends Plugin {
       },
     })
 
+    // A public annotation note is published to Hypothesis as it changes; the command sends it all again.
+    const hypothesis = syncWithHypothesis(this, async (file) => {
+      const target = isWebNote(this.app, file) ? undefined : targetOf(this.app, file, this.settings.customDefaultPath)
+      return target !== undefined && (await this.documentStore().read(textFileOf(target))) !== undefined
+    })
+    this.addCommand({
+      id: "publish-to-hypothesis",
+      name: "Publish this note's annotations to Hypothesis again",
+      checkCallback: (checking) => {
+        const file = this.app.workspace.getActiveViewOfType(MarkdownView)?.file ?? null
+        if (!isAnnotationNote(this.app, file)) return false
+        if (!checking) void this.publishToHypothesis(file, hypothesis.resend)
+        return true
+      },
+    })
+
     this.addCommand({
       id: "supply-document",
       name: "Supply this note's PDF from a file",
@@ -86,6 +104,28 @@ export default class AnnotatorPlugin extends Plugin {
         return true
       },
     })
+  }
+
+  /** Sends an annotation note's annotations to Hypothesis again, and tells the user how it went. */
+  private async publishToHypothesis(file: TFile, resend: (file: TFile) => Promise<MirrorResult | undefined>) {
+    if (!this.settings.hypothesisToken) {
+      new Notice("Annotator has no Hypothesis API token: set one in its settings to publish.")
+      return
+    }
+    const published = isPublic(this.app.metadataCache.getFileCache(file)?.frontmatter)
+    try {
+      const result = await resend(file)
+      if (!result) {
+        new Notice("This note isn't public, and has nothing on Hypothesis: add `annotation-public: true` to publish it.")
+        return
+      }
+      const done = published
+        ? `Published to Hypothesis: ${result.created} new, ${result.updated} updated, ${result.removed} removed.`
+        : `This note isn't public: ${result.removed} annotations removed from Hypothesis.`
+      new Notice(result.errors.length ? `${done} ${result.errors.length} failed; see the console.` : done)
+    } catch (error) {
+      new Notice(`Annotator could not publish to Hypothesis: ${error instanceof Error ? error.message : error}`)
+    }
   }
 
   /** Documents whose text is being recognized, by address, so one isn't recognized twice at once. */

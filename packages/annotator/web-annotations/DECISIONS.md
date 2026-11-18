@@ -19,6 +19,7 @@ Where the spec left room, or contradicted itself, and what the package does.
 - **Updating keeps what the content leaves out**: an omitted comment, tags or target stays as it was.
 - **Rewritten records keep the canonical key order**, then unknown fields in their old order; unknown fields of the target object are kept too.
 - **Bodies that are neither comment reference nor tag** are kept, after them.
+- **`setRecordFields` sets a caller's own fields** beside the record's, leaving the comment and `modified` alone, and refuses the record's own fields; `undefined` removes one.
 - **Removing a block** takes the blank line after it when another block follows, otherwise the blank line before it; a note's only block goes alone.
 - **Removing a parent leaves its replies**; the caller removes them if it wants.
 - **Adding to a note with no blocks** appends enough line endings for one blank line, and the new block always ends with a line ending.

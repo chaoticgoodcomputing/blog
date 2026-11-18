@@ -37,6 +37,20 @@ export interface AnnotatorSettings {
    */
   webPageTemplate: string
   pdfTemplate: string
+  /**
+   * A Hypothesis developer token (hypothes.is/account/developer), with which the annotations of web
+   * pages' notes marked `annotation-public` are published to Hypothesis (src/hypothesis-sync.ts).
+   * Empty, nothing is published.
+   */
+  hypothesisToken: string
+  /** The Hypothesis group annotations are published to: `__world__`, its public one. */
+  hypothesisGroup: string
+  /** The site the vault's notes are published at, without a trailing `/`: wikilinks are published as links to it. */
+  siteUrl: string
+  /** The vault's folders whose notes are the site's, from the vault's root: a note's address is its path under one. */
+  siteRoots: string[]
+  /** Every annotation published to Hypothesis from a note, by the note's path: the mirror's ledger, not a setting. */
+  hypothesisLedger: Record<string, string[]>
   annotationMarkdownSettings: {
     /** A block's view writes the text before its passage. */
     includePrefix: boolean
@@ -57,6 +71,11 @@ export const DEFAULT_SETTINGS: AnnotatorSettings = {
   webNotePath: "",
   webPageTemplate: "",
   pdfTemplate: "",
+  hypothesisToken: "",
+  hypothesisGroup: "__world__",
+  siteUrl: "https://chaoticgood.computer",
+  siteRoots: ["public", "private"],
+  hypothesisLedger: {},
   annotationMarkdownSettings: {
     includePrefix: true,
     highlightHighlightedText: true,
@@ -80,12 +99,28 @@ export function settingsFrom(saved: unknown): AnnotatorSettings {
     // The one template the settings named before there were two: both's.
     webPageTemplate: data.webPageTemplate ?? data.webNoteTemplate ?? DEFAULT_SETTINGS.webPageTemplate,
     pdfTemplate: data.pdfTemplate ?? data.webNoteTemplate ?? DEFAULT_SETTINGS.pdfTemplate,
+    hypothesisToken: data.hypothesisToken ?? DEFAULT_SETTINGS.hypothesisToken,
+    hypothesisGroup: data.hypothesisGroup || DEFAULT_SETTINGS.hypothesisGroup,
+    siteUrl: data.siteUrl ?? DEFAULT_SETTINGS.siteUrl,
+    siteRoots: Array.isArray(data.siteRoots) ? data.siteRoots.filter((root) => typeof root === "string") : [...DEFAULT_SETTINGS.siteRoots],
+    hypothesisLedger: ledgerFrom(data.hypothesisLedger),
     annotationMarkdownSettings: {
       includePrefix: data.annotationMarkdownSettings?.includePrefix ?? DEFAULT_SETTINGS.annotationMarkdownSettings.includePrefix,
       highlightHighlightedText: data.annotationMarkdownSettings?.highlightHighlightedText ?? DEFAULT_SETTINGS.annotationMarkdownSettings.highlightHighlightedText,
       includePostfix: data.annotationMarkdownSettings?.includePostfix ?? DEFAULT_SETTINGS.annotationMarkdownSettings.includePostfix,
     },
   }
+}
+
+/** The mirror's ledger, from what was saved: each note's path, and the ids published from it. */
+function ledgerFrom(saved: unknown): Record<string, string[]> {
+  const ledger: Record<string, string[]> = {}
+  if (saved && typeof saved === "object") {
+    for (const [path, ids] of Object.entries(saved)) {
+      if (Array.isArray(ids)) ledger[path] = ids.filter((id): id is string => typeof id === "string")
+    }
+  }
+  return ledger
 }
 
 export class AnnotatorSettingTab extends PluginSettingTab {
@@ -163,6 +198,32 @@ export class AnnotatorSettingTab extends PluginSettingTab {
       .setDesc(`The note a PDF's new annotation note is made from, when it is first annotated in the browser. ${variables}Empty, a title, date and tags.`)
       .addText((text) =>
         text.setPlaceholder("Templates/PDF annotation").setValue(settings.pdfTemplate).onChange((value) => ((settings.pdfTemplate = value.trim()), save())),
+      )
+
+    containerEl.createEl("h3", { text: "Publishing to Hypothesis" })
+    new Setting(containerEl)
+      .setName("Hypothesis API token")
+      .setDesc(
+        "From hypothes.is/account/developer. A web page's note with `annotation-public: true` has its annotations published to Hypothesis " +
+          "as well as kept in the note, which stays what is true: edits and removals are published after it changes. Highlights stay private. Empty, nothing is published.",
+      )
+      .addText((text) => {
+        text.inputEl.type = "password"
+        text.setValue(settings.hypothesisToken).onChange((value) => ((settings.hypothesisToken = value.trim()), save()))
+      })
+    new Setting(containerEl)
+      .setName("Group")
+      .setDesc("The Hypothesis group published to. __world__ is Hypothesis's public one.")
+      .addText((text) => text.setPlaceholder("__world__").setValue(settings.hypothesisGroup).onChange((value) => ((settings.hypothesisGroup = value.trim() || DEFAULT_SETTINGS.hypothesisGroup), save())))
+    new Setting(containerEl)
+      .setName("Site address")
+      .setDesc("Wikilinks in a published comment become links to the notes' pages here. Empty, they become their text.")
+      .addText((text) => text.setPlaceholder("https://example.com").setValue(settings.siteUrl).onChange((value) => ((settings.siteUrl = value.trim().replace(/\/+$/, "")), save())))
+    new Setting(containerEl)
+      .setName("Site folders")
+      .setDesc("The vault's folders whose notes are the site's, separated by commas: a note's page is its path under one. A link to a note elsewhere becomes its text.")
+      .addText((text) =>
+        text.setPlaceholder("public, private").setValue(settings.siteRoots.join(", ")).onChange((value) => ((settings.siteRoots = value.split(",").map((root) => root.trim()).filter(Boolean)), save())),
       )
 
     containerEl.createEl("h3", { text: "How annotations are written into the note" })

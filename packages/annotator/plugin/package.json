@@ -18,6 +18,7 @@
     "@chaoticgoodcomputing/annotator-format": "workspace:*",
     "@chaoticgoodcomputing/pdf-ocr": "workspace:*",
     "@chaoticgoodcomputing/web-annotations": "workspace:*",
+    "github-slugger": "^2.0.0",
     "hypothesis": "1.1769.0",
     "monkey-around": "^2.2.0",
     "pdfjs-dist": "5.4.530",

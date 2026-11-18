@@ -331,6 +331,9 @@ importers:
       '@chaoticgoodcomputing/web-annotations':
         specifier: workspace:*
         version: link:../web-annotations
+      github-slugger:
+        specifier: ^2.0.0
+        version: 2.0.0
       hypothesis:
         specifier: 1.1769.0
         version: 1.1769.0(patch_hash=b4281075fe8b3366e0634daa7ea9f28916ec6eb31a2315348d86c746c05a41c9)
