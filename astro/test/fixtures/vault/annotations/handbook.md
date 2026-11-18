@@ -2,7 +2,7 @@
 title: An annotated handbook
 date: 2026-03-26
 tags:
-  - reading
+  - reading/docs
 annotation-target: https://example.com/handbooks/Valve_Handbook_LowRes.pdf
 ---
 Why I read the handbook.

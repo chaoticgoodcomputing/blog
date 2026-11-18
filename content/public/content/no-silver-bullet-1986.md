@@ -6,7 +6,7 @@ tags:
   - engineering
   - engineering/ai
   - economics/management
-  - reading
+  - reading/docs
   - writing/notes
 annotation-target: https://worrydream.com/refs/Brooks_1986_-_No_Silver_Bullet.pdf
 description: A set of annotations on the seminal computation and project management paper, No Silver Bullet, by Frederick Brooks (1986)

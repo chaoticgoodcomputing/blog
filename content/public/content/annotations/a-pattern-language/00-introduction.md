@@ -6,7 +6,7 @@ tags:
   - economics/policy
   - projects/games/the-neighborhood
   - projects/a-pattern-language
-  - reading
+  - reading/lit
 description: Can graphs be libertarian? Authoritarian? Annotations for the introductory portion of the 1977 book A Pattern Language.
 ---
 ← [[public/content/notes/pattern-languages-of-the-neighborhood|Pattern Languages & The Neighborhood]] | [[public/content/annotations/a-pattern-language/01-independent-regions|Independent Regions]] →

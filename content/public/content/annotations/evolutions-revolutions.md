@@ -4,7 +4,7 @@ date: 2026-01-28
 updated: 2026-11-02
 tags:
   - economics/management
-  - reading
+  - reading/docs
 annotation-target: https://pantherspassionpolitics.com/wp-content/uploads/2026/06/greiner-organisational-growth.pdf
 annotation-public: true
 description: Annotations for Greiner's 1972 paper "Evolution and Revolution as Organizations Grow", about the structural composition of organizations at different sizes and requirements.

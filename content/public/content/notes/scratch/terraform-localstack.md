@@ -7,7 +7,7 @@ date: 2024-04-18
 updated: 2026-01-21
 tags:
   - engineering/devops
-  - reading
+  - writing/fragments
 ---
 ## Primary Takeaways
 

@@ -5,7 +5,7 @@ tags:
   - "engineering/data"
   - "projects/games/the-neighborhood"
   - "projects/a-pattern-language"
-  - "reading"
+  - "reading/lit"
   - "private"
 ---
 

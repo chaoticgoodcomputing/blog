@@ -6,7 +6,7 @@ date: 2024-03-14
 updated: 2026-11-02
 tags:
   - economics/markets
-  - reading
+  - reading/docs
 annotation-target: https://www.math.utoronto.ca/mccann/assignments/477/GaleShapley62.pdf
 annotation-public: true
 annotation-pages: 2-8

@@ -5,7 +5,7 @@ updated: 2026-09-23
 tags:
   - engineering
   - economics/management
-  - reading
+  - reading/lit
 annotation-target:
 description:
 ---

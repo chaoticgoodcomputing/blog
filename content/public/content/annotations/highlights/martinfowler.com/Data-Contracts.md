@@ -5,7 +5,7 @@ updated: 2026-11-18
 tags:
   - engineering/data
   - engineering/ai
-  - reading
+  - reading/web
   - writing/fragments
 description: Thoughts on the Simon Herrer & Arif Wider post about ODCS, *Data Contracts*
 annotation-target: "https://martinfowler.com/articles/data-contracts.html"

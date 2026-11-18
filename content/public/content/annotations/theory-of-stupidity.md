@@ -5,7 +5,7 @@ updated: 2026-11-02
 tags:
   - economics/markets
   - horticulture/seasons/systems
-  - reading
+  - reading/docs
 annotation-target: https://www.onthewing.org/user/Bonhoeffer%20-%20Theory%20of%20Stupidity.pdf
 description: Our lives are all dominated by a little graph in our hearts — and sometimes, that graph gets wacky. A review of Dietrich Bonhoeffer's "Theory of Stupidity", part of his larger ~1943-1945 work "Letters and Papers from Prison."
 annotation-public: true

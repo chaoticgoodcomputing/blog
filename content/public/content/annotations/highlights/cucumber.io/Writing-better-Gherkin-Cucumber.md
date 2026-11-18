@@ -4,7 +4,7 @@ date: 2026-11-06
 updated: 2026-11-06
 tags:
   - engineering/ai
-  - reading
+  - reading/web
   - writing/fragments
 description: A few notes on a very important, but hidden, part of the Cucumber and Gherkin documentation around Behavior Driven Development
 annotation-pages:

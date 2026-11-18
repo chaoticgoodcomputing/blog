@@ -5,7 +5,7 @@ updated: 2026-11-18
 tags:
   - engineering
   - writing/fragments
-  - reading
+  - reading/web
 description: Annotations on Appleton's post about design engineering and futures speculation.
 annotation-pages:
 annotation-target: https://maggieappleton.com/fortune-telling

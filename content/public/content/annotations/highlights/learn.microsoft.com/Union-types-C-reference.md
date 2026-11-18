@@ -5,7 +5,7 @@ updated: 2026-11-06
 tags:
   - projects/flowthru
   - engineering/languages/csharp
-  - reading
+  - reading/web
   - writing/fragments
 description: Some quick notes on the Union type addition in C# 15, and how I can use it to make Flowthru fail-fast(er)
 annotation-pages:

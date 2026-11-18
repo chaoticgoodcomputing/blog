@@ -7,7 +7,6 @@ tags:
   - "economics/strategy"
   - "writing/fragments"
   - "projects/a-pattern-language"
-  - "reading"
   - "private"
 ---
 
