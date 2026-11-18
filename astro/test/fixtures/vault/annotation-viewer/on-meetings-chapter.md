@@ -30,3 +30,6 @@ which this note does not show.
 >
 > A standing meeting is the hardest to cancel, and the one that most often has no question left to answer: it outlives the question it was made for by months.
 ^cancel
+
+
+Read on its own, the second page is a list of rules with the reasons left out.

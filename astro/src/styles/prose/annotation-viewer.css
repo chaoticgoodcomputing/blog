@@ -150,3 +150,9 @@ annotation-viewer[data-switching] :is(.annotations, .annotation) {
     transition: none !important;
   }
 }
+
+/* The epilogue is given the focus by the line under the document that skips to it, as a place to
+   start from: no ring. */
+annotation-viewer .annotation-epilogue:focus {
+  outline: none;
+}

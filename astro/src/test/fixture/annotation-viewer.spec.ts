@@ -607,6 +607,45 @@ test("a scanned document's passages are found in its text file, the text the plu
   await expect(viewer.locator('.document-page[data-page="1"] .text-layer')).toContainText("surprise.")
 })
 
+// Scrolls the page so that the top of the document's frame is `by` pixels above the top of the window.
+const scrollPastFrameTop = (viewer: Locator, by: number) =>
+  viewer.locator(".frame").evaluate((frame, by) => window.scrollTo({ top: frame.getBoundingClientRect().top + window.scrollY + by, behavior: "instant" }), by)
+
+test("while the bar is stuck at the top, a line at the bottom skips to the epilogue's heading, gives it the focus, and leaves the address as it is", async ({ page }) => {
+  const viewer = await opened(page, DESKTOP, GARDEN)
+  const skip = viewer.getByRole("link", { name: "Skip to What it found" })
+  // Not while the bar is still where the document starts.
+  await expect(skip).toBeHidden()
+
+  await scrollPastFrameTop(viewer, 200)
+  await expect(viewer).toHaveAttribute("data-bar-stuck")
+  await expect(skip).toBeVisible()
+  const box = (await skip.boundingBox())!
+  expect(box.y + box.height).toBeCloseTo(DESKTOP.height, 0)
+  await expect.poll(async () => (await viewer.locator(".bar").boundingBox())!.y).toBeCloseTo(0, 0)
+
+  await skip.click()
+  const heading = page.locator(".annotation-epilogue h3")
+  // In view, past the document and the line under it; as near the top as the page's end lets it be.
+  await expect(heading).toBeInViewport()
+  await expect.poll(async () => (await heading.boundingBox())!.y).toBeGreaterThanOrEqual((await skip.boundingBox())!.y + box.height)
+  await expect(page.locator(".annotation-epilogue")).toBeFocused()
+  expect(new URL(page.url()).hash).toBe("")
+})
+
+test("an epilogue that opens with no heading is skipped to as the takeaways", async ({ page }) => {
+  const viewer = await opened(page, DESKTOP, "/annotation-viewer/on-meetings-chapter")
+  await scrollPastFrameTop(viewer, 100)
+  await expect(viewer.getByRole("link", { name: "Skip to Takeaways" })).toBeVisible()
+})
+
+test("a page with no epilogue has no line to skip to it", async ({ page }) => {
+  const viewer = await opened(page, DESKTOP)
+  await scrollPastFrameTop(viewer, 100)
+  await expect(viewer).toHaveAttribute("data-bar-stuck")
+  await expect(viewer.locator(".skip")).toBeHidden()
+})
+
 test("a document with text of its own has no text file to fetch", async ({ page }) => {
   const requested: string[] = []
   page.on("request", (request) => requested.push(new URL(request.url()).pathname))

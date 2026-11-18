@@ -13,6 +13,8 @@ annotation-target-type: web
 annotation-public: true
 ---
 
+This, along with her recent [[public/content/annotations/highlights/maggieappleton.com/Planning-with-Agents-Divided-Worlds,-Boundary-Objects,-and-Thicker-Interfaces|Boundary Objects]] presentation, have got to be two of the greatest slide decks I'll ever see.
+
 > [!annotation]
 > %%
 > ```annotation
@@ -563,12 +565,3 @@ annotation-public: true
 >
 > Who knows -- maybe next year?
 ^omvuofir6r1
-
-> [!annotation]
-> %%
-> ```annotation
-> {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:5e9eaad4-5c54-4063-903a-ab083721eddb","type":"Annotation","motivation":"commenting","body":{"id":"#^fwkrxnw4kka","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://maggieappleton.com/fortune-telling","selector":[{"type":"RangeSelector","startContainer":"/main[1]/div[1]/article[1]/div[2]/div[2]/div[178]/p[1]","startOffset":0,"endContainer":"/main[1]/div[1]/article[1]/div[2]/div[2]/div[178]/p[1]","endOffset":5},{"type":"TextPositionSelector","start":27968,"end":27973},{"type":"TextQuoteSelector","exact":"Thank","prefix":" message me or my manager, Idan.","suffix":" you for having me. You can find"}]},"created":"2026-11-18T02:58:57.008Z","modified":"2026-11-18T02:58:57.008Z","hypothesis":{"id":"OEf6POL_EfGF9h8xhpbiaw","digest":"727bc76dc954e"}}
-> ```
-> %%
-> Test!
-^fwkrxnw4kka

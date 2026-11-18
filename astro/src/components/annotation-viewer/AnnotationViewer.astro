@@ -23,7 +23,9 @@
 // Over the document is its bar, which stays at the top of the window, under a phone's menu bar,
 // while the document is read: the document's title, its file's name without its extension; where it
 // was retrieved from, a link to it at its address, in place of the body's line saying where it comes
-// from; and the zoom's buttons.
+// from; and the zoom's buttons. Where the page has an epilogue, a line under the document stays at
+// the bottom of the window while the bar is stuck at the top, "Skip to" the epilogue's heading, or
+// "Skip to Takeaways" where it opens with none, and goes past the rest of the document to it.
 //
 // Selecting an annotation marks its card and its highlights, and writes its address, `#^id`, in
 // place of the page's (history.replaceState), so the back button isn't cluttered. A card, a
@@ -115,6 +117,10 @@ const retrieved = new Date()
         <p class="status" data-loading>Loading the document…</p>
         <div class="pages"></div>
       </div>
+      <a class="skip" href="#">
+        <Icon name="mdi:arrow-down" is:inline width="16" height="16" fill="currentColor" aria-hidden="true" />
+        <span class="label">Skip to Takeaways</span>
+      </a>
     </div>
     <slot />
   </div>
@@ -178,6 +184,9 @@ const retrieved = new Date()
     get #section() {
       return this.querySelector<HTMLElement>("section.annotations")
     }
+    get #epilogue() {
+      return this.querySelector<HTMLElement>(".annotation-epilogue")
+    }
     get #pages() {
       return this.querySelector<HTMLElement>(".pages")!
     }
@@ -205,6 +214,7 @@ const retrieved = new Date()
         section.tabIndex = -1
       }
       this.querySelector(".tab")!.setAttribute("aria-controls", CARDS)
+      this.#labelSkip()
 
       // A highlight's annotation, in a popover beside it, while the pointer rests on it.
       const popover = this.querySelector<HTMLElement>(".annotation-popover")!
@@ -355,6 +365,39 @@ const retrieved = new Date()
       this.querySelector(".tab")!.setAttribute("tabindex", "0")
       this.#mark()
       this.#restore()
+      this.#stick()
+    }
+
+    // The line under the document names where it skips to: the epilogue's heading, where it opens
+    // with one, or its takeaways. Its address is the heading's, or the epilogue's own.
+    #labelSkip() {
+      const epilogue = this.#epilogue
+      if (!epilogue) return
+      const first = epilogue.firstElementChild
+      const heading = first?.matches("h1, h2, h3, h4, h5, h6") && first.id ? first : undefined
+      if (!heading) epilogue.id ||= "epilogue"
+      epilogue.tabIndex = -1
+      const skip = this.querySelector<HTMLAnchorElement>(".skip")!
+      skip.href = `#${(heading ?? epilogue).id}`
+      skip.querySelector(".label")!.textContent = `Skip to ${heading?.textContent?.trim() || "Takeaways"}`
+    }
+
+    // Whether the bar is stuck at the top of the window, under a phone's menu bar: the line under the
+    // document is at the bottom of it only while it is.
+    #stick() {
+      if (this.#layout === "static") return
+      const top = this.querySelector<HTMLElement>(".frame")!.getBoundingClientRect().top
+      this.toggleAttribute("data-bar-stuck", top <= this.#covered + 0.5)
+    }
+
+    // Goes past the rest of the document to the epilogue, and gives it the focus, leaving the address
+    // as it is, as the link over the preface does.
+    #toEpilogue() {
+      const epilogue = this.#epilogue
+      if (!epilogue) return
+      const smoothly = !matchMedia("(prefers-reduced-motion: reduce)").matches
+      this.#reveal(epilogue.getBoundingClientRect().top, smoothly)
+      epilogue.focus({ preventScroll: true })
     }
 
     // Marks the selected annotation's card and highlights, and, once the document is shown, shortens
@@ -627,6 +670,13 @@ const retrieved = new Date()
         this.#toDocument()
       })
 
+      // The line under the document, and whether it is shown.
+      this.#on(this.querySelector(".skip")!, "click", (event: MouseEvent) => {
+        event.preventDefault()
+        this.#toEpilogue()
+      })
+      this.#on(window, "scroll", () => this.#stick(), { passive: true })
+
       this.#on(document, "keydown", (event: KeyboardEvent) => {
         if (event.key === "Tab" && this.#drawerOpen && this.#modal()) return this.#trapTab(event)
         if (typing(event)) return
@@ -752,6 +802,41 @@ const retrieved = new Date()
 
   /* Its buttons stay clear of a desktop's drawer, which opens over the right of the window. */
   .annotation-viewer[data-drawer="tablet"][data-drawer-open="true"] .bar {
+    padding-right: calc(var(--card-width) + 0.75rem);
+  }
+
+  /* The line under the document, skipping to the epilogue: at the bottom of the window while the bar
+     is stuck at the top, and, past the last page, where the document ends. None where there is no
+     epilogue to skip to. */
+  .skip {
+    display: none;
+  }
+
+  .annotation-viewer[data-layout="drawer"]:has(.annotation-epilogue) .skip {
+    position: sticky;
+    bottom: 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    margin-top: 0.75rem;
+    padding: 0.5rem 0.75rem calc(0.5rem + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--lightgray);
+    background: var(--light);
+    color: var(--darkgray);
+    font-size: 0.9rem;
+  }
+
+  .annotation-viewer[data-layout="drawer"]:not([data-bar-stuck]) .skip {
+    visibility: hidden;
+  }
+
+  .skip:hover {
+    color: var(--secondary);
+  }
+
+  .annotation-viewer[data-drawer="tablet"][data-drawer-open="true"] .skip {
     padding-right: calc(var(--card-width) + 0.75rem);
   }
 
