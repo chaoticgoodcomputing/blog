@@ -19,17 +19,15 @@ test("on a desktop the graph fills the room between the graph column's header an
   expect(graph.y + graph.height).toBeCloseTo(footer.y, 0)
 })
 
-test("on a phone a bar is over the spines, and they over the note; the menu brings the graph column in from the left, as tall as the screen", async ({
+test("on a phone a bar is over the note; the menu brings the graph column in from the left, as tall as the screen", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto(note)
   const bar = await box(page, ".menu-bar")
-  const spines = await box(page, "trail-spines")
   const main = await box(page, "main")
   expect(bar.y).toBe(0)
-  expect(bar.y + bar.height).toBeLessThanOrEqual(spines.y)
-  expect(spines.y + spines.height).toBeLessThanOrEqual(main.y)
+  expect(bar.y + bar.height).toBeLessThanOrEqual(main.y)
   await expect(page.locator("aside.graph-column")).toBeHidden()
   expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBe(0)
 

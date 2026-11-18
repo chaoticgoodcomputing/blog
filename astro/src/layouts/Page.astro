@@ -2,11 +2,11 @@
 // The site shell: what is around a page's content, on every kind of page. Two columns: the graph
 // column, and the note. The graph column holds the site's title, the search box with the colour
 // scheme switch to the right of it, the local graph over the reader's trail, and the footer.
-// Beside it are the trail's spines, the notes the reader came through, then the note itself: its
-// header (title, tags, date, and the ways to share it) over the page's content, and what follows the body under it:
-// its connections, its links and its discussion in one carousel.
+// Beside it is the note: its header (title, tags, date, and the ways to share it) over the page's
+// content, and what follows the body under it: its connections, its links and its discussion in one
+// carousel.
 //
-// The window is the one scroll: the graph column and the spines stay in view beside the note. On a
+// The window is the one scroll: the graph column stays in view beside the note. On a
 // phone or a tablet the graph column is a menu instead, opened from a bar over the note, which
 // comes in from the left: a popover, so the browser closes it on Escape or a tap outside it, and a
 // link followed from it loads a page with it closed. What a feature needs to know of the page it
@@ -21,7 +21,7 @@ import Search from "../components/Search.astro"
 import SchemeSwitch from "../components/SchemeSwitch.astro"
 import LocalGraph from "../components/LocalGraph.astro"
 import SiteFooter from "../components/SiteFooter.astro"
-import TrailSpines from "../components/TrailSpines.astro"
+import TrailNavigation from "../components/TrailNavigation.astro"
 
 import ArticleTitle from "../components/ArticleTitle.astro"
 import ShareLinks from "../components/ShareLinks.astro"
@@ -40,21 +40,6 @@ const on = (...kinds: PageKind[]) => kinds.includes(page.kind)
 // A note's page is an h-entry, for the IndieWeb's readers and Bridgy (EntryMeta.astro). A private
 // page's stub is none.
 const entry = on("note", "annotation") && page.note !== undefined && !page.note.isPrivate
-
-// Moving to another page, the note folds away to the left, into the spine it becomes, and the next
-// slides in from the right; going back along the trail, the other way round. Which way a navigation
-// goes is the trail's to say (TrailSpines.astro). The keyframes are the global style's below.
-const timing = { duration: "0.4s", easing: "cubic-bezier(0.4, 0, 0.2, 1)", fillMode: "both" }
-const fold = {
-  forwards: {
-    old: { name: "note-fold-away", ...timing },
-    new: { name: "note-slide-in", ...timing },
-  },
-  backwards: {
-    old: { name: "note-slide-away", ...timing },
-    new: { name: "note-unfold", ...timing },
-  },
-}
 ---
 
 <Base {...page}>
@@ -88,10 +73,10 @@ const fold = {
       </footer>
     </aside>
 
-    <TrailSpines />
+    <TrailNavigation />
 
     <div class="note-room">
-      <main class:list={[entry && "h-entry"]} transition:name="note" transition:animate={fold}>
+      <main class:list={[entry && "h-entry"]} transition:animate="none">
         {/* The home page says who the site is: its author's representative h-card. */}
         {on("home") && <HomeCard />}
         <header>
@@ -120,17 +105,12 @@ const fold = {
 </Base>
 
 <style>
-  /* The graph column, the spines (as wide as the trail before the note, and none without one), and
-     the note. Each in its own named area, so the note keeps its column when the spines are hidden. */
+  /* The graph column and the note, each in its own named area. */
   .page {
     display: grid;
-    grid-template-columns: 22rem auto minmax(0, 1fr);
-    grid-template-areas: "graph spines note";
+    grid-template-columns: 22rem minmax(0, 1fr);
+    grid-template-areas: "graph note";
     min-height: 100vh;
-  }
-
-  .page > :global(trail-spines) {
-    grid-area: spines;
   }
 
   /* The note's room: the note's column of the grid, as wide as the note and its margins together.
@@ -195,9 +175,8 @@ const fold = {
     border-top: 1px solid var(--lightgray);
   }
 
-  /* The note: its text as wide as reads well, --noteWidth (global.css), in the middle of the room it has. The note
-     itself fills that room, the same box on every page, so its fold from one page to the next is
-     one box's (the global style below). A wide table or a long line of code scrolls inside it, and
+  /* The note: its text as wide as reads well, --noteWidth (global.css), in the middle of the room it
+     has. The note itself fills that room. A wide table or a long line of code scrolls inside it, and
      the page stays as wide as the window. */
   main {
     box-sizing: border-box;
@@ -265,13 +244,13 @@ const fold = {
   }
 
   /* A phone or a tablet: one column. A bar over the note opens the graph column, which comes in from
-     the left, over the page, as tall as the screen; the spines are a row under the bar. */
+     the left, over the page, as tall as the screen. */
   @media (width < 1000px) {
     .page {
       grid-template-columns: minmax(0, 1fr);
       /* A short note's page is still a screen tall: the room it doesn't fill is the note's. */
-      grid-template-rows: auto auto 1fr;
-      grid-template-areas: "bar" "spines" "note";
+      grid-template-rows: auto 1fr;
+      grid-template-areas: "bar" "note";
     }
 
     .menu-bar {
@@ -348,51 +327,6 @@ const fold = {
   @media (width < 1000px) and (prefers-reduced-motion: reduce) {
     .graph-column {
       transition: none;
-    }
-  }
-</style>
-
-<style is:global>
-  /* The note's fold (`fold` above): into its left edge, where the spines are, and out of it. Flat,
-     not turned in depth: a note is a box as tall as the whole note, whose middle may be far below
-     the window, and turned about it the part in view would slant. */
-  ::view-transition-old(note),
-  ::view-transition-new(note) {
-    transform-origin: left center;
-  }
-
-  @keyframes note-fold-away {
-    to {
-      transform: scaleX(0);
-      opacity: 0;
-    }
-  }
-
-  @keyframes note-unfold {
-    from {
-      transform: scaleX(0);
-      opacity: 0;
-    }
-  }
-
-  @keyframes note-slide-in {
-    from {
-      transform: translateX(6rem);
-      opacity: 0;
-    }
-  }
-
-  @keyframes note-slide-away {
-    to {
-      transform: translateX(6rem);
-      opacity: 0;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    ::view-transition-old(note),
-    ::view-transition-new(note) {
-      animation: none;
     }
   }
 </style>

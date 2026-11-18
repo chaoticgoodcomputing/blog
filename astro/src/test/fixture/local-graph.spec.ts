@@ -173,4 +173,27 @@ test.describe("on a high-density screen, where a rim is wide enough to have pixe
     await page.mouse.move(box.x > 40 ? box.x - 20 : box.x + box.width + 20, box.y + box.height / 2)
     await expect.poll(() => pixelsLike(canvas(page), engineering, around)).toBe(0)
   })
+
+  test("while the pointer is off the canvas, a tag off the trail is drawn without its label, and with it once it is on", async ({ page }) => {
+    // The page's `--light`, which a label's box is filled with (src/styles/global.css), and so is a
+    // bubble's circle. The hub, the trail's one note, is drawn as `#ai`'s bubble in colour, so its
+    // pixels are left out; every other node is off the trail, its bubble in grayscale, which is not
+    // `--light`. What is left is the labels' boxes.
+    const light = [0xfa, 0xf8, 0xf8]
+    await page.emulateMedia({ colorScheme: "light", reducedMotion: "reduce" })
+    await page.goto(hub)
+    const at = await nodePosition(page, "Hub")
+    const boxes = async () =>
+      (await pixelsLike(canvas(page), light)) - (await pixelsLike(canvas(page), light, { ...at, radius: 20 }))
+    await expect.poll(boxes).toBe(0)
+
+    // On the canvas: its tags' labels, `#ai`'s among them.
+    await page.mouse.move(at.x, at.y)
+    await expect.poll(boxes).toBeGreaterThan(20)
+
+    // Off it again: no label.
+    const box = (await canvas(page).boundingBox())!
+    await page.mouse.move(box.x > 40 ? box.x - 20 : box.x + box.width + 20, box.y + box.height / 2)
+    await expect.poll(boxes).toBe(0)
+  })
 })

@@ -45,7 +45,7 @@ export interface DrawingOptions {
   focus?: number
   /**
    * Whether, while the pointer is off the canvas, every node off the trail (`path`) is drawn in
-   * grayscale, so the trail's own nodes are the only ones in colour.
+   * grayscale and without its label, so the trail's own nodes are the only ones in colour.
    */
   grayOffPath?: boolean
 }
@@ -239,7 +239,7 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
   const nodeAt = (x: number, y: number): PlacedNode | undefined => {
     const [gx, gy] = toGraph(x, y)
     for (const node of nodes.toReversed()) {
-      if (!labelled(node, hovered?.id, lit)) continue
+      if (!shows(node)) continue
       const width = labelWidth(node)
       const box = labelBox(node.x ?? 0, node.y ?? 0, radius.get(node.id) ?? 0, width, settings.sizes.label)
       if (gx >= box.left && gx <= box.right && gy >= box.top && gy <= box.bottom) return node
@@ -289,6 +289,10 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
     hover(undefined)
   })
   const onPath = new Set(options.path ?? [current])
+  // Whether a node is at rest off the trail: grayscale, and its label hidden (`grayOffPath`).
+  const resting = (node: PlacedNode) => options.grayOffPath === true && !pointerOn && !onPath.has(node.id)
+  // Whether a node's label is drawn, and so can be pointed at.
+  const shows = (node: PlacedNode) => labelled(node, hovered?.id, lit) && !resting(node)
 
   // Until the reader pans, zooms or drags a node, the view follows the graph as it settles, so that
   // the whole of it is in the box, and never drawn larger than it is.
@@ -440,7 +444,7 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
       const [x, y] = [node.x ?? 0, node.y ?? 0]
       // While a node is hovered, what it doesn't light is faded.
       context.globalAlpha = hovered && !lit.nodes.has(node.id) ? UNLIT : 1
-      context.filter = options.grayOffPath && !pointerOn && !onPath.has(node.id) ? "grayscale(1)" : "none"
+      context.filter = resting(node) ? "grayscale(1)" : "none"
       let r = radius.get(node.id) ?? 0
       if (node.id === current && !still.matches) {
         r *= 1 + ((1 - Math.cos(((time % SWELL_MS) / SWELL_MS) * 2 * Math.PI)) / 2) * (settings.sizes.current - 1)
@@ -472,15 +476,16 @@ export function drawGraph(container: HTMLElement, options: DrawingOptions): Draw
 
     context.filter = "none"
 
-    // A tag's label always shows; while a node is hovered, its own and the lit tags' (`labelled`).
-    // Each on a box of the page's background, over every node and edge, and over the labels before it.
+    // A tag's label always shows, but for one at rest off the trail; while a node is hovered, its
+    // own and the lit tags' (`labelled`). Each on a box of the page's background, over every node
+    // and edge, and over the labels before it.
     context.globalAlpha = 1
     context.textAlign = "center"
     context.textBaseline = "top"
     const size = settings.sizes.label
     const pad = size * LABEL_PAD
     for (const node of nodes) {
-      if (!labelled(node, hovered?.id, lit)) continue
+      if (!shows(node)) continue
       const [x, y, r] = [node.x ?? 0, node.y ?? 0, radius.get(node.id) ?? 0]
       const box = labelBox(x, y, r, labelWidth(node), size)
       context.fillStyle = palette.labelBox

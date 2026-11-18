@@ -1,0 +1,25 @@
+---
+// Carries the reader's trail (src/lib/trail.ts) on. The trail is in the page's address, and the
+// local graph (LocalGraph.astro) draws it. Every navigation of the client router
+// (ClientNavigation.astro) is sent to the address of the trail it makes: following any link on the
+// site, from a note, a search result or a graph, goes on to its note, or back to it if the trail
+// has it. Back and forward go where history says, trail and all; a link the router doesn't take (a
+// full page load), one followed from the 404 page, which is no note, and one marked
+// `data-trail-reset` (the site's title, to the home page) start a trail afresh.
+---
+
+<script>
+  import type { TransitionBeforePreparationEvent } from "astro:transitions/client"
+  import { addressOf, follow, trailOf } from "../lib/trail.ts"
+
+  document.addEventListener("astro:before-preparation", (event) => {
+    const navigation = event as TransitionBeforePreparationEvent
+    if (navigation.navigationType === "traverse") return
+    const lost = document.querySelector<HTMLElement>(".page")?.dataset.kind === "404"
+    const reset = navigation.sourceElement?.closest("[data-trail-reset]") != null
+    const before = lost || reset ? [] : trailOf(new URL(location.href))
+    const to = new URL(addressOf(follow(before, navigation.to.pathname)), navigation.to)
+    to.hash = navigation.to.hash
+    navigation.to = to
+  })
+</script>

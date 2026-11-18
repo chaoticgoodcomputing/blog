@@ -227,18 +227,13 @@ _Avoid_: site config (Quartz's YAML file), settings
 
 **Site shell**:
 What is around a page's content on every page, `src/layouts/Page.astro`: the graph column, the
-trail's spines, the header over the content, and what follows the body.
+header over the content, and what follows the body.
 _Avoid_: frame (Quartz's), chrome, template
 
 **Graph column**:
 The column beside the note on every page, in view while the note scrolls: the site's title and
 the search box, the local graph, and the footer.
 _Avoid_: sidebar, rail
-
-**Spine**:
-One note of the trail before the note shown, as a strip beside it with the note's title on its
-side, which goes back to that note.
-_Avoid_: column, tab, breadcrumb
 
 **Page kind**:
 Which page the site shell is around: a note, the home page, a tag page, an annotation page, the

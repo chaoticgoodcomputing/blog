@@ -1,62 +1,58 @@
 import { trail as settings } from "../../site.config.ts"
+import { TRAIL_KEY } from "../../lib/trail.ts"
 import { expect, expectAt, test } from "../site.ts"
 
-// The reader's trail (src/lib/trail.ts): the notes they came through to the note shown, each a
-// spine beside it that goes back to it. Fixture notes: client-side-navigation's start links to its
+// The reader's trail (src/lib/trail.ts): the notes they came through to the note shown, carried in
+// the page's address. Fixture notes: client-side-navigation's start links to its
 // destination, which links back; alpha links to beta.
 const start = "/client-side-navigation/start"
 const destination = "/client-side-navigation/destination"
 
-const spines = (page: import("@playwright/test").Page) => page.getByRole("navigation", { name: "Trail" }).getByRole("link")
+// The notes of the trail before the note shown, as the page's address carries them.
+const before = (page: import("@playwright/test").Page) => () => new URL(page.url()).searchParams.getAll(TRAIL_KEY)
 
 test("a page reached by its address has no trail before it", async ({ page }) => {
   await page.goto(start)
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Where navigation starts")
-  await expect(spines(page)).toHaveCount(0)
+  expect(before(page)()).toEqual([])
 })
 
-test("following a link carries the trail on: the page it was followed from is a spine, which goes back to it", async ({
-  page,
-}) => {
+test("following a link carries the trail on: the page it was followed from is on it", async ({ page }) => {
   await page.goto(start)
   await page.getByRole("link", { name: "To the destination" }).click()
   await expectAt(page, destination)
-  await expect(spines(page)).toHaveText(["Where navigation starts"])
-
-  await spines(page).first().click()
-  await expectAt(page, start)
-  await expect(spines(page)).toHaveCount(0)
+  await expect.poll(before(page)).toEqual([start])
 })
 
 test("following a link to a note on the trail goes back to it, letting the notes after it go", async ({ page }) => {
   await page.goto(`${destination}?trail=/&trail=${start}`)
-  await expect(spines(page)).toHaveText(["Fixture Home", "Where navigation starts"])
+  await expect.poll(before(page)).toEqual(["/", start])
   await page.locator(".prose").getByRole("link", { name: "where navigation starts" }).click()
   await expectAt(page, start)
-  await expect(spines(page)).toHaveText(["Fixture Home"])
+  await expect.poll(before(page)).toEqual(["/"])
 })
 
 test("a trail holds as many notes as the site configures, letting the oldest go", async ({ page }) => {
   test.skip(settings.length !== 4, "the fixture's trail is written for a trail of four notes")
   await page.goto(`/content/notes/alpha?trail=/&trail=${start}&trail=${destination}`)
-  await expect(spines(page)).toHaveText(["Fixture Home", "Where navigation starts", "The destination"])
+  await expect.poll(before(page)).toEqual(["/", start, destination])
 
   await page.locator(".prose").getByRole("link", { name: "beta" }).click()
   await expectAt(page, "/content/notes/beta")
-  await expect(spines(page)).toHaveText(["Where navigation starts", "The destination", "Alpha"])
+  await expect.poll(before(page)).toEqual([start, destination, "/content/notes/alpha"])
 })
 
 test("the back and forward buttons return to a page with the trail it had", async ({ page }) => {
   await page.goto(start)
   await page.getByRole("link", { name: "To the destination" }).click()
-  await expect(spines(page)).toHaveCount(1)
+  await expect.poll(before(page)).toEqual([start])
 
   await page.goBack()
   await expectAt(page, start)
-  await expect(spines(page)).toHaveCount(0)
+  await expect.poll(before(page)).toEqual([])
   await page.goForward()
   await expectAt(page, destination)
-  await expect(spines(page)).toHaveText(["Where navigation starts"])
+  await expect.poll(before(page)).toEqual([start])
 })
 
 test("a link followed from the 404 page starts a trail afresh", async ({ page }) => {
@@ -64,7 +60,7 @@ test("a link followed from the 404 page starts a trail afresh", async ({ page })
   await page.locator("main").getByRole("link", { name: "Return to the home page" }).click()
   await expectAt(page, "/")
   expect(new URL(page.url()).search).toBe("")
-  await expect(spines(page)).toHaveCount(0)
+  await expect.poll(before(page)).toEqual([])
 })
 
 test("the site's title goes to the home page with no trail: a fresh start", async ({ page }) => {
@@ -72,7 +68,7 @@ test("the site's title goes to the home page with no trail: a fresh start", asyn
   await page.getByRole("link", { name: "Chaotic Good Computing by Spencer Elkington" }).click()
   await expectAt(page, "/")
   expect(new URL(page.url()).search).toBe("")
-  await expect(spines(page)).toHaveCount(0)
+  await expect.poll(before(page)).toEqual([])
 })
 
 test("on a phone, the site's name in the bar is a fresh start too", async ({ page }) => {

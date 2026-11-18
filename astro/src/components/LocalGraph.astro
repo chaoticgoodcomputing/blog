@@ -11,12 +11,12 @@
 // are here.
 //
 // While the pointer is off the canvas, only the trail's nodes are drawn in colour; the rest are
-// grayscale until the reader points at the graph.
+// grayscale, with no label, until the reader points at the graph.
 //
 // In the corner of its frame is the control that opens the global graph, in a dialog
 // (./global-graph/GlobalGraph.astro), which marks the note shown and draws the trail through it
 // too. Following a node of either graph is a navigation like any link's, which carries the trail
-// on (TrailSpines.astro).
+// on (TrailNavigation.astro).
 import { graphOf } from "../lib/graph.ts"
 import { graphIndex } from "../lib/graph-index.ts"
 import { graph } from "../site.config.ts"
