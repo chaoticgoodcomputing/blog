@@ -4,7 +4,7 @@ date: 2026-11-06
 updated: 2026-11-17
 tags:
   - engineering
-  - writing/annotations
+  - reading
   - writing/fragments
 description: Annotations on Karl Lieberherr's "Law of Demeter"
 annotation-pages:

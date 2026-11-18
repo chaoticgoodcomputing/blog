@@ -91,7 +91,7 @@ test("puts a date in the last era that has started by then", () => {
 })
 
 test("knows a transcript", () => {
-  assert.ok(isTranscript(["writing/annotations/meetings"], ""))
+  assert.ok(isTranscript(["writing/fragments/meetings"], ""))
   assert.ok(isTranscript([], "1\n00:00:05,922 --> 00:00:08,841 Hi\n".repeat(6)))
   assert.ok(!isTranscript(["writing/notes"], "a -- b"))
 })

@@ -6,7 +6,7 @@ tags:
   - economics/policy
   - projects/games/the-neighborhood
   - projects/a-pattern-language
-  - writing/annotations
+  - reading
 description: Home isn't where the heart is — it's a single node on a very, very large graph. Annotations for the "Independent Regions" pattern of *A Pattern Language*.
 ---
 ← [[public/content/annotations/a-pattern-language/00-introduction|Introduction]] | [[public/content/annotations/a-pattern-language/02-the-distribution-of-towns|The Distribution of Towns]] →

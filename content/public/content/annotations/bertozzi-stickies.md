@@ -6,7 +6,7 @@ tags:
   - engineering/bio
   - engineering/data
   - engineering/languages/python
-  - writing/annotations
+  - reading
 annotation-target: https://www.nature.com/articles/s41587-023-01840-6.pdf
 annotation-public: true
 description: The rubber hits the road on ColabFold! I hope that's rubber I'm smelling — although it may be the computer. A replication attempt of a protein fold figure in K. Pedram et al (2023).

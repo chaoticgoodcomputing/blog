@@ -60,13 +60,13 @@ export const site: SiteConfig = {
 const red = "light-dark(#cc0000, #FF0000)"
 
 export const tags: TagDictionary = {
-  economics: { color: "light-dark(#B35F00, #de8200)", icon: "mdi:earth" },
+  economics: { color: "light-dark( #B35F00, #de8200)", icon: "mdi:earth" },
   "economics/finance": { icon: "mdi:currency-usd" },
   "economics/markets": { icon: "mdi:handshake" },
   "economics/policy": { icon: "mdi:script" },
   "economics/strategy": { icon: "mdi:arrow-decision" },
   "economics/management": { icon: "mdi:account-group" },
-  engineering: { color: "light-dark(#0070CC, #008CFF)", icon: "mdi:wrench" },
+  engineering: { color: "light-dark( #0070CC, #008CFF)", icon: "mdi:wrench" },
   "engineering/ai": { icon: "mdi:robot" },
   "engineering/bio": { icon: "mdi:dna" },
   "engineering/data": { icon: "mdi:pulse" },
@@ -78,13 +78,13 @@ export const tags: TagDictionary = {
   "engineering/languages/python": { icon: "mdi:language-python" },
   "engineering/languages/scratch": { icon: "mdi:cat" },
   "engineering/languages/typescript": { icon: "mdi:language-typescript" },
-  horticulture: { color: "light-dark(#FF00CC, #FF00CC)", icon: "mdi:flower" },
+  horticulture: { color: "light-dark( #FF00CC, #FF00CC)", icon: "mdi:flower" },
   "horticulture/seasons": { icon: "mdi:weather-sunny" },
   "horticulture/seasons/rhythm": { icon: "mdi:music-note" },
   "horticulture/seasons/systems": { icon: "mdi:connection" },
   "horticulture/seasons/stamps": { icon: "mdi:check-decagram" },
   private: { color: red, icon: "mdi:lock" },
-  projects: { color: "light-dark(#CC0000, #DD0000)", icon: "mdi:source-branch" },
+  projects: { color: "light-dark( #CC0000, #DD0000)", icon: "mdi:source-branch" },
   "projects/dayjob": { icon: "mdi:vote" },
   "projects/flowthru": { icon: "mdi:graph-outline" },
   "projects/games": { icon: "custom:d20" },
@@ -97,13 +97,13 @@ export const tags: TagDictionary = {
   "projects/teaching": { icon: "mdi:school" },
   "projects/undergrad": { icon: "custom:uofu" },
   "projects/a-pattern-language": { icon: "mdi:home-city" },
-  writing: { color: "light-dark(#1A8A1A, #00FF00)", icon: "mdi:pencil" },
+  writing: { color: "light-dark( #1A8A1A, #00FF00)", icon: "mdi:pencil" },
   "writing/notes": { icon: "mdi:sprout" },
-  "writing/annotations": { icon: "mdi:chat-plus" },
-  "writing/annotations/meetings": { icon: "mdi:microphone" },
+  "writing/fragments/meetings": { icon: "mdi:microphone" },
   "writing/notes/emails": { icon: "mdi:email" },
   "writing/essays": { icon: "mdi:pine-tree" },
   "writing/fragments": { icon: "mdi:seed" },
+  reading: { color: "light-dark( #128db6, #00e5ff)", icon: "mdi:book-open-blank-variant" },
 }
 
 export const tagList: TagListConfig = {
@@ -161,7 +161,7 @@ export const seo: SeoConfig = {
   description:
     "Articles for the data and engineering consulting practice Chaotic Good Computing, as well as personal notes by Spencer Elkington.",
   articleTypes: [
-    { tag: "writing/annotations", type: "ScholarlyArticle", section: "Annotations" },
+    { tag: "reading", type: "ScholarlyArticle", section: "Annotations" },
     { tag: "writing/notes", type: "HowTo", section: "Tutorials" },
     { tag: "writing/essays", type: "Article", section: "Articles" },
     { tag: "engineering", type: "TechArticle", section: "Engineering" },
@@ -253,7 +253,7 @@ export const graph: GraphConfig = {
       style: { tagTag: "solid", tagNote: "solid", noteNote: "dotted" },
     },
     shell: {
-      pinnedTags: ["engineering", "writing", "horticulture", "projects", "economics"],
+      pinnedTags: ["engineering", "writing", "horticulture", "projects", "economics", "reading"],
       zoomMargin: 80,
       style: { opacity: 1, lineStyle: "dotted", lineWidth: 3 },
     },

@@ -65,7 +65,7 @@ title: "${title}"
 date: ${CURRENT_DATE}
 tags:
   - projects/a-pattern-language
-  - writing/annotations
+  - reading
   - projects/games/the-neighborhood
 ---
 

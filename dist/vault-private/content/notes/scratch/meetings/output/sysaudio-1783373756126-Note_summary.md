@@ -7,7 +7,7 @@ tags:
   - "economics/finance"
   - "projects/flowthru"
   - "projects/dayjob"
-  - "writing/annotations/meetings"
+  - "writing/fragments/meetings"
   - "private"
 ---
 

@@ -6,7 +6,7 @@ tags:
   - "engineering/devops"
   - "economics/finance"
   - "projects/dayjob"
-  - "writing/annotations/meetings"
+  - "writing/fragments/meetings"
   - "private"
 ---
 

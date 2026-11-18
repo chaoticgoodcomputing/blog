@@ -148,7 +148,7 @@ test("an annotation page is an article in the site shell: its type, its date, it
   await page.setViewportSize({ width: 1300, height: 800 })
   await page.goto(ARTICLE)
 
-  // The note is an article under `writing/annotations`, so a ScholarlyArticle.
+  // The note is an article under `reading`, so a ScholarlyArticle.
   const ld = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent())!) as Record<string, unknown>
   expect(ld["@type"]).toBe("ScholarlyArticle")
   expect(ld.articleSection).toBe("Annotations")

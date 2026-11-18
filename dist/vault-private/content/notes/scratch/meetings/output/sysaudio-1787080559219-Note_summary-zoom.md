@@ -5,7 +5,7 @@ tags:
   - "engineering"
   - "economics/markets"
   - "projects/dayjob"
-  - "writing/annotations/meetings"
+  - "writing/fragments/meetings"
   - "private"
 ---
 

@@ -2,7 +2,7 @@
 title: "{{title}}"
 date: <% tp.date.now() %>
 tags:
-  - writing/annotations
+  - reading
   - writing/fragments
 annotation-target:
 description:

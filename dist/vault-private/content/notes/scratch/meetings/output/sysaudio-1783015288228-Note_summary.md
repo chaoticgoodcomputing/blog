@@ -7,7 +7,7 @@ tags:
   - "horticulture/seasons/systems"
   - "projects/games/magic-atlas"
   - "projects/dayjob"
-  - "writing/annotations/meetings"
+  - "writing/fragments/meetings"
   - "private"
 ---
 

@@ -4,7 +4,7 @@ date: 2026-11-06
 updated: 2026-11-17
 tags:
   - engineering/ai
-  - writing/annotations
+  - reading
   - writing/fragments
 description: Annotations on Maggie Appleton's 2026 talk about Boundary Objects
 annotation-pages:

@@ -6,7 +6,7 @@ tags:
   - engineering
   - economics/management
   - writing/fragments
-  - writing/annotations
+  - reading
 description: Brief notes on Sean Goedecke's "Working with Designers"
 annotation-pages:
 annotation-target: "https://www.seangoedecke.com/working-with-designers/"

@@ -7,7 +7,7 @@ tags:
   - "engineering/languages/csharp"
   - "projects/flowthru"
   - "projects/dayjob"
-  - "writing/annotations/meetings"
+  - "writing/fragments/meetings"
   - "private"
 ---
 

@@ -149,7 +149,7 @@ export function withTarget(text: string, page: Page): string {
  * annotations follow.
  */
 export function defaultNote(variables: PageVariables): string {
-  return ["---", `title: ${JSON.stringify(variables.title)}`, `date: ${variables.date}`, "tags:", "  - writing/annotations", "---", ""].join("\n")
+  return ["---", `title: ${JSON.stringify(variables.title)}`, `date: ${variables.date}`, "tags:", "  - reading", "---", ""].join("\n")
 }
 
 /** A page's new note's text: the template's, or the default's, with the page as its target. */

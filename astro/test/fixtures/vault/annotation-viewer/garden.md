@@ -2,7 +2,7 @@
 title: Annotations on a garden
 date: 2026-10-29
 tags:
-  - writing/annotations
+  - reading
 annotation-target: "https://example.com/papers/Garden.pdf"
 ---
 

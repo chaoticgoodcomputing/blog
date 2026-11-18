@@ -6,7 +6,7 @@ tags:
   - engineering/data
   - projects/games/the-neighborhood
   - projects/a-pattern-language
-  - writing/annotations
+  - reading
 description: "Urban development has the high ground over agricultural and ecological preservation — and it should! *A Pattern Language* annotations on Pattern 4: Agricultural Valleys"
 ---
 ← [[public/content/annotations/a-pattern-language/03-city-country-fingers|City Country Fingers]] | [[public/content/annotations/a-pattern-language/05-lace-of-country-streets|Lace of Country Streets]] →

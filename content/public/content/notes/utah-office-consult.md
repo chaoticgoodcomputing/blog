@@ -11,7 +11,7 @@ tags:
   - engineering/languages/python
   - engineering/data
   - projects/undergrad
-  - writing/annotations
+  - reading
 annotation-target: https://raw.githubusercontent.com/chaoticgoodcomputing/blog/refs/heads/main/content/public/assets/utah_office_update.pdf
 annotation-public: true
 ---

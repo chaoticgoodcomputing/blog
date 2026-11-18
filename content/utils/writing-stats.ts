@@ -311,7 +311,7 @@ const isoDate = (value: unknown) =>
 
 /** A note that is no one's writing: a meeting's transcript, or a subtitle file pasted in. */
 export const isTranscript = (tags: string[], body: string) =>
-  tags.some((tag) => tag.startsWith("writing/annotations/meetings")) ||
+  tags.some((tag) => tag.startsWith("writing/fragments/meetings")) ||
   (body.match(/^\d{2}:\d{2}:\d{2}[,.]\d{3} --> /gm)?.length ?? 0) > 5
 
 const dateOf = (file: string) => isoDate(matter(fs.readFileSync(file, "utf8")).data.date)

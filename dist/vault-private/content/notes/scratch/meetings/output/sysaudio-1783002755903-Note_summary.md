@@ -5,9 +5,9 @@ tags:
   - "engineering/data"
   - "projects/flowthru"
   - "horticulture/seasons/systems"
-  - "writing/annotations"
+  - "reading"
   - "projects/dayjob"
-  - "writing/annotations/meetings"
+  - "writing/fragments/meetings"
   - "private"
 ---
 

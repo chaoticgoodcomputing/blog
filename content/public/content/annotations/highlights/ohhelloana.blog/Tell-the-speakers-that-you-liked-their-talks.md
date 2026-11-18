@@ -4,7 +4,7 @@ date: 2026-11-06
 updated: 2026-11-06
 tags:
   - horticulture/seasons/stamps
-  - writing/annotations
+  - reading
   - writing/fragments
 description: Some quick thoughts on Ana Rodrigues's post "Tell the speakers that you liked their talks", and a general initial test for web-based annotations.
 annotation-pages: 

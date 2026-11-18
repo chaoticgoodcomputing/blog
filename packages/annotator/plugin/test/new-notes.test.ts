@@ -84,7 +84,7 @@ describe("a new note's text", () => {
   test("has the annotation template's properties, with no template", () => {
     assert.equal(
       newNote({ uri: PAGE, title: "Pickle: a food" }, DATE),
-      `---\ntitle: "Pickle: a food"\ndate: ${DATE}\ntags:\n  - writing/annotations\nannotation-target: "${PAGE}"\nannotation-target-type: web\n---\n`,
+      `---\ntitle: "Pickle: a food"\ndate: ${DATE}\ntags:\n  - reading\nannotation-target: "${PAGE}"\nannotation-target-type: web\n---\n`,
     )
   })
 
