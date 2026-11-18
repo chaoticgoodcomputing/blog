@@ -58,6 +58,7 @@ import { externalLinks } from "./src/lib/external-links.ts"
 import { indieNews } from "./src/lib/indienews.ts"
 import { headingAnchors } from "./src/lib/heading-anchors.ts"
 import { calloutIcons } from "./src/lib/callouts.ts"
+import { quotes } from "./src/lib/quotes.ts"
 
 import { imageCarousels } from "./src/lib/image-carousels.ts"
 
@@ -246,6 +247,10 @@ export default defineConfig({
 
         // A callout's title begins with its kind's icon, and a folding one's ends with a fold icon.
         calloutIcons(),
+
+        // A quote, of any kind, sets its words alike, and sets apart a last line saying who said it
+        // (src/lib/quotes.ts).
+        quotes(),
 
         // Images on adjacent lines are a carousel, one in view at a time (src/lib/image-carousels.ts).
         imageCarousels(),

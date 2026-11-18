@@ -362,6 +362,12 @@ export interface LayoutConfig {
    */
   noteFontSize: string
   /**
+   * How large a block of code's text is: any CSS length. It is its own size, not a step of
+   * `noteFontSize`, so a change to the note's text size leaves it as it is. Inline code is sized
+   * with the text it is in. Pages read it as `--codeFontSize`.
+   */
+  codeFontSize: string
+  /**
    * How wide a sidenote is, a footnote beside the paragraph that cites it (src/lib/sidenotes.ts): any
    * CSS length. Where the margin to the right of the text is too narrow for it, the sidenote is
    * under its paragraph.

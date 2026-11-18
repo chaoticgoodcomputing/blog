@@ -113,11 +113,32 @@
 
 /* Quotes and callouts. */
 
-/* A quote, of any kind, is set apart from the text around it by more room than a paragraph is, and
-   a quote or a paraphrase is drawn on a ground a shade off the page's. */
-.prose :is(blockquote, .callout:is([data-callout-kind="quote"], [data-callout-kind="paraphrase"])) {
+/* A quote, of any kind (src/lib/quotes.ts): a blockquote, a quote callout, a paraphrase. It is set
+   apart from the text around it by more room than a paragraph is, and drawn on a ground a shade off
+   the page's. */
+.prose .quote {
   --quote-background: color-mix(in srgb, var(--lightgray) 45%, var(--light));
   margin-block: 1.5rem;
+}
+
+/* A quote's words, whatever its kind: the text of where it is, a note's body text in a note, as it
+   is. This is the one rule that sets them; a kind draws its frame, its rule and ground and title,
+   and never its words (src/test/fixture/quotes.spec.ts). */
+.prose .quote-body {
+  font-size: 1em;
+  font-style: normal;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+/* A quote's last line, when it says who said it (`-- Someone`), is set apart from the words over it
+   by a dotted rule in the quote's colour. */
+.prose .quote-attribution {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px dotted var(--callout-color, var(--secondary));
 }
 
 /* A quote is a rule beside it and a ground a shade off the page's, as GitHub draws one and the
@@ -237,7 +258,7 @@
 
 /* A paraphrase: words given as someone's, though not in their words (src/lib/callouts.ts). Drawn as
    a quote is, by a rule beside it on a ground a shade off the page's, but the rule dashed, for words
-   that are only roughly theirs: a small label over the words, the words a step larger. */
+   that are only roughly theirs, and a small label over the words. */
 .prose .callout[data-callout-kind="paraphrase"] {
   --callout-color: var(--secondary);
   padding: 0.25rem 1.25rem;
@@ -252,10 +273,6 @@
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-}
-
-.prose .callout[data-callout-kind="paraphrase"] > .callout-content {
-  font-size: 1.1em;
 }
 
 .prose .callout[data-callout-kind="paraphrase"] > .callout-content > :last-child {
@@ -288,8 +305,8 @@
 }
 
 /* Code. Inline code breaks where it must, as the note's text does, and keeps its words whole in a
-   table, which scrolls instead. A block of code scrolls inside itself; its colours are the
-   highlighter's. */
+   table, which scrolls instead. A block of code scrolls inside itself, in the site config's
+   `layout.codeFontSize` (global.css); its colours are the highlighter's. */
 
 .prose code {
   padding: 0.1rem 0.25rem;
@@ -305,7 +322,7 @@
   overflow-x: auto;
   border: 1px solid var(--lightgray);
   border-radius: 5px;
-  font-size: 0.85em;
+  font-size: var(--codeFontSize);
   line-height: 1.5;
 }
 

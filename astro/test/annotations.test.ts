@@ -339,13 +339,13 @@ test("a passage's address is its page's, with a text fragment for it and the wor
   expect(passageAddress("https://example.org/a", { exact: "well-known" })).toBe("https://example.org/a#:~:text=well%2Dknown")
 })
 
-test("a web page's passage is a quote callout linking to it in the page, and a PDF's a plain quote", async () => {
+test("a web page's passage is a quote callout linking to it in the page, its words a quote's, and a PDF's a plain quote", async () => {
   const passage = /<a class="annotation-passage".*?<\/a>/s.exec(await render("pickle.md"))?.[0] ?? ""
   expect(passage).toMatch(
     /^<a class="annotation-passage" href="https:\/\/example\.org\/pickle#:~:text=Introduction\.-,A%20pickle%20is%20a%20cucumber,-kept%20in%20brine\." target="_blank" rel="noopener" title="Read it in context">/,
   )
-  expect(passage).toMatch(/<div class="callout" data-callout="quote" data-callout-kind="quote"><div class="callout-title"><svg/)
-  expect(passage).toMatch(/Quote<\/div><div class="callout-content"><p>A pickle is a cucumber<\/p><\/div><\/div><\/a>$/)
+  expect(passage).toMatch(/<div class="callout quote" data-callout="quote" data-callout-kind="quote"><div class="callout-title"><svg/)
+  expect(passage).toMatch(/Quote<\/div><div class="callout-content quote-body"><p>A pickle is a cucumber<\/p><\/div><\/div><\/a>$/)
   const pdf = await render("on-the-web.md")
   expect(pdf).toContain('<blockquote class="annotation-highlight"><p>A passage</p></blockquote>')
   expect(pdf).not.toContain("annotation-passage")

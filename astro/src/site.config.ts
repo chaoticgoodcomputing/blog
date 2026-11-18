@@ -177,6 +177,8 @@ export const layout: LayoutConfig = {
   // a 600px column.
   noteWidth: "37.5rem",
   noteFontSize: "1.25rem",
+  // A block of code a little smaller than the text around it: 12pt is 16px.
+  codeFontSize: "10pt",
   // About 35 characters to a line of a sidenote's smaller sans.
   sidenoteWidth: "10rem",
   sidenoteGap: "2rem",

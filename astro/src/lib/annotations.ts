@@ -21,6 +21,7 @@ import type { AnnotatedPassage } from "./highlights.ts"
 import type { Note } from "./notes.ts"
 import { formatDate } from "./dates.ts"
 import { calloutLook } from "./callouts.ts"
+import { markQuote } from "./quotes.ts"
 import { noteIcon } from "./icons.ts"
 import { site } from "../site.config.ts"
 
@@ -402,7 +403,8 @@ export function annotatedDocument() {
  * Shows a web page's passage, in its card, as a quote callout, `[!QUOTE]`, the whole box a link to
  * the passage in the page itself: the address its quote cites, whose text fragment a browser that
  * has them scrolls to and marks, with a quote callout's icon (src/lib/callouts.ts). A PDF's passage
- * cites none and stays a quote: the viewer shows it in its document.
+ * cites none and stays a quote: the viewer shows it in its document. Either is a quote whose words
+ * are set as every quote's are (src/lib/quotes.ts).
  */
 export function passageLinks() {
   return defineHastPlugin({
@@ -422,6 +424,7 @@ export function passageLinks() {
             { type: "element", tagName: "div", properties: { className: ["callout-content"] }, children: node.children },
           ],
         }
+        markQuote(callout as never)
         ctx.replaceNode(node, {
           type: "element",
           tagName: "a",

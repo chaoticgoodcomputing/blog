@@ -12,7 +12,7 @@ description: Do humans have a role in software development anymore? Absolutely â
 annotation-target: https://pablo.rauzy.name/dev/naur1985programming.pdf
 annotation-public: true
 ---
-I recently read a post by [Steve Krouse](https://stevekrouse.com/), [*Vibe code is legacy code*](https://stevekrouse.com/syndicated/vibe-code), where it mentions the refrain:
+I recently read a post by [Steve Krouse](https://stevekrouse.com/), [*Vibe code is legacy code*](https://stevekrouse.com/syndicated/vibe-code), where he states:
 
 > [!QUOTE]
 > Programming is fundamentally theory building,
@@ -702,7 +702,7 @@ Stick around, though! If you share my anxiety about the role of humans in a worl
 
 ### Takeaways
 
-I'm writing this section with the benefit of quite a bit more hindsight. Since originally stumbling on this paper nearly a year ago, a lot of my thoughts around the use of LLMs in actual, production software development have solidified a bit.
+I'm writing this section with the benefit of quite a bit more hindsight. Since originally stumbling on this paper and writing those annotations nearly a year ago, a lot of my thoughts around the use of LLMs in actual, production software development have solidified a bit.
 
 Much of this thought process is brought together in [[public/content/notes/software-gardening.mdx|Software Gardening]]: the hope that, as the creation of software tends towards something grown organically rather than something built by hand, we can pick up some lessons from modern agriculture in the same way Agile came from lean assembly lines.
 

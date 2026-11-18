@@ -65,8 +65,9 @@
   --headerFont: var(--bodyFont);
 }
 
-/* `--noteWidth`, how wide a note's text is, and `--noteFontSize`, how large, are the site config's
-   `layout.noteWidth` and `layout.noteFontSize`, put on the root by src/layouts/Base.astro. */
+/* `--noteWidth`, how wide a note's text is, `--noteFontSize`, how large, and `--codeFontSize`, how
+   large a block of code's text is, are the site config's `layout.noteWidth`, `layout.noteFontSize`
+   and `layout.codeFontSize`, put on the root by src/layouts/Base.astro. */
 
 /* The reading scale: the sizes of what a reader reads, each a step of `--noteFontSize`. Text a
    reader reads is set in one of these steps and in no size of its own, so a change to the note's
@@ -83,8 +84,9 @@
 
    Each step is declared on every element, so it is worked out from the `--noteFontSize` where it
    is read: a place that sets `--noteFontSize` of its own, as a link's preview does, has the whole
-   scale at its size. Within a step, a part a step smaller or larger, a byline, a code block, is
-   sized in `em` of it.
+   scale at its size. Within a step, a part a step smaller or larger, a byline, inline code, is
+   sized in `em` of it. A block of code is the one exception: it is `--codeFontSize`, a size of its
+   own, wherever it is.
 
    What a reader works rather than reads, the interface (the graph column, the search box, a
    button, a tag badge, a chip), keeps sizes of its own in `rem`, and doesn't move with the text. */

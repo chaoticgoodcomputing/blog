@@ -72,8 +72,9 @@ test("each annotation is a card that ends with the date it was written, as the s
   await expect(cover.locator("time.annotation-date")).toHaveAttribute("datetime", "2026-03-26T16:30:00.000Z")
   await expect(cover).toHaveCSS("border-top-style", "solid")
   await expect(cover).toHaveCSS("border-radius", "8px")
-  // The passage is quoted: the document's words, in italics, ruled off from the comment.
-  await expect(cover.locator(".annotation-highlight")).toHaveCSS("font-style", "italic")
+  // The passage is quoted: the document's words, set as every quote's are, ruled off from the comment.
+  await expect(cover.locator(".annotation-highlight")).toHaveClass(/\bquote-body\b/)
+  await expect(cover.locator(".annotation-highlight")).toHaveCSS("border-left-style", "solid")
 })
 
 test("the annotations are headed, under where the document comes from", async ({ page }) => {

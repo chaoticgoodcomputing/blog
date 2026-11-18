@@ -1,10 +1,10 @@
 ---
-title: "LLMs: A Primer Presentation for Our Newest, Scariest Tool"
-description: |
+title: "Agents: Why Let My Program Program?"
+description: |-
   An engineer-focused primer on the mechanisms that drive Large Language Models. Basics on how we got here,
   how they work, and how to use them without feeling an apocalyptic dread.
-date: 2025-07-15
-updated: 2026-11-02
+date: 2025-05-15
+updated: 2026-11-18
 tags:
   - engineering/ai
   - engineering/languages/csharp

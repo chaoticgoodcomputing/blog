@@ -1,7 +1,7 @@
 ---
 title: Math is Dead, and Pickles are Small
 date: 2026-10-26
-updated: 2026-10-28
+updated: 2026-11-18
 tags:
   - engineering
   - engineering/ai
@@ -30,7 +30,7 @@ Some friends of mine-- both engineers who specialize in fluids, and who are Very
 
 Planes did not fall from the sky. Missiles, presumably, still exploded. My shower turned on! Fluids seemed to behave as they always have.
 
-Some *other* friends of mine-- mathematicians who specialize in proofs and are also Very Into™ thi type of thing-- their reaction was (paraphrasing again):
+Some *other* friends of mine-- mathematicians who specialize in proofs and are also Very Into™ this type of thing-- their reaction was (paraphrasing again):
 
 > [!PARAPHRASE]
 > 

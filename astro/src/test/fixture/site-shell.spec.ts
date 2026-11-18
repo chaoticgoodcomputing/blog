@@ -56,6 +56,15 @@ test("the note body styles every kind of Markdown, not only Obsidian's", async (
   expect(await style("blockquote", "border-left-width")).toBe("3px")
   expect(await style("td", "border-bottom-style")).toBe("solid")
   expect(await style("pre", "font-family")).toContain("Hack")
+  // A block of code is the site config's own size, not a step of the text's.
+  const codeSize = await page.evaluate((length) => {
+    const probe = document.body.appendChild(document.createElement("div"))
+    probe.style.fontSize = length
+    const size = parseFloat(getComputedStyle(probe).fontSize)
+    probe.remove()
+    return size
+  }, layout.codeFontSize)
+  expect(await size("pre")).toBeCloseTo(codeSize, 1)
   expect(await style("p > code", "font-family")).toContain("Hack")
   expect(await style("pre", "border-top-style")).toBe("solid")
 

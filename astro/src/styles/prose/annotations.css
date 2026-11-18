@@ -54,13 +54,13 @@
   box-shadow: 0 0 0 1px var(--secondary);
 }
 
-/* The passage: the document's words, not the author's, so set apart from the comment as a quote. */
+/* The passage: the document's words, not the author's, so set apart from the comment as a quote,
+   its words set as every quote's are (src/lib/quotes.ts). */
 .prose .annotation-highlight {
   margin: 0;
   padding: 0.125rem 0 0.125rem 0.75rem;
   border-left: 3px solid var(--tertiary);
   color: var(--darkgray);
-  font-style: italic;
 }
 
 .prose .annotation-highlight > p {
