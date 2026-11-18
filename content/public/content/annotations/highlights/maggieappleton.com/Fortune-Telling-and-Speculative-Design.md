@@ -104,7 +104,7 @@ annotation-target-type: web
 > %%
 > I went to a really great presentation by [Alex Voss](https://corealization.com/) last weekend called [Can we use AI for better ends?](https://www.meetup.com/boston-code-and-coffee/events/317380952/). I think a good framework on which to think about the question is: what is possible now, that wasn't before?
 >
-> One of the pieces of data that I've personally seen, in [[content/public/tags/projects/dayjob|my own work]], is that there's been a rise in both:
+> One of the pieces of data that I've personally seen, in [[public/tags/projects/dayjob|my own work]], is that there's been a rise in both:
 >
 > a) the number of US counties that have websites; and
 > b) the number of US county websites that adhere to [ADA guidelines for website accessibility](https://www.ada.gov/resources/web-guidance/).
@@ -224,7 +224,7 @@ annotation-target-type: web
 > {"@context":"http://www.w3.org/ns/anno.jsonld","id":"urn:uuid:8d9d61ad-c29b-4f82-b4be-a5eef55d1112","type":"Annotation","motivation":"commenting","body":{"id":"#^f648fv5k7ul","type":"Text","format":"text/markdown","purpose":"commenting"},"target":{"source":"https://maggieappleton.com/fortune-telling","selector":[{"type":"RangeSelector","startContainer":"/main[1]/div[1]/article[1]/div[2]/div[2]/div[159]/p[2]","startOffset":0,"endContainer":"/main[1]/div[1]/article[1]/div[2]/div[2]/div[159]/p[2]","endOffset":123},{"type":"TextPositionSelector","start":22695,"end":22818},{"type":"TextQuoteSelector","exact":"Take seasonal harvesting and agents: could agents work in seasons or harvest rounds, waiting until a piece of work is ripe?","prefix":" change the shape of the future.","suffix":" Or take the postal service: how"}]},"created":"2026-11-18T01:49:17.563Z","modified":"2026-11-18T01:49:17.563Z"}
 > ```
 > %%
-> [[content/public/content/notes/software-gardening|*leo pointing meme*]]
+> [[public/content/notes/software-gardening|*leo pointing meme*]]
 ^f648fv5k7ul
 
 > [!annotation]
