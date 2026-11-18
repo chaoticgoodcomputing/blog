@@ -3,8 +3,8 @@ title: "Data Contracts (Herror & Wider)"
 date: 2026-11-18
 updated: 2026-11-18
 tags:
+  - projects/flowthru
   - engineering/data
-  - engineering/ai
   - reading/web
   - writing/fragments
 description: Thoughts on the Simon Herrer & Arif Wider post about ODCS, *Data Contracts*
