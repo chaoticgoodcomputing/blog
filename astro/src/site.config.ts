@@ -296,8 +296,21 @@ export const discussion: DiscussionConfig = {
 export const analytics: AnalyticsConfig = {
   posthogKey: "phc_BviHJVml66FIB1RFmgeAzZpKRWA0nntGdIOo47hTA3X",
   posthogHost: "https://app.posthog.com",
+  // The first that matches names the link, so a list of posts inside a panel is named for the
+  // panel, and a tag badge for itself wherever it is.
   navigationSources: {
+    "global-graph": "global-graph",
+    "local-graph": "local-graph",
+    ".search": "search",
+    ".link-popover": "link-popover",
     ".tag-badge": "tag-badge",
+    ".connection.outlinks": "outgoing-links",
+    ".connection.backlinks": "incoming-links",
+    ".posts": "post-list",
     ".prose a": "inline-link",
+    ".site-title, .menu-bar-title": "site-title",
+    ".site-footer": "footer",
   },
+  // What Page.astro puts after a note's body: its connections, and the link to its source.
+  endOfNote: '.page[data-kind="note"] .after-body',
 }

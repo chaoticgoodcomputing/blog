@@ -19,6 +19,10 @@
 			"env": {
 				"GSC_OAUTH_CLIENT_SECRETS_FILE": "~/Library/Application Support/mcp-gsc/client_secrets.json"
 			}
+		},
+		"posthog": {
+			"type": "http",
+			"url": "https://mcp.posthog.com/mcp"
 		}
 	}
 }

@@ -475,4 +475,9 @@ export interface AnalyticsConfig {
    * link; a link none matches is `other`.
    */
   navigationSources: Record<string, string>
+  /**
+   * What follows a note's body, as a CSS selector: a `read_to_end` event is recorded, once for each
+   * page shown, when it first comes into view. A page with nothing that matches records none.
+   */
+  endOfNote: string
 }

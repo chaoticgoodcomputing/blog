@@ -1,7 +1,7 @@
 ---
 title: Privacy Policy
 date: 2026-02-04
-updated: 2026-02-07
+updated: 2026-11-18
 tags:
   - engineering/data
   - projects/site
@@ -26,7 +26,8 @@ This site uses [PostHog](https://posthog.com) to understand how visitors use the
 
 - Which pages people are visited
 - How people move between pages (for example, if they prefer to use the sidebar, graph, or tags for navigation)
-- Browser type, device type, screen size, and general location (country/region level)
+- Browser type, device type, screen size, and general location (down to the general metro area)
+- Time spent/total scroll on posts
 - If you sign up for the newsletter subscription, your email is put onto my personal mailing list.
 
 ### What is NOT Collected
@@ -34,7 +35,7 @@ This site uses [PostHog](https://posthog.com) to understand how visitors use the
 This site does **not** collect:
 
 - Names, browsing history, or any personal identification
-- Your specific location at the city/neighborhood/household level
+- Your specific location, down to the neighborhood/street/household level
 - Any session recordings or screen captures
 
 Additionally, this site doesn't use any cookies to collect analytics, so you don't have to worry about any analytics being collected unless you're on the site itself — I wouldn't be able to see if you go shopping somewhere, or browse social media, after you've visited this site.
@@ -75,3 +76,8 @@ This site aims to comply with:
 - **CCPA** (California Consumer Privacy Act) - California privacy law
 - **ePrivacy Directive** - EU cookie law
 - Other applicable privacy regulations
+
+## Changelog:
+
+- **2026-11-17:** Redefined location specificity to "no deeper than postal code", which pretty much means "down to metro areas", since truncating at the state level meant the data got super wonky.
+- **2026-02-04:** Init

@@ -36,7 +36,7 @@ test("a page reached by a link is recorded too, by the PostHog the visit has alr
 
 // The privacy options the site has had since Quartz 4. `ip: false` is passed on as it was, though
 // PostHog's library no longer reads it: an IP is kept out by the project's "Discard client IP data".
-test("PostHog is set up with no cookie and no session recording", async ({ page }) => {
+test("PostHog is set up with no cookie, clicks on links and buttons only, and no session recording", async ({ page }) => {
   await page.goto(start)
 
   await expect.poll(() => postHog(page).inits).toHaveLength(1)
@@ -45,15 +45,20 @@ test("PostHog is set up with no cookie and no session recording", async ({ page 
     capture_pageview: false,
     capture_pageleave: true,
     persistence: "localStorage",
+    autocapture: { dom_event_allowlist: ["click"], element_allowlist: ["a", "button"] },
     disable_session_recording: true,
     ip: false,
   })
 })
 
-// Each kind of link on the page the router follows, and what site configuration names it.
-for (const { kind, link, name, to } of [
+// Each kind of link on the page the router follows, and what site configuration names it. The
+// site's title starts the trail afresh (TrailNavigation.astro), so its page is reached by none.
+const fromStart = ["/analytics/start"]
+for (const { kind, link, name, to, trail = fromStart } of [
   { kind: "a link in a note's text", link: (page: Page) => page.getByRole("link", { name: "a link in the text" }), name: "inline-link", to: "/analytics/destination" },
   { kind: "a tag badge", link: (page: Page) => page.locator(".tag-list").getByRole("link", { name: "#analytics" }), name: "tag-badge", to: "/tags/analytics" },
+  { kind: "a note in the outgoing links", link: (page: Page) => page.locator(".connection.outlinks").getByRole("link", { name: "Where the reader goes" }), name: "outgoing-links", to: "/analytics/destination" },
+  { kind: "the site's title", link: (page: Page) => page.locator(".site-title"), name: "site-title", to: "/", trail: [] },
 ]) {
   test(`following ${kind} is recorded as a navigation from "${name}"`, async ({ page, baseURL }) => {
     await page.goto(start)
@@ -63,7 +68,7 @@ for (const { kind, link, name, to } of [
 
     await expectAt(page, to)
     await expect.poll(() => events(page, "navigation")).toEqual([
-      { source: name, from_page: "/analytics/start", to_page: to, url: new URL(to, baseURL).href, trail: ["/analytics/start"] },
+      { source: name, from_page: "/analytics/start", to_page: to, url: new URL(to, baseURL).href, trail },
     ])
   })
 }
@@ -105,3 +110,41 @@ for (const [where, setDoNotTrack] of [
     expect(postHog(page)).toEqual({ loads: [], inits: [], captures: [] })
   })
 }
+
+// The end of a note: what follows its body (site configuration's `analytics.endOfNote`).
+test("reaching the end of a note shorter than the window is recorded at once, and once", async ({ page }) => {
+  await page.goto(start)
+  await expect.poll(() => events(page, "read_to_end")).toEqual([{ path: "/analytics/start" }])
+  await page.mouse.wheel(0, 400)
+  await page.mouse.wheel(0, -400)
+  await page.waitForTimeout(250)
+  expect(events(page, "read_to_end")).toHaveLength(1)
+})
+
+test("reaching the end of a note longer than the window is recorded once it is scrolled to", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 160 })
+  await page.goto(start)
+  await expect.poll(() => events(page, "$pageview")).toHaveLength(1)
+  await page.waitForTimeout(250)
+  expect(events(page, "read_to_end")).toEqual([])
+
+  await page.locator(".after-body").scrollIntoViewIfNeeded()
+  await expect.poll(() => events(page, "read_to_end")).toEqual([{ path: "/analytics/start" }])
+})
+
+test("each note shown is watched for its own end", async ({ page }) => {
+  await page.goto(start)
+  await expect.poll(() => events(page, "read_to_end")).toHaveLength(1)
+  await page.getByRole("link", { name: "a link in the text" }).click()
+  await expectAt(page, "/analytics/destination")
+  await expect
+    .poll(() => events(page, "read_to_end"))
+    .toEqual([{ path: "/analytics/start" }, { path: "/analytics/destination" }])
+})
+
+test("a page that is no note, such as a tag's, has no end to reach", async ({ page }) => {
+  await page.goto("/tags/analytics")
+  await expect.poll(() => events(page, "$pageview")).toHaveLength(1)
+  await page.waitForTimeout(250)
+  expect(events(page, "read_to_end")).toEqual([])
+})

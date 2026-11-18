@@ -1,5 +1,6 @@
 import type { Locator, Page } from "@playwright/test"
 import { graph as settings } from "../../site.config.ts"
+import { events } from "../analytics.ts"
 import { expect, expectAt, test } from "../site.ts"
 
 // The fixture vault's local-graph/ notes: a hub tagged `engineering/ai` that links to a spoke and to
@@ -117,6 +118,16 @@ test("left out, a private page is not in the local graph", async ({ page }) => {
   await page.goto(hub)
   const graph = await drawnGraph(page)
   expect(graph["Private Spoke"]).toBeUndefined()
+})
+
+test("following a node is recorded as a navigation from the local graph", async ({ page }) => {
+  await page.goto(hub)
+  const node = await nodePosition(page, "Spoke")
+  await page.mouse.click(node.x, node.y)
+  await expectAt(page, "/local-graph/spoke")
+  await expect
+    .poll(() => events(page, "navigation"))
+    .toEqual([expect.objectContaining({ source: "local-graph", from_page: hub, to_page: "/local-graph/spoke" })])
 })
 
 test("the home page has a local graph around the home note", async ({ page }) => {

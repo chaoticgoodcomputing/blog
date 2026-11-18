@@ -212,7 +212,8 @@ const stops = TIME_PERIODS.toReversed()
         bubble: (tag) => this.querySelector<HTMLElement>(`.bubbles [data-tag="${CSS.escape(tag)}"] .tag-bubble`),
         follow: (to) => {
           this.#dialog.close()
-          void navigate(to)
+          // The graph is what the reader followed, for analytics (Analytics.astro): no link was.
+          void navigate(to, { sourceElement: this })
         },
         label: "Graph of every page of the site",
       })

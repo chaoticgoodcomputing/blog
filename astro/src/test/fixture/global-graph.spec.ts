@@ -1,5 +1,6 @@
 import type { Page } from "@playwright/test"
 import { graph as settings } from "../../site.config.ts"
+import { events } from "../analytics.ts"
 import { expect, expectAt, test } from "../site.ts"
 
 // The fixture vault's global-graph/ notes, read on 15 January 2030: Global Recent, from this month,
@@ -207,6 +208,17 @@ test("clicking a node closes the dialog and goes to its page", async ({ page }) 
   await page.mouse.click(node.x, node.y)
   await expectAt(page, "/global-graph/older")
   await expect(dialog(page)).toBeHidden()
+})
+
+test("following a node is recorded as a navigation from the global graph", async ({ page }) => {
+  await visit(page, recent)
+  await opener(page).click()
+  const node = await nodePosition(page, "Global Older")
+  await page.mouse.click(node.x, node.y)
+  await expectAt(page, "/global-graph/older")
+  await expect
+    .poll(() => events(page, "navigation"))
+    .toEqual([expect.objectContaining({ source: "global-graph", from_page: recent, to_page: "/global-graph/older" })])
 })
 
 test("the built site has no settings panel for the graph, in its markup or in its scripts", async ({ page }) => {

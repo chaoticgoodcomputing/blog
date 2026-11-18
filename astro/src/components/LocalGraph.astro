@@ -101,7 +101,8 @@ const tags = graphOf(graphIndex({ index: getNoteIndex() }), { removeTags, privat
         current: shown,
         settings,
         bubble: (tag) => this.querySelector<HTMLElement>(`[data-tag="${CSS.escape(tag)}"] .tag-bubble`),
-        follow: (to) => void navigate(to),
+        // The graph is what the reader followed, for analytics (Analytics.astro): no link was.
+        follow: (to) => void navigate(to, { sourceElement: this }),
         label: `Graph of the pages around ${here?.label ?? "this page"}`,
         path: [...trail],
         focus: settings.focusZoom,

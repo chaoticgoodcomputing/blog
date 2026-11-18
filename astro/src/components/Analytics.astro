@@ -55,6 +55,12 @@
             capture_pageleave: true,
             // No cookie: what PostHog keeps of a visit is kept in local storage.
             persistence: "localStorage",
+            // Clicks on links and buttons only, which the privacy policy counts as how people move
+            // between pages: no form fields, and no change or submit events.
+            autocapture: {
+              dom_event_allowlist: ["click"],
+              element_allowlist: ["a", "button"],
+            },
             disable_session_recording: true,
             // The site's since Quartz 4. The library ignores it now; an IP is dropped by the
             // project's "Discard client IP data".
@@ -100,19 +106,41 @@
 
   if (!import.meta.env.DEV && !doNotTrack) {
     loadPostHog()
-    document.addEventListener("astro:page-load", () =>
-      capture("$pageview", { path: location.pathname, trail: trailBefore(new URL(location.href)) }),
-    )
+    // The end of the page shown, while it is watched for: a reader who reaches it has read the
+    // whole note.
+    let watching: IntersectionObserver | undefined
+    document.addEventListener("astro:page-load", () => {
+      capture("$pageview", { path: location.pathname, trail: trailBefore(new URL(location.href)) })
+      watching?.disconnect()
+      watching = undefined
+      const end = document.querySelector(analytics.endOfNote)
+      if (!end) return
+      // Once for each page shown, when the end first comes into view, which on a note shorter than
+      // the window is at once. A page reached before it does stops the watch, so the page counted
+      // is the one it was watched on.
+      const path = location.pathname
+      const watch = new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return
+        watch.disconnect()
+        capture("read_to_end", { path })
+      })
+      watch.observe(end)
+      watching = watch
+    })
     // A link the router followed to another page, just before that page is swapped in: the link is
-    // still on the page it was clicked on. The browser's back and forward buttons follow no link,
-    // and a link to a heading on the same page swaps nothing.
+    // still on the page it was clicked on. A graph follows no link, and passes itself to the router
+    // instead (LocalGraph.astro, GlobalGraph.astro): it counts where site configuration names it.
+    // The browser's back and forward buttons follow no link, and a link to a heading on the same
+    // page swaps nothing.
     document.addEventListener("astro:before-swap", ({ sourceElement, from, to }) => {
-      if (!(sourceElement instanceof Element) || !sourceElement.closest("a")) return
+      if (!(sourceElement instanceof Element)) return
+      const source = kindOf(sourceElement)
+      if (!sourceElement.closest("a") && source === "other") return
       // The page's own address: the reader's trail is no part of where it is, and goes on its own.
       const url = new URL(to.href)
       url.searchParams.delete(TRAIL_KEY)
       capture("navigation", {
-        source: kindOf(sourceElement),
+        source,
         from_page: from.pathname,
         to_page: to.pathname,
         url: url.href,
