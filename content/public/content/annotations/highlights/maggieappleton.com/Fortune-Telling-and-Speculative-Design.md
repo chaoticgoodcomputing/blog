@@ -1,9 +1,12 @@
 ---
-title:
+title: Fortune Telling and Speculative Design
 date: 2026-11-17
+updated: 2026-11-18
 tags:
+  - engineering
+  - writing/fragments
   - writing/annotations
-description:
+description: Annotations on Appleton's post about design engineering and futures speculation.
 annotation-pages:
 annotation-target: "https://maggieappleton.com/fortune-telling"
 annotation-target-type: web
