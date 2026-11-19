@@ -11,7 +11,7 @@ tags:
   - engineering/languages/typescript
   - projects/teaching
   - writing/essays
-  - reading/docs
+  - reading/papers
 annotation-target: https://raw.githubusercontent.com/chaoticgoodcomputing/blog/refs/heads/main/content/public/assets/llms.pdf
 annotation-public: true
 ---

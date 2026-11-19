@@ -7,7 +7,7 @@ tags:
   - engineering/data
   - engineering/languages/python
   - projects/homelab
-  - reading/docs
+  - reading/papers
 annotation-target: https://www.nature.com/articles/s41592-022-01488-1.pdf
 description: Amaze (or bore) your friends and family by picking up on a hot new hobby that's all the rage — protein folding! An annotated starter to the 2021 paper "ColabFold - Making protein folding accessible to all"
 annotation-public: true

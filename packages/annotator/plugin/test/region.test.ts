@@ -3,7 +3,7 @@
 
 import assert from "node:assert/strict"
 import { test } from "node:test"
-import { updateAnnotation } from "@chaoticgoodcomputing/web-annotations"
+import { setRecordFields, updateAnnotation } from "@chaoticgoodcomputing/web-annotations"
 import { EditorState } from "@codemirror/state"
 import { annotatorWrite, blockAtLine, changeBetween, isAnnotationNoteText, isWebNoteText, protectBlocks, regionField, regionOf, webPageOf } from "../src/editor/region.ts"
 import { annotate } from "./notes.ts"
@@ -124,4 +124,56 @@ test("a line of a block is known as its block's, with the line the block starts 
   assert.equal(blockAtLine(text, lines.findIndex((line) => line === "^bbb"))?.annotation?.blockId, "bbb")
   assert.equal(blockAtLine(text, lines.indexOf("The preface.")), undefined)
   assert.equal(blockAtLine(text, lines.indexOf("The epilogue.")), undefined)
+})
+
+/**
+ * Obsidian's reload of a note changed on disk into its open editor (1.15.1's edit mode
+ * `set(text, false)`): one change over the lines between the common prefix and suffix, as the user
+ * event "set", which change filters see.
+ */
+function reload(state: EditorState, text: string): EditorState {
+  const doc = state.doc
+  const lines = text.split(/\r?\n/g)
+  let prefix = 0
+  while (prefix < lines.length && prefix < doc.lines && lines[prefix] === doc.line(prefix + 1).text) prefix++
+  if (prefix === lines.length && prefix === doc.lines) return state
+  let oldEnd = doc.lines - 1
+  let newEnd = lines.length - 1
+  while (oldEnd > prefix && newEnd > prefix && doc.line(oldEnd + 1).text === lines[newEnd]) oldEnd--, newEnd--
+  let from = doc.line(prefix + 1).from
+  let to = doc.line(oldEnd + 1).to
+  let insert = lines.slice(prefix, newEnd + 1).join("\n")
+  if (prefix === Math.min(doc.lines, lines.length)) {
+    from = to = doc.line(prefix).to
+    if (lines.length > doc.lines) insert = "\n" + insert
+  }
+  return state.update({ changes: { from, to, insert }, userEvent: "set" }).state
+}
+
+const blockIdCounts = (text: string) => {
+  const counts: Record<string, number> = {}
+  for (const [, id] of text.matchAll(/^\^(\w+)$/gm)) counts[id!] = (counts[id!] ?? 0) + 1
+  return counts
+}
+
+/** What the Hypothesis mirror writes to disk: a field on every block. */
+const mirrored = (text: string) => ["aaa", "bbb"].reduce((note, id) => setRecordFields(note, id, { hypothesis: { id: `h-${id}` } }).text, text)
+
+test("a change to the blocks on disk reaches the open editor", () => {
+  const disk = mirrored(note())
+  assert.equal(reload(stateOf(note()), disk).doc.toString(), disk)
+})
+
+test("a change on disk to the blocks and the frontmatter at once doesn't copy the blocks", () => {
+  const disk = mirrored(note()).replace("title: A paper", "title: A paper, retitled")
+  const reloaded = reload(stateOf(note()), disk).doc.toString()
+  assert.deepEqual(blockIdCounts(reloaded), { aaa: 1, bbb: 1 })
+  assert.equal(reloaded, disk)
+})
+
+test("an annotation added on disk to a note open in the editor stays", () => {
+  const disk = annotate(mirrored(note()), "ccc", PDF, "passage ccc", "Third.")
+  const reloaded = reload(stateOf(note()), disk).doc.toString()
+  assert.deepEqual(blockIdCounts(reloaded), { aaa: 1, bbb: 1, ccc: 1 })
+  assert.equal(reloaded, disk)
 })

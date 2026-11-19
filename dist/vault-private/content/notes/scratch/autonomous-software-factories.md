@@ -5,7 +5,7 @@ tags:
   - "engineering/ai"
   - "horticulture/seasons/systems"
   - "writing/notes"
-  - "reading/docs"
+  - "reading/papers"
   - "private"
 ---
 

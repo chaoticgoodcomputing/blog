@@ -5,7 +5,7 @@ updated: 2026-11-19
 tags:
   - economics/management
   - engineering
-  - reading/docs
+  - reading/papers
   - writing/fragments
 annotation-target: https://www.ida.liu.se/~729G12/mtrl/suchman_1983.pdf
 description: Brief notes on the paper "Office Procedure as Practical Action", a 1983 XEROX study on modeling work as procedures.

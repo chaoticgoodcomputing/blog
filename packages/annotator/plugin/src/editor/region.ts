@@ -70,9 +70,14 @@ export const regionField = StateField.define<Region | null>({
  * No edit may touch the blocks, or the line breaks just before and after them, which would join a
  * line to a block's: changes there are dropped. Typing on the line above the blocks, or the line
  * below, is an edit beside them. The plugin's own writes pass (`annotatorWrite`): a card's comment,
- * edited, is one (src/editor/annotator.ts).
+ * edited, is one (src/editor/annotator.ts). So does Obsidian's reload of the note when it changes
+ * on disk (the user event "set"): another writer's change to the blocks, such as the Hypothesis
+ * mirror's fields or an annotation from the browser, is the note's text. Held back, it would leave
+ * the editor stale, to write the old blocks back on its next save, or, with a line beside the blocks
+ * changed too, to keep the reload's new blocks above its old ones.
  */
 export const protectBlocks = EditorState.changeFilter.of((transaction) => {
+  if (transaction.isUserEvent("set")) return true
   const region = transaction.startState.field(regionField, false)
   if (!region || region.from === region.to) return true
   return [Math.max(0, region.from - 1), Math.min(transaction.startState.doc.length, region.to + 1)]

@@ -8,7 +8,7 @@ updated: 2026-01-10
 tags:
   - economics/markets
   - engineering
-  - reading/docs
+  - reading/papers
 annotation-target: "https://www.nber.org/system/files/working_papers/w7600/w7600.pdf"
 annotation-public: true
 ---

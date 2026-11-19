@@ -105,7 +105,7 @@ export const tags: TagDictionary = {
   "writing/fragments": { icon: "mdi:seed" },
   reading: { color: "light-dark( #128db6, #00e5ff)", icon: "mdi:book-open-blank-variant" },
   "reading/lit": { icon: "mdi:book-open-blank-variant" },
-  "reading/docs": { icon: "mdi:file-document-outline" },
+  "reading/papers": { icon: "mdi:file-document-outline" },
   "reading/web": { icon: "mdi:web" },
 }
 
