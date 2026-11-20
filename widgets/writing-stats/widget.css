@@ -1,0 +1,60 @@
+/* The WritingStats widget. BEM under `writing-stats`. The chart's colours are the
+   `--writing-stats-*` properties below, read in script. The dash kinds are four categorical hues,
+   checked for colour-blind separation against the site's light and dark backgrounds; the site's own
+   blue reads as grey beside them, so they are their own. */
+.writing-stats {
+  --writing-stats-paper: var(--light);
+  --writing-stats-ink: var(--dark);
+  --writing-stats-muted: var(--darkgray);
+  --writing-stats-grid: var(--lightgray);
+  --writing-stats-bar: var(--secondary);
+  --writing-stats-dash-em: light-dark(#2a78d6, #3987e5);
+  --writing-stats-dash-double: light-dark(#eb6834, #d95926);
+  --writing-stats-dash-single: light-dark(#1baf7a, #199e70);
+  --writing-stats-dash-en: light-dark(#eda100, #c98500);
+  /* The eras, oldest to newest: one blue, light to dark (dark to light on the dark background). */
+  --writing-stats-era-1: light-dark(#6da7ec, #1c5cab);
+  --writing-stats-era-2: light-dark(#256abf, #5598e7);
+  --writing-stats-era-3: light-dark(#0d366b, #b7d3f6);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.writing-stats__filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.writing-stats__chip {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--gray);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--darkgray);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.writing-stats__chip[aria-pressed="true"] {
+  border-color: var(--secondary);
+  background-color: var(--highlight);
+  color: var(--dark);
+  font-weight: 600;
+}
+
+.writing-stats__chip:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 2px;
+}
+
+/* WritingTotals: the counts behind the charts, as a table. */
+.writing-totals td,
+.writing-totals thead th {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}

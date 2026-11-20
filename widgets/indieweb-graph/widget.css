@@ -1,0 +1,384 @@
+/* The IndiewebGraph widget. BEM under `indieweb-graph`. The graph is SVG drawn by Preact, so its
+   colours are plain CSS: the `--indieweb-graph-*` properties below. Outgoing and incoming are
+   categorical hues, checked for colour-blind separation against the site's light and dark
+   backgrounds, as ExportGraph's SVG uses; mutual is the seeds' ink, and the rest the theme's own. */
+.indieweb-graph {
+  --indieweb-graph-paper: var(--light);
+  --indieweb-graph-ink: var(--dark);
+  --indieweb-graph-muted: var(--darkgray);
+  --indieweb-graph-node: var(--gray);
+  --indieweb-graph-seed: var(--dark);
+  --indieweb-graph-utility: var(--dark);
+  --indieweb-graph-out: light-dark(#2a78d6, #3987e5);
+  --indieweb-graph-in: light-dark(#eb6834, #d95926);
+  --indieweb-graph-mutual: var(--indieweb-graph-seed);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+/* Two rows, the blogs' marks over the links', each centred. */
+.indieweb-graph__legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  color: var(--indieweb-graph-muted);
+  font-size: 0.85rem;
+}
+
+.indieweb-graph__legend ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.indieweb-graph__legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.indieweb-graph__swatch {
+  display: inline-block;
+  width: 1.5rem;
+  height: 2px;
+  border-radius: 1px;
+}
+
+.indieweb-graph__swatch--out {
+  background: var(--indieweb-graph-out);
+}
+
+.indieweb-graph__swatch--in {
+  background: var(--indieweb-graph-in);
+}
+
+.indieweb-graph__swatch--mutual {
+  background: var(--indieweb-graph-mutual);
+}
+
+.indieweb-graph__dot {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--indieweb-graph-node);
+}
+
+.indieweb-graph__dot--seed {
+  background: var(--indieweb-graph-seed);
+}
+
+.indieweb-graph__star {
+  width: 0.9rem;
+  height: 0.9rem;
+  fill: var(--indieweb-graph-utility);
+}
+
+/* The plot: the card is placed over it, by the active blog's place. */
+.indieweb-graph__plot {
+  position: relative;
+}
+
+.indieweb-graph__plot svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.indieweb-graph__link {
+  fill: none;
+  stroke-linecap: round;
+  opacity: 0.7;
+  transition: opacity 0.15s ease-out;
+}
+
+.indieweb-graph__link--out {
+  stroke: var(--indieweb-graph-out);
+}
+
+.indieweb-graph__link--in {
+  stroke: var(--indieweb-graph-in);
+}
+
+.indieweb-graph__link--mutual {
+  stroke: var(--indieweb-graph-mutual);
+}
+
+.indieweb-graph__arrow--out {
+  fill: var(--indieweb-graph-out);
+}
+
+.indieweb-graph__arrow--in {
+  fill: var(--indieweb-graph-in);
+}
+
+.indieweb-graph__arrow--mutual {
+  fill: var(--indieweb-graph-mutual);
+}
+
+.indieweb-graph__hit {
+  fill: transparent;
+}
+
+.indieweb-graph__node {
+  fill: var(--indieweb-graph-node);
+  stroke: var(--indieweb-graph-paper);
+  stroke-width: 1.5;
+  transition: opacity 0.15s ease-out;
+}
+
+.indieweb-graph__node--seed {
+  fill: var(--indieweb-graph-seed);
+}
+
+/* This site's own blog: its icon, in a seed's ink, with no ring, which the icon's own box would draw. */
+.indieweb-graph__node--home {
+  fill: var(--indieweb-graph-seed);
+  stroke: none;
+  overflow: visible;
+}
+
+.indieweb-graph__node--utility {
+  fill: var(--indieweb-graph-utility);
+}
+
+.indieweb-graph a {
+  cursor: pointer;
+  outline: none;
+}
+
+.indieweb-graph a:focus-visible .indieweb-graph__node {
+  stroke: var(--secondary);
+  stroke-width: 3;
+}
+
+/* While a blog is active, what isn't linked to it fades back. */
+.indieweb-graph svg.is-focused .indieweb-graph__link:not([data-lit="true"]) {
+  opacity: 0.08;
+}
+
+.indieweb-graph svg.is-focused .indieweb-graph__link[data-lit="true"] {
+  opacity: 1;
+}
+
+.indieweb-graph svg.is-focused .indieweb-graph__node:not([data-lit="true"]) {
+  opacity: 0.25;
+}
+
+.indieweb-graph__label {
+  fill: var(--indieweb-graph-muted);
+  font-size: 11px;
+  paint-order: stroke;
+  stroke: var(--indieweb-graph-paper);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.indieweb-graph__label--utility {
+  fill: var(--indieweb-graph-ink);
+  font-size: 13px;
+  font-style: italic;
+}
+
+.indieweb-graph__label--seed {
+  fill: var(--indieweb-graph-ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* The active blog's card: over its node, nudged up and right, out of the pointer's way. */
+.indieweb-graph__card {
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  background: var(--indieweb-graph-paper);
+  box-shadow: 0 2px 8px var(--shadow, rgb(0 0 0 / 0.15));
+  color: var(--indieweb-graph-muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translate(1rem, calc(-100% - 0.5rem));
+}
+
+.indieweb-graph__card--left {
+  transform: translate(calc(-100% - 1rem), calc(-100% - 0.5rem));
+}
+
+.indieweb-graph__card strong {
+  color: var(--indieweb-graph-ink);
+}
+
+.indieweb-graph__host {
+  font-size: 0.75rem;
+}
+
+/* A utility's note: what it is, which may be a sentence, so the card wraps it. */
+.indieweb-graph__note {
+  max-width: 16rem;
+  font-style: italic;
+  white-space: normal;
+}
+
+.indieweb-graph figcaption {
+  color: var(--indieweb-graph-muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .indieweb-graph__link,
+  .indieweb-graph__node {
+    transition: none;
+  }
+}
+
+/* A link's hit target: wider than the link, unseen, and only its stroke takes the pointer. */
+.indieweb-graph__link-hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 12;
+  pointer-events: stroke;
+  cursor: pointer;
+}
+
+/* A link's card: its post mentions, one a line. Wider than a blog's, and wrapping. */
+.indieweb-graph__card--link {
+  max-width: min(28rem, 90%);
+  white-space: normal;
+}
+
+/* Held open, it takes the pointer, so its posts can be followed, and says how to close it. */
+.indieweb-graph__card--link.is-held {
+  z-index: 2;
+  padding-right: 2rem;
+  pointer-events: auto;
+}
+
+.indieweb-graph__mentions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0.35rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Held open, every one is listed, and a long list scrolls. */
+.indieweb-graph__card--link.is-held .indieweb-graph__mentions {
+  max-height: 16rem;
+  overflow-y: auto;
+}
+
+.indieweb-graph__mentions li {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.indieweb-graph__mentions a {
+  color: var(--secondary);
+}
+
+.indieweb-graph__kind {
+  display: inline-block;
+  min-width: 4.5em;
+  color: var(--indieweb-graph-ink);
+  font-weight: 600;
+}
+
+.indieweb-graph__seen,
+.indieweb-graph__more {
+  color: var(--indieweb-graph-muted);
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+.indieweb-graph__seen::before {
+  content: " · ";
+}
+
+.indieweb-graph__close {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.35rem;
+  padding: 0 0.3rem;
+  border: none;
+  border-radius: 4px;
+  background: none;
+  color: var(--indieweb-graph-muted);
+  font: inherit;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.indieweb-graph__close:hover {
+  background: var(--highlight);
+}
+
+/* Zoom: buttons in the plot's corner, and the hint a plain scroll over it shows. */
+.indieweb-graph__zoom {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.indieweb-graph__zoom button {
+  min-width: 1.75rem;
+  height: 1.75rem;
+  padding: 0 0.4rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 4px;
+  background: var(--indieweb-graph-paper);
+  color: var(--indieweb-graph-muted);
+  font: inherit;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.indieweb-graph__zoom button:hover:not(:disabled) {
+  color: var(--indieweb-graph-ink);
+  background: var(--highlight);
+}
+
+.indieweb-graph__zoom button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.indieweb-graph__hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  background: var(--indieweb-graph-ink);
+  color: var(--indieweb-graph-paper);
+  font-size: 0.85rem;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+/* Zoomed in, it can be dragged about. */
+.indieweb-graph__plot svg {
+  cursor: grab;
+}
+
+.indieweb-graph__plot svg:active {
+  cursor: grabbing;
+}

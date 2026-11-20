@@ -1,0 +1,2247 @@
+{
+ "generated": "2026-11-05",
+ "width": 960,
+ "height": 592,
+ "nodes": [
+  {
+   "id": "11d.im",
+   "label": "11d.im",
+   "seed": false,
+   "x": 416.9,
+   "y": 406.3,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 2,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "200666.xyz",
+   "label": "200666.xyz",
+   "seed": false,
+   "x": 543.8,
+   "y": 383.5,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 3,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "adactio.com",
+   "label": "adactio.com",
+   "seed": false,
+   "x": 874.6,
+   "y": 300.3,
+   "r": 5.4,
+   "weight": 8,
+   "outgoing": 8,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "alexhyett.com",
+   "label": "alexhyett.com",
+   "seed": false,
+   "x": 618.8,
+   "y": 47.9,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 2,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "alongtheray.com",
+   "label": "alongtheray.com",
+   "seed": false,
+   "x": 475.1,
+   "y": 309.5,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 2,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "artlung.com",
+   "label": "artlung.com",
+   "seed": false,
+   "x": 757.6,
+   "y": 482.0,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 3,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "birgitta.info",
+   "label": "Birgitta Boeckeler",
+   "seed": true,
+   "x": 85.4,
+   "y": 340.6,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 0,
+   "incoming": 2,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 85.4,
+   "label_y": 331.2,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "blog.chaoticgood.computer",
+   "label": "Chaotic Good Computing",
+   "seed": true,
+   "x": 279.7,
+   "y": 352.0,
+   "r": 7.2,
+   "weight": 7,
+   "outgoing": 7,
+   "incoming": 0,
+   "seeds_linked": 3,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 279.7,
+   "label_y": 340.8,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "blog.glasp.co",
+   "label": "blog.glasp.co",
+   "seed": false,
+   "x": 452.1,
+   "y": 235.3,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 2,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "blog.muni.town",
+   "label": "blog.muni.town",
+   "seed": false,
+   "x": 803.7,
+   "y": 121.4,
+   "r": 5.4,
+   "weight": 8,
+   "outgoing": 8,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "boffosocko.com",
+   "label": "boffosocko.com",
+   "seed": false,
+   "x": 650.3,
+   "y": 544.1,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 2,
+   "incoming": 1,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "cagrimmett.com",
+   "label": "cagrimmett.com",
+   "seed": false,
+   "x": 473.8,
+   "y": 388.8,
+   "r": 5.4,
+   "weight": 5,
+   "outgoing": 5,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "citationneeded.news",
+   "label": "citationneeded.news",
+   "seed": false,
+   "x": 840.1,
+   "y": 178.1,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 2,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "cote.io",
+   "label": "cote.io",
+   "seed": false,
+   "x": 681.0,
+   "y": 480.1,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 2,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "danielcorin.com",
+   "label": "danielcorin.com",
+   "seed": false,
+   "x": 794.4,
+   "y": 231.0,
+   "r": 5.4,
+   "weight": 4,
+   "outgoing": 4,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "danielsantos.org",
+   "label": "danielsantos.org",
+   "seed": false,
+   "x": 408.4,
+   "y": 335.9,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 2,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "david.garden",
+   "label": "david.garden",
+   "seed": false,
+   "x": 713.5,
+   "y": 219.4,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 2,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "evgenykuznetsov.org",
+   "label": "evgenykuznetsov.org",
+   "seed": false,
+   "x": 561.8,
+   "y": 535.4,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 3,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "hamatti.org",
+   "label": "hamatti.org",
+   "seed": false,
+   "x": 763.8,
+   "y": 163.3,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 2,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "hidde.blog",
+   "label": "hidde.blog",
+   "seed": false,
+   "x": 632.9,
+   "y": 104.2,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 2,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "indieweb.org",
+   "label": "indieweb.org",
+   "seed": false,
+   "x": 556.1,
+   "y": 124.4,
+   "r": 5.4,
+   "weight": 9,
+   "outgoing": 0,
+   "incoming": 9,
+   "seeds_linked": 1,
+   "utility": true,
+   "note": "The IndieWeb wiki: cited to explain a concept, and never mentions back",
+   "labelled": true,
+   "label_x": 556.1,
+   "label_y": 115.0,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "iwebthings.joejenett.com",
+   "label": "iwebthings.joejenett.com",
+   "seed": false,
+   "x": 698.7,
+   "y": 131.3,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 2,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "jeffbridgforth.com",
+   "label": "jeffbridgforth.com",
+   "seed": false,
+   "x": 623.6,
+   "y": 427.4,
+   "r": 5.4,
+   "weight": 1,
+   "outgoing": 1,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "jimmybogard.com",
+   "label": "Jimmy Bogard",
+   "seed": true,
+   "x": 98.8,
+   "y": 424.0,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 0,
+   "incoming": 2,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 98.8,
+   "label_y": 414.6,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "johnjohnston.info",
+   "label": "johnjohnston.info",
+   "seed": false,
+   "x": 458.8,
+   "y": 459.8,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 3,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "leahdas.com",
+   "label": "leahdas.com",
+   "seed": false,
+   "x": 615.7,
+   "y": 175.5,
+   "r": 5.4,
+   "weight": 6,
+   "outgoing": 6,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "localghost.dev",
+   "label": "localghost.dev",
+   "seed": false,
+   "x": 742.8,
+   "y": 327.0,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 2,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "lqdev.me",
+   "label": "lqdev.me",
+   "seed": false,
+   "x": 554.3,
+   "y": 61.7,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 3,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "maggieappleton.com",
+   "label": "Maggie Appleton",
+   "seed": true,
+   "x": 624.9,
+   "y": 296.6,
+   "r": 19.1,
+   "weight": 155,
+   "outgoing": 26,
+   "incoming": 129,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": true,
+   "label_x": 624.9,
+   "label_y": 273.5,
+   "label_anchor": "middle"
+  },
+  {
+   "id": "marcthiele.com",
+   "label": "marcthiele.com",
+   "seed": false,
+   "x": 711.9,
+   "y": 412.8,
+   "r": 5.4,
+   "weight": 1,
+   "outgoing": 0,
+   "incoming": 1,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "martymcgui.re",
+   "label": "martymcgui.re",
+   "seed": false,
+   "x": 846.1,
+   "y": 410.7,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 2,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "mxb.dev",
+   "label": "mxb.dev",
+   "seed": false,
+   "x": 407.7,
+   "y": 194.6,
+   "r": 5.4,
+   "weight": 1,
+   "outgoing": 1,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "nicksimson.com",
+   "label": "nicksimson.com",
+   "seed": false,
+   "x": 688.3,
+   "y": 59.1,
+   "r": 5.4,
+   "weight": 4,
+   "outgoing": 4,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "ohhelloana.blog",
+   "label": "ohhelloana.blog",
+   "seed": false,
+   "x": 808.4,
+   "y": 462.1,
+   "r": 5.4,
+   "weight": 1,
+   "outgoing": 1,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "paperpilot.dev",
+   "label": "paperpilot.dev",
+   "seed": false,
+   "x": 862.9,
+   "y": 237.7,
+   "r": 5.4,
+   "weight": 9,
+   "outgoing": 9,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "quantumgardener.info",
+   "label": "quantumgardener.info",
+   "seed": false,
+   "x": 747.9,
+   "y": 84.3,
+   "r": 5.4,
+   "weight": 4,
+   "outgoing": 4,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "qubyte.codes",
+   "label": "qubyte.codes",
+   "seed": false,
+   "x": 496.0,
+   "y": 163.2,
+   "r": 5.4,
+   "weight": 2,
+   "outgoing": 2,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "ryanpatrickrandall.com",
+   "label": "ryanpatrickrandall.com",
+   "seed": false,
+   "x": 808.9,
+   "y": 298.7,
+   "r": 5.4,
+   "weight": 6,
+   "outgoing": 6,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "sekhmetdesign.thegeekcartel.com",
+   "label": "sekhmetdesign.thegeekcartel.com",
+   "seed": false,
+   "x": 441.2,
+   "y": 137.5,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 3,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "simonwillison.net",
+   "label": "simonwillison.net",
+   "seed": false,
+   "x": 493.0,
+   "y": 91.3,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 0,
+   "incoming": 3,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "stream.jeremycherfas.net",
+   "label": "stream.jeremycherfas.net",
+   "seed": false,
+   "x": 396.7,
+   "y": 269.7,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 3,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "swyx.io",
+   "label": "swyx.io",
+   "seed": false,
+   "x": 541.8,
+   "y": 460.2,
+   "r": 5.4,
+   "weight": 5,
+   "outgoing": 0,
+   "incoming": 5,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "thejaymo.net",
+   "label": "thejaymo.net",
+   "seed": false,
+   "x": 849.2,
+   "y": 354.3,
+   "r": 5.4,
+   "weight": 4,
+   "outgoing": 4,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "tomcritchlow.com",
+   "label": "tomcritchlow.com",
+   "seed": false,
+   "x": 608.0,
+   "y": 502.4,
+   "r": 5.4,
+   "weight": 5,
+   "outgoing": 0,
+   "incoming": 5,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "tracydurnell.com",
+   "label": "tracydurnell.com",
+   "seed": false,
+   "x": 782.5,
+   "y": 395.8,
+   "r": 5.4,
+   "weight": 4,
+   "outgoing": 4,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "visitmy.website",
+   "label": "visitmy.website",
+   "seed": false,
+   "x": 720.7,
+   "y": 527.6,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 3,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "werd.io",
+   "label": "werd.io",
+   "seed": false,
+   "x": 500.5,
+   "y": 505.4,
+   "r": 5.4,
+   "weight": 3,
+   "outgoing": 3,
+   "incoming": 0,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  },
+  {
+   "id": "zylstra.org",
+   "label": "zylstra.org",
+   "seed": false,
+   "x": 528.3,
+   "y": 231.0,
+   "r": 5.4,
+   "weight": 6,
+   "outgoing": 4,
+   "incoming": 2,
+   "seeds_linked": 1,
+   "utility": false,
+   "note": null,
+   "labelled": false
+  }
+ ],
+ "links": [
+  {
+   "source": "11d.im",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://11d.im/notices/11d",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://11d.im/write.apreslanu.it/offload/1761310045",
+     "target": "https://maggieappleton.com/antilibrary",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "200666.xyz",
+   "target": "maggieappleton.com",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://200666.xyz/gas-town-exploring-agent-patterns-and-vibecoding-at-scale",
+     "target": "https://maggieappleton.com/gastown",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://200666.xyz/gas-towns-agent-patterns-design-bottlenecks-and-vibecoding-at-scale",
+     "target": "https://maggieappleton.com/gastown",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://200666.xyz/the-rise-and-evolution-of-command-k-bars-in-modern-ui",
+     "target": "https://maggieappleton.com/command-bar",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "adactio.com",
+   "target": "maggieappleton.com",
+   "count": 8,
+   "kinds": {
+    "bookmark": 8
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://adactio.com/links/19761",
+     "target": "https://maggieappleton.com/ai-empty-pointer",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://adactio.com/links/20146",
+     "target": "https://maggieappleton.com/forest-talk",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://adactio.com/links/20236",
+     "target": "https://maggieappleton.com/lm-sketchbook",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://adactio.com/links/20436",
+     "target": "https://maggieappleton.com/squish-structure",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://adactio.com/links/20754",
+     "target": "https://maggieappleton.com/historical-trails",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://adactio.com/links/20927",
+     "target": "https://maggieappleton.com/gathering-structures",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://adactio.com/links/21052",
+     "target": "https://maggieappleton.com/openings",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://adactio.com/links/21188",
+     "target": "https://maggieappleton.com/home-cooked-software",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "alexhyett.com",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://alexhyett.com/blogroll",
+     "target": "https://maggieappleton.com",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://alexhyett.com/newsletter/but-at-what-cost",
+     "target": "https://maggieappleton.com/forest-talk",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "alongtheray.com",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://alongtheray.com/blogging/short-thoughts-on-digital-gardens",
+     "target": "https://maggieappleton.com/garden",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://alongtheray.com/welcome-to-my-new-digs",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "artlung.com",
+   "target": "maggieappleton.com",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://artlung.com/blog/2024/02/28/digital-gardens",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com/blog/2024/10/31/owning-my-own-bookmarks-over-20-years",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://artlung.com/gardening-ic",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "blog.chaoticgood.computer",
+   "target": "birgitta.info",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://blog.chaoticgood.computer/content/notes/software-gardening",
+     "target": "https://birgitta.info",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://blog.chaoticgood.computer/mentions/content/notes/software-gardening/9385861790ce",
+     "target": "https://birgitta.info",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "blog.chaoticgood.computer",
+   "target": "jimmybogard.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://blog.chaoticgood.computer/content/notes/software-gardening",
+     "target": "https://jimmybogard.com/vertical-slice-architecture",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://blog.chaoticgood.computer/content/notes/strong-and-weak-opinions",
+     "target": "https://jimmybogard.com/vertical-slice-architecture",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "blog.chaoticgood.computer",
+   "target": "maggieappleton.com",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://blog.chaoticgood.computer/content/notes/dashes",
+     "target": "https://maggieappleton.com/planning-agents",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://blog.chaoticgood.computer/content/notes/digital-gardening-with-quartz",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://blog.chaoticgood.computer/mentions/content/notes/dashes/40579207c6f6",
+     "target": "https://maggieappleton.com/planning-agents",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "blog.glasp.co",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://blog.glasp.co/p/bc3907c3-9f5e-4008-a82d-fc28474bc38a",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.glasp.co/p/e0ab9928-eb6b-4134-b7b9-59052fb34eae",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "blog.muni.town",
+   "target": "maggieappleton.com",
+   "count": 8,
+   "kinds": {
+    "mention": 8
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://blog.muni.town/chatty-community-gardens",
+     "target": "https://maggieappleton.com",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.muni.town/chatty-community-gardens",
+     "target": "https://maggieappleton.com/cozy-web",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.muni.town/chatty-community-gardens",
+     "target": "https://maggieappleton.com/evergreens",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.muni.town/chatty-community-gardens",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.muni.town/chatty-community-gardens",
+     "target": "https://maggieappleton.com/nontechnical-gardening",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.muni.town/chatty-community-gardens",
+     "target": "https://maggieappleton.com/tools-for-thought",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.muni.town/content-imperative",
+     "target": "https://maggieappleton.com/nontechnical-gardening",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://blog.muni.town/weird-v0-4",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "boffosocko.com",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 1,
+    "reply": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://boffosocko.com/2021/07/06/55793175",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "reply",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://boffosocko.com/2022/12/02/55812255",
+     "target": "https://maggieappleton.com",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "cagrimmett.com",
+   "target": "maggieappleton.com",
+   "count": 5,
+   "kinds": {
+    "like": 1,
+    "mention": 4
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://cagrimmett.com/6524-2",
+     "target": "https://maggieappleton.com",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://cagrimmett.com/6524-2",
+     "target": "https://maggieappleton.com/garden",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://cagrimmett.com/blogroll",
+     "target": "https://maggieappleton.com",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://cagrimmett.com/blogroll",
+     "target": "https://maggieappleton.com/garden",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://cagrimmett.com/likes/3a71834380",
+     "target": "https://maggieappleton.com/now-2026-01",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "citationneeded.news",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://citationneeded.news/curate-with-rss",
+     "target": "https://maggieappleton.com/garden",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://citationneeded.news/we-can-have-a-different-web",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "cote.io",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://cote.io/2023/01/10/no-you-dont-want-to.html",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://cote.io/2026/02/07/ai-reality-bites-wall-street.html",
+     "target": "https://maggieappleton.com/gastown",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "danielcorin.com",
+   "target": "maggieappleton.com",
+   "count": 4,
+   "kinds": {
+    "bookmark": 4
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://danielcorin.com/links/2025/05/language-model-sketchbook-or-why-i-hate-chatbots",
+     "target": "https://maggieappleton.com/lm-sketchbook",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://danielcorin.com/links/2026/01/gas-towns-agent-patterns-design-bottlenecks-and-vibecoding-at-scale",
+     "target": "https://maggieappleton.com/gastown",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://danielcorin.com/links/2026/01/january-2026-maggie-appleton",
+     "target": "https://maggieappleton.com/now-2026-01",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://danielcorin.com/links/2026/05/one-developer-two-dozen-agents-zero-alignment",
+     "target": "https://maggieappleton.com/zero-alignment",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "danielsantos.org",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://danielsantos.org/nota/jardim-digital",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://danielsantos.org/notes/jardim-digital",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "david.garden",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://david.garden",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://david.garden/newsletter/archive/celebrate-your-progress-for-it-is-yours",
+     "target": "https://maggieappleton.com/home-cooked-software",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "evgenykuznetsov.org",
+   "target": "maggieappleton.com",
+   "count": 3,
+   "kinds": {
+    "like": 1,
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://evgenykuznetsov.org/en/posts/2022/hovercards",
+     "target": "https://maggieappleton.com/xanadu-patterns",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://evgenykuznetsov.org/en/reactions/2021/like-149072925",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://evgenykuznetsov.org/posts/2022/hovercards",
+     "target": "https://maggieappleton.com/xanadu-patterns",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "hamatti.org",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://hamatti.org/posts/home-cooked-situated-software",
+     "target": "https://maggieappleton.com/home-cooked-software",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://hamatti.org/weeklies/2024-24",
+     "target": "https://maggieappleton.com/home-cooked-software",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "hidde.blog",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://hidde.blog/artificial-nor-intelligent/Neither%20artificial,%20nor%20intelligent",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://hidde.blog/how-i-turned-my-goodreads-data-into-a-self-hosted-website-with-eleventy/How%20I%20turned%20my%20Goodreads%20data%20into%20a%20self-hosted%20website%20with%20Eleventy",
+     "target": "https://maggieappleton.com/library",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "iwebthings.joejenett.com",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://iwebthings.joejenett.com/a-few-in-the-meantime-05-01-24",
+     "target": "https://maggieappleton.com/ambient-copresence",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://iwebthings.joejenett.com/linkylove-a-few-personal-faves-11-03-23",
+     "target": "https://maggieappleton.com/garden",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "jeffbridgforth.com",
+   "target": "maggieappleton.com",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://jeffbridgforth.com/weeknotes-april-2-2024",
+     "target": "https://maggieappleton.com/design-engineers",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "johnjohnston.info",
+   "target": "maggieappleton.com",
+   "count": 3,
+   "kinds": {
+    "bookmark": 1,
+    "like": 1,
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://johnjohnston.info/blog/14631-2",
+     "target": "https://maggieappleton.com/nontechnical-gardening",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://johnjohnston.info/blog/folk-interfaces",
+     "target": "https://maggieappleton.com/folk-interfaces",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://johnjohnston.info/blog/programming-portals",
+     "target": "https://maggieappleton.com/programming-portals",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "leahdas.com",
+   "target": "maggieappleton.com",
+   "count": 6,
+   "kinds": {
+    "mention": 6
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://leahdas.com/note/rethinking-personal-websites",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://leahdas.com/note/rethinking-personal-websites",
+     "target": "https://maggieappleton.com/nontechnical-gardening",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://leahdas.com/posts/personal-websites",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://leahdas.com/posts/personal-websites",
+     "target": "https://maggieappleton.com/nontechnical-gardening",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://leahdas.com/posts/rethinking-personal-websites",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://leahdas.com/posts/rethinking-personal-websites",
+     "target": "https://maggieappleton.com/nontechnical-gardening",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "localghost.dev",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://localghost.dev/blog/stop-generating-start-thinking",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://localghost.dev/blog/this-page-is-under-construction",
+     "target": "https://maggieappleton.com/forest-talk",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "lqdev.me",
+   "target": "maggieappleton.com",
+   "count": 3,
+   "kinds": {
+    "bookmark": 1,
+    "like": 1,
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://lqdev.me/feed/appleton-garden-history",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://lqdev.me/feed/gas-towns-agent-patterns-design-bottlenecks-and-vi-2026-01-23",
+     "target": "https://maggieappleton.com/gastown",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://lqdev.me/feed/home-cooked-software-barefoot-developers-appleton",
+     "target": "https://maggieappleton.com/home-cooked-software",
+     "kind": "like",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "maggieappleton.com",
+   "target": "boffosocko.com",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://maggieappleton.com/metatour",
+     "target": "https://boffosocko.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "maggieappleton.com",
+   "target": "indieweb.org",
+   "count": 9,
+   "kinds": {
+    "mention": 9
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://maggieappleton.com/bidirectionals",
+     "target": "https://indieweb.org",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/bidirectionals",
+     "target": "https://indieweb.org/Webmention",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/garden-history",
+     "target": "https://indieweb.org",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/garden-history",
+     "target": "https://indieweb.org/2020/Pop-ups/GardenAndStream",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/interoperable-libraries",
+     "target": "https://indieweb.org",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/interoperable-libraries",
+     "target": "https://indieweb.org/2022/Pop-ups/Personal_Libraries",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/metatour",
+     "target": "https://indieweb.org",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/now-2022-11",
+     "target": "https://indieweb.org",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/now-2022-11",
+     "target": "https://indieweb.org/POSSE",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "maggieappleton.com",
+   "target": "marcthiele.com",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://maggieappleton.com/squish-structure",
+     "target": "https://marcthiele.com/photos/smashingconf-freiburg-2023",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "maggieappleton.com",
+   "target": "simonwillison.net",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://maggieappleton.com/2025-08-vibe-legacy-code",
+     "target": "https://simonwillison.net/2025/Mar/19/vibe-coding",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/smidgeons",
+     "target": "https://simonwillison.net/2025/Mar/19/vibe-coding",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/squish-structure",
+     "target": "https://simonwillison.net/2023/Aug/27/wordcamp-llms",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "maggieappleton.com",
+   "target": "swyx.io",
+   "count": 5,
+   "kinds": {
+    "mention": 5
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://maggieappleton.com/cscl",
+     "target": "https://swyx.io/writing/learn-in-public",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/garden-history",
+     "target": "https://swyx.io/digital-garden-tos",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/garden-history",
+     "target": "https://swyx.io/learn-in-public",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/garden-history",
+     "target": "https://swyx.io/writing/digital-garden-tos",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/gathering-structures",
+     "target": "https://swyx.io/learn-in-public",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "maggieappleton.com",
+   "target": "tomcritchlow.com",
+   "count": 5,
+   "kinds": {
+    "mention": 5
+   },
+   "direction": "out",
+   "mentions": [
+    {
+     "source": "https://maggieappleton.com/garden-history",
+     "target": "https://tomcritchlow.com/2018/10/10/of-gardens-and-wikis",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/garden-history",
+     "target": "https://tomcritchlow.com/wiki",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/interoperable-libraries",
+     "target": "https://tomcritchlow.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/interoperable-libraries",
+     "target": "https://tomcritchlow.com/2020/04/15/library-json",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/metatour",
+     "target": "https://tomcritchlow.com",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "maggieappleton.com",
+   "target": "zylstra.org",
+   "count": 2,
+   "kinds": {
+    "mention": 2
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://maggieappleton.com/interoperable-libraries",
+     "target": "https://zylstra.org",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    },
+    {
+     "source": "https://maggieappleton.com/interoperable-libraries",
+     "target": "https://zylstra.org/blog/booklist-opml-data-structure",
+     "kind": "mention",
+     "seen_as": "outgoing"
+    }
+   ]
+  },
+  {
+   "source": "martymcgui.re",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "like": 1,
+    "repost": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://martymcgui.re/2023/01/07/082208",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "like",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://martymcgui.re/2023/05/02/201637",
+     "target": "https://maggieappleton.com/forest-talk",
+     "kind": "repost",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "mxb.dev",
+   "target": "maggieappleton.com",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://mxb.dev/blog/seven-reasons-why-i-dont-write",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "nicksimson.com",
+   "target": "maggieappleton.com",
+   "count": 4,
+   "kinds": {
+    "mention": 4
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://nicksimson.com/following",
+     "target": "https://maggieappleton.com",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://nicksimson.com/posts/commonplace-books-gardens-and-streams",
+     "target": "https://maggieappleton.com",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://nicksimson.com/posts/engine-building-garden",
+     "target": "https://maggieappleton.com",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://nicksimson.com/posts/engine-building-garden",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "ohhelloana.blog",
+   "target": "maggieappleton.com",
+   "count": 1,
+   "kinds": {
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://ohhelloana.blog/more-bookmarks-from-2021",
+     "target": "https://maggieappleton.com/nontechnical-gardening",
+     "kind": "mention",
+     "seen_as": "both"
+    }
+   ]
+  },
+  {
+   "source": "paperpilot.dev",
+   "target": "maggieappleton.com",
+   "count": 9,
+   "kinds": {
+    "mention": 9
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://paperpilot.dev/garden/artificial-intelligence",
+     "target": "https://maggieappleton.com/home-cooked-software",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://paperpilot.dev/garden/barefoot-developers",
+     "target": "https://maggieappleton.com/home-cooked-software",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://paperpilot.dev/garden/chromatic-lattice",
+     "target": "https://maggieappleton.com/ambient-copresence",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://paperpilot.dev/garden/command-palettes",
+     "target": "https://maggieappleton.com/command-bar",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://paperpilot.dev/garden/digital-gardens",
+     "target": "https://maggieappleton.com/nontechnical-gardening",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://paperpilot.dev/garden/essays",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://paperpilot.dev/garden/generative-ai",
+     "target": "https://maggieappleton.com/ai-enlightenment",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://paperpilot.dev/garden/incremental-automaton",
+     "target": "https://maggieappleton.com/ambient-copresence",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://paperpilot.dev/garden/the-cozy-web",
+     "target": "https://maggieappleton.com/cozy-web",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "quantumgardener.info",
+   "target": "maggieappleton.com",
+   "count": 4,
+   "kinds": {
+    "mention": 4
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://quantumgardener.info/notes/ambient-co-presence",
+     "target": "https://maggieappleton.com/ambient-copresence",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://quantumgardener.info/notes/blogging",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://quantumgardener.info/notes/designing-the-quantum-garden",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://quantumgardener.info/notes/digital-garden",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "qubyte.codes",
+   "target": "maggieappleton.com",
+   "count": 2,
+   "kinds": {
+    "bookmark": 1,
+    "mention": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://qubyte.codes/blog/indiewebcamp-brighton-2024",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://qubyte.codes/links/1672735995597",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "ryanpatrickrandall.com",
+   "target": "maggieappleton.com",
+   "count": 6,
+   "kinds": {
+    "mention": 6
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://ryanpatrickrandall.com/_posts/2024-09-19-book-notes-elsewhere",
+     "target": "https://maggieappleton.com/antilibrary",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://ryanpatrickrandall.com/_posts/2024-09-19-book-notes-elsewhere",
+     "target": "https://maggieappleton.com/library",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://ryanpatrickrandall.com/book-notes-elsewhere",
+     "target": "https://maggieappleton.com/antilibrary",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://ryanpatrickrandall.com/book-notes-elsewhere",
+     "target": "https://maggieappleton.com/library",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://ryanpatrickrandall.com/now/_posts/2020-06-19-now-july-2020",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://ryanpatrickrandall.com/now/now-july-2020",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "sekhmetdesign.thegeekcartel.com",
+   "target": "maggieappleton.com",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://sekhmetdesign.thegeekcartel.com/2024/07/links-id-share-in-private-10",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://sekhmetdesign.thegeekcartel.com/2024/12/links-id-share-in-private-19",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://sekhmetdesign.thegeekcartel.com/2025/03/links-id-share-in-private-26",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "stream.jeremycherfas.net",
+   "target": "maggieappleton.com",
+   "count": 3,
+   "kinds": {
+    "bookmark": 3
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://stream.jeremycherfas.net/2023/the-expanding-dark-forest-and-generative-ai",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://stream.jeremycherfas.net/2024/faking-william-morris-generative-forgery-and-the-erosion-of-art",
+     "target": "https://maggieappleton.com/generative-forgery",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://stream.jeremycherfas.net/2024/home-cooked-software-and-barefoot-developers",
+     "target": "https://maggieappleton.com/home-cooked-software",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "thejaymo.net",
+   "target": "maggieappleton.com",
+   "count": 4,
+   "kinds": {
+    "mention": 4
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://thejaymo.net/2023/01/29/280-twice-in-one-week",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://thejaymo.net/2024/03/17/331-15-years-thejaymo-net",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://thejaymo.net/2025/01/26/374-a-touch-of-future-shock-operator-and-deepseek-r1",
+     "target": "https://maggieappleton.com/2025-01-deepseek",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://thejaymo.net/2025/09/21/408-after-reading-the-draft",
+     "target": "https://maggieappleton.com/ai-enlightenment",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "tracydurnell.com",
+   "target": "maggieappleton.com",
+   "count": 4,
+   "kinds": {
+    "mention": 4
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://tracydurnell.com/2023/05/02/ai-article-roundup",
+     "target": "https://maggieappleton.com/forest-talk",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://tracydurnell.com/2024/05/18/social-norms-of-the-indieweb",
+     "target": "https://maggieappleton.com/assumed-audience",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://tracydurnell.com/2025/01/09/sanding-off-friction-from-indie-web-connection",
+     "target": "https://maggieappleton.com/cozy-web",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://tracydurnell.com/2026/10/06/wonders-of-web-weaving-podcast-annotated-transcript",
+     "target": "https://maggieappleton.com/garden-history",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "visitmy.website",
+   "target": "maggieappleton.com",
+   "count": 3,
+   "kinds": {
+    "mention": 3
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://visitmy.website/2022/05/24/bookmarks-9",
+     "target": "https://maggieappleton.com/evergreens",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://visitmy.website/2022/05/24/bookmarks-9",
+     "target": "https://maggieappleton.com/paleolithic-nostalgia",
+     "kind": "mention",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://visitmy.website/2022/09/26/searching-for-answers-in-data",
+     "target": "https://maggieappleton.com/block-data",
+     "kind": "mention",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "werd.io",
+   "target": "maggieappleton.com",
+   "count": 3,
+   "kinds": {
+    "bookmark": 2,
+    "reply": 1
+   },
+   "direction": "in",
+   "mentions": [
+    {
+     "source": "https://werd.io/2023/reading-watching-playing-using-january-2023",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "reply",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://werd.io/2023/the-expanding-dark-forest-and-generative-ai",
+     "target": "https://maggieappleton.com/ai-dark-forest",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://werd.io/2024/ambient-co-presence",
+     "target": "https://maggieappleton.com/ambient-copresence",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  },
+  {
+   "source": "zylstra.org",
+   "target": "maggieappleton.com",
+   "count": 4,
+   "kinds": {
+    "bookmark": 4
+   },
+   "direction": "mutual",
+   "mentions": [
+    {
+     "source": "https://zylstra.org/blog/2022/08/22024",
+     "target": "https://maggieappleton.com/joining-ought",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    },
+    {
+     "source": "https://zylstra.org/blog/2023/05/23128",
+     "target": "https://maggieappleton.com",
+     "kind": "bookmark",
+     "seen_as": "both"
+    },
+    {
+     "source": "https://zylstra.org/blog/2023/05/23128",
+     "target": "https://maggieappleton.com/forest-talk",
+     "kind": "bookmark",
+     "seen_as": "both"
+    },
+    {
+     "source": "https://zylstra.org/blog/2023/05/bing-bombing-through-twitter",
+     "target": "https://maggieappleton.com/forest-talk",
+     "kind": "bookmark",
+     "seen_as": "incoming"
+    }
+   ]
+  }
+ ]
+}

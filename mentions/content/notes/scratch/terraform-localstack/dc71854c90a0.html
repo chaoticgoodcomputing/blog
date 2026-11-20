@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Terraform LocalStack Testing</title>
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href="https://blog.chaoticgood.computer/content/notes/scratch/terraform-localstack" />
+    <script>location.replace("https://blog.chaoticgood.computer/content/notes/scratch/terraform-localstack#:~:text=QUESTION%3A%20Does%20LocalStack%20offer%20good%20support%20for%20the")</script>
+    <style>
+      :root { color-scheme: light dark; }
+      body { max-width: 40rem; margin: 2rem auto; padding: 0 1rem; font-family: Georgia, serif; line-height: 1.5; }
+    </style>
+  </head>
+  <body>
+    <article class="h-entry">
+      <h1 class="p-name">Terraform LocalStack Testing</h1>
+      <p>
+        <a class="p-author h-card" href="https://blog.chaoticgood.computer/contact">Spencer Elkington</a>
+        <time class="dt-published" datetime="2024-04-18T00:00:00.000Z">2024-04-18</time>
+        <a class="u-url" href="https://blog.chaoticgood.computer/mentions/content/notes/scratch/terraform-localstack/dc71854c90a0" hidden></a>
+      </p>
+      <div class="e-content">
+        <li><strong>QUESTION:</strong> Does LocalStack <a href="https://docs.localstack.cloud/user-guide/aws/feature-coverage/#emulation-levels" target="_blank" rel="noopener">offer good support</a> for the services we use?
+<ul>
+<li>NOTE: The two levels of emulation they offer are <code>CRUD</code> for response-only, and <code>Emulated</code> for actual logic emulation.</li>
+<li>NOTE: Some services are locked behind the Pro version</li>
+<li><strong>SUPPORT LEVELS</strong>:
+<ol>
+<li>RDS (Databases): <code>**, Emulated</code></li>
+<li>Cognito: Locked in Pro, <a href="https://docs.localstack.cloud/references/coverage/coverage_cognito-identity/" target="_blank" rel="noopener">variable support</a></li>
+<li>User Pools: <code>**-****, CRUD</code></li>
+<li>VPCs: <code>***-****, CRUD</code></li>
+<li>ECR: Locked in Pro, <a href="https://docs.localstack.cloud/references/coverage/coverage_ecr/" target="_blank" rel="noopener">variable support</a></li>
+<li>ELB: Variable, v1 as <code>***, CRUD</code>, v2 as Pro feature</li>
+<li>Key Management Service: Pro</li>
+<li>Lambda: Pro</li>
+</ol>
+</li>
+</ul>
+</li>
+      </div>
+      <p><a href="https://blog.chaoticgood.computer/content/notes/scratch/terraform-localstack#:~:text=QUESTION%3A%20Does%20LocalStack%20offer%20good%20support%20for%20the">Read the whole note</a></p>
+    </article>
+  </body>
+</html>

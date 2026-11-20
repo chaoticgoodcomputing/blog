@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+# Third-party documents served only for the annotation viewer.
+Disallow: /assets/annotated-documents/
+
+# Search engines' crawlers index each page, not its Markdown copy (src/lib/markdown-copies.ts), so a
+# copy is never a search result in its page's place. A crawler follows only the group that names it,
+# so each repeats the rule above. Every other agent, an AI assistant's among them, may read the copies.
+User-agent: Googlebot
+User-agent: Bingbot
+Allow: /
+Disallow: /assets/annotated-documents/
+Disallow: /*.md$
+
+Sitemap: https://blog.chaoticgood.computer/sitemap.xml
