@@ -1,7 +1,7 @@
 ---
-title: "No Silver Bullet: Essence and Accident in Software Engineering"
+title: Is AI a Silver Bullet?
 date: 2026-11-06
-updated: 2026-11-18
+updated: 2026-11-22
 tags:
   - engineering
   - engineering/ai
