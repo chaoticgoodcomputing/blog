@@ -150,11 +150,13 @@ export function neighbourhood(graph: Graph, id: string, depth: number): Graph {
 
 /**
  * The graph around a reader's trail (./trail.ts): each of its notes, every node within `depth`
- * edges of one, and every edge among them, whichever note's neighbourhood each end is in. A trail
- * note the graph has no node for adds nothing.
+ * edges of its last, the note shown, and every edge among them. The trail's other notes bring
+ * none of their neighbours. A trail note the graph has no node for adds nothing.
  */
 export function trailGraph(graph: Graph, trail: readonly string[], depth: number): Graph {
-  const found = new Set(trail.flatMap((id) => neighbourhood(graph, id, depth).nodes.map((node) => node.id)))
+  const shown = trail.at(-1)
+  const around = shown === undefined ? [] : neighbourhood(graph, shown, depth).nodes.map((node) => node.id)
+  const found = new Set([...trail, ...around])
   return {
     nodes: graph.nodes.filter((node) => found.has(node.id)),
     edges: graph.edges.filter((edge) => found.has(edge.source) && found.has(edge.target)),

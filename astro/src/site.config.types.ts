@@ -249,11 +249,16 @@ export interface GraphSettings {
      * an edge reaches right across the shell.
      */
     linkDistance: PerEdge<number>
-    /** How strongly each kind of edge pulls towards its length. */
-    linkStrength: PerEdge<number>
+    /**
+     * How strongly each kind of edge pulls towards its length. Without it, d3-force's own: an
+     * edge pulls more weakly the more edges its better-connected end has.
+     */
+    linkStrength?: PerEdge<number>
     /**
      * How strongly two nodes, or a node and a tag's label, or two tags' labels, closer than
-     * `sizes.gap` are pushed apart, from 0, not at all, to 1, the whole way in a tick.
+     * `sizes.gap` are pushed apart, from 0, not at all, to 1, the whole way in a tick. It weakens
+     * as the layout cools, as the other forces do, so a drag, which warms it, doesn't change the
+     * graph's shape. A trail's band (`trailThickness`) is kept clear at its whole strength.
      */
     collision: number
     /**
@@ -320,7 +325,10 @@ export interface HoverPulse {
 }
 /** The local graph's settings: a graph's, with how far from the page it reaches. */
 export interface LocalGraphSettings extends GraphSettings {
-  /** How many edges from a note of the trail a node may be, and be drawn. Below zero, every node is. */
+  /**
+   * How many edges from the note shown a node may be, and be drawn, besides the trail's own notes.
+   * Below zero, every node is.
+   */
   depth: number
   /**
    * How far the graph opens zoomed in, centred on the note shown, where 1 draws the graph at its

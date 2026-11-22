@@ -192,7 +192,7 @@ export const trail: TrailConfig = {
 }
 
 export const graph: GraphConfig = {
-  // The graph column's: every note of the trail, and what is next to one.
+  // The graph column's: every note of the trail, and what is next to the note shown.
   local: {
     depth: 1,
     focusZoom: 1.5,
@@ -200,10 +200,9 @@ export const graph: GraphConfig = {
     // A private page is never in the graph column's graph.
     privatePages: "omit",
     forces: {
-      charge: -20,
+      charge: -30,
       center: 0.05,
-      linkDistance: { tagTag: 0.1, tagNote: 0.1, noteNote: 0.01 },
-      linkStrength: { tagTag: 1.0, tagNote: 0.2, noteNote: 0.1 },
+      linkDistance: { tagTag: 0.08, tagNote: 0.08, noteNote: 0.08 },
       collision: 0.1,
       trailThickness: 16,
     },
@@ -231,10 +230,9 @@ export const graph: GraphConfig = {
     removeTags: site.private.tags,
     privatePages: "mark",
     forces: {
-      charge: -20,
+      charge: -30,
       center: 0.05,
-      linkDistance: { tagTag: 0.1, tagNote: 0.1, noteNote: 0.01 },
-      linkStrength: { tagTag: 1.0, tagNote: 0.2, noteNote: 0.1 },
+      linkDistance: { tagTag: 0.08, tagNote: 0.08, noteNote: 0.08 },
       collision: 0.1,
       trailThickness: 16,
     },

@@ -64,15 +64,15 @@ const GRAPH: Graph = {
   ],
 }
 
-test("the graph around a trail is every note of it, and everything one edge from one", () => {
-  const graph = trailGraph(GRAPH, ["/a", "/b"], 1)
-  expect(graph.nodes.map((node) => node.id).sort()).toEqual(["/a", "/b", "/c", "/tags/x"])
+test("the graph around a trail is every note of it, and everything one edge from the note shown", () => {
+  const graph = trailGraph(GRAPH, ["/a", "/c"], 1)
+  // `/tags/x` is next to `/a` only, which is on the trail but not shown: it is left out.
+  expect(graph.nodes.map((node) => node.id).sort()).toEqual(["/a", "/b", "/c", "/d"])
 })
 
-test("the graph around a trail keeps every edge among its nodes, not only each note's own", () => {
-  const graph = trailGraph(GRAPH, ["/a", "/d"], 1)
-  // `/b` is next to `/a` and `/c` next to `/d`: the edge between them is no trail note's, and is kept.
-  expect(graph.edges).toContainEqual({ source: "/b", target: "/c", kind: "noteNote" })
+test("the graph around a trail keeps every edge among its nodes", () => {
+  const graph = trailGraph(GRAPH, ["/a", "/c"], 1)
+  expect(graph.edges).toContainEqual({ source: "/a", target: "/b", kind: "noteNote" })
 })
 
 test("a trail note the graph has no node for adds nothing to its graph", () => {

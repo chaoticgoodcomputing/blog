@@ -3,7 +3,7 @@
 // kept inside it. Knows no browser: src/lib/graph-drawing.ts ticks it a frame at a time, and a test
 // ticks it to rest.
 
-import { forceCenter, forceCollide, forceLink, forceManyBody, forceSimulation, type Simulation, type SimulationLinkDatum, type SimulationNodeDatum } from "d3-force"
+import { forceCenter, forceCollide, forceLink, forceManyBody, forceSimulation, type Force, type ForceCollide, type Simulation, type SimulationLinkDatum, type SimulationNodeDatum } from "d3-force"
 import type { GraphSettings, NodeSize, PerEdge, ShellSettings } from "../site.config.types.ts"
 import { radii, type Graph, type GraphEdge, type GraphNode } from "./graph.ts"
 import { tagAncestors, tagUrl } from "./tags.ts"
@@ -56,18 +56,16 @@ export function layOut(
   const linkDistance = Object.fromEntries(
     Object.entries(settings.forces.linkDistance).map(([kind, share]) => [kind, share * 2 * size]),
   ) as PerEdge<number>
+  const link = forceLink<PlacedNode, PlacedEdge>(edges)
+    .id((node) => node.id)
+    .distance((edge) => linkDistance[edge.kind])
+  if (linkStrength) link.strength((edge) => linkStrength[edge.kind])
   const simulation = forceSimulation(nodes)
     .stop()
     .force("charge", forceManyBody<PlacedNode>().strength(charge))
     .force("center", forceCenter<PlacedNode>().strength(center))
-    .force(
-      "link",
-      forceLink<PlacedNode, PlacedEdge>(edges)
-        .id((node) => node.id)
-        .distance((edge) => linkDistance[edge.kind])
-        .strength((edge) => linkStrength[edge.kind]),
-    )
-    .force("collide", forceCollide<PlacedNode>((node) => (radius.get(node.id) ?? 0) + half).strength(collision).iterations(3))
+    .force("link", link)
+    .force("collide", withAlpha(forceCollide<PlacedNode>((node) => (radius.get(node.id) ?? 0) + half).iterations(3), collision))
     .force("labels", labelCollide(nodes, radius, measure, settings.sizes, collision))
     .force("trail", trailCollide(nodes, trail, radius, settings.forces.trailThickness, collision))
   if (!settings.shell) {
@@ -104,7 +102,8 @@ export function labelBox(x: number, y: number, r: number, width: number, size: n
  * label box, by `sizes.gap`, as the collision force keeps nodes clear of each other: a node in a box
  * is pushed out of it, and the tag the box is under the other way; two boxes over each other are
  * pushed apart along the way they overlap least. A note's label shows only while it is hovered, and
- * takes no room. `strength` is the share of the way they are pushed apart in a tick.
+ * takes no room. `strength` times alpha is the share of the way they are pushed apart in a tick,
+ * as with the collision force (`withAlpha`).
  */
 function labelCollide(
   nodes: PlacedNode[],
@@ -122,14 +121,17 @@ function labelCollide(
     const box = labelBox(x, y, radius.get(node.id) ?? 0, width, sizes.label)
     return { left: box.left - half, top: box.top - half, right: box.right + half, bottom: box.bottom + half }
   }
-  // Moves `a` by half of (dx, dy), and `b` by half of it the other way, at `strength`.
+  // This tick's strength: `strength` at alpha.
+  let now = strength
+  // Moves `a` by half of (dx, dy), and `b` by half of it the other way, at this tick's strength.
   const push = (a: PlacedNode, b: PlacedNode, dx: number, dy: number) => {
-    const [x, y] = [(dx * strength) / 2, (dy * strength) / 2]
+    const [x, y] = [(dx * now) / 2, (dy * now) / 2]
     ;[a.vx, a.vy] = [(a.vx ?? 0) + x, (a.vy ?? 0) + y]
     ;[b.vx, b.vy] = [(b.vx ?? 0) - x, (b.vy ?? 0) - y]
   }
 
-  return () => {
+  return (alpha: number) => {
+    now = strength * alpha
     for (const [i, tag] of tags.entries()) {
       const box = boxOf(tag)
       for (const node of nodes) {
@@ -170,8 +172,9 @@ function labelCollide(
  * Keeps every node clear of each step of a trail, the line between two of its notes the graph has,
  * by half of `thickness` each side of it, as the collision force keeps nodes clear of each other: a
  * node in the band is pushed out of it, and the step's two notes the other way, each by how near the
- * node is to it along the step. `strength` is the share of the way they are pushed apart in a tick.
- * With no thickness, or no step, it does nothing.
+ * node is to it along the step. `strength` is the share of the way they are pushed apart in a tick,
+ * whatever alpha is: at `strength` times alpha it is too weak to hold the band clear against the
+ * links. With no thickness, or no step, it does nothing.
  */
 function trailCollide(nodes: PlacedNode[], trail: string[], radius: Map<string, number>, thickness: number, strength: number) {
   const byId = new Map(nodes.map((node) => [node.id, node]))
@@ -210,6 +213,20 @@ function trailCollide(nodes: PlacedNode[], trail: string[], radius: Map<string, 
       }
     }
   }
+}
+
+/**
+ * d3-force's collision force at `strength` times alpha, as the other forces are: d3-force's own
+ * pushes at its whole strength whatever alpha is, so the graph would settle looser the cooler it
+ * is, and pull in whenever a drag warms it.
+ */
+function withAlpha(collide: ForceCollide<PlacedNode>, strength: number): Force<PlacedNode, undefined> {
+  const force = (alpha: number) => {
+    collide.strength(strength * alpha)
+    collide(alpha)
+  }
+  force.initialize = (nodes: PlacedNode[], random: () => number) => collide.initialize(nodes, random)
+  return force
 }
 
 /** How far apart, in CSS pixels, the nodes that start on one tag are spread round it. */
