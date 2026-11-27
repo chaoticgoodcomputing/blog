@@ -1,0 +1,1 @@
+import{i as e,n as t,r as n}from"./trail.Dm-9ph4n.js";document.addEventListener(`astro:before-preparation`,r=>{let i=r;if(i.navigationType===`traverse`)return;let a=document.querySelector(`.page`)?.dataset.kind===`404`,o=i.sourceElement?.closest(`[data-trail-reset]`)!=null,s=a||o?[]:e(new URL(location.href)),c=new URL(t(n(s,i.to.pathname)),i.to);c.hash=i.to.hash,i.to=c});

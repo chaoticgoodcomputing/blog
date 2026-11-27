@@ -1,0 +1,17 @@
+# Quantitative Analysis of Markets & Organizations
+
+> My time at the University of Utah was longer than I'd planned, cut shorter than expected by COVID-19. I was very lucky to have mentorship to push me across the finish line.
+
+- Page: https://blog.chaoticgood.computer/content/notes/qamo
+- Author: Spencer Elkington
+- Published: 2024-02-26
+- Updated: 2026-01-10
+- Tags: economics, projects/undergrad, writing/notes
+
+---
+
+In 2022, I graduated from the University of Utah with a degree in [Quantitative Analysis of Markets & Organizations](https://eccles.utah.edu/programs/undergraduate/academics/majors/qamo/) (QAMO, more-or-less [quantitative economics](https://blog.chaoticgood.computer/tags/economics)).
+
+Words cannot describe how much I appreciate the mentorship I received from my professors - especially Dr. Scott Schaefer, the program director who was incredibly kind in providing a level of flexibility that, frankly, was the only reason I was able to graduate while working full-time.
+
+That said, I *do* wish the name of the degree wasn’t such a pain in the ass to type out.

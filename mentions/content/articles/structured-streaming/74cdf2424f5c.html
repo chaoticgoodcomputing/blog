@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Don't Double Down: Structured Streaming to Wrangle Data</title>
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href="https://blog.chaoticgood.computer/content/articles/structured-streaming" />
+    <script>location.replace("https://blog.chaoticgood.computer/content/articles/structured-streaming#:~:text=Stream%20from%20a%20Delta%20Table")</script>
+    <style>
+      :root { color-scheme: light dark; }
+      body { max-width: 40rem; margin: 2rem auto; padding: 0 1rem; font-family: Georgia, serif; line-height: 1.5; }
+    </style>
+  </head>
+  <body>
+    <article class="h-entry">
+      <h1 class="p-name">Don't Double Down: Structured Streaming to Wrangle Data</h1>
+      <p>
+        <a class="p-author h-card" href="https://blog.chaoticgood.computer/contact">Spencer Elkington</a>
+        <time class="dt-published" datetime="2022-07-14T00:00:00.000Z">2022-07-14</time>
+        <a class="u-url" href="https://blog.chaoticgood.computer/mentions/content/articles/structured-streaming/74cdf2424f5c" hidden></a>
+      </p>
+      <div class="e-content">
+        <li><a href="https://docs.databricks.com/delta/delta-streaming.html#delta-table-as-a-source" target="_blank" rel="noopener"><strong>Stream from a Delta Table</strong></a></li>
+        <p>Of all of Delta tables’ nifty features, this may be the niftiest: <strong>you can treat them like a stream</strong>. Because <a href="https://docs.databricks.com/delta/delta-streaming.html#delta-table-as-a-source" target="_blank" rel="noopener">Delta keeps track of updates</a>, you can use <code>.readStream.table()</code> to stream new updates each time you run the process.</p>
+        <li><a href="https://docs.databricks.com/delta/delta-streaming.html#delta-table-as-a-sink" target="_blank" rel="noopener"><strong>Use Structured Streaming-compatible transformations</strong></a></li>
+        <li><a href="https://docs.databricks.com/delta/delta-streaming.html#delta-table-as-a-sink" target="_blank" rel="noopener"><strong>Create the output stream</strong></a></li>
+      </div>
+      <p><a href="https://blog.chaoticgood.computer/content/articles/structured-streaming#:~:text=Stream%20from%20a%20Delta%20Table">Read the whole note</a></p>
+    </article>
+  </body>
+</html>

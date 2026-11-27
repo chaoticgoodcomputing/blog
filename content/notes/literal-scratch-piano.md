@@ -1,0 +1,15 @@
+# Scratch Piano Application
+
+> An educational waveform visualizer written in everybody's favorite programming language: Scratch.
+
+- Page: https://blog.chaoticgood.computer/content/notes/literal-scratch-piano
+- Author: Spencer Elkington
+- Published: 2018-07-18
+- Updated: 2026-01-10
+- Tags: engineering/languages/scratch, projects/teaching, projects/undergrad, writing/fragments
+
+---
+
+Back in 2018, I taught at the [GREAT Camp at the University of Utah](https://blog.chaoticgood.computer/content/notes/periodic/daily/2024/03/2024-03-02) as an instructor for ~4th-6th grade students interested in intro programming in [Scratch](https://scratch.mit.edu/). As a CS student at the time, it was really cool to try and put things I’d made in “real” languages and translate them into Scratch, especially if they required manually implementing data structures like stacks and heaps.
+
+This was a fun project to try and explain music - something that every Utah child learns from the womb as if by law - and also a way to cope with the fact that in Spring of 2018 I’d unintentionally signed up to take a weed-out Intro to Music Theory course at university.

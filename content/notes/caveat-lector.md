@@ -1,0 +1,35 @@
+# Caveat Lector: Reader Beware
+
+> I'm embracing being wrong on the internet in an effort to learn in public. A disclaimer on digital gardening, dead pixels, and the fear of terminal online-ness.
+
+- Page: https://blog.chaoticgood.computer/content/notes/caveat-lector
+- Author: Spencer Elkington
+- Published: 2024-02-27
+- Updated: 2026-01-10
+- Tags: horticulture/seasons/rhythm, projects/site, writing/notes
+
+---
+
+The past few days have been a weird experience as I actively try to lower the internal bar for what I feel comfortable putting out into the world. As a proud member of the most terminally online generation to ever live, **I have a deep and relentless fear of being wrong on the Internet.**
+
+In getting everything ready to [re-publish this site as my own digital garden](https://blog.chaoticgood.computer/content/notes/digital-gardening-with-quartz), I’ve started using the phrase “*caveat lector*” a lot. Back in [my undergraduate degree](https://blog.chaoticgood.computer/content/notes/qamo), I learned about the phrase *caveat emptor* and *caveat venditor*:
+
+-   *Caveat emptor* means “buyer beware,” to be used in situations where a buyer of a product is responsible for understanding the risk they take in their purchase; and
+-   *Caveat venditor* means “seller beware”, to be used in situations where a seller of a product is responsible for minimizing the risk of the products they sell.
+
+A good napkin example would be a buyer and seller of digital LCD displays. In that case, it’s the seller’s responsibility to make sure that the display actually works - *caveat venditor*. However, what if a display works, but has a few dead pixels? This doesn’t render the display unfit for purpose - the seller would still be selling a good and usable product that fulfills their promise - but dead pixels *are* pretty annoying. The risk of dead pixels, then, may fall on the buyer - *caveat emptor*.
+
+One of my intentions with Chaotic Good Computing is to contribute to the free body of knowledge I’ve benefitted immensely from myself, but to do so in a way that both fits my style and my habits better than traditional blogging or educational entertainment. The commitments that I’m making to you, the reader, are:
+
+-   To my knowledge, the things that I’m posting are accurate at the time that I write them down; and
+-   If I learn something in the future that corrects something I’ve written in the past, I’ll do my best to make corrections as I find mistakes.
+
+That said, I’m also just *some person on the internet*. I know some things pretty well and other things not-so-much, with a pretty vast in-between. By the very nature of [learning in public](https://blog.chaoticgood.computer/tags/horticulture), some things here will be straight-up wrong, if not at least not-as-correct-as-they-could-be.
+
+So, to you, I say:
+
+> ***Caveat lector!*** *Reader Beware!*
+
+and, as a follow-up piece of advice, I might also borrow from the Russian proverb:
+
+> **Doveryay, no Proveryay.** *Trust, but Verify.*

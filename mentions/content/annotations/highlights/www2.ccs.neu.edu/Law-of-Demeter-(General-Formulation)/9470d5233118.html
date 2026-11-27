@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Law of Demeter (LOD)</title>
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href="https://blog.chaoticgood.computer/content/annotations/highlights/www2.ccs.neu.edu/Law-of-Demeter-(General-Formulation)" />
+    <script>location.replace("https://blog.chaoticgood.computer/content/annotations/highlights/www2.ccs.neu.edu/Law-of-Demeter-(General-Formulation)#:~:text=From%20www2.ccs.neu.edu")</script>
+    <style>
+      :root { color-scheme: light dark; }
+      body { max-width: 40rem; margin: 2rem auto; padding: 0 1rem; font-family: Georgia, serif; line-height: 1.5; }
+    </style>
+  </head>
+  <body>
+    <article class="h-entry">
+      <h1 class="p-name">Law of Demeter (LOD)</h1>
+      <p>
+        <a class="p-author h-card" href="https://blog.chaoticgood.computer/contact">Spencer Elkington</a>
+        <time class="dt-published" datetime="2026-11-06T00:00:00.000Z">2026-11-06</time>
+        <a class="u-url" href="https://blog.chaoticgood.computer/mentions/content/annotations/highlights/www2.ccs.neu.edu/Law-of-Demeter-(General-Formulation)/9470d5233118" hidden></a>
+        <a class="u-in-reply-to" href="https://www2.ccs.neu.edu/research/demeter/demeter-method/LawOfDemeter/general-formulation.html" hidden></a>
+      </p>
+      <div class="e-content">
+        <p class="annotated-document">From <a href="https://www2.ccs.neu.edu/research/demeter/demeter-method/LawOfDemeter/general-formulation.html" target="_blank" rel="noopener">www2.ccs.neu.edu</a></p>
+        <article class="annotation" id="^wjvchhuae5"><a class="annotation-passage" href="https://www2.ccs.neu.edu/research/demeter/demeter-method/LawOfDemeter/general-formulation.html#:~:text=by%20Ian%20Holland.-,A%20more%20general%20formulation%20of,friends%3B%20Don't%20talk%20to%20strangers.,-In%20this%20general" target="_blank" rel="noopener" title="Read it in context"><div class="callout quote" data-callout="quote" data-callout-kind="quote"><div class="callout-title"><svg viewBox="0 0 24 24" width="1em" height="1em" class="callout-icon" aria-hidden="true"><path fill="currentColor" d="M14 17h3l2-4V7h-6v6h3M6 17h3l2-4V7H5v6h3z"></path></svg>Quote</div><div class="callout-content quote-body"><p>A more general formulation of the Law of Demeter is:
+Each unit should have only limited knowledge about other units:
+only units "closely" related to the current unit.
+
+Or: Each unit should only talk to its friends; Don't talk to strangers.</p></div></div></a><div class="annotation-comment"><p>This a principle I’ve tried to stick through with Flowthru, which is made easy by connections between its primitives being closely tied to the DAG that they assemble: if you try coupling things together in terrible ways, the flows (which are all DAGs) become immediately nightmarish. “Ugly” DAGs have a somewhat pleasant aesthetic definition: if the visualization of a DAG is structurally fucked, then the DAG itself is probably <em>also</em> structurally fucked.</p><p>Coming from Pragmatic Programmer, it’s difficult not to think about this as a form of software rot (tip 3, software entropy): that by reaching for “but X should talk to Y!” too often, there’s a tendency to tangle.</p><p>I also think this hails back to <a class="internal-link is-unresolved" href="https://blog.chaoticgood.computer/content/annotations/highlights/www2.ccs.neu.edu/Software%20Gardening" data-href="Software Gardening">Software Gardening</a>: the role of a stack engineer is to make it structurally difficult for a unit of the code to know too much outside its immediate domain, making the Law of Demeter an actual <em>law</em>, rather than a soft rule to be shortcutted past by an agent.</p><p>(The Pragmatic Programmer actually touches on that idea: its footnote on the Law of Demeter is “So it’s not really law. It’s more like The Jolly Good Idea of Demeter”. I believe we have more tools than ever to codify this: that’s part of why I enjoy writing linters that make use of .NET’s Roslyn, and do this a <em>lot</em> in Flowthru.)</p></div><time class="annotation-date" datetime="2026-11-06T20:47:17.919Z">Nov 06, 2026</time></article>
+        <article class="annotation" id="^i1smereqnjp"><a class="annotation-passage" href="https://www2.ccs.neu.edu/research/demeter/demeter-method/LawOfDemeter/general-formulation.html#:~:text=of%20Demeter%20as%3A-,A%20method%20should%20have%20limited,knowledge%20about%20the%20object%20model.,-The%20Law%20of" target="_blank" rel="noopener" title="Read it in context"><div class="callout quote" data-callout="quote" data-callout-kind="quote"><div class="callout-title"><svg viewBox="0 0 24 24" width="1em" height="1em" class="callout-icon" aria-hidden="true"><path fill="currentColor" d="M14 17h3l2-4V7h-6v6h3M6 17h3l2-4V7H5v6h3z"></path></svg>Quote</div><div class="callout-content quote-body"><p>A method should have
+limited knowledge of an object model.
+This view leads to aspect-oriented programming: we pull out
+the method and transitively all its
+auxiliary methods into a separate aspect. This works best if the separate
+aspect has limited knowledge about the object model.</p></div></div></a><div class="annotation-comment"><p>I think this is something that I really had to noodle on when I first entered into the domain of ORMs, which enforce databases and objects in code to align. Over a lot of time working with EFCore, specifically, I’ve developed a repulsion towards having methods attached to objects that should, in an ideal setup, be purely data objects representing the rows of a table.</p><p>It also meshes well in my broken dev brain of thinking about things in terms of little machines on an assembly line, where the data (a product moving across the assembly line) and the actions done to that data ought to be separate things.</p></div><time class="annotation-date" datetime="2026-11-06T20:50:36.044Z">Nov 06, 2026</time></article>
+        <article class="annotation" id="^jbhq3zrlo2d"><a class="annotation-passage" href="https://www2.ccs.neu.edu/research/demeter/demeter-method/LawOfDemeter/general-formulation.html#:~:text=Demeter%20home%20page-,Professor%20Karl%20Lieberherr%20College%20of,MA%2002115%20lieber%20at%20ccs.neu.edu" target="_blank" rel="noopener" title="Read it in context"><div class="callout quote" data-callout="quote" data-callout-kind="quote"><div class="callout-title"><svg viewBox="0 0 24 24" width="1em" height="1em" class="callout-icon" aria-hidden="true"><path fill="currentColor" d="M14 17h3l2-4V7h-6v6h3M6 17h3l2-4V7H5v6h3z"></path></svg>Quote</div><div class="callout-content quote-body"><p>Professor Karl Lieberherr
+College of Computer and Information Science Science, Northeastern University
+Boston, MA 02115
+lieber at ccs.neu.edu</p></div></div></a><div class="annotation-comment"><p>I’m not sure if this is a case of <a href="https://en.wikipedia.org/wiki/Frequency_illusion" target="_blank" rel="noopener">frequency illusion</a>, but there is a part of me that is absolutely floored by how often random research paths eventually lead me back to “oh, <em>they</em> live in Boston, too?”</p><p>The last notable one: <a href="https://arstechnica.com/information-technology/2011/03/the-linux-graphics-stack-from-x-to-wayland/" target="_blank" rel="noopener">Wayland</a></p></div><time class="annotation-date" datetime="2026-11-06T20:40:59.780Z">Nov 06, 2026</time></article>
+      </div>
+      <p><a href="https://blog.chaoticgood.computer/content/annotations/highlights/www2.ccs.neu.edu/Law-of-Demeter-(General-Formulation)#:~:text=From%20www2.ccs.neu.edu">Read the whole note</a></p>
+    </article>
+  </body>
+</html>
